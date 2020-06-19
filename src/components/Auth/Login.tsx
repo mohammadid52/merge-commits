@@ -1,22 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import PageHeaderBar from '../Header/PageHeaderBar';
+import React, { useContext, useState } from 'react';
+import { GlobalContext } from '../../contexts/GlobalContext';
+import { 
+    Link
+} from 'react-router-dom';
+import { Auth } from 'aws-amplify';
 
 const Login = () => {
+    const { state, dispatch } = useContext(GlobalContext);
     const [ input, setInput ] = useState({
         email: '',
         password: '',
     })
-    // const [ data, setData ] = useState({});
 
-    // useEffect(() => {
-    //     async function fetchData(){
-    //         const response = await fetch('/api/data')
-    //         const dataObject = await response.json();
-    //         setData(dataObject)
-    //     }
+    async function SignIn() {
+        let username = input.email;
+        let password = input.password;
 
-    //     fetchData();
-    // }, []);
+        try {
+            const user = await Auth.signIn(username, password);
+            console.log({ user })
+            dispatch({type: "SET_USER", payload: {user}})
+        } catch (error) {
+            console.log('error signing in', error);
+        }
+    }
 
     const handleChange = (e: { target: { id: any; value: any; }; }) => {
         const { id, value } = e.target;
@@ -29,7 +36,8 @@ const Login = () => {
     }
 
     const handleSubmit = (e: any) => {
-        console.log(input);
+        console.log('log-in attempt')
+        SignIn()
     }
 
     return (
@@ -40,7 +48,11 @@ const Login = () => {
                     <label htmlFor="email">Email</label>
                     <input type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
                     <label htmlFor="password">Password</label>
-                    <input type="text" id="password" name="password" value={input.password} onChange={handleChange}/>
+                    <input type="password" id="password" name="password" value={input.password} onChange={handleChange}/>
+                </div>
+                <div className="flex flex-col justify-center items-center">
+                    <p>New to Iconoclast Artists?</p>
+                    <Link to="/register">Click here!</Link>
                 </div>
                 <button onClick={handleSubmit}>Submit</button>
             </div>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { LessonStateType, lessonState } from '../state/LessonState';
 
 type LessonActions = 

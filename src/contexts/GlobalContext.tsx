@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
+import { globalReducer } from '../reducers/GlobalReducer';
+import { globalState } from '../state/GlobalState';
 
 const pageThemes = {
     light: {
@@ -45,13 +47,14 @@ const pageThemes = {
     }
 }
 
-interface ThemeProps {
+interface GlobalProps {
     children: React.ReactNode;
 }
 
-export const ThemeContext = React.createContext(null);
+export const GlobalContext = React.createContext(null);
 
-export const ThemeContextProvider = ({ children }: ThemeProps) => {
+export const GlobalContextProvider = ({ children }: GlobalProps) => {
+    const [ state, dispatch ] = useReducer(globalReducer, globalState);
     const [ lightOn, setLightOn ] = useState(true);
 
     const lightSwitch = () => {
@@ -63,9 +66,9 @@ export const ThemeContextProvider = ({ children }: ThemeProps) => {
     const theme = lightOn ? pageThemes.light : pageThemes.dark;
 
     return (
-        <ThemeContext.Provider value={{theme, lightSwitch}}>
+        <GlobalContext.Provider value={{theme, lightSwitch, state, dispatch}}>
             { children }
-        </ThemeContext.Provider>
+        </GlobalContext.Provider>
     )
 }
 

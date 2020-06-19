@@ -4,7 +4,7 @@ import {
     Switch, 
     Route,
  } from 'react-router-dom';
-import { ThemeContext } from '../../contexts/ThemeContext';
+import { GlobalContext } from '../../contexts/GlobalContext';
 import PageHeaderBar from '../Header/PageHeaderBar';
 import SideMenu from './Menu/SideMenu';
 import DashboardHome from './DashboardHome/DashboardHome';
@@ -14,41 +14,44 @@ import StudentLinks from './Menu/StudentLinks';
 import Profile from './Profile/Profile';
 
 const Dashboard: React.FC = () => {
-    const { theme } = useContext(ThemeContext);
+    const { theme } = useContext(GlobalContext);
 
     return (
-        <Router basename="/dashboard">
-            <div className={`w-full h-full flex`}>
-                <SideMenu>
-                    <ProfileLink />
-                    <StudentLinks />
-                </SideMenu>
-                <div className={`flex-grow`}>
-                    <Switch>
-                        <Route 
-                            exact
-                            path="/"
-                            render={() => (
-                                <DashboardHome />
-                            )}
+        <>
+            {console.log('dashboard')}
+        </>
+        // <Router basename="/dashboard">
+        //     <div className={`w-full h-full flex`}>
+        //         <SideMenu>
+        //             <ProfileLink />
+        //             <StudentLinks />
+        //         </SideMenu>
+        //         <div className={`flex-grow`}>
+        //             <Switch>
+        //                 <Route 
+        //                     exact
+        //                     path="/"
+        //                     render={() => (
+        //                         <DashboardHome />
+        //                     )}
                             
-                        />
-                        <Route 
-                            path="/classroom"
-                            render={() => (
-                                <Classroom />
-                            )}
-                        />
-                        <Route 
-                            path="/profile"
-                            render={() => (
-                                <Profile />
-                            )}
-                        />
-                    </Switch>
-                </div>
-            </div>
-        </Router>
+        //                 />
+        //                 <Route 
+        //                     path="/classroom"
+        //                     render={() => (
+        //                         <Classroom />
+        //                     )}
+        //                 />
+        //                 <Route 
+        //                     path="/profile"
+        //                     render={() => (
+        //                         <Profile />
+        //                     )}
+        //                 />
+        //             </Switch>
+        //         </div>
+        //     </div>
+        // </Router>
     )
 }
 

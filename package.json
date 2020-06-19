@@ -36,6 +36,7 @@
     "webpack-cli": "^3.3.9"
   },
   "dependencies": {
+    "aws-amplify": "^3.0.17",
     "debug": "~2.6.9",
     "postcss-loader": "^3.0.0",
     "react": "^16.10.2",

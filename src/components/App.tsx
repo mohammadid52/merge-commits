@@ -1,14 +1,12 @@
 import React, { useContext } from 'react';
 import MainRouter from './AppMainRouter';
-import { ThemeContextProvider } from '../contexts/ThemeContext';
-// import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
+import { GlobalContextProvider } from '../contexts/GlobalContext';
 
 const App: React.FC = () => {
     return (
-       <ThemeContextProvider>
-            {/* <AmplifySignOut /> */}
+        <GlobalContextProvider>
             <MainRouter />
-       </ThemeContextProvider>
+        </GlobalContextProvider>
     )
 }
 

@@ -1,34 +1,23 @@
-import React, { useState, useContext } from 'react';
-import { GlobalContext } from '../../contexts/GlobalContext';
-import {
-    useHistory,
-    Link
-} from 'react-router-dom';
+import React, { useState } from 'react';
 import { Auth } from 'aws-amplify';
 
 const Registration = () => {
-    const history = useHistory();
-    const { state, dispatch } = useContext(GlobalContext);
     const [ input, setInput ] = useState({
         email: '',
-        password: '',
+        code: '',
     })
 
-    async function signUp() {
+    async function confirmSignUp() {
         let username = input.email
-        let password = input.password
+        let code = input.code
         try {
-            const user = await Auth.signUp({
-                username,
-                password
-            });
-            console.log({ user });
-            dispatch({type: "SET_USER", payload: { user }});
-            history.push("/");
+          let res = await Auth.confirmSignUp(username, code);
+          console.log(res)
         } catch (error) {
-            console.log('error signing up:', error);
+            console.log('error confirming sign up', error);
         }
     }
+
 
     const handleChange = (e: { target: { id: any; value: any; }; }) => {
         const { id, value } = e.target;
@@ -42,8 +31,9 @@ const Registration = () => {
 
     const handleSubmit = (e: any) => {
         console.log(input);
-        signUp();
+        confirmSignUp()
         console.log('attempt')
+        
     }
 
     return (
@@ -53,12 +43,8 @@ const Registration = () => {
                 <div className="flex flex-col justify-around items-center">
                     <label htmlFor="email">Email</label>
                     <input type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
-                    <label htmlFor="password">Password</label>
-                    <input type="password" id="password" name="password" value={input.password} onChange={handleChange}/>
-                </div>
-                <div className="flex flex-col justify-center items-center">
-                    <p>Already have an account?</p>
-                    <Link to="/login">Go to login</Link>
+                    <label htmlFor="code">Confirmation Code</label>
+                    <input type="text" id="code" name="code" value={input.code} onChange={handleChange}/>
                 </div>
                 <button onClick={handleSubmit}>Submit</button>
             </div>

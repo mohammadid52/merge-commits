@@ -1,0 +1,232 @@
+enum Language {
+  EN
+  ES
+}
+
+enum PersonStatus {
+  ACTIVE
+  SUSPENDED
+  INACTIVE
+  HOLD
+}
+
+enum InstitutionType {
+  ELEM
+  MID
+  HIGH
+  CORR
+  CAMP
+  EXCURR
+}
+
+enum CourseType {
+  CLASS
+  EXCURR
+  DIST
+}
+
+enum Role {
+  ADM
+  BLD
+  FLW
+  CRD
+  TR
+  ST
+}
+
+type Person @model 
+@key(fields: ["email"]) 
+@key(name: "byContributor", fields: ["id"])
+{
+  id: ID!
+  status: PersonStatus!
+  email: String!
+  role: Role!
+  firstName: String!
+  preferredName: String
+  lastName: String!
+  institution: Institution! @connection
+  externalId: String
+  grade: Int
+  courses: [Course]
+  phone: String
+  birthdate: AWSDate!
+  image: String
+  language: Language!
+}
+
+type Curriculum @model @key(fields: ["id"]) {
+  id: ID!
+  name: String
+  contributors: [Person] @connection(keyName: "byContributor", fields: ["id"])
+  grade: [Int]
+  languages: [Language]
+  lessons: [Lesson]
+}
+
+type Course @model {
+  id: ID!
+  name: String!
+  courseType: CourseType!
+  institution: Institution!
+  classroomTeacher: Person!
+  fellow: Person!
+  curriculum: Curriculum @connection
+  location: String!
+  startDate: AWSDate!
+  endDate: AWSDate!
+  duration: Int
+}
+
+type Institution @model @key(fields: ["id"]) {
+  id: ID!
+  name: String
+  address: String
+  phone: String
+  contact: [Person]
+  type: InstitutionType
+}
+
+type LessonComponent {
+  stage: String!
+  type: String!
+  breakdown: Boolean!
+}
+
+type Artist {
+  images: [String!]
+  name: String!
+  bio: [String!]!
+}
+
+type Quote {
+  text: String!
+  source: String!
+}
+
+type SELStructure @model {
+  id: ID!
+  name: String!
+  description: String!
+  types: [SELType!]! @connection(keyName: "byStructure", fields: ["id"] )
+}
+
+type SELType @model 
+@key(name: "byStructure", fields: ["structureID", "id"])
+# @key(name: "byComponent", fields: ["id", "structureID"])
+{
+  id: ID!
+  structureID: ID!
+  name: String!
+  description: String!
+}
+
+type DataObject {
+  type: String!
+  data: String!
+}
+
+type ClassroomData {
+  studentID: ID!
+  dataObjects: [DataObject!]!
+}
+
+type Class @model {
+  id: ID!
+  courseID: ID!
+  lessonID: ID!
+  lesson: Lesson! @connection
+  data: [ClassroomData]!
+}
+
+type Lesson @model @key(fields: ["id"]) {
+  id: ID!
+  title: String! 
+  contributors: [Person]! @connection(keyName: "byContributor", fields: ["id"])
+  grade: [Int]
+  lessonPlan: [LessonComponent]!
+  artist: Artist!
+  language: Language!
+  quotes: [Quote]!
+  primarySELType: SELType! @connection
+  warmUp: WarmUp @connection
+  coreLesson: CoreLesson! @connection
+  activity: Activity! @connection
+}
+
+type Instructions {
+  video: Boolean!
+  link: String
+  text: [String!]!
+}
+
+type Breakdown {
+  included: Boolean!
+  reflectionQuestions: [String]
+}
+
+type Inputs {
+  title: Boolean!
+  additionalInputs: [WritingPrompts!]
+}
+
+type WritingPrompts {
+  name: String!
+  prompt: String!
+  example: String!
+}
+
+type WarmUp @model {
+  id: ID!
+  title: String!
+  label: String!
+  stage: String!
+  type: String!
+  language: Language!
+  SELTypes: [ID!]!
+  instructions: Instructions!
+  inputs: Inputs!
+  breakdown: Breakdown!
+}
+
+type Content {
+  video: Boolean!
+  link: String
+  title: String!
+  artist: String!
+  text: [String!]!
+}
+
+type Tool {
+  name: String!
+  color: String!
+  icon: String!
+}
+
+type CoreLesson @model {
+  id: ID!
+  title: String!
+  label: String!
+  stage: String!
+  type: String!
+  language: Language!
+  SELTypes: [ID!]!
+  instructions: Instructions!
+  content: Content!
+  tools: [Tool!]!
+  breakdown: Breakdown!
+}
+
+type Activity @model {
+  id: ID!
+  title: String!
+  label: String!
+  stage: String!
+  type: String!
+  language: Language!
+  SELTypes: [ID!]!
+  instructions: Instructions!
+  lineNumber: Int
+  writingPrompts: [WritingPrompts!]!
+  breakdown: Breakdown!
+}

@@ -1,7 +1,8 @@
 import React, { useContext, useState, Suspense, lazy } from 'react';
-import { ThemeContext } from '../contexts/ThemeContext';
+import { GlobalContext } from '../contexts/GlobalContext';
 import PageHeaderBar from './Header/PageHeaderBar';
 import Login from './Auth/Login';
+const Confirmation = lazy(() => import ('./Auth/Confirmation'));
 const Dashboard = lazy(() => import('./Dashboard/Dashboard'));
 const Registration = lazy(() => import('./Auth/Register'));
 import { 
@@ -11,48 +12,58 @@ import {
     Redirect,
  } from 'react-router-dom';
 import PrivateRoute from './Auth/PrivateRoute';
+import AuthRoutes from './Auth/AuthRoutes';
 // import Lesson from './Lesson/Lesson';
 
 const MainRouter: React.FC = () => {
-    const { theme } = useContext(ThemeContext);
-    const [ isAuthenticated, setIsAuthenticated ] = useState(false);
+    const { theme, state } = useContext(GlobalContext);
 
-    let loginLinks = !isAuthenticated ? [
-        {
-        path: "/register",
-        name: "Register"
-        },
-        {
-        path: "/",
-        name: "Login"
-        },
-        ] : null
+    const redirectLocation = !state.isAuthenticated ? "/login" : "/dashboard";
 
     return (
         <Router>
+            { console.log(state) }
             <div className={`min-h-screen w-screen ${theme.bg} flex flex-col`}>
-                <PageHeaderBar links={loginLinks} />
+                <PageHeaderBar />
                 <Suspense fallback={<div>Loading...</div>}>
                     <Switch>
-                        <Route 
-                            exact
-                            path="/"
-                            render={() => (
-                                <Login />
-                            )}
-                        />
-                        <Route 
-                            path="/register"
-                            render={() => (
-                                <Registration />  
-                            )} 
-                        />
-                        <PrivateRoute path="/dashboard" isAuthenticated={isAuthenticated}>
+                        {/* <AuthRoutes> */}
+                            <Route 
+                                path="/login"
+                                render={() => (
+                                    <Login />
+                                )}
+                            />
+                            <Route 
+                                path="/register"
+                                render={() => (
+                                    <Registration />  
+                                )} 
+                            />
+                            <Route 
+                                path="/confirm"
+                                render={() => (
+                                    <Confirmation />  
+                                )} 
+                            />
+                        {/* </AuthRoutes> */}
+                        <PrivateRoute path="/dashboard" >
                             <Dashboard />  
                         </PrivateRoute>
                         {/* <PrivateRoute path="/lesson" isAuthenticated={isAuthenticated}>
                             <Lesson />
                         </PrivateRoute> */}
+                        <Route 
+                            exact
+                            path="/"
+                            render={({ location }) => (
+                                <Redirect 
+                                    to={{
+                                    pathname: redirectLocation,
+                                    state: { from: location }
+                                }}/>
+                            )} 
+                        />
                     </Switch>
                 </Suspense>
             </div>

@@ -1,7 +1,3 @@
-import React from 'react';
-
-
-
 export interface LessonStateType  {
     status: string;
     error: string;

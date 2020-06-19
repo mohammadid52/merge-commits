@@ -10,6 +10,17 @@
             "StackName": "amplify-demoselready-dev-205442",
             "StackId": "arn:aws:cloudformation:us-east-1:249198924856:stack/amplify-demoselready-dev-205442/8f2b9630-ae70-11ea-bb02-0e3edd8361ed",
             "AmplifyAppId": "d1dpu9pt5d4yr2"
+        },
+        "categories": {
+            "hosting": {
+                "amplifyhosting": {
+                    "appId": "d1dpu9pt5d4yr2",
+                    "type": "cicd"
+                }
+            },
+            "auth": {
+                "demoselreadydcd2459b": {}
+            }
         }
     }
 }

@@ -1,21 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { GlobalContext } from '../../contexts/GlobalContext';
 import {
     Route,
     Redirect,
   } from "react-router-dom";
 
 interface PrivateRouteProps {
-    isAuthenticated: boolean
     path: string
     children: React.ReactNode
 }
 
-const PrivateRoute = ({isAuthenticated, children, path}: PrivateRouteProps) => {
+const PrivateRoute = ({children, path}: PrivateRouteProps) => {
+    const { state } = useContext(GlobalContext);
+    console.log('priv')
     return (
         <Route 
         path={path}
         render={({ location }) =>
-            isAuthenticated ? (
+            state.isAuthenticated ? (
                 children
             ) : (
                 <Redirect
