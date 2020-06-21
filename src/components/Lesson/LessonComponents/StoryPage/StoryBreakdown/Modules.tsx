@@ -1,12 +1,12 @@
 import React from 'react';
 
-const keywordCapitilizer = str => {
+const keywordCapitilizer = (str: string) => {
     let capitalizedStr = str.replace(/^\w/, char => char.toUpperCase());
     return capitalizedStr;
 }
 
 
-const Modules = props => {
+const Modules = (props: any) => {
     const { additional } = props;
 
     if (!additional) {
@@ -16,11 +16,11 @@ const Modules = props => {
     return (
         <div className="w-2/10 flex flex-col text-gray-200 ml-4">
             {
-                additional.map((item, key) => (
+                additional.map((item: any, key: number) => (
                     <div key={key} className={`bg-dark-blue font-open font-bold h-32 shadow-2 rounded px-4 py-2 ${key === additional.length - 1 ? '' : 'mb-2'}`}>
                         <h3>{keywordCapitilizer(item.name)}:</h3>
                         <div className="w-full px-2 overflow-scroll">
-                            {   item.text ? item.text.map((word, key) => (
+                            {   item.text ? item.text.map((word: string, key: number) => (
                                     <p key={key} className="text-xl">
                                         { word }
                                     </p>

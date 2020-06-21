@@ -17,7 +17,7 @@ interface dataObject {
 }
 
 export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
-    const [ data, setData ] = useState();
+    const [ data, setData ] = useState<dataObject>();
     const [ state, dispatch ] = useReducer(lessonReducer, lessonState);
     const [ lightOn, setLightOn ] = useState(false);
 
@@ -46,9 +46,9 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     }, []);
 
     useEffect(() => {
-        if (data){
+        if (data) {
             const wordBank: Array<string> = ['Mimo provoz'];
-            const lessonPlan = data.lessonPlan;
+            const lessonPlan: any = data.lessonPlan
             let pagesArray = [
                 {
                     type: 'intro',

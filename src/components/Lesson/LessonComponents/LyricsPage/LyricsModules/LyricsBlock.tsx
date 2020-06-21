@@ -109,28 +109,28 @@ const LyricsBlock = (props: LyricsBlockProps) => {
 
     const handleSelect = () => {
         if (color) {
-            let selection = window.getSelection()
-            let anchorId = selection.anchorNode.parentNode.id;
-            let focusId = selection.focusNode.parentNode.id;
-            let textArr: any[] = [];
-            for ( let i = parseInt(anchorId); i < (parseInt(focusId) + 1); i++ ) {
-                textArr.push(document.getElementById(i.toString()).innerText)
-            }
+            // let selection = window.getSelection()
+            // let anchorId = selection.anchorNode.parentNode.id;
+            // let focusId = selection.focusNode.parentNode.id;
+            // let textArr: any[] = [];
+            // for ( let i = parseInt(anchorId); i < (parseInt(focusId) + 1); i++ ) {
+            //     textArr.push(document.getElementById(i.toString()).innerText)
+            // }
 
-            setSelected(selected => {
-                return (
-                    [
-                        ...selected,
-                        {
-                            id: selected.length + 1,
-                            anchor: anchorId,
-                            focus: focusId,
-                            color: color,
-                            content: textArr,
-                        }
-                    ]
-                )
-            })
+            // setSelected(selected => {
+            //     return (
+            //         [
+            //             ...selected,
+            //             {
+            //                 id: selected.length + 1,
+            //                 anchor: anchorId,
+            //                 focus: focusId,
+            //                 color: color,
+            //                 content: textArr,
+            //             }
+            //         ]
+            //     )
+            // })
         }
     }
 
