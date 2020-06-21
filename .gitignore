@@ -19,6 +19,8 @@ amplify-gradle-config.json
 amplifytools.xcconfig
 
 #breakdowns
-src/components/Lesson/LessonComponents/PoemPage/PoemBreakdown
-src/components/Lesson/LessonComponents/PoemPage/PoemBreakdown
-src/components/Lesson/LessonComponents/LyricsPage/LyricsBreakdown
+src/components/Lesson/LessonComponents/PoemPage/PoemBreakdown/*
+
+src/components/Lesson/LessonComponents/StoryPage/StoryBreakdown/*
+
+src/components/Lesson/LessonComponents/LyricsPage/LyricsBreakdown/*

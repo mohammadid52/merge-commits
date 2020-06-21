@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { PageContext } from '../../../PageContext';
+import { LessonContext } from '../../../../../contexts/LessonContext';
 
-const ReflectionQuestions = props => {
+const ReflectionQuestions = () => {
     const [ question, setQuestion ] = useState(0);
-    const { state } = useContext(PageContext);
+    const { state } = useContext(LessonContext);
     const questArr = state.data.lesson.components.warm_up.content.reflection_questions;
 
     const nextQuestion = () => {
