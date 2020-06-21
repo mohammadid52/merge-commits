@@ -2,7 +2,7 @@ import React, { useState, useReducer } from 'react';
 import { globalReducer } from '../reducers/GlobalReducer';
 import { globalState } from '../state/GlobalState';
 
-const pageThemes = {
+export const pageThemes = {
     light: {
         bg: 'bg-gray-200',
         elem: {

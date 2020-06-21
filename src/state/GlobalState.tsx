@@ -1,15 +1,27 @@
 export interface globalStateType  {
-    status: string;
-    error: string;
+    status: string
+    error: string
     isAuthenticated: boolean
     user: {
-        [key: string]: any;
+        authId: string,
+        email: string,
+        firstName: string,
+        lastName: string,
+        language: string,
+        role: string,
     }
 }
 
 export const globalState: globalStateType = {
     status: '',
     error: '',
-    isAuthenticated: true,
-    user: {},
+    isAuthenticated: false,
+    user: {
+        authId: '',
+        email: '',
+        firstName: '',
+        lastName: '',
+        language: '',
+        role: '',
+    },
 }

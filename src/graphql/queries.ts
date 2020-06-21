@@ -3,9 +3,10 @@
 // this is an auto generated file. This will be overwritten
 
 export const getPerson = /* GraphQL */ `
-  query GetPerson($email: String!) {
-    getPerson(email: $email) {
+  query GetPerson($email: String!, $authId: String!) {
+    getPerson(email: $email, authId: $authId) {
       id
+      authId
       status
       email
       role
@@ -19,6 +20,7 @@ export const getPerson = /* GraphQL */ `
         phone
         contact {
           id
+          authId
           status
           email
           role
@@ -55,6 +57,7 @@ export const getPerson = /* GraphQL */ `
         }
         classroomTeacher {
           id
+          authId
           status
           email
           role
@@ -72,6 +75,7 @@ export const getPerson = /* GraphQL */ `
         }
         fellow {
           id
+          authId
           status
           email
           role
@@ -114,6 +118,7 @@ export const getPerson = /* GraphQL */ `
 export const listPersons = /* GraphQL */ `
   query ListPersons(
     $email: String
+    $authId: ModelStringKeyConditionInput
     $filter: ModelPersonFilterInput
     $limit: Int
     $nextToken: String
@@ -121,6 +126,7 @@ export const listPersons = /* GraphQL */ `
   ) {
     listPersons(
       email: $email
+      authId: $authId
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -128,6 +134,7 @@ export const listPersons = /* GraphQL */ `
     ) {
       items {
         id
+        authId
         status
         email
         role
@@ -175,6 +182,7 @@ export const getCurriculum = /* GraphQL */ `
       contributors {
         items {
           id
+          authId
           status
           email
           role
@@ -201,11 +209,6 @@ export const getCurriculum = /* GraphQL */ `
           nextToken
         }
         grade
-        lessonPlan {
-          stage
-          type
-          breakdown
-        }
         artist {
           images
           name
@@ -317,6 +320,7 @@ export const getCourse = /* GraphQL */ `
         phone
         contact {
           id
+          authId
           status
           email
           role
@@ -338,6 +342,7 @@ export const getCourse = /* GraphQL */ `
       }
       classroomTeacher {
         id
+        authId
         status
         email
         role
@@ -375,6 +380,7 @@ export const getCourse = /* GraphQL */ `
       }
       fellow {
         id
+        authId
         status
         email
         role
@@ -460,6 +466,7 @@ export const listCourses = /* GraphQL */ `
         }
         classroomTeacher {
           id
+          authId
           status
           email
           role
@@ -477,6 +484,7 @@ export const listCourses = /* GraphQL */ `
         }
         fellow {
           id
+          authId
           status
           email
           role
@@ -520,6 +528,7 @@ export const getInstitution = /* GraphQL */ `
       phone
       contact {
         id
+        authId
         status
         email
         role
@@ -583,6 +592,7 @@ export const listInstitutions = /* GraphQL */ `
         phone
         contact {
           id
+          authId
           status
           email
           role
@@ -686,13 +696,124 @@ export const getClass = /* GraphQL */ `
       id
       courseID
       lessonID
-      lesson {
+      lessonPlan {
+        stage
+        type
+        breakdown
+      }
+      artist {
+        images
+        name
+        bio
+      }
+      quotes {
+        text
+        source
+      }
+      warmUp {
         id
         title
-        contributors {
-          nextToken
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
         }
-        grade
+        inputs {
+          title
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      coreLesson {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        content {
+          video
+          link
+          title
+          artist
+          text
+        }
+        tools {
+          name
+          color
+          icon
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      activity {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        lineNumber
+        writingPrompts {
+          name
+          prompt
+          example
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      data {
+        studentID
+        dataObjects {
+          type
+          data
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listClasss = /* GraphQL */ `
+  query ListClasss(
+    $filter: ModelClassFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClasss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        courseID
+        lessonID
         lessonPlan {
           stage
           type
@@ -703,18 +824,9 @@ export const getClass = /* GraphQL */ `
           name
           bio
         }
-        language
         quotes {
           text
           source
-        }
-        primarySELType {
-          id
-          structureID
-          name
-          description
-          createdAt
-          updatedAt
         }
         warmUp {
           id
@@ -750,40 +862,6 @@ export const getClass = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        createdAt
-        updatedAt
-      }
-      data {
-        studentID
-        dataObjects {
-          type
-          data
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listClasss = /* GraphQL */ `
-  query ListClasss(
-    $filter: ModelClassFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listClasss(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        courseID
-        lessonID
-        lesson {
-          id
-          title
-          grade
-          language
-          createdAt
-          updatedAt
-        }
         data {
           studentID
         }
@@ -802,6 +880,7 @@ export const getLesson = /* GraphQL */ `
       contributors {
         items {
           id
+          authId
           status
           email
           role
@@ -820,11 +899,6 @@ export const getLesson = /* GraphQL */ `
         nextToken
       }
       grade
-      lessonPlan {
-        stage
-        type
-        breakdown
-      }
       artist {
         images
         name
@@ -951,11 +1025,6 @@ export const listLessons = /* GraphQL */ `
           nextToken
         }
         grade
-        lessonPlan {
-          stage
-          type
-          breakdown
-        }
         artist {
           images
           name

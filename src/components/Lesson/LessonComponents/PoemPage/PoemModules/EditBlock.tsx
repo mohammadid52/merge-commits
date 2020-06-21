@@ -1,0 +1,63 @@
+import React, { useState, useEffect, useContext } from 'react';
+import { LessonContext } from '../../../../../contexts/LessonContext';
+
+interface EditBlockProps {
+    editMode: {
+        open: boolean;
+        input: string;
+    }
+}
+
+const EditBlock = (props: EditBlockProps) => {
+    const { editMode } = props;
+    const { dispatch } = useContext(LessonContext);
+    const [ editInput, setEditInput ] = useState({
+        title: '',
+        text: editMode.input,
+    })
+
+    useEffect(() => {
+        let displayProps = {
+            title: editInput.title,
+            text: editInput.text,
+        }
+
+        dispatch({
+            type: 'SET_DISPLAY_PROPS',
+            payload: {
+                name: 'poem',
+                content: displayProps,
+            },
+        })
+    }, [editInput])
+
+    const handleChange = (e: { target: { id: string; value: string; }; }) => {
+        const {id, value} = e.target
+        setEditInput(editInput => {
+            return {
+                ...editInput,
+                [id]: value,
+            }
+        })
+    }
+
+    return (
+        <div className="bg-dark-blue w-full h-168 flex flex-col justify-between rounded-sm shadow-2 px-8 py-6">
+            <h3 className="text-xl text-gray-200 font-open font-bold mb-3 border-b border-gray-700">
+                Final Edits
+            </h3>
+            <div className="w-full h-140 flex flex-col justify-center">
+                <label className="w-7/10 text-gray-200 text-lg font-open font-bold mb-2" htmlFor="title">
+                    Your poem's title
+                </label>
+                <input id="title" name="title" className="bg-gray-300 w-7/10 h-12 mb-4 rounded-lg px-4 shadow-2" type="text" 
+                value={editInput.title} onChange={handleChange} 
+                placeholder="Choose a title"/>
+                <textarea id="text" className="bg-gray-300 w-full h-112 p-8 text-2xl text-gray-800 rounded-sm shadow-2" 
+                value={editInput.text} onChange={handleChange}/>
+            </div>
+        </div>
+    )
+}
+
+export default EditBlock;

@@ -4,9 +4,9 @@ type LessonActions =
 |   {
     type: 'SET_INITIAL_STATE';
     payload: {
-        data: any;
+        data?: any;
         pages: any;
-        word_bank: any;
+        word_bank?: any;
         }
     }
 |   {

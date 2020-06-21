@@ -6,6 +6,7 @@ export const onCreatePerson = /* GraphQL */ `
   subscription OnCreatePerson {
     onCreatePerson {
       id
+      authId
       status
       email
       role
@@ -19,6 +20,7 @@ export const onCreatePerson = /* GraphQL */ `
         phone
         contact {
           id
+          authId
           status
           email
           role
@@ -55,6 +57,7 @@ export const onCreatePerson = /* GraphQL */ `
         }
         classroomTeacher {
           id
+          authId
           status
           email
           role
@@ -72,6 +75,7 @@ export const onCreatePerson = /* GraphQL */ `
         }
         fellow {
           id
+          authId
           status
           email
           role
@@ -115,6 +119,7 @@ export const onUpdatePerson = /* GraphQL */ `
   subscription OnUpdatePerson {
     onUpdatePerson {
       id
+      authId
       status
       email
       role
@@ -128,6 +133,7 @@ export const onUpdatePerson = /* GraphQL */ `
         phone
         contact {
           id
+          authId
           status
           email
           role
@@ -164,6 +170,7 @@ export const onUpdatePerson = /* GraphQL */ `
         }
         classroomTeacher {
           id
+          authId
           status
           email
           role
@@ -181,6 +188,7 @@ export const onUpdatePerson = /* GraphQL */ `
         }
         fellow {
           id
+          authId
           status
           email
           role
@@ -224,6 +232,7 @@ export const onDeletePerson = /* GraphQL */ `
   subscription OnDeletePerson {
     onDeletePerson {
       id
+      authId
       status
       email
       role
@@ -237,6 +246,7 @@ export const onDeletePerson = /* GraphQL */ `
         phone
         contact {
           id
+          authId
           status
           email
           role
@@ -273,6 +283,7 @@ export const onDeletePerson = /* GraphQL */ `
         }
         classroomTeacher {
           id
+          authId
           status
           email
           role
@@ -290,6 +301,7 @@ export const onDeletePerson = /* GraphQL */ `
         }
         fellow {
           id
+          authId
           status
           email
           role
@@ -337,6 +349,7 @@ export const onCreateCurriculum = /* GraphQL */ `
       contributors {
         items {
           id
+          authId
           status
           email
           role
@@ -363,11 +376,6 @@ export const onCreateCurriculum = /* GraphQL */ `
           nextToken
         }
         grade
-        lessonPlan {
-          stage
-          type
-          breakdown
-        }
         artist {
           images
           name
@@ -436,6 +444,7 @@ export const onUpdateCurriculum = /* GraphQL */ `
       contributors {
         items {
           id
+          authId
           status
           email
           role
@@ -462,11 +471,6 @@ export const onUpdateCurriculum = /* GraphQL */ `
           nextToken
         }
         grade
-        lessonPlan {
-          stage
-          type
-          breakdown
-        }
         artist {
           images
           name
@@ -535,6 +539,7 @@ export const onDeleteCurriculum = /* GraphQL */ `
       contributors {
         items {
           id
+          authId
           status
           email
           role
@@ -561,11 +566,6 @@ export const onDeleteCurriculum = /* GraphQL */ `
           nextToken
         }
         grade
-        lessonPlan {
-          stage
-          type
-          breakdown
-        }
         artist {
           images
           name
@@ -639,6 +639,7 @@ export const onCreateCourse = /* GraphQL */ `
         phone
         contact {
           id
+          authId
           status
           email
           role
@@ -660,6 +661,7 @@ export const onCreateCourse = /* GraphQL */ `
       }
       classroomTeacher {
         id
+        authId
         status
         email
         role
@@ -697,6 +699,7 @@ export const onCreateCourse = /* GraphQL */ `
       }
       fellow {
         id
+        authId
         status
         email
         role
@@ -773,6 +776,7 @@ export const onUpdateCourse = /* GraphQL */ `
         phone
         contact {
           id
+          authId
           status
           email
           role
@@ -794,6 +798,7 @@ export const onUpdateCourse = /* GraphQL */ `
       }
       classroomTeacher {
         id
+        authId
         status
         email
         role
@@ -831,6 +836,7 @@ export const onUpdateCourse = /* GraphQL */ `
       }
       fellow {
         id
+        authId
         status
         email
         role
@@ -907,6 +913,7 @@ export const onDeleteCourse = /* GraphQL */ `
         phone
         contact {
           id
+          authId
           status
           email
           role
@@ -928,6 +935,7 @@ export const onDeleteCourse = /* GraphQL */ `
       }
       classroomTeacher {
         id
+        authId
         status
         email
         role
@@ -965,6 +973,7 @@ export const onDeleteCourse = /* GraphQL */ `
       }
       fellow {
         id
+        authId
         status
         email
         role
@@ -1037,6 +1046,7 @@ export const onCreateInstitution = /* GraphQL */ `
       phone
       contact {
         id
+        authId
         status
         email
         role
@@ -1087,6 +1097,7 @@ export const onUpdateInstitution = /* GraphQL */ `
       phone
       contact {
         id
+        authId
         status
         email
         role
@@ -1137,6 +1148,7 @@ export const onDeleteInstitution = /* GraphQL */ `
       phone
       contact {
         id
+        authId
         status
         email
         role
@@ -1286,69 +1298,97 @@ export const onCreateClass = /* GraphQL */ `
       id
       courseID
       lessonID
-      lesson {
+      lessonPlan {
+        stage
+        type
+        breakdown
+      }
+      artist {
+        images
+        name
+        bio
+      }
+      quotes {
+        text
+        source
+      }
+      warmUp {
         id
         title
-        contributors {
-          nextToken
-        }
-        grade
-        lessonPlan {
-          stage
-          type
-          breakdown
-        }
-        artist {
-          images
-          name
-          bio
-        }
+        label
+        stage
+        type
         language
-        quotes {
+        SELTypes
+        instructions {
+          video
+          link
           text
-          source
         }
-        primarySELType {
-          id
-          structureID
+        inputs {
+          title
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      coreLesson {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        content {
+          video
+          link
+          title
+          artist
+          text
+        }
+        tools {
           name
-          description
-          createdAt
-          updatedAt
+          color
+          icon
         }
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
+        breakdown {
+          included
+          reflectionQuestions
         }
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
+        createdAt
+        updatedAt
+      }
+      activity {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
         }
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
+        lineNumber
+        writingPrompts {
+          name
+          prompt
+          example
+        }
+        breakdown {
+          included
+          reflectionQuestions
         }
         createdAt
         updatedAt
@@ -1371,69 +1411,97 @@ export const onUpdateClass = /* GraphQL */ `
       id
       courseID
       lessonID
-      lesson {
+      lessonPlan {
+        stage
+        type
+        breakdown
+      }
+      artist {
+        images
+        name
+        bio
+      }
+      quotes {
+        text
+        source
+      }
+      warmUp {
         id
         title
-        contributors {
-          nextToken
-        }
-        grade
-        lessonPlan {
-          stage
-          type
-          breakdown
-        }
-        artist {
-          images
-          name
-          bio
-        }
+        label
+        stage
+        type
         language
-        quotes {
+        SELTypes
+        instructions {
+          video
+          link
           text
-          source
         }
-        primarySELType {
-          id
-          structureID
+        inputs {
+          title
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      coreLesson {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        content {
+          video
+          link
+          title
+          artist
+          text
+        }
+        tools {
           name
-          description
-          createdAt
-          updatedAt
+          color
+          icon
         }
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
+        breakdown {
+          included
+          reflectionQuestions
         }
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
+        createdAt
+        updatedAt
+      }
+      activity {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
         }
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
+        lineNumber
+        writingPrompts {
+          name
+          prompt
+          example
+        }
+        breakdown {
+          included
+          reflectionQuestions
         }
         createdAt
         updatedAt
@@ -1456,69 +1524,97 @@ export const onDeleteClass = /* GraphQL */ `
       id
       courseID
       lessonID
-      lesson {
+      lessonPlan {
+        stage
+        type
+        breakdown
+      }
+      artist {
+        images
+        name
+        bio
+      }
+      quotes {
+        text
+        source
+      }
+      warmUp {
         id
         title
-        contributors {
-          nextToken
-        }
-        grade
-        lessonPlan {
-          stage
-          type
-          breakdown
-        }
-        artist {
-          images
-          name
-          bio
-        }
+        label
+        stage
+        type
         language
-        quotes {
+        SELTypes
+        instructions {
+          video
+          link
           text
-          source
         }
-        primarySELType {
-          id
-          structureID
+        inputs {
+          title
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      coreLesson {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        content {
+          video
+          link
+          title
+          artist
+          text
+        }
+        tools {
           name
-          description
-          createdAt
-          updatedAt
+          color
+          icon
         }
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
+        breakdown {
+          included
+          reflectionQuestions
         }
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
+        createdAt
+        updatedAt
+      }
+      activity {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
         }
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
+        lineNumber
+        writingPrompts {
+          name
+          prompt
+          example
+        }
+        breakdown {
+          included
+          reflectionQuestions
         }
         createdAt
         updatedAt
@@ -1543,6 +1639,7 @@ export const onCreateLesson = /* GraphQL */ `
       contributors {
         items {
           id
+          authId
           status
           email
           role
@@ -1561,11 +1658,6 @@ export const onCreateLesson = /* GraphQL */ `
         nextToken
       }
       grade
-      lessonPlan {
-        stage
-        type
-        breakdown
-      }
       artist {
         images
         name
@@ -1678,6 +1770,7 @@ export const onUpdateLesson = /* GraphQL */ `
       contributors {
         items {
           id
+          authId
           status
           email
           role
@@ -1696,11 +1789,6 @@ export const onUpdateLesson = /* GraphQL */ `
         nextToken
       }
       grade
-      lessonPlan {
-        stage
-        type
-        breakdown
-      }
       artist {
         images
         name
@@ -1813,6 +1901,7 @@ export const onDeleteLesson = /* GraphQL */ `
       contributors {
         items {
           id
+          authId
           status
           email
           role
@@ -1831,11 +1920,6 @@ export const onDeleteLesson = /* GraphQL */ `
         nextToken
       }
       grade
-      lessonPlan {
-        stage
-        type
-        breakdown
-      }
       artist {
         images
         name

@@ -1,7 +1,7 @@
 export interface LessonStateType  {
     status: string;
     error: string;
-    data: {
+    data?: {
         [key: string]: any;
     }
     currentPage: number;
@@ -18,7 +18,7 @@ export interface LessonStateType  {
         };
     }>
     new_words: Array<string>;
-    word_bank: Array<string>;
+    word_bank?: Array<string>;
     lesson_complete: boolean;
 }
 

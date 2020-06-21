@@ -12,7 +12,6 @@ interface PrivateRouteProps {
 
 const PrivateRoute = ({children, path}: PrivateRouteProps) => {
     const { state } = useContext(GlobalContext);
-    console.log('priv')
     return (
         <Route 
         path={path}

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Auth } from 'aws-amplify';
+import {
+    useHistory
+} from 'react-router-dom';
 
 const Registration = () => {
+    const history = useHistory();
     const [ input, setInput ] = useState({
         email: '',
         code: '',
@@ -13,6 +17,7 @@ const Registration = () => {
         try {
           let res = await Auth.confirmSignUp(username, code);
           console.log(res)
+          history.push('/login');
         } catch (error) {
             console.log('error confirming sign up', error);
         }
@@ -39,7 +44,7 @@ const Registration = () => {
     return (
         <div className="w-full h-200 flex items-center justify-center">
             <div className="w-120 h-120 bg-gray-300 p-8 flex flex-col items-center justify-around shadow-elem-dark rounded">
-                <h1 className="text-3xl font-open font-bold">Register</h1>
+                <h1 className="text-3xl font-open font-bold">Confirm your e-mail</h1>
                 <div className="flex flex-col justify-around items-center">
                     <label htmlFor="email">Email</label>
                     <input type="text" id="email" name="email" value={input.email} onChange={handleChange}/>

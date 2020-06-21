@@ -35,22 +35,23 @@ enum Role {
 }
 
 type Person @model 
-@key(fields: ["email"]) 
+@key(fields: ["email", "authId"]) 
 @key(name: "byContributor", fields: ["id"])
 {
   id: ID!
+  authId: String!
   status: PersonStatus!
   email: String!
   role: Role!
   firstName: String!
   preferredName: String
   lastName: String!
-  institution: Institution! @connection
+  institution: Institution @connection
   externalId: String
   grade: Int
   courses: [Course]
   phone: String
-  birthdate: AWSDate!
+  birthdate: AWSDate
   image: String
   language: Language!
 }
@@ -131,11 +132,22 @@ type ClassroomData {
   dataObjects: [DataObject!]!
 }
 
+type ComponentSummary {
+  stage: String!
+  type: String!
+  breakdown: Boolean!
+}
+
 type Class @model {
   id: ID!
   courseID: ID!
   lessonID: ID!
-  lesson: Lesson! @connection
+  lessonPlan: [ComponentSummary!]!
+  artist: Artist!
+  quotes: [Quote]!
+  warmUp: WarmUp!
+  coreLesson: CoreLesson!
+  activity: Activity!
   data: [ClassroomData]!
 }
 
@@ -144,7 +156,6 @@ type Lesson @model @key(fields: ["id"]) {
   title: String! 
   contributors: [Person]! @connection(keyName: "byContributor", fields: ["id"])
   grade: [Int]
-  lessonPlan: [LessonComponent]!
   artist: Artist!
   language: Language!
   quotes: [Quote]!
@@ -183,7 +194,7 @@ type WarmUp @model {
   stage: String!
   type: String!
   language: Language!
-  SELTypes: [ID!]!
+  SELTypes: [ID!]
   instructions: Instructions!
   inputs: Inputs!
   breakdown: Breakdown!
@@ -210,7 +221,7 @@ type CoreLesson @model {
   stage: String!
   type: String!
   language: Language!
-  SELTypes: [ID!]!
+  SELTypes: [ID!]
   instructions: Instructions!
   content: Content!
   tools: [Tool!]!
@@ -224,7 +235,7 @@ type Activity @model {
   stage: String!
   type: String!
   language: Language!
-  SELTypes: [ID!]!
+  SELTypes: [ID!]
   instructions: Instructions!
   lineNumber: Int
   writingPrompts: [WritingPrompts!]!

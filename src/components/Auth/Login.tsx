@@ -1,11 +1,15 @@
 import React, { useContext, useState } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
+import { useCookies } from 'react-cookie';
 import { 
+    useHistory,
     Link
 } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 
 const Login = () => {
+    const [ cookies, setCookie ] = useCookies(['auth']);
+    const history = useHistory();
     const { state, dispatch } = useContext(GlobalContext);
     const [ input, setInput ] = useState({
         email: '',
@@ -19,7 +23,9 @@ const Login = () => {
         try {
             const user = await Auth.signIn(username, password);
             console.log({ user })
-            dispatch({type: "SET_USER", payload: {user}})
+            dispatch({type: "LOG_IN", payload: { email: username, authId: user.username }})
+            setCookie('auth', { email: username, authId: user.username }, { secure: false })
+            history.push('/dashboard')
         } catch (error) {
             console.log('error signing in', error);
         }
