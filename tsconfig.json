@@ -6,6 +6,7 @@
       "dom.iterable",
       "esnext"
     ],
+    "outDir": "build",
     "baseUrl": "./src/index",
     "allowJs": true,
     "skipLibCheck": true,
@@ -23,9 +24,11 @@
     "src"
   ],
   "exclude": [
+      "build",
       "bin",
       "routes",
       "public",
-      "node-modules"
+      "node-modules",
+      "src/aws-exports.js"
   ]
 }

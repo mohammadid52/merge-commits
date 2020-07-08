@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { storyBreakdownProps } from './StoryActivity';
+import React, { useState, useEffect, useContext } from 'react';
+import { LessonContext } from '../../../../../contexts/LessonContext';
+import { useCookies } from 'react-cookie';
+import { string } from 'prop-types';
 
 type inputProp = [{ name: string; example: string; prompt: string; }];
 interface ModulesProps {
     inputs: inputProp;
-    breakdownProps: storyBreakdownProps;
-    setBreakdownProps: React.Dispatch<React.SetStateAction<storyBreakdownProps>>;
 }
 
 const initialInputs = (input: inputProp) => {
@@ -16,38 +16,50 @@ const initialInputs = (input: inputProp) => {
     return tempObj;
 }
 
-const keywordParser = (str: string) => {
-    let tempWord = '';
-    let initialArray = Array.from(str);
-    let finalArray = [];
-    initialArray.forEach(letter => {
-        if (letter !== ',') {
-            tempWord = tempWord + letter;
-        } else {
-            finalArray.push(tempWord);
-            tempWord = '';
-        }
-    })
-    
-    finalArray.push(tempWord);
-
-    return finalArray;
-}
-
 const Modules = (props: ModulesProps) => {
-    const { inputs, breakdownProps, setBreakdownProps, } = props;
-    const [ formInputs, setFormInputs ] = useState(initialInputs(inputs));
+    const { inputs } = props
+    const { state, dispatch } = useContext(LessonContext);
+    const [ cookies, setCookie ] = useCookies(['story'])
+    const [ formInputs, setFormInputs ] = useState(initialInputs(inputs))
 
     useEffect(() => {
-        // setBreakdownProps({
-        //     ...breakdownProps,
-        //     additional: breakdownProps.additional.map(prop => {
-        //         return {
-        //             ...prop,
-        //             text: keywordParser(formInputs[prop.name]),
-        //         }
-        //     })
-        // })
+        if ( cookies.story ) {
+            cookies.story.additional.map((item: {name: string, input: string}) => {
+                setFormInputs(prev => {
+                    return {
+                        ...prev,
+                        [item.name]: item.input,
+                    }
+                })
+            })
+        }
+    }, [])
+
+
+    useEffect(() => {
+        if ( state.componentState.story 
+            && state.componentState.story.additional.length > 0 ) {
+            let tempArray: Array<{name: string, input: string}> = [];
+            inputs.forEach(input => {
+                let tempObj = {
+                    name: input.name,
+                    input: formInputs[input.name]
+                }
+                
+                tempArray.push(tempObj)
+            })
+
+            dispatch({
+                type: 'UPDATE_COMPONENT_STATE',
+                payload: {
+                    componentName: 'story',
+                    inputName: 'additional',
+                    content: tempArray
+                }
+            })
+
+            setCookie('story', {...cookies.story, additional: tempArray})
+        }
     }, [formInputs])
 
     const handleFormInputChange = (e: { target: { id: string; value: string; }; }) => {

@@ -1,19 +1,19 @@
 {
     "dev": {
         "awscloudformation": {
-            "AuthRoleName": "amplify-demoselready-dev-175834-authRole",
-            "UnauthRoleArn": "arn:aws:iam::249198924856:role/amplify-demoselready-dev-175834-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::249198924856:role/amplify-demoselready-dev-175834-authRole",
+            "AuthRoleName": "amplify-demoselready-dev-184224-authRole",
+            "UnauthRoleArn": "arn:aws:iam::249198924856:role/amplify-demoselready-dev-184224-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::249198924856:role/amplify-demoselready-dev-184224-authRole",
             "Region": "us-east-1",
-            "DeploymentBucketName": "amplify-demoselready-dev-175834-deployment",
-            "UnauthRoleName": "amplify-demoselready-dev-175834-unauthRole",
-            "StackName": "amplify-demoselready-dev-175834",
-            "StackId": "arn:aws:cloudformation:us-east-1:249198924856:stack/amplify-demoselready-dev-175834/bcb186e0-b245-11ea-8e3a-127e1ad2bd25",
-            "AmplifyAppId": "d2cl4ekp6ca3yv"
+            "DeploymentBucketName": "amplify-demoselready-dev-184224-deployment",
+            "UnauthRoleName": "amplify-demoselready-dev-184224-unauthRole",
+            "StackName": "amplify-demoselready-dev-184224",
+            "StackId": "arn:aws:cloudformation:us-east-1:249198924856:stack/amplify-demoselready-dev-184224/032167c0-bc83-11ea-a9a8-0ed4cff9b69d",
+            "AmplifyAppId": "d2tb9cu6930w1"
         },
         "categories": {
             "auth": {
-                "demoselready6134b46d": {}
+                "demoselready37a4b1c2": {}
             }
         }
     }

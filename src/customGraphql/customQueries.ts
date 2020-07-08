@@ -1,6 +1,22 @@
-export const getClass = /* GraphQL */ `
-  query GetClass($id: ID!) {
-    getClass(id: $id) {
+export const getPerson = /* GraphQL */ `
+  query GetPerson($email: String!, $authId: String!) {
+    getPerson(email: $email, authId: $authId) {
+      id
+      authId
+      status
+      email
+      role
+      firstName
+      preferredName
+      lastName
+      language
+    }
+  }
+`;
+
+export const getClassroom = /* GraphQL */ `
+  query GetClassroom($id: ID!) {
+    getClassroom(id: $id) {
       id
       courseID
       lessonID
@@ -86,6 +102,7 @@ export const getClass = /* GraphQL */ `
         }
         lineNumber
         writingPrompts {
+          id
           name
           prompt
           example
@@ -95,13 +112,29 @@ export const getClass = /* GraphQL */ `
           reflectionQuestions
         }
       }
+    }
+  }
+`;
+
+export const getClassroomDataTest = /* GraphQL */ `
+  query GetClassroomDataTest($classroomID: ID!, $studentID: String!) {
+    getClassroomDataTest(classroomID: $classroomID, studentID: $studentID) {
+      lessonProgress
+      classroomID
+      studentID
       data {
-        studentID
-        dataObjects {
-          type
-          data
+        warmUpData {
+          story
+          title
+        }
+        activityData {
+          editInput
+          editMode
+          title
         }
       }
+      createdAt
+      updatedAt
     }
   }
 `;

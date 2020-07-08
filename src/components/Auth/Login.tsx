@@ -11,6 +11,11 @@ const Login = () => {
     const [ cookies, setCookie ] = useCookies(['auth']);
     const history = useHistory();
     const { state, dispatch } = useContext(GlobalContext);
+    const [ message, setMessage ] = useState<{show: boolean, type: string, message: string,}>({
+        show: false,
+        type: '',
+        message: '',
+    })
     const [ input, setInput ] = useState({
         email: '',
         password: '',
@@ -28,6 +33,13 @@ const Login = () => {
             history.push('/dashboard')
         } catch (error) {
             console.log('error signing in', error);
+            setMessage(() => {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: error.message,
+                }
+            })
         }
     }
 
@@ -41,26 +53,37 @@ const Login = () => {
         })
     }
 
-    const handleSubmit = (e: any) => {
-        console.log('log-in attempt')
+    const handleEnter = (e: any) => {
+        if (e.key === 'Enter') {
+            SignIn()
+        }
+    }
+
+    const handleSubmit = () => {
         SignIn()
     }
 
     return (
         <div className="w-full h-200 flex flex-col items-center justify-center">
-            <div className="w-120 h-120 bg-gray-300 p-8 flex flex-col items-center justify-around shadow-elem-dark rounded">
+            <div className="w-140 h-120 bg-gray-200 p-8 flex flex-col items-center shadow-elem-light border border-gray-300 rounded">
                 <h1 className="text-3xl font-open font-bold">Login</h1>
-                <div className="flex flex-col justify-around items-center">
+                <div className="w-full h-12 flex justify-center items-center">
+                    {
+                        message.show ? (
+                            <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                { message.message }
+                            </p>
+                        ) : null
+                    }
+                </div>
+                <div className="w-5/10 flex-grow flex flex-col items-center py-4">
                     <label htmlFor="email">Email</label>
-                    <input type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
+                    <input className="w-full px-2 py-1 mb-4 " type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
                     <label htmlFor="password">Password</label>
-                    <input type="password" id="password" name="password" value={input.password} onChange={handleChange}/>
+                    <input className="w-full px-2 py-1 mb-4" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
                 </div>
-                <div className="flex flex-col justify-center items-center">
-                    <p>New to Iconoclast Artists?</p>
-                    <Link to="/register">Click here!</Link>
-                </div>
-                <button onClick={handleSubmit}>Submit</button>
+                {/* <Link to="/register">Register</Link> */}
+                <button className="w-20 h-12 bg-dark-red text-gray-200 rounded shadow-elem-light mb-4" onClick={handleSubmit}>Submit</button>
             </div>
         </div>
     )

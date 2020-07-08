@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { IconContext } from "react-icons";
 import { FaPlus } from 'react-icons/fa';
+import { useCookies } from 'react-cookie';
 
 interface WritingBlockProps {
     editMode: {
@@ -16,6 +17,7 @@ interface WritingBlockProps {
 
 const WritingBlock = (props: WritingBlockProps) => {
     const { editMode, setEditMode } = props;
+    const [ cookies, setCookie ] = useCookies(['poem']);
     const { state, dispatch } = useContext(LessonContext);
     const lineNo = state.data.activity.lineNumber;
     const promptArray = state.data.activity.writingPrompts;
@@ -35,6 +37,16 @@ const WritingBlock = (props: WritingBlockProps) => {
         lines: initialLines,
     });
 
+    useEffect(() => {
+        if ( cookies.poem && cookies.poem.lines.length >= lineNo ) {
+            setLineState(prev => {
+                return {
+                    ...prev,
+                    lines: cookies.poem.lines
+                }
+            })
+        }
+    }, [])
 
     useEffect(() => {
         let lineArray = lineState.lines.map(line => {
@@ -46,6 +58,7 @@ const WritingBlock = (props: WritingBlockProps) => {
             return content = content + line + '\n'
         });
 
+        
         setEditMode(editInput => {
             return {
                 ...editInput, 
@@ -53,6 +66,31 @@ const WritingBlock = (props: WritingBlockProps) => {
             }
         })
 
+        if ( state.componentState.poem ) {
+            dispatch({
+                type: 'UPDATE_COMPONENT_STATE',
+                payload: {
+                    componentName: 'poem',
+                    inputName: 'lines',
+                    content: lineState.lines
+                }
+            })
+
+            dispatch({
+                type: 'UPDATE_COMPONENT_STATE',
+                payload: {
+                    componentName: 'poem',
+                    inputName: 'editInput',
+                    content: content
+                }
+            })
+
+            setCookie('poem', {
+                ...cookies.poem, 
+                lines: lineState.lines,
+                editInput: content
+            })
+        }
     }, [lineState])
 
     const closeMenus = () => {

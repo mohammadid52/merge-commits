@@ -6,8 +6,6 @@ import { LessonContext } from '../../../../contexts/LessonContext';
 const Banner = () => {
     const { state, theme } = useContext(LessonContext);
     const artistName = state.data.artist.name
-
-    console.log(state.data);
     
     return (
         <div className="w-full flex flex-row justify-center items-center">

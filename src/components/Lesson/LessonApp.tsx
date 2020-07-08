@@ -3,10 +3,11 @@ import { LessonContext } from '../../contexts/LessonContext';
 import Body from './Body/Body';
 import Foot from './Foot/Foot';
 import LessonLoading from './Loading/LessonLoading';
+import LessonHeaderBar from '../Header/LessonHeaderBar';
 
 
 const LessonApp = () => {
-    const { state } = useContext(LessonContext);
+    const { state, theme } = useContext(LessonContext);
 
     if ( state.status !== 'loaded') {
         return (
@@ -15,7 +16,8 @@ const LessonApp = () => {
     }
 
     return (
-        <div className="min-h-full w-screen flex flex-col justify-between" >
+        <div className={`${theme.bg} min-h-full w-screen flex flex-col justify-between`} >
+            <LessonHeaderBar />
             <Body />
             <Foot />
         </div>

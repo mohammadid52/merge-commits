@@ -63,10 +63,14 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
         })
     }
 
+    const forceTheme = (bool: boolean) => {
+        setLightOn(bool)
+    }
+
     const theme = lightOn ? pageThemes.light : pageThemes.dark;
 
     return (
-        <GlobalContext.Provider value={{theme, lightSwitch, state, dispatch}}>
+        <GlobalContext.Provider value={{theme, lightSwitch, forceTheme, state, dispatch}}>
             { children }
         </GlobalContext.Provider>
     )

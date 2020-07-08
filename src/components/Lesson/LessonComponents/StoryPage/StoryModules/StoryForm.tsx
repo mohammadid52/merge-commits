@@ -1,29 +1,67 @@
-import React, { useState } from 'react';
-import { storyBreakdownProps } from './StoryActivity';
+import React, { useState, useContext, useEffect } from 'react';
+import { LessonContext } from '../../../../../contexts/LessonContext';
+import { useCookies } from 'react-cookie';
 
-interface storyFormProps {
-    breakdownProps: storyBreakdownProps;
-    setBreakdownProps: React.Dispatch<React.SetStateAction<storyBreakdownProps>>;
-}
 
-const StoryForm = (props: storyFormProps) => {
-    const { breakdownProps, setBreakdownProps } = props;
+const StoryForm = () => {
+    const { state, dispatch } = useContext(LessonContext)
+    const [ cookies, setCookie ] = useCookies(['story']);
     const [ input, setInput ] = useState({
         title: '',
         story: '',
     })
+
+    useEffect(() => {
+        if ( cookies.story ) {
+            setInput(() => {
+                return {
+                    title: cookies.story.title,
+                    story: cookies.story.story
+                }
+            })
+        }
+    }, [])
+
+
+    useEffect(() => {
+        if ( state.componentState.story ) {
+
+            dispatch({
+                type: 'UPDATE_COMPONENT_STATE',
+                payload: {
+                    componentName: 'story',
+                    inputName: 'title',
+                    content: input.title
+                }
+            })
+
+            setCookie('story', {...cookies.story, title: input.title})
+        }
+    }, [input.title])
+
+    useEffect(() => {
+        if ( state.componentState.story ) {
+
+            dispatch({
+                type: 'UPDATE_COMPONENT_STATE',
+                payload: {
+                    componentName: 'story',
+                    inputName: 'story',
+                    content: input.story
+                }
+            })
+
+            setCookie('story', {...cookies.story, story: input.story })
+        }
+    }, [input.story])
    
     const handleInputChange = (e: { target: { id: string; value: string; }; }) => {
         setInput({
             ...input,
             [e.target.id]: e.target.value
         })
-        setBreakdownProps({
-            ...breakdownProps,
-            [e.target.id]: e.target.value
-        })
     }
-
+    
 
     return (
         <div className="bg-dark-blue w-full h-full px-8 py-4 flex flex-col text-gray-200 shadow-2 rounded-sm">

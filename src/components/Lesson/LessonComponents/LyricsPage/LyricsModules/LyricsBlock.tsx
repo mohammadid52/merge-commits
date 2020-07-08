@@ -91,15 +91,15 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         }
     }
 
-    const handleDragStart = (e: { target: any; dataTransfer: { setData: (arg0: string, arg1: any) => void; }; }) => {
-        const target = e.target;
+    // const handleDragStart = (e: { target: any; dataTransfer: { setData: (arg0: string, arg1: any) => void; }; }) => {
+    //     const target = e.target;
 
-        e.dataTransfer.setData('wordId', target.id)
-    }
+    //     e.dataTransfer.setData('wordId', target.id)
+    // }
 
-    const handleDragOver = (e: { stopPropagation: () => void; }) => {
-        e.stopPropagation();
-    }
+    // const handleDragOver = (e: { stopPropagation: () => void; }) => {
+    //     e.stopPropagation();
+    // }
 
     const handleFullscreen = () => {
         setFullscreen(fullscreen => {
@@ -109,29 +109,50 @@ const LyricsBlock = (props: LyricsBlockProps) => {
 
     const handleSelect = () => {
         if (color) {
-            // let selection = window.getSelection()
-            // let anchorId = selection.anchorNode.parentNode.id;
-            // let focusId = selection.focusNode.parentNode.id;
-            // let textArr: any[] = [];
-            // for ( let i = parseInt(anchorId); i < (parseInt(focusId) + 1); i++ ) {
-            //     textArr.push(document.getElementById(i.toString()).innerText)
-            // }
+            let selection = window.getSelection()
+            let anchor: { id?: string, [key: string]: any } = selection.anchorNode.parentNode ;
+            let focus: { id?: string, [key: string]: any} = selection.focusNode.parentNode ;
+            
+            let textArr: any[] = [];
+            for ( let i = parseInt(anchor.id); i < (parseInt(focus.id) + 1); i++ ) {
+                let textObj = {
+                    id: i,
+                    text: document.getElementById(i.toString()).innerText
+                }
+                textArr.push(textObj)
+            }
 
-            // setSelected(selected => {
-            //     return (
-            //         [
-            //             ...selected,
-            //             {
-            //                 id: selected.length + 1,
-            //                 anchor: anchorId,
-            //                 focus: focusId,
-            //                 color: color,
-            //                 content: textArr,
-            //             }
-            //         ]
-            //     )
-            // })
+            setSelected(selected => {
+                return (
+                    [
+                        ...selected,
+                        {
+                            id: selected.length + 1,
+                            anchor: anchor.id,
+                            focus: focus.id,
+                            color: color,
+                            content: textArr,
+                        }
+                    ]
+                )
+            })
+        } 
+
+        if (!color) {
+            let selection = window.getSelection()
+            let anchor: { id?: string, [key: string]: any } = selection.anchorNode.parentNode ;
+            let focus: { id?: string, [key: string]: any} = selection.focusNode.parentNode ;
+
+            let selections = selected.map((selection: { anchor: string, focus: string, color: string }) => {
+                if ( parseInt(selection.anchor) > parseInt(focus.id) ||
+                parseInt(selection.focus) < parseInt(anchor.id) ) return selection;
+
+                
+            })
+
+            console.log(selections)
         }
+
     }
 
     const colorPicker = (colorName: string): string => {
@@ -182,9 +203,9 @@ const LyricsBlock = (props: LyricsBlockProps) => {
                                                     id={id} 
                                                     onMouseUp={handleSelect}  
                                                     className={`text-${idCheck(id) ? colorFunc(id) : null} ${idCheck(id) ? `${colorFunc(id)}-tag` : null}`}
-                                                    draggable={ color ? 'false' : 'true' }
-                                                    onDragStart={handleDragStart}
-                                                    onDragOver={handleDragOver}
+                                                    // draggable={ color ? 'false' : 'true' }
+                                                    // onDragStart={handleDragStart}
+                                                    // onDragOver={handleDragOver}
                                                 > 
                                                     {`${word} `}
                                                 </span>

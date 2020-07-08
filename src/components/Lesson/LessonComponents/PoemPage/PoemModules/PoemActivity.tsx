@@ -1,20 +1,115 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import { LessonContext } from '../../../../../contexts/LessonContext';
+import { useCookies } from 'react-cookie';
 import WritingBlock from './WritingBlock';
 import InstructionBlock from './InstructionBlock';
 import ToolBar from './ToolBar';
 import Banner from './Banner';
 import EditBlock from './EditBlock';
 import InstructionsPopup from '../../../Popup/InstructionsPopup';
-import { LessonContext } from '../../../../../contexts/LessonContext';
+
+type storageObject = {
+    title: string
+    editMode: boolean
+    editInput?: string
+    lines?: Array<{
+        id: number
+        text: string
+        example: string
+        menuOpen: false
+    }>
+}
 
 const PoemActivity = () => {
-    const { state } = useContext(LessonContext);
+    const { state, dispatch } = useContext(LessonContext);
+    const [ cookies, setCookie ] = useCookies(['poem']);
     const [ editMode, setEditMode ] = useState({
-        open: false,
+        open: cookies.poem ? cookies.poem.editMode : false,
         input: '',
-    });
+    })
     const { video, link, text } = state.data.activity.instructions
     const [ openPopup, setOpenPopup ] = useState(false);
+
+    
+    useEffect(() => {
+        if ( cookies.poem ) {
+            if ( !cookies.poem.editMode ) {
+                dispatch({
+                    type: 'SET_INITIAL_COMPONENT_STATE',
+                    payload: {
+                        name: 'poem',
+                        content: cookies.poem
+                    }
+                })
+            }
+
+            if ( cookies.poem.editMode ) {
+                setEditMode(prev => {
+                    return {
+                        ...prev,
+                        editMode: true,
+                        input: cookies.poem.editInput
+                    }
+                })
+
+                dispatch({
+                    type: 'SET_INITIAL_COMPONENT_STATE',
+                    payload: {
+                        name: 'poem',
+                        content: cookies.poem
+                    }
+                })
+            }
+        }
+
+        if ( !cookies.poem ) {
+            let storageObj: storageObject = {
+                title: '',
+                editMode: false,
+                editInput: '',
+                lines: [],
+            }
+
+            dispatch({
+                type: 'SET_INITIAL_COMPONENT_STATE',
+                payload: {
+                    name: 'poem',
+                    content: storageObj
+                }
+            })
+
+            setCookie('poem', storageObj)
+        }
+    }, [])
+
+    useEffect(() => {
+        if ( state.componentState.poem && editMode.open === true ) {
+            dispatch({
+                type: 'UPDATE_COMPONENT_STATE',
+                payload: {
+                    componentName: 'poem',
+                    inputName: 'editMode',
+                    content: true
+                }
+            })
+
+            setCookie('poem', {...cookies.poem, editMode: true})
+        }
+    }, [editMode.open])
+
+    useEffect(() => {
+        if ( state.componentState.poem ) {
+            dispatch({
+                type: 'UPDATE_COMPONENT_STATE',
+                payload: {
+                    componentName: 'poem',
+                    inputName: 'editInput',
+                    content: editMode.input
+                }
+            })
+
+        }
+    }, [editMode.input])
 
     return (
         <>

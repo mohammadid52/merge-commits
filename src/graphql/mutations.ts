@@ -398,6 +398,8 @@ export const createCurriculum = /* GraphQL */ `
           text
           source
         }
+        summary
+        objectives
         primarySELType {
           id
           structureID
@@ -496,6 +498,8 @@ export const updateCurriculum = /* GraphQL */ `
           text
           source
         }
+        summary
+        objectives
         primarySELType {
           id
           structureID
@@ -594,6 +598,8 @@ export const deleteCurriculum = /* GraphQL */ `
           text
           source
         }
+        summary
+        objectives
         primarySELType {
           id
           structureID
@@ -769,6 +775,8 @@ export const createCourse = /* GraphQL */ `
           title
           grade
           language
+          summary
+          objectives
           createdAt
           updatedAt
         }
@@ -909,6 +917,8 @@ export const updateCourse = /* GraphQL */ `
           title
           grade
           language
+          summary
+          objectives
           createdAt
           updatedAt
         }
@@ -1049,6 +1059,8 @@ export const deleteCourse = /* GraphQL */ `
           title
           grade
           language
+          summary
+          objectives
           createdAt
           updatedAt
         }
@@ -1346,6 +1358,1053 @@ export const deleteSelType = /* GraphQL */ `
     }
   }
 `;
+export const createClassroomDataTest = /* GraphQL */ `
+  mutation CreateClassroomDataTest(
+    $input: CreateClassroomDataTestInput!
+    $condition: ModelClassroomDataTestConditionInput
+  ) {
+    createClassroomDataTest(input: $input, condition: $condition) {
+      lessonProgress
+      classroomID
+      classroom {
+        id
+        courseID
+        lessonID
+        lessonPlan {
+          stage
+          type
+          breakdown
+        }
+        artist {
+          images
+          name
+          bio
+        }
+        quotes {
+          text
+          source
+        }
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        data {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      studentID
+      student {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        institution {
+          id
+          name
+          address
+          phone
+          type
+          createdAt
+          updatedAt
+        }
+        externalId
+        grade
+        courses {
+          id
+          name
+          courseType
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        phone
+        birthdate
+        image
+        language
+        createdAt
+        updatedAt
+      }
+      data {
+        warmUpData {
+          story
+          title
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateClassroomDataTest = /* GraphQL */ `
+  mutation UpdateClassroomDataTest(
+    $input: UpdateClassroomDataTestInput!
+    $condition: ModelClassroomDataTestConditionInput
+  ) {
+    updateClassroomDataTest(input: $input, condition: $condition) {
+      lessonProgress
+      classroomID
+      classroom {
+        id
+        courseID
+        lessonID
+        lessonPlan {
+          stage
+          type
+          breakdown
+        }
+        artist {
+          images
+          name
+          bio
+        }
+        quotes {
+          text
+          source
+        }
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        data {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      studentID
+      student {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        institution {
+          id
+          name
+          address
+          phone
+          type
+          createdAt
+          updatedAt
+        }
+        externalId
+        grade
+        courses {
+          id
+          name
+          courseType
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        phone
+        birthdate
+        image
+        language
+        createdAt
+        updatedAt
+      }
+      data {
+        warmUpData {
+          story
+          title
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteClassroomDataTest = /* GraphQL */ `
+  mutation DeleteClassroomDataTest(
+    $input: DeleteClassroomDataTestInput!
+    $condition: ModelClassroomDataTestConditionInput
+  ) {
+    deleteClassroomDataTest(input: $input, condition: $condition) {
+      lessonProgress
+      classroomID
+      classroom {
+        id
+        courseID
+        lessonID
+        lessonPlan {
+          stage
+          type
+          breakdown
+        }
+        artist {
+          images
+          name
+          bio
+        }
+        quotes {
+          text
+          source
+        }
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        data {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      studentID
+      student {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        institution {
+          id
+          name
+          address
+          phone
+          type
+          createdAt
+          updatedAt
+        }
+        externalId
+        grade
+        courses {
+          id
+          name
+          courseType
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        phone
+        birthdate
+        image
+        language
+        createdAt
+        updatedAt
+      }
+      data {
+        warmUpData {
+          story
+          title
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createClassroomData = /* GraphQL */ `
+  mutation CreateClassroomData(
+    $input: CreateClassroomDataInput!
+    $condition: ModelClassroomDataConditionInput
+  ) {
+    createClassroomData(input: $input, condition: $condition) {
+      classID
+      lessonProgress
+      class {
+        id
+        courseID
+        lessonID
+        lessonPlan {
+          stage
+          type
+          breakdown
+        }
+        artist {
+          images
+          name
+          bio
+        }
+        quotes {
+          text
+          source
+        }
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        data {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      studentID
+      student {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        institution {
+          id
+          name
+          address
+          phone
+          type
+          createdAt
+          updatedAt
+        }
+        externalId
+        grade
+        courses {
+          id
+          name
+          courseType
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        phone
+        birthdate
+        image
+        language
+        createdAt
+        updatedAt
+      }
+      dataObjects {
+        name
+        data
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateClassroomData = /* GraphQL */ `
+  mutation UpdateClassroomData(
+    $input: UpdateClassroomDataInput!
+    $condition: ModelClassroomDataConditionInput
+  ) {
+    updateClassroomData(input: $input, condition: $condition) {
+      classID
+      lessonProgress
+      class {
+        id
+        courseID
+        lessonID
+        lessonPlan {
+          stage
+          type
+          breakdown
+        }
+        artist {
+          images
+          name
+          bio
+        }
+        quotes {
+          text
+          source
+        }
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        data {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      studentID
+      student {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        institution {
+          id
+          name
+          address
+          phone
+          type
+          createdAt
+          updatedAt
+        }
+        externalId
+        grade
+        courses {
+          id
+          name
+          courseType
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        phone
+        birthdate
+        image
+        language
+        createdAt
+        updatedAt
+      }
+      dataObjects {
+        name
+        data
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteClassroomData = /* GraphQL */ `
+  mutation DeleteClassroomData(
+    $input: DeleteClassroomDataInput!
+    $condition: ModelClassroomDataConditionInput
+  ) {
+    deleteClassroomData(input: $input, condition: $condition) {
+      classID
+      lessonProgress
+      class {
+        id
+        courseID
+        lessonID
+        lessonPlan {
+          stage
+          type
+          breakdown
+        }
+        artist {
+          images
+          name
+          bio
+        }
+        quotes {
+          text
+          source
+        }
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        data {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      studentID
+      student {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        institution {
+          id
+          name
+          address
+          phone
+          type
+          createdAt
+          updatedAt
+        }
+        externalId
+        grade
+        courses {
+          id
+          name
+          courseType
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        phone
+        birthdate
+        image
+        language
+        createdAt
+        updatedAt
+      }
+      dataObjects {
+        name
+        data
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createClassData = /* GraphQL */ `
+  mutation CreateClassData(
+    $input: CreateClassDataInput!
+    $condition: ModelClassDataConditionInput
+  ) {
+    createClassData(input: $input, condition: $condition) {
+      classroomID
+      lessonProgress
+      classroom {
+        id
+        courseID
+        lessonID
+        lessonPlan {
+          stage
+          type
+          breakdown
+        }
+        artist {
+          images
+          name
+          bio
+        }
+        quotes {
+          text
+          source
+        }
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        data {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      studentID
+      student {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        institution {
+          id
+          name
+          address
+          phone
+          type
+          createdAt
+          updatedAt
+        }
+        externalId
+        grade
+        courses {
+          id
+          name
+          courseType
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        phone
+        birthdate
+        image
+        language
+        createdAt
+        updatedAt
+      }
+      dataObjects {
+        name
+        data
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateClassData = /* GraphQL */ `
+  mutation UpdateClassData(
+    $input: UpdateClassDataInput!
+    $condition: ModelClassDataConditionInput
+  ) {
+    updateClassData(input: $input, condition: $condition) {
+      classroomID
+      lessonProgress
+      classroom {
+        id
+        courseID
+        lessonID
+        lessonPlan {
+          stage
+          type
+          breakdown
+        }
+        artist {
+          images
+          name
+          bio
+        }
+        quotes {
+          text
+          source
+        }
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        data {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      studentID
+      student {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        institution {
+          id
+          name
+          address
+          phone
+          type
+          createdAt
+          updatedAt
+        }
+        externalId
+        grade
+        courses {
+          id
+          name
+          courseType
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        phone
+        birthdate
+        image
+        language
+        createdAt
+        updatedAt
+      }
+      dataObjects {
+        name
+        data
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteClassData = /* GraphQL */ `
+  mutation DeleteClassData(
+    $input: DeleteClassDataInput!
+    $condition: ModelClassDataConditionInput
+  ) {
+    deleteClassData(input: $input, condition: $condition) {
+      classroomID
+      lessonProgress
+      classroom {
+        id
+        courseID
+        lessonID
+        lessonPlan {
+          stage
+          type
+          breakdown
+        }
+        artist {
+          images
+          name
+          bio
+        }
+        quotes {
+          text
+          source
+        }
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        data {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      studentID
+      student {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        institution {
+          id
+          name
+          address
+          phone
+          type
+          createdAt
+          updatedAt
+        }
+        externalId
+        grade
+        courses {
+          id
+          name
+          courseType
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        phone
+        birthdate
+        image
+        language
+        createdAt
+        updatedAt
+      }
+      dataObjects {
+        name
+        data
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createClass = /* GraphQL */ `
   mutation CreateClass(
     $input: CreateClassInput!
@@ -1439,6 +2498,7 @@ export const createClass = /* GraphQL */ `
         }
         lineNumber
         writingPrompts {
+          id
           name
           prompt
           example
@@ -1451,11 +2511,14 @@ export const createClass = /* GraphQL */ `
         updatedAt
       }
       data {
-        studentID
-        dataObjects {
-          type
-          data
+        items {
+          classID
+          lessonProgress
+          studentID
+          createdAt
+          updatedAt
         }
+        nextToken
       }
       createdAt
       updatedAt
@@ -1555,6 +2618,7 @@ export const updateClass = /* GraphQL */ `
         }
         lineNumber
         writingPrompts {
+          id
           name
           prompt
           example
@@ -1567,11 +2631,14 @@ export const updateClass = /* GraphQL */ `
         updatedAt
       }
       data {
-        studentID
-        dataObjects {
-          type
-          data
+        items {
+          classID
+          lessonProgress
+          studentID
+          createdAt
+          updatedAt
         }
+        nextToken
       }
       createdAt
       updatedAt
@@ -1671,6 +2738,7 @@ export const deleteClass = /* GraphQL */ `
         }
         lineNumber
         writingPrompts {
+          id
           name
           prompt
           example
@@ -1683,11 +2751,374 @@ export const deleteClass = /* GraphQL */ `
         updatedAt
       }
       data {
-        studentID
-        dataObjects {
-          type
-          data
+        items {
+          classID
+          lessonProgress
+          studentID
+          createdAt
+          updatedAt
         }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createClassroom = /* GraphQL */ `
+  mutation CreateClassroom(
+    $input: CreateClassroomInput!
+    $condition: ModelClassroomConditionInput
+  ) {
+    createClassroom(input: $input, condition: $condition) {
+      id
+      courseID
+      lessonID
+      lessonPlan {
+        stage
+        type
+        breakdown
+      }
+      artist {
+        images
+        name
+        bio
+      }
+      quotes {
+        text
+        source
+      }
+      warmUp {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        inputs {
+          title
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      coreLesson {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        content {
+          video
+          link
+          title
+          artist
+          text
+        }
+        tools {
+          name
+          color
+          icon
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      activity {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        lineNumber
+        writingPrompts {
+          id
+          name
+          prompt
+          example
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      data {
+        items {
+          classID
+          lessonProgress
+          studentID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateClassroom = /* GraphQL */ `
+  mutation UpdateClassroom(
+    $input: UpdateClassroomInput!
+    $condition: ModelClassroomConditionInput
+  ) {
+    updateClassroom(input: $input, condition: $condition) {
+      id
+      courseID
+      lessonID
+      lessonPlan {
+        stage
+        type
+        breakdown
+      }
+      artist {
+        images
+        name
+        bio
+      }
+      quotes {
+        text
+        source
+      }
+      warmUp {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        inputs {
+          title
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      coreLesson {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        content {
+          video
+          link
+          title
+          artist
+          text
+        }
+        tools {
+          name
+          color
+          icon
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      activity {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        lineNumber
+        writingPrompts {
+          id
+          name
+          prompt
+          example
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      data {
+        items {
+          classID
+          lessonProgress
+          studentID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteClassroom = /* GraphQL */ `
+  mutation DeleteClassroom(
+    $input: DeleteClassroomInput!
+    $condition: ModelClassroomConditionInput
+  ) {
+    deleteClassroom(input: $input, condition: $condition) {
+      id
+      courseID
+      lessonID
+      lessonPlan {
+        stage
+        type
+        breakdown
+      }
+      artist {
+        images
+        name
+        bio
+      }
+      quotes {
+        text
+        source
+      }
+      warmUp {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        inputs {
+          title
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      coreLesson {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        content {
+          video
+          link
+          title
+          artist
+          text
+        }
+        tools {
+          name
+          color
+          icon
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      activity {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        lineNumber
+        writingPrompts {
+          id
+          name
+          prompt
+          example
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      data {
+        items {
+          classID
+          lessonProgress
+          studentID
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       createdAt
       updatedAt
@@ -1734,6 +3165,8 @@ export const createLesson = /* GraphQL */ `
         text
         source
       }
+      summary
+      objectives
       primarySELType {
         id
         structureID
@@ -1812,6 +3245,7 @@ export const createLesson = /* GraphQL */ `
         }
         lineNumber
         writingPrompts {
+          id
           name
           prompt
           example
@@ -1868,6 +3302,8 @@ export const updateLesson = /* GraphQL */ `
         text
         source
       }
+      summary
+      objectives
       primarySELType {
         id
         structureID
@@ -1946,6 +3382,7 @@ export const updateLesson = /* GraphQL */ `
         }
         lineNumber
         writingPrompts {
+          id
           name
           prompt
           example
@@ -2002,6 +3439,8 @@ export const deleteLesson = /* GraphQL */ `
         text
         source
       }
+      summary
+      objectives
       primarySELType {
         id
         structureID
@@ -2080,6 +3519,7 @@ export const deleteLesson = /* GraphQL */ `
         }
         lineNumber
         writingPrompts {
+          id
           name
           prompt
           example
@@ -2117,6 +3557,7 @@ export const createWarmUp = /* GraphQL */ `
       inputs {
         title
         additionalInputs {
+          id
           name
           prompt
           example
@@ -2152,6 +3593,7 @@ export const updateWarmUp = /* GraphQL */ `
       inputs {
         title
         additionalInputs {
+          id
           name
           prompt
           example
@@ -2187,6 +3629,7 @@ export const deleteWarmUp = /* GraphQL */ `
       inputs {
         title
         additionalInputs {
+          id
           name
           prompt
           example
@@ -2338,6 +3781,7 @@ export const createActivity = /* GraphQL */ `
       }
       lineNumber
       writingPrompts {
+        id
         name
         prompt
         example
@@ -2371,6 +3815,7 @@ export const updateActivity = /* GraphQL */ `
       }
       lineNumber
       writingPrompts {
+        id
         name
         prompt
         example
@@ -2404,6 +3849,7 @@ export const deleteActivity = /* GraphQL */ `
       }
       lineNumber
       writingPrompts {
+        id
         name
         prompt
         example

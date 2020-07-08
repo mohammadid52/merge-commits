@@ -1,14 +1,15 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
-import { NavLink, useHistory } from 'react-router-dom';
+import { NavLink, useHistory, useLocation } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 
 
 const PageHeaderBar = () => {
     const [ , , removeCookie ] = useCookies(['auth']);
+    const location = useLocation();
     const history = useHistory();
-    const { theme, lightSwitch, state, dispatch } = useContext(GlobalContext);
+    const { theme, lightSwitch, forceTheme, state, dispatch } = useContext(GlobalContext);
 
     async function SignOut() {
         try {
@@ -24,6 +25,10 @@ const PageHeaderBar = () => {
     const handleSignOut = () => {
         SignOut();
     }
+
+    const lessonRegEx = RegExp(/^\/lesson\/?.*/);
+
+    if ( lessonRegEx.test(location.pathname) ) { return null }
 
     return (
         <div className={`w-full h-12 ${theme.toolbar.bg} text-gray-200 shadow-2 flex justify-between`}>

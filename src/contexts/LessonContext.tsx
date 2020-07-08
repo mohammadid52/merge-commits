@@ -2,6 +2,7 @@ import React, { useReducer, useEffect, useState, } from 'react';
 import { lessonState } from '../state/LessonState'
 import { lessonReducer } from '../reducers/LessonReducer'
 import { pageThemes } from './GlobalContext';
+import { useCookies } from 'react-cookie';
 // import * as queries from '../graphql/queries';
 import * as customQueries from '../customGraphql/customQueries';
 import { API, graphqlOperation } from 'aws-amplify';
@@ -18,6 +19,7 @@ interface dataObject {
 
 export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     const [ data, setData ] = useState<dataObject>();
+    const [ cookies ] = useCookies(['auth']);
     const [ state, dispatch ] = useReducer(lessonReducer, lessonState);
     const [ lightOn, setLightOn ] = useState(false);
 
@@ -32,16 +34,30 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     async function getClass() {
         try {
             // this any needs to be changed once a solution is found!!!
-            const classObject: any = await API.graphql(graphqlOperation(customQueries.getClass, { id: 1 }))
-            setData(classObject.data.getClass)
+            const classroomObject: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: 1 }))
+            console.log(classroomObject)
+            setData(classroomObject.data.getClassroom)
         } catch (error) {
             console.error(error)
         }
     }
 
+    async function getClassroomData() {
+        let classroomID = 1
+        let studentID = cookies.auth.email
+
+        try {
+            // this any needs to be changed once a solution is found!!!
+            const classroomObject: any = await API.graphql(graphqlOperation(customQueries.getClassroomDataTest, { classroomID: classroomID, studentID: studentID }))
+            console.log('classroom data', classroomObject)
+        } catch (error) {
+            console.error('classroom data error', error)
+        }
+    }
+
     useEffect(() => {
         getClass()
-
+        getClassroomData()
         return function cleanup() { dispatch({ type: 'CLEANUP' })};
     }, []);
 

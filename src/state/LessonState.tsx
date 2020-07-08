@@ -1,3 +1,5 @@
+import { turquoise } from "color-name";
+
 export interface LessonStateType  {
     status: string;
     error: string;
@@ -5,6 +7,7 @@ export interface LessonStateType  {
         [key: string]: any;
     }
     currentPage: number;
+    lessonProgress: number;
     canContinue: boolean;
     pages: Array<{
         type: string;
@@ -13,13 +16,15 @@ export interface LessonStateType  {
         active: boolean;
         save: boolean;
         breakdown: boolean;
-        data: {
-            [key: string]: any;
-        };
     }>
+    componentState: {
+        [key: string]: any
+    }
     new_words: Array<string>;
     word_bank?: Array<string>;
-    lesson_complete: boolean;
+    lessonComplete: boolean;
+    firstSave: boolean;
+    unsavedChanges: boolean;
 }
 
 export const lessonState: LessonStateType = {
@@ -27,9 +32,13 @@ export const lessonState: LessonStateType = {
     error: '',
     data: {},
     currentPage: 0,
+    lessonProgress: 0,
     canContinue: false,
+    componentState: {},
     pages: null,
     new_words: [],
     word_bank: null,
-    lesson_complete: false,
+    lessonComplete: false,
+    firstSave: false,
+    unsavedChanges: true,
 }

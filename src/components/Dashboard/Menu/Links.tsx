@@ -7,7 +7,6 @@ const Links: React.FC = () => {
     const match = useRouteMatch();
     const { state } = useContext(GlobalContext);
     const initialLinks:Array<string> = [
-        'Classroom',
     ];
     const [ links, setLinks ] = useState(initialLinks)
 
@@ -17,7 +16,9 @@ const Links: React.FC = () => {
                 setLinks(links => {
                     return [
                         ...links,
-                        'classroom',
+                        'Registration',
+                        'Classroom',
+
                     ]
                 })
             default:
@@ -25,11 +26,10 @@ const Links: React.FC = () => {
         }
     }
 
-    // useEffect(() => {
-    //     // userLinks(state.user.role)
-    //     console.log(state.user.role);
-        
-    // }, [])
+    useEffect(() => {
+        userLinks(state.user.role)
+        // console.log(state.user.role);
+    }, [state.user.role])
 
     const handleLink = (e: any) => {
         let id = e.target.id.toLowerCase();
@@ -39,9 +39,9 @@ const Links: React.FC = () => {
     return (
         <div className="w-full h-12 py-4">
             {
-                links.length > 0 ? 
+                state.user.role && links.length > 0 ? 
                 links.map((link: string, key: number) => (
-                    <div id={link} key={key} className={`w-full text-center`} onClick={handleLink}>
+                    <div id={link} key={key} className={`w-full text-center mb-4`} onClick={handleLink}>
                         { link }
                     </div>
                 )) :

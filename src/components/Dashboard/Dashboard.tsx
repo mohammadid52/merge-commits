@@ -8,11 +8,13 @@ import {
  } from 'react-router-dom';
 // import PageHeaderBar from '../Header/PageHeaderBar';
 import SideMenu from './Menu/SideMenu';
+import { useCookies } from 'react-cookie';
 const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'))
 const Profile = lazy(() => import('./Profile/Profile'))
 const Links = lazy(() => import('./Menu/Links'))
 const ProfileLink = lazy(() => import('./Menu/ProfileLink'))
+const Registration = lazy(() => import('./Admin/Registration'))
 import * as queries from '../../graphql/queries';
 
 
@@ -22,6 +24,7 @@ type userObject = {
 
 const Dashboard: React.FC = () => {
     const match = useRouteMatch();
+    const [cookies, setCookie] = useCookies(['auth']);
     const { state, dispatch } = useContext(GlobalContext);
 
     const setUser = (user: userObject) => {
@@ -29,12 +32,15 @@ const Dashboard: React.FC = () => {
         dispatch({
             type: 'SET_USER',
             payload: {
+                id: user.id,
                 firstName: firstName,
                 lastName: user.lastName,
                 language: user.language,
                 role: user.role,
             }
         })
+
+        setCookie('auth', { ...cookies.auth, role: user.role, firstName: firstName, id: user.id })
     }
 
     async function getUser() {
@@ -49,7 +55,9 @@ const Dashboard: React.FC = () => {
     }
 
     useEffect(() => {
-        getUser()
+        if( !state.user.firstName ) {
+            getUser()
+        }
     }, [])
 
     return (
@@ -73,6 +81,12 @@ const Dashboard: React.FC = () => {
                         path={`${match.url}/classroom`}
                         render={() => (
                             <Classroom />
+                        )}
+                    />
+                    <Route 
+                        path={`${match.url}/registration`}
+                        render={() => (
+                            <Registration />
                         )}
                     />
                     <Route 

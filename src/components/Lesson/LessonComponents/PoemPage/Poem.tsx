@@ -6,7 +6,7 @@ import {
     useRouteMatch,
 } from "react-router-dom";
 import PoemActivity from './PoemModules/PoemActivity';
-// import PoemBreakdown from './PoemBreakdown/PoemBreakdown'
+import PoemBreakdown from './PoemBreakdown/PoemBreakdown'
 // import ErrorPage from '../../Error/ErrorPage';
 
 const Poem = () => {
@@ -19,9 +19,9 @@ const Poem = () => {
     
     return (
         <Switch>
-            {/* <Route path={`${match.url}/breakdown`}>
+            <Route path={`${match.url}/breakdown`}>
                 <PoemBreakdown />
-            </Route> */}
+            </Route>
             <Route exact path={`${match.url}`}>
                 <PoemActivity />
             </Route>

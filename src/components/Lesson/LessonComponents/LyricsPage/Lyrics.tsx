@@ -7,7 +7,7 @@ import {
     useRouteMatch,
 } from "react-router-dom";
 import LyricsActivity from './LyricsModules/LyricsActivity';
-// import LyricsBreakdown from './LyricsBreakdown/LyricsBreakdown';
+import LyricsBreakdown from './LyricsBreakdown/LyricsBreakdown';
 // import ErrorPage from '../../Error/ErrorPage';
 
 const Lyrics = () => {
@@ -20,9 +20,9 @@ const Lyrics = () => {
 
     return (
         <Switch>
-            {/* <Route path={`${match.url}/breakdown`}>
+            <Route path={`${match.url}/breakdown`}>
                 <LyricsBreakdown />
-            </Route> */}
+            </Route>
             <Route exact path={`${match.url}`}>
                 <LyricsActivity />
             </Route>

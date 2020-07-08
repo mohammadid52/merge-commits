@@ -1,4 +1,6 @@
 import { LessonStateType, lessonState } from '../state/LessonState';
+import { stat } from 'fs';
+import { turquoise } from 'color-name';
 
 type LessonActions = 
 |   {
@@ -12,6 +14,24 @@ type LessonActions =
 |   {
         type: 'SET_CURRENT_PAGE';
         payload: number;
+    } 
+|   {
+        type: 'SET_PROGRESS';
+        payload: number;
+    } 
+|   {
+        type: 'SET_INITIAL_COMPONENT_STATE';
+        payload: {
+            [key: string]: any,
+        };
+    } 
+|   {
+        type: 'UPDATE_COMPONENT_STATE';
+        payload: {
+            componentName: string,
+            inputName: string
+            content: any,
+        };
     } 
 |   {
         type: 'ERROR';
@@ -37,7 +57,7 @@ type LessonActions =
         type: 'CLEANUP';
     } 
 |   {
-        type: 'TEST' | 'PAGE_FORWARD' |  'PAGE_BACK' | 'CAN_CONTINUE';
+        type: 'TEST' | 'PAGE_FORWARD' |  'PAGE_BACK' | 'CAN_CONTINUE' | 'SAVED_CHANGES';
     } 
 
 export const lessonReducer = (state: LessonStateType, action: LessonActions) => {
@@ -57,6 +77,22 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             return {
                 ...state,
                 currentPage: action.payload,
+                lessonProgress: action.payload, 
+                pages: state.pages.map((page: {}, key: number) => {
+                    if (key <= action.payload) {
+                        return {
+                            ...page,
+                            active: true,
+                        }
+                    } else {
+                        return page
+                    }
+                })
+            }
+        case 'SET_PROGRESS':
+            return {
+                ...state,
+                lessonProgress: action.payload, 
                 pages: state.pages.map((page: {}, key: number) => {
                     if (key <= action.payload) {
                         return {
@@ -79,18 +115,36 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 new_words: [...state.new_words, action.payload],
                 word_bank: [...state.word_bank, action.payload]
             }
-        // case 'SET_DISPLAY_PROPS':
-        //     return {
-        //         ...state,
-        //         displayProps: {
-        //             ...state.displayProps,
-        //             [action.payload.name]: action.payload.content,
-        //         },
-        //     };
+        case 'SET_INITIAL_COMPONENT_STATE':
+            return {
+                ...state,
+                componentState: {
+                    ...state.componentState,
+                    [action.payload.name]: action.payload.content,
+                },
+            };
+        case 'UPDATE_COMPONENT_STATE':
+            return {
+                ...state,
+                unsavedChanges: true,
+                componentState: {
+                    ...state.componentState,
+                    [action.payload.componentName]: {
+                        ...state.componentState[action.payload.componentName],
+                        [action.payload.inputName]: action.payload.content
+                    }
+                },
+            };
         case 'CAN_CONTINUE':
             return {
                 ...state,
                 canContinue: true,
+            }
+        case 'SAVED_CHANGES':
+            return {
+                ...state,
+                unsavedChanges: false,
+                firstSave: state.firstSave ? state.firstSave : true,
             }
         case 'OPEN_LESSON': 
             return {
@@ -128,6 +182,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
         case 'PAGE_FORWARD':
             return {
                 ...state,
+                lessonProgress: state.lessonProgress === state.currentPage ? state.currentPage + 1 : state.lessonProgress,
                 currentPage: state.currentPage + 1,
             };
         case 'PAGE_BACK':

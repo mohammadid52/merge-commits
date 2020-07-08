@@ -123,13 +123,89 @@ type SELType @model
 }
 
 type DataObject {
-  type: String!
+  name: String!
   data: String!
 }
 
-type ClassroomData {
-  studentID: ID!
-  dataObjects: [DataObject!]!
+type AdditionalInputs {
+  name: String
+  input: String
+}
+
+type WarmUpData {
+  story: String
+  title: String
+  additional: [AdditionalInputs]
+}
+
+type SelectedWord {
+  id: Int
+  text: String
+}
+
+type Selection {
+  anchor: String
+  color: String
+  content: [SelectedWord]
+  focus: String
+  id: Int
+}
+
+type CoreLessonData {
+  selected: [Selection]
+}
+
+type LineInput {
+  example: String
+  id: Int
+  menuOpen: Boolean
+  text: String
+}
+
+type ActivityData {
+  editInput: String
+  editMode: Boolean
+  lines: [LineInput]
+  title: String
+}
+
+type DataTest {
+  warmUpData: WarmUpData
+  coreLessonData: CoreLessonData
+  activityData: ActivityData
+}
+
+type ClassroomDataTest @model 
+@key(fields: ["classroomID", "studentID"])
+{
+  lessonProgress: Int!
+  classroomID: ID!
+  classroom: Classroom! @connection(fields: ["classroomID"])
+  studentID: String!
+  student: Person! @connection(fields: ["studentID"])
+  data: [DataTest]!
+}
+
+type ClassroomData @model 
+@key(name: "byClass", fields: ["classID", "studentID"])
+@key(name: "byStudent", fields: ["studentID", "classID"])
+{
+  classID: ID!
+  lessonProgress: Int
+  class: Class! @connection(fields: ["classID"])
+  studentID: String!
+  student: Person! @connection(fields: ["studentID"])
+  dataObjects: [DataObject]!
+}
+
+type ClassData @model 
+{
+  classroomID: ID!
+  lessonProgress: Int
+  classroom: Classroom! @connection(fields: ["classroomID"])
+  studentID: String!
+  student: Person! @connection(fields: ["studentID"])
+  dataObjects: [DataObject]!
 }
 
 type ComponentSummary {
@@ -138,9 +214,11 @@ type ComponentSummary {
   breakdown: Boolean!
 }
 
-type Class @model {
+type Class @model 
+@key(fields: ["id", "courseID", "lessonID"])
+{
   id: ID!
-  courseID: ID!
+  courseID: ID! 
   lessonID: ID!
   lessonPlan: [ComponentSummary!]!
   artist: Artist!
@@ -148,7 +226,21 @@ type Class @model {
   warmUp: WarmUp!
   coreLesson: CoreLesson!
   activity: Activity!
-  data: [ClassroomData]!
+  data: [ClassroomData]! @connection
+}
+
+type Classroom @model 
+{
+  id: ID!
+  courseID: ID! 
+  lessonID: ID!
+  lessonPlan: [ComponentSummary!]!
+  artist: Artist!
+  quotes: [Quote]!
+  warmUp: WarmUp!
+  coreLesson: CoreLesson!
+  activity: Activity!
+  data: [ClassroomData]! @connection
 }
 
 type Lesson @model @key(fields: ["id"]) {
@@ -159,6 +251,8 @@ type Lesson @model @key(fields: ["id"]) {
   artist: Artist!
   language: Language!
   quotes: [Quote]!
+  summary: String!
+  objectives: [String]!
   primarySELType: SELType! @connection
   warmUp: WarmUp @connection
   coreLesson: CoreLesson! @connection
@@ -182,6 +276,7 @@ type Inputs {
 }
 
 type WritingPrompts {
+  id: Int
   name: String!
   prompt: String!
   example: String!

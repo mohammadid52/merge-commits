@@ -11,6 +11,7 @@ import Intro from '../LessonComponents/Intro/Intro';
 import Story from '../LessonComponents/StoryPage/Story';
 import Lyrics from '../LessonComponents/LyricsPage/Lyrics';
 import Poem from '../LessonComponents/PoemPage/Poem';
+import Outro from '../LessonComponents/Outro/Outro';
 
 const Body = () => {
     const { state, dispatch } = useContext(LessonContext);
@@ -108,9 +109,9 @@ const Body = () => {
                 {/* <Route path='/wrap-up'>
                     {pageFetch('wrap-up')}
                 </Route> */}
-                {/* <Route path='/outro'>
+                <Route path={`${match.url}/outro`}>
                     <Outro />
-                </Route> */}
+                </Route>
                 {/* <Route>
                     <ErrorPage />
                 </Route> */}

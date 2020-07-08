@@ -5,7 +5,7 @@ import {
     useRouteMatch,
 } from "react-router-dom";
 import StoryActivity from './StoryModules/StoryActivity';
-// import StoryBreakdown from './StoryBreakdown/StoryBreakdown';
+import StoryBreakdown from './StoryBreakdown/StoryBreakdown';
 // import ErrorPage from '../../Error/ErrorPage';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
@@ -21,9 +21,9 @@ const StoryPage = () => {
 
     return (
         <Switch>
-            {/* <Route path={`${match.url}/breakdown`}>
+            <Route path={`${match.url}/breakdown`}>
                 <StoryBreakdown />
-            </Route> */}
+            </Route>
             <Route exact path={`${match.url}`}>
                 <StoryActivity />
             </Route>

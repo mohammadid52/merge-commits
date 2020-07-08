@@ -1,61 +1,77 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
+import { useCookies } from 'react-cookie';
 import InstructionsBlock from './InstructionBlock';
 import StoryForm from './StoryForm';
 import Banner from './Banner';
 import Modules from './Modules';
 import InstructionsPopup from '../../../Popup/InstructionsPopup';
+import { string } from 'prop-types';
 
-export interface storyBreakdownProps {
+export interface StoryState {
     story: string,
     title?: string,
-    additional?: [{
+    additional?: {
         name: string,
         text: string | [],
-    }?]
+    }[]
 }
 
 const Story = () => {
     const { state, dispatch } = useContext(LessonContext);
+    const [ cookies, setCookie ] = useCookies(['story']);
     const inputs = state.data.warmUp.inputs;
     const video = state.data.warmUp.instructions.link
     const [ openPopup, setOpenPopup ] = useState(false)
+
+    console.log(cookies);
     
-    const setInitialBreakdownProps = () => {
-        let tempObj:storyBreakdownProps = {
-            story: ''
-        };
 
-        if (inputs.title) {
-            tempObj.title = '';
-        }
+    useEffect(() => {
+       if ( !cookies.story ) {
+           let tempObj: StoryState = {
+                story: '',
+            }
+            if ( inputs.title ) {
+                tempObj.title = '';
+            }
 
-        if (inputs.additionalInputs.length > 0) {
-            tempObj.additional = [];
-            inputs.additionalInputs.forEach((input: { name: string; }) => {
-                let newInput = {
-                    name: input.name,
-                    text: '',
+            if (inputs.additionalInputs.length > 0) {
+                let additional:Array<{name: string, text: string | []}>= [];
+                inputs.additionalInputs.forEach((input: { name: string; }) => {
+                    let newInput = {
+                        name: input.name,
+                        text: '',
+                    }
+
+                    additional.push(newInput);
+                })
+
+                tempObj.additional = additional;
+            }
+
+            dispatch({
+                type: 'SET_INITIAL_COMPONENT_STATE',
+                payload: {
+                    name: 'story',
+                    content: tempObj
                 }
+            })
 
-                tempObj.additional.push(newInput);
+            setCookie('story', tempObj)
+        }
+        
+        if ( cookies.story ) {
+            dispatch({
+                type: 'SET_INITIAL_COMPONENT_STATE',
+                payload: {
+                    name: 'story',
+                    content: cookies.story
+                }
             })
         }
 
-        return tempObj
-    }
-
-    const [ breakdownProps, setBreakdownProps ] = useState(setInitialBreakdownProps())
-    
-    useEffect(() => {
-        dispatch({
-            type: 'SET_DISPLAY_PROPS',
-            payload: {
-                name: 'story',
-                content: breakdownProps,
-            },
-        })
-    }, [breakdownProps])
+    }, []);
 
 
     return (
@@ -68,8 +84,8 @@ const Story = () => {
                         <InstructionsBlock />
                         { inputs.additionalInputs.length > 0 ?
                             <Modules 
-                                breakdownProps={breakdownProps}
-                                setBreakdownProps={setBreakdownProps}
+                                // breakdownProps={breakdownProps}
+                                // setBreakdownProps={setBreakdownProps}
                                 inputs={inputs.additionalInputs}
                             />
                             :
@@ -77,10 +93,7 @@ const Story = () => {
                         }
                     </div>
                     <div className="w-6/10 h-full flex flex-col items-center ml-2">
-                        <StoryForm 
-                            breakdownProps={breakdownProps}
-                            setBreakdownProps={setBreakdownProps}
-                        />
+                        <StoryForm />
                     </div>
                 </div>
             </div>

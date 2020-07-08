@@ -14,7 +14,7 @@ const ProfileLink: React.FC = () => {
 
     return (
         <NavLink to={`${match.url}/profile`}>
-            <div className="w-full h-14 flex justify-between items-center border-t border-b border-gray-200 py-4">
+            <div className="w-full h-14 flex justify-between items-center border-t border-b border-gray-200 py-4 px-4">
                 <IconContext.Provider value={{ size: '2rem', color: 'white' }}>
                     <FaUserCircle />
                 </IconContext.Provider>
