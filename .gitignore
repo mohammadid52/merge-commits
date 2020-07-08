@@ -4,7 +4,6 @@ package-lock.json
 zjunk
 
 #breakdowns
-src/components/Lesson/LessonComponents/PoemPage/PoemBreakdown/*
 
 #amplify
 amplify/\#current-cloud-backend
