@@ -79,12 +79,23 @@ type Course @model {
   duration: Int
 }
 
+type Contact { 
+  name: String
+  phone: String
+  email: String
+}
+
 type Institution @model @key(fields: ["id"]) {
   id: ID!
-  name: String
-  address: String
+  name: String!
+  district: String
+  address: String!
+  city: String!
+  state: String
+  zip: String!
   phone: String
-  contact: [Person]
+  contact: Contact!
+  coordinator: [Person]
   type: InstitutionType
 }
 
@@ -170,9 +181,9 @@ type ActivityData {
 }
 
 type DataTest {
-  warmUpData: WarmUpData
-  coreLessonData: CoreLessonData
-  activityData: ActivityData
+  warmup: WarmUpData
+  corelesson: CoreLessonData
+  activity: ActivityData
 }
 
 type ClassroomDataTest @model 
@@ -183,7 +194,7 @@ type ClassroomDataTest @model
   classroom: Classroom! @connection(fields: ["classroomID"])
   studentID: String!
   student: Person! @connection(fields: ["studentID"])
-  data: [DataTest]!
+  data: DataTest!
 }
 
 type ClassroomData @model 

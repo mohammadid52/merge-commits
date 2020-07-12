@@ -24,11 +24,11 @@ const Story = () => {
     const video = state.data.warmUp.instructions.link
     const [ openPopup, setOpenPopup ] = useState(false)
 
-    console.log(cookies);
+    
     
 
     useEffect(() => {
-       if ( !cookies.story ) {
+        if ( !cookies.story && !state.componentState.story ) {
            let tempObj: StoryState = {
                 story: '',
             }

@@ -39,9 +39,9 @@ const LessonHeaderBar = () => {
             classroomID: 1,
             studentID: cookies.auth.email,
             data: {
-                warmUpData: state.componentState.story ? state.componentState.story : null,
-                coreLessonData: state.componentState.lyrics ? state.componentState.lyrics : null,
-                activityData: state.componentState.poem ? state.componentState.poem : null
+                warmup: state.componentState.story ? state.componentState.story : null,
+                corelesson: state.componentState.lyrics ? state.componentState.lyrics : null,
+                activity: state.componentState.poem ? state.componentState.poem : null
             }
         }
 

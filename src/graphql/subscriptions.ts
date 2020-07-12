@@ -16,9 +16,18 @@ export const onCreatePerson = /* GraphQL */ `
       institution {
         id
         name
+        district
         address
+        city
+        state
+        zip
         phone
         contact {
+          name
+          phone
+          email
+        }
+        coordinator {
           id
           authId
           status
@@ -49,7 +58,11 @@ export const onCreatePerson = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -129,9 +142,18 @@ export const onUpdatePerson = /* GraphQL */ `
       institution {
         id
         name
+        district
         address
+        city
+        state
+        zip
         phone
         contact {
+          name
+          phone
+          email
+        }
+        coordinator {
           id
           authId
           status
@@ -162,7 +184,11 @@ export const onUpdatePerson = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -242,9 +268,18 @@ export const onDeletePerson = /* GraphQL */ `
       institution {
         id
         name
+        district
         address
+        city
+        state
+        zip
         phone
         contact {
+          name
+          phone
+          email
+        }
+        coordinator {
           id
           authId
           status
@@ -275,7 +310,11 @@ export const onDeletePerson = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -641,9 +680,18 @@ export const onCreateCourse = /* GraphQL */ `
       institution {
         id
         name
+        district
         address
+        city
+        state
+        zip
         phone
         contact {
+          name
+          phone
+          email
+        }
+        coordinator {
           id
           authId
           status
@@ -677,7 +725,11 @@ export const onCreateCourse = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -715,7 +767,11 @@ export const onCreateCourse = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -780,9 +836,18 @@ export const onUpdateCourse = /* GraphQL */ `
       institution {
         id
         name
+        district
         address
+        city
+        state
+        zip
         phone
         contact {
+          name
+          phone
+          email
+        }
+        coordinator {
           id
           authId
           status
@@ -816,7 +881,11 @@ export const onUpdateCourse = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -854,7 +923,11 @@ export const onUpdateCourse = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -919,9 +992,18 @@ export const onDeleteCourse = /* GraphQL */ `
       institution {
         id
         name
+        district
         address
+        city
+        state
+        zip
         phone
         contact {
+          name
+          phone
+          email
+        }
+        coordinator {
           id
           authId
           status
@@ -955,7 +1037,11 @@ export const onDeleteCourse = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -993,7 +1079,11 @@ export const onDeleteCourse = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1054,9 +1144,18 @@ export const onCreateInstitution = /* GraphQL */ `
     onCreateInstitution {
       id
       name
+      district
       address
+      city
+      state
+      zip
       phone
       contact {
+        name
+        phone
+        email
+      }
+      coordinator {
         id
         authId
         status
@@ -1068,7 +1167,11 @@ export const onCreateInstitution = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1105,9 +1208,18 @@ export const onUpdateInstitution = /* GraphQL */ `
     onUpdateInstitution {
       id
       name
+      district
       address
+      city
+      state
+      zip
       phone
       contact {
+        name
+        phone
+        email
+      }
+      coordinator {
         id
         authId
         status
@@ -1119,7 +1231,11 @@ export const onUpdateInstitution = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1156,9 +1272,18 @@ export const onDeleteInstitution = /* GraphQL */ `
     onDeleteInstitution {
       id
       name
+      district
       address
+      city
+      state
+      zip
       phone
       contact {
+        name
+        phone
+        email
+      }
+      coordinator {
         id
         authId
         status
@@ -1170,7 +1295,11 @@ export const onDeleteInstitution = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1380,7 +1509,11 @@ export const onCreateClassroomDataTest = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1407,11 +1540,11 @@ export const onCreateClassroomDataTest = /* GraphQL */ `
         updatedAt
       }
       data {
-        warmUpData {
+        warmup {
           story
           title
         }
-        activityData {
+        activity {
           editInput
           editMode
           title
@@ -1498,7 +1631,11 @@ export const onUpdateClassroomDataTest = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1525,11 +1662,11 @@ export const onUpdateClassroomDataTest = /* GraphQL */ `
         updatedAt
       }
       data {
-        warmUpData {
+        warmup {
           story
           title
         }
-        activityData {
+        activity {
           editInput
           editMode
           title
@@ -1616,7 +1753,11 @@ export const onDeleteClassroomDataTest = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1643,11 +1784,11 @@ export const onDeleteClassroomDataTest = /* GraphQL */ `
         updatedAt
       }
       data {
-        warmUpData {
+        warmup {
           story
           title
         }
-        activityData {
+        activity {
           editInput
           editMode
           title
@@ -1734,7 +1875,11 @@ export const onCreateClassroomData = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1845,7 +1990,11 @@ export const onUpdateClassroomData = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1956,7 +2105,11 @@ export const onDeleteClassroomData = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -2067,7 +2220,11 @@ export const onCreateClassData = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -2178,7 +2335,11 @@ export const onUpdateClassData = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -2289,7 +2450,11 @@ export const onDeleteClassData = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt

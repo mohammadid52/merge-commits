@@ -3,20 +3,18 @@ import { GlobalContext } from '../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
 import PageHeaderBar from './Header/PageHeaderBar';
 import Login from './Auth/Login';
-const Confirmation = lazy(() => import ('./Auth/Confirmation'));
+const Confirmation = lazy(() => import('./Auth/Confirmation'));
 const Dashboard = lazy(() => import('./Dashboard/Dashboard'));
 const Registration = lazy(() => import('./Auth/Register'));
+const Lesson = lazy(() => import('./Lesson/Lesson'));
 import { 
-    BrowserRouter as Router,
     Switch, 
     Route,
     Redirect,
     useHistory,
  } from 'react-router-dom';
 import PrivateRoute from './Auth/PrivateRoute';
-import AuthRoutes from './Auth/AuthRoutes';
-import Lesson from './Lesson/Lesson';
-// import Lesson from './Lesson/Lesson';
+import NewPassword from './Auth/NewPassword';
 
 const MainRouter: React.FC = () => {
     const { theme, state, dispatch } = useContext(GlobalContext);
@@ -35,26 +33,30 @@ const MainRouter: React.FC = () => {
             <PageHeaderBar />
             <Suspense fallback={<div>Loading...</div>}>
                 <Switch>
-                    {/* <AuthRoutes> */}
-                        <Route 
-                            path="/login"
-                            render={() => (
-                                <Login />
-                            )}
-                        />
-                        <Route 
-                            path="/register"
-                            render={() => (
-                                <Registration />  
-                            )} 
-                        />
-                        <Route 
-                            path="/confirm"
-                            render={() => (
-                                <Confirmation />  
-                            )} 
-                        />
-                    {/* </AuthRoutes> */}
+                    <Route 
+                        path="/login"
+                        render={() => (
+                            <Login />
+                        )}
+                    />
+                    <Route 
+                        path="/register"
+                        render={() => (
+                            <Registration />  
+                        )} 
+                    />
+                    <Route 
+                        path="/confirm"
+                        render={() => (
+                            <Confirmation />  
+                        )} 
+                    />
+                    <Route 
+                        path="/new-password"
+                        render={() => (
+                            <NewPassword />  
+                        )} 
+                    />
                     <PrivateRoute path="/dashboard" >
                         <Dashboard />  
                     </PrivateRoute>

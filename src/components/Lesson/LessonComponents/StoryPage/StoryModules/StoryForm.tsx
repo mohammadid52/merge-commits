@@ -7,8 +7,8 @@ const StoryForm = () => {
     const { state, dispatch } = useContext(LessonContext)
     const [ cookies, setCookie ] = useCookies(['story']);
     const [ input, setInput ] = useState({
-        title: '',
-        story: '',
+        title: state.componentState.story && state.componentState.story.title ?  state.componentState.story.title : '',
+        story: state.componentState.story &&state.componentState.story.story ? state.componentState.story.story : '',
     })
 
     useEffect(() => {

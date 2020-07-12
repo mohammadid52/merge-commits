@@ -19,7 +19,7 @@ const EditBlock = (props: EditBlockProps) => {
     })
 
     useEffect(() => {
-        if ( cookies.poem.editMode ) {
+        if ( cookies.poem && cookies.poem.editMode ) {
             setEditInput(() => {
                 return {
                     title: cookies.poem.title,

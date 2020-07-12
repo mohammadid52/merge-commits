@@ -13,12 +13,17 @@ interface LessonProps {
     children: React.ReactNode;
 }
 
-interface dataObject {
+interface LessonObject {
+    [key: string]: any;
+}
+
+interface DataObject {
     [key: string]: any;
 }
 
 export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
-    const [ data, setData ] = useState<dataObject>();
+    const [ data, setData ] = useState<DataObject>();
+    const [ lesson, setLesson ] = useState<DataObject>();
     const [ cookies ] = useCookies(['auth']);
     const [ state, dispatch ] = useReducer(lessonReducer, lessonState);
     const [ lightOn, setLightOn ] = useState(false);
@@ -32,39 +37,44 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     const theme = lightOn ? pageThemes.light : pageThemes.dark;
 
     async function getClass() {
+        let classroomID = 1
+        let studentID = cookies.auth.email
         try {
             // this any needs to be changed once a solution is found!!!
             const classroomObject: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: 1 }))
-            console.log(classroomObject)
-            setData(classroomObject.data.getClassroom)
+            console.log('classdata', classroomObject)
+            setLesson(classroomObject.data.getClassroom)
+            const dataObject: any = await API.graphql(graphqlOperation(customQueries.getClassroomDataTest, { classroomID: classroomID, studentID: studentID }))
+            console.log('stdata', dataObject);
+            setData(dataObject.data.getClassroomDataTest)
         } catch (error) {
             console.error(error)
         }
     }
 
-    async function getClassroomData() {
-        let classroomID = 1
-        let studentID = cookies.auth.email
+    // async function getClassroomData() {
+        
 
-        try {
-            // this any needs to be changed once a solution is found!!!
-            const classroomObject: any = await API.graphql(graphqlOperation(customQueries.getClassroomDataTest, { classroomID: classroomID, studentID: studentID }))
-            console.log('classroom data', classroomObject)
-        } catch (error) {
-            console.error('classroom data error', error)
-        }
-    }
+    //     try {
+    //         // this any needs to be changed once a solution is found!!!
+            
+            
+    //         
+    //     } catch (error) {
+    //         console.error('classroom data error', error)
+    //     }
+    // }
 
     useEffect(() => {
         getClass()
-        getClassroomData()
+        // getClassroomData()
         return function cleanup() { dispatch({ type: 'CLEANUP' })};
     }, []);
 
     useEffect(() => {
-        if (data) {
+        if (lesson) {
             const wordBank: Array<string> = ['Mimo provoz'];
-            const lessonPlan: any = data.lessonPlan
+            const lessonPlan: any = lesson.lessonPlan
             let pagesArray = [
                 {
                     type: 'intro',
@@ -101,17 +111,28 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             });
 
             dispatch({
-            type:'SET_INITIAL_STATE', 
-            payload: { 
-                pages: pagesArray, 
-                word_bank: wordBank, 
-                data: data,
+                type: 'SET_INITIAL_STATE', 
+                payload: { 
+                    pages: pagesArray, 
+                    word_bank: wordBank, 
+                    data: lesson,
             }})
+        }
+    }, [lesson])
 
+    useEffect(() => {
+        if ( data ) {
+            console.log('data', data)
+            let initialComponentState: any = {};
+            lesson.lessonPlan.forEach((item: { type: string, stage: string}) => {
+                initialComponentState[item.type] = data.data[item.stage]
+            })
+            dispatch({
+                type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB',
+                payload: initialComponentState,
+            })
         }
     }, [data])
-
-    // console.log('state', state)
 
     return (
         <LessonContext.Provider value={{state, dispatch, theme }}>

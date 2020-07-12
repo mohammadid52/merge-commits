@@ -123,14 +123,36 @@ export const getClassroomDataTest = /* GraphQL */ `
       classroomID
       studentID
       data {
-        warmUpData {
+        warmup {
           story
           title
+          additional {
+            name
+            input
+          }
         }
-        activityData {
+        corelesson {
+          selected {
+            id
+            anchor
+            focus
+            color
+            content {
+              id
+              text
+            }
+          }
+        }
+        activity {
           editInput
           editMode
           title
+          lines {
+            example
+            id
+            menuOpen
+            text
+          }
         }
       }
       createdAt

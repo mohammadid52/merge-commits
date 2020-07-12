@@ -32,7 +32,10 @@ const Login = () => {
             setCookie('auth', { email: username, authId: user.username }, { secure: false })
             history.push('/dashboard')
         } catch (error) {
-            console.log('error signing in', error);
+            console.error('error signing in', error);
+            if ( error.code === "UserNotConfirmedException" ) {
+                return history.push('/confirm')
+            }
             setMessage(() => {
                 return {
                     show: true,
@@ -65,7 +68,7 @@ const Login = () => {
 
     return (
         <div className="w-full h-200 flex flex-col items-center justify-center">
-            <div className="w-140 h-120 bg-gray-200 p-8 flex flex-col items-center shadow-elem-light border border-gray-300 rounded">
+            <div className="w-140 h-140 bg-gray-200 p-8 flex flex-col items-center shadow-elem-light border border-gray-300 rounded">
                 <h1 className="text-3xl font-open font-bold">Login</h1>
                 <div className="w-full h-12 flex justify-center items-center">
                     {
@@ -82,7 +85,7 @@ const Login = () => {
                     <label htmlFor="password">Password</label>
                     <input className="w-full px-2 py-1 mb-4" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
                 </div>
-                {/* <Link to="/register">Register</Link> */}
+                {/* <Link to="/register">Register</Link> */} 
                 <button className="w-20 h-12 bg-dark-red text-gray-200 rounded shadow-elem-light mb-4" onClick={handleSubmit}>Submit</button>
             </div>
         </div>

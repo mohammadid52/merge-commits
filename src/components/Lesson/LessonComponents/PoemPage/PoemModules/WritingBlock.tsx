@@ -34,7 +34,7 @@ const WritingBlock = (props: WritingBlockProps) => {
     const [ lineState, setLineState ] = useState({
         focused: null,
         prompts: promptArray,
-        lines: initialLines,
+        lines: state.componentState.poem && state.componentState.poem.lines ? state.componentState.poem.lines : initialLines,
     });
 
     useEffect(() => {
@@ -49,12 +49,12 @@ const WritingBlock = (props: WritingBlockProps) => {
     }, [])
 
     useEffect(() => {
-        let lineArray = lineState.lines.map(line => {
+        let lineArray = lineState.lines.map((line: { text: string }) => {
             return line.text
         })
 
         let content = '';
-        lineArray.forEach(line => {
+        lineArray.forEach((line: string) => {
             return content = content + line + '\n'
         });
 
@@ -97,7 +97,7 @@ const WritingBlock = (props: WritingBlockProps) => {
         setLineState(lineState => {
             return {
                 ...lineState,
-                lines: lineState.lines.map(line => {
+                lines: lineState.lines.map((line: { text: string }) => {
                     return {
                         ...line,
                         menuOpen: false,
@@ -128,12 +128,12 @@ const WritingBlock = (props: WritingBlockProps) => {
         let length = lineState.lines.length;
         if (length > lineNo) {
             setLineState(lineState => {
-                let newLines = lineState.lines.filter((line, key) => {
+                let newLines = lineState.lines.filter((line: { id: string }, key: number) => {
                     return id != line.id;
                 })
                 return {
                     ...lineState,
-                    lines: newLines.map((line, key) => {
+                    lines: newLines.map((line: { id: string }, key: number) => {
                         return {
                             ...line,
                             id: key
@@ -154,7 +154,7 @@ const WritingBlock = (props: WritingBlockProps) => {
         setLineState(lineState => {
             return {
                 ...lineState, 
-                lines: lineState.lines.map(line => {
+                lines: lineState.lines.map((line: { id: string }, key: number) => {
                     if (line.id == current.id) {
                         return {
                             ...line, 
@@ -175,7 +175,7 @@ const WritingBlock = (props: WritingBlockProps) => {
         setLineState(lineState => {
             return {
                 ...lineState,
-                lines: lineState.lines.map(line => {
+                lines: lineState.lines.map((line: { id: string, menuOpen: boolean }, key: number) => {
                     if (line.id == id) {
                         return {
                             ...line,
@@ -206,7 +206,7 @@ const WritingBlock = (props: WritingBlockProps) => {
         setLineState(lineState => {
             return {
                 ...lineState,
-                lines: lineState.lines.map(line => {
+                lines: lineState.lines.map((line: { id: string }, key: number) => {
                     if (line.id == id) {
                         return {
                             ...line,
@@ -231,7 +231,7 @@ const WritingBlock = (props: WritingBlockProps) => {
         setLineState(lineState => {
             return {
                 ...lineState,
-                lines: lineState.lines.map(line => {
+                lines: lineState.lines.map((line: { id: string, text: string }, key: number) => {
                     if (id == line.id) {
                         return {
                             ...line,
@@ -259,7 +259,7 @@ const WritingBlock = (props: WritingBlockProps) => {
             </div>
             <div className="w-full h-160 flex flex-col ml-2">
                 {   lineState.lines.length > 1 ? 
-                    lineState.lines.map((line, key) => {
+                    lineState.lines.map((line: { id: string, text: string, example: string, menuOpen: boolean }, key: number) => {
                         let id = line.id.toString()
                         return (
                         <div key={key} className="relative bg-transparent flex flex-col">

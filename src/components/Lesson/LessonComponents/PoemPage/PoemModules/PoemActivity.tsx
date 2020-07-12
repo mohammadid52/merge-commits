@@ -24,8 +24,8 @@ const PoemActivity = () => {
     const { state, dispatch } = useContext(LessonContext);
     const [ cookies, setCookie ] = useCookies(['poem']);
     const [ editMode, setEditMode ] = useState({
-        open: cookies.poem ? cookies.poem.editMode : false,
-        input: '',
+        open: state.componentState.poem && state.componentState.poem.editMode ? state.componentState.poem.editMode : false,
+        input: state.componentState.poem && state.componentState.poem.editInput ? state.componentState.poem.editInput : '',
     })
     const { video, link, text } = state.data.activity.instructions
     const [ openPopup, setOpenPopup ] = useState(false);
@@ -43,7 +43,7 @@ const PoemActivity = () => {
                 })
             }
 
-            if ( cookies.poem.editMode ) {
+            if ( cookies.poem.editMode && cookies.poem ) {
                 setEditMode(prev => {
                     return {
                         ...prev,
@@ -62,7 +62,7 @@ const PoemActivity = () => {
             }
         }
 
-        if ( !cookies.poem ) {
+        if ( !cookies.poem && !state.componentState.poem ) {
             let storageObj: storageObject = {
                 title: '',
                 editMode: false,

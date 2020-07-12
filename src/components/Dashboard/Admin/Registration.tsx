@@ -45,7 +45,7 @@ const Registration = () => {
                     show: false,
                 }
             })
-        }, 3000)
+        }, 1000)
     }
 
     useEffect(() => {

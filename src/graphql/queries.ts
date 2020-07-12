@@ -16,9 +16,18 @@ export const getPerson = /* GraphQL */ `
       institution {
         id
         name
+        district
         address
+        city
+        state
+        zip
         phone
         contact {
+          name
+          phone
+          email
+        }
+        coordinator {
           id
           authId
           status
@@ -49,7 +58,11 @@ export const getPerson = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -144,7 +157,11 @@ export const listPersons = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -320,9 +337,18 @@ export const getCourse = /* GraphQL */ `
       institution {
         id
         name
+        district
         address
+        city
+        state
+        zip
         phone
         contact {
+          name
+          phone
+          email
+        }
+        coordinator {
           id
           authId
           status
@@ -356,7 +382,11 @@ export const getCourse = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -394,7 +424,11 @@ export const getCourse = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -464,7 +498,11 @@ export const listCourses = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -530,9 +568,18 @@ export const getInstitution = /* GraphQL */ `
     getInstitution(id: $id) {
       id
       name
+      district
       address
+      city
+      state
+      zip
       phone
       contact {
+        name
+        phone
+        email
+      }
+      coordinator {
         id
         authId
         status
@@ -544,7 +591,11 @@ export const getInstitution = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -594,9 +645,18 @@ export const listInstitutions = /* GraphQL */ `
       items {
         id
         name
+        district
         address
+        city
+        state
+        zip
         phone
         contact {
+          name
+          phone
+          email
+        }
+        coordinator {
           id
           authId
           status
@@ -772,7 +832,11 @@ export const getClassroomDataTest = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -799,11 +863,11 @@ export const getClassroomDataTest = /* GraphQL */ `
         updatedAt
       }
       data {
-        warmUpData {
+        warmup {
           story
           title
         }
-        activityData {
+        activity {
           editInput
           editMode
           title
@@ -943,7 +1007,11 @@ export const getClassroomData = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1101,7 +1169,11 @@ export const getClassData = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt

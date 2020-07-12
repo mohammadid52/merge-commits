@@ -19,9 +19,18 @@ export const createPerson = /* GraphQL */ `
       institution {
         id
         name
+        district
         address
+        city
+        state
+        zip
         phone
         contact {
+          name
+          phone
+          email
+        }
+        coordinator {
           id
           authId
           status
@@ -52,7 +61,11 @@ export const createPerson = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -135,9 +148,18 @@ export const updatePerson = /* GraphQL */ `
       institution {
         id
         name
+        district
         address
+        city
+        state
+        zip
         phone
         contact {
+          name
+          phone
+          email
+        }
+        coordinator {
           id
           authId
           status
@@ -168,7 +190,11 @@ export const updatePerson = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -251,9 +277,18 @@ export const deletePerson = /* GraphQL */ `
       institution {
         id
         name
+        district
         address
+        city
+        state
+        zip
         phone
         contact {
+          name
+          phone
+          email
+        }
+        coordinator {
           id
           authId
           status
@@ -284,7 +319,11 @@ export const deletePerson = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -662,9 +701,18 @@ export const createCourse = /* GraphQL */ `
       institution {
         id
         name
+        district
         address
+        city
+        state
+        zip
         phone
         contact {
+          name
+          phone
+          email
+        }
+        coordinator {
           id
           authId
           status
@@ -698,7 +746,11 @@ export const createCourse = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -736,7 +788,11 @@ export const createCourse = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -804,9 +860,18 @@ export const updateCourse = /* GraphQL */ `
       institution {
         id
         name
+        district
         address
+        city
+        state
+        zip
         phone
         contact {
+          name
+          phone
+          email
+        }
+        coordinator {
           id
           authId
           status
@@ -840,7 +905,11 @@ export const updateCourse = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -878,7 +947,11 @@ export const updateCourse = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -946,9 +1019,18 @@ export const deleteCourse = /* GraphQL */ `
       institution {
         id
         name
+        district
         address
+        city
+        state
+        zip
         phone
         contact {
+          name
+          phone
+          email
+        }
+        coordinator {
           id
           authId
           status
@@ -982,7 +1064,11 @@ export const deleteCourse = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1020,7 +1106,11 @@ export const deleteCourse = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1084,9 +1174,18 @@ export const createInstitution = /* GraphQL */ `
     createInstitution(input: $input, condition: $condition) {
       id
       name
+      district
       address
+      city
+      state
+      zip
       phone
       contact {
+        name
+        phone
+        email
+      }
+      coordinator {
         id
         authId
         status
@@ -1098,7 +1197,11 @@ export const createInstitution = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1138,9 +1241,18 @@ export const updateInstitution = /* GraphQL */ `
     updateInstitution(input: $input, condition: $condition) {
       id
       name
+      district
       address
+      city
+      state
+      zip
       phone
       contact {
+        name
+        phone
+        email
+      }
+      coordinator {
         id
         authId
         status
@@ -1152,7 +1264,11 @@ export const updateInstitution = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1192,9 +1308,18 @@ export const deleteInstitution = /* GraphQL */ `
     deleteInstitution(input: $input, condition: $condition) {
       id
       name
+      district
       address
+      city
+      state
+      zip
       phone
       contact {
+        name
+        phone
+        email
+      }
+      coordinator {
         id
         authId
         status
@@ -1206,7 +1331,11 @@ export const deleteInstitution = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1437,7 +1566,11 @@ export const createClassroomDataTest = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1464,11 +1597,11 @@ export const createClassroomDataTest = /* GraphQL */ `
         updatedAt
       }
       data {
-        warmUpData {
+        warmup {
           story
           title
         }
-        activityData {
+        activity {
           editInput
           editMode
           title
@@ -1558,7 +1691,11 @@ export const updateClassroomDataTest = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1585,11 +1722,11 @@ export const updateClassroomDataTest = /* GraphQL */ `
         updatedAt
       }
       data {
-        warmUpData {
+        warmup {
           story
           title
         }
-        activityData {
+        activity {
           editInput
           editMode
           title
@@ -1679,7 +1816,11 @@ export const deleteClassroomDataTest = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1706,11 +1847,11 @@ export const deleteClassroomDataTest = /* GraphQL */ `
         updatedAt
       }
       data {
-        warmUpData {
+        warmup {
           story
           title
         }
-        activityData {
+        activity {
           editInput
           editMode
           title
@@ -1800,7 +1941,11 @@ export const createClassroomData = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -1914,7 +2059,11 @@ export const updateClassroomData = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -2028,7 +2177,11 @@ export const deleteClassroomData = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -2142,7 +2295,11 @@ export const createClassData = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -2256,7 +2413,11 @@ export const updateClassData = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt
@@ -2370,7 +2531,11 @@ export const deleteClassData = /* GraphQL */ `
         institution {
           id
           name
+          district
           address
+          city
+          state
+          zip
           phone
           type
           createdAt

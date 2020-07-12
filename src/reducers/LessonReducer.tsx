@@ -1,6 +1,4 @@
 import { LessonStateType, lessonState } from '../state/LessonState';
-import { stat } from 'fs';
-import { turquoise } from 'color-name';
 
 type LessonActions = 
 |   {
@@ -21,6 +19,12 @@ type LessonActions =
     } 
 |   {
         type: 'SET_INITIAL_COMPONENT_STATE';
+        payload: {
+            [key: string]: any,
+        };
+    } 
+|   {
+        type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB';
         payload: {
             [key: string]: any,
         };
@@ -115,6 +119,13 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 new_words: [...state.new_words, action.payload],
                 word_bank: [...state.word_bank, action.payload]
             }
+        case 'SET_INITIAL_COMPONENT_STATE_FROM_DB':
+            
+            return {
+                ...state,
+                firstSave: true,
+                componentState: action.payload,
+            };
         case 'SET_INITIAL_COMPONENT_STATE':
             return {
                 ...state,

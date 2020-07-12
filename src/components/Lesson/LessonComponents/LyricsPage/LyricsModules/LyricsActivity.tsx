@@ -19,27 +19,13 @@ type SelectObject = {
 const Body = () => {
     const { state, dispatch } = useContext(LessonContext)
     const [ color, setColor ] = useState('')
-    const [ selected, setSelected ] = useState<Array<SelectObject>>([])
+    const [ selected, setSelected ] = useState<Array<SelectObject>>( state.componentState.lyrics && state.componentState.lyrics.selected ? state.componentState.lyrics.selected : [])
     const [ cookies, setCookie ] = useCookies(['lyrics'])
     const [ fullscreen, setFullscreen ] = useState(false)
     const { video, link } = state.data.coreLesson.instructions
     const [ openPopup, setOpenPopup ] = useState(false)
 
     useEffect(() => {
-        if ( !cookies.lyrics ) {
-            dispatch({
-                type: 'SET_INITIAL_COMPONENT_STATE',
-                payload: {
-                    name: 'lyrics',
-                    content: {
-                        selected: [],
-                    },
-                }
-            })
-
-            setCookie('lyrics', []);
-        }
-
         if ( cookies.lyrics ) {
             dispatch({
                 type: 'SET_INITIAL_COMPONENT_STATE',
@@ -54,6 +40,19 @@ const Body = () => {
             setSelected(cookies.lyrics)
         }
 
+        if ( !cookies.lyrics && !state.componentState.lyrics && !state.componentState.lyrics.selected ) {
+            dispatch({
+                type: 'SET_INITIAL_COMPONENT_STATE',
+                payload: {
+                    name: 'lyrics',
+                    content: {
+                        selected: [],
+                    },
+                }
+            })
+
+            setCookie('lyrics', []);
+        }
     }, [])
 
     useEffect(() => {

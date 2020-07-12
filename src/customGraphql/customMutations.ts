@@ -27,11 +27,11 @@ export const createClassroomDataTest = /* GraphQL */ `
       classroomID
       studentID
       data {
-        warmUpData {
+        warmup {
           story
           title
         }
-        activityData {
+        activity {
           editInput
           editMode
           title

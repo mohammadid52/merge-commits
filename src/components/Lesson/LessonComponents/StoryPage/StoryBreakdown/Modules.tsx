@@ -6,6 +6,7 @@ const keywordCapitilizer = (str: string) => {
 }
 
 const keywordParser = (str: string) => {
+    if (typeof str !== 'string') { return null }
     let tempWord = '';
     let initialArray = Array.from(str);
     let finalArray = [];
