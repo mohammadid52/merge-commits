@@ -95,6 +95,7 @@ type Institution @model @key(fields: ["id"]) {
   zip: String!
   phone: String
   contact: Contact!
+  website: String
   coordinator: [Person]
   type: InstitutionType
   image: String
