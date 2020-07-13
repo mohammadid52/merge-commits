@@ -53,11 +53,11 @@ export const updateClassroomDataTest = /* GraphQL */ `
       classroomID
       studentID
       data {
-        warmUpData {
+        warmup {
           story
           title
         }
-        activityData {
+        activity {
           editInput
           editMode
           title

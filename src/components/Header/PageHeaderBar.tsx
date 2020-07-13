@@ -34,7 +34,7 @@ const PageHeaderBar = () => {
         <div className={`w-full h-12 ${theme.toolbar.bg} text-gray-200 shadow-2 flex justify-between`}>
             <div className={`w-2/12 h-full flex justify-center items-center text-2xl font-bold`}>
                 <NavLink to="/dashboard">
-                    SELReady
+                    <img className="h-8 pl-4 pr-3" src="media/logo_white.svg" alt="Iconoclast Artists"/>
                 </NavLink>
             </div>
             <div className={`w-48 h-full flex flex-row justify-center`}>

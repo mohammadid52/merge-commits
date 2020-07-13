@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { NavLink, useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import { IconContext } from "react-icons";
+import { FaRegSave } from 'react-icons/fa';
 import { LessonContext } from '../../contexts/LessonContext';
 import { API, graphqlOperation } from 'aws-amplify';
 import * as customMutations from '../../customGraphql/customMutations';
@@ -97,12 +99,15 @@ const LessonHeaderBar = () => {
         <div className={`w-full h-12 ${theme.toolbar.bg} text-gray-200 shadow-2 flex justify-between`}>
             <div className={`w-2/12 h-full flex justify-center items-center text-2xl font-bold`}>
                 <NavLink to="/dashboard">
-                    SELReady
+                    <img className="h-8 px-8" src="media/logo_white.svg" alt="Iconoclast Artists"/>
                 </NavLink>
             </div>
-            <div className={`w-48 h-full flex flex-row justify-center items-center`}>
-                <div className={`${state.unsavedChanges ? 'bg-green-600 text-gray-300 shadow-elem-dark cursor-pointer' : 'bg-gray-500 text-gray-600 cursor-default'} flex justify-center items-center w-16 h-8 rounded font-open font-bold`} onClick={handleSave}>
-                    { state.unsavedChanges ? 'Save' : 'Saved!' }
+            <div className={`w-48 h-full flex flex-row justify-end items-center px-8`}>
+                <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex justify-center items-center w-10 h-10 rounded-full font-open font-bold`} onClick={handleSave}>
+                    <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
+                        <FaRegSave />
+                    </IconContext.Provider>
+                    {/* { state.unsavedChanges ? 'Save' : 'Saved!' } */}
                 </div>
             </div>
         </div>
