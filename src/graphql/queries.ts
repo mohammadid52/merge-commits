@@ -46,6 +46,7 @@ export const getPerson = /* GraphQL */ `
           updatedAt
         }
         type
+        image
         createdAt
         updatedAt
       }
@@ -65,6 +66,7 @@ export const getPerson = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -164,6 +166,7 @@ export const listPersons = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -367,6 +370,7 @@ export const getCourse = /* GraphQL */ `
           updatedAt
         }
         type
+        image
         createdAt
         updatedAt
       }
@@ -389,6 +393,7 @@ export const getCourse = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -431,6 +436,7 @@ export const getCourse = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -505,6 +511,7 @@ export const listCourses = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -598,6 +605,7 @@ export const getInstitution = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -622,6 +630,7 @@ export const getInstitution = /* GraphQL */ `
         updatedAt
       }
       type
+      image
       createdAt
       updatedAt
     }
@@ -675,6 +684,7 @@ export const listInstitutions = /* GraphQL */ `
           updatedAt
         }
         type
+        image
         createdAt
         updatedAt
       }
@@ -839,6 +849,7 @@ export const getClassroomDataTest = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -1014,6 +1025,7 @@ export const getClassroomData = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -1176,6 +1188,7 @@ export const getClassData = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }

@@ -46,6 +46,7 @@ export const onCreatePerson = /* GraphQL */ `
           updatedAt
         }
         type
+        image
         createdAt
         updatedAt
       }
@@ -65,6 +66,7 @@ export const onCreatePerson = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -172,6 +174,7 @@ export const onUpdatePerson = /* GraphQL */ `
           updatedAt
         }
         type
+        image
         createdAt
         updatedAt
       }
@@ -191,6 +194,7 @@ export const onUpdatePerson = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -298,6 +302,7 @@ export const onDeletePerson = /* GraphQL */ `
           updatedAt
         }
         type
+        image
         createdAt
         updatedAt
       }
@@ -317,6 +322,7 @@ export const onDeletePerson = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -710,6 +716,7 @@ export const onCreateCourse = /* GraphQL */ `
           updatedAt
         }
         type
+        image
         createdAt
         updatedAt
       }
@@ -732,6 +739,7 @@ export const onCreateCourse = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -774,6 +782,7 @@ export const onCreateCourse = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -866,6 +875,7 @@ export const onUpdateCourse = /* GraphQL */ `
           updatedAt
         }
         type
+        image
         createdAt
         updatedAt
       }
@@ -888,6 +898,7 @@ export const onUpdateCourse = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -930,6 +941,7 @@ export const onUpdateCourse = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -1022,6 +1034,7 @@ export const onDeleteCourse = /* GraphQL */ `
           updatedAt
         }
         type
+        image
         createdAt
         updatedAt
       }
@@ -1044,6 +1057,7 @@ export const onDeleteCourse = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -1086,6 +1100,7 @@ export const onDeleteCourse = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -1174,6 +1189,7 @@ export const onCreateInstitution = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -1198,6 +1214,7 @@ export const onCreateInstitution = /* GraphQL */ `
         updatedAt
       }
       type
+      image
       createdAt
       updatedAt
     }
@@ -1238,6 +1255,7 @@ export const onUpdateInstitution = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -1262,6 +1280,7 @@ export const onUpdateInstitution = /* GraphQL */ `
         updatedAt
       }
       type
+      image
       createdAt
       updatedAt
     }
@@ -1302,6 +1321,7 @@ export const onDeleteInstitution = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -1326,6 +1346,7 @@ export const onDeleteInstitution = /* GraphQL */ `
         updatedAt
       }
       type
+      image
       createdAt
       updatedAt
     }
@@ -1516,6 +1537,7 @@ export const onCreateClassroomDataTest = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -1638,6 +1660,7 @@ export const onUpdateClassroomDataTest = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -1760,6 +1783,7 @@ export const onDeleteClassroomDataTest = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -1882,6 +1906,7 @@ export const onCreateClassroomData = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -1997,6 +2022,7 @@ export const onUpdateClassroomData = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -2112,6 +2138,7 @@ export const onDeleteClassroomData = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -2227,6 +2254,7 @@ export const onCreateClassData = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -2342,6 +2370,7 @@ export const onUpdateClassData = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
@@ -2457,6 +2486,7 @@ export const onDeleteClassData = /* GraphQL */ `
           zip
           phone
           type
+          image
           createdAt
           updatedAt
         }
