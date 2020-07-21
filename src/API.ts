@@ -274,6 +274,7 @@ export type CreateInstitutionInput = {
   contact: ContactInput,
   website?: string | null,
   image?: string | null,
+  institutionTypeId?: string | null,
 };
 
 export type ContactInput = {
@@ -309,6 +310,7 @@ export type UpdateInstitutionInput = {
   contact?: ContactInput | null,
   website?: string | null,
   image?: string | null,
+  institutionTypeId?: string | null,
 };
 
 export type DeleteInstitutionInput = {
