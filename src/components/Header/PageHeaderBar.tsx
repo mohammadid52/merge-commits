@@ -34,16 +34,16 @@ const PageHeaderBar = () => {
         <div className={`w-full h-12 ${theme.toolbar.bg} text-gray-200 shadow-2 flex justify-between`}>
             <div className={`w-2/12 h-full flex justify-center items-center text-2xl font-bold`}>
                 <NavLink to="/dashboard">
-                    <img className="h-8 pl-4 pr-3" src="media/logo_white.svg" alt="Iconoclast Artists"/>
+                    <img className="h-6" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg" alt="Iconoclast Artists"/>
                 </NavLink>
             </div>
-            <div className={`w-48 h-full flex flex-row justify-center`}>
-                <button className={`w-24 h-full flex justify-center items-center text-lg py-2`} onClick={lightSwitch}>
+            <div className={`w-32 h-full flex flex-row justify-end mr-8`}>
+                {/* <button className={`h-full flex justify-center items-center text-lg py-2`} onClick={lightSwitch}>
                     Lights
-                </button>
+                </button> */}
                 {   
                     state.isAuthenticated ? 
-                    <button className={`w-24 h-full flex justify-center items-center text-lg py-2`} onClick={handleSignOut}>
+                    <button className={`h-full flex justify-center items-center text-lg py-2`} onClick={handleSignOut}>
                         Log Out
                     </button>
                     : null
