@@ -170,29 +170,29 @@ const LyricsBlock = (props: LyricsBlockProps) => {
 
     return (
         <>
-            <div className={`relative bg-dark-blue ${fullscreen ? 'h-164' : 'h-68'} w-full pl-8 pr-4 py-4 flex flex-col justify-between rounded shadow-2 text-gray-400 text-lg`}>
+            <div className={`md:h-64 relative bg-dark-blue ${fullscreen ? 'md:h-120' : 'h-68'} mb-4 md:mb-0 w-full pl-8 pr-4 py-4 flex flex-col justify-between rounded shadow-2 text-gray-400 text-lg`}>
                 <div className="w-full flex flex-row justify-between">
-                    <div className="w-full flex flex-row justify-between border-b border-gray-700 mr-4">
-                        <h3 className="text-2xl font-open font-bold mb-2">
+                    <div className="w-9/10 flex flex-row justify-between border-b border-gray-700 mr-4 md:mr-0">
+                        <h3 className="w-auto text-2xl font-open font-bold mb-2">
                             Lyrics
                         </h3>
-                        <div className="mr-2">
+                        <div className="w-auto mr-2">
                             <IconContext.Provider value={{ color: colorPicker(color), size: '2rem'}}>
                                 <FaHighlighter />
                             </IconContext.Provider>
                         </div>
                     </div>
-                    <div className="text-xl pt-2" onClick={handleFullscreen}>
+                    <div className="w-auto text-xl" onClick={handleFullscreen}>
                         <IconContext.Provider value={{ color: '#E2E8F0', size: '1.5rem' }}>
                             <FaExpand />
                         </IconContext.Provider>
                     </div>
                 </div>
-                <div className="text-gray-200 overflow-scroll px-4">
+                <div className="text-gray-200 text-sm overflow-scroll md:px-4">
                     {
                         displayTextArray.map((array, keyA) => {
                             return (
-                                <div id={keyA + 'a'} key={keyA} className="my-2 text-gray-200 text-base">
+                                <div id={keyA + 'a'} key={keyA} className="my-2 text-gray-200 text-sm md:text-base">
                                     {
                                         array.map((word, keyB) => {
                                             acc = acc + 1;

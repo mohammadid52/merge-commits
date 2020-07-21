@@ -9,3 +9,162 @@
     background: transparent; /* make scrollbar transparent */
 }
 
+* {
+    width: 100%;
+    /* height: 100%; */
+}
+.main {
+    height: 100vh; 
+}
+
+.instruction {
+    padding: 2rem;
+}
+.icon {
+    width: 16rem;
+}
+
+.picture {
+    background-position: center;
+    background-repeat: no-repeat; 
+}
+
+.banner {
+    margin-bottom: 1rem;
+    width: 100%;
+    height: 5rem;
+}
+
+.red {
+    color: red;
+    height: 5rem;
+    width: 5rem;
+}
+
+.title {
+    font-size: 3rem;
+    padding: .5rem;
+    height: 5rem;
+    padding: 0;
+}
+
+@media screen and (max-width: 767px) {
+    .main {
+        height: auto;
+    }
+    
+    .reflection {
+        height: 6rem;
+        width: 20rem;
+        font-size: 12px;
+        padding-left: .5rem;
+        padding-right: .5rem;
+        
+    }
+    .question {
+        font-size: 10px;
+        padding-left: .5rem;
+        padding-right: .5rem;
+        overflow: scroll;
+    }
+
+    .instruction {
+        padding: 1rem;
+    }
+
+    .icon-font {
+        font-size: .5rem;
+    }
+    .header-font {
+        font-size: 1.5rem;
+    }
+    .sidebar {
+        position: absolute;
+        bottom: 0;
+        height: 5rem;
+        width: 100vw;
+        display: flex;
+        font-size: 12px;
+        align-items: center;
+    }
+    .sidebar a {
+        width: 10rem;
+    }
+    .link {
+        display: flex;
+        margin-bottom: 0rem;
+        font-size: 12px;
+        padding-left: 1rem;
+    }
+
+    #Registration{
+        font-size: 12px;
+    }
+
+    #Classroom {
+        font-size: 12px;
+    }
+    .center {
+        display: flex;
+        justify-content: center;
+    }
+
+    .banner {
+        margin-top: .5rem;
+        margin-bottom: 1rem;
+        width: 100%;
+        height: 4rem;
+    }
+
+    .red {
+        color: red;
+        height: 4rem;
+        width: 4rem;
+    }
+    svg{
+        height: 2rem;
+        width: 2rem;
+    }
+
+    .title {
+        font-size: 1rem;
+        padding: .5rem;
+        height: 4rem;
+    }
+
+
+    .picture {
+        background-size: 22rem;
+    }
+
+    .column-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media screen and (min-width:768px) and (max-width: 1023px)  {
+    .banner {
+        margin-top: .5rem;
+        margin-bottom: 1rem;
+        width: 100%;
+        height: 4rem;
+    }
+
+    .red {
+        color: red;
+        height: 4rem;
+        width: 4rem;
+    }
+    svg{
+        height: 2rem;
+        width: 2rem;
+    }
+
+    .title {
+        font-size: 2rem;
+        padding: .5rem;
+        height: 4rem;
+    }
+}

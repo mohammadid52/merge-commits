@@ -14,13 +14,13 @@ const LessonApp = () => {
             <LessonLoading />
         )
     }
-
+//md:h-screen 
     return (
-        <div className={`${theme.bg} min-h-full w-screen flex flex-col justify-between`} >
-            <LessonHeaderBar />
-            <Body />
-            <Foot />
-        </div>
+    <div className={`${theme.bg} w-screen flex flex-col justify-between`} >
+        <LessonHeaderBar />
+        <Body />
+        <Foot />
+    </div>
     )
 }
 

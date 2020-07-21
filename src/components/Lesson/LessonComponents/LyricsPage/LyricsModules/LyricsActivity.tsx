@@ -77,14 +77,14 @@ const Body = () => {
     return (
         <>
             <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/> 
-            <div className="w-full h-200 flex flex-col items-center">
+            <div className="w-full h-full flex flex-col items-center">
                 <Banner />
-                <div className="h-164 w-full flex flex-row justify-around items-center content-center">
-                    <div className=" w-7/10 h-164 mr-2 text-gray-200">
+                <div className="w-full md:h-8/10 flex flex-col-reverse md:flex-row justify-around items-center content-center">
+                    <div className="h-full flex flex-col-reverse md:flex-col md:w-7/10 md:mr-2 text-gray-200">
                         <VideoBlock link={state.data.coreLesson.content.link} fullscreen={fullscreen} />
                         <LyricsBlock color={color} selected={selected} setSelected={setSelected} fullscreen={fullscreen} setFullscreen={setFullscreen}/>
                     </div>
-                    <div className="w-3/10 h-164 ml-2">
+                    <div className="h-full md:w-3/10 md:ml-2">
                         <InstructionBlock />
                         <Toolbar setColor={setColor} />
                     </div>

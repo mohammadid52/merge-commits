@@ -27,9 +27,9 @@ const MainRouter: React.FC = () => {
             history.push('/dashboard');
         }
     }, [])
-
+//min-h-screen
     return (
-        <div className={`min-h-screen w-screen ${theme.bg} flex flex-col`}>
+        <div className={`h-screen w-screen ${theme.bg} flex flex-col`}>
             <PageHeaderBar />
             <Suspense fallback={<div>Loading...</div>}>
                 <Switch>

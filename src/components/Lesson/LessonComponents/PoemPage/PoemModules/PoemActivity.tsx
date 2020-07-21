@@ -114,17 +114,17 @@ const PoemActivity = () => {
     return (
         <>
             <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/>
-            <div className="w-full h-200 flex flex-col items-center">
+            <div className="w-full flex flex-col items-center">
                 <Banner />
-                <div className="w-full h-168 flex flex-row">
-                    <div className="w-7/12 h-168 flex flex-col w-full h-screen mr-2">
+                <div className="w-full flex flex-col md:flex-row">
+                    <div className="md:w-7/12 md:h-128 flex flex-col md:w-full md:mr-2">
                         {   !editMode.open ?
                             <WritingBlock editMode={editMode} setEditMode={setEditMode}/>
                             :
                             <EditBlock editMode={editMode}/>
                         }
                     </div>
-                    <div className="w-5/12 h-168 flex flex-col ml-2">
+                    <div className="md:w-5/12 md:h-128 flex flex-col md:ml-2">
                         <InstructionBlock editMode={editMode.open} />
                         <ToolBar editMode={editMode} setEditMode={setEditMode} />
                     </div>

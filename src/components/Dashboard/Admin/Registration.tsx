@@ -114,17 +114,17 @@ const Registration = () => {
     }
 
     return (
-        <div className="w-full h-200 flex items-center justify-center">
-            <div className="w-9/10 h-180 bg-gray-200 py-8 px-12 flex flex-col shadow-elem-light border-2 border-gray-300 rounded">
+        <div className="w-full items-center justify-center">
+            <div className="w-9/10 h-130 ml-4 mt-4 md:m-0 bg-gray-200 py-8 px-12 md:flex flex-col shadow-elem-light border-2 border-gray-300 rounded">
                 <h1 className="text-3xl font-open font-bold mb-4">Register</h1>
                 <div className="flex-grow w-full flex flex-col">
-                    <div className="w-full flex">
-                        <div className="w-1/2 flex flex-col">
+                    <div className="w-full md:flex">
+                        <div className="md:w-1/2 md:flex flex-col">
                             <div className="w-full flex flex-col px-2">
                                 <label htmlFor="email">Email</label>
                                 <input className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
                             </div>
-                            <div className="flex justify-between my-2">
+                            <div className="md:flex justify-between my-2">
                                 <div className="w-full flex flex-col px-2">
                                     <label htmlFor="firstName">First name</label>
                                     <input className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="firstName" name="firstName" value={input.firstName} onChange={handleChange}/>
@@ -134,7 +134,7 @@ const Registration = () => {
                                     <input className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="lastName" name="lastName" value={input.lastName} onChange={handleChange}/>
                                 </div>
                             </div>
-                            <div className="flex justify-between my-2">
+                            <div className="md:flex justify-between my-2">
                                 <div className="w-full flex flex-col px-2">
                                     <label htmlFor="phone">Phone number</label>
                                     <input className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="phone" name="phone" value={input.phone} onChange={handleChange}/>

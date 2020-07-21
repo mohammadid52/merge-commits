@@ -96,13 +96,18 @@ const LessonHeaderBar = () => {
         
 
     return (
-        <div className={`w-full h-12 ${theme.toolbar.bg} text-gray-200 shadow-2 flex justify-between`}>
-            <div className={`w-2/12 h-full flex justify-center items-center text-2xl font-bold`}>
+        <div className={`center w-full h-12 ${theme.toolbar.bg} text-gray-200 shadow-2 flex justify-between`}>
+            <div>
+            <NavLink to="/dashboard">
+                arrow
+            </NavLink>
+            </div>
+            <div className={`h-full flex justify-center items-center text-2xl font-bold`}>
                 <NavLink to="/dashboard">
-                    <img className="h-8 px-8" src="media/logo_white.svg" alt="Iconoclast Artists"/>
+                    <img className="icon-font h-8 px-8" src="media/logo_white.svg" alt="Iconoclast Artists"/>
                 </NavLink>
             </div>
-            <div className={`w-48 h-full flex flex-row justify-end items-center px-8`}>
+            <div className={`h-full flex flex-row justify-end items-center px-8`}>
                 <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex justify-center items-center w-10 h-10 rounded-full font-open font-bold`} onClick={handleSave}>
                     <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
                         <FaRegSave />

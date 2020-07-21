@@ -77,7 +77,7 @@ const StageIcon = (props: StageIconProps) => {
     }
 
     return (
-        <div className={`${ breakdown ? 'flex-grow' : 'flex-grow-0'} flex flex-row justify-around items-center z-20`}>
+        <div className={`${ breakdown ? 'flex-grow' : 'flex-grow-0'} w-auto flex flex-row justify-around items-center z-20`}>
             <div className={`bg-gray-200 h-12 w-12 rounded-full flex items-center justify-center ${ active ? 'cursor-pointer' : 'cursor-default'}`} onClick={handleLink}>
                  <IconContext.Provider value={{ color: iconColor, size: '1.5rem' }}>
                     <div className={`h-10 w-10 rounded-full flex flex-col justify-center items-center ${ active ? 'bg-green-600'  : 'bg-gray-400'} z-30`}>

@@ -32,12 +32,12 @@ const ToolBar = (props: ToolBarProps) => {
     }
 
     return (
-        <div className="w-full h-100 bg-gray-700 flex flex-col items-center text-gray-200 shadow-2 px-4 py-2 rounded-sm">
+        <div className="w-full md:h-100 bg-gray-700 flex flex-col items-center text-gray-200 shadow-2 px-4 py-2 rounded-sm">
             <div className="mb-4 w-full">
                 <h3 className="w-full text-xl text-gray-200 font-open font-bold mb-4 border-b border-gray-900">Toolbox</h3>
                 <h3 className="text-lg font-bold font-open mb-2">My word bank:</h3>
                 <input id="search" className="pl-2 mb-2 rounded-lg shadow-3 text-gray-700  text-sm bg-gray-200" type="text" value={search} placeholder="Search..." onChange={handleChange}/>
-                <div className="w-full h-56 bg-gray-300 flex flex-col shadow-3 text-gray-500 px-4 rounded-sm overflow-scroll">
+                <div className="w-full h-40 md:h-16 bg-gray-300 flex flex-col shadow-3 text-gray-500 px-4 rounded-sm overflow-scroll">
                     { 
                         search === '' ? state.word_bank.map((word: string, key: string) => (
                             <div 
