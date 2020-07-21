@@ -66,7 +66,7 @@ const Dashboard: React.FC = () => {
                 <ProfileLink />
                 <Links />
             </SideMenu>
-            <div className={`flex-grow`}>
+            <div className={`w-10/12`}>
             <Suspense fallback={<div>Loading...</div>}>
                 <Switch>
                     <Route 

@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useHistory, NavLink, useRouteMatch } from 'react-router-dom';
 import { IconContext } from 'react-icons';
 import { FaUserCircle } from 'react-icons/fa';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 
 const ProfileLink: React.FC = () => {
+    const { state } = useContext(GlobalContext)
     const match = useRouteMatch()
     const history = useHistory()
 
+    const firstInitialFunc = (str: string) => {
+        if (typeof str !== 'string' || str === '') { return 'Profile' }
+        let firstInitial = str.charAt(0)
+        firstInitial = firstInitial.toUpperCase() + '.';
+        return firstInitial;
+    }
 
     const handleLink = () => {
         history.push('dashboard/profile');
@@ -19,7 +27,7 @@ const ProfileLink: React.FC = () => {
                     <FaUserCircle />
                 </IconContext.Provider>
                 <div className="flex-grow h-full flex justify-center">
-                    Profile
+                    {`${ state.user.firstName } ${ firstInitialFunc(state.user.lastName) }`}
                 </div>
             </div>
         </NavLink>
