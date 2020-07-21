@@ -41,7 +41,7 @@ const Links: React.FC = () => {
             {
                 state.user.role && links.length > 0 ? 
                 links.map((link: string, key: number) => (
-                    <div id={link} key={key} className={`w-full text-center mb-4`} onClick={handleLink}>
+                    <div id={link} key={key} className={`w-full text-center text-lg mb-4`} onClick={handleLink}>
                         { link }
                     </div>
                 )) :

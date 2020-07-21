@@ -143,14 +143,12 @@ const LyricsBlock = (props: LyricsBlockProps) => {
             let anchor: { id?: string, [key: string]: any } = selection.anchorNode.parentNode ;
             let focus: { id?: string, [key: string]: any} = selection.focusNode.parentNode ;
 
-            let selections = selected.map((selection: { anchor: string, focus: string, color: string }) => {
-                if ( parseInt(selection.anchor) > parseInt(focus.id) ||
-                parseInt(selection.focus) < parseInt(anchor.id) ) return selection;
-
-                
+            let selections = selected.filter((selection: { anchor: string, focus: string, color: string }) => {
+                return parseInt(selection.anchor) > parseInt(focus.id) ||
+                parseInt(selection.focus) < parseInt(anchor.id)
             })
 
-            console.log(selections)
+            setSelected(selections)
         }
 
     }

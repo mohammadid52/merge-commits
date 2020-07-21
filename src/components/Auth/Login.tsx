@@ -69,7 +69,7 @@ const Login = () => {
     return (
         <div className="w-full h-200 flex flex-col items-center justify-center">
             <div className="w-140 h-140 bg-gray-200 p-8 flex flex-col items-center shadow-elem-light border border-gray-300 rounded">
-                <h1 className="text-3xl font-open font-bold">Login</h1>
+                <h1 className="text-5xl font-open font-bold">Login</h1>
                 <div className="w-full h-12 flex justify-center items-center">
                     {
                         message.show ? (
@@ -79,11 +79,15 @@ const Login = () => {
                         ) : null
                     }
                 </div>
-                <div className="w-5/10 flex-grow flex flex-col items-center py-4">
-                    <label htmlFor="email">Email</label>
-                    <input className="w-full px-2 py-1 mb-4 " type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
-                    <label htmlFor="password">Password</label>
-                    <input className="w-full px-2 py-1 mb-4" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
+                <div className="w-5/10 flex-grow flex flex-col py-8">
+                    <div>
+                        <label htmlFor="email">Email</label>
+                        <input className="w-full px-2 py-1 mb-4 " type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
+                    </div>
+                    <div>
+                        <label htmlFor="password">Password</label>
+                        <input className="w-full px-2 py-1 mb-4" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
+                    </div>
                 </div>
                 {/* <Link to="/register">Register</Link> */} 
                 <button className="w-20 h-12 bg-dark-red text-gray-200 rounded shadow-elem-light mb-4" onClick={handleSubmit}>Submit</button>

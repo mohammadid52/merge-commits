@@ -61,7 +61,7 @@ type LessonActions =
         type: 'CLEANUP';
     } 
 |   {
-        type: 'TEST' | 'PAGE_FORWARD' |  'PAGE_BACK' | 'CAN_CONTINUE' | 'SAVED_CHANGES';
+        type: 'TEST' | 'PAGE_FORWARD' |  'PAGE_BACK' | 'CAN_CONTINUE' | 'FINISH' | 'SAVED_CHANGES';
     } 
 
 export const lessonReducer = (state: LessonStateType, action: LessonActions) => {
@@ -150,6 +150,11 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             return {
                 ...state,
                 canContinue: true,
+            }
+        case 'FINISH':
+            return {
+                ...state,
+                canContinue: false,
             }
         case 'SAVED_CHANGES':
             return {

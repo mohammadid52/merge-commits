@@ -40,7 +40,7 @@ const Body = () => {
             setSelected(cookies.lyrics)
         }
 
-        if ( !cookies.lyrics && !state.componentState.lyrics && !state.componentState.lyrics.selected ) {
+        if ( !cookies.lyrics && !state.componentState.lyrics ) {
             dispatch({
                 type: 'SET_INITIAL_COMPONENT_STATE',
                 payload: {

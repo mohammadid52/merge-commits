@@ -12,10 +12,13 @@ const InstructionsBlock = () => {
                 Read the lyrics to the song "Latinoamérica" by Calle 13.
             </p>,
             <p className="text-sm mb-2">
-                Highlight lines or words from the lyrics that are <span className="underline">meaningful</span> to you in <span className="text-dark-red">red</span> using the highlighters below. 
+                Highlight lines or words from the lyrics that are <span className="underline">connect to you personally</span> in <span className="text-dark-red">red</span> using the highlighters below. 
             </p>, 
             <p className="text-sm mb-2"> 
-                Highlight <span className="underline">impactful</span> lines in <span className="text-fire-orange">orange</span>.
+                Mark lines that<span className="underline"> remind you of your culture</span> with <span className="text-blueberry">blue</span>.
+            </p>,
+            <p className="text-sm mb-2"> 
+                Highlight any lines that you think are<span className="underline">powerful</span> in <span className="text-fire-orange">orange</span>.
             </p>,
             <p className="text-sm mb-2">
                 Mark words you don't know in <span className="text-sea-green">green</span>.
