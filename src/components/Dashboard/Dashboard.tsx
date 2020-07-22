@@ -16,6 +16,7 @@ const Links = lazy(() => import('./Menu/Links'))
 const ProfileLink = lazy(() => import('./Menu/ProfileLink'))
 const Registration = lazy(() => import('./Admin/Registration'))
 import * as queries from '../../graphql/queries';
+import PageHeaderBar from '../Header/PageHeaderBar';
 
 
 type userObject = {
@@ -60,45 +61,46 @@ const Dashboard: React.FC = () => {
         }
     }, [])
 
-    return (
-        <div className={`w-full h-full flex`}>
-            <SideMenu>
-                <ProfileLink />
-                <Links />
-            </SideMenu>
-            <div className={`height h-full`}>
-            <Suspense fallback={<div>Loading...</div>}>
-                <Switch>
-                    <Route 
-                        exact
-                        path={`${match.url}`}
-                        render={() => (
-                            <DashboardHome />
-                        )}
-                        
-                    />
-                    <Route 
-                        path={`${match.url}/classroom`}
-                        render={() => (
-                            <Classroom />
-                        )}
-                    />
-                    <Route 
-                        path={`${match.url}/registration`}
-                        render={() => (
-                            <Registration />
-                        )}
-                    />
-                    <Route 
-                        path={`${match.url}/profile`}
-                        render={() => (
-                            <Profile />
-                        )}
-                    />
-                </Switch>
-            </Suspense>
+    return ( 
+            <div className={`w-full h-full flex`}>
+                <SideMenu>
+                    <ProfileLink />
+                    <Links />
+                </SideMenu>
+                <div className={`height h-full flex flex-col`}>
+                <PageHeaderBar />
+                <Suspense fallback={<div>Loading...</div>}>
+                    <Switch>
+                        <Route 
+                            exact
+                            path={`${match.url}`}
+                            render={() => (
+                                <DashboardHome />
+                            )}
+                            
+                        />
+                        <Route 
+                            path={`${match.url}/classroom`}
+                            render={() => (
+                                <Classroom />
+                            )}
+                        />
+                        <Route 
+                            path={`${match.url}/registration`}
+                            render={() => (
+                                <Registration />
+                            )}
+                        />
+                        <Route 
+                            path={`${match.url}/profile`}
+                            render={() => (
+                                <Profile />
+                            )}
+                        />
+                    </Switch>
+                </Suspense>
+                </div>
             </div>
-        </div>
     )
 }
 

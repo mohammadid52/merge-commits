@@ -30,7 +30,6 @@ const MainRouter: React.FC = () => {
 //min-h-screen
     return (
         <div className={`background-test h-screen w-screen ${theme.bg} flex flex-col`}>
-            <PageHeaderBar />
             <Suspense fallback={<div>Loading...</div>}>
                 <Switch>
                     <Route 
