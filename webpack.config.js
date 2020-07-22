@@ -83,6 +83,23 @@ module.exports = {
         ]
       },
       {
+        test: /\.s[ac]ss$/i,
+        use: [
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+            }
+          },
+          {
+            loader: 'sass-loader'
+          }
+        ]
+      },
+      {
         test: /\.(png|jpe?g|svg)$/,
         use: [
           {

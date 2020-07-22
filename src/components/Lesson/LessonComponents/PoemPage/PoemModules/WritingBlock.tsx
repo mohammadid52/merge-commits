@@ -246,7 +246,7 @@ const WritingBlock = (props: WritingBlockProps) => {
     }
 
     return (
-        <div className="bg-dark-blue w-full h-168 flex flex-col items-center px-8 py-6 rounded-sm shadow-2" >
+        <div className="bg-dark-blue w-full h-80 md:h-full flex flex-col items-center px-8 py-6 rounded-sm shadow-2 mb-4 md:mb-0 " >
             <div className="w-full flex flex-row justify-between mb-4">
                 <h3 className="w-full flex-grow text-xl text-gray-200 font-open font-bold border-b border-gray-700 mr-2">
                     Line Prompts
@@ -257,7 +257,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                     </div>
                 </IconContext.Provider>
             </div>
-            <div className="w-full h-160 flex flex-col ml-2">
+            <div className="w-full overflow-scroll flex flex-col ml-2">
                 {   lineState.lines.length > 1 ? 
                     lineState.lines.map((line: { id: string, text: string, example: string, menuOpen: boolean }, key: number) => {
                         let id = line.id.toString()

@@ -37,7 +37,7 @@ const Links: React.FC = () => {
     }
 
     return (
-        <div className="w-full h-12 py-4">
+        <div className="link w-full h-12 py-4">
             {
                 state.user.role && links.length > 0 ? 
                 links.map((link: string, key: number) => (

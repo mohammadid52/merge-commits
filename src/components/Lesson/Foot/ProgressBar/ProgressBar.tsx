@@ -6,7 +6,7 @@ const ProgressBar = () => {
     const { state } = useContext(LessonContext);
 
     return (
-        <div className="w-full flex-grow flex flex-col items-center justify-center content-center px-4 z-0">
+        <div className="hidden w-full md:flex flex-col flex-grow items-center justify-center content-center px-4 z-0">
             <div className="w-full flex flex-row items-center justify-between">
                 { 
                     state.pages.map((page: { stage: string; type: string; breakdown: boolean; }, key: React.ReactText) => (

@@ -15,7 +15,7 @@ const Classroom: React.FC = () => {
 
     return (
         <div className={`w-full h-full flex flex-col p-8`}>
-            <div className={`${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-100 rounded-sm p-8 flex flex-col`}>
+            <div className={`${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-80 rounded-sm p-8 flex flex-col`}>
                 <h1 className={`bg-dark text-4xl text-gray-200 font-bold font-open px-8 shadow-elem-light`}>
                     Where I'm From
                 </h1>
@@ -34,8 +34,9 @@ const Classroom: React.FC = () => {
                             In this lesson, we'll be discussing heritage and culture in the context of stories and experiences passed down through the generations. We'll be analysing and reacting to a poem by our own Marlon Lizama, called 'Where I'm from'. In reponse, you'll have the opportunity to write and present your own poem too!
                         </p>
                     </div>
+                    
                     <div className={`w-2/10 h-full flex flex-col items-center my-4`}>
-                        <div className={`h-8 w-24 bg-green-500 text-gray-200 font-open font-bold shadow-elem-light flex justify-center items-center my-4`} onClick={handleLink}>
+                        <div className={`cursor-pointer h-8 w-24 bg-green-500 text-gray-200 font-open font-bold shadow-elem-light flex justify-center items-center my-4`} onClick={handleLink}>
                             Start Lesson!
                         </div>
                         <div className={`flex h-12 my-2`} >

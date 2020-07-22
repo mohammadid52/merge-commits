@@ -13,8 +13,8 @@ const keywordCapitilizer = (str: string) => {
 const TrophyBlock = () => {
 
     return (
-        <div className="h-44 w-full bg-dark-blue flex flex-row justify-around items-center shadow-2 rounded-sm p-4 mt-4">
-            <div className="mx-4">
+        <div className="md:h-44 w-full bg-dark-blue flex flex-row justify-around items-center shadow-2 rounded-sm p-4 mt-4">
+            <div className="mx-4 column-center">
                 <IconContext.Provider value={{ color: '#F1C40F', size: '7rem',}}>
                     <FaTrophy />
                 </IconContext.Provider>
@@ -22,7 +22,7 @@ const TrophyBlock = () => {
                     Story
                 </div>
             </div>
-            <div className="mx-4">
+            <div className="mx-4 column-center">
                 <IconContext.Provider value={{ color: '#F1C40F', size: '7rem',}}>
                     <FaTrophy />
                 </IconContext.Provider>

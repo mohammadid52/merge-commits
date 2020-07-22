@@ -66,7 +66,7 @@ const Dashboard: React.FC = () => {
                 <ProfileLink />
                 <Links />
             </SideMenu>
-            <div className={`w-10/12`}>
+            <div className={`height h-full`}>
             <Suspense fallback={<div>Loading...</div>}>
                 <Switch>
                     <Route 

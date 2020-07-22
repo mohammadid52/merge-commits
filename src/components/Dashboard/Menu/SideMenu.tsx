@@ -10,7 +10,7 @@ const SideMenu: React.FC = ({children, ...props}: SideMenuProps) => {
     const { theme } = useContext(GlobalContext);
 
     return (
-        <div className={`w-2/12 h-screen ${theme.toolbar.bg} text-gray-200 shadow-2 px-4`}>
+        <div className={`sidebar w-2/12 h-full ${theme.toolbar.bg} text-gray-200 shadow-2 px-4 cursor-pointer`}>
             { children }
         </div>
     )
