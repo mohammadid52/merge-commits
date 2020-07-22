@@ -44,16 +44,23 @@ const Registration = () => {
     }
 
     return (
-        <div className="w-full h-200 flex items-center justify-center">
-            <div className="w-120 h-120 bg-gray-300 p-8 flex flex-col items-center justify-around shadow-elem-dark rounded">
-                <h1 className="text-3xl font-open font-bold">Confirm Signup</h1>
-                <div className="flex flex-col justify-around items-center">
-                    <label htmlFor="email">Email</label>
-                    <input type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
-                    <label htmlFor="code">Confirmation Code</label>
-                    <input type="text" id="code" name="code" value={input.code} onChange={handleChange}/>
+        <div className="w-full h-full flex items-center justify-center">
+            <div className="test login w-140 h-140 bg-gray-200 p-8 flex flex-col items-center justify-around shadow-elem-light rounded">
+                <div>
+                    <img className="mb-8" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                 </div>
-                <button onClick={handleSubmit}>Submit</button>
+                <h1 className="text-5xl font-open font-bold">Confirm Signup</h1>
+                <div className="flex-grow flex flex-col py-4">
+                    <div className="input">
+                        <label className="hidden" htmlFor="email">Email</label>
+                        <input className="w-full px-2 py-1 mb-4" placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
+                    </div>
+                    <div className="input">
+                        <label className="hidden" htmlFor="code">Confirmation Code</label>
+                        <input className="w-full px-2 py-1 mb-4" placeholder="Confirmation Code" type="text" id="code" name="code" value={input.code} onChange={handleChange}/>
+                    </div>
+                </div>
+                <button className="bg-dark-red text-gray-200 rounded shadow-elem-light mb-4" onClick={handleSubmit}>Submit</button>
             </div>
         </div>
     )

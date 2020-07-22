@@ -2,6 +2,64 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getInstitutionType = /* GraphQL */ `
+  query GetInstitutionType($id: ID!) {
+    getInstitutionType(id: $id) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listInstitutionTypes = /* GraphQL */ `
+  query ListInstitutionTypes(
+    $filter: ModelInstitutionTypeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listInstitutionTypes(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCourseType = /* GraphQL */ `
+  query GetCourseType($id: ID!) {
+    getCourseType(id: $id) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCourseTypes = /* GraphQL */ `
+  query ListCourseTypes(
+    $filter: ModelCourseTypeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCourseTypes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getPerson = /* GraphQL */ `
   query GetPerson($email: String!, $authId: String!) {
     getPerson(email: $email, authId: $authId) {
@@ -27,6 +85,7 @@ export const getPerson = /* GraphQL */ `
           phone
           email
         }
+        website
         coordinator {
           id
           authId
@@ -45,7 +104,12 @@ export const getPerson = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        type
+        type {
+          id
+          name
+          createdAt
+          updatedAt
+        }
         image
         createdAt
         updatedAt
@@ -55,7 +119,12 @@ export const getPerson = /* GraphQL */ `
       courses {
         id
         name
-        courseType
+        courseType {
+          id
+          name
+          createdAt
+          updatedAt
+        }
         institution {
           id
           name
@@ -65,7 +134,7 @@ export const getPerson = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -165,7 +234,7 @@ export const listPersons = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -175,7 +244,6 @@ export const listPersons = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -336,7 +404,12 @@ export const getCourse = /* GraphQL */ `
     getCourse(id: $id) {
       id
       name
-      courseType
+      courseType {
+        id
+        name
+        createdAt
+        updatedAt
+      }
       institution {
         id
         name
@@ -351,6 +424,7 @@ export const getCourse = /* GraphQL */ `
           phone
           email
         }
+        website
         coordinator {
           id
           authId
@@ -369,7 +443,12 @@ export const getCourse = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        type
+        type {
+          id
+          name
+          createdAt
+          updatedAt
+        }
         image
         createdAt
         updatedAt
@@ -392,7 +471,7 @@ export const getCourse = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -402,7 +481,6 @@ export const getCourse = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -435,7 +513,7 @@ export const getCourse = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -445,7 +523,6 @@ export const getCourse = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -500,7 +577,12 @@ export const listCourses = /* GraphQL */ `
       items {
         id
         name
-        courseType
+        courseType {
+          id
+          name
+          createdAt
+          updatedAt
+        }
         institution {
           id
           name
@@ -510,7 +592,7 @@ export const listCourses = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -586,6 +668,7 @@ export const getInstitution = /* GraphQL */ `
         phone
         email
       }
+      website
       coordinator {
         id
         authId
@@ -604,7 +687,7 @@ export const getInstitution = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -614,7 +697,6 @@ export const getInstitution = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -629,7 +711,12 @@ export const getInstitution = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      type
+      type {
+        id
+        name
+        createdAt
+        updatedAt
+      }
       image
       createdAt
       updatedAt
@@ -665,6 +752,7 @@ export const listInstitutions = /* GraphQL */ `
           phone
           email
         }
+        website
         coordinator {
           id
           authId
@@ -683,7 +771,12 @@ export const listInstitutions = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        type
+        type {
+          id
+          name
+          createdAt
+          updatedAt
+        }
         image
         createdAt
         updatedAt
@@ -848,7 +941,7 @@ export const getClassroomDataTest = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -858,7 +951,6 @@ export const getClassroomDataTest = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -1024,7 +1116,7 @@ export const getClassroomData = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -1034,7 +1126,6 @@ export const getClassroomData = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -1187,7 +1278,7 @@ export const getClassData = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -1197,7 +1288,6 @@ export const getClassData = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate

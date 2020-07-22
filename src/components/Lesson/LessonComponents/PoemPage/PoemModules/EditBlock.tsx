@@ -45,7 +45,6 @@ const EditBlock = (props: EditBlockProps) => {
     }, [editInput.text])
 
     useEffect(() => {
-        console.log(state.componentState)
         if ( state.componentState.poem && state.componentState.poem.editMode === true ) {
             dispatch({
                 type: 'UPDATE_COMPONENT_STATE',

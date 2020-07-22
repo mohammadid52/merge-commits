@@ -10,7 +10,7 @@ import { Auth } from 'aws-amplify';
 const Login = () => {
     const [ cookies, setCookie ] = useCookies(['auth']);
     const history = useHistory();
-    const { state, dispatch } = useContext(GlobalContext);
+    const { theme, state, dispatch } = useContext(GlobalContext);
     const [ message, setMessage ] = useState<{show: boolean, type: string, message: string,}>({
         show: false,
         type: '',
@@ -67,9 +67,26 @@ const Login = () => {
     }
 
     return (
-        <div className="w-full h-200 flex flex-col items-center justify-center">
-            <div className="w-140 h-140 bg-gray-200 p-8 flex flex-col items-center shadow-elem-light border border-gray-300 rounded">
-                <h1 className="text-3xl font-open font-bold">Login</h1>
+        
+        <div className="w-full h-full flex flex-col items-center justify-center">
+             
+            <div className="test login w-140 h-140 bg-gray-200 shadow-elem-light border border-gray-300 rounded pt-0">
+            <div className="h-10 bg-dark w-full rounded-t-lg"></div>
+            <div className="flex flex-col items-center p-8">
+                <div>
+                    <img className="mb-8" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
+                </div>
+          
+                <div className="flex-grow flex flex-col py-4 pt-12">
+                    <div className="input">
+                        <label className="hidden" htmlFor="email">Email</label>
+                        <input className="w-full px-2 py-1 mb-4 " placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
+                    </div>
+                    <div className="input">
+                        <label className="hidden" htmlFor="password">Password</label>
+                        <input className="w-full px-2 py-1 mb-4" placeholder="Password" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
+                    </div>
+                </div>
                 <div className="w-full h-12 flex justify-center items-center">
                     {
                         message.show ? (
@@ -79,15 +96,12 @@ const Login = () => {
                         ) : null
                     }
                 </div>
-                <div className="w-5/10 flex-grow flex flex-col items-center py-4">
-                    <label htmlFor="email">Email</label>
-                    <input className="w-full px-2 py-1 mb-4 " type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
-                    <label htmlFor="password">Password</label>
-                    <input className="w-full px-2 py-1 mb-4" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
-                </div>
                 {/* <Link to="/register">Register</Link> */} 
-                <button className="w-20 h-12 bg-dark-red text-gray-200 rounded shadow-elem-light mb-4" onClick={handleSubmit}>Submit</button>
+                <button className="bg-dark-red text-gray-200 rounded-lg mb-4" onClick={handleSubmit}>Login</button>
+                <div className="text-center">forgot password?</div>
             </div>
+            </div>
+            
         </div>
     )
 }

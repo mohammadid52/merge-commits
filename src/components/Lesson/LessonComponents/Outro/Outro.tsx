@@ -10,6 +10,7 @@ const Outro = () => {
 
     useEffect(() => {
         dispatch({type: 'ACTIVATE_LESSON', payload: 'outro'})
+        dispatch({type: 'FINISH'})
     }, [])
 
     return (

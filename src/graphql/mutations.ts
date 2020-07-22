@@ -2,6 +2,84 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createInstitutionType = /* GraphQL */ `
+  mutation CreateInstitutionType(
+    $input: CreateInstitutionTypeInput!
+    $condition: ModelInstitutionTypeConditionInput
+  ) {
+    createInstitutionType(input: $input, condition: $condition) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateInstitutionType = /* GraphQL */ `
+  mutation UpdateInstitutionType(
+    $input: UpdateInstitutionTypeInput!
+    $condition: ModelInstitutionTypeConditionInput
+  ) {
+    updateInstitutionType(input: $input, condition: $condition) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteInstitutionType = /* GraphQL */ `
+  mutation DeleteInstitutionType(
+    $input: DeleteInstitutionTypeInput!
+    $condition: ModelInstitutionTypeConditionInput
+  ) {
+    deleteInstitutionType(input: $input, condition: $condition) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCourseType = /* GraphQL */ `
+  mutation CreateCourseType(
+    $input: CreateCourseTypeInput!
+    $condition: ModelCourseTypeConditionInput
+  ) {
+    createCourseType(input: $input, condition: $condition) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCourseType = /* GraphQL */ `
+  mutation UpdateCourseType(
+    $input: UpdateCourseTypeInput!
+    $condition: ModelCourseTypeConditionInput
+  ) {
+    updateCourseType(input: $input, condition: $condition) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCourseType = /* GraphQL */ `
+  mutation DeleteCourseType(
+    $input: DeleteCourseTypeInput!
+    $condition: ModelCourseTypeConditionInput
+  ) {
+    deleteCourseType(input: $input, condition: $condition) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createPerson = /* GraphQL */ `
   mutation CreatePerson(
     $input: CreatePersonInput!
@@ -30,6 +108,7 @@ export const createPerson = /* GraphQL */ `
           phone
           email
         }
+        website
         coordinator {
           id
           authId
@@ -48,7 +127,12 @@ export const createPerson = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        type
+        type {
+          id
+          name
+          createdAt
+          updatedAt
+        }
         image
         createdAt
         updatedAt
@@ -58,7 +142,12 @@ export const createPerson = /* GraphQL */ `
       courses {
         id
         name
-        courseType
+        courseType {
+          id
+          name
+          createdAt
+          updatedAt
+        }
         institution {
           id
           name
@@ -68,7 +157,7 @@ export const createPerson = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -161,6 +250,7 @@ export const updatePerson = /* GraphQL */ `
           phone
           email
         }
+        website
         coordinator {
           id
           authId
@@ -179,7 +269,12 @@ export const updatePerson = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        type
+        type {
+          id
+          name
+          createdAt
+          updatedAt
+        }
         image
         createdAt
         updatedAt
@@ -189,7 +284,12 @@ export const updatePerson = /* GraphQL */ `
       courses {
         id
         name
-        courseType
+        courseType {
+          id
+          name
+          createdAt
+          updatedAt
+        }
         institution {
           id
           name
@@ -199,7 +299,7 @@ export const updatePerson = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -292,6 +392,7 @@ export const deletePerson = /* GraphQL */ `
           phone
           email
         }
+        website
         coordinator {
           id
           authId
@@ -310,7 +411,12 @@ export const deletePerson = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        type
+        type {
+          id
+          name
+          createdAt
+          updatedAt
+        }
         image
         createdAt
         updatedAt
@@ -320,7 +426,12 @@ export const deletePerson = /* GraphQL */ `
       courses {
         id
         name
-        courseType
+        courseType {
+          id
+          name
+          createdAt
+          updatedAt
+        }
         institution {
           id
           name
@@ -330,7 +441,7 @@ export const deletePerson = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -703,7 +814,12 @@ export const createCourse = /* GraphQL */ `
     createCourse(input: $input, condition: $condition) {
       id
       name
-      courseType
+      courseType {
+        id
+        name
+        createdAt
+        updatedAt
+      }
       institution {
         id
         name
@@ -718,6 +834,7 @@ export const createCourse = /* GraphQL */ `
           phone
           email
         }
+        website
         coordinator {
           id
           authId
@@ -736,7 +853,12 @@ export const createCourse = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        type
+        type {
+          id
+          name
+          createdAt
+          updatedAt
+        }
         image
         createdAt
         updatedAt
@@ -759,7 +881,7 @@ export const createCourse = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -769,7 +891,6 @@ export const createCourse = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -802,7 +923,7 @@ export const createCourse = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -812,7 +933,6 @@ export const createCourse = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -865,7 +985,12 @@ export const updateCourse = /* GraphQL */ `
     updateCourse(input: $input, condition: $condition) {
       id
       name
-      courseType
+      courseType {
+        id
+        name
+        createdAt
+        updatedAt
+      }
       institution {
         id
         name
@@ -880,6 +1005,7 @@ export const updateCourse = /* GraphQL */ `
           phone
           email
         }
+        website
         coordinator {
           id
           authId
@@ -898,7 +1024,12 @@ export const updateCourse = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        type
+        type {
+          id
+          name
+          createdAt
+          updatedAt
+        }
         image
         createdAt
         updatedAt
@@ -921,7 +1052,7 @@ export const updateCourse = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -931,7 +1062,6 @@ export const updateCourse = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -964,7 +1094,7 @@ export const updateCourse = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -974,7 +1104,6 @@ export const updateCourse = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -1027,7 +1156,12 @@ export const deleteCourse = /* GraphQL */ `
     deleteCourse(input: $input, condition: $condition) {
       id
       name
-      courseType
+      courseType {
+        id
+        name
+        createdAt
+        updatedAt
+      }
       institution {
         id
         name
@@ -1042,6 +1176,7 @@ export const deleteCourse = /* GraphQL */ `
           phone
           email
         }
+        website
         coordinator {
           id
           authId
@@ -1060,7 +1195,12 @@ export const deleteCourse = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        type
+        type {
+          id
+          name
+          createdAt
+          updatedAt
+        }
         image
         createdAt
         updatedAt
@@ -1083,7 +1223,7 @@ export const deleteCourse = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -1093,7 +1233,6 @@ export const deleteCourse = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -1126,7 +1265,7 @@ export const deleteCourse = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -1136,7 +1275,6 @@ export const deleteCourse = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -1200,6 +1338,7 @@ export const createInstitution = /* GraphQL */ `
         phone
         email
       }
+      website
       coordinator {
         id
         authId
@@ -1218,7 +1357,7 @@ export const createInstitution = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -1228,7 +1367,6 @@ export const createInstitution = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -1243,7 +1381,12 @@ export const createInstitution = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      type
+      type {
+        id
+        name
+        createdAt
+        updatedAt
+      }
       image
       createdAt
       updatedAt
@@ -1269,6 +1412,7 @@ export const updateInstitution = /* GraphQL */ `
         phone
         email
       }
+      website
       coordinator {
         id
         authId
@@ -1287,7 +1431,7 @@ export const updateInstitution = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -1297,7 +1441,6 @@ export const updateInstitution = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -1312,7 +1455,12 @@ export const updateInstitution = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      type
+      type {
+        id
+        name
+        createdAt
+        updatedAt
+      }
       image
       createdAt
       updatedAt
@@ -1338,6 +1486,7 @@ export const deleteInstitution = /* GraphQL */ `
         phone
         email
       }
+      website
       coordinator {
         id
         authId
@@ -1356,7 +1505,7 @@ export const deleteInstitution = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -1366,7 +1515,6 @@ export const deleteInstitution = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -1381,7 +1529,12 @@ export const deleteInstitution = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      type
+      type {
+        id
+        name
+        createdAt
+        updatedAt
+      }
       image
       createdAt
       updatedAt
@@ -1593,7 +1746,7 @@ export const createClassroomDataTest = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -1603,7 +1756,6 @@ export const createClassroomDataTest = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -1719,7 +1871,7 @@ export const updateClassroomDataTest = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -1729,7 +1881,6 @@ export const updateClassroomDataTest = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -1845,7 +1996,7 @@ export const deleteClassroomDataTest = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -1855,7 +2006,6 @@ export const deleteClassroomDataTest = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -1971,7 +2121,7 @@ export const createClassroomData = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -1981,7 +2131,6 @@ export const createClassroomData = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -2090,7 +2239,7 @@ export const updateClassroomData = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -2100,7 +2249,6 @@ export const updateClassroomData = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -2209,7 +2357,7 @@ export const deleteClassroomData = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -2219,7 +2367,6 @@ export const deleteClassroomData = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -2328,7 +2475,7 @@ export const createClassData = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -2338,7 +2485,6 @@ export const createClassData = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -2447,7 +2593,7 @@ export const updateClassData = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -2457,7 +2603,6 @@ export const updateClassData = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate
@@ -2566,7 +2711,7 @@ export const deleteClassData = /* GraphQL */ `
           state
           zip
           phone
-          type
+          website
           image
           createdAt
           updatedAt
@@ -2576,7 +2721,6 @@ export const deleteClassData = /* GraphQL */ `
         courses {
           id
           name
-          courseType
           location
           startDate
           endDate

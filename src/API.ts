@@ -2,6 +2,88 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
+export type CreateInstitutionTypeInput = {
+  id?: string | null,
+  name: string,
+};
+
+export type ModelInstitutionTypeConditionInput = {
+  name?: ModelStringInput | null,
+  and?: Array< ModelInstitutionTypeConditionInput | null > | null,
+  or?: Array< ModelInstitutionTypeConditionInput | null > | null,
+  not?: ModelInstitutionTypeConditionInput | null,
+};
+
+export type ModelStringInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
+};
+
+export enum ModelAttributeTypes {
+  binary = "binary",
+  binarySet = "binarySet",
+  bool = "bool",
+  list = "list",
+  map = "map",
+  number = "number",
+  numberSet = "numberSet",
+  string = "string",
+  stringSet = "stringSet",
+  _null = "_null",
+}
+
+
+export type ModelSizeInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+};
+
+export type UpdateInstitutionTypeInput = {
+  id: string,
+  name?: string | null,
+};
+
+export type DeleteInstitutionTypeInput = {
+  id?: string | null,
+};
+
+export type CreateCourseTypeInput = {
+  id?: string | null,
+  name: string,
+};
+
+export type ModelCourseTypeConditionInput = {
+  name?: ModelStringInput | null,
+  and?: Array< ModelCourseTypeConditionInput | null > | null,
+  or?: Array< ModelCourseTypeConditionInput | null > | null,
+  not?: ModelCourseTypeConditionInput | null,
+};
+
+export type UpdateCourseTypeInput = {
+  id: string,
+  name?: string | null,
+};
+
+export type DeleteCourseTypeInput = {
+  id?: string | null,
+};
+
 export type CreatePersonInput = {
   id?: string | null,
   authId: string,
@@ -71,46 +153,6 @@ export type ModelRoleInput = {
   ne?: Role | null,
 };
 
-export type ModelStringInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
-};
-
-export enum ModelAttributeTypes {
-  binary = "binary",
-  binarySet = "binarySet",
-  bool = "bool",
-  list = "list",
-  map = "map",
-  number = "number",
-  numberSet = "numberSet",
-  string = "string",
-  stringSet = "stringSet",
-  _null = "_null",
-}
-
-
-export type ModelSizeInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-};
-
 export type ModelIntInput = {
   ne?: number | null,
   eq?: number | null,
@@ -127,23 +169,6 @@ export type ModelLanguageInput = {
   eq?: Language | null,
   ne?: Language | null,
 };
-
-export enum InstitutionType {
-  ELEM = "ELEM",
-  MID = "MID",
-  HIGH = "HIGH",
-  CORR = "CORR",
-  CAMP = "CAMP",
-  EXCURR = "EXCURR",
-}
-
-
-export enum CourseType {
-  CLASS = "CLASS",
-  EXCURR = "EXCURR",
-  DIST = "DIST",
-}
-
 
 export type UpdatePersonInput = {
   id: string,
@@ -205,7 +230,6 @@ export type DeleteCurriculumInput = {
 export type CreateCourseInput = {
   id?: string | null,
   name: string,
-  courseType: CourseType,
   location: string,
   startDate: string,
   endDate: string,
@@ -215,7 +239,6 @@ export type CreateCourseInput = {
 
 export type ModelCourseConditionInput = {
   name?: ModelStringInput | null,
-  courseType?: ModelCourseTypeInput | null,
   location?: ModelStringInput | null,
   startDate?: ModelStringInput | null,
   endDate?: ModelStringInput | null,
@@ -225,15 +248,9 @@ export type ModelCourseConditionInput = {
   not?: ModelCourseConditionInput | null,
 };
 
-export type ModelCourseTypeInput = {
-  eq?: CourseType | null,
-  ne?: CourseType | null,
-};
-
 export type UpdateCourseInput = {
   id: string,
   name?: string | null,
-  courseType?: CourseType | null,
   location?: string | null,
   startDate?: string | null,
   endDate?: string | null,
@@ -255,8 +272,9 @@ export type CreateInstitutionInput = {
   zip: string,
   phone?: string | null,
   contact: ContactInput,
-  type?: InstitutionType | null,
+  website?: string | null,
   image?: string | null,
+  institutionTypeId?: string | null,
 };
 
 export type ContactInput = {
@@ -273,16 +291,11 @@ export type ModelInstitutionConditionInput = {
   state?: ModelStringInput | null,
   zip?: ModelStringInput | null,
   phone?: ModelStringInput | null,
-  type?: ModelInstitutionTypeInput | null,
+  website?: ModelStringInput | null,
   image?: ModelStringInput | null,
   and?: Array< ModelInstitutionConditionInput | null > | null,
   or?: Array< ModelInstitutionConditionInput | null > | null,
   not?: ModelInstitutionConditionInput | null,
-};
-
-export type ModelInstitutionTypeInput = {
-  eq?: InstitutionType | null,
-  ne?: InstitutionType | null,
 };
 
 export type UpdateInstitutionInput = {
@@ -295,8 +308,9 @@ export type UpdateInstitutionInput = {
   zip?: string | null,
   phone?: string | null,
   contact?: ContactInput | null,
-  type?: InstitutionType | null,
+  website?: string | null,
   image?: string | null,
+  institutionTypeId?: string | null,
 };
 
 export type DeleteInstitutionInput = {
@@ -797,6 +811,22 @@ export type DeleteActivityInput = {
   id?: string | null,
 };
 
+export type ModelInstitutionTypeFilterInput = {
+  id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  and?: Array< ModelInstitutionTypeFilterInput | null > | null,
+  or?: Array< ModelInstitutionTypeFilterInput | null > | null,
+  not?: ModelInstitutionTypeFilterInput | null,
+};
+
+export type ModelCourseTypeFilterInput = {
+  id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  and?: Array< ModelCourseTypeFilterInput | null > | null,
+  or?: Array< ModelCourseTypeFilterInput | null > | null,
+  not?: ModelCourseTypeFilterInput | null,
+};
+
 export type ModelStringKeyConditionInput = {
   eq?: string | null,
   le?: string | null,
@@ -846,7 +876,6 @@ export type ModelCurriculumFilterInput = {
 export type ModelCourseFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
-  courseType?: ModelCourseTypeInput | null,
   location?: ModelStringInput | null,
   startDate?: ModelStringInput | null,
   endDate?: ModelStringInput | null,
@@ -865,7 +894,7 @@ export type ModelInstitutionFilterInput = {
   state?: ModelStringInput | null,
   zip?: ModelStringInput | null,
   phone?: ModelStringInput | null,
-  type?: ModelInstitutionTypeInput | null,
+  website?: ModelStringInput | null,
   image?: ModelStringInput | null,
   and?: Array< ModelInstitutionFilterInput | null > | null,
   or?: Array< ModelInstitutionFilterInput | null > | null,
@@ -1003,6 +1032,96 @@ export type ModelActivityFilterInput = {
   not?: ModelActivityFilterInput | null,
 };
 
+export type CreateInstitutionTypeMutationVariables = {
+  input: CreateInstitutionTypeInput,
+  condition?: ModelInstitutionTypeConditionInput | null,
+};
+
+export type CreateInstitutionTypeMutation = {
+  createInstitutionType:  {
+    __typename: "InstitutionType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateInstitutionTypeMutationVariables = {
+  input: UpdateInstitutionTypeInput,
+  condition?: ModelInstitutionTypeConditionInput | null,
+};
+
+export type UpdateInstitutionTypeMutation = {
+  updateInstitutionType:  {
+    __typename: "InstitutionType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteInstitutionTypeMutationVariables = {
+  input: DeleteInstitutionTypeInput,
+  condition?: ModelInstitutionTypeConditionInput | null,
+};
+
+export type DeleteInstitutionTypeMutation = {
+  deleteInstitutionType:  {
+    __typename: "InstitutionType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateCourseTypeMutationVariables = {
+  input: CreateCourseTypeInput,
+  condition?: ModelCourseTypeConditionInput | null,
+};
+
+export type CreateCourseTypeMutation = {
+  createCourseType:  {
+    __typename: "CourseType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateCourseTypeMutationVariables = {
+  input: UpdateCourseTypeInput,
+  condition?: ModelCourseTypeConditionInput | null,
+};
+
+export type UpdateCourseTypeMutation = {
+  updateCourseType:  {
+    __typename: "CourseType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteCourseTypeMutationVariables = {
+  input: DeleteCourseTypeInput,
+  condition?: ModelCourseTypeConditionInput | null,
+};
+
+export type DeleteCourseTypeMutation = {
+  deleteCourseType:  {
+    __typename: "CourseType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreatePersonMutationVariables = {
   input: CreatePersonInput,
   condition?: ModelPersonConditionInput | null,
@@ -1035,6 +1154,7 @@ export type CreatePersonMutation = {
         phone: string | null,
         email: string | null,
       },
+      website: string | null,
       coordinator:  Array< {
         __typename: "Person",
         id: string,
@@ -1054,7 +1174,13 @@ export type CreatePersonMutation = {
         createdAt: string,
         updatedAt: string,
       } | null > | null,
-      type: InstitutionType | null,
+      type:  {
+        __typename: "InstitutionType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       image: string | null,
       createdAt: string,
       updatedAt: string,
@@ -1065,7 +1191,13 @@ export type CreatePersonMutation = {
       __typename: "Course",
       id: string,
       name: string,
-      courseType: CourseType,
+      courseType:  {
+        __typename: "CourseType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -1076,7 +1208,7 @@ export type CreatePersonMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -1176,6 +1308,7 @@ export type UpdatePersonMutation = {
         phone: string | null,
         email: string | null,
       },
+      website: string | null,
       coordinator:  Array< {
         __typename: "Person",
         id: string,
@@ -1195,7 +1328,13 @@ export type UpdatePersonMutation = {
         createdAt: string,
         updatedAt: string,
       } | null > | null,
-      type: InstitutionType | null,
+      type:  {
+        __typename: "InstitutionType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       image: string | null,
       createdAt: string,
       updatedAt: string,
@@ -1206,7 +1345,13 @@ export type UpdatePersonMutation = {
       __typename: "Course",
       id: string,
       name: string,
-      courseType: CourseType,
+      courseType:  {
+        __typename: "CourseType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -1217,7 +1362,7 @@ export type UpdatePersonMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -1317,6 +1462,7 @@ export type DeletePersonMutation = {
         phone: string | null,
         email: string | null,
       },
+      website: string | null,
       coordinator:  Array< {
         __typename: "Person",
         id: string,
@@ -1336,7 +1482,13 @@ export type DeletePersonMutation = {
         createdAt: string,
         updatedAt: string,
       } | null > | null,
-      type: InstitutionType | null,
+      type:  {
+        __typename: "InstitutionType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       image: string | null,
       createdAt: string,
       updatedAt: string,
@@ -1347,7 +1499,13 @@ export type DeletePersonMutation = {
       __typename: "Course",
       id: string,
       name: string,
-      courseType: CourseType,
+      courseType:  {
+        __typename: "CourseType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -1358,7 +1516,7 @@ export type DeletePersonMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -1772,7 +1930,13 @@ export type CreateCourseMutation = {
     __typename: "Course",
     id: string,
     name: string,
-    courseType: CourseType,
+    courseType:  {
+      __typename: "CourseType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -1789,6 +1953,7 @@ export type CreateCourseMutation = {
         phone: string | null,
         email: string | null,
       },
+      website: string | null,
       coordinator:  Array< {
         __typename: "Person",
         id: string,
@@ -1808,7 +1973,13 @@ export type CreateCourseMutation = {
         createdAt: string,
         updatedAt: string,
       } | null > | null,
-      type: InstitutionType | null,
+      type:  {
+        __typename: "InstitutionType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       image: string | null,
       createdAt: string,
       updatedAt: string,
@@ -1833,7 +2004,7 @@ export type CreateCourseMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -1844,7 +2015,6 @@ export type CreateCourseMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -1879,7 +2049,7 @@ export type CreateCourseMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -1890,7 +2060,6 @@ export type CreateCourseMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -1948,7 +2117,13 @@ export type UpdateCourseMutation = {
     __typename: "Course",
     id: string,
     name: string,
-    courseType: CourseType,
+    courseType:  {
+      __typename: "CourseType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -1965,6 +2140,7 @@ export type UpdateCourseMutation = {
         phone: string | null,
         email: string | null,
       },
+      website: string | null,
       coordinator:  Array< {
         __typename: "Person",
         id: string,
@@ -1984,7 +2160,13 @@ export type UpdateCourseMutation = {
         createdAt: string,
         updatedAt: string,
       } | null > | null,
-      type: InstitutionType | null,
+      type:  {
+        __typename: "InstitutionType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       image: string | null,
       createdAt: string,
       updatedAt: string,
@@ -2009,7 +2191,7 @@ export type UpdateCourseMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -2020,7 +2202,6 @@ export type UpdateCourseMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -2055,7 +2236,7 @@ export type UpdateCourseMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -2066,7 +2247,6 @@ export type UpdateCourseMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -2124,7 +2304,13 @@ export type DeleteCourseMutation = {
     __typename: "Course",
     id: string,
     name: string,
-    courseType: CourseType,
+    courseType:  {
+      __typename: "CourseType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -2141,6 +2327,7 @@ export type DeleteCourseMutation = {
         phone: string | null,
         email: string | null,
       },
+      website: string | null,
       coordinator:  Array< {
         __typename: "Person",
         id: string,
@@ -2160,7 +2347,13 @@ export type DeleteCourseMutation = {
         createdAt: string,
         updatedAt: string,
       } | null > | null,
-      type: InstitutionType | null,
+      type:  {
+        __typename: "InstitutionType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       image: string | null,
       createdAt: string,
       updatedAt: string,
@@ -2185,7 +2378,7 @@ export type DeleteCourseMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -2196,7 +2389,6 @@ export type DeleteCourseMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -2231,7 +2423,7 @@ export type DeleteCourseMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -2242,7 +2434,6 @@ export type DeleteCourseMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -2312,6 +2503,7 @@ export type CreateInstitutionMutation = {
       phone: string | null,
       email: string | null,
     },
+    website: string | null,
     coordinator:  Array< {
       __typename: "Person",
       id: string,
@@ -2332,7 +2524,7 @@ export type CreateInstitutionMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -2343,7 +2535,6 @@ export type CreateInstitutionMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -2358,7 +2549,13 @@ export type CreateInstitutionMutation = {
       createdAt: string,
       updatedAt: string,
     } | null > | null,
-    type: InstitutionType | null,
+    type:  {
+      __typename: "InstitutionType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     image: string | null,
     createdAt: string,
     updatedAt: string,
@@ -2387,6 +2584,7 @@ export type UpdateInstitutionMutation = {
       phone: string | null,
       email: string | null,
     },
+    website: string | null,
     coordinator:  Array< {
       __typename: "Person",
       id: string,
@@ -2407,7 +2605,7 @@ export type UpdateInstitutionMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -2418,7 +2616,6 @@ export type UpdateInstitutionMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -2433,7 +2630,13 @@ export type UpdateInstitutionMutation = {
       createdAt: string,
       updatedAt: string,
     } | null > | null,
-    type: InstitutionType | null,
+    type:  {
+      __typename: "InstitutionType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     image: string | null,
     createdAt: string,
     updatedAt: string,
@@ -2462,6 +2665,7 @@ export type DeleteInstitutionMutation = {
       phone: string | null,
       email: string | null,
     },
+    website: string | null,
     coordinator:  Array< {
       __typename: "Person",
       id: string,
@@ -2482,7 +2686,7 @@ export type DeleteInstitutionMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -2493,7 +2697,6 @@ export type DeleteInstitutionMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -2508,7 +2711,13 @@ export type DeleteInstitutionMutation = {
       createdAt: string,
       updatedAt: string,
     } | null > | null,
-    type: InstitutionType | null,
+    type:  {
+      __typename: "InstitutionType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     image: string | null,
     createdAt: string,
     updatedAt: string,
@@ -2750,7 +2959,7 @@ export type CreateClassroomDataTestMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -2761,7 +2970,6 @@ export type CreateClassroomDataTestMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -2892,7 +3100,7 @@ export type UpdateClassroomDataTestMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -2903,7 +3111,6 @@ export type UpdateClassroomDataTestMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -3034,7 +3241,7 @@ export type DeleteClassroomDataTestMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -3045,7 +3252,6 @@ export type DeleteClassroomDataTestMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -3176,7 +3382,7 @@ export type CreateClassroomDataMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -3187,7 +3393,6 @@ export type CreateClassroomDataMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -3309,7 +3514,7 @@ export type UpdateClassroomDataMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -3320,7 +3525,6 @@ export type UpdateClassroomDataMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -3442,7 +3646,7 @@ export type DeleteClassroomDataMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -3453,7 +3657,6 @@ export type DeleteClassroomDataMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -3575,7 +3778,7 @@ export type CreateClassDataMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -3586,7 +3789,6 @@ export type CreateClassDataMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -3708,7 +3910,7 @@ export type UpdateClassDataMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -3719,7 +3921,6 @@ export type UpdateClassDataMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -3841,7 +4042,7 @@ export type DeleteClassDataMutation = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -3852,7 +4053,6 @@ export type DeleteClassDataMutation = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -5566,6 +5766,74 @@ export type DeleteActivityMutation = {
   } | null,
 };
 
+export type GetInstitutionTypeQueryVariables = {
+  id: string,
+};
+
+export type GetInstitutionTypeQuery = {
+  getInstitutionType:  {
+    __typename: "InstitutionType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListInstitutionTypesQueryVariables = {
+  filter?: ModelInstitutionTypeFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListInstitutionTypesQuery = {
+  listInstitutionTypes:  {
+    __typename: "ModelInstitutionTypeConnection",
+    items:  Array< {
+      __typename: "InstitutionType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetCourseTypeQueryVariables = {
+  id: string,
+};
+
+export type GetCourseTypeQuery = {
+  getCourseType:  {
+    __typename: "CourseType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListCourseTypesQueryVariables = {
+  filter?: ModelCourseTypeFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListCourseTypesQuery = {
+  listCourseTypes:  {
+    __typename: "ModelCourseTypeConnection",
+    items:  Array< {
+      __typename: "CourseType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
 export type GetPersonQueryVariables = {
   email: string,
   authId: string,
@@ -5598,6 +5866,7 @@ export type GetPersonQuery = {
         phone: string | null,
         email: string | null,
       },
+      website: string | null,
       coordinator:  Array< {
         __typename: "Person",
         id: string,
@@ -5617,7 +5886,13 @@ export type GetPersonQuery = {
         createdAt: string,
         updatedAt: string,
       } | null > | null,
-      type: InstitutionType | null,
+      type:  {
+        __typename: "InstitutionType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       image: string | null,
       createdAt: string,
       updatedAt: string,
@@ -5628,7 +5903,13 @@ export type GetPersonQuery = {
       __typename: "Course",
       id: string,
       name: string,
-      courseType: CourseType,
+      courseType:  {
+        __typename: "CourseType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -5639,7 +5920,7 @@ export type GetPersonQuery = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -5739,7 +6020,7 @@ export type ListPersonsQuery = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -5750,7 +6031,6 @@ export type ListPersonsQuery = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -5928,7 +6208,13 @@ export type GetCourseQuery = {
     __typename: "Course",
     id: string,
     name: string,
-    courseType: CourseType,
+    courseType:  {
+      __typename: "CourseType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -5945,6 +6231,7 @@ export type GetCourseQuery = {
         phone: string | null,
         email: string | null,
       },
+      website: string | null,
       coordinator:  Array< {
         __typename: "Person",
         id: string,
@@ -5964,7 +6251,13 @@ export type GetCourseQuery = {
         createdAt: string,
         updatedAt: string,
       } | null > | null,
-      type: InstitutionType | null,
+      type:  {
+        __typename: "InstitutionType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       image: string | null,
       createdAt: string,
       updatedAt: string,
@@ -5989,7 +6282,7 @@ export type GetCourseQuery = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -6000,7 +6293,6 @@ export type GetCourseQuery = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -6035,7 +6327,7 @@ export type GetCourseQuery = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -6046,7 +6338,6 @@ export type GetCourseQuery = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -6107,7 +6398,13 @@ export type ListCoursesQuery = {
       __typename: "Course",
       id: string,
       name: string,
-      courseType: CourseType,
+      courseType:  {
+        __typename: "CourseType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -6118,7 +6415,7 @@ export type ListCoursesQuery = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -6202,6 +6499,7 @@ export type GetInstitutionQuery = {
       phone: string | null,
       email: string | null,
     },
+    website: string | null,
     coordinator:  Array< {
       __typename: "Person",
       id: string,
@@ -6222,7 +6520,7 @@ export type GetInstitutionQuery = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -6233,7 +6531,6 @@ export type GetInstitutionQuery = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -6248,7 +6545,13 @@ export type GetInstitutionQuery = {
       createdAt: string,
       updatedAt: string,
     } | null > | null,
-    type: InstitutionType | null,
+    type:  {
+      __typename: "InstitutionType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     image: string | null,
     createdAt: string,
     updatedAt: string,
@@ -6282,6 +6585,7 @@ export type ListInstitutionsQuery = {
         phone: string | null,
         email: string | null,
       },
+      website: string | null,
       coordinator:  Array< {
         __typename: "Person",
         id: string,
@@ -6301,7 +6605,13 @@ export type ListInstitutionsQuery = {
         createdAt: string,
         updatedAt: string,
       } | null > | null,
-      type: InstitutionType | null,
+      type:  {
+        __typename: "InstitutionType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       image: string | null,
       createdAt: string,
       updatedAt: string,
@@ -6498,7 +6808,7 @@ export type GetClassroomDataTestQuery = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -6509,7 +6819,6 @@ export type GetClassroomDataTestQuery = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -6690,7 +6999,7 @@ export type GetClassroomDataQuery = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -6701,7 +7010,6 @@ export type GetClassroomDataQuery = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -6875,7 +7183,7 @@ export type GetClassDataQuery = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -6886,7 +7194,6 @@ export type GetClassDataQuery = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -7905,6 +8212,66 @@ export type ListActivitysQuery = {
   } | null,
 };
 
+export type OnCreateInstitutionTypeSubscription = {
+  onCreateInstitutionType:  {
+    __typename: "InstitutionType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateInstitutionTypeSubscription = {
+  onUpdateInstitutionType:  {
+    __typename: "InstitutionType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteInstitutionTypeSubscription = {
+  onDeleteInstitutionType:  {
+    __typename: "InstitutionType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateCourseTypeSubscription = {
+  onCreateCourseType:  {
+    __typename: "CourseType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateCourseTypeSubscription = {
+  onUpdateCourseType:  {
+    __typename: "CourseType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteCourseTypeSubscription = {
+  onDeleteCourseType:  {
+    __typename: "CourseType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreatePersonSubscription = {
   onCreatePerson:  {
     __typename: "Person",
@@ -7932,6 +8299,7 @@ export type OnCreatePersonSubscription = {
         phone: string | null,
         email: string | null,
       },
+      website: string | null,
       coordinator:  Array< {
         __typename: "Person",
         id: string,
@@ -7951,7 +8319,13 @@ export type OnCreatePersonSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null > | null,
-      type: InstitutionType | null,
+      type:  {
+        __typename: "InstitutionType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       image: string | null,
       createdAt: string,
       updatedAt: string,
@@ -7962,7 +8336,13 @@ export type OnCreatePersonSubscription = {
       __typename: "Course",
       id: string,
       name: string,
-      courseType: CourseType,
+      courseType:  {
+        __typename: "CourseType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -7973,7 +8353,7 @@ export type OnCreatePersonSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -8068,6 +8448,7 @@ export type OnUpdatePersonSubscription = {
         phone: string | null,
         email: string | null,
       },
+      website: string | null,
       coordinator:  Array< {
         __typename: "Person",
         id: string,
@@ -8087,7 +8468,13 @@ export type OnUpdatePersonSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null > | null,
-      type: InstitutionType | null,
+      type:  {
+        __typename: "InstitutionType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       image: string | null,
       createdAt: string,
       updatedAt: string,
@@ -8098,7 +8485,13 @@ export type OnUpdatePersonSubscription = {
       __typename: "Course",
       id: string,
       name: string,
-      courseType: CourseType,
+      courseType:  {
+        __typename: "CourseType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -8109,7 +8502,7 @@ export type OnUpdatePersonSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -8204,6 +8597,7 @@ export type OnDeletePersonSubscription = {
         phone: string | null,
         email: string | null,
       },
+      website: string | null,
       coordinator:  Array< {
         __typename: "Person",
         id: string,
@@ -8223,7 +8617,13 @@ export type OnDeletePersonSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null > | null,
-      type: InstitutionType | null,
+      type:  {
+        __typename: "InstitutionType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       image: string | null,
       createdAt: string,
       updatedAt: string,
@@ -8234,7 +8634,13 @@ export type OnDeletePersonSubscription = {
       __typename: "Course",
       id: string,
       name: string,
-      courseType: CourseType,
+      courseType:  {
+        __typename: "CourseType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -8245,7 +8651,7 @@ export type OnDeletePersonSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -8639,7 +9045,13 @@ export type OnCreateCourseSubscription = {
     __typename: "Course",
     id: string,
     name: string,
-    courseType: CourseType,
+    courseType:  {
+      __typename: "CourseType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -8656,6 +9068,7 @@ export type OnCreateCourseSubscription = {
         phone: string | null,
         email: string | null,
       },
+      website: string | null,
       coordinator:  Array< {
         __typename: "Person",
         id: string,
@@ -8675,7 +9088,13 @@ export type OnCreateCourseSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null > | null,
-      type: InstitutionType | null,
+      type:  {
+        __typename: "InstitutionType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       image: string | null,
       createdAt: string,
       updatedAt: string,
@@ -8700,7 +9119,7 @@ export type OnCreateCourseSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -8711,7 +9130,6 @@ export type OnCreateCourseSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -8746,7 +9164,7 @@ export type OnCreateCourseSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -8757,7 +9175,6 @@ export type OnCreateCourseSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -8810,7 +9227,13 @@ export type OnUpdateCourseSubscription = {
     __typename: "Course",
     id: string,
     name: string,
-    courseType: CourseType,
+    courseType:  {
+      __typename: "CourseType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -8827,6 +9250,7 @@ export type OnUpdateCourseSubscription = {
         phone: string | null,
         email: string | null,
       },
+      website: string | null,
       coordinator:  Array< {
         __typename: "Person",
         id: string,
@@ -8846,7 +9270,13 @@ export type OnUpdateCourseSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null > | null,
-      type: InstitutionType | null,
+      type:  {
+        __typename: "InstitutionType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       image: string | null,
       createdAt: string,
       updatedAt: string,
@@ -8871,7 +9301,7 @@ export type OnUpdateCourseSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -8882,7 +9312,6 @@ export type OnUpdateCourseSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -8917,7 +9346,7 @@ export type OnUpdateCourseSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -8928,7 +9357,6 @@ export type OnUpdateCourseSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -8981,7 +9409,13 @@ export type OnDeleteCourseSubscription = {
     __typename: "Course",
     id: string,
     name: string,
-    courseType: CourseType,
+    courseType:  {
+      __typename: "CourseType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -8998,6 +9432,7 @@ export type OnDeleteCourseSubscription = {
         phone: string | null,
         email: string | null,
       },
+      website: string | null,
       coordinator:  Array< {
         __typename: "Person",
         id: string,
@@ -9017,7 +9452,13 @@ export type OnDeleteCourseSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null > | null,
-      type: InstitutionType | null,
+      type:  {
+        __typename: "InstitutionType",
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       image: string | null,
       createdAt: string,
       updatedAt: string,
@@ -9042,7 +9483,7 @@ export type OnDeleteCourseSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -9053,7 +9494,6 @@ export type OnDeleteCourseSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -9088,7 +9528,7 @@ export type OnDeleteCourseSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -9099,7 +9539,6 @@ export type OnDeleteCourseSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -9164,6 +9603,7 @@ export type OnCreateInstitutionSubscription = {
       phone: string | null,
       email: string | null,
     },
+    website: string | null,
     coordinator:  Array< {
       __typename: "Person",
       id: string,
@@ -9184,7 +9624,7 @@ export type OnCreateInstitutionSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -9195,7 +9635,6 @@ export type OnCreateInstitutionSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -9210,7 +9649,13 @@ export type OnCreateInstitutionSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null > | null,
-    type: InstitutionType | null,
+    type:  {
+      __typename: "InstitutionType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     image: string | null,
     createdAt: string,
     updatedAt: string,
@@ -9234,6 +9679,7 @@ export type OnUpdateInstitutionSubscription = {
       phone: string | null,
       email: string | null,
     },
+    website: string | null,
     coordinator:  Array< {
       __typename: "Person",
       id: string,
@@ -9254,7 +9700,7 @@ export type OnUpdateInstitutionSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -9265,7 +9711,6 @@ export type OnUpdateInstitutionSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -9280,7 +9725,13 @@ export type OnUpdateInstitutionSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null > | null,
-    type: InstitutionType | null,
+    type:  {
+      __typename: "InstitutionType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     image: string | null,
     createdAt: string,
     updatedAt: string,
@@ -9304,6 +9755,7 @@ export type OnDeleteInstitutionSubscription = {
       phone: string | null,
       email: string | null,
     },
+    website: string | null,
     coordinator:  Array< {
       __typename: "Person",
       id: string,
@@ -9324,7 +9776,7 @@ export type OnDeleteInstitutionSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -9335,7 +9787,6 @@ export type OnDeleteInstitutionSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -9350,7 +9801,13 @@ export type OnDeleteInstitutionSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null > | null,
-    type: InstitutionType | null,
+    type:  {
+      __typename: "InstitutionType",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     image: string | null,
     createdAt: string,
     updatedAt: string,
@@ -9557,7 +10014,7 @@ export type OnCreateClassroomDataTestSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -9568,7 +10025,6 @@ export type OnCreateClassroomDataTestSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -9694,7 +10150,7 @@ export type OnUpdateClassroomDataTestSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -9705,7 +10161,6 @@ export type OnUpdateClassroomDataTestSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -9831,7 +10286,7 @@ export type OnDeleteClassroomDataTestSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -9842,7 +10297,6 @@ export type OnDeleteClassroomDataTestSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -9968,7 +10422,7 @@ export type OnCreateClassroomDataSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -9979,7 +10433,6 @@ export type OnCreateClassroomDataSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -10096,7 +10549,7 @@ export type OnUpdateClassroomDataSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -10107,7 +10560,6 @@ export type OnUpdateClassroomDataSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -10224,7 +10676,7 @@ export type OnDeleteClassroomDataSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -10235,7 +10687,6 @@ export type OnDeleteClassroomDataSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -10352,7 +10803,7 @@ export type OnCreateClassDataSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -10363,7 +10814,6 @@ export type OnCreateClassDataSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -10480,7 +10930,7 @@ export type OnUpdateClassDataSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -10491,7 +10941,6 @@ export type OnUpdateClassDataSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
@@ -10608,7 +11057,7 @@ export type OnDeleteClassDataSubscription = {
         state: string | null,
         zip: string,
         phone: string | null,
-        type: InstitutionType | null,
+        website: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -10619,7 +11068,6 @@ export type OnDeleteClassDataSubscription = {
         __typename: "Course",
         id: string,
         name: string,
-        courseType: CourseType,
         location: string,
         startDate: string,
         endDate: string,
