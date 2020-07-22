@@ -204,8 +204,8 @@ const Registration = () => {
                             <div className="w-3/4 flex flex-col">
                                 <div className="flex my-2">
                                     <div id={`${key}`} className="w-1/3 flex flex-col px-2">
-                                        <label htmlFor="email">Email</label>
-                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="email" name="email" value={newUserInputs[key].email} onChange={handleChange}/>
+                                        <label className={`hidden`} htmlFor="email">Email</label>
+                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="email" name="email" value={newUserInputs[key].email} onChange={handleChange} placeholder="E-mail"/>
                                         </div>
                                     <div id={`${key}`} className="w-1/4 flex flex-col px-2">
                                         <label htmlFor="firstName">First name</label>

@@ -9,16 +9,16 @@ const InstructionsBlock = () => {
     const { text, video, link } = state.data.coreLesson.instructions;
     const instructionsArr = [
             <p className="text-sm mb-2">
-                Read the lyrics to the song "Latinoamérica" by Calle 13.
+                Read the lyrics to the poem "Where I'm from" by Marlon Lizama.
             </p>,
             <p className="text-sm mb-2">
                 Highlight lines or words from the lyrics that are <span className="underline">connect to you personally</span> in <span className="text-dark-red">red</span> using the highlighters below. 
             </p>, 
             <p className="text-sm mb-2"> 
-                Mark lines that<span className="underline"> remind you of your culture</span> with <span className="text-blueberry">blue</span>.
+                Mark lines that <span className="underline">remind you of your culture</span> with <span className="text-blueberry">blue</span>.
             </p>,
             <p className="text-sm mb-2"> 
-                Highlight any lines that you think are<span className="underline">powerful</span> in <span className="text-fire-orange">orange</span>.
+                Highlight any lines that you think are <span className="underline">powerful</span> in <span className="text-fire-orange">orange</span>.
             </p>,
             <p className="text-sm mb-2">
                 Mark words you don't know in <span className="text-sea-green">green</span>.

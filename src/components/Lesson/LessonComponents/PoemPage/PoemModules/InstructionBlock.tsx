@@ -57,7 +57,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
                 :
                 <div className="shadow-2 flex justify-center items-center my-4" style={{ width: '300px'}}>
                     <video controls width="300">
-                        <source src={instructions.video} type="video/mp4" />
+                        <source src={instructions.link} type="video/mp4" />
                         <p>Your browser does not support embedded video playback!</p>
                     </video>
                 </div>

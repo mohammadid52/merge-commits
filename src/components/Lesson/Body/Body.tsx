@@ -1,4 +1,4 @@
-import React, { useContext, useEffect} from 'react';
+import React, { useContext, useEffect, Suspense, lazy} from 'react';
 import { LessonContext } from '../../../contexts/LessonContext';
 import {
     Switch,
@@ -6,12 +6,12 @@ import {
     useLocation,
     useRouteMatch,
 } from "react-router-dom";
-import LessonError from '../../Error/LessonError';
-import Intro from '../LessonComponents/Intro/Intro';
-import Story from '../LessonComponents/StoryPage/Story';
-import Lyrics from '../LessonComponents/LyricsPage/Lyrics';
-import Poem from '../LessonComponents/PoemPage/Poem';
-import Outro from '../LessonComponents/Outro/Outro';
+const Intro = lazy(() => import('../LessonComponents/Intro/Intro'));
+const Story = lazy(() => import('../LessonComponents/StoryPage/Story'));
+const Lyrics = lazy(() => import('../LessonComponents/LyricsPage/Lyrics'));
+const Poem = lazy(() => import('../LessonComponents/PoemPage/Poem'));
+const Outro = lazy(() => import('../LessonComponents/Outro/Outro'));
+const LessonError = lazy(() => import('../../Error/LessonError'));
 
 const Body = () => {
     const { state, dispatch } = useContext(LessonContext);
@@ -82,40 +82,35 @@ const Body = () => {
     }, [state.currentPage, state.pages]);
 
     return (
-        <div className="flex flex-col flex-grow items-center content-center h-full w-auto px-8 mb-12"> 
-            {/* { pageSwitch(state.pages[state.currentPage].type) } */}
-            {/* <Intro></Intro> */}
-            {/* <MapGame /> */}
-            {/* <Story /> */}
-            {/* <Lyrics />  */}
-            {/* <Poem /> */}
-
-            <Switch>
-                <Route exact path={`${match.url}/`}>
-                    <Intro />
-                </Route>
-                {/* <Route path='/icebreaker'>
-                    {pageFetch('icebreaker')}
-                </Route> */}
-                <Route path={`${match.url}/warmup`}>
-                    {pageFetch('warmup')}
-                </Route>
-                <Route path={`${match.url}/corelesson`}>
-                    {pageFetch('corelesson')}
-                </Route>
-                <Route path={`${match.url}/activity`}>
-                    {pageFetch('activity')}
-                </Route>
-                {/* <Route path='/wrap-up'>
-                    {pageFetch('wrap-up')}
-                </Route> */}
-                <Route path={`${match.url}/outro`}>
-                    <Outro />
-                </Route>
-                {/* <Route>
-                    <ErrorPage />
-                </Route> */}
-            </Switch>
+        <div className="flex flex-col flex-grow items-center content-center h-full w-auto px-8 mb-12">
+            <Suspense fallback={<div className={`bg-dark text-gray-200`}>Loading...</div>}>
+                <Switch>
+                    <Route exact path={`${match.url}/`}>
+                        <Intro />
+                    </Route>
+                    {/* <Route path='/icebreaker'>
+                        {pageFetch('icebreaker')}
+                    </Route> */}
+                    <Route path={`${match.url}/warmup`}>
+                        {pageFetch('warmup')}
+                    </Route>
+                    <Route path={`${match.url}/corelesson`}>
+                        {pageFetch('corelesson')}
+                    </Route>
+                    <Route path={`${match.url}/activity`}>
+                        {pageFetch('activity')}
+                    </Route>
+                    {/* <Route path='/wrap-up'>
+                        {pageFetch('wrap-up')}
+                    </Route> */}
+                    <Route path={`${match.url}/outro`}>
+                        <Outro />
+                    </Route>
+                    <Route>
+                        <LessonError />
+                    </Route>
+                </Switch>
+            </Suspense>
         </div>
     )
 }
