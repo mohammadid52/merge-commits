@@ -75,9 +75,22 @@ const NewPassword = () => {
     }
 
     return (
-        <div className="w-full h-200 flex items-center justify-center">
-            <div className="w-140 h-140 bg-gray-200 px-8 py-12 flex flex-col items-center justify-around shadow-elem-dark rounded">
+        <div className="w-full h-full flex items-center justify-center">
+            <div className="test login w-140 h-140 bg-gray-200 px-8 py-12 flex flex-col items-center justify-around shadow-elem-dark rounded">
                 <h1 className="text-4xl font-open font-bold">Enter your new password</h1>
+            
+                <div className="flex-grow flex flex-col py-4">
+                    <div>
+                        <div className="input">
+                            <label className="hidden" htmlFor="password">New Password</label>
+                            <input className="w-full px-2 py-1 mb-4" placeholder="New Password" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
+                        </div>
+                        <div className="input">
+                            <label className="hidden" htmlFor="match">Confirm Password</label>
+                            <input className="w-full px-2 py-1 mb-4" placeholder="Confirm Password" type="password" id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
+                        </div>
+                    </div>
+                </div>
                 <div className="w-full h-12 flex justify-center items-center">
                     {
                         message.show ? (
@@ -86,12 +99,6 @@ const NewPassword = () => {
                             </p>
                         ) : null
                     }
-                </div>
-                <div className="w-5/10 flex-grow flex flex-col justify-center items-center py-4">
-                    <label htmlFor="password">New Password</label>
-                    <input className="w-full px-2 py-1 mb-4 " type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
-                    <label htmlFor="match">Confirm Password</label>
-                    <input className="w-full px-2 py-1 mb-4" type="password" id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
                 </div>
                 <button className="w-20 h-12 bg-dark-red text-gray-200 rounded shadow-elem-light mb-4" onClick={handleSubmit}>Submit</button>
             </div>

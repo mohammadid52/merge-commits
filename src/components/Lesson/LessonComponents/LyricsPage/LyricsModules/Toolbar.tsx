@@ -38,12 +38,12 @@ const ToolBar = (props: ToolbarProps) => {
 
 
     return (
-        <div className="bg-gray-500 h-104 w-full flex flex-col items-center p-4 shadow-2 rounded-b">
+        <div className="bg-gray-500 h-80 w-full flex flex-col items-center p-4 shadow-2 rounded-b my-4 md:my-0">
             <h3 className="w-full text-xl text-gray-200 font-open font-bold mb-2 border-b border-gray-700">Toolbox</h3>
             <div className="w-full text-lg text-gray-200 font-open font-bold my-2">
                 Highlighters:
             </div>
-            <div className="flex flex-row flex-wrap justify-center items-center mb-2">
+            <div className="cursor-pointer flex flex-row md:flex-wrap justify-center items-center mb-2">
                 {
 
                     buttons.map((button: {color: string, icon: string}, key: number) => (
@@ -61,7 +61,7 @@ const ToolBar = (props: ToolbarProps) => {
             <div className="w-full h-40">
                 <h3 className="text-gray-200 text-lg font-bold font-open mb-2">My word bank:</h3>
                 <input id="search" className="pl-2 mb-2 rounded-lg shadow-3 text-gray-700 bg-gray-200" type="text" value={search} placeholder="Search..." onChange={handleChange}/>
-                <div className="w-full h-32 bg-gray-300 flex flex-col shadow-3 text-gray-500 px-4 overflow-scroll" onDrop={handleDrop} onDragOver={handleDragOver}>
+                <div className="w-full h-16 md:h-10 bg-gray-300 flex flex-col shadow-3 text-gray-500 px-4 overflow-scroll" onDrop={handleDrop} onDragOver={handleDragOver}>
                         { 
                             search === '' ? state.word_bank.map((word: string, key: string) => (
                                 <span id={key} key={key}>

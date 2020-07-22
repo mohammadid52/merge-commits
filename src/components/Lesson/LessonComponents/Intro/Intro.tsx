@@ -6,14 +6,14 @@ import Banner from './Banner';
 
 const Intro = () => {
     return (
-        <div className="w-full h-160 flex flex-row justify-between items-center">
-            <div className="w-5/10 h-152 flex flex-col justify-between items-center mr-4">
-                <Banner />
-                <PhotoBlock />
-                <QuoteBlock />
-            </div>
-            <BioBlock />
+    <div className="w-full h-full flex flex-col md:flex-row justify-between items-center">
+        <div className="md:w-5/10 h-full flex flex-col justify-between items-center md:mr-4">
+            <Banner />
+            <PhotoBlock />
+            <QuoteBlock />
         </div>
+        <BioBlock />
+    </div>
     )
 }
 

@@ -13,9 +13,9 @@ const Profile: React.FC = () => {
 
     return (
         <div className={`w-full h-full flex flex-col p-8`}>
-            <div className={`${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-80 rounded-sm p-8 `}>
+            <div className={`test profile ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-80 rounded-sm p-8 `}>
                 <div className="w-full flex">
-                    <div className={`h-40 w-40 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light mx-4`}>
+                    <div className={`w-40 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light mx-4`}>
                         <IconContext.Provider value={{ size: '8rem', color: '#4a5568' }}>
                             <FaUserCircle />
                         </IconContext.Provider>

@@ -82,7 +82,7 @@ const Body = () => {
     }, [state.currentPage, state.pages]);
 
     return (
-        <div className="flex flex-col flex-grow items-center content-center h-full w-auto px-8 mb-12"> 
+        <div className="p-4 md:px-8 md:h-168"> 
             {/* { pageSwitch(state.pages[state.currentPage].type) } */}
             {/* <Intro></Intro> */}
             {/* <MapGame /> */}
