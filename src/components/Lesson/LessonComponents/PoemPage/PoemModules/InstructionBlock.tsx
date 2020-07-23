@@ -21,7 +21,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
         return (
             <div className="bg-dark-blue w-full md:h-64 flex flex-col p-6 shadow-3 rounded-sm text-gray-200 mt-4 md:mt-0 mb-4">
                 <div className="w-full flex justify-between">
-                    <h3 className="flex-grow text-xl font-open font-bold mb-6 border-b border-gray-700 mr-4">
+                    <h3 className="flex-grow text-xl font-open font-bold mb-6 border-b border-white mr-4">
                         Instructions
                     </h3>
                 </div>
@@ -35,7 +35,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
     return (
         <div className="bg-dark-blue w-full h-72 flex flex-col items-center p-6 shadow-3 rounded-sm text-gray-200 mb-4">
             <div className="w-full flex justify-between">
-                <h3 className="flex-grow text-xl font-open font-bold mb-3 border-b border-gray-700 mr-4">
+                <h3 className="flex-grow text-xl font-open font-bold mb-3 border-b border-white mr-4">
                     Instructions
                 </h3>
                 <IconContext.Provider value={{ color: '#EDF2F7', size: '1rem'}}>

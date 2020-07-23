@@ -124,7 +124,7 @@ module.exports = {
         'sea-green': '#17A589',
         'fire-orange': '#FF5733',
         // 'dark-blue': '#04111A',
-        'blue': '#1C2C42',
+        'dark-blue': '#1C2C42',
         'dark': '#051429',
         'gold': '#F1C40F',
 

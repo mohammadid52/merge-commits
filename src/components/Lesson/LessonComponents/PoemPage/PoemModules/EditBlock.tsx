@@ -71,7 +71,7 @@ const EditBlock = (props: EditBlockProps) => {
 
     return (
         <div className="bg-dark-blue w-full md:h-128 flex flex-col justify-between rounded-sm shadow-2 px-4 md:px-8 py-6">
-            <h3 className="text-xl text-gray-200 font-open font-bold mb-3 border-b border-gray-700">
+            <h3 className="text-xl text-gray-200 font-open font-bold mb-3 border-b border-white">
                 Final Edits
             </h3>
             <div className="w-full md:h-140 flex flex-col justify-center">

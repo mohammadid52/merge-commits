@@ -1,6 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
+import { IconContext } from "react-icons";
+import { FaKey } from 'react-icons/fa';
+import { MdEmail } from 'react-icons/md';
 import { 
     useHistory,
     Link
@@ -78,15 +81,30 @@ const Login = () => {
                 </div>
           
                 <div className="flex-grow flex flex-col py-4 pt-12">
+                    
                     <div className="input">
+                            <div className="icon">
+                            <IconContext.Provider value={{ size: '1.5rem'}}>
+                                <MdEmail />
+                            </IconContext.Provider>
+                            </div>
                         <label className="hidden" htmlFor="email">Email</label>
                         <input className="w-full px-2 py-1 mb-4 " placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
                     </div>
+                 
                     <div className="input">
+
+                        <div className="icon">
+                        <IconContext.Provider value={{ size: '1.5rem'}}>
+                            <FaKey />
+                        </IconContext.Provider>
+                        </div>
+
                         <label className="hidden" htmlFor="password">Password</label>
                         <input className="w-full px-2 py-1 mb-4" placeholder="Password" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
                     </div>
                 </div>
+                
                 <div className="w-full h-12 flex justify-center items-center">
                     {
                         message.show ? (

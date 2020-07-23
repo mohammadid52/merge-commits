@@ -80,7 +80,7 @@ const Story = () => {
             <div className="w-full h-full flex flex-col items-center">
                 <Banner />
                 <div className="w-full h-8/10 flex flex-col items-center md:flex-row">
-                    <div className="md:w-8/10 md:w-4/10 h-full flex flex-col items-center md:mr-2">
+                    <div className="md:w-4/10 h-full flex flex-col items-center md:mr-2">
                         <InstructionsBlock />
                         { inputs.additionalInputs.length > 0 ?
                             <Modules 

@@ -35,12 +35,12 @@ const Modules = (props: any) => {
     console.log(additional)
 
     return (
-        <div className="md:w-2/10 h-full text-sm md:text-base overflow-scroll flex flex-col justify-around text-gray-200 md:ml-4">
+        <div className="col md:w-2/10 h-56 md:h-100 text-sm md:text-base text-gray-200 md:ml-4 mb-4 md:mb-0">
             {
                 additional.map((item: any, key: number) => {
                     let wordArray = keywordParser(item.input)
                     return (
-                    <div key={key} className={`bg-dark-blue font-open font-bold h-16 md:h-full shadow-2 rounded px-4 py-2 ${key === additional.length - 1 ? '' : 'mb-2'}`}>
+                    <div key={key} className={`bg-dark-blue font-open font-bold h-16 md:h-32 shadow-2 rounded px-4 py-2 ${key === additional.length - 1 ? '' : ''}`}>
                         <h3>{keywordCapitilizer(item.name)}:</h3>
                         <div className="w-full px-2 overflow-scroll">
                             {   item.input ? wordArray.map((word: string, key: number) => (

@@ -65,7 +65,7 @@ const StoryForm = () => {
 
     return (
         <div className="bg-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-gray-200 shadow-2 rounded-sm">
-            <h3 className="text-xl font-open font-bold mb-3 border-b border-gray-700">Story</h3>
+            <h3 className="text-xl font-open font-bold mb-3 border-b border-white">Story</h3>
             <div className="flex flex-col mb-5 mt-2">
                 <label className="text-lg mb-2" htmlFor="title">
                     Title

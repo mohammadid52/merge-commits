@@ -33,9 +33,9 @@ const PageHeaderBar = () => {
                 <button className={`w-24 h-full flex justify-center items-center text-lg py-2`} onClick={lightSwitch}></button> */}
                 
             <div className={`hidden w-32 h-full md:flex flex-row justify-end mr-8`}>
-                <button className={`h-full flex justify-center items-center text-lg py-2`} onClick={lightSwitch}>
+                {/* <button className={`h-full flex justify-center items-center text-lg py-2`} onClick={lightSwitch}>
                     Lights
-                </button>
+                </button> */}
                 {   
                     state.isAuthenticated ? 
                     <button className={`h-full flex justify-center items-center text-lg py-2`} onClick={handleSignOut}>

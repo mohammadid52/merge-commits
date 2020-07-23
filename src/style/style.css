@@ -14,22 +14,6 @@
     /* height: 100%; */
 }
 
-.background-test {
-    background-color: #fafafa;
-}
-
-.test {
-    background-color: white;
-    border-radius: 1rem;
-    box-shadow: 1px 1px 10px 1px #e0e0e0;
-}
-/* 
-.login {
-    width: 30vw;
-    height: 60vh;
-} */
-
-
 .reg {
     height: 80vh;
 }
@@ -45,29 +29,6 @@
     width: 16rem;
 }
 
-.picture {
-    background-position: center;
-    background-repeat: no-repeat; 
-}
-
-.banner {
-    margin-bottom: 1rem;
-    width: 100%;
-    height: 5rem;
-}
-
-.red {
-    color: red;
-    height: 5rem;
-    width: 5rem;
-}
-
-.title {
-    font-size: 3rem;
-    padding: .5rem;
-    height: 5rem;
-    padding: 0;
-}
 
 @media screen and (max-width: 767px) {
     .main {
@@ -76,14 +37,12 @@
     
     .reflection {
         height: 6rem;
-        width: 20rem;
-        font-size: 12px;
-        padding-left: .5rem;
-        padding-right: .5rem;
+        width: 100%;
+        font-size: 14px;
         
     }
     .question {
-        font-size: 10px;
+        font-size: 12px;
         padding-left: .5rem;
         padding-right: .5rem;
         overflow: scroll;
@@ -129,30 +88,6 @@
         display: flex;
         justify-content: center;
     }
-
-    .banner {
-        margin-top: .5rem;
-        margin-bottom: 1rem;
-        width: 100%;
-        height: 4rem;
-    }
-
-    .red {
-        color: red;
-        height: 4rem;
-        width: 4rem;
-    }
-    svg{
-        height: 2rem;
-        width: 2rem;
-    }
-
-    .title {
-        font-size: 1rem;
-        padding: .5rem;
-        height: 4rem;
-    }
-
 
     .picture {
         background-size: 22rem;
