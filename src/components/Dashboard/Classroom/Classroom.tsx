@@ -45,7 +45,7 @@ const Classroom: React.FC = () => {
                         </div>
 
                         <div className="flex_column">
-                            <div className={`flex my-2 justify-center`} >
+                            <div className={`flex mb-2 md:my-2 justify-between`} >
                                 <IconContext.Provider value={{ size: '1.5rem' }}>
                                     <FaClock />
                                 </IconContext.Provider>
@@ -53,7 +53,7 @@ const Classroom: React.FC = () => {
                                     45 min.
                                 </div>
                             </div>
-                            <div className={`flex my-2 justify-center`} >
+                            <div className={`flex mb-2 md:my-2 justify-center`} >
                                 <IconContext.Provider value={{ size: '1.5rem' }}>
                                     <FaUserAlt />
                                 </IconContext.Provider>
