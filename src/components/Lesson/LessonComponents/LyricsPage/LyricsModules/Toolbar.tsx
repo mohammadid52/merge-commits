@@ -43,7 +43,7 @@ const ToolBar = (props: ToolbarProps) => {
             <div className="w-full text-xl text-gray-200 font-open font-bold mb-4">
                 Highlighters:
             </div>
-            <div className="cursor-pointer flex flex-row md:flex-wrap justify-center items-center mb-2 px-4">
+            <div className="cursor-pointer flex flex-row md:flex-wrap justify-center items-center mb-2 md:px-4 lg:px-8">
                 {
 
                     buttons.map((button: {color: string, icon: string}, key: number) => (
