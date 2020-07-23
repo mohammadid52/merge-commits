@@ -78,7 +78,7 @@
           }
         }
         .block2 {
-            height: 8rem;
+            height: 10rem;
             flex-direction: column;
             width: 100%;
             margin: 0;
@@ -93,7 +93,8 @@
             height: 12%;
             flex-direction: row-reverse;
             width: 100%;
-            font-size: 10px;
+            font-size: 13px;
+            margin-top: 0;
             .flex_column {
                 display: flex;
                 flex-direction: column-reverse;
@@ -103,6 +104,10 @@
 
             svg {
                 height: 1rem;
+            }
+
+            button {
+                border-radius: 2rem;
             }
         }
     }

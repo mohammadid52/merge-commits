@@ -11,8 +11,8 @@ const SideMenu: React.FC = ({children, ...props}: SideMenuProps) => {
     const { theme } = useContext(GlobalContext);
 
     return (
-        <div className={`w-2/12 flex flex-col`}>
-            <div className={`w-full h-12 ${theme.toolbar.bg} flex justify-center items-center text-2xl font-bold z-50`}>
+        <div className={`w-0 md:w-2/12 md:flex flex-row md:flex-col`}>
+            <div className={`hidden w-full h-12 ${theme.toolbar.bg} md:flex justify-center items-center text-2xl font-bold z-50`}>
                 <NavLink to="/dashboard">
                     <img className="h-6" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg" alt="Iconoclast Artists"/>
                 </NavLink>
