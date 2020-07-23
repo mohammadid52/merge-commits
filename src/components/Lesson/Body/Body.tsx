@@ -83,13 +83,6 @@ const Body = () => {
 
     return (
         <div className="p-4 md:px-8 md:h-168"> 
-            {/* { pageSwitch(state.pages[state.currentPage].type) } */}
-            {/* <Intro></Intro> */}
-            {/* <MapGame /> */}
-            {/* <Story /> */}
-            {/* <Lyrics />  */}
-            {/* <Poem /> */}
-
             <Switch>
                 <Route exact path={`${match.url}/`}>
                     <Intro />

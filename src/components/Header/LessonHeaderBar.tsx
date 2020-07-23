@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { NavLink, useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { IconContext } from "react-icons";
-import { FaRegSave, FaHome } from 'react-icons/fa';
+import { FaRegSave, FaHome, FaBook } from 'react-icons/fa';
 import { LessonContext } from '../../contexts/LessonContext';
 import { API, graphqlOperation } from 'aws-amplify';
 import * as customMutations from '../../customGraphql/customMutations';
@@ -14,6 +14,7 @@ const LessonHeaderBar = () => {
     const location = useLocation();
     const history = useHistory();
     const { theme, state, dispatch } = useContext(LessonContext);
+    const [ dictOpen, setDictOpen ] = useState(false);
 
     useEffect(() => {
         if ( cookies.lesson ) {
@@ -93,6 +94,12 @@ const LessonHeaderBar = () => {
             }
         }
     }
+
+    const toggleDictionary = () => {
+        setDictOpen(() => {
+            return !dictOpen
+        })
+    }
         
 
     return (
@@ -102,7 +109,25 @@ const LessonHeaderBar = () => {
                     <img className="h-6 px-4" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg" alt="Iconoclast Artists"/>
                 </NavLink>
             </div>
-            <div className={`w-48 h-full flex flex-row justify-end items-center px-8`}>
+            <div className={`relative w-48 h-full flex flex-row justify-end items-center px-8`}>
+                {/* <div className={`flex flex-col justify-center items-center px-2`}>
+                    <div className={`cursor-pointer`} onClick={toggleDictionary}>
+                        <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
+                            <FaBook />
+                        </IconContext.Provider>
+                    </div>
+                    { dictOpen ? 
+                        <div className={`absolute flex flex-col items-center transform translate-y-44 z-50`}>
+                            <div className={`arrow-up`}></div>
+                            <div className={`w-56 h-72 bg-dark p-2 shadow-elem-dark`}>
+                                <div className={`w-full h-full `}>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        : null
+                    }
+                </div> */}
                 <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex justify-center items-center px-2`} onClick={handleSave}>
                     <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
                         <FaRegSave />

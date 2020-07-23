@@ -21,7 +21,7 @@
 }
 
 .quote {
-    border-left: 7px solid red;
+    border-left: 7px solid #CA2222;
 
     @media screen and (max-width: 767px) {
 
@@ -106,4 +106,14 @@
             }
         }
     }
+}
+
+.arrow-up {
+    width: 0;
+    height: 0;
+    
+    border-right: 16px solid transparent;
+    border-left: 16px solid transparent;
+    
+    border-bottom: 20px solid #051429;
 }

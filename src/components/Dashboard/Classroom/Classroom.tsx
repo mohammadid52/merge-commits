@@ -3,6 +3,7 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
 import { IconContext } from "react-icons";
 import { FaClock, FaUserAlt } from 'react-icons/fa';
+import ProgressRing from './ProgressRing';
 
 
 const Classroom: React.FC = () => {
@@ -36,28 +37,39 @@ const Classroom: React.FC = () => {
                     </div>
                     
                     <div className={`block3 w-2/10 h-full flex flex-col items-center my-4`}>
-                        <div className="flex_column">
-                            <div className={`cursor-pointer h-8 w-24 bg-green-500 text-gray-200 font-open font-bold shadow-elem-light flex justify-center items-center my-4`} onClick={handleLink}>
-                                Start Lesson!
-                            </div>
-                            <div className={`flex h-12 my-2`} >
-                            </div>
+                        <div className={`cursor-pointer h-8 w-24 bg-green-500 text-gray-200 font-open font-bold shadow-elem-light flex justify-center items-center my-4`} onClick={handleLink}>
+                            Start Lesson!
                         </div>
-
-                        <div className="flex_column">
-                            <div className={`flex my-2 justify-center`} >
-                                <IconContext.Provider value={{ size: '1.5rem' }}>
-                                    <FaClock />
-                                </IconContext.Provider>
-                                <div className={`mx-4`}>
+                        <div className={`w-full`}>
+                            <div className={`flex justify-center mb-4 text-center`} >
+                                <div className="w-1/3">
+                                    <ProgressRing
+                                        radius={24} 
+                                        stroke={3}
+                                        progress={80}
+                                    />
+                                </div>
+                                {/* <div className={`w-1/2`}>
+                                    75% complete
+                                </div> */}
+                            </div>
+                            <div className={`flex my-2`} >
+                                <div className="w-1/2">
+                                    <IconContext.Provider value={{ size: '1.5rem' }}>
+                                        <FaClock />
+                                    </IconContext.Provider>
+                                </div>
+                                <div className={`w-1/2 mx-4`}>
                                     45 min.
                                 </div>
                             </div>
-                            <div className={`flex my-2 justify-center`} >
-                                <IconContext.Provider value={{ size: '1.5rem' }}>
-                                    <FaUserAlt />
-                                </IconContext.Provider>
-                                <div className={`mx-4`}>
+                            <div className={`flex my-2`} >
+                                <div className="w-1/2">
+                                    <IconContext.Provider value={{ size: '1.5rem' }}>
+                                        <FaUserAlt />
+                                    </IconContext.Provider>
+                                </div>
+                                <div className={`w-1/2 mx-4`}>
                                     Marlon
                                 </div>
                             </div>

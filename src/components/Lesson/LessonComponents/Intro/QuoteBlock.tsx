@@ -28,8 +28,8 @@ const QuoteBlock = () => {
         //         </div>
         //     </div>
         // </div>
-    <div className={`flex-grow w-full min-h-24 ${theme.block.bg} ${theme.block.text} p-4 md:px-8 md:py-4 mt-3 flex items-center justify-center rounded-sm ${theme.block.shadow}`}>
-        <div className="quote flex flex-col items-center">
+    <div className={`flex-grow w-full min-h-24 ${theme.block.bg} ${theme.block.text} p-4 mt-4 flex items-center justify-center rounded-sm ${theme.block.shadow}`}>
+        <div className="quote flex flex-col items-center px-4">
             <div className="">
                 <div className="w-12">
                     <IconContext.Provider value={{ size: '2.5rem' }}>

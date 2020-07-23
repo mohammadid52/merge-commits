@@ -77,7 +77,7 @@ const NewPassword = () => {
     return (
         <div className="w-full h-full flex items-center justify-center">
             <div className="test login w-140 h-140 bg-gray-200 px-8 py-12 flex flex-col items-center justify-around shadow-elem-dark rounded">
-                <h1 className="text-4xl font-open font-bold">Enter your new password</h1>
+                <h1 className="text-xl font-open font-bold">Enter your new password</h1>
             
                 <div className="flex-grow flex flex-col py-4">
                     <div>
