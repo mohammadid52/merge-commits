@@ -87,7 +87,7 @@ const NewPassword = () => {
                 </div>
 
             
-                <div className="flex-grow flex flex-col py-4">
+                <div className="flex-grow flex flex-col py-4 pt-16">
                     
                         
                         <div className="input">
