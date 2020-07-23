@@ -26,17 +26,8 @@ const PageHeaderBar = () => {
         SignOut();
     }
 
-    const lessonRegEx = RegExp(/^\/lesson\/?.*/);
-
-    if ( lessonRegEx.test(location.pathname) ) { return null }
-
     return (
-        <div className={`w-full h-12 ${theme.toolbar.bg} text-gray-200 shadow-2 flex justify-center md:justify-between`}>
-            <div className={`md:w-2/12 h-full flex justify-center items-center text-2xl font-bold`}>
-                <NavLink to="/dashboard">
-                    <img className="h-6" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg" alt="Iconoclast Artists"/>
-                </NavLink>
-            </div>
+        <div className={`w-full h-12 ${theme.toolbar.bg} text-gray-200 shadow-2 flex justify-center md:justify-end`}>
 
             {/* <div className={`hidden md:block md:flex w-48`}>
                 <button className={`w-24 h-full flex justify-center items-center text-lg py-2`} onClick={lightSwitch}></button> */}
