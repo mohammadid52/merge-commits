@@ -34,7 +34,7 @@ const InstructionsBlock = () => {
     
     return (
         <div className="flex-grow md:h-64 bg-dark-blue w-full flex justify-center p-4 shadow-2 rounded-t text-gray-200 mb-4 md:mb-2">
-            <div className="w-full flex flex-col mr-4">
+            <div className="w-full flex flex-col items-center mr-4">
                 <h3 className="flex-grow text-xl font-open font-bold mb-3 border-b border-white mr-4">
                     Instructions
                 </h3>
