@@ -21,7 +21,7 @@
 }
 
 .quote {
-    border-left: 7px solid red;
+    border-left: 7px solid #CA2222;
 
     @media screen and (max-width: 767px) {
 
@@ -94,6 +94,7 @@
             flex-direction: row-reverse;
             width: 100%;
             font-size: 13px;
+            margin-top: 0;
             .flex_column {
                 display: flex;
                 flex-direction: column-reverse;
@@ -110,4 +111,14 @@
             }
         }
     }
+}
+
+.arrow-up {
+    width: 0;
+    height: 0;
+    
+    border-right: 16px solid transparent;
+    border-left: 16px solid transparent;
+    
+    border-bottom: 20px solid #051429;
 }
