@@ -9,7 +9,7 @@ const InstructionsBlock = () => {
     const { text, video, link } = state.data.coreLesson.instructions;
     const instructionsArr = [
             <p className="text-sm mb-2">
-                Read the lyrics to the song "Latinoamérica" by Calle 13.
+                Read the lyrics to the song "Where I'm from" by Marlon Lizama.
             </p>,
             <p className="text-sm mb-2">
                 Highlight lines or words from the lyrics that are <span className="underline">connect to you personally</span> in <span className="text-dark-red">red</span> using the highlighters below. 
@@ -51,8 +51,8 @@ const InstructionsBlock = () => {
                     ))}
                 </div>
                 :
-                <div className="shadow-2 flex justify-center items-center my-4" style={{ width: '300px'}}>
-                    <video controls width="300">
+                <div className="shadow-2 flex justify-center items-center my-4" style={{ width: '275px'}}>
+                    <video controls width="275">
                         <source src={link} type="video/mp4" />
                         <p>Your browser does not support embedded video playback!</p>
                     </video>

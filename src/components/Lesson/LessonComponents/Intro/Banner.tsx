@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { IconContext } from "react-icons";
-import { FaMusic } from 'react-icons/fa';
+import { FaPenFancy } from 'react-icons/fa';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
 const Banner = () => {
@@ -18,10 +18,10 @@ const Banner = () => {
             //         { artistName }
             //     </div>
             // </div>
-        <div className="banner w-full flex flex-row justify-center items-center">
+        <div className="w-full flex flex-row justify-center items-center">
             <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
                 <div className={`red bg-dark-red h-24 w-24 flex flex-col items-center justify-center z-20 rounded-sm ${theme.block.shadow}`}>
-                    <FaMusic />
+                    <FaPenFancy />
                 </div>
             </IconContext.Provider>
             <div className={`${theme.block.bg} title w-full flex flex-row justify-center items-center text-5xl text-center font-open font-bold ${theme.block.text} rounded-sm ${theme.block.shadow} px-4 py-2 z-10`}>
