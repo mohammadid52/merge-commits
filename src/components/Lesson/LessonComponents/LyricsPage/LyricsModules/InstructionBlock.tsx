@@ -35,7 +35,7 @@ const InstructionsBlock = () => {
     return (
         <div className="flex-grow md:h-48 bg-dark-blue w-full flex flex-col justify-around items-center p-4 shadow-2 rounded-t text-gray-200 mb-4 md:mb-2">
             <div className="w-full flex justify-between">
-                <h3 className="flex-grow text-xl font-open font-bold mb-3 border-b border-gray-700 mr-4">
+                <h3 className="flex-grow text-xl font-open font-bold mb-3 border-b border-white mr-4">
                     Instructions
                 </h3>
                 <IconContext.Provider value={{ color: '#EDF2F7', size: '1rem'}}>

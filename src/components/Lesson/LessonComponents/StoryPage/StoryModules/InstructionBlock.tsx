@@ -13,9 +13,9 @@ const InstructionsBlock = () => {
     }
 
     return (
-        <div className="bg-dark-blue md:h-40 overflow-scroll px-4 md:px-8 py-4 mb-4 flex flex-col text-gray-200 shadow-2 rounded-sm">
+        <div className="bg-dark-blue md:h-40 px-4 md:px-8 py-4 mb-4 flex flex-col text-gray-200 shadow-2 rounded-sm">
             <div className="w-full flex justify-between">
-                <h3 className="flex-grow text-xl font-open font-bold mb-3 border-b border-gray-700 mr-4">
+                <h3 className="flex-grow text-xl font-open font-bold mb-3 border-b border-white mr-4">
                     Instructions
                 </h3>
                 <IconContext.Provider value={{ color: '#EDF2F7', size: '1rem'}}>
@@ -24,7 +24,7 @@ const InstructionsBlock = () => {
                     </div>
                 </IconContext.Provider>
             </div>
-            <div className="w-full text-sm px-2">
+            <div className="w-full text-sm px-2 overflow-scroll">
             {   !videoMode ?
                 <div className="overflow-scroll">
                     {

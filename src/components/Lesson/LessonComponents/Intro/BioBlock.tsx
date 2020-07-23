@@ -38,13 +38,13 @@ const BioBlock = () => {
         //     </div>
         // </div>
     <div className={`md:w-5/10 md:h-full ${theme.block.bg} p-4 md:p-8 flex flex-col justify-start ${theme.block.text} text-sm rounded-sm ${theme.block.shadow} mt-3 md:mt-0 md:ml-4`}>
-        <div className="w-full flex flex-row items-center border-b border-gray-700">
+        <div className="w-full flex flex-row items-center border-b border-white">
             {/* <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                 <div className="bg-dark-red h-12 w-12 flex flex-col items-center justify-center z-20 rounded-sm shadow-2 mr-8">
                     <FaMusic />
                 </div>
             </IconContext.Provider> */}
-            <h1 className="header-font text-5xl font-open font-bold"> 
+            <h1 className="border_tb header-font text-5xl font-open font-bold"> 
                 About the artist
             </h1>
         </div>
