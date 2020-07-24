@@ -31,7 +31,7 @@ const ReflectionQuestions = () => {
                 </div>
                 <div className="w-8/10 bg-dark-blue flex-grow rounded-sm shadow-2 px-2 md:px-4 py-1 md:py-2 flex flex-col">
                     <h3 className="font-open font-bold mb-2">
-                        Reflection Questions
+                    Discussion Questions
                     </h3>
                     <div className="question w-full flex-grow text-sm md:text-xl text-gray-200 flex justify-center md:px-4">
                         <p className="text-center">{ questArr[question] }</p>

@@ -16,7 +16,7 @@ const Breakdown = () => {
         <div className="w-full flex flex-row justify-center items-center">
             <div className="w-full h-full flex flex-col justify-center items-center">
                 <Banner title={displayProps ? displayProps.title : null} />
-                <div className="bg-dark-blue w-full h-112 md:h-88 p-8 flex flex-col justify-center items-center text-3xl text-gray-200 rounded shadow-2 whitespace-pre-wrap overflow-scroll mb-5">
+                <div className="bg-dark-blue w-full h-112 md:h-88 p-8 flex flex-col items-center text-3xl text-gray-200 rounded shadow-2 whitespace-pre-wrap overflow-scroll mb-5">
                     { displayProps ? displayProps.editInput : null}
                 </div>
                 <ReflectionQuestions />
