@@ -10,12 +10,20 @@ import PoemBreakdown from './PoemBreakdown/PoemBreakdown'
 // import ErrorPage from '../../Error/ErrorPage';
 
 const Poem = () => {
-    const { dispatch } = useContext(LessonContext);
+    const { state, dispatch } = useContext(LessonContext);
     const match = useRouteMatch();
 
     useEffect(() => {
         dispatch({type: 'ACTIVATE_LESSON', payload: 'activity'})
+
+        if ( state.componentState.poem && state.componentState.poem.editMode === 'true' ) {
+            dispatch({ type: 'CAN_CONTINUE' })
+        } else {
+            dispatch({ type: 'NO_CONTINUE' })
+        }
     }, [])
+
+
     
     return (
         <Switch>

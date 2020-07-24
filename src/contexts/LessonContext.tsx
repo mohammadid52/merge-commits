@@ -100,6 +100,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                     }
                     pagesArray.splice(1, 0, tempBreakdown)
                 }
+                
                 let tempPrimaryLesson = {
                     type: lesson.type,
                     stage: lesson.stage,
