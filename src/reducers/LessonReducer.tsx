@@ -54,6 +54,10 @@ type LessonActions =
         payload: string;
     } 
 |   {
+        type: 'ACTIVATE_CHECKPOINT';
+        payload: string;
+    } 
+|   {
         type: 'SET_PAGE';
         payload: number;
     } 
@@ -191,6 +195,24 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                         return {
                             ...page,
                             active: true,
+                        }
+                    }
+                })
+            };
+        case 'ACTIVATE_CHECKPOINT':
+            return {
+                ...state,
+                pages: state.pages.map(page => {
+                    if (page.stage !== 'checkpoint') {
+                        return page
+                    } else {
+                        if ( action.payload !== page.type ) {
+                            return page
+                        } else {
+                            return {
+                                ...page,
+                                active: true,
+                            }
                         }
                     }
                 })

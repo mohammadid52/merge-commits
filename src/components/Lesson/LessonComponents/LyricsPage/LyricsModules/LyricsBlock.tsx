@@ -199,7 +199,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
                                                 <span 
                                                     key={keyB}
                                                     id={id} 
-                                                    onMouseUp={handleSelect}  
+                                                    onPointerUp={handleSelect}  
                                                     className={`text-${idCheck(id) ? colorFunc(id) : null} ${idCheck(id) ? `${colorFunc(id)}-tag` : null}`}
                                                     // draggable={ color ? 'false' : 'true' }
                                                     // onDragStart={handleDragStart}

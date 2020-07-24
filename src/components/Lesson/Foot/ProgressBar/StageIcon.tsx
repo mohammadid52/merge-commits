@@ -11,6 +11,7 @@ import {
     FaPenFancy,
     FaQuestion,
     FaMap,
+    FaCheck,
 } from 'react-icons/fa';
 
 interface StageIconProps {
@@ -42,6 +43,10 @@ const StageIcon = (props: StageIconProps) => {
                 return <FaQuestion />
             case 'outro':
                 return <FaTrophy />
+            case 'sel':
+                return <FaCheck />
+            case 'profile':
+                return <FaCheck />
             default:
                 return <FaPencilRuler />
         }

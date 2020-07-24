@@ -12,6 +12,7 @@ const Lyrics = lazy(() => import('../LessonComponents/LyricsPage/Lyrics'));
 const Poem = lazy(() => import('../LessonComponents/PoemPage/Poem'));
 const Outro = lazy(() => import('../LessonComponents/Outro/Outro'));
 const LessonError = lazy(() => import('../../Error/LessonError'));
+const Checkpoint = lazy(() => import('../LessonComponents/Checkpoint/Checkpoint'))
 
 const Body = () => {
     const { state, dispatch } = useContext(LessonContext);
@@ -104,6 +105,9 @@ const Body = () => {
                 </Route> */}
                 <Route path={`${match.url}/outro`}>
                     <Outro />
+                </Route>
+                <Route path={`${match.url}/checkpoint`}>
+                    <Checkpoint />
                 </Route>
                 {/* <Route>
                     <ErrorPage />
