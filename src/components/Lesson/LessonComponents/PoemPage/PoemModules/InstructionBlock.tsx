@@ -26,7 +26,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
                     </h3>
                 </div>
                 <div className="overflow-scroll text-sm mb-4 md:mb-0">
-                    Make the final edits to your poem, and get ready to present. Once you think you've finalized your poem, hit the "Submit" again.
+                    Make the final edits to your poem, and get ready to present.
                 </div>
             </div>
         )
