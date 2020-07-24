@@ -57,7 +57,7 @@ const DashboardHome: React.FC = () => {
                 </div>
                 <div className={`flex h-full w-1/3 flex items-center justify-center bg-white ${theme.elem.text} ${theme.elem.shadow} rounded-lg p-4`}>
                     <a href="https://avaloshs.aldineisd.org/" target="_blank">
-                        <img className="w-auto border border-dark-blue shadow-elem-light" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/schoollogos/aldine/thumbnail_LOGO_AVALOS_PRIMARY.png" alt="Aldine"/>
+                        <img className="border border-dark-blue shadow-elem-light" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/schoollogos/aldine/thumbnail_LOGO_AVALOS_PRIMARY.png" alt="Aldine"/>
                     </a>
 
                 </div>
