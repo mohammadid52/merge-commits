@@ -9,7 +9,7 @@ const InstructionsBlock = () => {
     const { text, video, link } = state.data.coreLesson.instructions;
     const instructionsArr = [
             <p className="text-sm mb-2">
-                Read the lyrics to the poem "Where I'm from" by Marlon Lizama.
+                Read the lyrics to the song "Where I'm from" by Marlon Lizama.
             </p>,
             <p className="text-sm mb-2">
                 Highlight lines or words from the lyrics that are <span className="underline">connect to you personally</span> in <span className="text-dark-red">red</span> using the highlighters below. 
@@ -33,31 +33,31 @@ const InstructionsBlock = () => {
     }
     
     return (
-        <div className="flex-grow md:h-48 bg-dark-blue w-full flex flex-col justify-around items-center p-4 shadow-2 rounded-t text-gray-200 mb-4 md:mb-2">
-            <div className="w-full flex justify-between">
-                <h3 className="flex-grow text-xl font-open font-bold mb-3 border-b border-gray-700 mr-4">
+        <div className="flex-grow md:h-64 bg-dark-blue w-full flex justify-center p-4 shadow-2 rounded-t text-gray-200 mb-4 md:mb-2">
+            <div className="w-full flex flex-col items-center mr-4">
+                <h3 className="flex-grow text-xl font-open font-bold mb-3 border-b border-white mr-4">
                     Instructions
                 </h3>
-                <IconContext.Provider value={{ color: '#EDF2F7', size: '1rem'}}>
-                    <div className="flex-grow-0 bg-dark-red h-8 w-8 flex flex-col items-center justify-center z-20 rounded-sm shadow-2" onClick={toggleVideoMode}>
-                        <FaVideo />
+                {   !videoMode ?
+                    <div className="overflow-scroll">
+                        { instructionsArr.map((inst, key) => (
+                            <div className="mx-2" key={key}>{inst}</div>
+                            ))}
                     </div>
-                </IconContext.Provider>
+                    :
+                    <div className="shadow-2 flex justify-center items-center my-4" style={{ width: '275px'}}>
+                        <video controls width="275">
+                            <source src={link} type="video/mp4" />
+                            <p>Your browser does not support embedded video playback!</p>
+                        </video>
+                    </div>
+                }
             </div>
-            {   !videoMode ?
-                <div className="overflow-scroll">
-                    { instructionsArr.map((inst, key) => (
-                        <div className="mx-2" key={key}>{inst}</div>
-                    ))}
+            <IconContext.Provider value={{ color: '#EDF2F7', size: '1rem'}}>
+                <div className="flex-grow-0 bg-dark-red h-8 w-8 flex flex-col items-center justify-center z-20 rounded-sm shadow-2" onClick={toggleVideoMode}>
+                    <FaVideo />
                 </div>
-                :
-                <div className="shadow-2 flex justify-center items-center my-4" style={{ width: '300px'}}>
-                    <video controls width="300">
-                        <source src={link} type="video/mp4" />
-                        <p>Your browser does not support embedded video playback!</p>
-                    </video>
-                </div>
-            }
+            </IconContext.Provider>
         </div>
     )
 }

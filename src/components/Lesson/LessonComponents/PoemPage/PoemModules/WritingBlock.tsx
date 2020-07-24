@@ -246,23 +246,23 @@ const WritingBlock = (props: WritingBlockProps) => {
     }
 
     return (
-        <div className="bg-dark-blue w-full h-80 md:h-full flex flex-col items-center px-8 py-6 rounded-sm shadow-2 mb-4 md:mb-0 " >
+        <div className="bg-dark-blue w-full h-80 md:h-full flex flex-col items-center p-4 md:px-8 md:py-6 rounded-sm shadow-2 mb-4 md:mb-0 " >
             <div className="w-full flex flex-row justify-between mb-4">
-                <h3 className="w-full flex-grow text-xl text-gray-200 font-open font-bold border-b border-gray-700 mr-2">
+                <h3 className="w-full flex-grow text-xl text-gray-200 font-open font-bold border-b border-white mr-2">
                     Line Prompts
                 </h3>
                 <IconContext.Provider value={{ color: '#E2E8F0', size: '1.5rem', style: { opacity: `${lineState.lines.length < (lineNo * 2) ? '100%' : '10%'}`}}}>
-                    <div onClick={handleAddInput}>
+                    <div className="w-8" onClick={handleAddInput}>
                         <FaPlus/>
                     </div>
                 </IconContext.Provider>
             </div>
-            <div className="w-full overflow-scroll flex flex-col ml-2">
+            <div className="w-full h-full overflow-scroll flex flex-col ml-2">
                 {   lineState.lines.length > 1 ? 
                     lineState.lines.map((line: { id: string, text: string, example: string, menuOpen: boolean }, key: number) => {
                         let id = line.id.toString()
                         return (
-                        <div key={key} className="relative bg-transparent flex flex-col">
+                        <div key={key} className="relative bg-transparent flex flex-col items-center">
                             <div key={key} id={id} className="w-full h-12 flex flex-row items-center rounded-lg" onDragOver={handleDragOver} onDrop={handleDrop}>
                                 <input id={id} className="w-full h-10 px-4 py-2 rounded-l-lg text-gray-700 bg-gray-300 shadow-2" name={id} type="text" value={line.text} onChange={handleInputChange} onDoubleClick={handleMenuToggle}/>
                                 <div id={id} className="w-10 h-10 bg-gray-300 rounded-r-lg  flex justify-center items-center shadow-2" onClick={handleMenuToggle}>
@@ -274,7 +274,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                                     </IconContext.Provider>
                                 </div>
                             </div>
-                            <label className={`${line.example ? 'visible' : 'invisible'} self-end text-gray-400 text-sm mr-12`} htmlFor={id}>
+                            <label className={`${line.example ? 'visible' : 'invisible'} self-end flex justify-end text-gray-400 text-sm mr-12`} htmlFor={id}>
                                 ( ex. {line.example} )
                             </label>
                             {   line.menuOpen ?

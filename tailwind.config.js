@@ -65,6 +65,7 @@ module.exports = {
         '40': '10rem',
         '44': '11rem',
         '48': '12rem',
+        '52': '13rem',
         '56': '14rem',
         '64': '16rem',
         '68': '17rem',
@@ -124,7 +125,7 @@ module.exports = {
         'sea-green': '#17A589',
         'fire-orange': '#FF5733',
         // 'dark-blue': '#04111A',
-        'blue': '#1C2C42',
+        'dark-blue': '#1C2C42',
         'dark': '#051429',
         'gold': '#F1C40F',
 

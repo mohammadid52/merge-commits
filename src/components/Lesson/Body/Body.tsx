@@ -82,35 +82,33 @@ const Body = () => {
     }, [state.currentPage, state.pages]);
 
     return (
-        <div className="flex flex-col flex-grow items-center content-center h-full w-auto px-8 mb-12">
-            <Suspense fallback={<div className={`bg-dark text-gray-200`}>Loading...</div>}>
-                <Switch>
-                    <Route exact path={`${match.url}/`}>
-                        <Intro />
-                    </Route>
-                    {/* <Route path='/icebreaker'>
-                        {pageFetch('icebreaker')}
-                    </Route> */}
-                    <Route path={`${match.url}/warmup`}>
-                        {pageFetch('warmup')}
-                    </Route>
-                    <Route path={`${match.url}/corelesson`}>
-                        {pageFetch('corelesson')}
-                    </Route>
-                    <Route path={`${match.url}/activity`}>
-                        {pageFetch('activity')}
-                    </Route>
-                    {/* <Route path='/wrap-up'>
-                        {pageFetch('wrap-up')}
-                    </Route> */}
-                    <Route path={`${match.url}/outro`}>
-                        <Outro />
-                    </Route>
-                    <Route>
-                        <LessonError />
-                    </Route>
-                </Switch>
-            </Suspense>
+        <div className="p-4 md:px-8 md:h-168"> 
+            <Switch>
+                <Route exact path={`${match.url}/`}>
+                    <Intro />
+                </Route>
+                {/* <Route path='/icebreaker'>
+                    {pageFetch('icebreaker')}
+                </Route> */}
+                <Route path={`${match.url}/warmup`}>
+                    {pageFetch('warmup')}
+                </Route>
+                <Route path={`${match.url}/corelesson`}>
+                    {pageFetch('corelesson')}
+                </Route>
+                <Route path={`${match.url}/activity`}>
+                    {pageFetch('activity')}
+                </Route>
+                {/* <Route path='/wrap-up'>
+                    {pageFetch('wrap-up')}
+                </Route> */}
+                <Route path={`${match.url}/outro`}>
+                    <Outro />
+                </Route>
+                {/* <Route>
+                    <ErrorPage />
+                </Route> */}
+            </Switch>
         </div>
     )
 }

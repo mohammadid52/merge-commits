@@ -13,12 +13,19 @@ const Links: React.FC = () => {
     const userLinks = (role: string): void => {
         switch(role) {
             case 'ADM':
-                setLinks(links => {
+                return setLinks(links => {
                     return [
                         ...links,
                         'Registration',
                         'Classroom',
 
+                    ]
+                })
+            case 'FLW':
+                return setLinks(links => {
+                    return [
+                        ...links,
+                        'Classroom',
                     ]
                 })
             default:
