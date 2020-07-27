@@ -58,7 +58,7 @@ const LyricsBreakdown = () => {
                                 <div className={`w-12 h-12 p-2 text-3xl rounded bg-${module.color} flex justify-center items-center shadow-2`}>
                                     { module.label }
                                 </div>
-                                <div className="w-full text-center text-gray-200 font-open text-lg font-bold"> 
+                                <div className="w-full pl-4 text-gray-200 font-open text-lg font-bold"> 
                                     { module.name } 
                                 </div>
                             </div>

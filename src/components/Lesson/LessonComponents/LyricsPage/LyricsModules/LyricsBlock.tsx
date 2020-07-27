@@ -170,7 +170,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         <>
             <div className={`md:h-64 relative bg-dark-blue ${fullscreen ? 'md:h-120' : 'h-68'} mb-4 md:mb-0 w-full pl-8 pr-4 py-4 flex flex-col justify-between rounded shadow-2 text-gray-400 text-lg`}>
                 <div className="w-full flex flex-row justify-between">
-                    <div className="w-9/10 flex flex-row justify-between border-b border-white mr-4 md:mr-0">
+                    <div className="w-9/10 flex flex-row justify-between border-b border-white mb-4 mr-4 md:mr-0">
                         <h3 className="w-auto text-2xl font-open font-bold mb-2">
                             Lyrics
                         </h3>
@@ -199,7 +199,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
                                                 <span 
                                                     key={keyB}
                                                     id={id} 
-                                                    onMouseUp={handleSelect}  
+                                                    onPointerUp={handleSelect}  
                                                     className={`text-${idCheck(id) ? colorFunc(id) : null} ${idCheck(id) ? `${colorFunc(id)}-tag` : null}`}
                                                     // draggable={ color ? 'false' : 'true' }
                                                     // onDragStart={handleDragStart}

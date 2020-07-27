@@ -54,6 +54,10 @@ type LessonActions =
         payload: string;
     } 
 |   {
+        type: 'ACTIVATE_CHECKPOINT';
+        payload: string;
+    } 
+|   {
         type: 'SET_PAGE';
         payload: number;
     } 
@@ -61,7 +65,7 @@ type LessonActions =
         type: 'CLEANUP';
     } 
 |   {
-        type: 'TEST' | 'PAGE_FORWARD' |  'PAGE_BACK' | 'CAN_CONTINUE' | 'FINISH' | 'SAVED_CHANGES';
+        type: 'TEST' | 'PAGE_FORWARD' |  'PAGE_BACK' | 'CAN_CONTINUE' | 'NO_CONTINUE' | 'FINISH' | 'SAVED_CHANGES';
     } 
 
 export const lessonReducer = (state: LessonStateType, action: LessonActions) => {
@@ -151,6 +155,11 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 ...state,
                 canContinue: true,
             }
+        case 'NO_CONTINUE':
+            return {
+                ...state,
+                canContinue: false,
+            }
         case 'FINISH':
             return {
                 ...state,
@@ -186,6 +195,24 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                         return {
                             ...page,
                             active: true,
+                        }
+                    }
+                })
+            };
+        case 'ACTIVATE_CHECKPOINT':
+            return {
+                ...state,
+                pages: state.pages.map(page => {
+                    if (page.stage !== 'checkpoint') {
+                        return page
+                    } else {
+                        if ( action.payload !== page.type ) {
+                            return page
+                        } else {
+                            return {
+                                ...page,
+                                active: true,
+                            }
                         }
                     }
                 })

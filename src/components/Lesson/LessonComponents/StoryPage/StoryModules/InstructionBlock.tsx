@@ -15,15 +15,21 @@ const InstructionsBlock = () => {
     return (
         <div className="bg-dark-blue md:h-52 p-4 mb-4 flex text-gray-200 shadow-2 rounded-sm">
             <div className="w-full flex flex-col px-4">
-                <h3 className="flex-grow text-xl font-open font-bold mb-3 border-b border-white mr-4">
-                    Instructions
-                </h3>
+                <div className="flex flex-row mb-3 border-b border-white mr-4">
+                    <h3 className="w-3/10 mr-2 flex-grow text-xl font-open font-bold ">
+                        Instructions
+                    </h3>
+                    <p className="text-sm flex items-center">(click the red icon for video instructions)</p>
+                </div>
                 <div className={`w-full flex justify-center text-sm px-2`}>
                 {   !videoMode ?
                     <div className="h-32 overflow-scroll mb-2">
+                        
                         {
                             text.map((inst: string, key: number) => (
+                                
                                 <p key={key} className="mb-2">
+                                
                                     { inst }
                                 </p>
                             ))

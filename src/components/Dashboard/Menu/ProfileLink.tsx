@@ -18,11 +18,11 @@ const ProfileLink: React.FC = () => {
 
     return (
         // <NavLink to={`${match.url}/profile`}>
-            <div className="w-full h-14 flex justify-center items-center md:border-t md:border-b md:border-gray-200 py-4 md:px-4">
+            <div className="size h-14 flex justify-center items-center md:border-t md:border-b md:border-gray-200 py-4 md:px-4">
                 <IconContext.Provider value={{ size: '2rem', color: 'white' }}>
                     <FaUserCircle />
                 </IconContext.Provider>
-                <div className="flex-grow h-full flex justify-center mx-4">
+                <div className="flex-grow w-auto h-full flex justify-start pl-4">
                     {`${ state.user.firstName } ${ firstInitialFunc(state.user.lastName) }`}
                 </div>
             </div>

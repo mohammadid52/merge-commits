@@ -43,7 +43,8 @@ const ToolBar = (props: ToolbarProps) => {
             <div className="w-full text-xl text-gray-200 font-open font-bold mb-4">
                 Highlighters:
             </div>
-            <div className="cursor-pointer flex flex-row md:flex-wrap justify-center items-center mb-2 md:px-4 lg:px-8">
+            <div className="cursor-pointer flex flex-row justify-center items-center mb-2">
+               
                 {
 
                     buttons.map((button: {color: string, icon: string}, key: number) => (
@@ -52,12 +53,17 @@ const ToolBar = (props: ToolbarProps) => {
                             </div>
                     ))
                 }
-                    <div id="" className={`bg-gray-200 h-12 w-12 text-3xl rounded-lg mb-2 mx-2 shadow-elem-dark flex flex-row justify-center items-center`} onClick={handleClick}>
+                    <div id="" className={`bg-gray-200 h-12 w-12 text-3xl rounded-lg mb-4 mx-4 shadow-elem-dark flex flex-row justify-center items-center`} onClick={handleClick}>
                         <IconContext.Provider value={{ color: 'darkgray', size: '2rem'}}>
                             <FaEraser />
                         </IconContext.Provider>
                     </div>
             </div>
+            {/* <div>
+                1. click on the colored icon you want to use
+                2. click on the words you want to Highlighter
+                3. to undo your highlighting, click on the erase icon and click on the words
+            </div> */}
             {/* <div className="w-full h-40">
                 <h3 className="text-gray-200 text-lg font-bold font-open mb-2">My word bank:</h3>
                 <input id="search" className="pl-2 mb-2 rounded-lg shadow-3 text-gray-700 bg-gray-200" type="text" value={search} placeholder="Search..." onChange={handleChange}/>

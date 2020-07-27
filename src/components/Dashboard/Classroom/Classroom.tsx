@@ -21,13 +21,13 @@ const Classroom: React.FC = () => {
                     Where I'm From
                 </h1>
                 <div className={`flex flex-col md:flex-row justify-around`} style={{height: "95%"}}>
-                    <div className={`block1 w-1/3 h-full flex flex-col items-center text-center mt-4`}>
+                    <div className={`block1 w-1/5 h-full flex flex-col items-center text-center mt-4`}>
                         <h2 className={`text-3xl font-open font-bold mb-4`}>
                             Marlon Lizama
                         </h2>
                         <img className="w-40 shadow-elem-light" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/marlon.jpeg" alt="Marlon Lizama" />
                     </div>
-                    <div className={`block2 w-1/2 h-full flex flex-col mx-8 mt-8`}>
+                    <div className={`block2 w-1/2 h-full flex flex-col mt-8`}>
                         <h2 className={`text-xl font-bold font-open md:mb-4`}>
                             Lesson Description
                         </h2>
@@ -36,7 +36,7 @@ const Classroom: React.FC = () => {
                         </p>
                     </div>
                     
-                    <div className={`block3 w-2/10 h-full flex flex-col items-center my-4`}>
+                    <div className={`block3 w-2/10 h-full flex flex-col-reverse justify-end pt-12 items-center my-4`}>
                         <div className={`cursor-pointer h-8 w-24 bg-green-500 text-gray-200 font-open font-bold shadow-elem-light flex justify-center items-center my-4`} onClick={handleLink}>
                             Start Lesson!
                         </div>
@@ -58,7 +58,7 @@ const Classroom: React.FC = () => {
                                 <div className={`mx-4`}> */}
 
                         <div className={`w-full`}>
-                            <div className={`hidden md:flex justify-center mb-4 text-center`} >
+                            <div className={`hidden justify-center mb-4 text-center`} >
                                 <div className="w-1/3">
                                     <ProgressRing
                                         radius={24} 

@@ -29,7 +29,7 @@ const ReflectionQuestions = () => {
             </div>
             <div className="w-8/10 bg-dark-blue flex-grow rounded-sm shadow-2 px-4 py-2 flex flex-col">
                 <div className="font-open font-bold mb-2">
-                    Reflection Questions
+                    Discussion Questions
                 </div>
                 <div className="question w-full flex-grow text-xs md:text-xl text-gray-200 flex justify-center px-4">
                     <p className="text-center">{ questArr[question] }</p>
