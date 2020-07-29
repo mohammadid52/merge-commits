@@ -17,6 +17,7 @@ const ProfileLink = lazy(() => import('./Menu/ProfileLink'))
 const Registration = lazy(() => import('./Admin/Registration'))
 import * as queries from '../../graphql/queries';
 import PageHeaderBar from '../Header/PageHeaderBar';
+import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 
 
 type userObject = {
@@ -95,6 +96,12 @@ const Dashboard: React.FC = () => {
                             path={`${match.url}/profile`}
                             render={() => (
                                 <Profile />
+                            )}
+                        />
+                        <Route 
+                            path={`${match.url}/lesson-planner`}
+                            render={() => (
+                                <LessonPlanHome />
                             )}
                         />
                     </Switch>

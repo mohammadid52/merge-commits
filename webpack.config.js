@@ -100,13 +100,14 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|jpe?g|svg)$/,
+        test: /\.(png|jpe?g|svg|gif)$/,
         use: [
           {
             loader: 'file-loader',
             options: {
-              name: '[name]-[hash:6].[ext]',
-              outputPath: '/media',
+              name: '[path][name].[ext]',
+              outputPath: 'media',
+              publicPath: 'media'
             },
           },
         ],
