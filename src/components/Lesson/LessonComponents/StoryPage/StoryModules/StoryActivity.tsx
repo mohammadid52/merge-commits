@@ -77,10 +77,10 @@ const Story = () => {
     return (
        <>
             <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/>
-            <div className="w-full h-200 flex flex-col items-center">
+            <div className="w-full h-full flex flex-col items-center">
                 <Banner />
-                <div className="w-full h-full flex flex-row">
-                    <div className="w-4/10 h-full flex flex-col items-center mr-2">
+                <div className="w-full h-8/10 flex flex-col items-center md:flex-row">
+                    <div className="md:w-4/10 h-full flex flex-col items-center md:mr-2">
                         <InstructionsBlock />
                         { inputs.additionalInputs.length > 0 ?
                             <Modules 
@@ -92,7 +92,7 @@ const Story = () => {
                             null
                         }
                     </div>
-                    <div className="w-6/10 h-full flex flex-col items-center ml-2">
+                    <div className="md:w-6/10 h-full flex flex-col items-center md:ml-2">
                         <StoryForm />
                     </div>
                 </div>

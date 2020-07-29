@@ -8,10 +8,15 @@ const PhotoBlock = () => {
     
 
     return(
-        <div className={`w-full h-80 ${theme.block.bg} py-2 px-4 mt-2 rounded-sm ${theme.block.shadow} flex flex-col justify-center items-center`}>
-            <div className="w-full h-72 bg-local shadow-2 rounded-sm" style={{ backgroundImage: `url(${imgArray[0]})` }}>
-            </div>
+        // <div className={`w-full h-80 ${theme.block.bg} py-2 px-4 mt-2 rounded-sm ${theme.block.shadow} flex flex-col justify-center items-center`}>
+        //     <div className="picture w-full h-72 bg-local shadow-2 rounded-sm" style={{ backgroundImage: `url(${imgArray[0]})` }}>
+        //     </div>
+        // </div>
+
+    <div className={`w-full h-80 ${theme.block.bg} py-2 px-4 mt-3 rounded-sm ${theme.block.shadow} flex flex-col justify-center items-center`}>
+        <div className="picture w-full h-72 bg-local shadow-2 rounded-sm" style={{ backgroundImage: `url(${imgArray[0]})` }}>
         </div>
+    </div>
     )
 }
 

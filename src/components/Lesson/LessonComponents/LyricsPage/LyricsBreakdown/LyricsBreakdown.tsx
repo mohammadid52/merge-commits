@@ -50,21 +50,21 @@ const LyricsBreakdown = () => {
     return (
         <div className="w-full py-4 flex flex-col justify-center items-center">
             <Banner title={title} artist={artist}/>
-            <div className="h-full w-full flex flex-row justify-between items-center mb-5">
+            <div className="h-full w-full flex flex-col md:flex-row justify-between items-center mb-5">
                 {   modules && modules.length >= 1 ?
                     modules.map((module: any, key: number) => (
-                        <div key={key} className={`bg-dark-blue h-80 w-full text-gray-200 flex flex-col flex-no-wrap items-center p-4 shadow-2 rounded-sm ${key === 0 ? 'mr-2' : key === modules.length - 1 ? 'ml-2' : 'mx-2'}`}>
-                            <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-gray-700">
+                        <div key={key} className={`bg-dark-blue mb-4 md:mb-0 h-64 md:h-80 w-full text-gray-200 flex flex-col flex-no-wrap items-center p-4 shadow-2 rounded-sm ${key === 0 ? 'md:mr-2' : key === modules.length - 1 ? 'md:ml-2' : 'md:mx-2'}`}>
+                            <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-white">
                                 <div className={`w-12 h-12 p-2 text-3xl rounded bg-${module.color} flex justify-center items-center shadow-2`}>
                                     { module.label }
                                 </div>
-                                <div className="w-full text-center text-gray-200 font-open text-lg font-bold"> 
+                                <div className="w-full pl-4 text-gray-200 font-open text-lg font-bold"> 
                                     { module.name } 
                                 </div>
                             </div>
-                            <div className="w-full my-4 flex flex-col overflow-scroll px-6">
+                            <div className="w-full md:my-4 flex flex-col overflow-scroll px-6">
                                 { module.content.map((line: string, key: number)=> (
-                                    <p key={key} className={`text-lg text-gray-200 font-bold mb-4`}>{line}</p>
+                                    <p key={key} className={`text-sm md:text-lg text-gray-200 font-bold mb-4`}>{line}</p>
                                 ))}
                             </div>
                         </div>

@@ -47,6 +47,10 @@ export const pageThemes = {
     }
 }
 
+const standardThemes = {
+    
+}
+
 interface GlobalProps {
     children: React.ReactNode;
 }

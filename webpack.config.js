@@ -83,13 +83,31 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|jpe?g|svg)$/,
+        test: /\.s[ac]ss$/i,
+        use: [
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+            }
+          },
+          {
+            loader: 'sass-loader'
+          }
+        ]
+      },
+      {
+        test: /\.(png|jpe?g|svg|gif)$/,
         use: [
           {
             loader: 'file-loader',
             options: {
-              name: '[name]-[hash:6].[ext]',
-              outputPath: '/media',
+              name: '[path][name].[ext]',
+              outputPath: 'media',
+              publicPath: 'media'
             },
           },
         ],

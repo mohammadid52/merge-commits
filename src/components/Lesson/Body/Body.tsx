@@ -1,4 +1,4 @@
-import React, { useContext, useEffect} from 'react';
+import React, { useContext, useEffect, Suspense, lazy} from 'react';
 import { LessonContext } from '../../../contexts/LessonContext';
 import {
     Switch,
@@ -6,12 +6,13 @@ import {
     useLocation,
     useRouteMatch,
 } from "react-router-dom";
-import LessonError from '../../Error/LessonError';
-import Intro from '../LessonComponents/Intro/Intro';
-import Story from '../LessonComponents/StoryPage/Story';
-import Lyrics from '../LessonComponents/LyricsPage/Lyrics';
-import Poem from '../LessonComponents/PoemPage/Poem';
-import Outro from '../LessonComponents/Outro/Outro';
+const Intro = lazy(() => import('../LessonComponents/Intro/Intro'));
+const Story = lazy(() => import('../LessonComponents/StoryPage/Story'));
+const Lyrics = lazy(() => import('../LessonComponents/LyricsPage/Lyrics'));
+const Poem = lazy(() => import('../LessonComponents/PoemPage/Poem'));
+const Outro = lazy(() => import('../LessonComponents/Outro/Outro'));
+const LessonError = lazy(() => import('../../Error/LessonError'));
+const Checkpoint = lazy(() => import('../LessonComponents/Checkpoint/Checkpoint'))
 
 const Body = () => {
     const { state, dispatch } = useContext(LessonContext);
@@ -82,14 +83,7 @@ const Body = () => {
     }, [state.currentPage, state.pages]);
 
     return (
-        <div className="flex flex-col flex-grow items-center content-center h-full w-auto px-8 mb-12"> 
-            {/* { pageSwitch(state.pages[state.currentPage].type) } */}
-            {/* <Intro></Intro> */}
-            {/* <MapGame /> */}
-            {/* <Story /> */}
-            {/* <Lyrics />  */}
-            {/* <Poem /> */}
-
+        <div className="p-4 md:px-8 md:h-168"> 
             <Switch>
                 <Route exact path={`${match.url}/`}>
                     <Intro />
@@ -111,6 +105,9 @@ const Body = () => {
                 </Route> */}
                 <Route path={`${match.url}/outro`}>
                     <Outro />
+                </Route>
+                <Route path={`${match.url}/checkpoint`}>
+                    <Checkpoint />
                 </Route>
                 {/* <Route>
                     <ErrorPage />

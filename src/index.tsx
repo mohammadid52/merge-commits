@@ -7,6 +7,7 @@ Amplify.configure(awsconfig);
 
 import './style/style.css';
 import './index.html';
+import './style/style.scss';
 
 const Page: React.FC = () => {
     return (

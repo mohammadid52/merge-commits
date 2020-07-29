@@ -16,21 +16,17 @@ const ProfileLink: React.FC = () => {
         return firstInitial;
     }
 
-    const handleLink = () => {
-        history.push('dashboard/profile');
-    }
-
     return (
-        <NavLink to={`${match.url}/profile`}>
-            <div className="w-full h-14 flex justify-between items-center border-t border-b border-gray-200 py-4 px-4">
+        // <NavLink to={`${match.url}/profile`}>
+            <div className="size h-14 flex justify-center items-center md:border-t md:border-b md:border-gray-200 py-4 md:px-4">
                 <IconContext.Provider value={{ size: '2rem', color: 'white' }}>
                     <FaUserCircle />
                 </IconContext.Provider>
-                <div className="flex-grow h-full flex justify-center">
+                <div className="flex-grow w-auto h-full flex justify-start pl-4">
                     {`${ state.user.firstName } ${ firstInitialFunc(state.user.lastName) }`}
                 </div>
             </div>
-        </NavLink>
+        // {/* </NavLink> */}
     )
 }
 

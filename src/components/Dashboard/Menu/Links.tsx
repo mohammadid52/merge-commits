@@ -2,23 +2,45 @@ import React, { useContext, useState, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
+type LinkObject = {
+    name: string
+    path: string
+}
+
 const Links: React.FC = () => {
     const history = useHistory();
     const match = useRouteMatch();
     const { state } = useContext(GlobalContext);
-    const initialLinks:Array<string> = [
-    ];
-    const [ links, setLinks ] = useState(initialLinks)
+    const [ links, setLinks ] = useState<Array<LinkObject>>([])
 
     const userLinks = (role: string): void => {
         switch(role) {
             case 'ADM':
-                setLinks(links => {
+                return setLinks(links => {
                     return [
                         ...links,
-                        'Registration',
-                        'Classroom',
-
+                        {
+                            name: 'Registration',
+                            path: 'registration'
+                        },
+                        {
+                            name: 'Classroom',
+                            path: 'classroom'
+                        },
+                        {
+                            name: 'Lesson Planner',
+                            path: 'lesson-planner'
+                        },
+                    ]
+                })
+            case 'FLW':
+                return setLinks(links => {
+                    return [
+                        ...links,
+                        {
+                            name: 'Classroom',
+                            path: 'classroom'
+                        },
                     ]
                 })
             default:
@@ -37,12 +59,12 @@ const Links: React.FC = () => {
     }
 
     return (
-        <div className="w-full h-12 py-4">
+        <div className="link w-full h-12 py-4">
             {
                 state.user.role && links.length > 0 ? 
-                links.map((link: string, key: number) => (
-                    <div id={link} key={key} className={`w-full text-center text-lg mb-4`} onClick={handleLink}>
-                        { link }
+                links.map((link: { name: string, path: string }, key: number) => (
+                    <div id={link.path} key={key} className={`w-full text-center text-lg mb-4`} onClick={handleLink}>
+                        { link.name }
                     </div>
                 )) :
                 null

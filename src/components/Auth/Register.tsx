@@ -30,7 +30,7 @@ const Registration = () => {
         let userData = {
             authId: input.id,
             status: 'ACTIVE',
-            role: 'ADM',
+            role: 'FLW',
             email: input.email,
             firstName: input.firstName,
             lastName: input.lastName,

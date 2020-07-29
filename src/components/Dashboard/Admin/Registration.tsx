@@ -186,8 +186,23 @@ const Registration = () => {
     }
 
     return (
-        <div className="w-full h-200 flex items-center justify-center">
-            <div className="w-9/10 h-180 bg-gray-200 py-8 px-12 flex flex-col shadow-elem-light border-2 border-gray-300 rounded">
+
+        // <div className="w-full items-center justify-center">
+        //     <div className="w-9/10 h-130 ml-4 mt-4 md:m-0 bg-gray-200 py-8 px-12 md:flex flex-col shadow-elem-light border-2 border-gray-300 rounded">
+        //         <h1 className="text-3xl font-open font-bold mb-4">Register</h1>
+        //         <div className="flex-grow w-full flex flex-col">
+        //             <div className="w-full md:flex">
+        //                 <div className="md:w-1/2 md:flex flex-col">
+        //                     <div className="w-full flex flex-col px-2">
+        //                         <label htmlFor="email">Email</label>
+        //                         <input className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
+        //                     </div>
+        //                     <div className="md:flex justify-between my-2">
+        //                         <div className="w-full flex flex-col px-2"></div>
+
+
+        <div className="w-full h-full flex items-center justify-center">
+            <div className="reg test w-9/10 bg-gray-200 py-8 px-12 flex flex-col shadow-elem-light border-2 border-gray-300 rounded">
                 <div className="w-full flex justify-between">
                     <h1 className="text-3xl font-open font-bold mb-4">
                         Register
@@ -198,36 +213,36 @@ const Registration = () => {
                         </div>
                     </IconContext.Provider>
                 </div>
-                <div className="flex-grow w-full flex flex-col">
+                <div className="flex-grow w-full overflow-scroll flex flex-col">
                     { newUserInputs.map((input: newUserInput, key: number) => (
-                        <div className="w-full flex mb-8" key={key}>
-                            <div className="w-3/4 flex flex-col">
-                                <div className="flex my-2">
-                                    <div id={`${key}`} className="w-1/3 flex flex-col px-2">
+                        <div className="w-full md:flex mb-8" key={key}>
+                            <div className="block md:w-3/4 flex md:flex-col">
+                                <div className="flex flex-col md:flex-row mr-4 md:mr-0 my-2">
+                                    <div id={`${key}`} className="w-full md:w-1/3 flex flex-col mx-2">
                                         <label htmlFor="email">Email</label>
-                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="email" name="email" value={newUserInputs[key].email} onChange={handleChange}/>
+                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" placeholder="you@email.com" type="text" id="email" name="email" value={newUserInputs[key].email} onChange={handleChange}/>
                                         </div>
-                                    <div id={`${key}`} className="w-1/4 flex flex-col px-2">
+                                    <div id={`${key}`} className="w-full md:w-1/3 flex flex-col mx-2">
                                         <label htmlFor="firstName">First name</label>
-                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="firstName" name="firstName" value={newUserInputs[key].firstName} onChange={handleChange}/>
+                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" placeholder="Jackson" type="text" id="firstName" name="firstName" value={newUserInputs[key].firstName} onChange={handleChange}/>
                                     </div>
-                                    <div id={`${key}`} className="w-1/4 flex flex-col px-2">
+                                    <div id={`${key}`} className="w-full md:w-1/3 flex flex-col mx-2">
                                         <label htmlFor="lastName">Last name</label>
-                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="lastName" name="lastName" value={newUserInputs[key].lastName} onChange={handleChange}/>
+                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" placeholder="Smith" type="text" id="lastName" name="lastName" value={newUserInputs[key].lastName} onChange={handleChange}/>
                                     </div>
                                 </div>
-                                <div className="flex my-2">
-                                    <div id={`${key}`}className="w-1/3 flex flex-col px-2">
+                                <div className="flex flex-col md:flex-row my-2">
+                                    <div id={`${key}`}className="w-full md:w-1/3 flex flex-col px-2">
                                         <label htmlFor="phone">Phone number</label>
-                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="phone" name="phone" value={newUserInputs[key].phone} onChange={handleChange}/>
+                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" placeholder="7031234567" type="text" id="phone" name="phone" value={newUserInputs[key].phone} onChange={handleChange}/>
                                     </div>
-                                    <div id={`${key}`} className="w-1/3 flex flex-col px-2">
+                                    <div id={`${key}`} className="w-full md:w-1/3 flex flex-col px-2">
                                         <label htmlFor="dob">Date of birth</label>
-                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="dob" name="dob" value={newUserInputs[key].dob} onChange={handleChange}/>
+                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" placeholder="MM/DD/YYYY" type="text" id="dob" name="dob" value={newUserInputs[key].dob} onChange={handleChange}/>
                                     </div>
                                 </div>
                             </div>
-                            <div className="w-1/4 h-full flex justify-center items-center">
+                            <div className="w-full md:w-1/4 h-4 md:h-full flex justify-center items-center">
                             {
                                 newUserInputs[key].message.show ? (
                                         <div className={`h-1/10 w-6/10 flex justify-center items-center text-sm border-2 ${  newUserInputs[key].message.type === 'success' ? 'text-green-500 bg-green-300  border-green-500' :  newUserInputs[key].message.type === 'error' ? 'text-red-500 bg-red-300  border-red-500' : 'text-gray-200'} py-8 px-4 rounded shadow-elem-light text-center`}>
@@ -239,7 +254,7 @@ const Registration = () => {
                         </div>
                     ))}
                 </div>
-                <button className="self-end w-20 h-8 bg-dark-red text-gray-200 rounded" onClick={handleSubmit}>Submit</button>
+                <button className="self-end h-8 bg-dark-red text-gray-200 rounded" onClick={handleSubmit}>Submit</button>
             </div>
         </div>
     )

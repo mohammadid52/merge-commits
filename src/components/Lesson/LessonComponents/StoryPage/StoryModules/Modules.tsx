@@ -86,16 +86,16 @@ const Modules = (props: ModulesProps) => {
     }
 
     return (
-        <div className="h-96 w-full bg-dark-blue text-gray-200 px-8 py-4 shadow-2 rounded-sm">
-            <h3 className="text-xl font-open font-bold mb-3 border-b border-gray-700 mb-4">Focus Questions</h3>
+        <div className="md:h-72 w-full bg-dark-blue text-gray-200 mb-4 md:mb-0 px-4 md:px-8 py-4 shadow-2 rounded-sm">
+            <h3 className="text-xl font-open font-bold mb-3 border-b border-white mb-2">Focus Questions</h3>
             <div className="w-full h-full">
                 { 
                     formInputs ? inputs.map((input, key) => (
-                        <div key={key} className="flex flex-col mb-4">
-                            <label className="text-lg mb-2" htmlFor={input.name}>
+                        <div key={key} className="flex flex-col mb-2">
+                            <label className="text-sm md:text-md mb-2" htmlFor={input.name}>
                                 { input.prompt }
                             </label>
-                            <input id={input.name} className="w-72 text-lg px-4 py-2 rounded-lg shadow-2 text-gray-700 bg-gray-300" name={input.name} type="text" placeholder={`${input.example}, etc.`} value={formInputs[input.name]} onChange={handleFormInputChange}/>
+                            <input id={input.name} className="md:w-72 text-sm md:text-md xl:text-lg px-4 py-1 rounded-lg shadow-2 text-gray-700 bg-gray-300" name={input.name} type="text" placeholder={`${input.example}, etc.`} value={formInputs[input.name]} onChange={handleFormInputChange}/>
                         </div>
                     )) : null
                 }
