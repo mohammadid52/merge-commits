@@ -59,6 +59,11 @@ const ToolBar = (props: ToolbarProps) => {
                         </IconContext.Provider>
                     </div>
             </div>
+            {/* <div>
+                1. click on the colored icon you want to use
+                2. click on the words you want to Highlighter
+                3. to undo your highlighting, click on the erase icon and click on the words
+            </div> */}
             {/* <div className="w-full h-40">
                 <h3 className="text-gray-200 text-lg font-bold font-open mb-2">My word bank:</h3>
                 <input id="search" className="pl-2 mb-2 rounded-lg shadow-3 text-gray-700 bg-gray-200" type="text" value={search} placeholder="Search..." onChange={handleChange}/>

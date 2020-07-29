@@ -7,6 +7,7 @@ const Confirmation = lazy(() => import('./Auth/Confirmation'));
 const Dashboard = lazy(() => import('./Dashboard/Dashboard'));
 const Registration = lazy(() => import('./Auth/Register'));
 const Lesson = lazy(() => import('./Lesson/Lesson'));
+const TeacherView = lazy(() => import('./TeacherView/TeacherView'))
 import { 
     Switch, 
     Route,
@@ -27,7 +28,7 @@ const MainRouter: React.FC = () => {
             history.push('/dashboard');
         }
     }, [])
-//min-h-screen
+    
     return (
         <div className={`background-test h-screen w-screen ${theme.bg} flex flex-col`}>
             <Suspense fallback={<div>Loading...</div>}>
@@ -61,6 +62,9 @@ const MainRouter: React.FC = () => {
                     </PrivateRoute>
                     <PrivateRoute path="/lesson" >
                         <Lesson />
+                    </PrivateRoute>
+                    <PrivateRoute path="/lesson-control" >
+                        <TeacherView />
                     </PrivateRoute>
                     <Route 
                         exact

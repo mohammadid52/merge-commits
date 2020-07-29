@@ -49,8 +49,30 @@ const labelDictionary = {
     }
 }
 
-function useDictionary() {
+function useDictionary(language: string) {
+    async function lookUp(word: string) {
+        const appId = 'c4ad157e';
+        const appKey = 'cc99a6410f78f4d8da7b70e0fcea3254';
+        const endpoint = "entries";
+        const languageCode = "en-us";
+        const wordId = word.toLowerCase()
 
+        const url = "https://od-api.oxforddictionaries.com/api/v2/" + endpoint + "/" + languageCode + "/" + wordId
+
+        const res = await fetch(url, {
+            headers: {
+                'app_id': appId,
+                'app_key': appKey,
+            },
+        })
+        const data = await res.json();
+        console.log('dict_res', data)
+
+    }
+
+    return {
+        lookUp,
+    }
 }
 
 export default useDictionary;
