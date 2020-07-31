@@ -118,6 +118,7 @@ module.exports = {
         'elem-dark': '0 2px 4px black',
         'elem-light': '3px 3px 5px darkgray',
         'map': '5px -1px 8px #1A202C',
+        'inner-dark': 'inset 0 2px 4px black',
       },
       colors: {
         'dark-red-faded': 'rgba(202, 34, 34, 0.2)',
