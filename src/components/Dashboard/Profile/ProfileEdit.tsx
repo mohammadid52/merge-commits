@@ -1,65 +1,44 @@
 import React, { useContext } from 'react';
 import { NavLink, useRouteMatch } from 'react-router-dom';
-import { useState } from "react";
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import DropdownForm from './DropdownForm';
 
 
 const ProfileEdit: React.FC = () => {
 
-    const match = useRouteMatch();
-
+    const items = [
+        {
+            id: 1,
+            value: 'English',
+        },
+        {
+            id: 2,
+            value: 'Spanish',
+        },
+        {
+            id: 3,
+            value: 'Vietnamese'
+        },
+    ];
+                
     return (
-        <div className="overflow-scroll">
-
+        <div className="h-full w-full md:p-6">
+            <div className="h-full bg-white shadow sm:rounded-lg">
             <form>
-                <div>
+                <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                    Edit Personal Information
+                    </h3>
+                </div>
 
-                    <div>
-                        <div>
-                            <h3 className="text-lg leading-6 font-medium text-gray-900">
-                            Profile
-                            </h3>
-                            <p className="mt-1 text-sm leading-5 text-gray-500">
-                            This information will be displayed publicly so be careful what you share.
-                            </p>
-                        </div>
-
-                        <div className="mt-6 grid grid-cols-1 row-gap-6 col-gap-4 sm:grid-cols-6">
-                            <div className="sm:col-span-6">
-                                <label htmlFor="photo" className="block text-sm leading-5 font-medium text-gray-700">
-                                    Photo
-                                </label>
-                                <div className="mt-2 flex items-center">
-                                    <span className="h-12 w-12 rounded-full overflow-hidden bg-gray-100">
-                                    <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                                    </svg>
-                                    </span>
-                                    <span className="ml-5 rounded-md shadow-sm">
-                                    <button type="button" className="py-2 px-3 border border-gray-300 rounded-md text-sm leading-4 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
-                                        Change
-                                    </button>
-                                    </span>
-                                </div>
-                            </div>
-                        
-                        </div>
-                    </div>
-
-                    <div className="mt-8 border-t border-gray-200 pt-8">
-                    <div>
-                        <h3 className="text-lg leading-6 font-medium text-gray-900">
-                        Personal Information
-                        </h3>
-                    </div>
-
-                    <div className="mt-6 grid grid-cols-1 row-gap-6 col-gap-4 sm:grid-cols-6">
+                <div className="h-full px-4 py-5 sm:px-6">
+                    
+                    <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
                         <div className="sm:col-span-3">
                         <label htmlFor="first_name" className="block text-sm font-medium leading-5 text-gray-700">
                             First name
                         </label>
-                        <div className="mt-1 rounded-md shadow-sm">
-                            <input id="first_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"/>
+                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                            <input id="first_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="Jayne"/>
                         </div>
                         </div>
 
@@ -67,60 +46,126 @@ const ProfileEdit: React.FC = () => {
                         <label htmlFor="last_name" className="block text-sm font-medium leading-5 text-gray-700">
                             Last name
                         </label>
-                        <div className="mt-1 rounded-md shadow-sm">
-                            <input id="last_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"/>
-                        </div>
-                        </div>
-
-                        <div className="sm:col-span-4">
-                        <label htmlFor="email" className="block text-sm font-medium leading-5 text-gray-700">
-                            Email address
-                        </label>
-                        <div className="mt-1 rounded-md shadow-sm">
-                            <input id="email" type="email" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"/>
+                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                            <input id="last_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="Phillips"/>
                         </div>
                         </div>
 
                         <div className="sm:col-span-3">
-                        <label htmlFor="country" className="block text-sm font-medium leading-5 text-gray-700">
-                            Country / Region
-                        </label>
-                        <div className="mt-1 rounded-md shadow-sm">
-                            <select id="country" className="form-select block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5">
-                            <option>United States</option>
-                            <option>Canada</option>
-                            <option>Mexico</option>
-                            </select>
-                        </div>
-                        </div>
-
-                        <div className="mt-8 border-t border-gray-200 pt-5">
-                            <div className="flex justify-end">
-                            <span className="inline-flex rounded-md shadow-sm">
-                                <button type="button" className="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
-                                Cancel
+                            <label htmlFor="photo" className="block text-sm leading-5 font-medium text-gray-700">
+                                Photo
+                            </label>
+                            <div className="mt-2 flex items-center">
+                                <span className="h-8 w-8 rounded-full bg-gray-100">
+                                <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                                </span>
+                                <span className="ml-5 rounded-md shadow-sm">
+                                <button type="button" className="py-2 px-3 border border-gray-300 rounded-md text-sm leading-4 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
+                                    Change
                                 </button>
-                            </span>
-                            <span className="ml-3 inline-flex rounded-md shadow-sm">
-                                <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
-                                Save
-                                </button>
-                            </span>
+                                </span>
                             </div>
                         </div>
 
-                    </div>
+                        <div className="sm:col-span-3">
+                        <label htmlFor="preferred_name" className="block text-sm font-medium leading-5 text-gray-700">
+                            Nickname
+                        </label>
+                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                            <input id="preferred_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="not set"/>
+                        </div>
+                        </div>
 
-                    </div>
+                        <div className="sm:col-span-3">
+                        <label htmlFor="birthday" className="block text-sm font-medium leading-5 text-gray-700">
+                            Birthday
+                        </label>
+                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                            <input id="birthday" type="date" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="06 01 1991"/>
+                        </div>
+                        </div>
 
+                        <div className="sm:col-span-3">
+                            <DropdownForm
+                                label='Language Preference'
+                                items= {items}
+                            />
+                        </div>
+
+                        <div className="sm:col-span-3">
+                        <label htmlFor="email" className="block text-sm font-medium leading-5 text-gray-700">
+                            Email address
+                        </label>
+                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                            <input id="email" type="email" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="jayne.phillips61@gmail.com"/>
+                        </div>
+                        </div>
+
+                        <div className="sm:col-span-3">
+                        <label htmlFor="number" className="block text-sm font-medium leading-5 text-gray-700">
+                            Contact Number
+                        </label>
+                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                            <input id="number" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="777 448 224"/>
+                        </div>
+                        </div>
+                    </div>
+                </div>  
+
+                <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                    Edit School Information
+                    </h3>
                 </div>
+
+                <div className="h-full px-4 py-5 sm:px-6">   
+                    <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
+                        <div className="sm:col-span-3">
+                        <label htmlFor="school_name" className="block text-sm font-medium leading-5 text-gray-700">
+                            School
+                        </label>
+                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                            <input id="school_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="Santa Clara High School"/>
+                        </div>
+                        </div>
+
+                        <div className="sm:col-span-3">
+                        <label htmlFor="grade" className="block text-sm font-medium leading-5 text-gray-700">
+                            Grade
+                        </label>
+                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                            <input id="grade" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="11th"/>
+                        </div>
+                        </div>
+
+                    </div>
+                </div>  
+
+                        <div className="p-4 w-full flex justify-end">
+                            <div className="flex w-4/10">
+                        <span className="inline-flex rounded-md shadow-sm">
+                            <NavLink to={`/dashboard/profile`}>
+                            <button type="button" className="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
+                            Cancel
+                            </button>
+                            </NavLink>
+                        </span>
+                        <span className="ml-3 inline-flex rounded-md shadow-sm">
+                            <NavLink to={`/dashboard/profile`}>
+                            <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                            Save
+                            </button>
+                            </NavLink>
+                        </span>
+                        </div>
+                        </div>
+                    
             </form>
+            </div>
 
-
-
-            <NavLink to={`/dashboard/profile`}>
-                <button>Save</button>
-            </NavLink>
+           
         </div>
     )
 

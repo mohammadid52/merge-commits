@@ -16,7 +16,7 @@ const LessonApp = () => {
     }
 //md:h-screen 
     return (
-    <div className={`${theme.bg} w-screen md:h-screen flex flex-col justify-between`} >
+    <div className={`${theme.bg} w-screen md:h-full flex flex-col justify-between`} >
         <LessonHeaderBar />
         <Body />
         <Foot />
