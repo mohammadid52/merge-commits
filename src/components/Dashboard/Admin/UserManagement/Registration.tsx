@@ -3,7 +3,7 @@ import {
     useHistory,
 } from 'react-router-dom';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
-import * as mutations from '../../../graphql/mutations';
+import * as mutations from '../../../../graphql/mutations';
 import { IconContext } from "react-icons";
 import { FaPlus } from 'react-icons/fa';
 
@@ -201,7 +201,7 @@ const Registration = () => {
         //                         <div className="w-full flex flex-col px-2"></div>
 
 
-        <div className="w-full h-full flex items-center justify-center">
+        <div className="w-full h-full p-8 flex items-center justify-center">
             <div className="reg test w-9/10 bg-gray-200 py-8 px-12 flex flex-col shadow-elem-light border-2 border-gray-300 rounded">
                 <div className="w-full flex justify-between">
                     <h1 className="text-3xl font-open font-bold mb-4">

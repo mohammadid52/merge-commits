@@ -5,8 +5,17 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 const ProfileInfo: React.FC = () => {
     const { theme, state, dispatch } = useContext(GlobalContext);
 
+    const language = () => {
+        if (state.user.language === 'EN') {
+            return 'English'
+        } else if (state.user.language === 'ES') {
+            return 'Spanish'
+        }
+
+    }
+
     return (
-        <div className="w-full md:p-4">
+        <div className="w-full md:p-6">
             <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
@@ -44,7 +53,7 @@ const ProfileInfo: React.FC = () => {
                     Language
                     </dt>
                     <dd className="mt-1 text-sm leading-5 text-gray-900">
-                    {`${ state.user.language }`} 
+                    { language() } 
                     </dd>
                 </div>
                 <div className="sm:col-span-1">

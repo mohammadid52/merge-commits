@@ -42,6 +42,7 @@
     "aws-amplify": "^3.0.22",
     "debug": "~2.6.9",
     "postcss-loader": "^3.0.0",
+    "query-string": "^6.13.1",
     "react": "^16.10.2",
     "react-cookie": "^4.0.3",
     "react-dom": "^16.10.2",
