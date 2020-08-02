@@ -3,7 +3,7 @@ import {
     useHistory,
 } from 'react-router-dom';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
-import * as mutations from '../../../graphql/mutations';
+import * as mutations from '../../../../graphql/mutations';
 import { IconContext } from "react-icons";
 import { FaPlus } from 'react-icons/fa';
 

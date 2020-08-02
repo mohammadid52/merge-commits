@@ -2172,3 +2172,64 @@ export const listActivitys = /* GraphQL */ `
     }
   }
 `;
+export const userById = /* GraphQL */ `
+  query UserById(
+    $id: ID
+    $sortDirection: ModelSortDirection
+    $filter: ModelPersonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userById(
+      id: $id
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        institution {
+          id
+          name
+          district
+          address
+          city
+          state
+          zip
+          phone
+          website
+          image
+          createdAt
+          updatedAt
+        }
+        externalId
+        grade
+        courses {
+          id
+          name
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        phone
+        birthdate
+        image
+        language
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

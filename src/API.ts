@@ -8212,6 +8212,66 @@ export type ListActivitysQuery = {
   } | null,
 };
 
+export type UserByIdQueryVariables = {
+  id?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelPersonFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type UserByIdQuery = {
+  userById:  {
+    __typename: "ModelPersonConnection",
+    items:  Array< {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        district: string | null,
+        address: string,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      externalId: string | null,
+      grade: number | null,
+      courses:  Array< {
+        __typename: "Course",
+        id: string,
+        name: string,
+        location: string,
+        startDate: string,
+        endDate: string,
+        duration: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
 export type OnCreateInstitutionTypeSubscription = {
   onCreateInstitutionType:  {
     __typename: "InstitutionType",
