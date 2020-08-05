@@ -1,8 +1,15 @@
 import React, { useContext, useState } from 'react';
 import { NavLink, useRouteMatch } from 'react-router-dom';
 
+interface DropdownProps {
+    label: any,
+    items: any,
+}
 
-function DropdownForm( {label, items} ) {
+
+const DropdownForm = ( props: DropdownProps ) => {
+
+    const {label, items} = props;
 
     let [selectedItem, setSelectItem] = useState(items[0].value);
 
@@ -10,11 +17,11 @@ function DropdownForm( {label, items} ) {
 
     const [highlight, setHighlight] = useState(false);
 
-    const setStyle = (highlight) => {
+    const setStyle = (highlight: any) => {
         setHighlight(highlight);
     }
     
-    const selectItem = (item) => {
+    const selectItem = (item: any) => {
         setSelectItem(item.value);   
         setShowItems(!showItems);
     }
@@ -45,13 +52,11 @@ function DropdownForm( {label, items} ) {
                 </span>
                 { showItems && (
                
-                <div className="absolute mt-1 w-full rounded-md bg-white shadow-lg">
-                <ul tabIndex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-item-3" className="max-h-60 rounded-md py-1 text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5">
+                <div className="z-50 absolute mt-1 w-full rounded-md bg-white shadow-lg">
+                <ul role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-item-3" className="max-h-60 rounded-md py-1 text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5">
                 
-                    {items.map(item => (
+                    {items.map( (item: {id: number, value: string}) => (
                     <li 
-                        // onMouseOver={() => setStyle('text-white bg-indigo-600')} 
-                        // onMouseOut={() => setStyle('text-gray-900')}
                         key={item.id}
                         onClick={() => selectItem(item)}
                         id="listbox-item-0" role="option" className={`hover:bg-indigo-400 hover:text-white flex cursor-default select-none relative py-2 pl-8 pr-4`}>

@@ -3,13 +3,13 @@ import { NavLink, useRouteMatch } from 'react-router-dom';
 import { useState } from "react";
 
 
-function DropdownFormTest({ label, items = [], multiSelect = false }) {
+const DropdownFormTest = ( label: any, items: any, multiSelect: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selection, setSelection] = useState([]);
   const toggle = () => setIsOpen(!isOpen);
 
 
-  function handleOnClick(item) {
+  function handleOnClick(item : any ) {
       if (!selection.some(current => current.id === item.id)) {
           if (!multiSelect) {
               setSelection([item]);
@@ -25,7 +25,7 @@ function DropdownFormTest({ label, items = [], multiSelect = false }) {
       }
   }
 
-function isItemInSelection(item) {
+function isItemInSelection(item : any ) {
     if (selection.find(current => current.id === item.id)) {
         return true;
     }
@@ -52,7 +52,7 @@ function isItemInSelection(item) {
           
         { isOpen && (
         <ul className="dd-list">
-            {items.map(item => (
+            {items.map( (item: {id: any, value: any}) => (
                 <li className="dd-list-item" key={item.id}>
                     <button 
                         type="button"

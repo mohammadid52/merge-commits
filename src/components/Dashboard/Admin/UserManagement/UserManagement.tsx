@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import UserLookup from './UserLookup';
+import User from './User';
 import UserInformation from './UserInformation';
 
 const UserManagement = () => {
@@ -23,7 +24,7 @@ const UserManagement = () => {
                     <Route 
                         path={`${match.url}/user`}
                         render={() => (
-                            <UserInformation />
+                            <User />
                         )}
                     />
                 </Switch>

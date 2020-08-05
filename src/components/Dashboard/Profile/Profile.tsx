@@ -98,7 +98,6 @@ const Profile: React.FC = () => {
                     </div>
                 </div>
 
-                {console.log(state.user)}
             </div>
         </div>
     </div>
