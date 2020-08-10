@@ -1,11 +1,24 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { NavLink, useRouteMatch } from 'react-router-dom';
 import DropdownForm from './DropdownForm';
 
 
-const ProfileEdit: React.FC = () => {
-    
+const ProfileEdit: React.FC = (user: any) => {
+    // const person = user.user;
+    const [editUser, setEditUser] = useState({
+        // person
+    })
+    // console.log(editUser, 'person edit')
+    // console.log(person, 'person')
 
+    const onSubmit = () => {
+        // setEditUser(person)
+    }
+
+    const onChange = (e: any) => {
+        // setEditUser({...editUser.person, [e.target.id]: e.target.value})
+    }
+   
     const items = [
         {
             id: 1,
@@ -20,6 +33,8 @@ const ProfileEdit: React.FC = () => {
             value: 'Vietnamese'
         },
     ];
+
+    
 
     return (
         <div className="h-full w-full md:p-6">
@@ -39,7 +54,9 @@ const ProfileEdit: React.FC = () => {
                             First name
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="first_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="Jayne"/>
+                            <input id="firstName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            // placeholder={`${person.firstName}`}
+                            />
                         </div>
                         </div>
 
@@ -48,7 +65,9 @@ const ProfileEdit: React.FC = () => {
                             Last name
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="last_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="Phillips"/>
+                            <input id="lastName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            // placeholder={`${person.lastName}`}
+                            />
                         </div>
                         </div>
 
@@ -75,7 +94,9 @@ const ProfileEdit: React.FC = () => {
                             Nickname
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="preferred_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="not set"/>
+                            <input id="preferred_name" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            // placeholder={`${person.preferredName}`}
+                            />
                         </div>
                         </div>
 
@@ -84,12 +105,15 @@ const ProfileEdit: React.FC = () => {
                             Birthday
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="birthday" type="date" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="06 01 1991"/>
+                            <input id="birthday" onChange={onChange} type="date" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            // placeholder={`${person.birthdate}`}
+                            />
                         </div>
                         </div>
 
                         <div className="sm:col-span-3">
                             <DropdownForm
+                                // person = {person}
                                 label='Language Preference'
                                 items= {items}
                             />
@@ -100,7 +124,9 @@ const ProfileEdit: React.FC = () => {
                             Email address
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="email" type="email" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="jayne.phillips61@gmail.com"/>
+                            <input id="email" onChange={onChange} type="email" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            // placeholder={`${person.email}`}
+                            />
                         </div>
                         </div>
 
@@ -109,7 +135,9 @@ const ProfileEdit: React.FC = () => {
                             Contact Number
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="number" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="777 448 224"/>
+                            <input id="number" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            // placeholder={`${person.phone}`}
+                            />
                         </div>
                         </div>
                     </div>
@@ -117,7 +145,7 @@ const ProfileEdit: React.FC = () => {
 
                 <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    Edit School Information
+                    Edit Institution Information
                     </h3>
                 </div>
 
@@ -125,10 +153,12 @@ const ProfileEdit: React.FC = () => {
                     <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
                         <div className="sm:col-span-3">
                         <label htmlFor="school_name" className="block text-sm font-medium leading-5 text-gray-700">
-                            School
+                            Institution
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="school_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="Santa Clara High School"/>
+                            <input id="school_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            // placeholder={`${person.institution}`}
+                            />
                         </div>
                         </div>
 
@@ -137,7 +167,9 @@ const ProfileEdit: React.FC = () => {
                             Grade
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="grade" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="11th"/>
+                            <input id="grade" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            // placeholder={`${person.grade}`}
+                            />
                         </div>
                         </div>
 
@@ -155,7 +187,7 @@ const ProfileEdit: React.FC = () => {
                         </span>
                         <span className="ml-3 inline-flex rounded-md shadow-sm">
                             <NavLink to={`/dashboard/profile`}>
-                            <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                            <button type="submit" onSubmit={onSubmit} className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
                             Save
                             </button>
                             </NavLink>

@@ -1,4 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { API, graphqlOperation } from 'aws-amplify';
+import * as queries from '../../../graphql/queries';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { IconContext } from 'react-icons';
 import { FaUserCircle } from 'react-icons/fa';
@@ -14,26 +16,97 @@ import {
     Link,
     NavLink
  } from 'react-router-dom';
+ import Container from '../../../standard/Container';
+
+ interface UserInfo {
+    authId: string
+    courses?: string
+    createdAt: string
+    email: string
+    externalId?: string
+    firstName: string
+    grade?: string
+    id: string
+    image?: string
+    institution?: string
+    language: string
+    lastName: string
+    preferredName?: string
+    role: string
+    status: string
+    phone: string
+    updatedAt: string
+    birthdate?: string
+}
 
 const Profile: React.FC = () => {
 
     const style = {
         height: '80vh'
     }
-    
+    const [user, setUser] = useState<UserInfo>(
+        {
+            id: '',
+            authId: '',
+            courses: null,
+            createdAt: '',
+            email: '',
+            externalId: null,
+            firstName: '',
+            grade: null,
+            image: null,
+            institution: null,
+            language: '',
+            lastName: '',
+            preferredName: null,
+            role: '',
+            status: '',
+            phone: '',
+            updatedAt: '',
+            birthdate: null,
+        }
+    );
     const { theme, state, dispatch } = useContext(GlobalContext);
+
+    async function getUser() {
+        try {
+            const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: state.user.email, authId: state.user.authId }))
+            setUser(user.data.getPerson);
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    useEffect(() => {
+            getUser()
+    }, [])
 
     const match = useRouteMatch();
 
+    const items = [
+        {
+            id: 1,
+            value: 'English',
+        },
+        {
+            id: 2,
+            value: 'Spanish',
+        },
+        {
+            id: 3,
+            value: 'Vietnamese'
+        },
+    ];
+
+
     return (
         <div className="w-full h-full flex items-center justify-center">
-        <div className={`w-9/10 h-full main_container`}>
+            <Container
+
+            />
+        {/* <div className={`w-9/10 h-full main_container`}>
             <div className={`w-full h-full white_back ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
                 
-                <div className="flex">
-                    <Dropdown />
-                </div>
-
                 <div className="h-9/10 flex flex-col md:flex-row">
                     <div className="w-auto p-4 flex flex-col text-center items-center">
                         <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
@@ -42,9 +115,9 @@ const Profile: React.FC = () => {
                             </IconContext.Provider>
                         </div>
                         <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 `}>
-                            {`${ state.user.firstName } ${ state.user.lastName }`} 
-                            <p className="text-md md:text-lg">{`${state.user.preferredName ? state.user.preferredName : '' }`}</p>
-                            <p className="text-md md:text-lg">Santa Clara High School</p>
+                            {`${ user.firstName } ${ user.lastName }`} 
+                            <p className="text-md md:text-lg">{`${user.preferredName ? user.preferredName : '' }`}</p>
+                            <p className="text-md md:text-lg">Avalos P-TECH School</p>
                         </div>
                     </div>
                     <div className="w-full">
@@ -73,7 +146,9 @@ const Profile: React.FC = () => {
                                 exact
                                 path={`${match.url}/`}
                                 render={() => (
-                                    <ProfileInfo />
+                                    <ProfileInfo 
+                                        // user = {user}
+                                    />
                                 )}
                             />
                             <Route 
@@ -85,7 +160,9 @@ const Profile: React.FC = () => {
                               <Route 
                                 path={`${match.url}/edit`}
                                 render={() => (
-                                    <ProfileEdit />  
+                                    <ProfileEdit 
+                                        // user = {user}
+                                    />  
                                 )} 
                             />
                               <Route 
@@ -99,7 +176,7 @@ const Profile: React.FC = () => {
                 </div>
 
             </div>
-        </div>
+        </div> */}
     </div>
     )
 }

@@ -37,10 +37,15 @@ const Classroom: React.FC = () => {
                     </div>
                     
                     <div className={`block3 w-2/10 h-full flex flex-col-reverse justify-end pt-12 items-center my-4`}>
-                        <div className={`cursor-pointer h-8 w-24 bg-green-500 text-gray-200 font-open font-bold shadow-elem-light flex justify-center items-center my-4`} onClick={handleLink}>
-                            Start Lesson!
+                        <div className="flex w-7/10 mt-4">
+                            <span className="ml-3 inline-flex rounded-md shadow-sm">
+                                <button type="submit" onClick={handleLink} className="
+                                text-gray-200 bg-green-500 hover:bg-green-300 focus:border-green-700 focus:shadow-outline-green active:bg-green-500
+                                inline-flex justify-center py-2 px-4 border border-transparent text-m leading-5 font-medium rounded-md focus:outline-none transition duration-150 ease-in-out">
+                                    Start Lesson!
+                                </button>
+                            </span>
                         </div>
-
 
                         {/* <div className="flex_column">
                             <div className={`flex mb-2 md:my-2 justify-between`} >

@@ -8,16 +8,66 @@ import * as queries from '../../../../graphql/queries';
 import { API, graphqlOperation } from 'aws-amplify';
 import { NavLink, useRouteMatch } from 'react-router-dom';
 
+interface UserInfo {
+    authId: string
+    courses?: string
+    createdAt: string
+    email: string
+    externalId?: string
+    firstName: string
+    grade?: string
+    id: string
+    image?: string
+    institution?: string
+    language: string
+    lastName: string
+    preferredName?: string
+    role: string
+    status: string
+    phone: string
+    updatedAt: string
+    birthdate?: string
+}
+
 const UserInformation = () => {
-    const { theme, state, dispatch } = useContext(GlobalContext);
+ 
     const match = useRouteMatch();
-    let [ user, setUser ] = useState([]);
+    const [ user, setUser ] = useState<UserInfo>(
+        {
+            id: '',
+            authId: '',
+            courses: null,
+            createdAt: '',
+            email: '',
+            externalId: null,
+            firstName: '',
+            grade: null,
+            image: null,
+            institution: null,
+            language: '',
+            lastName: '',
+            preferredName: null,
+            role: '',
+            status: '',
+            phone: '',
+            updatedAt: '',
+            birthdate: null,
+        }
+    )
+
     const location = useLocation();
     const queryParams = queryString.parse(location.search)
     
     async function getUserById(id: string) {
-        const data: any = await API.graphql(graphqlOperation(queries.userById, { id: id }))
-        console.log('user', data.data.userById.items.pop())
+        // console.log('user', data.data.userById.items.pop());
+        try {
+            const data: any = await API.graphql(graphqlOperation(queries.userById, { id: id }))
+            console.log('data', data.data.userById.items.pop());
+            setUser(data.data.userById.items.pop());
+            console.log(user, 'user')
+        } catch (error) {
+            console.error(error);  
+        }
     }
 
     useEffect(() => {
@@ -25,17 +75,11 @@ const UserInformation = () => {
         // console.log(id);
         if ( typeof id === 'string') {
             getUserById(id);
+            
         }
     }, [])
 
-    // const language = () => {
-    //     if (state.user.language === 'EN') {
-    //         return 'English'
-    //     } else if (state.user.language === 'ES') {
-    //         return 'Spanish'
-    //     }
 
-    // }
     return (
 
             <div className="w-full md:p-6">
@@ -50,10 +94,10 @@ const UserInformation = () => {
                     <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
                     <div className="sm:col-span-1">
                         <dt className="text-m leading-5 font-medium text-gray-500">
-                        Full Name
+                        Full Name 
                         </dt>
                         <dd className="mt-1 text-m leading-5 text-gray-900">
-                        {/* {`${ state.user.firstName } ${ state.user.lastName }`}  */}
+                        {/* {`${ user.firstName } ${ user.lastName }`}  */}
                         </dd>
                     </div>
                     <div className="sm:col-span-1">
@@ -61,7 +105,7 @@ const UserInformation = () => {
                         Nickname
                         </dt>
                         <dd className="mt-1 text-m leading-5 text-gray-900">
-                        {/* {`${ state.user.preferredName ? state.user.preferredName : 'not set' }`}  */}
+                        {/* {`${ user.preferredName ? user.preferredName : 'not set' }`}  */}
                         </dd>
                     </div>
                     <div className="sm:col-span-1">
@@ -69,6 +113,7 @@ const UserInformation = () => {
                         Role
                         </dt>
                         <dd className="mt-1 text-m leading-5 text-gray-900">
+                        {/* {`${ user.role }`}  */}
                         Admin
                         </dd>
                     </div>
@@ -77,6 +122,7 @@ const UserInformation = () => {
                         Status
                         </dt>
                         <dd className="mt-1 text-m leading-5 text-gray-900">
+                        {/* {`${ user.status }`} */}
                         Active
                         </dd>
                     </div>
@@ -85,7 +131,7 @@ const UserInformation = () => {
                         Birthday
                         </dt>
                         <dd className="mt-1 text-m leading-5 text-gray-900">
-                        06/01/1991
+                        {/* {`${ user.birthdate }`} */}
                         </dd>
                     </div>
                     <div className="sm:col-span-1">
@@ -93,7 +139,8 @@ const UserInformation = () => {
                         Language
                         </dt>
                         <dd className="mt-1 text-m leading-5 text-gray-900">
-                        {/* { language() }  */}
+                        {/* {`${ user.language }`}  */}
+                        English
                         </dd>
                     </div>
                     <div className="sm:col-span-1">
@@ -101,7 +148,7 @@ const UserInformation = () => {
                         Email Address
                         </dt>
                         <dd className="mt-1 text-m leading-5 text-gray-900">
-                        {/* {`${ state.user.email }`}  */}
+                        {/* {`${ user.email }`}  */}
                         </dd>
                     </div>
                     <div className="sm:col-span-1">
@@ -109,7 +156,7 @@ const UserInformation = () => {
                         Contact Number 
                         </dt>
                         <dd className="mt-1 text-m leading-5 text-gray-900">
-                        777 488 224
+                        {/* {`${ user.phone }`} */}
                         </dd>
                     </div>
                     <div className="sm:col-span-1">
@@ -117,7 +164,7 @@ const UserInformation = () => {
                         Account Created
                         </dt>
                         <dd className="mt-1 text-m leading-5 text-gray-900">
-                        07/23/2020
+                        {/* {`${ user.createdAt }`} */}
                         </dd>
                     </div>
                     </dl>
@@ -135,7 +182,7 @@ const UserInformation = () => {
                             Institution
                             </dt>
                             <dd className="mt-1 text-m leading-5 text-gray-900">
-                            Santa Clara High School
+                            {/* {`${ user.institution }`} */}
                             </dd>
                         </div>
                         <div className="sm:col-span-1">
@@ -143,7 +190,7 @@ const UserInformation = () => {
                             Grade 
                             </dt>
                             <dd className="mt-1 text-m leading-5 text-gray-900">
-                            11th
+                            {/* {`${ user.grade }`} */}
                             </dd>
                         </div>
                     </dl>

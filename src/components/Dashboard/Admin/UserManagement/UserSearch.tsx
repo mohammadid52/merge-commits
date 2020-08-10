@@ -1,12 +1,6 @@
-import React, { useState } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import { API, graphqlOperation } from 'aws-amplify';
-import * as queries from '../../../../graphql/queries';
+import React from 'react';
 
 const UserSearch = ( search: any ) => {
-    const [ data, setData ] = useState([]);
-    const match = useRouteMatch();
-    const history = useHistory();
 
     return (    
         <div className="col-span-1">

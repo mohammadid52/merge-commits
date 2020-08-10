@@ -1,41 +1,44 @@
-import React, { useContext, useState } from 'react';
-import { NavLink, useRouteMatch } from 'react-router-dom';
+import React, { useState } from 'react';
 
 interface DropdownProps {
     label: any,
     items: any,
-    // person: any
+    multiSelect: boolean
 }
 
+const FormDrop = ( props: DropdownProps ) => {
 
-const DropdownForm = ( props: DropdownProps ) => {
-
-    const {label, items, 
-        // person
-    } = props;
-    // console.log(person, 'person')
-
+    const { label, items, multiSelect } = props;
     let [selectedItem, setSelectItem] = useState(items[0].value);
-
     const [showItems, setShowItems] =useState(false);
-
-    const [highlight, setHighlight] = useState(false);
-
-    const setStyle = (highlight: any) => {
-        setHighlight(highlight);
-    }
+    const [selection, setSelection] = useState([]);
     
     const selectItem = (item: any) => {
         setSelectItem(item.value);   
         setShowItems(!showItems);
     }
 
-    // const handleHighlight = (e) => {
-    //     console.log(e.target);
-    //     // e.target.style.background = 'red'
-    // }
+    ///for multi-selection
+    function handleOnClick(item : any ) {
+        if (!selection.some(current => current.id === item.id)) {
+            if (!multiSelect) {
+                setSelection([item]);
+            } else if (multiSelect) {
+                setSelection([...selection, item]);
+            }
+        } else {
+            let selectionAfterRemoval = selection;
+            selectionAfterRemoval = selectionAfterRemoval.filter(
+                current => current.id  ==! item.id
+            );
+            setSelection([...selectionAfterRemoval]);
+        }
+    }
+  
 
     return (
+
+        ///may need to change WIDTH
 
         <div className="space-y-1">
             <label id="listbox-label" className="block text-sm leading-5 font-medium text-gray-700">
@@ -45,11 +48,8 @@ const DropdownForm = ( props: DropdownProps ) => {
                 <span className="inline-block w-full rounded-md shadow-sm">
                 <button onClick={() => setShowItems(!showItems)} type="button" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label" className="flex cursor-default relative w-full rounded-md border border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition ease-in-out duration-150 sm:text-sm sm:leading-5">
                     <span className="block truncate">
-                    {`${ selectedItem 
-                    // ? 
-                    // selectedItem : 
-                    //     person.language 
-                        }`} 
+                    {/* can change */}
+                    {`${ selectedItem }`} 
                     </span>
                     <span className="relative justify-end inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                     <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="none" stroke="currentColor">
@@ -68,7 +68,6 @@ const DropdownForm = ( props: DropdownProps ) => {
                         key={item.id}
                         onClick={() => selectItem(item)}
                         id="listbox-item-0" role="option" className={`hover:bg-indigo-400 hover:text-white flex cursor-default select-none relative py-2 pl-8 pr-4`}>
-                        
                         <span className={`${selectedItem === item.value ? 'font-semibold' : 'font-normal'} block truncate"`}>
                             {item.value}
                         </span>
@@ -91,4 +90,4 @@ const DropdownForm = ( props: DropdownProps ) => {
 
 }
 
-export default DropdownForm;
+export default FormDrop;
