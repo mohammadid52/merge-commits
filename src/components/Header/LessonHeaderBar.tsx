@@ -117,7 +117,7 @@ const LessonHeaderBar = () => {
         
 
     return (
-        <div className={`center w-full h-12 ${theme.toolbar.bg} text-gray-200 shadow-2 flex justify-between`}>
+        <div className={`center w-full h-.7/10 ${theme.toolbar.bg} text-gray-200 shadow-2 flex justify-between`}>
             <div className={`w-56 h-full flex justify-center items-center text-2xl font-bold`}>
                 <NavLink to="/dashboard">
                     <img className="h-6 px-4" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg" alt="Iconoclast Artists"/>

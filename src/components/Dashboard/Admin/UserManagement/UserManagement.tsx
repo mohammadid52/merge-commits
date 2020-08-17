@@ -1,17 +1,15 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import UserLookup from './UserLookup';
+import User from './User';
 import UserInformation from './UserInformation';
 
 const UserManagement = () => {
     const match = useRouteMatch();
     
     return (
-        <div className={`w-full h-full p-8`}>
-            {/* <div className={`w-full h-1/10`}>
-                
-            </div> */}
-            <div className={`w-full h-full`}>
+        <div className={`w-full h-full p-8 flex justify-center`}>
+
                 <Switch>
                     <Route 
                         exact
@@ -23,11 +21,11 @@ const UserManagement = () => {
                     <Route 
                         path={`${match.url}/user`}
                         render={() => (
-                            <UserInformation />
+                            <User />
                         )}
                     />
                 </Switch>
-            </div>
+
         </div>
     )
 }

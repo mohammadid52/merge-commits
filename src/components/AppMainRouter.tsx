@@ -30,8 +30,8 @@ const MainRouter: React.FC = () => {
     }, [])
     
     return (
-        <div className={`background-test h-screen w-screen ${theme.bg} flex flex-col`}>
-            <Suspense fallback={<div>Loading...</div>}>
+        <div className={`background-test h-full w-screen ${theme.bg} flex flex-col`}>
+            <Suspense fallback={<div className="h-screen ">Loading...</div>}>
                 <Switch>
                     <Route 
                         path="/login"

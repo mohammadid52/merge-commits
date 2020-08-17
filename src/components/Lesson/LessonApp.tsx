@@ -8,13 +8,14 @@ import LessonHeaderBar from '../Header/LessonHeaderBar';
 
 const LessonApp = () => {
     const { state, theme } = useContext(LessonContext);
+    console.log(state, 'state');
 
     if ( state.status !== 'loaded') {
         return (
             <LessonLoading />
         )
     }
-//md:h-screen 
+
     return (
     <div className={`${theme.bg} w-screen md:h-screen flex flex-col justify-between`} >
         <LessonHeaderBar />

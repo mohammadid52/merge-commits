@@ -14,6 +14,7 @@ const Classroom = lazy(() => import('./Classroom/Classroom'))
 const Profile = lazy(() => import('./Profile/Profile'))
 const Links = lazy(() => import('./Menu/Links'))
 const ProfileLink = lazy(() => import('./Menu/ProfileLink'))
+const Registration = lazy(() => import('./Admin/UserManagement/Registration'))
 const UserManagement = lazy(() => import('./Admin/UserManagement/UserManagement'))
 import * as queries from '../../graphql/queries';
 import PageHeaderBar from '../Header/PageHeaderBar';
@@ -70,7 +71,7 @@ const Dashboard: React.FC = () => {
                 </SideMenu>
                 <div className={`height h-full flex flex-col`}>
                 <PageHeaderBar />
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense fallback={<div className="h-screen">Loading...</div>}>
                     <Switch>
                         <Route 
                             exact
@@ -90,6 +91,12 @@ const Dashboard: React.FC = () => {
                             path={`${match.url}/manage-users`}
                             render={() => (
                                 <UserManagement />
+                            )}
+                        />
+                        <Route 
+                            path={`${match.url}/registration`}
+                            render={() => (
+                                <Registration />
                             )}
                         />
                         <Route 

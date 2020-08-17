@@ -38,7 +38,7 @@ const ToolBar = (props: ToolbarProps) => {
 
 
     return (
-        <div className="bg-gray-500 h-64 w-full flex flex-col items-center p-4 shadow-2 rounded-b my-4 md:my-0">
+        <div className="bg-gray-500 h-4.3/10 w-full flex flex-col items-center p-4 shadow-2 rounded-b my-4 md:my-0">
             <h3 className="w-full text-2xl text-gray-200 font-open font-bold mb-2 border-b border-white">Toolbox</h3>
             <div className="w-full text-xl text-gray-200 font-open font-bold mb-4">
                 Highlighters:

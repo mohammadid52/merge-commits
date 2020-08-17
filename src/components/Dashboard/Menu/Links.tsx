@@ -24,6 +24,10 @@ const Links: React.FC = () => {
                             path: 'manage-users'
                         },
                         {
+                            name: 'Registration',
+                            path: 'registration'
+                        },
+                        {
                             name: 'Classroom',
                             path: 'classroom'
                         },

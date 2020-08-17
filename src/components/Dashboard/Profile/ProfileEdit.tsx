@@ -1,126 +1,240 @@
-import React, { useContext } from 'react';
-import { NavLink, useRouteMatch } from 'react-router-dom';
-import { useState } from "react";
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import React, { useState, useContext, useEffect } from 'react';
+import { API, graphqlOperation } from 'aws-amplify';
+import * as customMutations from '../../../customGraphql/customMutations';
+import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
+import DropdownForm from './DropdownForm';
+import { UserInfo } from './Profile';
 
+interface UserInfoProps {
+    user: UserInfo
+}
 
-const ProfileEdit: React.FC = () => {
-
+const ProfileEdit = (props: UserInfoProps) => {
+    const history = useHistory();
+    
     const match = useRouteMatch();
+    const {user} = props;
+    const [editUser, setEditUser] = useState(user);
+    console.log(editUser, 'edit')
+    async function updatePerson() {
+        const input = {
+            id: editUser.id,
+            authId: editUser.authId,
+            firstName: editUser.firstName,
+            grade: editUser.grade,
+            image: editUser.image,
+            language: editUser.language,
+            lastName: editUser.lastName,
+            preferredName: editUser.preferredName,
+            role: editUser.role,
+            status: editUser.status,
+            phone: editUser.phone,
+            birthdate: editUser.birthdate,
+            email: editUser.email,
+        }
+
+        try {
+            const update: any = await API.graphql(graphqlOperation(customMutations.updatePerson, { input: input }))
+            console.log(update)
+            history.push('/dashboard/profile');
+
+            console.log(history, 'history')
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const onSubmit = () => {
+        updatePerson();
+    }
+
+    const onChange = (e: any) => {
+        const { id, value } = e.target
+        setEditUser(() => {
+            return {
+                ...editUser, 
+                [id]: value
+            }
+        })
+    }
+
+    const handleChangeLanguage = (lang: {name: string, code: string}) => {
+        setEditUser(() => {
+            return {
+                ...editUser, 
+                language: lang.code
+            }
+        })
+    }
+   
+    const Language = [
+        {
+            code: 'EN',
+            name: 'English'
+        },
+        {
+            code: 'ES',
+            name: 'Spanish'
+        },
+        // {
+        //     code: 'VT',
+        //     name: 'Vietnamese'
+        // },
+    ];
+
+    let [imagePreviewURL, setImagePreviewURL] = useState(user.image);
+    let imagePreview = null;
+    if (imagePreview) {
+        imagePreview = <img src = {`"${imagePreviewURL}"`} />;
+    } else {
+        imagePreview = 
+        <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        ;
+    }
+
+    const handleImage = (e: any) => {
+        console.log(e)
+    }
 
     return (
-        <div className="overflow-scroll">
+        <div className="h-full w-full md:p-6">
 
+            <div className="h-auto bg-white shadow-5 sm:rounded-lg mb-4">
             <form>
-                <div>
+                <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                    Edit Personal Information
+                    </h3>
+                </div>
 
-                    <div>
-                        <div>
-                            <h3 className="text-lg leading-6 font-medium text-gray-900">
-                            Profile
-                            </h3>
-                            <p className="mt-1 text-sm leading-5 text-gray-500">
-                            This information will be displayed publicly so be careful what you share.
-                            </p>
-                        </div>
-
-                        <div className="mt-6 grid grid-cols-1 row-gap-6 col-gap-4 sm:grid-cols-6">
-                            <div className="sm:col-span-6">
-                                <label htmlFor="photo" className="block text-sm leading-5 font-medium text-gray-700">
-                                    Photo
-                                </label>
-                                <div className="mt-2 flex items-center">
-                                    <span className="h-12 w-12 rounded-full overflow-hidden bg-gray-100">
-                                    <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                                    </svg>
-                                    </span>
-                                    <span className="ml-5 rounded-md shadow-sm">
-                                    <button type="button" className="py-2 px-3 border border-gray-300 rounded-md text-sm leading-4 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
-                                        Change
-                                    </button>
-                                    </span>
-                                </div>
-                            </div>
-                        
-                        </div>
-                    </div>
-
-                    <div className="mt-8 border-t border-gray-200 pt-8">
-                    <div>
-                        <h3 className="text-lg leading-6 font-medium text-gray-900">
-                        Personal Information
-                        </h3>
-                    </div>
-
-                    <div className="mt-6 grid grid-cols-1 row-gap-6 col-gap-4 sm:grid-cols-6">
+                <div className="h-full px-4 py-5 sm:px-6">
+                    
+                    <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
                         <div className="sm:col-span-3">
-                        <label htmlFor="first_name" className="block text-sm font-medium leading-5 text-gray-700">
+                        <label htmlFor="firstName" className="block text-sm font-medium leading-5 text-gray-700">
                             First name
                         </label>
-                        <div className="mt-1 rounded-md shadow-sm">
-                            <input id="first_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"/>
+                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                            <input id="firstName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            defaultValue={user.firstName}
+                            />
                         </div>
                         </div>
 
                         <div className="sm:col-span-3">
-                        <label htmlFor="last_name" className="block text-sm font-medium leading-5 text-gray-700">
+                        <label htmlFor="lastName" className="block text-sm font-medium leading-5 text-gray-700">
                             Last name
                         </label>
-                        <div className="mt-1 rounded-md shadow-sm">
-                            <input id="last_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"/>
-                        </div>
-                        </div>
-
-                        <div className="sm:col-span-4">
-                        <label htmlFor="email" className="block text-sm font-medium leading-5 text-gray-700">
-                            Email address
-                        </label>
-                        <div className="mt-1 rounded-md shadow-sm">
-                            <input id="email" type="email" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"/>
+                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                            <input id="lastName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            defaultValue = {user.lastName} type="text"
+                            />
                         </div>
                         </div>
 
                         <div className="sm:col-span-3">
-                        <label htmlFor="country" className="block text-sm font-medium leading-5 text-gray-700">
-                            Country / Region
+                        <label htmlFor="preferredName" className="block text-sm font-medium leading-5 text-gray-700">
+                            Nickname
                         </label>
-                        <div className="mt-1 rounded-md shadow-sm">
-                            <select id="country" className="form-select block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5">
-                            <option>United States</option>
-                            <option>Canada</option>
-                            <option>Mexico</option>
-                            </select>
+                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                            <input id="preferredName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            defaultValue = {user.preferredName}
+                            />
                         </div>
                         </div>
 
-                        <div className="mt-8 border-t border-gray-200 pt-5">
-                            <div className="flex justify-end">
-                            <span className="inline-flex rounded-md shadow-sm">
-                                <button type="button" className="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
-                                Cancel
-                                </button>
-                            </span>
-                            <span className="ml-3 inline-flex rounded-md shadow-sm">
-                                <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
-                                Save
-                                </button>
-                            </span>
-                            </div>
+                        <div className="sm:col-span-3">
+                        <label htmlFor="birthdate" className="block text-sm font-medium leading-5 text-gray-700">
+                            Birthday
+                        </label>
+                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                            <input id="birthdate" onChange={onChange} type="date" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            defaultValue = {user.birthdate}
+                            />
+                        </div>
                         </div>
 
+                        <div className="sm:col-span-3">
+                            <DropdownForm
+                                handleChangeLanguage = {handleChangeLanguage}
+                                userLanguage = {user.language}
+                                label='Language Preference'
+                                items= {Language}
+                            />
+                        </div>
+                        <div className="sm:col-span-3">
+                        <label htmlFor="phone" className="block text-sm font-medium leading-5 text-gray-700">
+                            Contact Number
+                        </label>
+                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                            <input id="phone" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            defaultValue = {user.phone}
+                            />
+                        </div>
+                        </div>
                     </div>
-
-                    </div>
-
-                </div>
+                </div>  
+                    
             </form>
+            </div>
 
+            <div className="h-auto bg-white shadow-5 sm:rounded-lg">
+            <form>
+                <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                    Edit Institution Information
+                    </h3>
+                </div>
 
+                <div className="h-full px-4 py-5 sm:px-6">   
+                    <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
+                        <div className="sm:col-span-3">
+                        <label htmlFor="institution" className="block text-sm font-medium leading-5 text-gray-700">
+                            Institution
+                        </label>
+                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                            <input id="institution"  onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            defaultValue={`${user.institution}`}
+                            />
+                        </div>
+                        </div>
 
-            <NavLink to={`/dashboard/profile`}>
-                <button>Save</button>
-            </NavLink>
+                        <div className="sm:col-span-3">
+                        <label htmlFor="grade" className="block text-sm font-medium leading-5 text-gray-700">
+                            Grade
+                        </label>
+                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                            <input id="grade"  onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            defaultValue={`${user.grade}`}
+                            />
+                        </div>
+                        </div>
+                    </div>
+                </div>  
+            
+            </form>
+            </div>
+
+            <div className="p-4 w-full flex justify-end">
+                <div className="flex w-4/10">
+                <span className="inline-flex rounded-md shadow-sm">
+                    <NavLink to={`/dashboard/profile`}>
+                    <button type="button" className="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
+                    Cancel
+                    </button>
+                    </NavLink>
+                </span>
+                <span className="ml-3 inline-flex rounded-md shadow-5">
+                    <button type="submit" onClick={onSubmit} className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                    Save
+                    </button>
+                </span>
+                </div>
+            </div>
+
+           
         </div>
     )
 
