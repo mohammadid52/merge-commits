@@ -45,15 +45,17 @@ const LyricsBreakdown = () => {
         dispatch({type: 'ACTIVATE_LESSON', payload: 'corelesson/breakdown'})
     }, [])
 
-    
+    // ${key === 0 ? 'md:mr-2' : key === modules.length - 1 ? 'md:ml-2' : 'md:mx-2'}
 
     return (
-        <div className="w-full py-4 flex flex-col justify-center items-center">
+        <div className="w-full h-full flex flex-col justify-between items-center">
             <Banner title={title} artist={artist}/>
-            <div className="h-full w-full flex flex-col md:flex-row justify-between items-center mb-5">
+            <div className="h-7/10 w-full flex flex-col md:flex-row justify-between items-center">
                 {   modules && modules.length >= 1 ?
                     modules.map((module: any, key: number) => (
-                        <div key={key} className={`bg-dark-blue mb-4 md:mb-0 h-64 md:h-80 w-full text-gray-200 flex flex-col flex-no-wrap items-center p-4 shadow-2 rounded-sm ${key === 0 ? 'md:mr-2' : key === modules.length - 1 ? 'md:ml-2' : 'md:mx-2'}`}>
+                        <div key={key} className={`bg-dark-blue h-64 md:h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-4 shadow-2 rounded-sm 
+                        
+                        `}>
                             <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-white">
                                 <div className={`w-12 h-12 p-2 text-3xl rounded bg-${module.color} flex justify-center items-center shadow-2`}>
                                     { module.label }

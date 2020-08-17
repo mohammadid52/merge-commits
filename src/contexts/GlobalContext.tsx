@@ -47,6 +47,25 @@ export const pageThemes = {
     }
 }
 
+export const main_container = {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '2rem'
+    // @media screen and (max-width: 767px) {
+    //     padding: '1rem';
+    // }
+}
+
+export const white_back = {
+    backgroundColor: 'white',
+    borderRadius: '1rem',
+    boxShadow: '1px 1px 10px 1px #e0e0e0',
+    // @media screen and (max-width: 767px) {
+    //     padding: 1rem;
+    //     overflow: scroll;
+    // }
+}
+
 const standardThemes = {
     
 }
@@ -74,7 +93,7 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
     const theme = lightOn ? pageThemes.light : pageThemes.dark;
 
     return (
-        <GlobalContext.Provider value={{theme, lightSwitch, forceTheme, state, dispatch}}>
+        <GlobalContext.Provider value={{theme, lightSwitch, forceTheme, state, dispatch, main_container, white_back}}>
             { children }
         </GlobalContext.Provider>
     )

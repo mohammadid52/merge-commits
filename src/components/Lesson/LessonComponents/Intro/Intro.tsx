@@ -1,35 +1,28 @@
 import React from 'react';
 import PhotoBlock from './PhotoBlock';
 import QuoteBlock from './QuoteBlock';
-import BioBlock from './BioBlock';
+import Block from './Block';
 import Banner from './Banner';
+import InstructionsBlock from './InstructionsBlock';
+import DoFirst from './DoFirst';
 
 const Intro = () => {
     return (
     <div className="w-full h-full flex flex-col md:flex-row justify-between items-center">
-        <div className="md:w-5/10 h-full flex flex-col justify-between items-center md:mr-4">
+        <div className="md:w-6/10 h-full flex flex-col justify-between items-center">
             <Banner />
-            <PhotoBlock />
-            <QuoteBlock />
+            <div className="w-full h-4.3/10 flex">
+                <QuoteBlock />
+            </div>
+            <div className="w-full h-4.3/10">
+                <Block />
+            </div>
         </div>
-        <BioBlock />
+        <div className="md:w-3.8/10 h-full flex flex-col justify-between items-center">
+            <DoFirst />
+        </div>
     </div>
     )
 }
 
 export default Intro;
-
-// const Intro = props => {
-//     return (
-//         <div className="w-full h-full flex flex-row items-center">
-//             <div className="w-4/10 h-full flex flex-col justify-center items-center">
-//                 <Banner />
-//                 <PhotoBlock />
-//                 <QuoteBlock />
-//             </div>
-//             <div className="w-6/10 h-full">
-//                 <BioBlock />
-//             </div>
-//         </div>
-//     )
-// }

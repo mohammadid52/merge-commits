@@ -77,9 +77,9 @@ const Story = () => {
     return (
        <>
             <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/>
-            <div className="w-full h-full flex flex-col items-center">
+            <div className="w-full h-full flex flex-col justify-between items-center">
                 <Banner />
-                <div className="w-full h-8/10 flex flex-col items-center md:flex-row">
+                <div className="w-full h-8.8/10 flex flex-col items-center md:flex-row">
                     <div className="md:w-4/10 h-full flex flex-col items-center md:mr-2">
                         <InstructionsBlock />
                         { inputs.additionalInputs.length > 0 ?
