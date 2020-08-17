@@ -19,7 +19,7 @@ const Keyword = () => {
 
     return (
         <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col justify-center ${theme.block.text} text-lx rounded-sm shadow-inner`}>
-            <p className="text-2xl font-extrabold">SEO keywords we will cover in this lesson:</p>
+            <p className="text-2xl font-extrabold">keywords we will cover in this lesson:</p>
             <p><span className="font-bold">Culture:</span> the beliefs, social practices, and characteristics of a racial, religious, or social group </p>
             <p><span className="font-bold">Identity:</span> all of those things by which a person or thing is known or is considered as being </p>
             <p><span className="font-bold">Self-Awareness:</span> conscious knowledge of one's own personality, character, motives, and feelings </p>
