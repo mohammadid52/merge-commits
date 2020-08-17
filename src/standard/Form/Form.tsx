@@ -60,14 +60,14 @@ const Form = () => {
                 <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
                     <FormInput
                     label = 'First Name'
-                    placeholder = 'Jayne'
+                    value = 'Jayne'
                     id = 'first_name'
                     type = 'text'
                     />
 
                     <FormInput
                     label = 'Last Name'
-                    placeholder = 'Phillips'
+                    value = 'Phillips'
                     id = 'last_name'
                     type = 'text'
                     />
@@ -92,7 +92,7 @@ const Form = () => {
 
                     <FormInput
                     label = 'Something'
-                    placeholder = 'Some'
+                    value = 'Some'
                     id = 'some'
                     type = 'text'
                     />
@@ -115,7 +115,7 @@ const Form = () => {
 
                     <FormInput
                         label = 'Birthday'
-                        placeholder = '01/01/1234'
+                        value = '01/01/1234'
                         id = 'birthdate'
                         type = 'date'
                     />
@@ -130,14 +130,14 @@ const Form = () => {
 
                     <FormInput
                         label = 'Email'
-                        placeholder = 'email@email.com'
+                        value = 'email@email.com'
                         id = 'email'
                         type = 'email'
                     />
 
                     <FormInput
                     label = 'Contact Number'
-                    placeholder = '123934587'
+                    value = '123934587'
                     id = 'phone'
                     type = 'text'
                     />

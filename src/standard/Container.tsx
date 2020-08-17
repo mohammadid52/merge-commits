@@ -24,9 +24,23 @@ const Container: React.FC = () => {
     return (
 
         <div className="w-9/10 h-full main_container">
-            <div className={`w-full h-full white_back ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
+            <div className={`w-full h-full white_container p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
                 <List />
                 <Form />
+                <ViewPage />
+                <EditPage />
+
+                <Pagination />
+                < ErrorNote/>
+                < SuccessNote/>
+                < NegativeAlert/>
+                < PositiveAlert/>
+                < Toggle/>
+                {/* < Search
+                name="label"
+                id="1"/> */}
+                < Badge/>
+                < MenuDropdown/>
 
 
 

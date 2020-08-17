@@ -16,7 +16,7 @@ import {
     NavLink
  } from 'react-router-dom';
 
- interface UserInfo {
+ export interface UserInfo {
     authId: string
     courses?: string
     createdAt: string
@@ -67,27 +67,32 @@ const User = () => {
     const queryParams = queryString.parse(location.search)
     
     async function getUserById(id: string) {
-        // console.log('user', data.data.userById.items.pop());
         try {
-            const data: any = await API.graphql(graphqlOperation(queries.userById, { id: id }))
-            console.log('data', data.data.userById.items.pop());
-            setUser(data.data.userById.items.pop());
-            console.log(user.id, 'user')
+            const result: any = await API.graphql(graphqlOperation(queries.userById, { id: id }))
+            const userData = result.data.userById.items.pop();
+            setUser(() => {
+                if ( typeof userData === 'object') {
+                    return userData
+                }
+                return user
+            });
+            
         } catch (error) {
             console.error(error);  
         }
-
-        console.log(user, '?')
     }
 
     useEffect(() => {
         let id = queryParams.id;
-        // console.log(id);
         if ( typeof id === 'string') {
             getUserById(id);
             
         }
     }, [])
+
+    useEffect(() => {
+        console.log('THISONE', user)
+    }, [user])
 
     // const language = () => {
     //     if (user.language === 'EN') {
@@ -98,56 +103,43 @@ const User = () => {
 
     // }
     return (
-<div className="w-full h-full flex items-center justify-center">
-        <div className={`w-9/10 h-full main_container`}>
-            <div className={`w-full h-full white_back ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
-                <div className="h-9/10 flex flex-col md:flex-row">
-                    <div className="w-auto p-4 flex flex-col text-center items-center">
-                        <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
-                            <IconContext.Provider value={{ size: '8rem', color: '#4a5568' }}>
-                                <FaUserCircle />
-                            </IconContext.Provider>
+            <div className={`w-9/10 h-full`}>
+                <div className={`w-full h-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
+                    <div className="h-9/10 flex flex-col md:flex-row">
+                        <div className="w-auto p-4 flex flex-col text-center items-center">
+                            <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+                                <IconContext.Provider value={{ size: '8rem', color: '#4a5568' }}>
+                                    <FaUserCircle />
+                                </IconContext.Provider>
+                            </div>
+                            <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
+                                {`${ user.preferredName ? user.preferredName : user.firstName } ${ user.lastName }`}
+                                <p className="text-md md:text-lg">
+                                {`${ user.institution ? user.institution : '' }`}
+                                </p>
+                            </div>
                         </div>
-                        <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 `}>
-                            {/* {`${ state.user.firstName } ${ state.user.lastName }`}  */}
-                            <p className="text-md md:text-lg">
-                            {/* {`${state.user.preferredName ? state.user.preferredName : '' }`} */}
-                            </p>
-                            <p className="text-md md:text-lg">Santa Clara High School</p>
-                        </div>
-                    </div>
 
-
-
-                    <Switch>
-                            <Route 
-                                exact
-                                path={`${match.url}/`}
-                                render={() => (
-                                    <UserInformation />
-                                )}
-                            />
+                        <Switch>
                             <Route 
                                 path={`${match.url}/edit`}
                                 render={() => (
-                                    <UserEdit />  
+                                    <UserEdit user={user}/>  
                                 )} 
+                            />
+                            <Route 
+                                path={`${match.url}/`}
+                                render={() => (
+                                    <UserInformation user={user} />
+                                )}
                             />
                         </Switch>
 
 
+                    </div>
+
                 </div>
-
             </div>
-        </div>
-    </div>
-
-
-
-
-
-
-
 
     )
 }

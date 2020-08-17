@@ -8,6 +8,6 @@ const LessonLoading = () => {
             </div>
         </div>
     )
-}
+} 
 
 export default LessonLoading;

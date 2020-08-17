@@ -1,22 +1,11 @@
 import React, { useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 //make sure you are importing from the correct folder
-import StatusDrop from './StatusDrop';
 
 const List = () => {
 const [ data, setData ] = useState([]);
 const match = useRouteMatch();
 const history = useHistory();
-
-// async function listUsers() {
-//     let limit = 10;
-//     try {
-//         const users: any = await API.graphql(graphqlOperation(queries.listPersons, { limit: limit }))
-//         setData(users.data.listPersons.items)
-//     } catch (error) {
-//         console.error(error);  
-//     }
-// }
 
 const handleLink = (e: any) => {
     const { id } = e.target
@@ -31,27 +20,29 @@ const handleLink = (e: any) => {
             <div className="w-full flex justify-end">
                 <span className="w-40 flex inline-flex rounded-md shadow-sm">
                     <button type="submit" className="
-                    text-white bg-indigo-700 hover:bg-indigo-600 focus:border-indigo-800 focus:shadow-outline-indigo active:bg-indigo-800
+                    text-indigo-700 bg-white border-indigo-700 hover:bg-indigo-600 hover:bg-opacity-50 hover:border-none focus:border-indigo-800 focus:shadow-outline-indigo active:bg-indigo-800
                     inline-flex justify-center py-2 px-4 border border-transparent text-m leading-5 font-medium rounded-md focus:outline-none transition duration-150 ease-in-out">
                         + Create Name 
                     </button>
                 </span>
             </div>
-            <div className="white_back mt-8 align-middle rounded-lg border-b border-gray-200">
+            <div className="white_container shadow-5 p-8 mt-8 align-middle rounded-lg border-b border-gray-200">
             <table className="h-8/10 px-4 divide-y divide-gray-200">
-                <thead className="w-full">
+                <thead className="w-full border-b border-gray-200">
                 <tr>
-                    <th className="px-8 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     Name
                     </th>
-                    <StatusDrop />
-                    <th className="px-8 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     Name
                     </th>
-                    <th className="px-8 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     Name
                     </th>
-                    <th className="px-8 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"></th>
+                    <th className="px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                    </th>
+                    <th className="px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"></th>
                 </tr>
                 </thead>
             { 
@@ -98,7 +89,6 @@ const handleLink = (e: any) => {
 
                 </tbody>
                 )):  null
-                        // <div className="w-full text-center">no data available in table</div>
                     
                 }
                 </table>

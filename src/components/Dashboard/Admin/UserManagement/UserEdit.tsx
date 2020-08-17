@@ -1,22 +1,84 @@
-import React, { useContext } from 'react';
-import { NavLink, useRouteMatch } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { API, graphqlOperation } from 'aws-amplify';
+import * as customMutations from '../../../../customGraphql/customMutations';
+import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
 import DropdownForm from '../../Profile/DropdownForm';
+import { UserInfo } from './User';
 
-const UserEdit: React.FC = () => {
+interface UserInfoProps {
+    user: UserInfo
+}
 
-    const items = [
+const UserEdit = (props: UserInfoProps) => {
+    const history = useHistory();
+    const {user} = props;
+    console.log(user, 'user')
+    const [editUser, setEditUser] = useState(user);
+    console.log(editUser, 'what is this');
+
+    async function updatePerson() {
+        const input = {
+            id: editUser.id,
+            authId: editUser.authId,
+            firstName: editUser.firstName,
+            grade: editUser.grade,
+            image: editUser.image,
+            language: editUser.language,
+            lastName: editUser.lastName,
+            preferredName: editUser.preferredName,
+            role: editUser.role,
+            status: editUser.status,
+            phone: editUser.phone,
+            birthdate: editUser.birthdate,
+            email: editUser.email,
+        }
+
+        try {
+            const update: any = await API.graphql(graphqlOperation(customMutations.updatePerson, { input: input }))
+            console.log(update)
+            history.goBack();
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const onSubmit = () => {
+        console.log(updatePerson, 'update');
+        updatePerson();
+    }
+
+    const onChange = (e: any) => {
+        const { id, value } = e.target
+        setEditUser(() => {
+            return {
+                ...editUser, 
+                [id]: value
+            }
+        })
+    }
+
+    const handleChangeLanguage = (lang: {name: string, code: string}) => {
+        setEditUser(() => {
+            return {
+                ...editUser, 
+                language: lang.code
+            }
+        })
+    }
+   
+    const Language = [
         {
-            id: 1,
-            value: 'English',
+            code: 'EN',
+            name: 'English'
         },
         {
-            id: 2,
-            value: 'Spanish',
+            code: 'ES',
+            name: 'Spanish'
         },
-        {
-            id: 3,
-            value: 'Vietnamese'
-        },
+        // {
+        //     code: 'VT',
+        //     name: 'Vietnamese'
+        // },
     ];
 
     const items_status = [
@@ -47,7 +109,7 @@ const UserEdit: React.FC = () => {
 
     return (
         <div className="h-full w-full md:p-6">
-            <div className="h-full bg-white shadow sm:rounded-lg">
+            <div className="h-full bg-white shadow sm:rounded-lg mb-4">
             <form>
                 <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
@@ -63,7 +125,7 @@ const UserEdit: React.FC = () => {
                             First name
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="first_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="Jayne"/>
+                            <input id="first_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue= {user.firstName}/>
                         </div>
                         </div>
 
@@ -72,7 +134,7 @@ const UserEdit: React.FC = () => {
                             Last name
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="last_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="Phillips"/>
+                            <input id="last_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue={user.lastName}/>
                         </div>
                         </div>
 
@@ -99,47 +161,26 @@ const UserEdit: React.FC = () => {
                             Nickname
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="preferred_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="not set"/>
+                            <input id="preferred_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue={user.preferredName}/>
                         </div>
                         </div>
 
                         <div className="sm:col-span-3">
                             <DropdownForm
-                                label = 'Role'
-                                items = {items_role}
+                                handleChangeLanguage = {handleChangeLanguage}
+                                userLanguage = {user.language}
+                                label='Status'
+                                items= {Language}
                             />
                         </div>
 
                         <div className="sm:col-span-3">
                             <DropdownForm
-                                label = 'Status'
-                                items = {items_status}
+                                handleChangeLanguage = {handleChangeLanguage}
+                                userLanguage = {user.language}
+                                label='Role'
+                                items= {Language}
                             />
-                        </div>
-
-                        <div className="sm:col-span-3">
-                        <label htmlFor="birthday" className="block text-m font-medium leading-5 text-gray-700">
-                            Birthday
-                        </label>
-                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="birthday" type="date" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="06 01 1991"/>
-                        </div>
-                        </div>
-
-                        <div className="sm:col-span-3">
-                            <DropdownForm
-                                label = 'Language Preference'
-                                items = {items}
-                            />
-                        </div>
-
-                        <div className="sm:col-span-3">
-                        <label htmlFor="email" className="block text-m font-medium leading-5 text-gray-700">
-                            Email address
-                        </label>
-                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="email" type="email" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="jayne.phillips61@gmail.com"/>
-                        </div>
                         </div>
 
                         <div className="sm:col-span-3">
@@ -147,12 +188,17 @@ const UserEdit: React.FC = () => {
                             Contact Number
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="number" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="777 448 224"/>
+                            <input id="number" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue={user.phone}/>
                         </div>
                         </div>
                     </div>
                 </div>  
 
+            </form>
+            </div>
+
+            <div className="h-full bg-white shadow sm:rounded-lg">
+            <form>
                 <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
                     Edit Institution Information
@@ -166,7 +212,7 @@ const UserEdit: React.FC = () => {
                             Institution
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="school_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="Santa Clara High School"/>
+                            <input id="school_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue={user.institution}/>
                         </div>
                         </div>
 
@@ -175,34 +221,33 @@ const UserEdit: React.FC = () => {
                             Grade
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="grade" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="11th"/>
+                            <input id="grade" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue={user.grade}/>
                         </div>
                         </div>
-
                     </div>
                 </div>  
-
-                        <div className="p-4 w-full flex justify-end">
-                            <div className="flex w-4/10">
-                        <span className="inline-flex rounded-md shadow-sm">
-                            <NavLink to={`/dashboard/profile`}>
-                            <button type="button" className="py-2 px-4 border border-gray-300 rounded-md text-m leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
-                            Cancel
-                            </button>
-                            </NavLink>
-                        </span>
-                        <span className="ml-3 inline-flex rounded-md shadow-sm">
-                            <NavLink to={`/dashboard/profile`}>
-                            <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-m leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
-                            Save
-                            </button>
-                            </NavLink>
-                        </span>
-                        </div>
-                        </div>
-                    
             </form>
             </div>
+
+            <div className="p-4 w-full flex justify-end">
+                <div className="flex w-4/10">
+                    <span className="inline-flex rounded-md shadow-sm">
+                        <NavLink to={`/dashboard/profile`}>
+                        <button type="button" className="py-2 px-4 border border-gray-300 rounded-md text-m leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
+                        Cancel
+                        </button>
+                        </NavLink>
+                    </span>
+                    <span className="ml-3 inline-flex rounded-md shadow-sm">
+                        
+                        <button type="submit" onClick={onSubmit} className="inline-flex justify-center py-2 px-4 border border-transparent text-m leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                        Save
+                        </button>
+                       
+                    </span>
+                </div>
+            </div>
+                    
 
            
         </div>

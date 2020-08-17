@@ -60,7 +60,6 @@ export const white_back = {
     backgroundColor: 'white',
     borderRadius: '1rem',
     boxShadow: '1px 1px 10px 1px #e0e0e0',
-    padding: '2rem'
     // @media screen and (max-width: 767px) {
     //     padding: 1rem;
     //     overflow: scroll;

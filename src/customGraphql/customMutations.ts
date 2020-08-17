@@ -68,3 +68,25 @@ export const updateClassroomDataTest = /* GraphQL */ `
     }
   }
 `;
+export const updatePerson = /* GraphQL */ `
+  mutation UpdatePerson(
+    $input: UpdatePersonInput!
+    $condition: ModelPersonConditionInput
+  ) {
+    updatePerson(input: $input, condition: $condition) {
+      id
+      authId
+      status
+      email
+      role
+      firstName
+      preferredName
+      lastName
+      grade
+      phone
+      birthdate
+      image
+      language
+    }
+  }
+`;

@@ -8,11 +8,8 @@ const UserManagement = () => {
     const match = useRouteMatch();
     
     return (
-        <div className={`w-full h-full p-8`}>
-            {/* <div className={`w-full h-1/10`}>
-                
-            </div> */}
-            <div className={`w-full h-full`}>
+        <div className={`w-full h-full p-8 flex justify-center`}>
+
                 <Switch>
                     <Route 
                         exact
@@ -28,7 +25,7 @@ const UserManagement = () => {
                         )}
                     />
                 </Switch>
-            </div>
+
         </div>
     )
 }

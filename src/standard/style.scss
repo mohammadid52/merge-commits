@@ -7,11 +7,11 @@
     }
 }
 
-.white_back {
+.white_container {
     background-color: white;
     border-radius: 1rem;
-    box-shadow: 1px 1px 10px 1px #e0e0e0;
-    padding: 2rem;
+    // box-shadow: 1px 1px 10px 1px #e0e0e0;
+
     @media screen and (max-width: 767px) {
         padding: 1rem;
         overflow: scroll;
