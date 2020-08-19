@@ -17,6 +17,7 @@ import {
     NavLink
  } from 'react-router-dom';
  import LessonLoading from '../../Lesson/Loading/LessonLoading';
+import { ConsoleLogger } from '@aws-amplify/core';
  export interface UserInfo {
     authId: string
     courses?: string
@@ -62,16 +63,17 @@ const Profile: React.FC = () => {
             birthdate: null,
         }
     );
+
+    const match = useRouteMatch();
     const {state, theme} = useContext(GlobalContext);
     const [status, setStatus] = useState('');
     const [select, setSelect] = useState('Profile');
-
 
     async function getUser() {
         try {
             const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: state.user.email, authId: state.user.authId }))
             setPerson(user.data.getPerson);
-            setStatus('done')
+            setStatus('done');
         } catch (error) {
             console.error(error)
         }
@@ -79,25 +81,21 @@ const Profile: React.FC = () => {
 
     useEffect(() => {
         getUser()
-    }, []
-)
-
-    const match = useRouteMatch();
+    }, [])
     
-
     if ( status !== 'done') {
-        return (
-            <LessonLoading />
-        )
-    }
-
-{    
+            return (
+                <LessonLoading />
+            )
+        }
+    { 
     return (
         <div className="w-full h-full flex items-center justify-center">
             <div className={`w-9/10 h-full main_container`}>
                 <div className={`w-full h-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
                     
                     <div className="h-9/10 flex flex-col md:flex-row">
+                        
                         <div className="w-auto p-4 flex flex-col text-center items-center">
                             <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
                                 <IconContext.Provider value={{ size: '8rem', color: '#4a5568' }}>
@@ -106,9 +104,10 @@ const Profile: React.FC = () => {
                             </div>
                             <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
                                 {`${ person.preferredName ? person.preferredName : person.firstName } ${ person.lastName }`} 
-                                <p className="text-md md:text-lg">Avalos P-TECH School</p>
+                                <p className="text-md md:text-lg">{person.institution}</p>
                             </div>
                         </div>
+
                         <div className="w-full">
                             <div className="w-9/10 md:w-6/10 h-8 pl-6 flex justify-between">
                                 <div onClick={() => setSelect('Profile')} className={` ${ select === 'Profile' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
@@ -137,6 +136,7 @@ const Profile: React.FC = () => {
                                     render={() => (
                                         <ProfileInfo 
                                             user = {person}
+                                            status = {status}
                                         />
                                     )}
                                 />
@@ -151,7 +151,9 @@ const Profile: React.FC = () => {
                                     render={() => (
                                         <ProfileEdit 
                                             user = {person}
-                                            getUser = {getUser()}
+                                            status = {status}
+                                            setStatus = {setStatus}
+                                            getUser = {getUser}
                                         />  
                                     )} 
                                 />
@@ -169,8 +171,8 @@ const Profile: React.FC = () => {
             </div>
     </div>
     )
+    }
+}
 
-}
-}
 
 export default Profile;

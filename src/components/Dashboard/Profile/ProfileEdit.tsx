@@ -4,20 +4,22 @@ import * as customMutations from '../../../customGraphql/customMutations';
 import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
 import DropdownForm from './DropdownForm';
 import { UserInfo } from './Profile';
+import LessonLoading from '../../Lesson/Loading/LessonLoading';
+import { ConsoleLogger } from '@aws-amplify/core';
 
 interface UserInfoProps {
     user: UserInfo
-    getUser: any
+    status: string
+    getUser: () => void
+    setStatus:  React.Dispatch<React.SetStateAction<string>>
 }
 
 const ProfileEdit = (props: UserInfoProps) => {
     const history = useHistory();
     
     const match = useRouteMatch();
-    const {user} = props;
-    const {getUser} = props;
+    const {user, getUser, status, setStatus} = props;
     const [editUser, setEditUser] = useState(user);
-    console.log(editUser, 'edit')
 
     async function updatePerson() {
         const input = {
@@ -39,20 +41,20 @@ const ProfileEdit = (props: UserInfoProps) => {
         try {
             const update: any = await API.graphql(graphqlOperation(customMutations.updatePerson, { input: input }))
             setEditUser(update.data.updatePerson);
-            console.log(update, 'update');
-            console.log(editUser, 'editUser')
-            console.log(user, 'user');
+            setStatus('loading');
             history.push('/dashboard/profile');
-
-            console.log(history, 'history')
         } catch (error) {
             console.error(error)
         }
     }
 
+    async function setPerson() {
+        const updateUser = await updatePerson();
+        const get = await getUser();
+    }
+
     const handleSubmit = (e: any) => {
-        console.log(user, 'user in handle');
-        updatePerson();
+        setPerson();
         e.preventDefault();
     }
 
@@ -74,10 +76,6 @@ const ProfileEdit = (props: UserInfoProps) => {
             }
         })
     }
-
-    useEffect(() => {
-        getUser;
-    }, [updatePerson]);
    
     const Language = [
         {
@@ -106,10 +104,16 @@ const ProfileEdit = (props: UserInfoProps) => {
         ;
     }
 
-    const handleImage = (e: any) => {
-        console.log(e)
-    }
+    // const handleImage = (e: any) => {
+    //     console.log(e)
+    // }
 
+    if ( status !== 'done') {
+        return (
+            <LessonLoading />
+        )
+    }
+{    
     return (
         <div className="h-full w-full md:p-6">
             <form onSubmit={handleSubmit}>
@@ -254,6 +258,7 @@ const ProfileEdit = (props: UserInfoProps) => {
         </div>
     )
 
+}
 }
 
 export default ProfileEdit;

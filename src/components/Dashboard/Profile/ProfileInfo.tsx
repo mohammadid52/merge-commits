@@ -3,13 +3,15 @@ import Dropdown from './Dropdown';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { NavLink, useRouteMatch } from 'react-router-dom';
 import { UserInfo } from './Profile';
+import LessonLoading from '../../Lesson/Loading/LessonLoading';
 
 interface UserInfoProps {
     user: UserInfo
+    status: string
 }
 
 const ProfileInfo = (props: UserInfoProps) => {
-   const {user} = props;
+   const {user, status} = props;
 
     const { theme, state, dispatch } = useContext(GlobalContext);
     const match = useRouteMatch();
@@ -22,6 +24,14 @@ const ProfileInfo = (props: UserInfoProps) => {
         }
 
     }
+
+    if ( status !== 'done') {
+        return (
+            <LessonLoading />
+        )
+    }
+
+{    
 
     return (
         <div className="w-full md:p-6">
@@ -128,6 +138,7 @@ const ProfileInfo = (props: UserInfoProps) => {
 
         </div>
     )
+}
 }
 
 export default ProfileInfo;
