@@ -10,7 +10,7 @@ interface InputProps {
 const FormInput = (props: InputProps) => {
     const {label, id, value, type} = props;
 
-    return (
+    return ( 
         ///change
         <div className="sm:col-span-3">
             <label htmlFor={`${id}`} className="block text-m font-medium leading-5 text-gray-700">

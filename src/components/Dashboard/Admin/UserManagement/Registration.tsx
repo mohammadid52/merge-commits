@@ -4,6 +4,8 @@ import {
 } from 'react-router-dom';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 import * as mutations from '../../../../graphql/mutations';
+import SuccessNote from '../../../../standard/Alert/SuccessNote';
+import ErrorNote from './ErrorNote';
 import { IconContext } from "react-icons";
 import { FaPlus } from 'react-icons/fa';
 
@@ -15,7 +17,7 @@ interface newUserInput {
     firstName: string
     lastName: string
     phone: string
-    dob: string
+    birthdate: string
     message: {
         show: boolean
         text: string
@@ -34,7 +36,7 @@ const Registration = () => {
             firstName: '',
             lastName: '',
             phone: '',
-            dob: '',
+            birthdate: '',
             message: {
                 show: false,
                 text: '',
@@ -59,22 +61,22 @@ const Registration = () => {
            })
            return  modifiedInputs
         })
-        setTimeout(() => {
-            setNewUserInputs(() => {
-                let modifiedInputs: Array<newUserInput> = newUserInputs.map((obj: any) => {
-                     if (key === obj.key) {
-                         return {
-                            ...obj,
-                            message: {
-                                ...obj.message,
-                                show: false,
-                            }
-                         }
-                     } return obj
-                })
-                return  modifiedInputs
-             })
-        }, 1000)
+        // setTimeout(() => {
+        //     setNewUserInputs(() => {
+        //         let modifiedInputs: Array<newUserInput> = newUserInputs.map((obj: any) => {
+        //              if (key === obj.key) {
+        //                  return {
+        //                     ...obj,
+        //                     message: {
+        //                         ...obj.message,
+        //                         show: false,
+        //                     }
+        //                  }
+        //              } return obj
+        //         })
+        //         return  modifiedInputs
+        //      })
+        // }, 2000)
     }
 
     // useEffect(() => {
@@ -144,7 +146,7 @@ const Registration = () => {
                     firstName: '',
                     lastName: '',
                     phone: '',
-                    dob: '',
+                    birthdate: '',
                     message: {
                         show: false,
                         text: '',
@@ -202,52 +204,125 @@ const Registration = () => {
 
 
         <div className="w-full h-full p-8 flex items-center justify-center">
-            <div className="reg test w-9/10 bg-gray-200 py-8 px-12 flex flex-col shadow-elem-light border-2 border-gray-300 rounded">
+            <div className="test w-9/10 bg-gray-200 py-8 px-12 flex flex-col shadow-elem-light border-2 border-gray-300 rounded">
                 <div className="w-full flex justify-between">
                     <h1 className="text-3xl font-open font-bold mb-4">
                         Register
                     </h1>
-                    <IconContext.Provider value={{ color: '#1C2C42', size: '1.5rem', }}>
-                        <div onClick={handleAddInput}>
-                            <FaPlus/>
-                        </div>
-                    </IconContext.Provider>
                 </div>
-                <div className="flex-grow w-full overflow-scroll flex flex-col">
+                <div className="">
                     { newUserInputs.map((input: newUserInput, key: number) => (
-                        <div className="w-full md:flex mb-8" key={key}>
-                            <div className="block md:w-3/4 flex md:flex-col">
-                                <div className="flex flex-col md:flex-row mr-4 md:mr-0 my-2">
-                                    <div id={`${key}`} className="w-full md:w-1/3 flex flex-col mx-2">
-                                        <label htmlFor="email">Email</label>
-                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" placeholder="you@email.com" type="text" id="email" name="email" value={newUserInputs[key].email} onChange={handleChange}/>
+                        <div className="w-full md:flex flex-col mb-8" key={key}>
+
+                        <div className="h-full w-full bg-white shadow-5 my-4 sm:rounded-lg">
+                        <form>
+
+                            <div className="h-full px-4 py-5 sm:px-6">
+                                <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
+
+                                    <div id={`${key}`} className="sm:col-span-3">
+                                        <label htmlFor="firstName" className="block text-m font-medium leading-5 text-gray-700">
+                                            First Name
+                                        </label>
+                                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                                            <input 
+                                                key={key} 
+                                                type="text" 
+                                                id="firstName"
+                                                name="firstName"
+                                                onChange={handleChange}
+                                                className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                                value={`${newUserInputs[key].firstName}`}
+                                                placeholder="John"/>
                                         </div>
-                                    <div id={`${key}`} className="w-full md:w-1/3 flex flex-col mx-2">
-                                        <label htmlFor="firstName">First name</label>
-                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" placeholder="Jackson" type="text" id="firstName" name="firstName" value={newUserInputs[key].firstName} onChange={handleChange}/>
                                     </div>
-                                    <div id={`${key}`} className="w-full md:w-1/3 flex flex-col mx-2">
-                                        <label htmlFor="lastName">Last name</label>
-                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" placeholder="Smith" type="text" id="lastName" name="lastName" value={newUserInputs[key].lastName} onChange={handleChange}/>
+
+                                    <div id={`${key}`} className="sm:col-span-3">
+                                        <label htmlFor="lastName" className="block text-m font-medium leading-5 text-gray-700">
+                                            Last Name
+                                        </label>
+                                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                                            <input 
+                                                key={key} 
+                                                type="text" 
+                                                id="lastName"
+                                                name="lastName"
+                                                onChange={handleChange}
+                                                className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                                value={`${newUserInputs[key].lastName}`}
+                                                placeholder="Doe"/>
+                                        </div>
+                                    </div>
+
+                                    <div id={`${key}`} className="sm:col-span-3">
+                                        <label htmlFor="email" className="block text-m font-medium leading-5 text-gray-700">
+                                            Email
+                                        </label>
+                                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                                            <input 
+                                                key={key} 
+                                                type="email" 
+                                                id="email"
+                                                name="email"
+                                                onChange={handleChange}
+                                                className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                                value={`${newUserInputs[key].email}`}
+                                                placeholder="email@email.com"/>
+                                        </div>
+                                    </div>
+
+                                    <div id={`${key}`} className="sm:col-span-3">
+                                        <label htmlFor="birthdate" className="block text-m font-medium leading-5 text-gray-700">
+                                            Date of Birth
+                                        </label>
+                                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                                            <input 
+                                                key={key} 
+                                                type="date" 
+                                                id="birthdate"
+                                                name="birthdate"
+                                                onChange={handleChange}
+                                                className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                                value={`${newUserInputs[key].birthdate}`}
+                                                placeholder="01/01/2010"/>
+                                        </div>
+                                    </div>
+
+                                    <div id={`${key}`} className="sm:col-span-3">
+                                        <label htmlFor="phone" className="block text-m font-medium leading-5 text-gray-700">
+                                            Phone Number
+                                        </label>
+                                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                                            <input 
+                                                key={key} 
+                                                type="text" 
+                                                id="phone"
+                                                name="phone"
+                                                onChange={handleChange}
+                                                className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                                value={`${newUserInputs[key].phone}`}
+                                                placeholder="5551234567"/>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="flex flex-col md:flex-row my-2">
-                                    <div id={`${key}`}className="w-full md:w-1/3 flex flex-col px-2">
-                                        <label htmlFor="phone">Phone number</label>
-                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" placeholder="7031234567" type="text" id="phone" name="phone" value={newUserInputs[key].phone} onChange={handleChange}/>
-                                    </div>
-                                    <div id={`${key}`} className="w-full md:w-1/3 flex flex-col px-2">
-                                        <label htmlFor="dob">Date of birth</label>
-                                        <input key={key} className="border-b border-gray-400 bg-gray-200 px-2 py-1" placeholder="MM/DD/YYYY" type="text" id="dob" name="dob" value={newUserInputs[key].dob} onChange={handleChange}/>
-                                    </div>
-                                </div>
+                            
                             </div>
-                            <div className="w-full md:w-1/4 h-4 md:h-full flex justify-center items-center">
+                        </form>
+                        </div>
+
+                
+                            <div className="w-full md:h-full flex justify-center items-center">
                             {
                                 newUserInputs[key].message.show ? (
-                                        <div className={`h-1/10 w-6/10 flex justify-center items-center text-sm border-2 ${  newUserInputs[key].message.type === 'success' ? 'text-green-500 bg-green-300  border-green-500' :  newUserInputs[key].message.type === 'error' ? 'text-red-500 bg-red-300  border-red-500' : 'text-gray-200'} py-8 px-4 rounded shadow-elem-light text-center`}>
-                                            <p>{newUserInputs[key].message.text}</p>
-                                        </div>
+                                    <div>
+                                        {newUserInputs[key].message.type === 'success' ? <SuccessNote /> : 
+                                        <ErrorNote 
+                                            note={newUserInputs[key].message.text}
+                                        />}
+                                    </div>
+                                        // <div className={`h-1/10 w-6/10 flex justify-center items-center text-sm border-2 ${  newUserInputs[key].message.type === 'success' ? 'text-green-500 bg-green-300  border-green-500' :  newUserInputs[key].message.type === 'error' ? 'text-red-500 bg-red-300  border-red-500' : 'text-gray-200'} py-8 px-4 rounded shadow-elem-light text-center`}>
+                                        //     <p>{newUserInputs[key].message.text}</p>
+                                        // </div>
                                 ) : null
                             }
                             </div>

@@ -38,7 +38,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                     <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
                     <div className="sm:col-span-1">
                         <dt className="text-sm leading-5 font-medium text-gray-500">
-                        Full name
+                        Full Name
                         </dt>
                         <dd className="mt-1 text-sm leading-5 text-gray-900">
                         {`${ user.firstName } ${ user.lastName }`} 
