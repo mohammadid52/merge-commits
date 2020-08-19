@@ -3,7 +3,7 @@ import { IconContext } from "react-icons";
 import { FaMusic } from 'react-icons/fa';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
-const Keyword = () => {
+const Ties = () => {
     const { state, theme } = useContext(LessonContext);
     const artistBio = state.data.artist.bio
 
@@ -19,12 +19,9 @@ const Keyword = () => {
 
     return (
         <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col justify-center ${theme.block.text} text-lx rounded-sm shadow-inner`}>
-            <p className="text-2xl font-extrabold">Keywords we will cover in this lesson:</p>
-            <p className="text-lg "><span className="text-lg font-bold">Culture:</span> the beliefs, social practices, and characteristics of a racial, religious, or social group </p>
-            <p className="text-lg "><span className="text-lg font-bold">Identity:</span> all of those things by which a person or thing is known or is considered as being </p>
-            <p className="text-lg "><span className="text-lg font-bold">Self-Awareness:</span> conscious knowledge of one's own personality, character, motives, and feelings </p>
+            Ties
         </div>
     )
 }
 
-export default Keyword;
+export default Ties;

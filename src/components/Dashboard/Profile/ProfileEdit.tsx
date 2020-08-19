@@ -7,6 +7,7 @@ import { UserInfo } from './Profile';
 
 interface UserInfoProps {
     user: UserInfo
+    getUser: any
 }
 
 const ProfileEdit = (props: UserInfoProps) => {
@@ -14,8 +15,10 @@ const ProfileEdit = (props: UserInfoProps) => {
     
     const match = useRouteMatch();
     const {user} = props;
+    const {getUser} = props;
     const [editUser, setEditUser] = useState(user);
     console.log(editUser, 'edit')
+
     async function updatePerson() {
         const input = {
             id: editUser.id,
@@ -35,7 +38,10 @@ const ProfileEdit = (props: UserInfoProps) => {
 
         try {
             const update: any = await API.graphql(graphqlOperation(customMutations.updatePerson, { input: input }))
-            console.log(update)
+            setEditUser(update.data.updatePerson);
+            console.log(update, 'update');
+            console.log(editUser, 'editUser')
+            console.log(user, 'user');
             history.push('/dashboard/profile');
 
             console.log(history, 'history')
@@ -44,8 +50,10 @@ const ProfileEdit = (props: UserInfoProps) => {
         }
     }
 
-    const onSubmit = () => {
+    const handleSubmit = (e: any) => {
+        console.log(user, 'user in handle');
         updatePerson();
+        e.preventDefault();
     }
 
     const onChange = (e: any) => {
@@ -66,6 +74,10 @@ const ProfileEdit = (props: UserInfoProps) => {
             }
         })
     }
+
+    useEffect(() => {
+        getUser;
+    }, [updatePerson]);
    
     const Language = [
         {
@@ -100,9 +112,10 @@ const ProfileEdit = (props: UserInfoProps) => {
 
     return (
         <div className="h-full w-full md:p-6">
+            <form onSubmit={handleSubmit}>
 
             <div className="h-auto bg-white shadow-5 sm:rounded-lg mb-4">
-            <form>
+            
                 <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
                     Edit Personal Information
@@ -117,8 +130,11 @@ const ProfileEdit = (props: UserInfoProps) => {
                             First name
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="firstName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                            defaultValue={user.firstName}
+                            <input id="firstName" 
+                                onChange={onChange} 
+                                type="text"
+                                className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                defaultValue={user.firstName}
                             />
                         </div>
                         </div>
@@ -177,11 +193,11 @@ const ProfileEdit = (props: UserInfoProps) => {
                     </div>
                 </div>  
                     
-            </form>
+            
             </div>
 
             <div className="h-auto bg-white shadow-5 sm:rounded-lg">
-            <form>
+            
                 <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
                     Edit Institution Information
@@ -214,7 +230,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                     </div>
                 </div>  
             
-            </form>
+            
             </div>
 
             <div className="p-4 w-full flex justify-end">
@@ -227,14 +243,14 @@ const ProfileEdit = (props: UserInfoProps) => {
                     </NavLink>
                 </span>
                 <span className="ml-3 inline-flex rounded-md shadow-5">
-                    <button type="submit" onClick={onSubmit} className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                    <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
                     Save
                     </button>
                 </span>
                 </div>
             </div>
 
-           
+            </form>
         </div>
     )
 

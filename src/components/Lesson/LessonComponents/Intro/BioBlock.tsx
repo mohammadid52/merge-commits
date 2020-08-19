@@ -20,10 +20,10 @@ const BioBlock = () => {
     return (
 
     <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col justify-center ${theme.block.text} text-base rounded-sm shadow-inner`}>
-        <p><span className="font-bold">Birth Place:</span> El Salvador</p>
-        <p><span className="font-bold">Grew Up In:</span> Puerto Rico</p>
-        <p><span className="font-bold">Family Background:</span> Parents are married. Youngest.  Has 2 brothers and 1 sister</p>
-        <p><span className="font-bold">Interesting Fact:</span> Marlon is on the committee to decided how medals will be awarded in Hip Hop in the upcoming Tokyo Olympics</p>
+        <p className="text-lg "><span className="font-bold">Birth Place:</span> El Salvador</p>
+        <p className="text-lg "><span className="font-bold">Grew Up In:</span> Puerto Rico</p>
+        <p className="text-lg "><span className="font-bold">Family Background:</span> Parents are married. Youngest.  Has 2 brothers and 1 sister</p>
+        <p className="text-lg "><span className="font-bold">Interesting Fact:</span> Marlon is on the committee to decided how medals will be awarded in Hip Hop in the upcoming Tokyo Olympics</p>
     </div>
     )
 }

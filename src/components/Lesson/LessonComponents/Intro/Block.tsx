@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import Keyword from './Keyword';
 import BioBlock from './BioBLock';
+import Ties from './Ties';
 import { IconContext } from "react-icons";
 import { FaMusic } from 'react-icons/fa';
 import { LessonContext } from '../../../../contexts/LessonContext';
@@ -20,7 +21,7 @@ const Block = () => {
     const match = useRouteMatch();
     const [bio, setBio] = useState(true);
     const [concept, setConcept] = useState(false);
-    const [select, setSelect] = useState(bio);
+    const [select, setSelect] = useState('Bio');
 
 
     const handleClick = () => {
@@ -41,20 +42,22 @@ const Block = () => {
 
     return (
 
-    <div className={`relative md:w-full md:h-full ${theme.block.bg} p-2 md:p-8 flex justify-start ${theme.block.text} text-sm rounded-lg ${theme.block.shadow}`}>
+    <div className={`relative md:w-full md:h-full ${theme.block.bg} flex justify-start ${theme.block.text} text-sm rounded-lg ${theme.block.shadow}`}>
     
-            <div className="absolute w-4/10 h-auto pl-6 pt-4 top-0 left-0 flex justify-between font-medium text-lg" style={{top: 0, left: 0}}>
-                
-                <div onClick={() => setBio(!bio)} className={`${select === bio ? 'text-gray-600': 'text-gray-400'} w-4.5/10 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
+            <div className="bg-dark w-2/10 h-full flex flex-col justify-between font-medium text-lg">
+                <div onClick={() => setSelect('Bio')} className={`${ select === 'Bio' ? `${theme.block.bg} font-extrabold` : 'border-4 border-blue-900 '} h-3/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
                     Bio
                 </div>
-                <div onClick={() => setBio(!bio)} className={`${select === bio ? 'text-gray-400': 'text-gray-600'} w-4.5/10 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
-                    Concept
+                <div onClick={() => setSelect('Keyword')} className={`${ select === 'Keyword' ? `${theme.block.bg} font-extrabold` : 'border-4 border-blue-900 '} h-3/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
+                    Keywords
                 </div>
-                
+                <div onClick={() => setSelect('Ties')} className={`${ select === 'Ties' ? `${theme.block.bg} font-extrabold` : 'border-4 border-blue-900 '} h-3/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
+                    Ties
+                </div>
             </div>
-            <div>
-                { select === bio ? <BioBlock /> : <Keyword /> }
+
+            <div className="p-8">
+                { select === 'Bio' ? <BioBlock /> : select === 'Keyword' ? <Keyword /> : select === 'Ties' ? <Ties /> : null}
             </div>
 
     </div>

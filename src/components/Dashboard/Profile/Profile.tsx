@@ -17,8 +17,6 @@ import {
     NavLink
  } from 'react-router-dom';
  import LessonLoading from '../../Lesson/Loading/LessonLoading';
- import Container from '../../../standard/Container';
-
  export interface UserInfo {
     authId: string
     courses?: string
@@ -64,30 +62,34 @@ const Profile: React.FC = () => {
             birthdate: null,
         }
     );
-    const { theme, state, dispatch } = useContext(GlobalContext);
+    const {state, theme} = useContext(GlobalContext);
+    const [status, setStatus] = useState('');
+    const [select, setSelect] = useState('Profile');
 
 
     async function getUser() {
         try {
             const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: state.user.email, authId: state.user.authId }))
             setPerson(user.data.getPerson);
+            setStatus('done')
         } catch (error) {
             console.error(error)
         }
     }
 
     useEffect(() => {
-            getUser()
-    }, [])
+        getUser()
+    }, []
+)
 
     const match = useRouteMatch();
-    console.log(state, 'status')
+    
 
-    if ( state.status !== 'done') {
+    if ( status !== 'done') {
         return (
             <LessonLoading />
         )
-    } else 
+    }
 
 {    
     return (
@@ -103,26 +105,25 @@ const Profile: React.FC = () => {
                                 </IconContext.Provider>
                             </div>
                             <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
-                                {`${ person.firstName } ${ person.lastName }`} 
-                                <p className="text-md md:text-lg">{`${person.preferredName ? person.preferredName : '' }`}</p>
+                                {`${ person.preferredName ? person.preferredName : person.firstName } ${ person.lastName }`} 
                                 <p className="text-md md:text-lg">Avalos P-TECH School</p>
                             </div>
                         </div>
                         <div className="w-full">
                             <div className="w-9/10 md:w-6/10 h-8 pl-6 flex justify-between">
-                                <div className={`w-1/3 uppercase p-2 md:p-0 flex justify-center items-center ${theme.toolbar.bg} text-gray-200 shadow-2 rounded-lg text-center text-xs md:text-md`}>
+                                <div onClick={() => setSelect('Profile')} className={` ${ select === 'Profile' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
                                     <NavLink to={`${match.url}`}>
                                     My Profile
                                     </NavLink>
                                 </div>
                                 
-                                <div className={`w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
+                                <div onClick={() => setSelect('AboutMe')}className={` ${ select === 'AboutMe' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
                                     <NavLink to={`${match.url}/about`}>
                                     Questionnaire  
                                     </NavLink>
                                 </div>
 
-                                <div className={`w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
+                                <div onClick={() => setSelect('Vault')}className={` ${ select === 'Vault' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
                                     <NavLink to={`${match.url}/vault`}>
                                     Vault  
                                     </NavLink>
@@ -150,6 +151,7 @@ const Profile: React.FC = () => {
                                     render={() => (
                                         <ProfileEdit 
                                             user = {person}
+                                            getUser = {getUser()}
                                         />  
                                     )} 
                                 />
