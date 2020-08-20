@@ -132,7 +132,6 @@ const Login = () => {
                     {/* <Link to="/register">Register</Link> */} 
                     <button className="bg-dark-red text-gray-200 rounded-lg mb-4" onClick={handleSubmit}>Login</button>
                     <div className="text-center">forgot password?</div>
-                    <div className="text-center">reset password?</div>
                 </div>
             </div>
             

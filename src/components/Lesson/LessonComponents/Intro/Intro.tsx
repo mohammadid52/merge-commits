@@ -18,7 +18,7 @@ const Intro = () => {
                 <Block />
             </div>
         </div>
-        <div className="md:w-3.8/10 h-full flex flex-col justify-between items-center">
+        <div className="md:w-3.9/10 h-full flex flex-col justify-between items-center">
             <DoFirst />
         </div>
     </div>

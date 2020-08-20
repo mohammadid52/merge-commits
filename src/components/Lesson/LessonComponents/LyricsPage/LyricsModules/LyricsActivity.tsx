@@ -80,15 +80,13 @@ const Body = () => {
             <div className="w-full h-full flex flex-col justify-between items-center">
                 <Banner />
                 <div className="w-full md:h-8.8/10 flex flex-col-reverse md:flex-row justify-between items-center content-center">
-                    <div className="h-full flex flex-col-reverse md:flex-col md:w-3.27/10 text-gray-200">
+                    <div className="h-full flex flex-col justify-between md:w-4.8/10 text-gray-200">
+                        <InstructionBlock />
                         <VideoBlock link={state.data.coreLesson.content.link} fullscreen={fullscreen} /> 
                     </div>
-                    <div className="h-full md:w-3.27/10">
-                        <LyricsBlock color={color} selected={selected} setSelected={setSelected} fullscreen={fullscreen} setFullscreen={setFullscreen}/>
-                    </div>
-                    <div className="h-full flex flex-col justify-between md:w-3.27/10">
-                        <InstructionBlock />
+                    <div className="h-full md:w-5.1/10 flex flex-col justify-between items-center">
                         <Toolbar setColor={setColor} />
+                        <LyricsBlock color={color} selected={selected} setSelected={setSelected} fullscreen={fullscreen} setFullscreen={setFullscreen}/>
                     </div>
                 </div>
             </div>
