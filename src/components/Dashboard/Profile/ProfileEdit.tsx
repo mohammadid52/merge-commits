@@ -112,7 +112,7 @@ const ProfileEdit = (props: UserInfoProps) => {
     }
 {    
     return (
-        <div className="h-full w-full md:p-6">
+        <div className="h-full w-full md:px-4 pt-4">
             <form onSubmit={handleSubmit}>
 
             <div className="h-auto bg-white shadow-5 sm:rounded-lg mb-4">
@@ -234,7 +234,7 @@ const ProfileEdit = (props: UserInfoProps) => {
             
             </div>
 
-            <div className="p-4 w-full flex justify-end">
+            <div className="px-4 pt-4 w-full flex justify-end">
                 <div className="flex w-4/10">
                 <span className="inline-flex rounded-md shadow-sm">
                     <NavLink to={`/dashboard/profile`}>

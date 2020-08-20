@@ -33,7 +33,7 @@ const ProfileInfo = (props: UserInfoProps) => {
 {    
 
     return (
-        <div className="w-full md:p-6">
+        <div className="w-full md:px-4 pt-4">
             <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
                 <div className="flex justify-between border-b border-gray-200 sm:px-6">
                     <h3 className="px-4 py-5 text-lg leading-6 font-medium text-gray-900">
@@ -125,7 +125,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                 </div>
             </div>
 
-            <div className="p-4 w-full flex justify-end">   
+            <div className="px-4 pt-4 w-full flex justify-end">   
                 <span className="flex w-32 ml-3 inline-flex rounded-md shadow-sm">
                     <NavLink to={`${match.url}/edit`}>
                     <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
