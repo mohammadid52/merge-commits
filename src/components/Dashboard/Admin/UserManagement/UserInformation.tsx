@@ -107,7 +107,7 @@ const UserInformation = (props: UserInfoProps) => {
 
     return (
 
-            <div className="w-full md:p-6">
+            <div className="w-full md:px-2 pt-2">
                 <div className="w-full flex justify-end mb-4">
                     <span className="w-20 flex inline-flex rounded-md shadow-sm">
                         <button type="submit" onClick={history.goBack} className="
@@ -128,66 +128,66 @@ const UserInformation = (props: UserInfoProps) => {
                     <div className="px-4 py-5 sm:px-6">
                         <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
                             <div className="sm:col-span-1">
-                                <dt className="text-lg leading-5 font-medium text-gray-500">
+                                <dt className="text-base leading-5 font-medium text-gray-500">
                                 Full Name 
                                 </dt>
-                                <dd className="mt-2 text-lg leading-5 text-gray-900">
+                                <dd className="mt-2 text-base leading-5 text-gray-900">
                                 {`${ user.firstName } ${ user.lastName }`} 
                                 </dd>
                             </div>
                             <div className="sm:col-span-1">
-                                <dt className="text-lg leading-5 font-medium text-gray-500">
+                                <dt className="text-base leading-5 font-medium text-gray-500">
                                 Nickname
                                 </dt>
-                                <dd className="mt-2 text-lg leading-5 text-gray-900">
+                                <dd className="mt-2 text-base leading-5 text-gray-900">
                                 {`${ user.preferredName ? user.preferredName : 'not set' }`} 
                                 </dd>
                             </div>
                             <div className="sm:col-span-1">
-                                <dt className="text-lg leading-5 font-medium text-gray-500">
+                                <dt className="text-base leading-5 font-medium text-gray-500">
                                 Role
                                 </dt>
-                                <dd className="mt-2 text-lg leading-5 text-gray-900">
+                                <dd className="mt-2 text-base leading-5 text-gray-900">
                                 {role()} 
                                 </dd>
                             </div>
                             <div className="sm:col-span-1">
-                                <dt className="text-lg leading-5 font-medium text-gray-500">
+                                <dt className="text-base leading-5 font-medium text-gray-500">
                                 Status
                                 </dt>
-                                <dd className="mt-2 text-lg leading-5 text-gray-900">
+                                <dd className="mt-2 text-base leading-5 text-gray-900">
                                 {userStatus()}
                                 </dd>
                             </div>
                             <div className="sm:col-span-1">
-                                <dt className="text-lg leading-5 font-medium text-gray-500">
+                                <dt className="text-base leading-5 font-medium text-gray-500">
                                 Birthday
                                 </dt>
-                                <dd className="mt-2 text-lg leading-5 text-gray-900">
+                                <dd className="mt-2 text-base leading-5 text-gray-900">
                                 {`${ user.birthdate ? user.birthdate : 'not set' }`}
                                 </dd>
                             </div>
                             <div className="sm:col-span-1">
-                                <dt className="text-lg leading-5 font-medium text-gray-500">
+                                <dt className="text-base leading-5 font-medium text-gray-500">
                                 Email Address
                                 </dt>
-                                <dd className="mt-2 text-lg leading-5 text-gray-900">
+                                <dd className="mt-2 text-base leading-5 text-gray-900">
                                 {`${ user.email }`} 
                                 </dd>
                             </div>
                             <div className="sm:col-span-1">
-                                <dt className="text-lg leading-5 font-medium text-gray-500">
+                                <dt className="text-base leading-5 font-medium text-gray-500">
                                 Contact Number 
                                 </dt>
-                                <dd className="mt-2 text-lg leading-5 text-gray-900">
+                                <dd className="mt-2 text-base leading-5 text-gray-900">
                                 {`${ user.phone }`}
                                 </dd>
                             </div>
                             <div className="sm:col-span-1">
-                                <dt className="text-lg leading-5 font-medium text-gray-500">
+                                <dt className="text-base leading-5 font-medium text-gray-500">
                                 Account Created
                                 </dt>
-                                <dd className="mt-2 text-lg leading-5 text-gray-900">
+                                <dd className="mt-2 text-base leading-5 text-gray-900">
                                 {`${ user.createdAt }`}
                                 </dd>
                             </div>
@@ -224,7 +224,7 @@ const UserInformation = (props: UserInfoProps) => {
                     </div>
                 </div>
 
-                <div className="p-4 w-full flex justify-end">
+                <div className="px-4 pt-4 w-full flex justify-end">
                     <div className="flex w-32">
                         <span className="ml-3 inline-flex rounded-md shadow-sm">
                         <NavLink to={`${match.url}/edit`}>
