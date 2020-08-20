@@ -22,7 +22,6 @@ const ProfileInfo = (props: UserInfoProps) => {
         } else if (user.language === 'ES') {
             return 'Spanish'
         }
-
     }
 
     if ( status !== 'done') {

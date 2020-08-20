@@ -21,7 +21,7 @@ const BioBlock = () => {
 
     <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col justify-center ${theme.block.text} text-base rounded-sm shadow-inner`}>
         <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} text-lx rounded-sm shadow-inner`}>
-            <h1 className="text-2xl font-extrabold mb-6">Keywords we will cover in this lesson:</h1>
+            <h1 className="text-2xl font-extrabold mb-6">Biography of the artist:</h1>
             <div>
                 <p className="text-lg "><span className="font-bold">Birth Place:</span> El Salvador</p>
                 <p className="text-lg "><span className="font-bold">Grew Up In:</span> Puerto Rico</p>

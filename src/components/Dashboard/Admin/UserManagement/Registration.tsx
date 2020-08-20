@@ -194,26 +194,13 @@ const Registration = () => {
     }
 
     const handleSubmit = (e: any) => {
-        console.log(newUserInputs);
+       
         submitNewUsers()
+        console.log(newUserInputs);
         console.log('attempt')
     }
 
     return (
-
-        // <div className="w-full items-center justify-center">
-        //     <div className="w-9/10 h-130 ml-4 mt-4 md:m-0 bg-gray-200 py-8 px-12 md:flex flex-col shadow-elem-light border-2 border-gray-300 rounded">
-        //         <h1 className="text-3xl font-open font-bold mb-4">Register</h1>
-        //         <div className="flex-grow w-full flex flex-col">
-        //             <div className="w-full md:flex">
-        //                 <div className="md:w-1/2 md:flex flex-col">
-        //                     <div className="w-full flex flex-col px-2">
-        //                         <label htmlFor="email">Email</label>
-        //                         <input className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
-        //                     </div>
-        //                     <div className="md:flex justify-between my-2">
-        //                         <div className="w-full flex flex-col px-2"></div>
-
 
         <div className="w-full h-full p-8 flex items-center justify-center">
             <div className="test w-9/10 bg-gray-200 py-8 px-12 flex flex-col shadow-elem-light border-2 border-gray-300 rounded">
