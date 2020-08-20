@@ -3,7 +3,7 @@ import { IconContext } from "react-icons";
 import { FaMusic } from 'react-icons/fa';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
-const Ties = () => {
+const Connect = () => {
     const { state, theme } = useContext(LessonContext);
     const artistBio = state.data.artist.bio
 
@@ -18,10 +18,13 @@ const Ties = () => {
 
 
     return (
-        <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col justify-center ${theme.block.text} text-lx rounded-sm shadow-inner`}>
-            Ties
+        <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} text-lx rounded-sm shadow-inner`}>
+            <h1 className="text-2xl font-extrabold mb-6">Connect:</h1>
+            <div>
+            <p className="text-lg ">Ways students can connect to the lesson</p>
+            </div>
         </div>
     )
 }
 
-export default Ties;
+export default Connect;

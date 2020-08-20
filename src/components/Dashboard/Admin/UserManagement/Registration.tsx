@@ -18,6 +18,9 @@ interface newUserInput {
     lastName: string
     phone: string
     birthdate: string
+    grade: string
+    role: string
+    externalId: string
     message: {
         show: boolean
         text: string
@@ -37,6 +40,9 @@ const Registration = () => {
             lastName: '',
             phone: '',
             birthdate: '',
+            grade: '',
+            role: '',
+            externalId: '',
             message: {
                 show: false,
                 text: '',
@@ -87,19 +93,21 @@ const Registration = () => {
         let userData = {
             authId: authId,
             status: 'ACTIVE',
-            role: 'ADM',
+            role: newUserInputs[key].role,
             email: newUserInputs[key].email,
             firstName: newUserInputs[key].firstName,
             lastName: newUserInputs[key].lastName,
             // insitution: '1',
             phone: newUserInputs[key].phone,
-            // birthdate: input.dob,
+            birthdate: newUserInputs[key].birthdate,
+            externalId: newUserInputs[key].externalId,
+            grade: newUserInputs[key].grade,
             language: 'EN',
         }
 
         try {
             const newPerson = await API.graphql(graphqlOperation(mutations.createPerson, { input: userData }))
-            console.log(newPerson)
+            console.log(newPerson, 'newperson')
             handleMessage(key, 'success', 'User registered successfully')
         } catch (error) {
             console.error('error registering user:', error)
@@ -115,7 +123,7 @@ const Registration = () => {
                 username,
                 password
             });
-            console.log(user.userSub);
+            console.log(user.userSub, 'userSub');
             setNewUserInputs(() => {
                 let modifiedInputs: Array<newUserInput> = newUserInputs.map((obj: any) => {
                     if (key === obj.key) {
@@ -147,6 +155,9 @@ const Registration = () => {
                     lastName: '',
                     phone: '',
                     birthdate: '',
+                    grade: '',
+                    role: '',
+                    externalId: '',
                     message: {
                         show: false,
                         text: '',
@@ -160,6 +171,7 @@ const Registration = () => {
     const handleChange = (e: any) => {
         let id = e.target.id
         let key = e.currentTarget.parentNode.id
+        console.log(key, 'key')
         let value = e.target.value
         console.log(key, id, value)
         setNewUserInputs(() => {
@@ -232,7 +244,7 @@ const Registration = () => {
                                                 name="firstName"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                value={`${newUserInputs[key].firstName}`}
+                                                defaultValue={`${newUserInputs[key].firstName}`}
                                                 placeholder="John"/>
                                         </div>
                                     </div>
@@ -249,7 +261,7 @@ const Registration = () => {
                                                 name="lastName"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                value={`${newUserInputs[key].lastName}`}
+                                                defaultValue={`${newUserInputs[key].lastName}`}
                                                 placeholder="Doe"/>
                                         </div>
                                     </div>
@@ -266,7 +278,7 @@ const Registration = () => {
                                                 name="email"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                value={`${newUserInputs[key].email}`}
+                                                defaultValue={`${newUserInputs[key].email}`}
                                                 placeholder="email@email.com"/>
                                         </div>
                                     </div>
@@ -283,8 +295,60 @@ const Registration = () => {
                                                 name="birthdate"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                value={`${newUserInputs[key].birthdate}`}
+                                                defaultValue={`${newUserInputs[key].birthdate}`}
                                                 placeholder="01/01/2010"/>
+                                        </div>
+                                    </div>
+
+                                    <div id={`${key}`} className="sm:col-span-3">
+                                        <label htmlFor="role" className="block text-m font-medium leading-5 text-gray-700">
+                                            Role
+                                        </label>
+                                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                                            <input 
+                                                key={key} 
+                                                type="text" 
+                                                id="role"
+                                                name="role"
+                                                onChange={handleChange}
+                                                className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                                defaultValue={`${newUserInputs[key].role}`}
+                                                placeholder="Student"/>
+                                        </div>
+                                    </div>
+
+                                    <div id={`${key}`} className="sm:col-span-3">
+                                        <label htmlFor="externalId" className="block text-m font-medium leading-5 text-gray-700">
+                                            Student ID
+                                        </label>
+                                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                                            <input 
+                                                key={key} 
+                                                type="text" 
+                                                id="externalId"
+                                                name="externalId"
+                                                onChange={handleChange}
+                                                className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                                defaultValue={`${newUserInputs[key].externalId}`}
+                                                placeholder="student ID"/>
+                                        </div>
+                                    </div>
+
+
+                                    <div id={`${key}`} className="sm:col-span-3">
+                                        <label htmlFor="grade" className="block text-m font-medium leading-5 text-gray-700">
+                                            Grade
+                                        </label>
+                                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                                            <input 
+                                                key={key} 
+                                                type="text" 
+                                                id="grade"
+                                                name="grade"
+                                                onChange={handleChange}
+                                                className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                                defaultValue={`${newUserInputs[key].grade}`}
+                                                placeholder="9"/>
                                         </div>
                                     </div>
 
@@ -300,10 +364,11 @@ const Registration = () => {
                                                 name="phone"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                value={`${newUserInputs[key].phone}`}
+                                                defaultValue={`${newUserInputs[key].phone}`}
                                                 placeholder="5551234567"/>
                                         </div>
                                     </div>
+
                                 </div>
                             
                             </div>

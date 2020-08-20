@@ -18,11 +18,13 @@ const Keyword = () => {
 
 
     return (
-        <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col justify-center ${theme.block.text} text-lx rounded-sm shadow-inner`}>
-            <p className="text-2xl font-extrabold">Keywords we will cover in this lesson:</p>
+        <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} text-lx rounded-sm shadow-inner`}>
+            <h1 className="text-2xl font-extrabold mb-6">Keywords we will cover in this lesson:</h1>
+            <div>
             <p className="text-lg "><span className="text-lg font-bold">Culture:</span> the beliefs, social practices, and characteristics of a racial, religious, or social group </p>
             <p className="text-lg "><span className="text-lg font-bold">Identity:</span> all of those things by which a person or thing is known or is considered as being </p>
             <p className="text-lg "><span className="text-lg font-bold">Self-Awareness:</span> conscious knowledge of one's own personality, character, motives, and feelings </p>
+            </div>
         </div>
     )
 }

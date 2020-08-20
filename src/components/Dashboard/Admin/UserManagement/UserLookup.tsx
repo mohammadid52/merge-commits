@@ -101,7 +101,7 @@ const UserLookup = () => {
                                             <img className="h-10 w-10 rounded-lg" src="https://i2.wp.com/www.quartzmasters.com/wp-content/uploads/2017/03/article-user-blank.jpg?ssl=1" alt="" />
                                         </div>
                                         <div className="ml-2">
-                                            <div id={item.id} className="text-sm leading-5 font-medium text-gray-900">
+                                            <div id={item.id} className="cursor-pointer text-sm leading-5 font-medium text-gray-900" onClick={handleLink} >
                                                 {`${item.lastName}, ${ item.preferredName ? item.preferredName : item.firstName }`}
                                             </div>
                                             <div id={item.id} className="text-sm leading-5 text-gray-500">

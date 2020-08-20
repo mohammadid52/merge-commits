@@ -71,11 +71,11 @@ const DoFirst = () => {
 
     return (
         <div className="bg-dark-blue w-full h-full rounded-lg shadow-2 ext-gray-200 px-4 md:px-8 py-6">
-                <h3 className="w-full text-xl text-gray-200 font-open font-bold border-b border-white mr-4 mb-4">
+                <h3 className="w-full text-2xl text-gray-200 font-open font-bold border-b border-white mr-4 mb-4">
                     Do First
                 </h3>
-            <div className="w-full h-9/10 flex flex-col justify-center text-gray-200">
-                <p className="mb-4">Write 3-5 facts about what that means to you and and your family.</p>
+            <div className="w-full h-8/10 flex flex-col justify-center text-gray-200">
+                <p className="text-lg my-4">Write 3-5 facts about what that means to you and and your family.</p>
                 <textarea id="text" className="bg-gray-300 w-full h-full p-8 text-sm md:text-2xl text-gray-800 rounded-lg shadow-2" 
                 // value={editInput.text} onChange={handleChange}
                 />

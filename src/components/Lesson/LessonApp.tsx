@@ -8,7 +8,6 @@ import LessonHeaderBar from '../Header/LessonHeaderBar';
 
 const LessonApp = () => {
     const { state, theme } = useContext(LessonContext);
-    console.log(state, 'state');
 
     if ( state.status !== 'loaded') {
         return (

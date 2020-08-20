@@ -1,9 +1,11 @@
 import React, { useContext, useState } from 'react';
 import Keyword from './Keyword';
 import BioBlock from './BioBLock';
-import Ties from './Ties';
+import Connect from './Connect';
 import { IconContext } from "react-icons";
-import { FaMusic } from 'react-icons/fa';
+import { FaLink } from 'react-icons/fa';
+import { MdVpnKey } from 'react-icons/md';
+import { BsPersonSquare } from 'react-icons/bs';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import { 
     Switch, 
@@ -38,26 +40,36 @@ const Block = () => {
         })
     }
 
-
-
     return (
 
-    <div className={`relative md:w-full md:h-full ${theme.block.bg} flex justify-start ${theme.block.text} text-sm rounded-lg ${theme.block.shadow}`}>
+    <div className={`relative md:w-full md:h-full ${theme.block.bg} flex justify-start ${theme.block.text} rounded-lg ${theme.block.shadow} text-sm `}>
     
-            <div className="bg-dark w-2/10 h-full flex flex-col justify-between font-medium text-lg">
-                <div onClick={() => setSelect('Bio')} className={`${ select === 'Bio' ? `${theme.block.bg} font-extrabold` : 'border-4 border-blue-900 '} h-3/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
-                    Bio
+            <div className="bg-dark w-1.5/10 h-full flex flex-col justify-between font-medium text-lg">
+                <div onClick={() => setSelect('Bio')} className={`${ select === 'Bio' ? `${theme.block.bg} font-extrabold` : 'bg-blue-500'} h-3.1/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
+                    <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
+                        <div className={`flex justify-center items-center`}>
+                            <BsPersonSquare />
+                        </div>
+                    </IconContext.Provider>
                 </div>
-                <div onClick={() => setSelect('Keyword')} className={`${ select === 'Keyword' ? `${theme.block.bg} font-extrabold` : 'border-4 border-blue-900 '} h-3/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
-                    Keywords
+                <div onClick={() => setSelect('Keyword')} className={`${ select === 'Keyword' ? `${theme.block.bg} font-extrabold` : 'bg-blue-500'} h-3.1/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
+                    <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
+                        <div className={`flex justify-center items-center`}>
+                            <MdVpnKey />
+                        </div>
+                    </IconContext.Provider>
                 </div>
-                <div onClick={() => setSelect('Ties')} className={`${ select === 'Ties' ? `${theme.block.bg} font-extrabold` : 'border-4 border-blue-900 '} h-3/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
-                    Ties
+                <div onClick={() => setSelect('Connect')} className={`${ select === 'Connect' ? `${theme.block.bg} font-extrabold` : 'bg-blue-500'} h-3.1/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
+                    <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
+                        <div className={`flex justify-center items-center`}>
+                            <FaLink />
+                        </div>
+                    </IconContext.Provider>
                 </div>
             </div>
 
-            <div className="p-8">
-                { select === 'Bio' ? <BioBlock /> : select === 'Keyword' ? <Keyword /> : select === 'Ties' ? <Ties /> : null}
+            <div className={`p-8 rounded-lg`}>
+                { select === 'Bio' ? <BioBlock /> : select === 'Keyword' ? <Keyword /> : select === 'Connect' ? <Connect /> : null}
             </div>
 
     </div>
