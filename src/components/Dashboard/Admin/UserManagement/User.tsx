@@ -8,6 +8,7 @@ import * as queries from '../../../../graphql/queries';
 import { API, graphqlOperation } from 'aws-amplify';
 import UserInformation from './UserInformation';
 import UserEdit from './UserEdit';
+import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import { 
     Switch, 
     Route,
@@ -41,6 +42,7 @@ import {
 const User = () => {
     const match = useRouteMatch();
     const { theme, state, dispatch } = useContext(GlobalContext);
+    const [status, setStatus] = useState('');
     const [ user, setUser ] = useState<UserInfo>(
         {
             id: '',
@@ -70,6 +72,7 @@ const User = () => {
         try {
             const result: any = await API.graphql(graphqlOperation(queries.userById, { id: id }))
             const userData = result.data.userById.items.pop();
+            setStatus('done');
             setUser(() => {
                 if ( typeof userData === 'object') {
                     return userData
@@ -90,10 +93,6 @@ const User = () => {
         }
     }, [])
 
-    useEffect(() => {
-        console.log('THISONE', user)
-    }, [user])
-
     // const language = () => {
     //     if (user.language === 'EN') {
     //         return 'English'
@@ -102,6 +101,13 @@ const User = () => {
     //     }
 
     // }
+
+    if ( status !== 'done') {
+        return (
+            <LessonLoading />
+        )
+    }
+{ 
     return (
             <div className={`w-9/10 h-full`}>
                 <div className={`w-full h-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
@@ -124,14 +130,22 @@ const User = () => {
                             <Route 
                                 path={`${match.url}/edit`}
                                 render={() => (
-                                    <UserEdit user={user}/>  
+                                    <UserEdit 
+                                        user={user}
+                                        status = {status}
+                                        setStatus = {setStatus}
+                                        getUserById = {getUserById}
+                                    />  
                                 )} 
                             />
                             <Route 
                                 path={`${match.url}/`}
                                 render={() => (
-                                    <UserInformation user={user} />
-                                )}
+                                    <UserInformation 
+                                        user={user}
+                                        status = {status} 
+                                        />
+                                 )}
                             />
                         </Switch>
 
@@ -142,6 +156,7 @@ const User = () => {
             </div>
 
     )
+}
 }
 
 export default User;

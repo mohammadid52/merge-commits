@@ -1,11 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import * as customMutations from '../../../customGraphql/customMutations';
-import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import DropdownForm from './DropdownForm';
 import { UserInfo } from './Profile';
 import LessonLoading from '../../Lesson/Loading/LessonLoading';
-import { ConsoleLogger } from '@aws-amplify/core';
 
 interface UserInfoProps {
     user: UserInfo
@@ -16,8 +15,6 @@ interface UserInfoProps {
 
 const ProfileEdit = (props: UserInfoProps) => {
     const history = useHistory();
-    
-    const match = useRouteMatch();
     const {user, getUser, status, setStatus} = props;
     const [editUser, setEditUser] = useState(user);
 
@@ -215,7 +212,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                             Institution
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="institution"  onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            <input id="institution" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
                             defaultValue={`${user.institution}`}
                             />
                         </div>
@@ -226,7 +223,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                             Grade
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="grade"  onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                            <input id="grade" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
                             defaultValue={`${user.grade}`}
                             />
                         </div>

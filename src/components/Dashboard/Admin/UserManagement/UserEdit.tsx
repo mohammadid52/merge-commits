@@ -1,20 +1,22 @@
 import React, { useContext, useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import * as customMutations from '../../../../customGraphql/customMutations';
-import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
-import DropdownForm from '../../Profile/DropdownForm';
+import { useHistory } from 'react-router-dom';
+import DropdownForm from './DropdownForm';
 import { UserInfo } from './User';
+import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 
 interface UserInfoProps {
     user: UserInfo
+    status: string
+    getUserById: (id: string) => void
+    setStatus:  React.Dispatch<React.SetStateAction<string>>
 }
 
 const UserEdit = (props: UserInfoProps) => {
     const history = useHistory();
-    const {user} = props;
-    console.log(user, 'user')
+    const {user, status, getUserById, setStatus} = props;
     const [editUser, setEditUser] = useState(user);
-    console.log(editUser, 'what is this');
 
     async function updatePerson() {
         const input = {
@@ -35,16 +37,21 @@ const UserEdit = (props: UserInfoProps) => {
 
         try {
             const update: any = await API.graphql(graphqlOperation(customMutations.updatePerson, { input: input }))
-            console.log(update)
+            setStatus('loading');
             history.goBack();
         } catch (error) {
             console.error(error)
         }
     }
 
-    const onSubmit = () => {
-        console.log(updatePerson, 'update');
-        updatePerson();
+    async function setPerson() {
+        const updateUser = await updatePerson();
+        const get = await getUserById(editUser.id);
+    }
+
+    const onSubmit = (e: any) => {
+        setPerson();
+        e.preventDefault();
     }
 
     const onChange = (e: any) => {
@@ -57,60 +64,91 @@ const UserEdit = (props: UserInfoProps) => {
         })
     }
 
-    const handleChangeLanguage = (lang: {name: string, code: string}) => {
+    // const handleChangeLanguage = (lang: {name: string, code: string}) => {
+    //     setEditUser(() => {
+    //         return {
+    //             ...editUser, 
+    //             language: lang.code
+    //         }
+    //     })
+    // }
+
+    const handleChangeStatus = (item: {name: string, code: string}) => {
         setEditUser(() => {
             return {
                 ...editUser, 
-                language: lang.code
+                status: item.code
             }
         })
     }
-   
-    const Language = [
+
+    const handleChangeRole = (item: {name: string, code: string}) => {
+        setEditUser(() => {
+            return {
+                ...editUser, 
+                role: item.code
+            }
+        })
+    }
+
+    const Status = [
         {
-            code: 'EN',
-            name: 'English'
+            code: 'ACTIVE',
+            name: 'Active',
         },
         {
-            code: 'ES',
-            name: 'Spanish'
+            code: 'SUSPENDED',
+            name: 'Suspended',
         },
-        // {
-        //     code: 'VT',
-        //     name: 'Vietnamese'
-        // },
+        {
+            code: 'INACTIVE',
+            name: 'Inactive',
+        },
+        {
+            code: 'HOLD',
+            name: 'Hold',
+        },
     ];
 
-    const items_status = [
+    const Role = [
         {
-            id: 1,
-            value: 'Active',
+            code: 'ADM',
+            name: 'Admin',
         },
         {
-            id: 2,
-            value: 'Inactive',
+            code: 'BLD',
+            name: 'Builder',
+        },
+        {
+            code: 'FLW',
+            name: 'Fellow',
+        },
+        {
+            code: 'CRD',
+            name: 'Coordinator',
+        },
+        {
+            code: 'TR',
+            name: 'Teacher',
+        },
+        {
+            code: 'ST',
+            name: 'Student',
         },
     ];
 
-    const items_role = [
-        {
-            id: 1,
-            value: 'Admin',
-        },
-        {
-            id: 2,
-            value: 'Fellow',
-        },
-        {
-            id: 3,
-            value: 'Teacher',
-        },
-    ];
+    if ( status !== 'done') {
+        return (
+            <LessonLoading />
+        )
+    }
+{ 
 
     return (
         <div className="h-full w-full md:p-6">
-            <div className="h-full bg-white shadow sm:rounded-lg mb-4">
-            <form>
+            
+            <form onSubmit={onSubmit}>
+            <div className="h-full shadow-5 bg-white sm:rounded-lg mb-4">
                 <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
                     Edit Information
@@ -121,24 +159,24 @@ const UserEdit = (props: UserInfoProps) => {
                     
                     <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
                         <div className="sm:col-span-3">
-                        <label htmlFor="first_name" className="block text-m font-medium leading-5 text-gray-700">
+                        <label htmlFor="firstName" className="block text-m font-medium leading-5 text-gray-700">
                             First name
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="first_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue= {user.firstName}/>
+                            <input id="firstName" type="text" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue= {user.firstName}/>
                         </div>
                         </div>
 
                         <div className="sm:col-span-3">
-                        <label htmlFor="last_name" className="block text-m font-medium leading-5 text-gray-700">
+                        <label htmlFor="lastName" className="block text-m font-medium leading-5 text-gray-700">
                             Last name
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="last_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue={user.lastName}/>
+                            <input id="lastName" type="text" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue={user.lastName}/>
                         </div>
                         </div>
 
-                        <div className="sm:col-span-3">
+                        {/* <div className="sm:col-span-3">
                             <label htmlFor="photo" className="block text-m leading-5 font-medium text-gray-700">
                                 Photo
                             </label>
@@ -154,51 +192,53 @@ const UserEdit = (props: UserInfoProps) => {
                                 </button>
                                 </span>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="sm:col-span-3">
-                        <label htmlFor="preferred_name" className="block textsm font-medium leading-5 text-gray-700">
+                        <label htmlFor="preferredName" className="block text-sm font-medium leading-5 text-gray-700">
                             Nickname
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="preferred_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue={user.preferredName}/>
+                            <input id="preferredName" type="text" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue={user.preferredName}/>
                         </div>
                         </div>
 
                         <div className="sm:col-span-3">
                             <DropdownForm
-                                handleChangeLanguage = {handleChangeLanguage}
-                                userLanguage = {user.language}
+                                handleChange = {handleChangeStatus}
+                                userInfo = {user.status}
                                 label='Status'
-                                items= {Language}
+                                id = 'status'
+                                items= {Status}
                             />
                         </div>
 
                         <div className="sm:col-span-3">
                             <DropdownForm
-                                handleChangeLanguage = {handleChangeLanguage}
-                                userLanguage = {user.language}
+                                handleChange = {handleChangeRole}
+                                userInfo = {user.role}
                                 label='Role'
-                                items= {Language}
+                                id = 'role'
+                                items= {Role}
                             />
                         </div>
 
                         <div className="sm:col-span-3">
-                        <label htmlFor="number" className="block text-m font-medium leading-5 text-gray-700">
+                        <label htmlFor="phone" className="block text-m font-medium leading-5 text-gray-700">
                             Contact Number
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="number" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue={user.phone}/>
+                            <input id="phone" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue={user.phone}/>
                         </div>
                         </div>
                     </div>
                 </div>  
 
-            </form>
+            
             </div>
 
-            <div className="h-full bg-white shadow sm:rounded-lg">
-            <form>
+            <div className="h-full bg-white shadow-5 sm:rounded-lg">
+            
                 <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
                     Edit Institution Information
@@ -208,11 +248,11 @@ const UserEdit = (props: UserInfoProps) => {
                 <div className="h-full px-4 py-5 sm:px-6">   
                     <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
                         <div className="sm:col-span-3">
-                        <label htmlFor="school_name" className="block text-m font-medium leading-5 text-gray-700">
+                        <label htmlFor="institution" className="block text-m font-medium leading-5 text-gray-700">
                             Institution
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="school_name" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue={user.institution}/>
+                            <input id="institution" type="text" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue={user.institution}/>
                         </div>
                         </div>
 
@@ -221,38 +261,34 @@ const UserEdit = (props: UserInfoProps) => {
                             Grade
                         </label>
                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="grade" className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue={user.grade}/>
+                            <input id="grade" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" defaultValue={user.grade}/>
                         </div>
                         </div>
                     </div>
                 </div>  
-            </form>
+            
             </div>
 
             <div className="p-4 w-full flex justify-end">
                 <div className="flex w-4/10">
                     <span className="inline-flex rounded-md shadow-sm">
-                        <NavLink to={`/dashboard/profile`}>
-                        <button type="button" className="py-2 px-4 border border-gray-300 rounded-md text-m leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
+                        <button type="button" onClick={history.goBack} className="py-2 px-4 border border-gray-300 rounded-md text-m leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
                         Cancel
                         </button>
-                        </NavLink>
                     </span>
                     <span className="ml-3 inline-flex rounded-md shadow-sm">
-                        
-                        <button type="submit" onClick={onSubmit} className="inline-flex justify-center py-2 px-4 border border-transparent text-m leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                        <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-m leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
                         Save
                         </button>
-                       
                     </span>
                 </div>
             </div>
                     
 
-           
+        </form>
         </div>
     )
-
+    }
 }
 
 export default UserEdit;

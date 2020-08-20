@@ -3,31 +3,49 @@ import React, { useState } from 'react';
 interface DropdownProps {
     label: string,
     items: any,
-    userLanguage: string,
-    handleChangeLanguage: (lang: {code: string, name: string}) => void
+    userInfo: string,
+    id: string
+    handleChange: (item: {code: string, name: string}) => void
 }
 
 
 const DropdownForm = ( props: DropdownProps ) => {
 
-    const {label, items, userLanguage, handleChangeLanguage } = props;
+    const {label, items, userInfo, handleChange, id } = props;
 
-    const language = () => {
-        if (userLanguage === 'EN') {
-            return 'English'
-        } else if (userLanguage === 'ES') {
-            return 'Spanish'
+    const options = () => {
+        if (userInfo === 'ACTIVE') {
+            return 'Active'
+        } else if (userInfo === 'SUSPENDED') {
+            return 'Suspended'
+        } else if (userInfo === 'INACTIVE') {
+            return 'Inactive'
+        } else if (userInfo === 'HOLD') {
+            return 'Hold'
+        } else if (userInfo === 'ADM') {
+            return 'Admin'
+        } else if (userInfo === 'BLD') {
+            return 'Builder'
+        } else if (userInfo === 'FLW') {
+            return 'Fellow'
+        } else if (userInfo === 'CRD') {
+            return 'Coordinator'
+        } else if (userInfo === 'TR') {
+            return 'Teacher'
+        } else if (userInfo === 'ST') {
+            return 'Student'
         }
     }
 
-    let [selectedItem, setSelectItem] = useState(language());
+    let [selectedItem, setSelectItem] = useState(options());
     const [showItems, setShowItems] = useState(false);
     
     const selectItem = (item: any) => {
         setSelectItem(item.name);   
         setShowItems(!showItems);
-        handleChangeLanguage(item)
+        handleChange(item)
     }
+
 
 
 
@@ -66,7 +84,7 @@ const DropdownForm = ( props: DropdownProps ) => {
                     <li 
                         key={key}
                         onClick={() => selectItem(item)}
-                        id="language"
+                        id={id}
                         role="option" className={`hover:bg-indigo-400 hover:text-white flex cursor-default select-none relative py-2 pl-8 pr-4`}>
                         
                         <span className={`${selectedItem === item.name ? 'font-semibold' : 'font-normal'} block truncate"`}>

@@ -171,6 +171,7 @@ module.exports = {
         'fire-orange': '#FF5733',
         // 'dark-blue': '#04111A',
         'dark-blue': '#1C2C42',
+        'darker-blue': '#101a27',
         'dark': '#051429',
         'gold': '#F1C40F',
         'grayscale' : '#666666',
