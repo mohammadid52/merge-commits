@@ -8,7 +8,6 @@ import ProfileInfo from './ProfileInfo';
 import AboutMe from './AboutMe';
 import ProfileVault from './ProfileVault';
 import ProfileEdit from './ProfileEdit';
-import Dropdown from './Dropdown';
 import { 
     Switch, 
     Route,
@@ -17,7 +16,6 @@ import {
     NavLink
  } from 'react-router-dom';
  import LessonLoading from '../../Lesson/Loading/LessonLoading';
-import { ConsoleLogger } from '@aws-amplify/core';
  export interface UserInfo {
     authId: string
     courses?: string

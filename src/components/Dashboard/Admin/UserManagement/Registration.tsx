@@ -6,8 +6,9 @@ import { Auth, API, graphqlOperation } from 'aws-amplify';
 import * as mutations from '../../../../graphql/mutations';
 import SuccessNote from '../../../../standard/Alert/SuccessNote';
 import ErrorNote from './ErrorNote';
+import DropdownForm from './DropdownForm';
 import { IconContext } from "react-icons";
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa'; 
 
 interface newUserInput {
     key: number
@@ -30,7 +31,7 @@ interface newUserInput {
 
 const Registration = () => {
     const history = useHistory();
-    const [ newUserInputs, setNewUserInputs ] = useState<Array<newUserInput>>([
+    const [ newUserInputs, setNewUserInputs ] = useState<newUserInput>(
         {   
             key: 0,
             authId: '',
@@ -49,155 +50,146 @@ const Registration = () => {
                 type: '',
             },
         },
-    ])
+    )
 
-    const handleMessage = (key: number, type: string, text: string) => {
+    const Role = [
+        {
+            code: 'ADM',
+            name: 'Admin',
+        },
+        {
+            code: 'BLD',
+            name: 'Builder',
+        },
+        {
+            code: 'FLW',
+            name: 'Fellow',
+        },
+        {
+            code: 'CRD',
+            name: 'Coordinator',
+        },
+        {
+            code: 'TR',
+            name: 'Teacher',
+        },
+        {
+            code: 'ST',
+            name: 'Student',
+        },
+    ];
+
+    const handleMessage = (type: string, text: string) => {
         setNewUserInputs(() => {
-           let modifiedInputs: Array<newUserInput> = newUserInputs.map((obj: any) => {
-                if (key === obj.key) {
-                    return {
-                        ...obj,
-                        message: {
-                            show: true,
-                            text: text,
-                            type: type,
-                        }
-                    }
-                } return obj
-           })
-           return  modifiedInputs
+           return {
+            ...newUserInputs,
+            message: {
+                show: true,
+                text: text,
+                type: type,
+            }
+        }
         })
-        // setTimeout(() => {
-        //     setNewUserInputs(() => {
-        //         let modifiedInputs: Array<newUserInput> = newUserInputs.map((obj: any) => {
-        //              if (key === obj.key) {
-        //                  return {
-        //                     ...obj,
-        //                     message: {
-        //                         ...obj.message,
-        //                         show: false,
-        //                     }
-        //                  }
-        //              } return obj
-        //         })
-        //         return  modifiedInputs
-        //      })
-        // }, 2000)
     }
 
-    // useEffect(() => {
-    //    if (newUser.authId.length > 1) {registerUser()}
-    // }, [newUserInputs])
-
-    async function registerUser(key: number, authId: string) {
+    async function registerUser(authId: string) {
         let userData = {
             authId: authId,
             status: 'ACTIVE',
-            role: newUserInputs[key].role,
-            email: newUserInputs[key].email,
-            firstName: newUserInputs[key].firstName,
-            lastName: newUserInputs[key].lastName,
+            role: newUserInputs.role,
+            email: newUserInputs.email,
+            firstName: newUserInputs.firstName,
+            lastName: newUserInputs.lastName,
             // insitution: '1',
-            phone: newUserInputs[key].phone,
-            birthdate: newUserInputs[key].birthdate,
-            externalId: newUserInputs[key].externalId,
-            grade: newUserInputs[key].grade,
+            phone: newUserInputs.phone,
+            birthdate: newUserInputs.birthdate,
+            externalId: newUserInputs.externalId,
+            grade: newUserInputs.grade,
             language: 'EN',
         }
 
         try {
             const newPerson = await API.graphql(graphqlOperation(mutations.createPerson, { input: userData }))
-            console.log(newPerson, 'newperson')
-            handleMessage(key, 'success', 'User registered successfully')
+            handleMessage('success', 'User registered successfully')
         } catch (error) {
             console.error('error registering user:', error)
-            handleMessage(key, 'error', error.message)
+            handleMessage('error', error.message)
         }
     }
 
-    async function signUp(key: number) {
-        let username = newUserInputs[key].email
-        let password = newUserInputs[key].password
+    async function signUp() {
+        let username = newUserInputs.email
+        let password = newUserInputs.password
         try {
             const user = await Auth.signUp({
                 username,
                 password
             });
-            console.log(user.userSub, 'userSub');
             setNewUserInputs(() => {
-                let modifiedInputs: Array<newUserInput> = newUserInputs.map((obj: any) => {
-                    if (key === obj.key) {
-                        return {
-                            ...obj,
-                            authId: user.userSub
-                        }
-                    } return obj
-                })
-                return  modifiedInputs
+                return {
+                    ...newUserInputs,
+                    authId: user.userSub
+                }
             })
-            registerUser(key, user.userSub)
+            registerUser(user.userSub)
         } catch (error) {
             console.log('error signing up:', error);
-            handleMessage(key, 'error', error.message)
+            handleMessage('error', error.message)
         }
     }
 
-    const handleAddInput = () => {
-        setNewUserInputs(prev => {
-            return [
-                ...prev,
-                {   
-                    key: newUserInputs.length,
-                    authId: '',
-                    email: '',
-                    password: 'xIconoclast.5x',
-                    firstName: '',
-                    lastName: '',
-                    phone: '',
-                    birthdate: '',
-                    grade: '',
-                    role: '',
-                    externalId: '',
-                    message: {
-                        show: false,
-                        text: '',
-                        type: '',
-                    },
-                },
-            ]
-        })
-    }
+    // const handleAddInput = () => {
+    //     setNewUserInputs(prev => {
+    //         return [
+    //             ...prev,
+    //             {   
+    //                 key: newUserInputs.length,
+    //                 authId: '',
+    //                 email: '',
+    //                 password: 'xIconoclast.5x',
+    //                 firstName: '',
+    //                 lastName: '',
+    //                 phone: '',
+    //                 birthdate: '',
+    //                 grade: '',
+    //                 role: '',
+    //                 externalId: '',
+    //                 message: {
+    //                     show: false,
+    //                     text: '',
+    //                     type: '',
+    //                 },
+    //             },
+    //         ]
+    //     })
+    // }
 
     const handleChange = (e: any) => {
         let id = e.target.id
-        let key = e.currentTarget.parentNode.id
-        console.log(key, 'key')
         let value = e.target.value
-        console.log(key, id, value)
         setNewUserInputs(() => {
-            let modifiedInputs: Array<newUserInput> = newUserInputs.map((obj: any) => {
-                if (parseInt(key) === obj.key) {
-                    return {
-                        ...obj,
-                        [id]: value,
-                    }
-                } return obj
-            })
-            return  modifiedInputs
+            return {
+                ...newUserInputs,
+                [id]: value
+            }
+        })
+    }
+
+    const handleChangeRole = (item: {name: string, code: string}) => {
+        setNewUserInputs(() => {
+            return {
+                ...newUserInputs, 
+                role: item.code
+            }
         })
     }
 
     const submitNewUsers = () => {
-        newUserInputs.forEach((obj: any, key: number) => {
-            signUp(key)
-        })
+        signUp()
     }
 
     const handleSubmit = (e: any) => {
-       
         submitNewUsers()
-        console.log(newUserInputs);
-        console.log('attempt')
     }
 
     return (
@@ -210,8 +202,8 @@ const Registration = () => {
                     </h1>
                 </div>
                 <div className="">
-                    { newUserInputs.map((input: newUserInput, key: number) => (
-                        <div className="w-full md:flex flex-col mb-8" key={key}>
+                    
+                        <div className="w-full md:flex flex-col mb-8">
 
                         <div className="h-full w-full bg-white shadow-5 my-4 sm:rounded-lg">
                         <form>
@@ -219,139 +211,125 @@ const Registration = () => {
                             <div className="h-full px-4 py-5 sm:px-6">
                                 <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
 
-                                    <div id={`${key}`} className="sm:col-span-3">
+                                    <div className="sm:col-span-3">
                                         <label htmlFor="firstName" className="block text-m font-medium leading-5 text-gray-700">
                                             First Name
                                         </label>
                                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                             <input 
-                                                key={key} 
                                                 type="text" 
                                                 id="firstName"
                                                 name="firstName"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                defaultValue={`${newUserInputs[key].firstName}`}
+                                                // defaultValue={`${newUserInputs[key].firstName}`}
                                                 placeholder="John"/>
                                         </div>
                                     </div>
 
-                                    <div id={`${key}`} className="sm:col-span-3">
+                                    <div className="sm:col-span-3">
                                         <label htmlFor="lastName" className="block text-m font-medium leading-5 text-gray-700">
                                             Last Name
                                         </label>
                                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                             <input 
-                                                key={key} 
                                                 type="text" 
                                                 id="lastName"
                                                 name="lastName"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                defaultValue={`${newUserInputs[key].lastName}`}
+                                                // defaultValue={`${newUserInputs[key].lastName}`}
                                                 placeholder="Doe"/>
                                         </div>
                                     </div>
 
-                                    <div id={`${key}`} className="sm:col-span-3">
+                                    <div className="sm:col-span-3">
                                         <label htmlFor="email" className="block text-m font-medium leading-5 text-gray-700">
                                             Email
                                         </label>
                                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                             <input 
-                                                key={key} 
                                                 type="email" 
                                                 id="email"
                                                 name="email"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                defaultValue={`${newUserInputs[key].email}`}
+                                                // defaultValue={`${newUserInputs[key].email}`}
                                                 placeholder="email@email.com"/>
                                         </div>
                                     </div>
 
-                                    <div id={`${key}`} className="sm:col-span-3">
+                                    <div className="sm:col-span-3">
                                         <label htmlFor="birthdate" className="block text-m font-medium leading-5 text-gray-700">
                                             Date of Birth
                                         </label>
                                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                             <input 
-                                                key={key} 
                                                 type="date" 
                                                 id="birthdate"
                                                 name="birthdate"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                defaultValue={`${newUserInputs[key].birthdate}`}
+                                                // defaultValue={`${newUserInputs[key].birthdate}`}
                                                 placeholder="01/01/2010"/>
                                         </div>
                                     </div>
 
-                                    <div id={`${key}`} className="sm:col-span-3">
-                                        <label htmlFor="role" className="block text-m font-medium leading-5 text-gray-700">
-                                            Role
-                                        </label>
-                                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                                            <input 
-                                                key={key} 
-                                                type="text" 
-                                                id="role"
-                                                name="role"
-                                                onChange={handleChange}
-                                                className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                defaultValue={`${newUserInputs[key].role}`}
-                                                placeholder="Student"/>
-                                        </div>
+                                    <div className="sm:col-span-3">
+                                        <DropdownForm
+                                            handleChange = {handleChangeRole}
+                                            userInfo = {'ST'}
+                                            label='Role'
+                                            id = 'role'
+                                            items= {Role}
+                                        />
                                     </div>
 
-                                    <div id={`${key}`} className="sm:col-span-3">
+                                    <div className="sm:col-span-3">
                                         <label htmlFor="externalId" className="block text-m font-medium leading-5 text-gray-700">
                                             Student ID
                                         </label>
                                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                             <input 
-                                                key={key} 
                                                 type="text" 
                                                 id="externalId"
                                                 name="externalId"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                defaultValue={`${newUserInputs[key].externalId}`}
+                                                // defaultValue={`${newUserInputs[key].externalId}`}
                                                 placeholder="student ID"/>
                                         </div>
                                     </div>
 
 
-                                    <div id={`${key}`} className="sm:col-span-3">
+                                    <div className="sm:col-span-3">
                                         <label htmlFor="grade" className="block text-m font-medium leading-5 text-gray-700">
                                             Grade
                                         </label>
                                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                             <input 
-                                                key={key} 
                                                 type="text" 
                                                 id="grade"
                                                 name="grade"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                defaultValue={`${newUserInputs[key].grade}`}
+                                                // defaultValue={`${newUserInputs[key].grade}`}
                                                 placeholder="9"/>
                                         </div>
                                     </div>
 
-                                    <div id={`${key}`} className="sm:col-span-3">
+                                    <div className="sm:col-span-3">
                                         <label htmlFor="phone" className="block text-m font-medium leading-5 text-gray-700">
                                             Phone Number
                                         </label>
                                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                                            <input 
-                                                key={key} 
+                                            <input  
                                                 type="text" 
                                                 id="phone"
                                                 name="phone"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                defaultValue={`${newUserInputs[key].phone}`}
+                                                // defaultValue={`${newUserInputs[key].phone}`}
                                                 placeholder="5551234567"/>
                                         </div>
                                     </div>
@@ -365,11 +343,11 @@ const Registration = () => {
                 
                             <div className="w-full md:h-full flex justify-center items-center">
                             {
-                                newUserInputs[key].message.show ? (
+                                newUserInputs.message.show ? (
                                     <div>
-                                        {newUserInputs[key].message.type === 'success' ? <SuccessNote /> : 
+                                        {newUserInputs.message.type === 'success' ? <SuccessNote /> : 
                                         <ErrorNote 
-                                            note={newUserInputs[key].message.text}
+                                            note={newUserInputs.message.text}
                                         />}
                                     </div>
                                         // <div className={`h-1/10 w-6/10 flex justify-center items-center text-sm border-2 ${  newUserInputs[key].message.type === 'success' ? 'text-green-500 bg-green-300  border-green-500' :  newUserInputs[key].message.type === 'error' ? 'text-red-500 bg-red-300  border-red-500' : 'text-gray-200'} py-8 px-4 rounded shadow-elem-light text-center`}>
@@ -379,7 +357,9 @@ const Registration = () => {
                             }
                             </div>
                         </div>
-                    ))}
+                  
+
+
                 </div>
                 <div className="w-full flex justify-end">
                     <span className="w-2/10 flex inline-flex rounded-md shadow-sm">

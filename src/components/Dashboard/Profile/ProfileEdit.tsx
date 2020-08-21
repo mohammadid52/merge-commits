@@ -30,7 +30,7 @@ const ProfileEdit = (props: UserInfoProps) => {
             preferredName: editUser.preferredName,
             role: editUser.role,
             status: editUser.status,
-            phone: editUser.phone,
+            phone: editUser.phone, 
             birthdate: editUser.birthdate,
             email: editUser.email,
         }

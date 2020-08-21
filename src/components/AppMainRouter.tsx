@@ -3,6 +3,7 @@ import { GlobalContext } from '../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
 import PageHeaderBar from './Header/PageHeaderBar';
 import Login from './Auth/Login';
+import Forgot from './Auth/Forgot';
 const Confirmation = lazy(() => import('./Auth/Confirmation'));
 const Dashboard = lazy(() => import('./Dashboard/Dashboard'));
 const Registration = lazy(() => import('./Auth/Register'));
@@ -16,6 +17,7 @@ import {
  } from 'react-router-dom';
 import PrivateRoute from './Auth/PrivateRoute';
 import NewPassword from './Auth/NewPassword';
+import Reset from './Auth/Reset';
 
 const MainRouter: React.FC = () => {
     const { theme, state, dispatch } = useContext(GlobalContext);
@@ -55,6 +57,18 @@ const MainRouter: React.FC = () => {
                         path="/new-password"
                         render={() => (
                             <NewPassword />  
+                        )} 
+                    />
+                    <Route 
+                        path="/forgot-password"
+                        render={() => (
+                            <Forgot />  
+                        )} 
+                    />
+                    <Route 
+                        path="/reset-password"
+                        render={() => (
+                            <Reset />  
                         )} 
                     />
                     <PrivateRoute path="/dashboard" >

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Auth } from 'aws-amplify';
 import { IconContext } from "react-icons";
-import { FaKey } from 'react-icons/fa';
+import { FaUnlockAlt } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
 import {
     useHistory
@@ -63,17 +63,17 @@ const Registration = () => {
                             </IconContext.Provider>
                             </div>
                         <label className="hidden" htmlFor="email">Email</label>
-                        <input className="w-full px-2 py-1 mb-4 " placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
+                        <input className="w-full px-2 py-1 ml-2" placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
                     </div>
 
                     <div className="input">
                             <div className="icon">
                             <IconContext.Provider value={{ size: '1.5rem'}}>
-                                <FaKey />
+                                <FaUnlockAlt />
                             </IconContext.Provider>
                             </div>
                         <label className="hidden" htmlFor="code">Confirmation Code</label>
-                        <input className="w-full px-2 py-1 mb-4" placeholder="Confirmation Code" type="text" id="code" name="code" value={input.code} onChange={handleChange}/>
+                        <input className="w-full px-2 py-1 ml-2" placeholder="Confirmation Code" type="text" id="code" name="code" value={input.code} onChange={handleChange}/>
                     </div>
                 </div>
                 <button className="bg-dark-red text-gray-200 rounded shadow-elem-light mb-4" onClick={handleSubmit}>Confirm</button>

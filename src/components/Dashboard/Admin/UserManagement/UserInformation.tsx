@@ -19,7 +19,6 @@ const UserInformation = (props: UserInfoProps) => {
     const { user, status } = props;
     const match = useRouteMatch();
     const history = useHistory();
-
     const location = useLocation();
     const queryParams = queryString.parse(location.search);
 
@@ -37,7 +36,7 @@ const UserInformation = (props: UserInfoProps) => {
             )
         } else if (user.status === 'SUSPENDED') {
             return (
-            <span className="w-auto px-2 inline-flex text-base leading-5 font-semibold uppercase rounded-full bg-teal-100 text-teal-600">
+            <span className="w-auto px-2 inline-flex text-base leading-5 font-semibold uppercase rounded-full bg-red-100 text-red-800">
                 SUSPENDED
             </span>
             )
@@ -67,37 +66,6 @@ const UserInformation = (props: UserInfoProps) => {
     }
 
     
-    // async function getUserById(id: string) {
-    //     // console.log('user', data.data.userById.items.pop());
-    //     try {
-    //         const data: any = await API.graphql(graphqlOperation(queries.userById, { id: id }))
-    //         console.log('data', data.data.userById.items.pop());
-    //         setUser(() => {
-    //             if (data.data.userById.items.pop()) {
-    //                 return data.data.userById.items.pop()
-    //             }
-    //             return user
-    //         });
-    //         // console.log(user, 'user')
-    //     } catch (error) {
-    //         console.error(error);  
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     let id = queryParams.id;
-    //     // console.log(id);
-    //     if ( typeof id === 'string') {
-    //         getUserById(id);
-            
-    //     }
-    // }, [])
-
-    // useEffect(() => {
-    //     console.log('this one', user)
-    // }, [user])
-
-
     if ( status !== 'done') {
         return (
             <LessonLoading />
@@ -188,7 +156,7 @@ const UserInformation = (props: UserInfoProps) => {
                                 Account Created
                                 </dt>
                                 <dd className="mt-2 text-base leading-5 text-gray-900">
-                                {`${ user.createdAt }`}
+                                    {/* { created() } */}
                                 </dd>
                             </div>
                         </dl>
