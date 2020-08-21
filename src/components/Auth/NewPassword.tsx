@@ -93,11 +93,11 @@ const NewPassword = () => {
                         <div className="input">
                             <div className="icon">
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
-                                    <MdEmail />
+                                    <FaKey />
                                 </IconContext.Provider>
                             </div>
                             <label className="hidden" htmlFor="password">New Password</label>
-                            <input className="w-full px-2 py-1 mb-4" placeholder="New Password" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
                         <div className="input">
                         <div className="icon">
@@ -106,7 +106,7 @@ const NewPassword = () => {
                         </IconContext.Provider>
                         </div>
                             <label className="hidden" htmlFor="match">Confirm Password</label>
-                            <input className="w-full px-2 py-1 mb-4" placeholder="Confirm Password" type="password" id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirm Password" type="password" id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
                     
                 </div>

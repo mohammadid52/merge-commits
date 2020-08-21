@@ -246,7 +246,7 @@ const WritingBlock = (props: WritingBlockProps) => {
     }
 
     return (
-        <div className="bg-dark-blue w-full h-80 md:h-full flex flex-col items-center p-4 md:px-8 md:py-6 rounded-sm shadow-2 mb-4 md:mb-0 " >
+        <div className="bg-dark-blue w-full h-80 md:h-full flex flex-col items-center p-4 md:px-8 md:py-6 rounded-lg shadow-2 mb-4 md:mb-0 " >
             <div className="w-full flex flex-row justify-between mb-4">
                 <h3 className="w-full flex-grow text-xl text-gray-200 font-open font-bold border-b border-white mr-2">
                     Line Prompts
@@ -278,7 +278,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                                 ( ex. {line.example} )
                             </label>
                             {   line.menuOpen ?
-                                    <div className="absolute w-full shadow-3 h-32 bg-gray-300 rounded p-4 transform translate-y-12 overflow-scroll z-20 shadow-2">
+                                    <div className="absolute w-full shadow-3 h-32 bg-gray-300 rounded-lg p-4 transform translate-y-12 overflow-scroll z-20 shadow-2">
                                         { 
                                             lineState.prompts.map((prompt: any, key: string) => (
                                                 <div key={key} id={id} className="w-full mb-2" onClick={handleSelectPrompt}>

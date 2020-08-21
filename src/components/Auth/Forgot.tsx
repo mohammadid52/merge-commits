@@ -11,9 +11,8 @@ import {
     Link, NavLink
 } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
-import Forgot from './Forgot';
 
-const Login = () => {
+const Forgot = () => {
     const [ cookies, setCookie ] = useCookies(['auth']);
     const history = useHistory();
     const { theme, state, dispatch } = useContext(GlobalContext);
@@ -26,30 +25,16 @@ const Login = () => {
         email: '',
         password: '',
     })
-    const [passToggle, setPassToggle] = useState(false);
 
-    async function SignIn() {
+    async function forgotPassword() {
         let username = input.email;
-        let password = input.password;
 
         try {
-            const user = await Auth.signIn(username, password);
+            const user = await Auth.forgotPassword(username);
             console.log({ user })
-            dispatch({type: "LOG_IN", payload: { email: username, authId: user.username }})
-            setCookie('auth', { email: username, authId: user.username }, { secure: false })
-            history.push('/dashboard')
+            history.push('/reset-password')
         } catch (error) {
             console.error('error signing in', error);
-            if ( error.code === "UserNotConfirmedException" ) {
-                return history.push('/confirm')
-            }
-            setMessage(() => {
-                return {
-                    show: true,
-                    type: 'error',
-                    message: error.message,
-                }
-            })
         }
     }
 
@@ -65,12 +50,12 @@ const Login = () => {
 
     const handleEnter = (e: any) => {
         if (e.key === 'Enter') {
-            SignIn()
+            forgotPassword()
         }
     }
 
     const handleSubmit = () => {
-        SignIn()
+        forgotPassword()
     }
 
     return (
@@ -79,12 +64,13 @@ const Login = () => {
              
             <div className="test login w-140 h-7/10 bg-gray-200 shadow-elem-light border border-gray-300 rounded pt-0">
                 <div className="h-.7/10 bg-dark w-full rounded-t-lg"></div>
-                <div className="h-9.3/10 flex flex-col items-center p-8">
+                <div className="h-9.3/10 flex flex-col items-center justify-center p-8">
                     <div>
                         <img className="mb-8" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                     </div>
             
-                    <div className="flex-grow flex flex-col justify-center py-4 pt-12">
+                    <div className="flex-grow flex flex-col justify-around py-4 pt-8">
+                        <div className="text-center text-xl mb-8">Input your email to reset your password</div>
                         
                         <div className="input">
                                 <div className="icon">
@@ -96,29 +82,6 @@ const Login = () => {
                             <input className="w-full px-2 py-1 ml-2" placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
                         </div>
                     
-                        <div className="input relative">
-                            <div style={{right: 0}} className="absolute right-0 w-auto">
-                                <div onClick={() => setPassToggle(!passToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
-                                { passToggle ?
-                                <IconContext.Provider value={{ size: '1.5rem'}}>
-                                    <AiOutlineEye />
-                                </IconContext.Provider> :
-                                <IconContext.Provider value={{ size: '1.5rem'}}>
-                                    <AiOutlineEyeInvisible />
-                                </IconContext.Provider>
-                                }
-                                </div>
-                            </div>
-
-                            <div className="icon">
-                            <IconContext.Provider value={{ size: '1.2rem'}}>
-                                <FaKey />
-                            </IconContext.Provider>
-                            </div>
-
-                            <label className="hidden" htmlFor="password">Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="Password" type={passToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
-                        </div>
                     </div>
                     
                     <div className="w-full h-12 flex justify-center items-center">
@@ -130,11 +93,14 @@ const Login = () => {
                             ) : null
                         }
                     </div>
-                    {/* <Link to="/register">Register</Link> */} 
-                    <button className="bg-dark-red text-gray-200 rounded-lg mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>Login</button>
-                    <NavLink to="/forgot-password">
-                    <div className="text-center hover:text-blue-500">forgot password?</div>
-                    </NavLink>
+
+                    <div className="flex justify-center">
+                        
+                            <button className="bg-dark-red text-gray-200 rounded-lg mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>
+                                Submit
+                            </button>
+                        
+                    </div>
                 </div>
             </div>
             
@@ -142,4 +108,4 @@ const Login = () => {
     )
 }
 
-export default Login;
+export default Forgot;

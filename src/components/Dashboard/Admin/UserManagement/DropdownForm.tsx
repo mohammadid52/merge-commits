@@ -44,6 +44,7 @@ const DropdownForm = ( props: DropdownProps ) => {
         setSelectItem(item.name);   
         setShowItems(!showItems);
         handleChange(item)
+        console.log(handleChange);
     }
 
 
@@ -64,7 +65,7 @@ const DropdownForm = ( props: DropdownProps ) => {
             </label>
             <div className="relative">
                 <span className="inline-block w-full rounded-md shadow-sm">
-                <button onClick={() => setShowItems(!showItems)} type="button" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label" className="flex cursor-default relative w-full rounded-md border border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+                <button onClick={() => setShowItems(!showItems)} type="button" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label" className="flex cursor-pointer relative w-full rounded-md border border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition ease-in-out duration-150 sm:text-sm sm:leading-5">
                     <span className="block truncate">
                     { selectedItem ? selectedItem : selectItem } 
                     </span>
@@ -85,7 +86,7 @@ const DropdownForm = ( props: DropdownProps ) => {
                         key={key}
                         onClick={() => selectItem(item)}
                         id={id}
-                        role="option" className={`hover:bg-indigo-400 hover:text-white flex cursor-default select-none relative py-2 pl-8 pr-4`}>
+                        role="option" className={`hover:bg-indigo-400 hover:text-white flex cursor-pointer select-none relative py-2 pl-8 pr-4`}>
                         
                         <span className={`${selectedItem === item.name ? 'font-semibold' : 'font-normal'} block truncate"`}>
                             {item.name}

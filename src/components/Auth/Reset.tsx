@@ -3,6 +3,7 @@ import { GlobalContext } from '../../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
 import { IconContext } from "react-icons";
 import { FaKey } from 'react-icons/fa';
+import { FaUnlockAlt } from 'react-icons/fa';
 import { AiOutlineEye } from 'react-icons/ai';
 import { AiOutlineEyeInvisible } from 'react-icons/ai';
 import { MdEmail } from 'react-icons/md';
@@ -11,9 +12,8 @@ import {
     Link, NavLink
 } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
-import Forgot from './Forgot';
 
-const Login = () => {
+const Reset = () => {
     const [ cookies, setCookie ] = useCookies(['auth']);
     const history = useHistory();
     const { theme, state, dispatch } = useContext(GlobalContext);
@@ -24,25 +24,34 @@ const Login = () => {
     })
     const [ input, setInput ] = useState({
         email: '',
+        code: '',
         password: '',
+        match: ''
     })
-    const [passToggle, setPassToggle] = useState(false);
 
-    async function SignIn() {
+    async function reset() {
+        if ( input.password !== input.match ) {
+            return setMessage(() => {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: 'Passwords do not match',
+                }
+            })
+        }
+
         let username = input.email;
         let password = input.password;
+        let match = input.match
+        let code = input.code;
 
         try {
-            const user = await Auth.signIn(username, password);
-            console.log({ user })
-            dispatch({type: "LOG_IN", payload: { email: username, authId: user.username }})
-            setCookie('auth', { email: username, authId: user.username }, { secure: false })
-            history.push('/dashboard')
+            Auth.forgotPasswordSubmit(username, code, password)
+            .then(data => console.log(data))
+            .catch(err => console.log(err));
+            history.push('/login')
         } catch (error) {
             console.error('error signing in', error);
-            if ( error.code === "UserNotConfirmedException" ) {
-                return history.push('/confirm')
-            }
             setMessage(() => {
                 return {
                     show: true,
@@ -65,12 +74,12 @@ const Login = () => {
 
     const handleEnter = (e: any) => {
         if (e.key === 'Enter') {
-            SignIn()
+            reset()
         }
     }
 
     const handleSubmit = () => {
-        SignIn()
+        reset()
     }
 
     return (
@@ -79,13 +88,14 @@ const Login = () => {
              
             <div className="test login w-140 h-7/10 bg-gray-200 shadow-elem-light border border-gray-300 rounded pt-0">
                 <div className="h-.7/10 bg-dark w-full rounded-t-lg"></div>
-                <div className="h-9.3/10 flex flex-col items-center p-8">
+                <div className="h-9.3/10 flex flex-col items-center justify-center p-8">
                     <div>
-                        <img className="mb-8" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
+                        <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                     </div>
             
-                    <div className="flex-grow flex flex-col justify-center py-4 pt-12">
-                        
+                    <div className="flex-grow flex flex-col py-4">
+                        <div className="text-center text-lg mb-4">Check your email for your confirmation code.</div>
+
                         <div className="input">
                                 <div className="icon">
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
@@ -93,35 +103,42 @@ const Login = () => {
                                 </IconContext.Provider>
                                 </div>
                             <label className="hidden" htmlFor="email">Email</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
-                    
-                        <div className="input relative">
-                            <div style={{right: 0}} className="absolute right-0 w-auto">
-                                <div onClick={() => setPassToggle(!passToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
-                                { passToggle ?
-                                <IconContext.Provider value={{ size: '1.5rem'}}>
-                                    <AiOutlineEye />
-                                </IconContext.Provider> :
-                                <IconContext.Provider value={{ size: '1.5rem'}}>
-                                    <AiOutlineEyeInvisible />
-                                </IconContext.Provider>
-                                }
-                                </div>
-                            </div>
 
+                        <div className="input">
+                                <div className="icon">
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <FaUnlockAlt />
+                                </IconContext.Provider>
+                                </div>
+                            <label className="hidden" htmlFor="code">Confirmation Code</label>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirmation Code" type="text" id="code" name="code" value={input.code} onChange={handleChange} onKeyDown={handleEnter}/>
+                        </div>
+        
+                        <div className="input">
                             <div className="icon">
-                            <IconContext.Provider value={{ size: '1.2rem'}}>
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <FaKey />
+                                </IconContext.Provider>
+                            </div>
+                            <label className="hidden" htmlFor="password">New Password</label>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
+                        </div>
+
+                        <div className="input">
+                            <div className="icon">
+                            <IconContext.Provider value={{ size: '1.5rem'}}>
                                 <FaKey />
                             </IconContext.Provider>
                             </div>
-
-                            <label className="hidden" htmlFor="password">Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="Password" type={passToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <label className="hidden" htmlFor="match">Confirm Password</label>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirm Password" type="password" id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
+                    
                     </div>
                     
-                    <div className="w-full h-12 flex justify-center items-center">
+                    <div className="w-full h-12 flex justify-center items-center mb-4">
                         {
                             message.show ? (
                                 <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
@@ -130,11 +147,12 @@ const Login = () => {
                             ) : null
                         }
                     </div>
-                    {/* <Link to="/register">Register</Link> */} 
-                    <button className="bg-dark-red text-gray-200 rounded-lg mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>Login</button>
-                    <NavLink to="/forgot-password">
-                    <div className="text-center hover:text-blue-500">forgot password?</div>
-                    </NavLink>
+
+                    <div className="cursor-pointer text-center rounded-lg bg-dark-red text-gray-200 mb-4" style={{borderRadius: '2rem', padding: '.75rem'}} onKeyPress={handleEnter} onClick={handleSubmit}>
+                        Submit
+                    </div>
+                        
+                    
                 </div>
             </div>
             
@@ -142,4 +160,4 @@ const Login = () => {
     )
 }
 
-export default Login;
+export default Reset;

@@ -13,13 +13,13 @@ const InstructionsBlock = () => {
     }
 
     return (
-        <div className="bg-dark-blue md:h-4/10 p-4 mb-4 flex text-gray-200 shadow-2 rounded-sm">
-            <div className="w-full flex flex-col px-4">
-                <div className="flex flex-row mb-3 border-b border-white mr-4">
-                    <h3 className="w-3/10 mr-2 flex-grow text-xl font-open font-bold ">
+        <div className="bg-dark-blue md:h-4/10 p-4 flex text-gray-200 shadow-2 rounded-lg">
+            <div className="w-full flex flex-col">
+                <div className="w-auto flex flex-row mb-3 border-b border-white mr-4">
+                    <h3 className="w-3/10 mr-2 flex-grow text-xl font-open font-bold">
                         Instructions
                     </h3>
-                    <p className="text-sm flex items-center">(click the red icon for video instructions)</p>
+                    <p className="w-auto text-sm flex mr-4 items-center">(click the red icon for video instructions)</p>
                 </div>
                 <div className={`w-full h-8/10 overflow-scroll flex justify-center text-sm px-2`}>
                 {   !videoMode ?
@@ -46,7 +46,7 @@ const InstructionsBlock = () => {
                 </div>
             </div>
             <IconContext.Provider value={{ color: '#EDF2F7', size: '1rem'}}>
-                <div className="flex-grow-0 bg-dark-red h-8 w-8 flex flex-col items-center justify-center z-20 rounded-sm shadow-2 mr-2" onClick={toggleVideoMode}>
+                <div className="flex-grow-0 bg-dark-red h-8 w-8 flex flex-col items-center justify-center z-20 rounded-lg shadow-2" onClick={toggleVideoMode}>
                     <FaVideo />
                 </div>
             </IconContext.Provider>

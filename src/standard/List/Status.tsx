@@ -13,7 +13,7 @@ const Status: React.FC = () => {
                 INACTIVE
             </span>
 
-            <span className="w-auto px-2 inline-flex text-xs leading-5 font-semibold uppercase rounded-full bg-teal-100 text-teal-600">
+            <span className="w-auto px-2 inline-flex text-xs leading-5 font-semibold uppercase rounded-full bg-red-100 text-red-800">
                 SUSPENDED
             </span>
 

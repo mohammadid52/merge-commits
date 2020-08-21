@@ -124,7 +124,7 @@ const PoemActivity = () => {
                             <EditBlock editMode={editMode}/>
                         }
                     </div>
-                    <div className="md:w-3.8/10 justify-between md:h-full flex flex-col">
+                    <div className="md:w-3.9/10 justify-between md:h-full flex flex-col">
                         <InstructionBlock editMode={editMode.open} />
                         <ToolBar editMode={editMode} setEditMode={setEditMode} />
                     </div>

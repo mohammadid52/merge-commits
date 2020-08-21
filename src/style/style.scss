@@ -69,7 +69,8 @@
     .input {
         border-bottom: 1px solid #1C2C42;
         margin-bottom: .75rem;
-        padding: .5rem;
+        padding-top: .5rem;
+        padding-bottom: .5rem;
         display: flex;
         justify-content: center;
         align-items: center; 
@@ -83,10 +84,6 @@
             margin-right: .5rem;
             border: none;
             padding: .5rem;
-        }
-
-        input {
-            margin: 0;
         }
     }
 

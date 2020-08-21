@@ -53,11 +53,11 @@ const LyricsBreakdown = () => {
             <div className="h-7/10 w-full flex flex-col md:flex-row justify-between items-center">
                 {   modules && modules.length >= 1 ?
                     modules.map((module: any, key: number) => (
-                        <div key={key} className={`bg-dark-blue h-64 md:h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-4 shadow-2 rounded-sm 
+                        <div key={key} className={`bg-dark-blue h-64 md:h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-4 shadow-2 rounded-lg 
                         
                         `}>
                             <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-white">
-                                <div className={`w-12 h-12 p-2 text-3xl rounded bg-${module.color} flex justify-center items-center shadow-2`}>
+                                <div className={`w-12 h-12 p-2 text-3xl rounded-lg bg-${module.color} flex justify-center items-center shadow-2`}>
                                     { module.label }
                                 </div>
                                 <div className="w-full pl-4 text-gray-200 font-open text-lg font-bold"> 
