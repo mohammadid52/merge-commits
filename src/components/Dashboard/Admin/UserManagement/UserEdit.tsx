@@ -64,14 +64,6 @@ const UserEdit = (props: UserInfoProps) => {
         })
     }
 
-    // const handleChangeLanguage = (lang: {name: string, code: string}) => {
-    //     setEditUser(() => {
-    //         return {
-    //             ...editUser, 
-    //             language: lang.code
-    //         }
-    //     })
-    // }
 
     const handleChangeStatus = (item: {name: string, code: string}) => {
         setEditUser(() => {

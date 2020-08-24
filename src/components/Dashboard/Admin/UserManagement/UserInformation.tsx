@@ -9,6 +9,8 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import { UserInfo } from './User';
+import UserStatus from './UserStatus';
+import UserRole from './UserRole';
 
 interface UserInfoProps {
     user: UserInfo
@@ -22,50 +24,7 @@ const UserInformation = (props: UserInfoProps) => {
     const location = useLocation();
     const queryParams = queryString.parse(location.search);
 
-    const userStatus = () => {
-        if (user.status === 'ACTIVE') {
-            return (
-            <span className="w-auto px-2 inline-flex text-base leading-5 font-semibold uppercase rounded-full bg-green-100 text-green-800">
-                ACTIVE
-            </span> )
-        } else if (user.status === 'INACTIVE') {
-            return (
-            <span className="w-auto px-2 inline-flex text-base leading-5 font-semibold uppercase rounded-full bg-gray-100 text-gray-500">
-                INACTIVE
-            </span>
-            )
-        } else if (user.status === 'SUSPENDED') {
-            return (
-            <span className="w-auto px-2 inline-flex text-base leading-5 font-semibold uppercase rounded-full bg-red-100 text-red-800">
-                SUSPENDED
-            </span>
-            )
-        } else if (user.status === 'HOLD') {
-            return (
-            <span className="w-auto px-2 inline-flex text-base leading-5 font-semibold uppercase rounded-full bg-yellow-100 text-yellow-700">
-                HOLD
-            </span>
-            )
-        }
-    }
-
-    const role = () => {
-        if (user.role === 'ADM') {
-            return 'Admin'
-        } else if (user.role === 'BLD') {
-            return 'Builder'
-        } else if (user.role === 'FLW') {
-            return 'Fellow'
-        } else if (user.role === 'CRD') {
-            return 'Coordinator'
-        } else if (user.role === 'TR') {
-            return 'Teacher'
-        } else if (user.role === 'ST') {
-            return 'Student'
-        }
-    }
     
-
     let created = () => {
         let date = new Date(user.createdAt);
         return (
@@ -80,7 +39,6 @@ const UserInformation = (props: UserInfoProps) => {
         )
         }
     {  
-
     return (
 
             <div className="w-full md:px-2 pt-2">
@@ -124,7 +82,8 @@ const UserInformation = (props: UserInfoProps) => {
                                 Role
                                 </dt>
                                 <dd className="mt-2 text-base leading-5 text-gray-900">
-                                {role()} 
+                                    <UserRole 
+                                        role= {user.role}/> 
                                 </dd>
                             </div>
                             <div className="sm:col-span-1">
@@ -132,7 +91,8 @@ const UserInformation = (props: UserInfoProps) => {
                                 Status
                                 </dt>
                                 <dd className="mt-2 text-base leading-5 text-gray-900">
-                                {userStatus()}
+                                    <UserStatus 
+                                        status= {user.status}/>
                                 </dd>
                             </div>
                             <div className="sm:col-span-1">
