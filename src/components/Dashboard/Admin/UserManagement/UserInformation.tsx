@@ -64,6 +64,14 @@ const UserInformation = (props: UserInfoProps) => {
             return 'Student'
         }
     }
+    
+
+    let created = () => {
+        let date = new Date(user.createdAt);
+        return (
+            (date.getMonth() + 1)+ '/' + date.getDate() + '/' + date.getFullYear()
+        )
+        }
 
     
     if ( status !== 'done') {
@@ -156,7 +164,7 @@ const UserInformation = (props: UserInfoProps) => {
                                 Account Created
                                 </dt>
                                 <dd className="mt-2 text-base leading-5 text-gray-900">
-                                    {/* { created() } */}
+                                    { created() }
                                 </dd>
                             </div>
                         </dl>
