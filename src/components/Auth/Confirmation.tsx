@@ -33,6 +33,32 @@ const Registration = () => {
             console.log('error confirming sign up', error);
             /////change the error code
             setMessage(() => {
+                if (!username) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Email cannot be blank',
+                    }
+                } else if (!username.includes("@")) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Email is not in the expected email address format',
+                    }
+                } else if (error.code === "UserNotFoundException") {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Email was not found',
+                    }
+                }
+                else if (!code) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Confirmation code cannot be empty',
+                    }
+                } 
                 return {
                     show: true,
                     type: 'error',

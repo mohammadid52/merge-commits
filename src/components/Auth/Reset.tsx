@@ -46,13 +46,27 @@ const Reset = () => {
         let code = input.code;
 
         try {
-            Auth.forgotPasswordSubmit(username, code, password)
-            .then(data => console.log(data))
-            .catch(err => console.log(err));
-            history.push('/login')
+            const forgot = await Auth.forgotPasswordSubmit(username, code, password);
+            // .then(data => console.log(data))
+            // .catch(err => console.log(err));
+            // history.push('/login');
+            
         } catch (error) {
             console.error('error signing in', error);
             setMessage(() => {
+                if (!username) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Email cannot be blank',
+                    }
+                } else if (error.code === "InvalidPasswordException" && "InvalidParameterException") {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+                    }
+                } 
                 return {
                     show: true,
                     type: 'error',
@@ -79,7 +93,8 @@ const Reset = () => {
     }
 
     const handleSubmit = () => {
-        reset()
+        reset();
+        
     }
 
     return (
@@ -104,7 +119,7 @@ const Reset = () => {
                     </div>
             
                     <div className="h-6/10 flex-grow flex flex-col">
-                        <div className="text-center text-lg">Check your email for your confirmation code</div>
+                        <div className="text-center text-lg mb-4">Check your email for your confirmation code</div>
 
                         <div className="input">
                                 <div className="icon">
@@ -153,6 +168,9 @@ const Reset = () => {
                         <div className="cursor-pointer shadow-elem-light text-center rounded-lg bg-dark-red text-gray-200 mb-4" style={{borderRadius: '2rem', padding: '.75rem'}} onKeyPress={handleEnter} onClick={handleSubmit}>
                             Submit
                         </div>
+                        <NavLink to="/forgot-password">
+                        <div className="text-center hover:text-blue-500">request another confirmation code</div>
+                        </NavLink>
                     </div>
                     
                 </div>
