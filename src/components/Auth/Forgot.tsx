@@ -52,7 +52,7 @@ const Forgot = () => {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'The email was not found',
+                        message: 'Email was not found',
                     }
                 } 
                 

@@ -16,7 +16,7 @@ const Class: React.FC = () => {
 
     return (
             <div className={`test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-4/10 rounded-sm p-6 flex flex-col mb-8`}>
-                <h1 className={`bg-dark text-4xl text-gray-200 font-bold font-open px-8 shadow-elem-light`}>
+                <h1 className={`h-.5/10 bg-dark text-4xl text-gray-200 font-bold font-open px-8 shadow-elem-light`}>
                     Where I'm From
                 </h1>
                 <div className={`flex flex-col md:flex-row justify-around items-center`} style={{height: "95%"}}>
