@@ -11,6 +11,11 @@ import { useCookies } from 'react-cookie';
 const Registration = () => {
     const history = useHistory();
     const [ cookies, setCookie ] = useCookies(['confirm_user'])
+    const [ message, setMessage ] = useState<{show: boolean, type: string, message: string,}>({
+        show: false,
+        type: '',
+        message: '',
+    })
     const [ input, setInput ] = useState({
         email: '',
         code: '',
@@ -26,6 +31,14 @@ const Registration = () => {
             history.push('/new-password');
         } catch (error) {
             console.log('error confirming sign up', error);
+            /////change the error code
+            setMessage(() => {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: error.message,
+                }
+            })
         }
     }
 
@@ -40,6 +53,12 @@ const Registration = () => {
         })
     }
 
+    const handleEnter = (e: any) => {
+        if (e.key === 'Enter') {
+            confirmSignUp()
+        }
+    }
+
     const handleSubmit = (e: any) => {
         console.log(input);
         confirmSignUp()
@@ -48,14 +67,23 @@ const Registration = () => {
 
     return (
         <div className="w-full h-screen flex items-center justify-center">
-            <div className="test login w-140 h-140 bg-gray-200 shadow-elem-light border border-gray-300 rounded pt-0">
-            <div className="h-10 bg-dark w-full rounded-t-lg"></div>
-            <div className="flex flex-col items-center p-8">
-                <div>
-                    <img className="mb-8" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
+            <div className="test login w-140 h-7/10 bg-gray-200 shadow-elem-light border border-gray-300 rounded pt-0">
+            <div className="h-.7/10 bg-dark w-full rounded-t-lg"></div>
+            <div className="h-9.3/10 flex flex-col items-center p-8">
+                <div className="h-2/10">
+                    <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
+                </div>
+                <div className="w-full h-1/10 flex justify-center items-center">
+                        {
+                            message.show ? (
+                                <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                    { message.message }
+                                </p>
+                            ) : null
+                        }
                 </div>
 
-                <div className="flex-grow flex flex-col py-4 pt-16">
+                <div className="h-5/10 flex-grow flex flex-col justify-center">
                     <div className="input">
                             <div className="icon">
                             <IconContext.Provider value={{ size: '1.5rem'}}>
@@ -76,7 +104,10 @@ const Registration = () => {
                         <input className="w-full px-2 py-1 ml-2" placeholder="Confirmation Code" type="text" id="code" name="code" value={input.code} onChange={handleChange}/>
                     </div>
                 </div>
-                <button className="bg-dark-red text-gray-200 rounded shadow-elem-light mb-4" onClick={handleSubmit}>Confirm</button>
+             
+                <div className="h-3/10 flex flex-col justify-center items-center">
+                    <button className="bg-dark-red text-gray-200 rounded shadow-elem-light mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>Confirm</button>
+                </div>
             </div>
             </div>
         </div>

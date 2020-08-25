@@ -137,6 +137,7 @@ const labelDictionary = {
             confirm: 'Confirm',
             confirmationCode: 'Confirmation Code',
             newPassword: 'New Password',
+            setNewPassword: 'Set New Password',
             confirmPassword: 'Confirm Password',
             inputPassword: 'Input your email to reset your password',
             checkEmail: 'Check your email for your confirmation code',

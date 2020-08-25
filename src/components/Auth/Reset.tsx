@@ -89,12 +89,22 @@ const Reset = () => {
             <div className="test login w-140 h-7/10 bg-gray-200 shadow-elem-light border border-gray-300 rounded pt-0">
                 <div className="h-.7/10 bg-dark w-full rounded-t-lg"></div>
                 <div className="h-9.3/10 flex flex-col items-center justify-center p-8">
-                    <div>
+                    <div className="2/10">
                         <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                     </div>
+
+                    <div className="w-full h-1/10 flex justify-center items-center">
+                        {
+                            message.show ? (
+                                <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                    { message.message }
+                                </p>
+                            ) : null
+                        }
+                    </div>
             
-                    <div className="flex-grow flex flex-col py-4">
-                        <div className="text-center text-lg mb-4">Check your email for your confirmation code.</div>
+                    <div className="h-6/10 flex-grow flex flex-col">
+                        <div className="text-center text-lg">Check your email for your confirmation code</div>
 
                         <div className="input">
                                 <div className="icon">
@@ -138,20 +148,12 @@ const Reset = () => {
                     
                     </div>
                     
-                    <div className="w-full h-12 flex justify-center items-center mb-4">
-                        {
-                            message.show ? (
-                                <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
-                                    { message.message }
-                                </p>
-                            ) : null
-                        }
+                
+                    <div className="h-2/10 flex flex-col justify-center items-center">
+                        <div className="cursor-pointer shadow-elem-light text-center rounded-lg bg-dark-red text-gray-200 mb-4" style={{borderRadius: '2rem', padding: '.75rem'}} onKeyPress={handleEnter} onClick={handleSubmit}>
+                            Submit
+                        </div>
                     </div>
-
-                    <div className="cursor-pointer text-center rounded-lg bg-dark-red text-gray-200 mb-4" style={{borderRadius: '2rem', padding: '.75rem'}} onKeyPress={handleEnter} onClick={handleSubmit}>
-                        Submit
-                    </div>
-                        
                     
                 </div>
             </div>
