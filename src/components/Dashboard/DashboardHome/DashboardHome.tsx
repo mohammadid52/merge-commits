@@ -9,7 +9,7 @@ import { MdClass } from 'react-icons/md'
 const DashboardHome: React.FC = () => {
     const { theme, state } = useContext(GlobalContext);
     return (
-        <div className={`w-full h-full flex flex-col p-8`}>
+        <div className={`w-full h-9.28/10 md:h-full flex flex-col p-8`}>
             <div className={`w-full h-4/10 flex`}>
                 <div className={`flex flex-col justify-center items-center w-2/3 h-full rounded-lg mx-2`}>
                     <h3 className="w-full h-20 text-2xl text-center bg-white shadow-elem-light rounded-lg mb-2"> Welcome, { state.user.firstName } </h3>

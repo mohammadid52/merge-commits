@@ -17,7 +17,7 @@ const Classroom: React.FC = () => {
     }
 
     return (
-        <div className={`w-full h-full flex flex-col p-4 md:p-8`}>
+        <div className={`w-full h-9.28/10 md:h-full flex flex-col p-4 md:p-8`}>
             <Class />
             <Upcoming />
             <Completed />
