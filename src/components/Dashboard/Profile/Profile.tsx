@@ -88,7 +88,7 @@ const Profile: React.FC = () => {
         }
     { 
     return (
-        <div className="w-full h-full flex items-center justify-center">
+        <div className="w-full h-9.28/10 md:h-full flex items-center justify-center">
             <div className={`w-9/10 h-full main_container`}>
                 <div className={`w-full h-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
                     

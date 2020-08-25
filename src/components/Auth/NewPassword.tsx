@@ -47,6 +47,20 @@ const NewPassword = () => {
             } catch (error) {
                 console.error('error signing in', error);
                 setMessage(() => {
+                    if (!input.password) {
+                        return {
+                            show: true,
+                            type: 'error',
+                            message: 'New password cannot be blank',
+                        }
+                    }
+                    if (!input.match) {
+                        return {
+                            show: true,
+                            type: 'error',
+                            message: 'Confirm password cannot be blank',
+                        }
+                    }
                     return {
                         show: true,
                         type: 'error',
@@ -78,39 +92,15 @@ const NewPassword = () => {
     }
 
     return (
-        <div className="w-full h-full flex flex-col items-center justify-center">
-            <div className="test login w-140 h-140 bg-gray-200 shadow-elem-light border border-gray-300 rounded pt-0">
-            <div className="h-10 bg-dark w-full rounded-t-lg"></div>
-            <div className="flex flex-col items-center p-8">
-                <div>
-                    <img className="mb-8" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
+        <div className="w-full h-screen flex items-center justify-center">
+            <div className="test login w-140 h-7/10 bg-gray-200 shadow-elem-light border border-gray-300 rounded pt-0">
+            <div className="h-.7/10 bg-dark w-full rounded-t-lg"></div>
+            <div className="h-9.3/10 flex flex-col items-center p-8">
+                <div className="h-2/10">
+                    <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                 </div>
 
-            
-                <div className="flex-grow flex flex-col py-4 pt-16">
-                    
-                        
-                        <div className="input">
-                            <div className="icon">
-                                <IconContext.Provider value={{ size: '1.5rem'}}>
-                                    <FaKey />
-                                </IconContext.Provider>
-                            </div>
-                            <label className="hidden" htmlFor="password">New Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
-                        </div>
-                        <div className="input">
-                        <div className="icon">
-                        <IconContext.Provider value={{ size: '1.5rem'}}>
-                            <FaKey />
-                        </IconContext.Provider>
-                        </div>
-                            <label className="hidden" htmlFor="match">Confirm Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirm Password" type="password" id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
-                        </div>
-                    
-                </div>
-                <div className="w-full h-12 flex justify-center items-center">
+                <div className="w-full h-1/10 flex justify-center items-center">
                     {
                         message.show ? (
                             <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
@@ -119,7 +109,36 @@ const NewPassword = () => {
                         ) : null
                     }
                 </div>
-                <button className="bg-dark-red text-gray-200 rounded-lg mb-4" onClick={handleSubmit}>New password</button>
+
+            
+                <div className="h-5/10 flex-grow flex flex-col justify-center">
+                    
+                        
+                        <div className="input">
+                            <div className="icon">
+                                <IconContext.Provider value={{ size: '1.2rem'}}>
+                                    <FaKey />
+                                </IconContext.Provider>
+                            </div>
+                            <label className="hidden" htmlFor="password">New Password</label>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
+                        </div>
+                        <div className="input">
+                            <div className="icon">
+                                <IconContext.Provider value={{ size: '1.2rem'}}>
+                                    <FaKey />
+                                </IconContext.Provider>
+                            </div>
+                            <label className="hidden" htmlFor="match">Confirm Password</label>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirm Password" type="password" id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
+                        </div>
+                    
+                </div>
+                
+
+                <div className="h-3/10 flex flex-col justify-center items-center">
+                    <button className="bg-dark-red text-gray-200 shadow-elem-light rounded-lg mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>Set New password</button>
+                </div>
             </div>
             </div>
         </div>

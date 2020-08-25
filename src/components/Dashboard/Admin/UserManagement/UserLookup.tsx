@@ -3,6 +3,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { API, graphqlOperation } from 'aws-amplify';
 import * as queries from '../../../../graphql/queries';
 import UserSearch from './UserSearch';
+import UserStatus from './UserStatus';
 
 const UserLookup = () => {
     const [ data, setData ] = useState([]);
@@ -125,11 +126,8 @@ const UserLookup = () => {
                                 </div>
                                 <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-no-wrap">
                                     <div className="w-16 flex justify-center">
-                                        <span id={item.id} className={`
-                                        ${item.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : item.status === 'INACTIVE' ? 'bg-gray-100 text-gray-500' : item.status === 'SUSPENDED' ? 'bg-red-100 text-red-800' : item.status === 'HOLD' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-800'} 
-                                        w-auto px-2 inline-flex text-xs leading-5 font-semibold rounded-lg `}>
-                                        {item.status} 
-                                        </span>
+                                        <UserStatus 
+                                        status= {item.status}/>
                                     </div>
                                 </div>
                                 <div className="w-16 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleLink} >

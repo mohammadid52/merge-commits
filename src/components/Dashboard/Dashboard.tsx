@@ -73,16 +73,17 @@ const Dashboard: React.FC = () => {
                 <PageHeaderBar />
                 <Suspense fallback={<div className="h-screen">Loading...</div>}>
                     <Switch>
-                        <Route 
+                        {/* <Route 
                             exact
                             path={`${match.url}`}
                             render={() => (
                                 <DashboardHome />
                             )}
                             
-                        />
+                        /> */}
                         <Route 
-                            path={`${match.url}/classroom`}
+                            exact
+                            path={`${match.url}`}
                             render={() => (
                                 <Classroom />
                             )}
