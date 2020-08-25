@@ -1,6 +1,7 @@
 import React from 'react';
-import { LessonContextProvider } from '../../contexts/LessonContext';
+import { LessonControlContextProvider } from '../../contexts/LessonControlContext';
 import LessonControl from './LessonControl';
+import { LessonContextProvider } from '../../contexts/LessonContext';
 
 
 
@@ -8,7 +9,9 @@ import LessonControl from './LessonControl';
 const TeacherView = () => {
     return (
         <LessonContextProvider>
-            <LessonControl />
+            <LessonControlContextProvider>
+                <LessonControl />
+            </LessonControlContextProvider>
         </LessonContextProvider>
     )
 }

@@ -30,13 +30,13 @@ const InstructionsBlock = () => {
     }
     
     return (
-        <div className="flex-grow md:h-64 bg-dark-blue w-full flex justify-center p-4 shadow-2 rounded-t text-gray-200 mb-4 md:mb-2">
+        <div className="md:h-3.8/10 bg-dark-blue w-full flex justify-center p-4 shadow-2 rounded-lg text-gray-200">
             <div className="w-full flex flex-col items-center mr-4">
-                <h3 className="flex-grow text-xl font-open font-bold mb-3 border-b border-white mr-4">
+                <h3 className="text-xl font-open font-bold mb-3 border-b border-white">
                     Instructions
                 </h3>
                 {   !videoMode ?
-                    <div className="overflow-scroll">
+                    <div className="">
                         { instructionsArr.map((inst, key) => (
                             <div className="mx-2" key={key}>{inst}</div>
                             ))}
@@ -51,7 +51,7 @@ const InstructionsBlock = () => {
                 }
             </div>
             <IconContext.Provider value={{ color: '#EDF2F7', size: '1rem'}}>
-                <div className="flex-grow-0 bg-dark-red h-8 w-8 flex flex-col items-center justify-center z-20 rounded-sm shadow-2" onClick={toggleVideoMode}>
+                <div className="flex-grow-0 bg-dark-red h-8 w-8 flex flex-col items-center justify-center z-20 rounded-lg shadow-2" onClick={toggleVideoMode}>
                     <FaVideo />
                 </div>
             </IconContext.Provider>

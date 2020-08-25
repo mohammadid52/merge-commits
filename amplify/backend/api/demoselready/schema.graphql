@@ -47,6 +47,7 @@ type CourseType @model {
 type Person @model 
 @key(fields: ["email", "authId"]) 
 @key(name: "byContributor", fields: ["id"])
+@key(name: "byUserId", fields: ["id"], queryField: "userById")
 {
   id: ID!
   authId: String!

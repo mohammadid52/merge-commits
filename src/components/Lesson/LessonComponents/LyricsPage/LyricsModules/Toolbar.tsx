@@ -38,22 +38,19 @@ const ToolBar = (props: ToolbarProps) => {
 
 
     return (
-        <div className="bg-gray-500 h-64 w-full flex flex-col items-center p-4 shadow-2 rounded-b my-4 md:my-0">
-            <h3 className="w-full text-2xl text-gray-200 font-open font-bold mb-2 border-b border-white">Toolbox</h3>
-            <div className="w-full text-xl text-gray-200 font-open font-bold mb-4">
-                Highlighters:
-            </div>
-            <div className="cursor-pointer flex flex-row justify-center items-center mb-2">
+        <div className="bg-gray-500 h-1.8/10 w-full p-4 shadow-2 rounded-lg flex flex-col items-center justify-around">
+            <h3 className="w-auto text-xl text-gray-200 font-open font-bold border-b border-white">Highlighters</h3>
+            <div className="w-auto cursor-pointer flex flex-row justify-center items-center pt-2">
                
                 {
 
                     buttons.map((button: {color: string, icon: string}, key: number) => (
-                            <div key={key} id={button.color} className={`bg-${button.color} h-12 w-12 text-3xl rounded-lg mb-4 mx-4 shadow-elem-dark flex flex-row justify-center items-center`} onClick={handleClick}>
+                            <div key={key} id={button.color} className={`bg-${button.color} h-12 w-12 text-3xl rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center`} onClick={handleClick}>
                                 {button.icon}
                             </div>
                     ))
                 }
-                    <div id="" className={`bg-gray-200 h-12 w-12 text-3xl rounded-lg mb-4 mx-4 shadow-elem-dark flex flex-row justify-center items-center`} onClick={handleClick}>
+                    <div id="" className={`bg-gray-200 h-12 w-12 text-3xl rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center`} onClick={handleClick}>
                         <IconContext.Provider value={{ color: 'darkgray', size: '2rem'}}>
                             <FaEraser />
                         </IconContext.Provider>
