@@ -60,7 +60,7 @@ const Reset = () => {
                         type: 'error',
                         message: 'Email cannot be blank',
                     }
-                } else if (error.code === "InvalidPasswordException" && "InvalidParameterException") {
+                } else if (error.code === "InvalidPasswordException" || "InvalidParameterException" ) {
                     return {
                         show: true,
                         type: 'error',
@@ -108,18 +108,20 @@ const Reset = () => {
                         <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                     </div>
 
-                    <div className="w-full h-1/10 flex justify-center items-center">
-                        {
-                            message.show ? (
-                                <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
-                                    { message.message }
-                                </p>
-                            ) : null
-                        }
-                    </div>
+                    <div className="w-full h-2/10 flex flex-col justify-center items-center">
+                        <div className="text-center text-sm mb-2">Check your email for your confirmation code</div>
+                        <div className="text-center text-xs mb-2">*password must be at least 8 characters and include uppercase and lowercase</div>
+                            {
+                                message.show ? (
+                                    <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                        { message.message }
+                                    </p>
+                                ) : null
+                            }
+                        </div>
             
-                    <div className="h-6/10 flex-grow flex flex-col">
-                        <div className="text-center text-lg mb-4">Check your email for your confirmation code</div>
+                    <div className="h-4/10 flex-grow flex flex-col">
+                    
 
                         <div className="input">
                                 <div className="icon">
@@ -166,10 +168,10 @@ const Reset = () => {
                 
                     <div className="h-2/10 flex flex-col justify-center items-center">
                         <div className="cursor-pointer shadow-elem-light text-center rounded-lg bg-dark-red text-gray-200 mb-4" style={{borderRadius: '2rem', padding: '.75rem'}} onKeyPress={handleEnter} onClick={handleSubmit}>
-                            Submit
+                            Reset Password
                         </div>
                         <NavLink to="/forgot-password">
-                        <div className="text-center hover:text-blue-500">request another confirmation code</div>
+                        <div className="text-center text-sm hover:text-blue-500">request another confirmation code</div>
                         </NavLink>
                     </div>
                     

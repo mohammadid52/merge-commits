@@ -15,13 +15,13 @@ const Class: React.FC = () => {
     }
 
     return (
-            <div className={`test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-4/10 rounded-sm p-6 flex flex-col mb-8`}>
-                <h1 className={`h-.5/10 bg-dark text-4xl text-gray-200 font-bold font-open px-8 shadow-elem-light`}>
+            <div className={`test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto rounded-sm p-6 flex flex-col mb-8`}>
+                <h1 className={`h-2.5/10 bg-dark text-4xl text-gray-200 font-bold font-open px-8 shadow-elem-light`}>
                     Where I'm From
                 </h1>
-                <div className={`flex flex-col md:flex-row justify-around items-center`} style={{height: "95%"}}>
+                <div className={`h-7.5/10 flex flex-col md:flex-row justify-around items-center pt-4`}>
                     <div className={`block1 w-1/5 h-full flex flex-col items-center text-center`}>
-                        <h2 className={`text-3xl font-open font-bold mb-4`}>
+                        <h2 className={`text-2xl font-open font-bold mb-4`}>
                             Marlon Lizama
                         </h2>
                         <img className="w-32 shadow-elem-light" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/marlon.jpeg" alt="Marlon Lizama" />
@@ -35,7 +35,7 @@ const Class: React.FC = () => {
                         </p>
                     </div>
                     
-                    <div className={`block3 w-2/10 h-full flex flex-col-reverse justify-end items-center my-4`}>
+                    <div className={`block3 w-2/10 h-full flex flex-col-reverse justify-end items-center`}>
                         <div className="flex w-7/10">
                             <span className="mt-4 inline-flex rounded-md shadow-md">
                                 <button type="submit" onClick={handleLink} className="
@@ -97,6 +97,9 @@ const Class: React.FC = () => {
                         </div>
                     </div>
                 </div>
+
+
+
             </div>
     )
 }

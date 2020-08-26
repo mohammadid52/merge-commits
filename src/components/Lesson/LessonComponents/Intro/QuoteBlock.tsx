@@ -21,7 +21,7 @@ const QuoteBlock = () => {
 
     return (
 
-    <div className={`flex-grow w-full min-h-24 ${theme.block.bg} ${theme.block.text} p-4 mt-3 flex items-center justify-center rounded-lg ${theme.block.shadow}`}>
+    <div className={`flex-grow w-full min-h-24 ${theme.block.bg} ${theme.block.text} p-4 flex items-center justify-center rounded-lg ${theme.block.shadow}`}>
         <div className="h-full flex flex-col items-center justify-around">
             <div className="w-8/10 text-center border-b-2 text-4xl font-bold mb-4">
                 {artistName}

@@ -19,7 +19,7 @@ const Connect = () => {
 
     return (
         <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} text-lx rounded-sm shadow-inner`}>
-            <h1 className="text-2xl font-extrabold mb-6">Connect:</h1>
+            <h1 className="text-2xl font-extrabold mb-6 underline">Connect:</h1>
             <div>
             <p className="text-lg ">Ways students can connect to the lesson</p>
             </div>
