@@ -179,6 +179,7 @@ module.exports = {
         'gray': '0px 0px 10px 4px #e2e8f0',
         'grayscale' : '0px 0px 10px 4px #fdfdfd',
         'inner-box' : 'inset 0 2px 4px 0 #191d25',
+        'container' : '1px 1px 10px 1px #e0e0e0',
       },
       colors: {
         'dark-red-faded': 'rgba(202, 34, 34, 0.2)',
@@ -193,7 +194,8 @@ module.exports = {
         'dark': '#051429',
         'gold': '#F1C40F',
         'grayscale' : '#666666',
-        'grayscale-light' : '#f1f1f1',
+        'grayscale-light' : '#d2cbcb96',
+        'grayscale-lighter' : '#f7f7f7',
 
       },
     },
