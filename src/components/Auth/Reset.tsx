@@ -53,25 +53,53 @@ const Reset = () => {
             
         } catch (error) {
             console.error('error signing in', error);
-            setMessage(() => {
-                if (!username) {
+            setMessage (() => {
+                switch (error.code) {
+                    case "InvalidPasswordException" || "InvalidParameterException":
+                        return {
+                                    show: true,
+                                    type: 'error',
+                                    message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+                                }
+                    case "UserNotFoundException":
+                        return {
+                                    show: true,
+                                    type: 'error',
+                                    message: 'User not found',
+                                }
+                    case (!username):
+                        return {
+                                    show: true,
+                                    type: 'error',
+                                    message: 'Email cannot be blank',
+                                }
+                    break
+                    default: 
                     return {
-                        show: true,
-                        type: 'error',
-                        message: 'Email cannot be blank',
-                    }
-                } else if (error.code === "InvalidPasswordException" || "InvalidParameterException" ) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
-                    }
-                } 
-                return {
-                    show: true,
-                    type: 'error',
-                    message: error.message,
+                            show: true,
+                            type: 'error',
+                            message: error.message,
+                        };  
                 }
+
+                // if (!username) { 
+                //     return {
+                //         show: true,
+                //         type: 'error',
+                //         message: 'Email cannot be blank',
+                //     }
+                // } else if (error.code === "InvalidPasswordException" || "InvalidParameterException" ) {
+                //     return {
+                //         show: true,
+                //         type: 'error',
+                //         message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+                //     }
+                // } 
+                // return {
+                //     show: true,
+                //     type: 'error',
+                //     message: error.message,
+                // }
             })
         }
     }

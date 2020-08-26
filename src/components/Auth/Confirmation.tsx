@@ -32,7 +32,7 @@ const Registration = () => {
         } catch (error) {
             console.log('error confirming sign up', error);
             /////change the error code
-            setMessage(() => {
+            setMessage(() => { 
                 if (!username) {
                     return {
                         show: true,

@@ -47,7 +47,7 @@ const NewPassword = () => {
             } catch (error) {
                 console.error('error signing in', error);
                 setMessage(() => {
-                    if (!input.password) {
+                    if (!input.password) { 
                         return {
                             show: true,
                             type: 'error',

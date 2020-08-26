@@ -35,7 +35,7 @@ const Forgot = () => {
             history.push('/reset-password')
         } catch (error) {
             console.error('error signing in', error);
-            setMessage(() => {
+            setMessage(() => { 
                 if (!username) {
                     return {
                         show: true,
@@ -55,7 +55,6 @@ const Forgot = () => {
                         message: 'Email was not found',
                     }
                 } 
-                
                 return {
                     show: true,
                     type: 'error',
