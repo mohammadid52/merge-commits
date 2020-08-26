@@ -42,24 +42,24 @@ const Block = () => {
 
     return (
 
-    <div className={`relative md:w-full md:h-full ${theme.block.bg} flex justify-start ${theme.block.text} rounded-lg ${theme.block.shadow} text-sm `}>
+    <div className={`relative md:w-full md:h-full ${theme.block.bg} flex justify-start ${theme.block.text} rounded-lg ${theme.block.shadow} shadow-l-none text-sm `}>
     
-            <div className="bg-dark w-1.5/10 h-full flex flex-col justify-between font-medium text-lg">
-                <div onClick={() => setSelect('Bio')} className={`${ select === 'Bio' ? `${theme.block.bg} font-extrabold` : 'bg-darker-blue'} h-3.1/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
+            <div className="bg-dark w-1.3/10 h-full flex flex-col justify-between font-medium text-lg">
+                <div onClick={() => setSelect('Bio')} className={`${ select === 'Bio' ? `${theme.block.bg} font-extrabold` : 'bg-darker-blue'} h-3.2/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
                         <div className={`flex justify-center items-center`}>
                             <BsPersonSquare />
                         </div>
                     </IconContext.Provider>
                 </div>
-                <div onClick={() => setSelect('Keyword')} className={`${ select === 'Keyword' ? `${theme.block.bg} font-extrabold` : 'bg-darker-blue'} h-3.1/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
+                <div onClick={() => setSelect('Keyword')} className={`${ select === 'Keyword' ? `${theme.block.bg} font-extrabold` : 'bg-darker-blue'} h-3.2/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
                         <div className={`flex justify-center items-center`}>
                             <MdVpnKey />
                         </div>
                     </IconContext.Provider>
                 </div>
-                <div onClick={() => setSelect('Connect')} className={`${ select === 'Connect' ? `${theme.block.bg} font-extrabold` : 'bg-darker-blue'} h-3.1/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
+                <div onClick={() => setSelect('Connect')} className={`${ select === 'Connect' ? `${theme.block.bg} font-extrabold` : 'bg-darker-blue'} h-3.2/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
                         <div className={`flex justify-center items-center`}>
                             <FaLink />

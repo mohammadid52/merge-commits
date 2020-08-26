@@ -34,31 +34,36 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
 
     return (
         <div className="bg-dark-blue w-full h-72 flex justify-center p-6 shadow-3 rounded-lg text-gray-200 mb-4">
-            <div className="w-full flex flex-col mr-2">
-                <h3 className="flex-grow text-xl font-open font-bold mb-3 border-b border-white mr-4">
-                    Instructions
-                </h3>
-                {   !videoMode ? 
-                    <div className="h-52 overflow-scroll">
-                    {
-                        instructions.text.map((inst: string, key: number) => (
-                            <p key={key} className="mb-2 text-sm">
-                                { inst }
-                            </p>
-                        ))
+            <div className="w-full flex flex-col">
+                <div className="w-auto flex flex-row mb-3 border-b border-white mr-4">
+                    <h3 className="w-3/10 mr-2 flex-grow text-xl font-open font-bold">
+                        Instructions
+                    </h3>
+                    <p className="w-auto text-gray-600 text-xs flex mr-4 items-center">(click the red icon for video instructions)</p>
+                </div>
+                <div className={`w-full h-8/10 flex justify-center items-center text-sm px-2`}>
+                    {   !videoMode ? 
+                        <div className="h-full overflow-scroll">
+                        {
+                            instructions.text.map((inst: string, key: number) => (
+                                <p key={key} className="mb-2 text-sm">
+                                    { inst }
+                                </p>
+                            ))
+                        }
+                        </div>
+                        :
+                        <div className="h-full flex justify-center items-center" style={{ width: '250px'}}>
+                            <video controls width="250">
+                                <source src={instructions.link} type="video/mp4" />
+                                <p>Your browser does not support embedded video playback!</p>
+                            </video>
+                        </div>
                     }
-                    </div>
-                    :
-                    <div className="shadow-2 flex justify-center items-center my-4" style={{ width: '300px'}}>
-                        <video controls width="300">
-                            <source src={instructions.link} type="video/mp4" />
-                            <p>Your browser does not support embedded video playback!</p>
-                        </video>
-                    </div>
-                }
+                </div>
             </div>
             <IconContext.Provider value={{ color: '#EDF2F7', size: '1rem'}}>
-                <div className="flex-grow-0 bg-dark-red h-8 w-8 flex flex-col items-center justify-center z-20 rounded-lg shadow-2" onClick={toggleVideoMode}>
+                <div className="cursor-pointer flex-grow-0 bg-dark-red h-8 w-8 flex flex-col items-center justify-center z-20 rounded-lg shadow-2" onClick={toggleVideoMode}>
                     <FaVideo />
                 </div>
             </IconContext.Provider>

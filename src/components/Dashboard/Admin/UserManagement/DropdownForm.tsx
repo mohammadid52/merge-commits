@@ -4,14 +4,15 @@ interface DropdownProps {
     label: string,
     items: any,
     userInfo: string,
-    id: string
-    handleChange: (item: {code: string, name: string}) => void
+    id: string,
+    handleChange: (item: {code: string, name: string}) => void,
+    style: boolean,
 }
 
 
 const DropdownForm = ( props: DropdownProps ) => {
 
-    const {label, items, userInfo, handleChange, id } = props;
+    const {label, items, userInfo, handleChange, id, style} = props;
 
     const options = () => {
         if (userInfo === 'ACTIVE') {
@@ -34,6 +35,8 @@ const DropdownForm = ( props: DropdownProps ) => {
             return 'Teacher'
         } else if (userInfo === 'ST') {
             return 'Student'
+        } else {
+            return 'Choose One'
         }
     }
 
@@ -60,8 +63,8 @@ const DropdownForm = ( props: DropdownProps ) => {
     return (
 
         <div className="space-y-1">
-            <label id="listbox-label" className="block text-sm leading-5 font-medium text-gray-700">
-                {label}
+            <label id="listbox-label" className={`${style ? 'text-m' : 'text-sm' } block leading-5 font-medium text-gray-700`}>
+            <span className={`${style ? 'text-red-500' : 'hidden'}`}>* </span>{label}
             </label>
             <div className="relative">
                 <span className="inline-block w-full rounded-md shadow-sm">

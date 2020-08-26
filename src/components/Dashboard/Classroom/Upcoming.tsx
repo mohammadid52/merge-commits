@@ -11,6 +11,8 @@ const UpcomingClass: React.FC = () => {
     const history = useHistory();
     const { theme } = useContext(GlobalContext);
 
+
+    // make sure to limit (max 5?) when fetching from data
     const [lessons, setLessons] = useState([
         {
             title: 'Where I\'m From',
@@ -59,7 +61,7 @@ const UpcomingClass: React.FC = () => {
 
 
     return (
-            <div className={`relative test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto rounded-sm flex flex-col mb-8`}>        
+            <div className={`relative test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto flex flex-col mb-8 p-2`}>        
                 <span style={{right: 0, top: -20}}
                 className="absolute right-0 mr-4 p-4 sm:h-8 bg-opacity-60 w-auto inline-flex items-center rounded-md text-sm sm:text-2xl font-bold leading-5 bg-blue-300 text-blue-800">
                 Upcoming Lessons
@@ -68,11 +70,11 @@ const UpcomingClass: React.FC = () => {
                 
                 { lessons.map( (lesson: {title: string, artist: string, image: string, instructor: string, lessonTime: string, lessonDescription: string, lessonDate: string, open: boolean}, i: number) => 
                 (
-                    <div key={i} className="p-2">
+                    <div key={i} className="py-2 px-4">
                     <button 
                         key={i}
                         onClick={() => toggle(i)} 
-                        className={`relative cursor-pointer focus:outline-none flex justify-center items-center rounded-lg bg-dark text-xl text-gray-200 font-bold font-open px-8 shadow-elem-light`}>
+                        className={`relative cursor-pointer focus:outline-none flex justify-between items-center bg-dark text-xl text-gray-200 font-bold font-open px-8 shadow-elem-light`}>
                         <div className="w-8.5/10 flex justify-between">
                             <div className="w-auto">
                                 {lesson.title} 
@@ -96,7 +98,7 @@ const UpcomingClass: React.FC = () => {
                     </button>
                     { lesson.open ? 
 
-                    <div className={`flex flex-col pt-2 md:flex-row justify-around items-center`} style={{height: "95%"}}>
+                    <div className={`flex flex-col pt-2 md:flex-row justify-around items-center`}>
                         <div className={`block1 w-1/5 h-full flex flex-col items-center text-center`}>
                             <h2 className={`text-xl font-open font-bold mb-2`}>
                                 {lesson.artist}

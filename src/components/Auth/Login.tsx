@@ -44,7 +44,7 @@ const Login = () => {
                 return history.push('/confirm')
             }
             
-            setMessage(() => {
+            setMessage(() => { 
                 if (!username) {
                     return {
                         show: true,

@@ -35,7 +35,7 @@ const Forgot = () => {
             history.push('/reset-password')
         } catch (error) {
             console.error('error signing in', error);
-            setMessage(() => {
+            setMessage(() => { 
                 if (!username) {
                     return {
                         show: true,
@@ -55,7 +55,6 @@ const Forgot = () => {
                         message: 'Email was not found',
                     }
                 } 
-                
                 return {
                     show: true,
                     type: 'error',
@@ -96,18 +95,22 @@ const Forgot = () => {
                         <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                     </div>
 
-                    <div className="w-full h-1/10 flex justify-center items-center">
-                        {
-                            message.show ? (
-                                <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
-                                    { message.message }
-                                </p>
-                            ) : null
-                        }
-                    </div>
+                    <div className="h-1/10 text-center text-xl">Input your email to reset your password</div>
+
+                    
             
-                    <div className="h-5/10 flex-grow flex flex-col justify-around">
-                        <div className="text-center text-xl">Input your email to reset your password</div>
+                    <div className="h-4/10 flex-grow flex flex-col justify-around">
+
+                        <div className="w-full flex justify-center items-center">
+                            {
+                                message.show ? (
+                                    <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                        { message.message }
+                                    </p>
+                                ) : null
+                            }
+                        </div>
+                        
                         
                         <div className="input">
                                 <div className="icon">
