@@ -52,13 +52,13 @@ const Login = () => {
                         message: 'Email cannot be blank',
                     }
                 }
-                else if (!username.includes("@")) {
+                if (!username.includes("@")) {
                     return {
                         show: true,
                         type: 'error',
                         message: 'Email is not in the expected email address format',
                     }
-                } else if (!password) {
+                } if (!password) {
                     return {
                         show: true,
                         type: 'error',

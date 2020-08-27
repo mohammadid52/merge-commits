@@ -29,8 +29,11 @@ interface newUserInput {
     }
 }
 
+// const initialSt
+
 const Registration = () => {
     const history = useHistory();
+    
     const [ newUserInputs, setNewUserInputs ] = useState<newUserInput>(
         {   
             key: 0,
