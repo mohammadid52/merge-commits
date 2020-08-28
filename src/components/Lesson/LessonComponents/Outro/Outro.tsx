@@ -4,8 +4,9 @@ import Banner from './Banner';
 import PhotoBlock from './PhotoBlock';
 import QuoteBlock from './QuoteBlock';
 import TrophyBlock from './TrophyBlock';
-import Links from './Links';
+import MoreArtist from './MoreArtist';
 import Feedback from './Feedback';
+import Links from './Links';
 
 const Outro = () => {
     const { dispatch } = useContext(LessonContext);
@@ -20,17 +21,17 @@ const Outro = () => {
             <Banner />
 
             <div className="w-full md:h-8.8/10 flex flex-col md:flex-row justify-between items-center">
-
-                <div className="w-4.9/10 h-full flex flex-col justify-between">
-                    <Feedback />
-                    {/* <QuoteBlock /> */}
-                    <TrophyBlock />
-                    {/* <PhotoBlock /> */}
-                </div>
                 <div className="w-5/10 h-full mt-4 md:mt-0 md:ml-2">
-                    <Links />
+                    <MoreArtist />
                 </div>
 
+                <div className="w-4.8/10 h-full flex flex-col justify-between">
+                    <div className="flex justify-between h-5/10">
+                        <TrophyBlock />
+                        <Links />
+                    </div>
+                    <Feedback />
+                </div>
             </div>
 
         </div>

@@ -1,35 +1,45 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
+import { IconContext } from "react-icons";
+import { FaRegSave, FaHome } from 'react-icons/fa';
+import { NavLink } from 'react-router-dom';
 import { LessonContext } from '../../../../contexts/LessonContext';
-import VideoBlock from './VideoBlock';
+
 
 const Links = () => {
-    const { state, dispatch } = useContext(LessonContext)
-    const [ fullscreen, setFullscreen ] = useState(false)
+    // the bottom is from 'LessonHeaderBar.tsx'
+    // const { theme, state, dispatch } = useContext(LessonContext);
+    // const handleSave = () => {
+    //     if ( state.unsavedChanges ) {
+    //         if ( !state.firstSave ) {
+    //             createClassroomData()
+    //         }
+    
+    //         if ( state.firstSave ) {
+    //             updateClassroomData()
+    //         }
+    //     }
+    // }
 
     return(
-        <div className="w-full h-full bg-dark-blue text-gray-200 p-4 flex flex-col justify-between items-center">
-            <h3 className="h-.5/10 w-full text-xl text-gray-200 font-open font-bold">
-                Learn more about the artist!
-            </h3>
-            <div className="h-4/10 rounded-lg">
-                <VideoBlock link={state.data.coreLesson.content.link} fullscreen={fullscreen}/>
+        <div className="w-3/10 h-full flex flex-col justify-between items-center rounded-lg text-gray-200">
+            
+            <div className={`h-4.8/10 bg-dark-blue p-4 rounded-lg shadow-2 cursor-pointer flex flex-col justify-center items-center`} 
+            // onClick={handleSave}
+            >
+                <IconContext.Provider value={{ color:  '#EDF2F7' , size: '3rem'}}>
+                    <FaRegSave />
+                </IconContext.Provider>
+                <p className="text-lg text-gray-200 text-center">Save your work</p>
             </div>
-            <div className="h-4/10 rounded-lg">
-                <VideoBlock link={state.data.coreLesson.content.link} fullscreen={fullscreen}/>
+            <div className={`h-4.8/10 bg-dark-blue p-4 rounded-lg shadow-2 flex flex-col justify-center items-center cursor-pointer`}>
+                <NavLink to="/dashboard">
+                    <IconContext.Provider value={{ color:  '#EDF2F7', size: '3rem'}}>
+                        <FaHome />
+                    </IconContext.Provider>
+                </NavLink>
+                <p className="text-lg text-gray-200 text-center">Go back to the dashboard</p>
             </div>
-            <div className="h-1/10">
-                <div>
-                    check out these other platforms.. 
-                </div>
-                <div className="flex justify-center">
-                    <div className="h-6 w-6 bg-red-100 mx-4">
-                    </div>
-                    <div className="h-6 w-6 bg-red-100 mx-4">
-                    </div>
-                    <div className="h-6 w-6 bg-red-100 mx-4">
-                    </div>
-                </div>
-            </div>
+
         </div>
     )
 }

@@ -42,23 +42,26 @@ const Forgot = () => {
                         type: 'error',
                         message: 'Email cannot be blank',
                     }
-                } else if (!username.includes("@")) {
+                } if (!username.includes("@")) {
                     return {
                         show: true,
                         type: 'error',
                         message: 'Email is not in the expected email address format',
                     }
-                } else if (error.code === "UserNotFoundException") {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'Email was not found',
-                    }
                 } 
-                return {
-                    show: true,
-                    type: 'error',
-                    message: error.message,
+                switch (error.code) {
+                    case "UserNotFoundException":
+                        return {
+                                    show: true,
+                                    type: 'error',
+                                    message: 'Email was not found',
+                                }
+                    default: 
+                    return {
+                            show: true,
+                            type: 'error',
+                            message: error.message,
+                        };  
                 }
             })
         }

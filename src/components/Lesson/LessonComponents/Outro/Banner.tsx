@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { IconContext } from "react-icons";
-import { FaPenFancy } from 'react-icons/fa';
+import { FaTrophy } from 'react-icons/fa';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
 const keywordCapitilizer = (str: string) => {
@@ -19,11 +19,11 @@ const Banner = () => {
         <div className="w-full h-1/10 flex flex-row justify-center items-center">
             <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
                 <div className="red bg-dark-red h-20 w-20 flex flex-col items-center justify-center z-20 rounded-lg shadow-2">
-                    <FaPenFancy />
+                    <FaTrophy />
                 </div>
             </IconContext.Provider>
             <div className="title bg-dark-blue w-full flex flex-row justify-center items-center text-xl md:text-4xl text-center font-open font-bold text-gray-200 rounded-lg shadow-2 px-4 py-2 z-10">
-                <p>Congrats! You've completed <span className="text-gold"> 1 </span> story and <span className="text-gold"> 1 </span> poem!</p>
+                <p>Congrats! You've completed the lesson!</p>
             </div>
         </div>
 
