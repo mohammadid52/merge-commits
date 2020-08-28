@@ -29,28 +29,29 @@ interface newUserInput {
     }
 }
 
+const initialState = {   
+    key: 0,
+    authId: '',
+    email: '',
+    password: 'xIconoclast.5x',
+    firstName: '',
+    lastName: '',
+    phone: '',
+    birthdate: '',
+    grade: '',
+    role: '',
+    externalId: '',
+    message: {
+        show: false,
+        text: '',
+        type: '',
+    },
+}
+
 const Registration = () => {
     const history = useHistory();
-    const [ newUserInputs, setNewUserInputs ] = useState<newUserInput>(
-        {   
-            key: 0,
-            authId: '',
-            email: '',
-            password: 'xIconoclast.5x',
-            firstName: '',
-            lastName: '',
-            phone: '',
-            birthdate: '',
-            grade: '',
-            role: '',
-            externalId: '',
-            message: {
-                show: false,
-                text: '',
-                type: '',
-            },
-        },
-    )
+    
+    const [ newUserInputs, setNewUserInputs ] = useState<newUserInput>(initialState)
 
     const [ message, setMessage ] = useState<{show: boolean, type: string, message: string,}>({
         show: false,
@@ -148,54 +149,68 @@ const Registration = () => {
                         type: 'error',
                         message: 'User\'s first name cannot be blank',
                     }
-                } else if (!newUserInputs.lastName) {
+                } if (!newUserInputs.lastName) {
                     return {
                         show: true,
                         type: 'error',
                         message: 'User\'s last name cannot be blank',
                     }
-                } else if (!username) {
+                } if (!username) {
                     return {
                         show: true,
                         type: 'error',
                         message: 'User\'s email cannot be blank',
                     }
-                } else if (!username.includes("@")) {
+                } if (!username.includes("@")) {
                     return {
                         show: true,
                         type: 'error',
                         message: 'User\'s email is not in the expected email address format',
                     }
-                } else if (!newUserInputs.birthdate) {
+                } if (!newUserInputs.birthdate) {
                     return {
                         show: true,
                         type: 'error',
                         message: 'User\'s birthday cannot be blank',
                     }
-                } else if (!newUserInputs.role) {
+                } if (!newUserInputs.role) {
                     return {
                         show: true,
                         type: 'error',
                         message: 'User\'s role cannot be blank',
                     }
-                } else if (!newUserInputs.grade) {
+                } if (!newUserInputs.grade) {
                     return {
                         show: true,
                         type: 'error',
                         message: 'User\'s grade cannot be blank',
                     }
-                }
-                else if (error.message === "InvalidParameterException") {
+                } if (error.code.message === "Alias entry already exists for a different username") {
                     return {
                         show: false,
                         type: 'error',
-                        message: '',
+                        message: 'User\'s grade cannot be blank',
                     }
-                }
+                } 
+                switch (error.code) {
+                    case "InvalidParameterException":
+                        return {
+                                    show: true,
+                                    type: 'success',
+                                    message: '',
+                                }
+                    case "UsernameExistsException":
+                        return {
+                                    show: true,
+                                    type: 'error',
+                                    message: 'An account with this email exists',
+                                }
+                    default: 
                     return {
-                    show: true,
-                    type: 'error',
-                    message: error.message,
+                            show: true,
+                            type: 'error',
+                            message: error.message,
+                        };  
                 }
             })
             handleMessage('error', error.message)
@@ -251,12 +266,9 @@ const Registration = () => {
 
     const submitNewUsers = () => {
         signUp();
-        if (signUp()) {
-            setNewUserInputs(() => {
-                return {
-                    ...newUserInputs
-                }
-            })
+        if (registerUser) {
+            console.log('success')
+            setNewUserInputs(initialState)
         }
         
     }
@@ -414,8 +426,7 @@ const Registration = () => {
                             </div>
                         </form>
                         </div>
-
-                
+                        
                             <div className="w-full md:h-full flex justify-center items-center">
                             {
                                 message.show ? (

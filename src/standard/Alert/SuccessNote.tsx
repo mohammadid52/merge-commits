@@ -5,12 +5,12 @@ const Success = () => {
     const [open, setOpen] = useState(false);
 
     const handleClick = () => {
-
+        setOpen(!open)
     }
     
     return (
         ///change INFO, MARGIN and WIDTH if needed
-        <div className="rounded-md bg-green-100 p-2">
+        <div className={`${open ? 'hidden' : 'display'} rounded-md bg-green-100 p-2`}>
             <div className="flex">
                 <div className="flex-shrink-0 w-8">
                 <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">

@@ -54,26 +54,62 @@ const Reset = () => {
         } catch (error) {
             console.error('error signing in', error);
             setMessage (() => {
+                if (!username) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Email cannot be blank',
+                    }
+                } if (!username.includes("@")) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Email is not in the expected email address format',
+                    }
+                } if (!code) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Confirmation code cannot be blank',
+                    }
+                } if (!password) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'New password cannot be blank',
+                    }
+                } if (!match) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Confirm password cannot be blank',
+                    }
+                } if ( input.password !== input.match ) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Passwords do not match',
+                    }
+                }
                 switch (error.code) {
-                    case "InvalidPasswordException" || "InvalidParameterException":
+                    case "InvalidPasswordException":
                         return {
                                     show: true,
                                     type: 'error',
                                     message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
                                 }
+                    case "InvalidParameterException":
+                            return {
+                                        show: true,
+                                        type: 'error',
+                                        message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+                                    }
                     case "UserNotFoundException":
                         return {
                                     show: true,
                                     type: 'error',
-                                    message: 'User not found',
+                                    message: 'Email not found',
                                 }
-                    case (!username):
-                        return {
-                                    show: true,
-                                    type: 'error',
-                                    message: 'Email cannot be blank',
-                                }
-                    break
                     default: 
                     return {
                             show: true,
@@ -81,25 +117,6 @@ const Reset = () => {
                             message: error.message,
                         };  
                 }
-
-                // if (!username) { 
-                //     return {
-                //         show: true,
-                //         type: 'error',
-                //         message: 'Email cannot be blank',
-                //     }
-                // } else if (error.code === "InvalidPasswordException" || "InvalidParameterException" ) {
-                //     return {
-                //         show: true,
-                //         type: 'error',
-                //         message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
-                //     }
-                // } 
-                // return {
-                //     show: true,
-                //     type: 'error',
-                //     message: error.message,
-                // }
             })
         }
     }
@@ -131,24 +148,24 @@ const Reset = () => {
              
             <div className="test login w-140 h-7/10 bg-gray-200 shadow-elem-light border border-gray-300 rounded pt-0">
                 <div className="h-.7/10 bg-dark w-full rounded-t-lg"></div>
-                <div className="h-9.3/10 flex flex-col items-center justify-center p-8">
+                <div className="h-9.3/10 flex flex-col items-center justify-center px-8 pt-4 pb-8">
                     <div className="2/10">
                         <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                     </div>
 
-                    <div className="w-full h-2/10 flex flex-col justify-center items-center">
-                        <div className="text-center text-sm mb-2">Check your email for your confirmation code</div>
-                        <div className="text-center text-xs mb-2">*password must be at least 8 characters and include uppercase and lowercase</div>
+                    <div className="w-full h-2.2/10 flex flex-col justify-around items-center">
+                        <div className="text-center text-sm">Check your email for your confirmation code</div>
+                        <div className="text-center text-xs">*password must be at least 8 characters and include uppercase and lowercase</div>
                             {
                                 message.show ? (
-                                    <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                    <p className={`text-xs ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
                                         { message.message }
                                     </p>
                                 ) : null
                             }
                         </div>
             
-                    <div className="h-4/10 flex-grow flex flex-col">
+                    <div className="h-3.8/10 flex-grow flex flex-col">
                     
 
                         <div className="input">
@@ -195,7 +212,7 @@ const Reset = () => {
                     
                 
                     <div className="h-2/10 flex flex-col justify-center items-center">
-                        <div className="cursor-pointer shadow-elem-light text-center rounded-lg bg-dark-red text-gray-200 mb-4" style={{borderRadius: '2rem', padding: '.75rem'}} onKeyPress={handleEnter} onClick={handleSubmit}>
+                        <div className="cursor-pointer shadow-elem-light text-center rounded-lg bg-dark-red text-gray-200 my-4" style={{borderRadius: '2rem', padding: '.75rem'}} onKeyPress={handleEnter} onClick={handleSubmit}>
                             Reset Password
                         </div>
                         <NavLink to="/forgot-password">

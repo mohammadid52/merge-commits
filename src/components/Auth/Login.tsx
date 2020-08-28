@@ -51,37 +51,41 @@ const Login = () => {
                         type: 'error',
                         message: 'Email cannot be blank',
                     }
-                }
-                else if (!username.includes("@")) {
+                } if (!username.includes("@")) {
                     return {
                         show: true,
                         type: 'error',
                         message: 'Email is not in the expected email address format',
                     }
-                } else if (!password) {
+                } if (!password) {
                     return {
                         show: true,
                         type: 'error',
                         message: 'Password cannot be blank',
                     }
-                } else if (error.code === "NotAuthorizedException") {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'Incorrect email or password',
-                    }
-                } else if (error.code === "UserNotFoundException") {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'Email not found',
-                    }
                 }
+                switch (error.code) {
+                    case "UserNotFoundException":
+                        return {
+                                    show: true,
+                                    type: 'error',
+                                    message: 'Email was not found',
+                                }
+                    case "NotAuthorizedException":
+                            return {
+                                        show: true,
+                                        type: 'error',
+                                        message: 'Incorrect email or password',
+                                    }
+                    // case "UserNotConfirmedException":
+                    //         return history.push('/confirm')
+                    default: 
                     return {
-                    show: true,
-                    type: 'error',
-                    message: error.message,
-                }
+                            show: true,
+                            type: 'error',
+                            message: error.message,
+                        };  
+                } 
             })
         }
     }

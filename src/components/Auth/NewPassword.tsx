@@ -22,18 +22,8 @@ const NewPassword = () => {
     const [ cookies, setCookie ] = useCookies(['confirm_user'])
 
     async function changePassword() {
-        if ( input.password !== input.match ) {
-            return setMessage(() => {
-                return {
-                    show: true,
-                    type: 'error',
-                    message: 'Passwords do not match',
-                }
-            })
-        }
-
+        
         if ( cookies.confirm_user ) {
-
             let username = cookies.confirm_user
             let password = 'xIconoclast.5x'
 
@@ -53,12 +43,23 @@ const NewPassword = () => {
                             type: 'error',
                             message: 'New password cannot be blank',
                         }
-                    }
-                    if (!input.match) {
+                    } if (!input.match) {
                         return {
                             show: true,
                             type: 'error',
                             message: 'Confirm password cannot be blank',
+                        }
+                    } if ( input.password !== input.match ) {
+                        return {
+                            show: true,
+                            type: 'error',
+                            message: 'Passwords do not match',
+                        }
+                    } if (error.code === "InvalidPasswordException" || "InvalidParameterException") {
+                        return {
+                            show: true,
+                            type: 'error',
+                            message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
                         }
                     }
                     return {
@@ -100,14 +101,15 @@ const NewPassword = () => {
                     <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                 </div>
 
-                <div className="w-full h-1/10 flex justify-center items-center">
-                    {
-                        message.show ? (
-                            <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
-                                { message.message }
-                            </p>
-                        ) : null
-                    }
+                <div className="w-full h-1/10 flex flex-col justify-center items-center">
+                    <div className="text-center text-xs mb-2">* Password must be at least 8 characters and include uppercase and lowercase</div>
+                        {
+                            message.show ? (
+                                <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                    { message.message }
+                                </p>
+                            ) : null
+                        }
                 </div>
 
             
