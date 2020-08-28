@@ -34,7 +34,6 @@ const Login = () => {
 
         try {
             const user = await Auth.signIn(username, password);
-            console.log({ user })
             dispatch({type: "LOG_IN", payload: { email: username, authId: user.username }})
             setCookie('auth', { email: username, authId: user.username }, { secure: false })
             history.push('/dashboard')

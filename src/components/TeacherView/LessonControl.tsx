@@ -53,6 +53,7 @@ const LessonControl = () => {
                     </div>
                     <div className={`w-6/10 h-full flex flex-col items-center`}>
                         <div className={`w-full h-8/10 bg-dark shadow-elem-light rounded-lg mb-4 p-4`}>
+                            {/*  */}
                             <IntroView student={selectedStudent}/>
                         </div>
                         <LessonControlBar />

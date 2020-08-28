@@ -28,6 +28,8 @@ const Reset = () => {
         password: '',
         match: ''
     })
+    const [passToggle, setPassToggle] = useState(false);
+    const [newPassToggle, setNewPassToggle] = useState(false);
 
     async function reset() {
         if ( input.password !== input.match ) {
@@ -49,7 +51,7 @@ const Reset = () => {
             const forgot = await Auth.forgotPasswordSubmit(username, code, password);
             // .then(data => console.log(data))
             // .catch(err => console.log(err));
-            // history.push('/login');
+            history.push('/login');
             
         } catch (error) {
             console.error('error signing in', error);
@@ -133,7 +135,7 @@ const Reset = () => {
 
     const handleEnter = (e: any) => {
         if (e.key === 'Enter') {
-            reset()
+            reset();
         }
     }
 
@@ -188,24 +190,50 @@ const Reset = () => {
                             <input className="w-full px-2 py-1 ml-2" placeholder="Confirmation Code" type="text" id="code" name="code" value={input.code} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
         
-                        <div className="input">
+                        <div className="input relative">
+                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                                <div onClick={() => setNewPassToggle(!newPassToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
+                                { newPassToggle ?
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEye />
+                                </IconContext.Provider> :
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEyeInvisible />
+                                </IconContext.Provider>
+                                }
+                                </div>
+                            </div>
+
                             <div className="icon">
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
                                     <FaKey />
                                 </IconContext.Provider>
                             </div>
                             <label className="hidden" htmlFor="password">New Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type={ newPassToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
 
-                        <div className="input">
+                        <div className="input relative">
+                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                                <div onClick={() => setPassToggle(!passToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
+                                { passToggle ?
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEye />
+                                </IconContext.Provider> :
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEyeInvisible />
+                                </IconContext.Provider>
+                                }
+                                </div>
+                            </div>
+
                             <div className="icon">
                             <IconContext.Provider value={{ size: '1.5rem'}}>
                                 <FaKey />
                             </IconContext.Provider>
                             </div>
                             <label className="hidden" htmlFor="match">Confirm Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirm Password" type="password" id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirm Password" type={passToggle ? 'text' : 'password'} id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
                     
                     </div>

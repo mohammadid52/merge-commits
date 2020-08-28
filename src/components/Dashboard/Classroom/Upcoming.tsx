@@ -20,7 +20,7 @@ const UpcomingClass: React.FC = () => {
             image: 'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/marlon.jpeg',
             instructor: 'Marlon',
             lessonTime: '45',
-            lessonDate: 'Sept 13th',
+            lessonDate: 'Sept 15th',
             lessonDescription: 'In this lesson, we will be discussing heritage and culture in the context of stories and experiences passed down through the generations. We will be analysing and reacting to a poem by our own Marlon Lizama, called Where I am from. In reponse, you will have the opportunity to write and present your own poem too!',
             open: false,
         },
@@ -30,7 +30,7 @@ const UpcomingClass: React.FC = () => {
             image: '2',
             instructor: '2',
             lessonTime: '2',
-            lessonDate: 'Sept 20th',
+            lessonDate: 'Sept 22nd',
             lessonDescription: '2',
             open: false
         },
@@ -40,7 +40,7 @@ const UpcomingClass: React.FC = () => {
             image: '3',
             instructor: '3',
             lessonTime: '3',
-            lessonDate: 'Sept 27th',
+            lessonDate: 'Sept 29th',
             lessonDescription: '3',
             open: false
         }

@@ -134,6 +134,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                     </NavLink>
                 </span>
             </div>
+            
 
         </div>
     )

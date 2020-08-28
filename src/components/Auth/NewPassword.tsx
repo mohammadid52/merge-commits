@@ -5,7 +5,7 @@ import { Auth } from 'aws-amplify';
 import { useCookies } from 'react-cookie';
 import { IconContext } from "react-icons";
 import { FaKey } from 'react-icons/fa';
-import { MdEmail } from 'react-icons/md';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 const NewPassword = () => {
     const { state, dispatch  } = useContext(GlobalContext)
@@ -19,7 +19,9 @@ const NewPassword = () => {
         type: '',
         message: '',
     })
-    const [ cookies, setCookie ] = useCookies(['confirm_user'])
+    const [ cookies, setCookie ] = useCookies(['confirm_user']);
+    const [passToggle, setPassToggle] = useState(false);
+    const [passMatchToggle, setPassMatchToggle] = useState(false);
 
     async function changePassword() {
         
@@ -116,23 +118,48 @@ const NewPassword = () => {
                 <div className="h-5/10 flex-grow flex flex-col justify-center">
                     
                         
-                        <div className="input">
+                        <div className="input relative">
+                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                                <div onClick={() => setPassToggle(!passToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
+                                { passToggle ?
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEye />
+                                </IconContext.Provider> :
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEyeInvisible />
+                                </IconContext.Provider>
+                                }
+                                </div>
+                            </div>
+
                             <div className="icon">
                                 <IconContext.Provider value={{ size: '1.2rem'}}>
                                     <FaKey />
                                 </IconContext.Provider>
                             </div>
                             <label className="hidden" htmlFor="password">New Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type={passToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
-                        <div className="input">
+                        <div className="input relative">
+                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                                <div onClick={() => setPassMatchToggle(!passMatchToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
+                                { passMatchToggle ?
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEye />
+                                </IconContext.Provider> :
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEyeInvisible />
+                                </IconContext.Provider>
+                                }
+                                </div>
+                            </div>
                             <div className="icon">
                                 <IconContext.Provider value={{ size: '1.2rem'}}>
                                     <FaKey />
                                 </IconContext.Provider>
                             </div>
                             <label className="hidden" htmlFor="match">Confirm Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirm Password" type="password" id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirm Password" type={passMatchToggle ? 'text' : 'password'} id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
                     
                 </div>
