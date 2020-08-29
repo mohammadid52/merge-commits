@@ -7,6 +7,7 @@ type InputProp = [{ name: string; example: string; prompt: string; }];
 
 interface ModulesProps {
     inputs: InputProp;
+    fullscreen: boolean
 }
 
 interface FormInputsState {
@@ -14,7 +15,7 @@ interface FormInputsState {
 }
 
 const Modules = (props: ModulesProps) => {
-    const { inputs } = props
+    const { inputs, fullscreen } = props
     const { state, dispatch } = useContext(LessonContext);
     const [ cookies, setCookie ] = useCookies(['story'])
     const [ formInputs, setFormInputs ] = useState<FormInputsState>()
@@ -86,16 +87,16 @@ const Modules = (props: ModulesProps) => {
     }
 
     return (
-        <div className="md:h-5.8/10 w-full bg-dark-blue text-gray-200 md:mb-0 px-4 md:px-8 py-4 shadow-2 rounded-lg">
+        <div className={`${fullscreen ? 'md:mb-0 px-4 md:px-8 py-4' : 'p-2'} md:h-5.8/10 w-full bg-dark-blue text-gray-200 shadow-2 rounded-lg`}>
             <h3 className="text-xl font-open font-bold mb-3 border-b border-white mb-2">Focus Questions</h3>
             <div className="w-full h-full">
                 { 
                     formInputs ? inputs.map((input, key) => (
                         <div key={key} className="flex flex-col mb-2">
-                            <label className="text-sm md:text-md mb-2" htmlFor={input.name}>
+                            <label className={`${fullscreen ? 'text-sm md:text-md mb-2' : 'text-xs'} `} htmlFor={input.name}>
                                 { input.prompt }
                             </label>
-                            <input id={input.name} className="md:w-72 text-sm md:text-md xl:text-lg px-4 py-1 rounded-lg shadow-2 text-gray-700 bg-gray-300" name={input.name} type="text" placeholder={`${input.example}, etc.`} value={formInputs[input.name]} onChange={handleFormInputChange}/>
+                            <input id={input.name} className={`${fullscreen ? 'ttext-sm md:text-md xl:text-lg md:w-72 ' : 'text-xs w-9/10'} px-4 py-1 rounded-lg shadow-2 text-gray-700 bg-gray-300`} name={input.name} type="text" placeholder={`${input.example}, etc.`} value={formInputs[input.name]} onChange={handleFormInputChange}/>
                         </div>
                     )) : null
                 }

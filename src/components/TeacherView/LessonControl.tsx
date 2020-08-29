@@ -11,7 +11,7 @@ import OutroView from './ComponentViews/OutroView/OutroView';
 import PoemBreakdownView from './ComponentViews/PoemPageView/PoemBreakdown/PoemBreakdownView';
 import PoemActivityView from './ComponentViews/PoemPageView/PoemModules/PoemActivityView';
 import StoryBreakdownView from './ComponentViews/StoryPageView/StoryBreakdown/StoryBreakdownView';
-import StoryActivtyView from './ComponentViews/StoryPageView/StoryModules/StoryActivityView';
+import StoryActivityView from './ComponentViews/StoryPageView/StoryModules/StoryActivityView';
 
 
 
@@ -74,11 +74,12 @@ const LessonControl = () => {
                     <div className={`${fullscreen ? 'w-full' : 'w-6/10'} h-full flex flex-col items-center`}>
                         <div className={`${fullscreen ? 'h-full' : 'h-8/10'} relative w-full bg-dark shadow-elem-light rounded-lg mb-4 p-4`}>
                             {/*  */}
-                            <OutroView
+                            <StoryActivityView
                                 student={selectedStudent}
-                                fullscreen={fullscreen}/>
+                                fullscreen={fullscreen}
+                                />
                             {/*  */}
-                            <div className="absolute cursor-pointer w-auto text-xl m-2" style={{bottom: 0, right: 0}} onClick={handleFullscreen}>
+                            <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{top: 0, right: 0}} onClick={handleFullscreen}>
                                 <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem' }}>
                                     {fullscreen ? < FaCompress /> :< FaExpand />}
                                 </IconContext.Provider>

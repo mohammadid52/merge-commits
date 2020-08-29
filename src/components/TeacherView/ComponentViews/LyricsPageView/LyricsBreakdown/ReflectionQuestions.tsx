@@ -6,6 +6,7 @@ interface props {
     }
 
 const ReflectionQuestions = (props: props) => {
+    const {  fullscreen } = props;
     const [ question, setQuestion ] = useState(0);
     const { state } = useContext(LessonContext);
     const questArr = state.data.coreLesson.breakdown.reflectionQuestions;
@@ -32,7 +33,7 @@ const ReflectionQuestions = (props: props) => {
                 <div className="w-6 h-6 border-dark border-t-8 border-l-8 transform -rotate-45 ml-2"></div>
             </div>
             <div className="w-8/10 bg-dark-blue flex-grow rounded-lg shadow-2 px-4 py-2 flex flex-col">
-                <div className="font-open font-bold mb-2">
+                <div className={`${fullscreen ? '' : 'text-sm'} font-open font-bold mb-2`}>
                     Discussion Questions
                 </div>
                 <div className="question w-full flex-grow text-xs md:text-xl text-gray-200 flex justify-center px-4">

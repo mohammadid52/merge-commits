@@ -21,11 +21,11 @@ const PoemBreakdownView = (props: props) => {
         <div className="w-full h-full flex flex-row justify-center items-center">
             <div className="w-full h-full flex flex-col justify-between items-center">
                 <Banner title={displayProps ? displayProps.title : null} 
-                display="SELF"/>
-                <div className="bg-dark-blue w-full h-112 md:h-7/10 p-8 flex flex-col items-center text-2xl text-gray-200 rounded-lg shadow-2 whitespace-pre-wrap overflow-scroll">
+                display="SELF" fullscreen={fullscreen}/>
+                <div className={`${fullscreen ? 'text-2xl p-8' : 'text-lg p-4'} bg-dark-blue w-full h-112 md:h-7/10 flex flex-col items-center text-gray-200 rounded-lg shadow-2 whitespace-pre-wrap overflow-scroll`}>
                     { displayProps ? displayProps.editInput : null}
                 </div>
-                <ReflectionQuestions />
+                <ReflectionQuestions fullscreen={fullscreen}/>
             </div>
         </div>
     )
