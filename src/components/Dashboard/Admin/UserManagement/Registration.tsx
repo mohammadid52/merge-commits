@@ -1,7 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { 
-    useHistory,
-} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 import * as mutations from '../../../../graphql/mutations';
 import SuccessNote from '../../../../standard/Alert/SuccessNote';
@@ -264,17 +262,22 @@ const Registration = () => {
         })
     }
 
-    const submitNewUsers = () => {
-        signUp();
-        if (registerUser) {
-            console.log('success')
-            setNewUserInputs(initialState)
-        }
+    // const submitNewUsers = () => {
+    //     signUp();
+    //     if (registerUser) {
+    //         console.log('success')
+    //         setNewUserInputs(initialState)
+    //     }
         
-    }
+    // }
 
     const handleSubmit = (e: any) => {
-        submitNewUsers()
+        // submitNewUsers()
+        signUp();
+        if (newUserInputs.message.type === 'success') {
+            console.log('success state')
+            setNewUserInputs(initialState)
+        }
     }
 
     return (

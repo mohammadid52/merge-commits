@@ -5,13 +5,32 @@ import ClassRoster from './ClassRoster';
 import Intro from '../Lesson/LessonComponents/Intro/Intro';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
 import IntroView from './ComponentViews/IntroView/IntroView';
+import LyricsBreakdownView from './ComponentViews/LyricsPageView/LyricsBreakdown/LyricsBreakdownView';
+import LyricsActivityView from './ComponentViews/LyricsPageView/LyricsModules/LyricsActivityView';
+import OutroView from './ComponentViews/OutroView/OutroView';
+import PoemBreakdownView from './ComponentViews/PoemPageView/PoemBreakdown/PoemBreakdownView';
+import PoemActivityView from './ComponentViews/PoemPageView/PoemModules/PoemActivityView';
+import StoryBreakdownView from './ComponentViews/StoryPageView/StoryBreakdown/StoryBreakdownView';
+import StoryActivtyView from './ComponentViews/StoryPageView/StoryModules/StoryActivityView';
+
+
+
 import { LessonControlContext } from '../../contexts/LessonControlContext';
+import { IconContext } from "react-icons";
+import { FaExpand, FaCompress } from 'react-icons/fa';
 
 type selectedState = number | null
 
 const LessonControl = () => {
     const { state } = useContext(LessonControlContext);
-    const [ selectedStudent, setSelectedStudent ] = useState<selectedState>(null)
+    const [ selectedStudent, setSelectedStudent ] = useState<selectedState>(null);
+    const [fullscreen, setFullscreen] = useState(false);
+
+    const handleFullscreen = () => {
+        setFullscreen(fullscreen => {
+            return !fullscreen
+        });
+    }
 
     if ( state.status !== 'loaded') {
         return (
@@ -27,8 +46,9 @@ const LessonControl = () => {
                         Where I'm From
                     </h1>
                 </div>
+                {/*  */}
                 <div className={`w-full h-9/10 flex bg-gray-200 shadow-elem-light p-4 rounded-lg`}>
-                    <div className={`w-4/10 h-full px-4 flex flex-col items-center`}>
+                    <div className={`${fullscreen ? 'hidden' : 'display'} w-4/10 h-full px-4 flex flex-col items-center`}>
                         <div className={`h-full w-full mb-2`}>
                             <div className={`w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between text-xl text-gray-200 font-extrabold font-open`}>
                                 <h2 className={`w-auto`}>
@@ -51,11 +71,24 @@ const LessonControl = () => {
                             />
                         </div>
                     </div>
-                    <div className={`w-6/10 h-full flex flex-col items-center`}>
-                        <div className={`w-full h-8/10 bg-dark shadow-elem-light rounded-lg mb-4 p-4`}>
-                            <IntroView student={selectedStudent}/>
+                    <div className={`${fullscreen ? 'w-full' : 'w-6/10'} h-full flex flex-col items-center`}>
+                        <div className={`${fullscreen ? 'h-full' : 'h-8/10'} relative w-full bg-dark shadow-elem-light rounded-lg mb-4 p-4`}>
+                            {/*  */}
+                            <OutroView
+                                student={selectedStudent}
+                                fullscreen={fullscreen}/>
+                            {/*  */}
+                            <div className="absolute cursor-pointer w-auto text-xl m-2" style={{bottom: 0, right: 0}} onClick={handleFullscreen}>
+                                <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem' }}>
+                                    {fullscreen ? < FaCompress /> :< FaExpand />}
+                                </IconContext.Provider>
+                            </div>
+
                         </div>
-                        <LessonControlBar />
+
+                        <div className={`${fullscreen ? 'hidden' : 'display'} flex justify-center items-center`}>
+                            <LessonControlBar />
+                        </div>
                     </div>
                 </div>
             </div>

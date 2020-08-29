@@ -198,7 +198,7 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
             dispatch({type: 'SET_STUDENTS', payload: students})
             dispatch({type: 'SET_PAGES', payload: tempPagesArray})
             clearTimeout(timer)
-        }, 1000)
+        }, 3000)
     }, [])
 
 
