@@ -121,18 +121,18 @@ const PoemActivity = (props: props) => {
         <>
             <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/>
             <div className="w-full h-full flex flex-col justify-between items-center">
-                <Banner />
+                <Banner fullscreen={fullscreen}/>
                 <div className="w-full h-8.8/10 justify-between flex flex-col md:flex-row">
                     <div className="md:w-6/10 md:h-full flex flex-col">
                         {   !editMode.open ?
-                            <WritingBlock editMode={editMode} setEditMode={setEditMode}/>
+                            <WritingBlock editMode={editMode} setEditMode={setEditMode} fullscreen={fullscreen}/>
                             :
-                            <EditBlock editMode={editMode}/>
+                            <EditBlock editMode={editMode} fullscreen={fullscreen}/>
                         }
                     </div>
                     <div className="md:w-3.9/10 justify-between md:h-full flex flex-col">
-                        <InstructionBlock editMode={editMode.open} />
-                        <ToolBar editMode={editMode} setEditMode={setEditMode} />
+                        <InstructionBlock editMode={editMode.open} fullscreen={fullscreen}/>
+                        <ToolBar editMode={editMode.open} setEditMode={setEditMode} fullscreen={fullscreen}/>
                     </div>
                 </div>
             </div>

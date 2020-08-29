@@ -84,22 +84,23 @@ const Story = (props: props) => {
        <>
             <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/>
             <div className="w-full h-full flex flex-col justify-between items-center">
-                <Banner />
+                <Banner fullscreen={fullscreen}/>
                 <div className="w-full h-8.8/10 flex flex-col items-center md:flex-row md:justify-between">
                     <div className="md:w-4/10 h-full flex flex-col justify-between items-center">
-                        <InstructionsBlock />
+                        <InstructionsBlock fullscreen={fullscreen}/>
                         { inputs.additionalInputs.length > 0 ?
                             <Modules 
                                 // breakdownProps={breakdownProps}
                                 // setBreakdownProps={setBreakdownProps}
                                 inputs={inputs.additionalInputs}
+                                fullscreen={fullscreen}
                             />
                             :
                             null
                         }
                     </div>
                     <div className="md:w-5.9/10 h-full flex flex-col items-center">
-                        <StoryForm />
+                        <StoryForm fullscreen={fullscreen} />
                     </div>
                 </div>
             </div>

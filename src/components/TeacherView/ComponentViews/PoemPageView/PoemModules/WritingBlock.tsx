@@ -5,6 +5,7 @@ import { FaPlus } from 'react-icons/fa';
 import { useCookies } from 'react-cookie';
 
 interface WritingBlockProps {
+    fullscreen: boolean,
     editMode: {
         open: boolean;
         input: string;
@@ -16,7 +17,7 @@ interface WritingBlockProps {
 }
 
 const WritingBlock = (props: WritingBlockProps) => {
-    const { editMode, setEditMode } = props;
+    const { editMode, setEditMode, fullscreen } = props;
     const [ cookies, setCookie ] = useCookies(['poem']);
     const { state, dispatch } = useContext(LessonContext);
     const lineNo = state.data.activity.lineNumber;
@@ -246,13 +247,13 @@ const WritingBlock = (props: WritingBlockProps) => {
     }
 
     return (
-        <div className="bg-dark-blue w-full h-80 md:h-full flex flex-col items-center p-4 md:px-8 md:py-6 rounded-lg shadow-2 mb-4 md:mb-0 " >
+        <div className={`${fullscreen ? 'p-4 md:px-8 md:py-6 ' : 'text-2xl p-4'} bg-dark-blue w-full h-80 md:h-full flex flex-col items-center rounded-lg shadow-2 mb-4 md:mb-0`}>
             <div className="w-full flex flex-row justify-between mb-4">
                 <h3 className="w-full flex-grow text-xl text-gray-200 font-open font-bold border-b border-white mr-2">
                     Line Prompts
                 </h3>
                 <IconContext.Provider value={{ color: '#E2E8F0', size: '1.5rem', style: { opacity: `${lineState.lines.length < (lineNo * 2) ? '100%' : '10%'}`}}}>
-                    <div className="w-8" onClick={handleAddInput}>
+                    <div className="w-8 cursor-pointer" onClick={handleAddInput}>
                         <FaPlus/>
                     </div>
                 </IconContext.Provider>
@@ -263,18 +264,18 @@ const WritingBlock = (props: WritingBlockProps) => {
                         let id = line.id.toString()
                         return (
                         <div key={key} className="relative bg-transparent flex flex-col items-center">
-                            <div key={key} id={id} className="w-full h-12 flex flex-row items-center rounded-lg" onDragOver={handleDragOver} onDrop={handleDrop}>
-                                <input id={id} className="w-full h-10 px-4 py-2 rounded-l-lg text-gray-700 bg-gray-300 shadow-2" name={id} type="text" value={line.text} onChange={handleInputChange} onDoubleClick={handleMenuToggle}/>
-                                <div id={id} className="w-10 h-10 bg-gray-300 rounded-r-lg  flex justify-center items-center shadow-2" onClick={handleMenuToggle}>
+                            <div key={key} id={id} className={`${fullscreen ? 'h-12' : 'h-8'} w-full flex flex-row items-center rounded-lg`} onDragOver={handleDragOver} onDrop={handleDrop}>
+                                <input id={id} className={`${fullscreen ? 'h-10' : 'h-8 text-lg'} w-full px-4 py-2 rounded-l-lg text-gray-700 bg-gray-300 shadow-2`} name={id} type="text" value={line.text} onChange={handleInputChange} onDoubleClick={handleMenuToggle}/>
+                                <div id={id} className={`${fullscreen ? 'w-10 h-10' : 'w-8 h-8'}  bg-gray-300 rounded-r-lg  flex justify-center items-center shadow-2`} onClick={handleMenuToggle}>
                                     <div id={id} className="w-4 h-4 border-dark-blue border-b-8 border-r-8 transform rotate-45 mb-1"></div>
                                 </div>
-                                <div id={id} className="w-8 h-8 ml-2 flex justify-center items-center" onClick={handleDeleteInput}>
+                                <div id={id} className="cursor-pointer w-8 h-8 ml-2 flex justify-center items-center" onClick={handleDeleteInput}>
                                     <IconContext.Provider value={{color: '#E2E8F0', size: '1.5rem', style: { transform: 'rotate(45deg)', opacity: `${lineState.lines.length > lineNo ? '100%' : '10%'}` }}}>
                                         <FaPlus/>
                                     </IconContext.Provider>
                                 </div>
                             </div>
-                            <label className={`${line.example ? 'visible' : 'invisible'} self-end flex justify-end text-gray-400 text-sm mr-12`} htmlFor={id}>
+                            <label className={`${line.example ? 'visible' : 'invisible'} ${fullscreen ? 'text-sm mr-12' : 'text-xs'} self-end flex justify-end text-gray-400`} htmlFor={id}>
                                 ( ex. {line.example} )
                             </label>
                             {   line.menuOpen ?

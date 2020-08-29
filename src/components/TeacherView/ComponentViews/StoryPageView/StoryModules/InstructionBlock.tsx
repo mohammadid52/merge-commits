@@ -3,7 +3,12 @@ import { LessonContext } from '../../../../../contexts/LessonContext';
 import { IconContext } from "react-icons";
 import { FaVideo } from 'react-icons/fa';
 
-const InstructionsBlock = () => {
+interface InstructionsBlockProps {
+    fullscreen: boolean
+}
+
+const InstructionsBlock = (props: InstructionsBlockProps) => {
+    const { fullscreen } = props
     const { state } = useContext(LessonContext);
     const [ videoMode, setVideoMode ] = useState(false);
     const { text, video, link } = state.data.warmUp.instructions ;
@@ -13,22 +18,22 @@ const InstructionsBlock = () => {
     }
 
     return (
-        <div className="bg-dark-blue md:h-4/10 p-4 flex text-gray-200 shadow-2 rounded-lg">
+        <div className={`${fullscreen ? 'p-4' : 'p-2'} bg-dark-blue md:h-4/10 flex text-gray-200 shadow-2 rounded-lg`}>
             <div className="w-full flex flex-col">
-                <div className="w-auto flex flex-row mb-3 border-b border-white mr-4">
-                    <h3 className="w-3/10 mr-2 flex-grow text-xl font-open font-bold">
+                <div className={`${fullscreen ? 'flex-row mb-3' : 'flex-col'} w-auto flex flex-row border-b border-white mr-4`}>
+                    <h3 className={`${fullscreen ? 'text-xl w-auto mr-2' : 'text-base w-full'} w-3/10 flex-grow font-open font-bold`}>
                         Instructions
                     </h3>
-                    <p className="w-auto text-gray-600 text-sm flex mr-4 items-center">(click the red icon for video instructions)</p>
+                    <p className={`${fullscreen ? 'w-auto' : 'w-full'} text-gray-600 text-sm flex mr-4 items-center`}>(click the red icon for video instructions)</p>
                 </div>
-                <div className={`w-full h-8/10 flex justify-center items-center text-sm px-2`}>
+                <div className={`${fullscreen ? 'h-8/10' : 'h-5/10'} w-full  flex justify-center items-center text-sm px-2`}>
                 {   !videoMode ?
                     <div className="h-full overflow-scroll">
                         
                         {
                             text.map((inst: string, key: number) => (
                                 
-                                <p key={key} className="mb-2">
+                                <p key={key} className={`${fullscreen ? '' : 'text-xs'} mb-2`}>
                                 
                                     { inst }
                                 </p>
