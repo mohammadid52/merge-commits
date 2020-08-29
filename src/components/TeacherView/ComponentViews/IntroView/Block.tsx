@@ -15,9 +15,12 @@ import {
     NavLink
  } from 'react-router-dom';
  
+ interface props {
+        fullscreen: boolean
+    }    
 
-
-const Block = () => {
+const Block = (props: props) => 
+    {const {  fullscreen } = props;
     const { state, theme } = useContext(LessonContext);
     const artistBio = state.data.artist.bio
     const match = useRouteMatch();

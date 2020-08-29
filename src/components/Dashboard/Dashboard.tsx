@@ -64,7 +64,7 @@ const Dashboard: React.FC = () => {
     }, [])
 
     return ( 
-            <div className={`w-full h-full flex`}>
+            <div className={`w-screen md:w-full md:h-auto flex`}>
                 <SideMenu>
                     <ProfileLink />
                     <Links />

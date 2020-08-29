@@ -1,6 +1,4 @@
 import React, { useContext, useState } from 'react';
-// import { GlobalContext } from '../../contexts/GlobalContext';
-// import { useCookies } from 'react-cookie';
 import ErrorNote from '../Admin/UserManagement/ErrorNote';
 import { IconContext } from "react-icons";
 import { FaKey } from 'react-icons/fa';
@@ -12,9 +10,7 @@ const ChangePassword = () => {
     const [oldPassToggle, setOldPassToggle] = useState(false);
     const [passToggle, setPassToggle] = useState(false);
     const [passMatchToggle, setPassMatchToggle] = useState(false);
-    // const [ cookies, setCookie ] = useCookies(['auth']);
     const history = useHistory();
-    // const { theme, state, dispatch } = useContext(GlobalContext);
     const [ message, setMessage ] = useState<{show: boolean, type: string, message: string,}>({
         show: false,
         type: '',
@@ -30,18 +26,6 @@ const ChangePassword = () => {
     async function change() {
         let oldPassword = input.oldPassword;
         let newPassword = input.newPassword;
-        // let match = input.match;
-
-        // Auth.currentAuthenticatedUser()
-        // .then(data => console.log(data, 'data'))
-        // .then(user => {
-        //     return Auth.changePassword(user, oldPassword, newPassword);
-        // })
-        // .then(data => console.log(data, 'change password'))
-        // .catch((err: any) => 
-        // console.log(err, 'err'))
-
-        // const user = Auth.currentAuthenticatedUser()
         
         try {
             const user = await Auth.currentAuthenticatedUser();
@@ -75,7 +59,7 @@ const ChangePassword = () => {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Passwords do not match',
+                        message: 'Your new password and confirm password do not match',
                     }
                 }
                 switch (error.code) {
@@ -84,6 +68,12 @@ const ChangePassword = () => {
                                     show: true,
                                     type: 'error',
                                     message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+                                }
+                    case "NotAuthorizedException":
+                        return {
+                                    show: true,
+                                    type: 'error',
+                                    message: 'Your old password is incorrect',
                                 }
                     case "InvalidParameterException":
                             return {
@@ -95,7 +85,7 @@ const ChangePassword = () => {
                     return {
                             show: true,
                             type: 'error',
-                            message: error.message,
+                            message: 'Make sure your old password is correct and that your new password is at least 8 characters, including uppercase, lowercase and numbers',
                         };  
                 }
             })
@@ -126,7 +116,6 @@ const ChangePassword = () => {
     return (
 
     <div className="h-full w-full md:px-4 pt-4">
-            {/* <form> */}
 
             <div className="h-auto bg-white shadow-5 sm:rounded-lg mb-4">
             
@@ -250,7 +239,6 @@ const ChangePassword = () => {
                 </div>
             </div>
 
-            {/* </form> */}
         </div>
     )
 }
