@@ -6,7 +6,7 @@ import { FaVideo } from 'react-icons/fa';
 const InstructionsBlock = () => {
     const { state } = useContext(LessonContext);
     const [ videoMode, setVideoMode ] = useState(false);
-    const { text, video, link } = state.data.warmUp.instructions ;
+    const { text, video, link } = state.data.lesson.warmUp.instructions ;
 
     const toggleVideoMode = () => {
         setVideoMode(!videoMode);

@@ -8,8 +8,8 @@ import PhotoBlock from './PhotoBlock';
 
 const QuoteBlock = () => { 
     const { state, theme } = useContext(LessonContext);
-    const quoteArray = state.data.quotes;
-    const artistName = state.data.artist.name;
+    const quoteArray = state.data.lesson.artist.quotes;
+    const artistName = state.data.lesson.artist.name;
     
 
     const randomQuote = () => {

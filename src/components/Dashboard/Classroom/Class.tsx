@@ -11,7 +11,7 @@ const Class: React.FC = () => {
     const { theme } = useContext(GlobalContext);
 
     const handleLink = () => {
-        history.push('/lesson');
+        history.push('/lesson?id=1');
     }
 
     return (

@@ -5,7 +5,7 @@ import { LessonContext } from '../../../../contexts/LessonContext';
 
 const BioBlock = () => {
     const { state, theme } = useContext(LessonContext);
-    const artistBio = state.data.artist.bio
+    const artistBio = state.data.lesson.artist.bio
 
     const firstLetterFunction = (str: string) => {
         let arr = str.split('');
