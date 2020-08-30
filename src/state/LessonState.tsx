@@ -1,5 +1,3 @@
-import { turquoise } from "color-name";
-
 export interface LessonStateType  {
     status: string;
     error: string;
@@ -10,12 +8,13 @@ export interface LessonStateType  {
     lessonProgress: number;
     canContinue: boolean;
     pages: Array<{
+        disabled: boolean;
+        displayMode: null | string;
         type: string;
         stage: string;
         open: boolean;
         active: boolean;
         save: boolean;
-        breakdown: boolean;
     }>
     componentState: {
         [key: string]: any

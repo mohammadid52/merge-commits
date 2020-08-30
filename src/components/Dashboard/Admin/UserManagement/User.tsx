@@ -15,7 +15,7 @@ import {
     useRouteMatch,
     Link,
     NavLink
- } from 'react-router-dom';
+} from 'react-router-dom';
 
  export interface UserInfo {
     authId: string

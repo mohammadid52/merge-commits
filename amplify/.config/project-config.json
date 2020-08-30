@@ -1,7 +1,4 @@
 {
-    "providers": [
-        "awscloudformation"
-    ],
     "projectName": "demoselready",
     "version": "3.0",
     "frontend": "javascript",
@@ -10,8 +7,11 @@
         "config": {
             "SourceDir": "src",
             "DistributionDir": "public",
-            "BuildCommand": "npm run watch",
-            "StartCommand": "npm run build"
+            "BuildCommand": "npm run build",
+            "StartCommand": "npm run watch"
         }
-    }
+    },
+    "providers": [
+        "awscloudformation"
+    ]
 }

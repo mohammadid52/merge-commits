@@ -1,73 +1,3 @@
-export const createClassroomData = /* GraphQL */ `
-  mutation CreateClassroomData(
-    $input: CreateClassroomDataInput!
-    $condition: ModelClassroomDataConditionInput
-  ) {
-    createClassroomData(input: $input, condition: $condition) {
-      classID
-      lessonProgress
-      studentID
-      dataObjects {
-        name
-        data
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
-export const createClassroomDataTest = /* GraphQL */ `
-  mutation CreateClassroomDataTest(
-    $input: CreateClassroomDataTestInput!
-    $condition: ModelClassroomDataTestConditionInput
-  ) {
-    createClassroomDataTest(input: $input, condition: $condition) {
-      lessonProgress
-      classroomID
-      studentID
-      data {
-        warmup {
-          story
-          title
-        }
-        activity {
-          editInput
-          editMode
-          title
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
-export const updateClassroomDataTest = /* GraphQL */ `
-  mutation UpdateClassroomDataTest(
-    $input: UpdateClassroomDataTestInput!
-    $condition: ModelClassroomDataTestConditionInput
-  ) {
-    updateClassroomDataTest(input: $input, condition: $condition) {
-      lessonProgress
-      classroomID
-      studentID
-      data {
-        warmup {
-          story
-          title
-        }
-        activity {
-          editInput
-          editMode
-          title
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const updatePerson = /* GraphQL */ `
   mutation UpdatePerson(
     $input: UpdatePersonInput!
@@ -87,6 +17,24 @@ export const updatePerson = /* GraphQL */ `
       birthdate
       image
       language
+    }
+  }
+`;
+
+export const createStudentData = /* GraphQL */ `
+  mutation CreateStudentData(
+    $input: CreateStudentDataInput!
+    $condition: ModelStudentDataConditionInput
+  ) {
+    createStudentData(input: $input, condition: $condition) {
+      id
+      lessonProgress
+      status
+      live
+      classroomID
+      studentID
+      createdAt
+      updatedAt
     }
   }
 `;

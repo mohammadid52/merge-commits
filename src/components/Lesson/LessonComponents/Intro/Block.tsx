@@ -19,7 +19,7 @@ import {
 
 const Block = () => {
     const { state, theme } = useContext(LessonContext);
-    const artistBio = state.data.artist.bio
+    // const artistBio = state.data.artist.bio
     const match = useRouteMatch();
     const [bio, setBio] = useState(true);
     const [concept, setConcept] = useState(false);
