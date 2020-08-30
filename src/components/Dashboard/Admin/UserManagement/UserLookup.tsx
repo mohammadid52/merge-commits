@@ -5,6 +5,7 @@ import * as queries from '../../../../graphql/queries';
 import UserSearch from './UserSearch';
 import UserStatus from './UserStatus';
 import UserRole from './UserRole';
+import Pagination from '../../../../standard/List/Pagination';
 
 const UserLookup = () => {
     const [ data, setData ] = useState([]);
@@ -12,15 +13,17 @@ const UserLookup = () => {
     const history = useHistory();
 
     async function listUsers() {
-        let limit = 10;
+        // let limit = 20;
         try {
-            const users: any = await API.graphql(graphqlOperation(queries.listPersons, { limit: limit }))
+            const users: any = await API.graphql(graphqlOperation(queries.listPersons, 
+                // { limit: limit }
+                ))
             setData(users.data.listPersons.items)
         } catch (error) {
             console.error(error);  
         }
     }
-
+console.log(data, 'data')
     const handleSubmit = () => {
         listUsers()
     }
@@ -81,7 +84,7 @@ const UserLookup = () => {
                         <div className="white_back py-4 px-8 mt-8 align-middle rounded-lg border-b border-gray-200">
                         <div className="h-8/10 px-4">
                             <div className="w-full flex justify-between border-b border-gray-200 ">
-                                <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                <div className="w-3.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                     <span>Name</span>
                                 </div>
                                 <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -97,9 +100,10 @@ const UserLookup = () => {
                             </div>
                         { 
                     data.length > 0 ? data.map((item: any, key: number) => (
+                            <>
                             <div id={item.id} key={key} className="flex justify-between bg-white w-full border-b border-gray-200">
                             
-                                <div className="w-3/10 px-8 py-4 whitespace-no-wrap">
+                                <div className="w-3.5/10 px-8 py-4 whitespace-no-wrap">
                                     <div className="flex items-center">
                                         <div className="flex-shrink-0 h-10 w-10">
                                             <img className="h-10 w-10 rounded-lg" src="https://i2.wp.com/www.quartzmasters.com/wp-content/uploads/2017/03/article-user-blank.jpg?ssl=1" alt="" />
@@ -138,9 +142,20 @@ const UserLookup = () => {
                 
 
                             </div>
+
+                            
+                            </>
                             )): null
+                            
                             }
+                            <div className="">
+                                <Pagination 
+                                    data = {data}/>
                             </div>
+
+                            </div>
+
+                            
                         </div>
                     </div>
                 </div>

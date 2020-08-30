@@ -49,7 +49,7 @@ const Modules = (props: props) => {
                         <h3>{keywordCapitilizer(item.name)}:</h3>
                         <div className="w-full px-2 overflow-scroll">
                             {   item.input ? wordArray.map((word: string, key: number) => (
-                                    <p key={key} className={`text-sm md:text-xl `}>
+                                    <p key={key} className={`${fullscreen ? 'text-sm md:text-xl' : 'text-base'} `}>
                                         { word }
                                     </p>
                                 ))
