@@ -39,7 +39,7 @@ const MoreArtist = () => {
 
             </div>
             <div className="h-5/10 rounded-lg">
-                <VideoBlock link={state.data.coreLesson.content.link} fullscreen={fullscreen}/>
+                <VideoBlock link={state.data.lesson.coreLesson.content.link} fullscreen={fullscreen}/>
             </div>
         </div>
     )

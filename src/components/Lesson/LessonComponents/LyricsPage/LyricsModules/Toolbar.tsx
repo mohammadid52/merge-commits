@@ -11,7 +11,7 @@ const ToolBar = (props: ToolbarProps) => {
     const { setColor } = props;
     const { state, dispatch } = useContext(LessonContext);
     const [ search, setSearch ] = useState('');
-    const buttons = state.data.coreLesson.tools;
+    const buttons = state.data.lesson.coreLesson.tools;
 
     const handleClick = (e: any) => {
         setColor(e.target.id);
