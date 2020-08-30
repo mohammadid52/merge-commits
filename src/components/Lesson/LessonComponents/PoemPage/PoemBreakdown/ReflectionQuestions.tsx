@@ -4,7 +4,7 @@ import { LessonContext } from '../../../../../contexts/LessonContext';
 const ReflectionQuestions = () => {
     const [ question, setQuestion ] = useState(0);
     const { state } = useContext(LessonContext);
-    const questArr = state.data.activity.breakdown.reflectionQuestions;
+    const questArr = state.data.lesson.activity.breakdown.reflectionQuestions;
 
     const nextQuestion = () => {
         if (question < questArr.length - 1) {

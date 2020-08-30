@@ -30,8 +30,8 @@ interface LyricsBlockProps {
 const LyricsBlock = (props: LyricsBlockProps) => {
     const { color, selected, setSelected, fullscreen, setFullscreen } = props;
     const { state, dispatch } = useContext(LessonContext);
-    const buttons = state.data.coreLesson.tools
-    const rawText = state.data.coreLesson.content.text;
+    const buttons = state.data.lesson.coreLesson.tools
+    const rawText = state.data.lesson.coreLesson.content.text;
     const displayTextArray: string[][] = [];
     rawText.map((line: string) => {
         let array = (textParser(line));

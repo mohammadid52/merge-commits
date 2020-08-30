@@ -27,7 +27,7 @@ const PoemActivity = () => {
         open: state.componentState.poem && state.componentState.poem.editMode ? state.componentState.poem.editMode : false,
         input: state.componentState.poem && state.componentState.poem.editInput ? state.componentState.poem.editInput : '',
     })
-    const { video, link, text } = state.data.activity.instructions
+    const { video, link, text } = state.data.lesson.activity.instructions
     const [ openPopup, setOpenPopup ] = useState(false);
 
     

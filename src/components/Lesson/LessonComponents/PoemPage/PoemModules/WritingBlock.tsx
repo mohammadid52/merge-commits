@@ -19,8 +19,8 @@ const WritingBlock = (props: WritingBlockProps) => {
     const { editMode, setEditMode } = props;
     const [ cookies, setCookie ] = useCookies(['poem']);
     const { state, dispatch } = useContext(LessonContext);
-    const lineNo = state.data.activity.lineNumber;
-    const promptArray = state.data.activity.writingPrompts;
+    const lineNo = state.data.lesson.activity.lineNumber;
+    const promptArray = state.data.lesson.activity.writingPrompts;
     const initialLines = [];
     for(let i = 0; i < lineNo; i++) {
         let tempObj = {

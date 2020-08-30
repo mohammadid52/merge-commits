@@ -9,8 +9,8 @@ const LyricsBreakdown = () => {
     const { dispatch, state } = useContext(LessonContext)
     const [ modules, setModules ] = useState<Array<any>>()
     const displayProps = state.componentState.lyrics.selected
-    const { artist, title } = state.data.coreLesson.content
-    const moduleTypes = state.data.coreLesson.tools
+    const { artist, title } = state.data.lesson.coreLesson.content
+    const moduleTypes = state.data.lesson.coreLesson.tools
 
     const [displayMode, setDisplayMode] = useState('COOP');
 
