@@ -11,7 +11,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
     const { editMode } = props
     const { state } = useContext(LessonContext);
     const [ videoMode, setVideoMode ] = useState(false);
-    const instructions = state.data.activity.instructions;
+    const instructions = state.data.lesson.activity.instructions;
 
     const toggleVideoMode = () => {
         setVideoMode(!videoMode);

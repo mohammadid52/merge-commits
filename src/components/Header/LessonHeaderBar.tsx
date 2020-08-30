@@ -54,9 +54,9 @@ const LessonHeaderBar = () => {
         console.log('write', data)
 
         try {
-            const dataObject: any = await API.graphql(graphqlOperation(customMutations.createClassroomDataTest, { input: data }))
-            console.log(dataObject)
-            dispatch({ type: 'SAVED_CHANGES' })
+            // const dataObject: any = await API.graphql(graphqlOperation(customMutations.createClassroomDataTest, { input: data }))
+            // console.log(dataObject)
+            // dispatch({ type: 'SAVED_CHANGES' })
         } catch (error) {
             console.error(error);   
         }
@@ -78,9 +78,9 @@ const LessonHeaderBar = () => {
         
 
         try {
-            const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateClassroomDataTest, { input: data }))
-            console.log(dataObject)
-            dispatch({ type: 'SAVED_CHANGES' })
+            // const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateClassroomDataTest, { input: data }))
+            // console.log(dataObject)
+            // dispatch({ type: 'SAVED_CHANGES' })
         } catch (error) {
             console.error(error);   
         }

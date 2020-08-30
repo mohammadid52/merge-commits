@@ -15,6 +15,8 @@ const LessonApp = () => {
         )
     }
 
+    console.log(state)
+
     return (
     <div className={`${theme.bg} w-screen md:h-screen flex flex-col justify-between`} >
         <LessonHeaderBar />

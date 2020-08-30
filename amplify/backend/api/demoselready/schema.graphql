@@ -1,6 +1,7 @@
 enum Language {
   EN
   ES
+  VT
 }
 
 enum PersonStatus {
@@ -9,21 +10,6 @@ enum PersonStatus {
   INACTIVE
   HOLD
 }
-
-# enum InstitutionType {
-#   ELEM
-#   MID
-#   HIGH
-#   CORR
-#   CAMP
-#   EXCURR
-# }
-
-# enum CourseType {
-#   CLASS
-#   EXCURR
-#   DIST
-# }
 
 enum Role {
   ADM
@@ -39,15 +25,45 @@ type InstitutionType @model {
   name: String!
 }
 
-type CourseType @model {
-  id: ID!
-  name: String!
+# enum InstitutionType {
+#   ELEM
+#   MID
+#   HIGH
+#   CORR
+#   CAMP
+#   EXCURR
+# }
+
+type Contact { 
+  name: String
+  phone: String
+  email: String
 }
 
-type Person @model 
+type Institution @model @key(fields: ["id"]) {
+  id: ID!
+  name: String!
+  institutionTypeId: ID!
+  institutionType: InstitutionType @connection(fields: ["institutionTypeId"])
+  district: String
+  address: String!
+  city: String!
+  state: String
+  zip: String!
+  phone: String
+  contact: Contact!
+  website: String
+  # coordinator: [Person]
+  type: InstitutionType @connection
+  image: String
+}
+
+type Person @model
+@searchable
 @key(fields: ["email", "authId"]) 
 @key(name: "byContributor", fields: ["id"])
 @key(name: "byUserId", fields: ["id"], queryField: "userById")
+@key(name: "byRole", fields: ["role"], queryField: "usersByRole")
 {
   id: ID!
   authId: String!
@@ -57,10 +73,11 @@ type Person @model
   firstName: String!
   preferredName: String
   lastName: String!
-  institution: Institution @connection
+  # institutionId: ID!
+  # institution: Institution @connection(fields: ["institutionId"])
   externalId: String
   grade: Int
-  courses: [Course]
+  # courses: [StudentCourse] @connection(keyName: "byStudent", field: ["id"])
   phone: String
   birthdate: AWSDate
   image: String
@@ -73,77 +90,63 @@ type Curriculum @model @key(fields: ["id"]) {
   contributors: [Person] @connection(keyName: "byContributor", fields: ["id"])
   grade: [Int]
   languages: [Language]
-  lessons: [Lesson]
+  lessons: [CurriculumLessons] @connection(keyName: "byCurriculum", fields: ["id"])
 }
+
+type CurriculumLessons @model(queries: null)
+@key(name: "byCurriculum", fields: ["curriculumID", "lessonID"]) {
+  id: ID!
+  curriculumID: ID!
+  lessonID: ID!
+  curriculum: Curriculum @connection(fields: ["curriculumID"])
+  lesson: Lesson @connection(fields: ["lessonID"])
+}
+
+type CourseType @model {
+  id: ID!
+  name: String!
+}
+
+# enum CourseType {
+#   CLASS
+#   EXCURR
+#   DIST
+# }
 
 type Course @model {
   id: ID!
   name: String!
-  courseType: CourseType!
-  institution: Institution!
-  classroomTeacher: Person!
-  fellow: Person!
-  curriculum: Curriculum @connection
-  location: String!
-  startDate: AWSDate!
-  endDate: AWSDate!
+  courseTypeID: ID!
+  courseType: CourseType! @connection(fields: ["courseTypeID"])
+  institution: Institution
+  # classroomTeachers: [Person]!
+  # fellows: [Person]!
+  classID: ID!
+  class: Class @connection(fields: ["classID"])
+  curriculumID: ID!
+  curriculum: Curriculum @connection(fields: ["curriculumID"])
+  location: String
+  startDate: AWSDate
+  endDate: AWSDate
   duration: Int
 }
 
-type Contact { 
-  name: String
-  phone: String
-  email: String
-}
-
-type Institution @model @key(fields: ["id"]) {
+type Class @model {
   id: ID!
   name: String!
-  district: String
-  address: String!
-  city: String!
-  state: String
-  zip: String!
-  phone: String
-  contact: Contact!
-  website: String
-  coordinator: [Person]
-  type: InstitutionType @connection
-  image: String
+  students: [ClassStudent]! @connection(keyName: "byClass", fields: ["id"])
 }
 
-type LessonComponent {
-  stage: String!
-  type: String!
-  breakdown: Boolean!
-}
-
-type Artist {
-  images: [String!]
-  name: String!
-  bio: [String!]!
-}
-
-type Quote {
-  text: String!
-  source: String!
-}
-
-type SELStructure @model {
-  id: ID!
-  name: String!
-  description: String!
-  types: [SELType!]! @connection(keyName: "byStructure", fields: ["id"] )
-}
-
-type SELType @model 
-@key(name: "byStructure", fields: ["structureID", "id"])
-# @key(name: "byComponent", fields: ["id", "structureID"])
+type ClassStudent @model(queries: null)
+@key(name: "byClass", fields: ["classID", "studentID"])
 {
   id: ID!
-  structureID: ID!
-  name: String!
-  description: String!
+  classID: ID!
+  studentID: ID!
+  studentEmail: String!
+  studentAuth: String!
+  class: Class @connection(fields: ["classID"])
+  student: Person @connection( fields:["studentEmail", "studentAuth"])
 }
 
 type DataObject {
@@ -193,94 +196,139 @@ type ActivityData {
   title: String
 }
 
-type DataTest {
-  warmup: WarmUpData
-  corelesson: CoreLessonData
-  activity: ActivityData
+type Subscription {
+  onUpdateClassroom(id: ID!): Classroom @aws_subscribe(mutations: ["updateClassroom"])
+  onChangeStudentData(classroomID: ID!):
+  StudentData @aws_subscribe(mutations: ["createClassroom", "updateClassroom"])
 }
 
-type ClassroomDataTest @model 
+type StudentData @model(subscriptions: null)
 @key(fields: ["classroomID", "studentID"])
+@key(name: "byClassroom", fields: ["classroomID", "studentID"])
 {
-  lessonProgress: Int!
+  id: ID!
+  lessonProgress: String!
+  status: String!
+  live: Boolean!
   classroomID: ID!
-  classroom: Classroom! @connection(fields: ["classroomID"])
+  classroom: Classroom @connection(fields: ["classroomID"])
+  # studentDataClassroomId: String
   studentID: String!
   student: Person! @connection(fields: ["studentID"])
-  data: DataTest!
-}
-
-type ClassroomData @model 
-@key(name: "byClass", fields: ["classID", "studentID"])
-@key(name: "byStudent", fields: ["studentID", "classID"])
-{
-  classID: ID!
-  lessonProgress: Int
-  class: Class! @connection(fields: ["classID"])
-  studentID: String!
-  student: Person! @connection(fields: ["studentID"])
-  dataObjects: [DataObject]!
-}
-
-type ClassData @model 
-{
-  classroomID: ID!
-  lessonProgress: Int
-  classroom: Classroom! @connection(fields: ["classroomID"])
-  studentID: String!
-  student: Person! @connection(fields: ["studentID"])
-  dataObjects: [DataObject]!
+  warmupData: WarmUpData
+  corelessonData: CoreLessonData
+  activityData: ActivityData
+  doFirstData: [QuestionDataStudentData]! @connection(name: "byStudentData", fields: ["id"])
+  checkpointData: [QuestionDataStudentData]! @connection(name: "byStudentData", fields: ["id"])
 }
 
 type ComponentSummary {
+  id: ID
+  disabled: Boolean!
+  open: Boolean!
+  active: Boolean!
   stage: String!
   type: String!
-  breakdown: Boolean!
+  displayMode: String
 }
 
-type Class @model 
-@key(fields: ["id", "courseID", "lessonID"])
-{
-  id: ID!
-  courseID: ID! 
-  lessonID: ID!
-  lessonPlan: [ComponentSummary!]!
-  artist: Artist!
-  quotes: [Quote]!
-  warmUp: WarmUp!
-  coreLesson: CoreLesson!
-  activity: Activity!
-  data: [ClassroomData]! @connection
+type Quote {
+  source: String!
+  text: String!
 }
 
-type Classroom @model 
+type Artist @model
 {
   id: ID!
-  courseID: ID! 
+  images: [String!]
+  name: String!
+  type: String!
+  bio: [String!]!
+  quotes: [Quote!]!
+}
+
+type DisplayData {
+  breakdownComponent: String
+  warmUpData: WarmUpData
+  corelessonData: CoreLessonData
+  activityData: ActivityData
+}
+
+type Classroom @model(subscriptions: null) 
+@key(name: "byCourse", fields: ["courseID", "lessonID"])
+{
+  id: ID!
+  open: Boolean!
+  openedAt: AWSDate
+  closedAt: AWSDate
+  roster: [String!]!
+  displayData: DisplayData
+  courseID: ID!
+  course: Course @connection(fields: ["courseID"])
   lessonID: ID!
+  lesson: Lesson @connection(fields: ["lessonID"])
   lessonPlan: [ComponentSummary!]!
-  artist: Artist!
-  quotes: [Quote]!
-  warmUp: WarmUp!
-  coreLesson: CoreLesson!
-  activity: Activity!
-  data: [ClassroomData]! @connection
+  data: [StudentData]! @connection(keyName: "byClassroom", fields: ["id"])
+}
+
+type SELStructure @model {
+  id: ID!
+  name: String!
+  description: String
 }
 
 type Lesson @model @key(fields: ["id"]) {
   id: ID!
   title: String! 
   contributors: [Person]! @connection(keyName: "byContributor", fields: ["id"])
-  grade: [Int]
-  artist: Artist!
+  grades: [Int]
+  artistID: ID!
+  artist: Artist! @connection(fields: ["artistID"])
   language: Language!
-  quotes: [Quote]!
+  SELStructureID: ID!
+  SELStructure: SELStructure @connection(fields: ["SELStructureID"])
+  #keywords: Keywords
+  #connection: Connection
   summary: String!
   objectives: [String]!
-  primarySELType: SELType! @connection
-  warmUp: WarmUp @connection
-  coreLesson: CoreLesson! @connection
-  activity: Activity! @connection
+  # primarySELType: SELType! @connection
+  checkpoints: [LessonCheckpoint]! @connection(keyName: "byLesson", fields: ["id"])
+  doFirstID: ID!
+  doFirst: DoFirst @connection(fields: ["doFirstID"])
+  warmUpId: ID!
+  warmUp: WarmUp @connection(fields: ["warmUpId"])
+  coreLessonId: ID!
+  coreLesson: CoreLesson! @connection(fields: ["coreLessonId"])
+  activityId: ID!
+  activity: Activity! @connection(fields: ["activityId"])
+}
+
+type LessonCheckpoint @model(queries: null)
+@key(name: "byLesson", fields: ["lessonID", "checkpointID"])
+{
+  id: ID!
+  lessonID: ID!
+  checkpointID: ID!
+  position: Int!
+  lesson: Lesson @connection(fields: ["lessonID"])
+  checkpoint: Checkpoint @connection(fields: ["checkpointID"])
+}
+
+type DoFirst @model {
+  id: ID!
+  type: String!
+  required: Boolean!
+  questions: [DoFirstQuestion!]! @connection(keyName: "byDoFirst", fields: ["id"])
+}
+
+type DoFirstQuestion @model(queries: null) 
+@key(name: "byDoFirst", fields: ["doFirstID", "questionID"])
+{
+  id: ID!
+  doFirstID: ID!
+  questionID: ID!
+  doFirst: DoFirst @connection(fields: ["doFirstID"])
+  question: Question @connection(fields: ["questionID"])
 }
 
 type Instructions {
@@ -359,4 +407,52 @@ type Activity @model {
   lineNumber: Int
   writingPrompts: [WritingPrompts!]!
   breakdown: Breakdown!
+}
+
+type Checkpoint @model {
+  id: ID!
+  label: String!
+  type: String!
+  instructions: String!
+  questions: [CheckpointQuestions]! @connection(keyName: "byCheckpoint", fields: ["id"])
+}
+
+type CheckpointQuestions @model(queries: null) 
+@key(name: "byCheckpoint", fields: ["checkpointID", "questionID"])
+@key(name: "byQuestion", fields: ["questionID", "checkpointID"])
+{
+  id: ID!
+  checkpointID: ID!
+  questionID: ID!
+  required: Boolean!
+  checkpoint: Checkpoint @connection(fields: ["checkpointID"])
+  question: Question @connection(fields: ["questionID"])
+}
+
+type Question @model {
+  id: ID!
+  label: String!
+  type: String!
+  question: String!
+  options: [String]
+}
+
+type QuestionData @model {
+  id: ID!
+  questionID: ID!
+  email: String!
+  authID: String!
+  question: Question @connection(fields: ["questionID"])
+  person: Person @connection(fields: ["email", "authID"])
+  response: String
+}
+
+type QuestionDataStudentData @model(queries: null) 
+@key(name: "byStudentData", fields: ["studentDataID", "questionDataID"])
+{
+  id: ID!
+  studentDataID: ID!
+  studentData: StudentData @connection(fields: ["studentDataID"])
+  questionDataID: ID!
+  questionData: QuestionData @connection(fields: ["questionDataID"])
 }

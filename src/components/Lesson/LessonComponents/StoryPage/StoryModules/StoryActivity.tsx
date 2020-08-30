@@ -20,8 +20,8 @@ export interface StoryState {
 const Story = () => {
     const { state, dispatch } = useContext(LessonContext);
     const [ cookies, setCookie ] = useCookies(['story']);
-    const inputs = state.data.warmUp.inputs;
-    const video = state.data.warmUp.instructions.link
+    const inputs = state.data.lesson.warmUp.inputs;
+    const video = state.data.lesson.warmUp.instructions.link
     const [ openPopup, setOpenPopup ] = useState(false)
 
     

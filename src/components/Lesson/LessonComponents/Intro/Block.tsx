@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import Keyword from './Keyword';
-import BioBlock from './BioBLock';
+import BioBlock from './BioBlock';
 import Connect from './Connect';
 import { IconContext } from "react-icons";
 import { FaLink } from 'react-icons/fa';
@@ -19,7 +19,7 @@ import {
 
 const Block = () => {
     const { state, theme } = useContext(LessonContext);
-    const artistBio = state.data.artist.bio
+    // const artistBio = state.data.artist.bio
     const match = useRouteMatch();
     const [bio, setBio] = useState(true);
     const [concept, setConcept] = useState(false);

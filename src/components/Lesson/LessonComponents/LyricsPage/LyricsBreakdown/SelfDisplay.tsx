@@ -7,8 +7,8 @@ const SelfDisplay = () => {
     const { dispatch, state } = useContext(LessonContext)
     const [ modules, setModules ] = useState<Array<any>>()
     const displayProps = state.componentState.lyrics.selected
-    const { artist, title } = state.data.coreLesson.content
-    const moduleTypes = state.data.coreLesson.tools
+    const { artist, title } = state.data.lesson.coreLesson.content
+    const moduleTypes = state.data.lesson.coreLesson.tools
 
     const arrayParseToString = (arr: Array<Array<{[key: string]: any}>>) => {
         let resultArray = arr.map((item: Array<{ text: string, [key: string]: any}>) => {

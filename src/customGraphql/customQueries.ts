@@ -18,142 +18,240 @@ export const getClassroom = /* GraphQL */ `
   query GetClassroom($id: ID!) {
     getClassroom(id: $id) {
       id
-      courseID
+      open
+      roster
+      displayData {
+        breakdownComponent
+        warmUpData {
+          story
+          title
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+      }
       lessonID
-      lessonPlan {
-        stage
-        type
-        breakdown
-      }
-      artist {
-        images
-        name
-        bio
-      }
-      quotes {
-        text
-        source
-      }
-      warmUp {
+      lesson {
         id
         title
-        label
-        stage
-        type
-        language
-        instructions {
-          video
-          link
-          text
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          quotes {
+            source
+            text
+          }
         }
-        inputs {
+        language
+        summary
+        objectives
+        checkpoints {
+          items {
+            position
+            checkpoint {
+              instructions
+              label
+              type
+              questions {
+                items {
+                  required
+                  question {
+                    label
+                    type
+                    question
+                    options
+                  }
+                }
+                nextToken
+              }
+            }
+          }
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          questions {
+            items {
+              question {
+                label
+                type
+                question
+                options
+              }
+            }
+            nextToken
+          }
+        }
+        warmUpId
+        warmUp {
+          id
           title
-          additionalInputs {
+          label
+          stage
+          type
+          language
+          instructions {
+            video
+            link
+            text
+          }
+          inputs {
+            title
+            additionalInputs {
+              id
+              name
+              prompt
+              example
+            }
+          }
+          breakdown {
+            reflectionQuestions
+          }
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          instructions {
+            video
+            link
+            text
+          }
+          content {
+            video
+            link
+            title
+            artist
+            text
+          }
+          tools {
+            name
+            color
+            icon
+          }
+          breakdown {
+            reflectionQuestions
+          }
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          lineNumber
+          instructions {
+            video
+            link
+            text
+          }
+          writingPrompts {
+            id
             name
             prompt
             example
           }
-        }
-        breakdown {
-          included
-          reflectionQuestions
+          breakdown {
+            reflectionQuestions
+          }
         }
       }
-      coreLesson {
-        id
-        title
-        label
+      lessonPlan {
+        disabled
+        open
+        active
         stage
         type
-        language
-        instructions {
-          video
-          link
-          text
-        }
-        content {
-          video
-          link
-          title
-          artist
-          text
-        }
-        tools {
-          name
-          color
-          icon
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
+        displayMode
       }
-      activity {
-        id
-        title
-        label
-        stage
-        type
-        language
-        instructions {
-          video
-          link
-          text
-        }
-        lineNumber
-        writingPrompts {
-          id
-          name
-          prompt
-          example
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-      }
+      # data {
+      #   items {
+      #     id
+      #     lessonProgress
+      #     status
+      #     live
+      #     classroomID
+      #     studentID
+      #     createdAt
+      #     updatedAt
+      #   }
+      #   nextToken
+      # }
+      createdAt
+      updatedAt
     }
   }
 `;
 
-export const getClassroomDataTest = /* GraphQL */ `
-  query GetClassroomDataTest($classroomID: ID!, $studentID: String!) {
-    getClassroomDataTest(classroomID: $classroomID, studentID: $studentID) {
+export const getStudentData = /* GraphQL */ `
+  query GetStudentData($classroomID: ID!, $studentID: String!) {
+    getStudentData(classroomID: $classroomID, studentID: $studentID) {
+      id
       lessonProgress
+      status
+      live
       classroomID
       studentID
-      data {
-        warmup {
-          story
-          title
-          additional {
-            name
-            input
-          }
+      warmupData {
+        story
+        title
+        additional {
+          name
+          input
         }
-        corelesson {
-          selected {
-            id
-            anchor
-            focus
-            color
-            content {
-              id
-              text
-            }
-          }
+      }
+      corelessonData {
+        selected {
+          anchor
+          color
+          focus
+          id
         }
-        activity {
-          editInput
-          editMode
-          title
-          lines {
-            example
-            id
-            menuOpen
-            text
-          }
+      }
+      activityData {
+        editInput
+        editMode
+        lines {
+          example
+          id
+          menuOpen
+          text
         }
+        title
+      }
+      doFirstData {
+        items {
+          id
+          studentDataID
+          questionDataID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      checkpointData {
+        items {
+          id
+          studentDataID
+          questionDataID
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       createdAt
       updatedAt

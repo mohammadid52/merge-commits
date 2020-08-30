@@ -74,7 +74,7 @@ const LessonControl = () => {
                     <div className={`${fullscreen ? 'w-full' : 'w-6/10'} h-full flex flex-col items-center`}>
                         <div className={`${fullscreen ? 'h-full' : 'h-8/10'} relative w-full bg-dark shadow-elem-light rounded-lg mb-4 p-4`}>
                             {/*  */}
-                            <IntroView
+                            <LyricsActivityView
                                 student={selectedStudent}
                                 fullscreen={fullscreen}
                                 />
