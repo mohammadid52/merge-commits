@@ -43,19 +43,19 @@ const NewPassword = () => {
                         return {
                             show: true,
                             type: 'error',
-                            message: 'New password cannot be blank',
+                            message: 'Please enter your new password',
                         }
                     } if (!input.match) {
                         return {
                             show: true,
                             type: 'error',
-                            message: 'Confirm password cannot be blank',
+                            message: 'Please confirm your new password',
                         }
                     } if ( input.password !== input.match ) {
                         return {
                             show: true,
                             type: 'error',
-                            message: 'Passwords do not match',
+                            message: 'Your new password and confirmation password do not match',
                         }
                     } if (error.code === "InvalidPasswordException" || "InvalidParameterException") {
                         return {
@@ -107,7 +107,7 @@ const NewPassword = () => {
                     <div className="text-center text-xs mb-2">* Password must be at least 8 characters and include uppercase and lowercase</div>
                         {
                             message.show ? (
-                                <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                <p className={`text-sm text-center ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
                                     { message.message }
                                 </p>
                             ) : null

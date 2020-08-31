@@ -37,19 +37,19 @@ const Registration = () => {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Email cannot be blank',
+                        message: 'Please enter your email',
                     }
                 } if (!username.includes("@")) {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Email is not in the expected email address format',
+                        message: 'Your email is not in the expected email address format',
                     }
                 } if (!code) {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Confirmation code cannot be empty',
+                        message: 'Please enter your confirmation code',
                     }
                 } 
                 switch (error.code) {
@@ -57,7 +57,7 @@ const Registration = () => {
                         return {
                                     show: true,
                                     type: 'error',
-                                    message: 'Email was not found',
+                                    message: 'The email you entered was not found',
                                 }
                     default: 
                     return {

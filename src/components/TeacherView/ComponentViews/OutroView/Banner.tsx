@@ -14,7 +14,7 @@ interface props {
 
 const Banner = (props: props) => {
     const {  fullscreen } = props;
-    const { state } = useContext(LessonContext);
+    // const { state } = useContext(Le);
     // const achievements = state.data.lesson.achievements;
     // const studentPortfolio = state.data.student.portfolio;
 

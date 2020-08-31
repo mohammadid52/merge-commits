@@ -60,37 +60,37 @@ const Reset = () => {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Email cannot be blank',
+                        message: 'Please enter your email',
                     }
                 } if (!username.includes("@")) {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Email is not in the expected email address format',
+                        message: 'Your email is not in the expected email address format',
                     }
                 } if (!code) {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Confirmation code cannot be blank',
+                        message: 'Please enter your confirmation code',
                     }
                 } if (!password) {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'New password cannot be blank',
+                        message: 'Please enter your new password',
                     }
                 } if (!match) {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Confirm password cannot be blank',
+                        message: 'Please enter your confirmation password',
                     }
                 } if ( input.password !== input.match ) {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Passwords do not match',
+                        message: 'Your new password and confirmation password do not match',
                     }
                 }
                 switch (error.code) {
@@ -110,7 +110,13 @@ const Reset = () => {
                         return {
                                     show: true,
                                     type: 'error',
-                                    message: 'Email not found',
+                                    message: 'The email you entered was not found',
+                                }
+                    case "CodeMismatchException":
+                        return {
+                                    show: true,
+                                    type: 'error',
+                                    message: 'The confirmation code you provided is not correct',
                                 }
                     default: 
                     return {

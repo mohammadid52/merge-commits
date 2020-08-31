@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
 import { IconContext } from "react-icons";
 import { FaMusic } from 'react-icons/fa';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface props {
         fullscreen: boolean
     }
 const Banner = (props: props) => {
     const { fullscreen } = props;
-    const { state } = useContext(LessonContext);
-    const { title, artist } = state.data.coreLesson.content
+    const { state } = useContext(LessonControlContext);
+    const { title, artist } = state.data.lesson.coreLesson.content
 
     return (
 

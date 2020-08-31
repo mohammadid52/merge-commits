@@ -63,7 +63,7 @@ const ClassRoster = (props: props) => {
             </div>
             <div className={`w-full h-full flex flex-col items-center`}>
                 {
-                    state.roster.length > 0 ? 
+                    state.roster && state.roster.length > 0 ? 
                     state.roster.map((item: any, key: number) => (
                         <div key={key} className={`w-full flex my-2`}>
                             <div className={`w-2/10 mx-2 text-xs`}>

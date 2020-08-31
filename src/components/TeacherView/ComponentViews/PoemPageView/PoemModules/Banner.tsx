@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { IconContext } from "react-icons";
 import { FaPenFancy } from 'react-icons/fa';
-import { LessonContext } from '../../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface props {
         fullscreen: boolean
@@ -9,8 +9,8 @@ interface props {
 
 const Banner = (props: props) => {
     const {  fullscreen } = props;
-    const { state } = useContext(LessonContext);
-    const title = state.data.activity.title;
+    const { state } = useContext(LessonControlContext);
+    const title = state.data.lesson.activity.title;
 
     return (
 

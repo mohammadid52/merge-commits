@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface ToolBarProps {
     fullscreen: boolean,
@@ -12,7 +13,7 @@ interface ToolBarProps {
 
 const ToolBar = (props: ToolBarProps) => {
     const { editMode, setEditMode, fullscreen } = props;
-    const { state, dispatch } = useContext(LessonContext);
+    const { state, dispatch } = useContext(LessonControlContext);
     const [ search, setSearch ] = useState('');
 
     const handleDragOver = (e: { stopPropagation: () => void; }) => {
@@ -36,7 +37,7 @@ const ToolBar = (props: ToolBarProps) => {
                 <h3 className="h-1/10 text-lg font-bold font-open">My word bank:</h3>
                 <input id="search" className="h-1/10 pl-2 rounded-lg shadow-elem-dark text-gray-700 text-sm bg-gray-200" type="text" value={search} placeholder="Search..." onChange={handleChange}/>
                 <div className="w-full h-40 md:h-6/10 bg-gray-300 flex flex-col shadow-elem-dark text-gray-500 px-4 rounded-lg overflow-scroll">
-                    { 
+                    {/* { 
                         search === '' ? state.word_bank.map((word: string, key: string) => (
                             <div 
                                 key={key} 
@@ -65,7 +66,7 @@ const ToolBar = (props: ToolBarProps) => {
                                 )
                             }
                         })
-                    }
+                    } */}
                 </div>
             </div>
         </div>
