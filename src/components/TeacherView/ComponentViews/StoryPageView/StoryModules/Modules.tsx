@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
-import { string } from 'prop-types';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 type InputProp = [{ name: string; example: string; prompt: string; }];
 
@@ -15,7 +14,7 @@ interface FormInputsState {
 
 const Modules = (props: ModulesProps) => {
     const { inputs } = props
-    const { state, dispatch } = useContext(LessonContext);
+    const { state, dispatch } = useContext(LessonControlContext);
     const [ cookies, setCookie ] = useCookies(['story'])
     const [ formInputs, setFormInputs ] = useState<FormInputsState>()
 
@@ -40,42 +39,42 @@ const Modules = (props: ModulesProps) => {
             })
         }
 
-        if ( state.componentState.story &&state.componentState.story.additional && state.componentState.story.additional.length > 0 ) {
-            state.componentState.story.additional.map((item: {name: string, input: string}) => {
-                setFormInputs(prev => {
-                    return {
-                        ...prev,
-                        [item.name]: item.input,
-                    }
-                })
-            })
-        }
+        // if ( state.componentState.story &&state.componentState.story.additional && state.componentState.story.additional.length > 0 ) {
+        //     state.componentState.story.additional.map((item: {name: string, input: string}) => {
+        //         setFormInputs(prev => {
+        //             return {
+        //                 ...prev,
+        //                 [item.name]: item.input,
+        //             }
+        //         })
+        //     })
+        // }
     }, [])
 
     useEffect(() => {
-        if ( formInputs && state.componentState.story.additional
-            && state.componentState.story.additional.length > 0 ) {
-            let tempArray: Array<{name: string, input: string}> = [];
-            inputs.forEach(input => {
-                let tempObj = {
-                    name: input.name,
-                    input: formInputs[input.name]
-                }
+        // if ( formInputs && state.componentState.story.additional
+        //     && state.componentState.story.additional.length > 0 ) {
+        //     let tempArray: Array<{name: string, input: string}> = [];
+        //     inputs.forEach(input => {
+        //         let tempObj = {
+        //             name: input.name,
+        //             input: formInputs[input.name]
+        //         }
                 
-                tempArray.push(tempObj)
-            })
+        //         tempArray.push(tempObj)
+        //     })
 
-            dispatch({
-                type: 'UPDATE_COMPONENT_STATE',
-                payload: {
-                    componentName: 'story',
-                    inputName: 'additional',
-                    content: tempArray
-                }
-            })
+        //     dispatch({
+        //         type: 'UPDATE_COMPONENT_STATE',
+        //         payload: {
+        //             componentName: 'story',
+        //             inputName: 'additional',
+        //             content: tempArray
+        //         }
+        //     })
 
-            setCookie('story', {...cookies.story, additional: tempArray})
-        }
+        //     setCookie('story', {...cookies.story, additional: tempArray})
+        // }
     }, [formInputs])
 
     const handleFormInputChange = (e: { target: { id: string; value: string; }; }) => {

@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { IconContext } from "react-icons";
 import { FaEraser } from 'react-icons/fa';
 import { LessonContext } from '../../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface ToolbarProps {
     setColor: React.Dispatch<React.SetStateAction<string>>,
@@ -10,9 +11,9 @@ interface ToolbarProps {
 
 const ToolBar = (props: ToolbarProps) => {
     const { setColor, fullscreen } = props;
-    const { state, dispatch } = useContext(LessonContext);
+    const { state, dispatch } = useContext(LessonControlContext);
     const [ search, setSearch ] = useState('');
-    const buttons = state.data.coreLesson.tools;
+    const buttons = state.data.lesson.coreLesson.tools;
 
     const handleClick = (e: any) => {
         setColor(e.target.id);
@@ -52,7 +53,7 @@ const ToolBar = (props: ToolbarProps) => {
                     ))
                 }
                     <div id="" className={`${fullscreen ? 'h-12 w-12 text-3xl' : 'h-8 w-8 text-md'} bg-gray-200 rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center`} onClick={handleClick}>
-                        <IconContext.Provider value={{ color: 'darkgray', size: '2rem'}}>
+                        <IconContext.Provider value={{ color: 'darkgray', size: '1rem'}}>
                             <FaEraser />
                         </IconContext.Provider>
                     </div>

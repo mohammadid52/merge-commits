@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-import { LessonContext } from '../../../../contexts/LessonContext';
 import { IconContext } from "react-icons";
 import { GoQuote } from 'react-icons/go';
 import { FaQuoteLeft } from 'react-icons/fa';
 import PhotoBlock from './PhotoBlock';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
 interface props {
         fullscreen: boolean
@@ -11,9 +11,9 @@ interface props {
 
 const QuoteBlock = (props: props) => { 
     const {  fullscreen } = props
-    const { state, theme } = useContext(LessonContext);
-    const quoteArray = state.data.quotes;
-    const artistName = state.data.artist.name;
+    const { state, theme } = useContext(LessonControlContext);
+    const quoteArray = state.data.lesson.artist.quotes;
+    const artistName = state.data.lesson.artist.name;
     
 
     const randomQuote = () => {

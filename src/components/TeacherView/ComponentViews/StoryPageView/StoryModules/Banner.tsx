@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { IconContext } from "react-icons";
 import { FaScroll } from 'react-icons/fa';
-import { LessonContext } from '../../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 const Banner = () => {
-    const { state } = useContext(LessonContext);
-    const title = state.data.warmUp.title
+    const { state } = useContext(LessonControlContext);
+    const title = state.data.lesson.warmUp.title
 
     return (
         <div className="w-full h-1/10 flex flex-row justify-center items-center">

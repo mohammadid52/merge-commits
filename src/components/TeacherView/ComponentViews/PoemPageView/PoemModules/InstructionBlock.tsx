@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { IconContext } from "react-icons";
 import { FaVideo } from 'react-icons/fa';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface InstructionsBlockProps {
     editMode: boolean
@@ -9,9 +10,9 @@ interface InstructionsBlockProps {
 
 const InstructionsBlock = (props: InstructionsBlockProps) => {
     const { editMode } = props
-    const { state } = useContext(LessonContext);
+    const { state } = useContext(LessonControlContext);
     const [ videoMode, setVideoMode ] = useState(false);
-    const instructions = state.data.activity.instructions;
+    const instructions = state.data.lesson.activity.instructions;
 
     const toggleVideoMode = () => {
         setVideoMode(!videoMode);

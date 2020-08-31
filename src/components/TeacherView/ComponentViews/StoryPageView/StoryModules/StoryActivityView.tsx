@@ -1,12 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
 import InstructionsBlock from './InstructionBlock';
 import StoryForm from './StoryForm';
 import Banner from './Banner';
 import Modules from './Modules';
 import InstructionsPopup from '../../../../Lesson/Popup/InstructionsPopup';
-import { string } from 'prop-types';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 export interface StoryState {
     story: string,
@@ -24,58 +23,58 @@ interface props {
 
 const Story = (props: props) => {
     const { student, fullscreen } = props;
-    const { state, dispatch } = useContext(LessonContext);
+    const { state, dispatch } = useContext(LessonControlContext);
     const [ cookies, setCookie ] = useCookies(['story']);
-    const inputs = state.data.warmUp.inputs;
-    const video = state.data.warmUp.instructions.link
+    const inputs = state.data.lesson.warmUp.inputs;
+    const video = state.data.lesson.warmUp.instructions.link
     const [ openPopup, setOpenPopup ] = useState(false)
 
     
     
 
     useEffect(() => {
-        if ( !cookies.story && !state.componentState.story ) {
-           let tempObj: StoryState = {
-                story: '',
-            }
-            if ( inputs.title ) {
-                tempObj.title = '';
-            }
+        // if ( !cookies.story && !state.componentState.story ) {
+        //    let tempObj: StoryState = {
+        //         story: '',
+        //     }
+        //     if ( inputs.title ) {
+        //         tempObj.title = '';
+        //     }
 
-            if (inputs.additionalInputs.length > 0) {
-                let additional:Array<{name: string, text: string | []}>= [];
-                inputs.additionalInputs.forEach((input: { name: string; }) => {
-                    let newInput = {
-                        name: input.name,
-                        text: '',
-                    }
+        //     if (inputs.additionalInputs.length > 0) {
+        //         let additional:Array<{name: string, text: string | []}>= [];
+        //         inputs.additionalInputs.forEach((input: { name: string; }) => {
+        //             let newInput = {
+        //                 name: input.name,
+        //                 text: '',
+        //             }
 
-                    additional.push(newInput);
-                })
+        //             additional.push(newInput);
+        //         })
 
-                tempObj.additional = additional;
-            }
+        //         tempObj.additional = additional;
+        //     }
 
-            dispatch({
-                type: 'SET_INITIAL_COMPONENT_STATE',
-                payload: {
-                    name: 'story',
-                    content: tempObj
-                }
-            })
+        //     dispatch({
+        //         type: 'SET_INITIAL_COMPONENT_STATE',
+        //         payload: {
+        //             name: 'story',
+        //             content: tempObj
+        //         }
+        //     })
 
-            setCookie('story', tempObj)
-        }
+        //     setCookie('story', tempObj)
+        // }
         
-        if ( cookies.story ) {
-            dispatch({
-                type: 'SET_INITIAL_COMPONENT_STATE',
-                payload: {
-                    name: 'story',
-                    content: cookies.story
-                }
-            })
-        }
+        // if ( cookies.story ) {
+        //     dispatch({
+        //         type: 'SET_INITIAL_COMPONENT_STATE',
+        //         payload: {
+        //             name: 'story',
+        //             content: cookies.story
+        //         }
+        //     })
+        // }
 
     }, []);
 

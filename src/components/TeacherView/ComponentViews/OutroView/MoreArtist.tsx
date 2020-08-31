@@ -5,6 +5,7 @@ import PhotoBlock from './PhotoBlock';
 import { IconContext } from "react-icons";
 import { IoLogoYoutube, } from 'react-icons/io';
 import { FaSpotify, } from 'react-icons/fa';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
 interface props {
         fullscreen: boolean
@@ -12,7 +13,7 @@ interface props {
 
 const MoreArtist = (props: props) => {
     const {  fullscreen } = props;
-    const { state, dispatch } = useContext(LessonContext)
+    const { state, dispatch } = useContext(LessonControlContext)
     const [ fullscreenOutro, setFullscreenOutro ] = useState(false)
 
     return(
@@ -43,7 +44,7 @@ const MoreArtist = (props: props) => {
 
             </div>
             <div className="h-5/10 rounded-lg">
-                <VideoBlock link={state.data.coreLesson.content.link} fullscreenOutro={fullscreenOutro}/>
+                <VideoBlock link={state.data.lesson.coreLesson.content.link} fullscreenOutro={fullscreenOutro}/>
             </div>
         </div>
     )

@@ -7,6 +7,7 @@ import ToolBar from './ToolBar';
 import Banner from './Banner';
 import EditBlock from './EditBlock';
 import InstructionsPopup from '../../../../Lesson/Popup/InstructionsPopup';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 type storageObject = {
     title: string
@@ -27,94 +28,96 @@ interface props {
 
 const PoemActivity = (props: props) => {
     const { student, fullscreen } = props;
-    const { state, dispatch } = useContext(LessonContext);
+    const { state, dispatch } = useContext(LessonControlContext);
     const [ cookies, setCookie ] = useCookies(['poem']);
     const [ editMode, setEditMode ] = useState({
-        open: state.componentState.poem && state.componentState.poem.editMode ? state.componentState.poem.editMode : false,
-        input: state.componentState.poem && state.componentState.poem.editInput ? state.componentState.poem.editInput : '',
+        open: false,
+        input: ''
+        // open: state.componentState.poem && state.componentState.poem.editMode ? state.componentState.poem.editMode : false,
+        // input: state.componentState.poem && state.componentState.poem.editInput ? state.componentState.poem.editInput : '',
     })
-    const { video, link, text } = state.data.activity.instructions
+    const { video, link, text } = state.data.lesson.activity.instructions
     const [ openPopup, setOpenPopup ] = useState(false);
 
     
     useEffect(() => {
-        if ( cookies.poem ) {
-            if ( !cookies.poem.editMode ) {
-                dispatch({
-                    type: 'SET_INITIAL_COMPONENT_STATE',
-                    payload: {
-                        name: 'poem',
-                        content: cookies.poem
-                    }
-                })
-            }
+        // if ( cookies.poem ) {
+        //     if ( !cookies.poem.editMode ) {
+        //         dispatch({
+        //             type: 'SET_INITIAL_COMPONENT_STATE',
+        //             payload: {
+        //                 name: 'poem',
+        //                 content: cookies.poem
+        //             }
+        //         })
+        //     }
 
-            if ( cookies.poem.editMode && cookies.poem ) {
-                setEditMode(prev => {
-                    return {
-                        ...prev,
-                        editMode: true,
-                        input: cookies.poem.editInput
-                    }
-                })
+        //     if ( cookies.poem.editMode && cookies.poem ) {
+        //         setEditMode(prev => {
+        //             return {
+        //                 ...prev,
+        //                 editMode: true,
+        //                 input: cookies.poem.editInput
+        //             }
+        //         })
 
-                dispatch({
-                    type: 'SET_INITIAL_COMPONENT_STATE',
-                    payload: {
-                        name: 'poem',
-                        content: cookies.poem
-                    }
-                })
-            }
-        }
+        //         dispatch({
+        //             type: 'SET_INITIAL_COMPONENT_STATE',
+        //             payload: {
+        //                 name: 'poem',
+        //                 content: cookies.poem
+        //             }
+        //         })
+        //     }
+        // }
 
-        if ( !cookies.poem && !state.componentState.poem ) {
-            let storageObj: storageObject = {
-                title: '',
-                editMode: false,
-                editInput: '',
-                lines: [],
-            }
+        // if ( !cookies.poem && !state.componentState.poem ) {
+        //     let storageObj: storageObject = {
+        //         title: '',
+        //         editMode: false,
+        //         editInput: '',
+        //         lines: [],
+        //     }
 
-            dispatch({
-                type: 'SET_INITIAL_COMPONENT_STATE',
-                payload: {
-                    name: 'poem',
-                    content: storageObj
-                }
-            })
+        //     dispatch({
+        //         type: 'SET_INITIAL_COMPONENT_STATE',
+        //         payload: {
+        //             name: 'poem',
+        //             content: storageObj
+        //         }
+        //     })
 
-            setCookie('poem', storageObj)
-        }
+        //     setCookie('poem', storageObj)
+        // }
     }, [])
 
     useEffect(() => {
-        if ( state.componentState.poem && editMode.open === true ) {
-            dispatch({
-                type: 'UPDATE_COMPONENT_STATE',
-                payload: {
-                    componentName: 'poem',
-                    inputName: 'editMode',
-                    content: true
-                }
-            })
+        // if ( state.componentState.poem && editMode.open === true ) {
+        //     dispatch({
+        //         type: 'UPDATE_COMPONENT_STATE',
+        //         payload: {
+        //             componentName: 'poem',
+        //             inputName: 'editMode',
+        //             content: true
+        //         }
+        //     })
 
-            setCookie('poem', {...cookies.poem, editMode: true})
-        }
+        //     setCookie('poem', {...cookies.poem, editMode: true})
+        // }
     }, [editMode.open])
 
     useEffect(() => {
-        if ( state.componentState.poem ) {
-            dispatch({
-                type: 'UPDATE_COMPONENT_STATE',
-                payload: {
-                    componentName: 'poem',
-                    inputName: 'editInput',
-                    content: editMode.input
-                }
-            })
+        // if ( state.componentState.poem ) {
+        //     dispatch({
+        //         type: 'UPDATE_COMPONENT_STATE',
+        //         payload: {
+        //             componentName: 'poem',
+        //             inputName: 'editInput',
+        //             content: editMode.input
+        //         }
+        //     })
 
-        }
+        // }
     }, [editMode.input])
 
     return (

@@ -1,29 +1,33 @@
-import React, { useContext, useState } from 'react';
-import ProgressBar from '../Lesson/Foot/ProgressBar/ProgressBar';
+import React, { useContext, useState, Suspense, lazy } from 'react';
+import {
+   Switch,
+   Route,
+   Redirect,
+   useRouteMatch
+} from 'react-router-dom';
 import LessonLoading from '../Lesson/Loading/LessonLoading';
 import ClassRoster from './ClassRoster';
-import Intro from '../Lesson/LessonComponents/Intro/Intro';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
-import IntroView from './ComponentViews/IntroView/IntroView';
+const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
+const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
+const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
+const OutroView = lazy(() => import('./ComponentViews/OutroView/OutroView'));
+const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'))
 import LyricsBreakdownView from './ComponentViews/LyricsPageView/LyricsBreakdown/LyricsBreakdownView';
-import LyricsActivityView from './ComponentViews/LyricsPageView/LyricsModules/LyricsActivityView';
-import OutroView from './ComponentViews/OutroView/OutroView';
 import PoemBreakdownView from './ComponentViews/PoemPageView/PoemBreakdown/PoemBreakdownView';
-import PoemActivityView from './ComponentViews/PoemPageView/PoemModules/PoemActivityView';
 import StoryBreakdownView from './ComponentViews/StoryPageView/StoryBreakdown/StoryBreakdownView';
-import StoryActivtyView from './ComponentViews/StoryPageView/StoryModules/StoryActivityView';
-
-
-
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import { IconContext } from "react-icons";
 import { FaExpand, FaCompress } from 'react-icons/fa';
+import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
 
 type selectedState = number | null
 
 const LessonControl = () => {
     const { state } = useContext(LessonControlContext);
     const [ selectedStudent, setSelectedStudent ] = useState<selectedState>(null);
+    const match = useRouteMatch();
+    const [ componentView, setComponentView ] = useState('');
     const [fullscreen, setFullscreen] = useState(false);
 
     const handleFullscreen = () => {
@@ -41,8 +45,8 @@ const LessonControl = () => {
     return (
         <div className={`w-full h-full bg-gray-400 p-8`}>
             <div className={`w-full h-full flex flex-col`}>
-                <div className={`w-full h-1/10 bg-gray-200 mb-2 shadow-elem-light rounded-lg px-4 flex flex-row items-center`}>
-                    <h1 className={`w-2/10 text-3xl text-center font-extrabold font-open my-2`}>
+                <div className={`w-full h-0.5/10 bg-gray-200 mb-2 shadow-elem-light rounded-lg px-4 flex flex-row items-center`}>
+                    <h1 className={`w-4/10 text-3xl text-center font-extrabold font-open my-2`}>
                         Where I'm From
                     </h1>
                 </div>
@@ -74,10 +78,61 @@ const LessonControl = () => {
                     <div className={`${fullscreen ? 'w-full' : 'w-6/10'} h-full flex flex-col items-center`}>
                         <div className={`${fullscreen ? 'h-full' : 'h-8/10'} relative w-full bg-dark shadow-elem-light rounded-lg mb-4 p-4`}>
                             {/*  */}
-                            <LyricsActivityView
+                            {/* <LyricsActivityView
                                 student={selectedStudent}
-                                fullscreen={fullscreen}/>
+                                fullscreen={fullscreen}/> */}
                             {/*  */}
+                            <Suspense fallback={<div> Loading... </div>}>
+                                <Switch>
+                                    <Route 
+                                        path={`${match.url}/intro`}
+                                        render={() => (
+                                            <IntroView student={selectedStudent} fullscreen={fullscreen} />
+                                        )}
+                                    />
+                                    <Route 
+                                        path={`${match.url}/warmup`}
+                                        render={() => (
+                                            <StoryView student={selectedStudent} fullscreen={fullscreen} />
+                                        )}
+                                    />
+                                    <Route 
+                                        path={`${match.url}/corelesson`}
+                                        render={() => (
+                                            <LyricsView student={selectedStudent} fullscreen={fullscreen} />
+                                        )}
+                                    />
+                                    <Route 
+                                        path={`${match.url}/activity`}
+                                        render={() => (
+                                            <PoemView student={selectedStudent} fullscreen={fullscreen} />
+                                        )}
+                                    />
+                                    <Route 
+                                        path={`${match.url}/checkpoint`}
+                                        render={() => (
+                                            <Checkpoint />
+                                        )}
+                                    />
+                                    <Route 
+                                        path={`${match.url}/outro`}
+                                        render={() => (
+                                            <OutroView student={selectedStudent} fullscreen={fullscreen} />
+                                        )}
+                                    />
+                                    <Route 
+                                        exact
+                                        path={`${match.url}/`}
+                                        render={({location}) => (
+                                            <Redirect 
+                                                to={{
+                                                pathname: `${match.url}/intro`,
+                                                state: { from: location }
+                                            }}/>
+                                        )}
+                                    />
+                                </Switch>
+                            </Suspense>
                             <div className="absolute cursor-pointer w-auto text-xl m-2" style={{bottom: 0, right: 0}} onClick={handleFullscreen}>
                                 <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem' }}>
                                     {fullscreen ? < FaCompress /> :< FaExpand />}
@@ -87,7 +142,7 @@ const LessonControl = () => {
                         </div>
 
                         <div className={`${fullscreen ? 'hidden' : 'display'} flex justify-center items-center`}>
-                            <LessonControlBar />
+                            <LessonControlBar setComponentView={setComponentView} />
                         </div>
                     </div>
                 </div>

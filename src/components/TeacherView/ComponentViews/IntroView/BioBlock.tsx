@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { IconContext } from "react-icons";
 import { FaMusic } from 'react-icons/fa';
-import { LessonContext } from '../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
 const BioBlock = () => {
-    const { theme } = useContext(LessonContext);
+    const { theme } = useContext(LessonControlContext);
 
     const firstLetterFunction = (str: string) => {
         let arr = str.split('');

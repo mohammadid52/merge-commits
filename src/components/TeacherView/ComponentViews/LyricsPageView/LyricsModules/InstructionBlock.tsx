@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { IconContext } from "react-icons";
 import { FaVideo } from 'react-icons/fa';
-import { LessonContext } from '../../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface props {
         fullscreen: boolean
@@ -9,9 +9,9 @@ interface props {
 
 const InstructionsBlock = (props: props) => {
     const {  fullscreen } = props;
-    const { state } = useContext(LessonContext);
+    const { state } = useContext(LessonControlContext);
     const [ videoMode, setVideoMode ] = useState(false);
-    const { text, video, link } = state.data.coreLesson.instructions;
+    const { text, video, link } = state.data.lesson.coreLesson.instructions;
     const instructionsArr = [
             <p className="text-sm mb-2">
                 Read the lyrics to the song "Where I'm from" by Marlon Lizama.

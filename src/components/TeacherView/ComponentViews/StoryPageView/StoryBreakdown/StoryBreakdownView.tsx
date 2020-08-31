@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
 import ReflectionQuestions from './ReflectionQuestions';
 import Modules from './Modules';
 import Banner from './Banner';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface props {
     student: number | null,
@@ -11,7 +11,7 @@ interface props {
 
 const SelfDisplay = (props: props) => {
     const { student, fullscreen } = props;
-    const { state, dispatch } = useContext(LessonContext);
+    const { state, dispatch } = useContext(LessonControlContext);
     const displayProps = state.componentState.story;
 
     useEffect(() => {

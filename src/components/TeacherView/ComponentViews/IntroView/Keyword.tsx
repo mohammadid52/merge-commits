@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { IconContext } from "react-icons";
 import { FaMusic } from 'react-icons/fa';
-import { LessonContext } from '../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
 const Keyword = () => {
-    const { state, theme } = useContext(LessonContext);
-    const artistBio = state.data.artist.bio
+    const { state, theme } = useContext(LessonControlContext);
+    // const artistBio = state.data.artist.bio
 
     // const firstLetterFunction = (str: string) => {
     //     let arr = str.split('');

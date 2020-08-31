@@ -6,8 +6,8 @@ import { useCookies } from 'react-cookie';
 import * as customMutations from '../customGraphql/customMutations';
 import * as customQueries from '../customGraphql/customQueries';
 import { API, graphqlOperation } from 'aws-amplify';
-import queryString from 'query-string';
 import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
 
 export const LessonContext = React.createContext(null);
 
@@ -73,7 +73,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
     async function getClassroom() {
         let queryParams = queryString.parse(location.search)
-        let studentID = cookies.auth.email
+        
         try {
             // this any needs to be changed once a solution is found!!!
             const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: queryParams.id }))
@@ -85,17 +85,16 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         }
     }
 
-    // async function getClassroomData() {
-        
-
-    //     try {
-    //         // this any needs to be changed once a solution is found!!!
-            
-            
-    //         
-    //     } catch (error) {
-    //         console.error('classroom data error', error)
-    //     }
+    // const subscribeToClassroom = () => {
+    //     let queryParams = queryString.parse(location.search)
+  
+    //     // @ts-ignore
+    //     const classroomSubscription = API.graphql(graphqlOperation(onUpdateClassroom, 
+    //       { id: queryParams.id })).subscribe({
+    //         next: (classroomData: any) => console.log(classroomData)
+    //     });
+  
+    //     console.log(classroomSubscription)
     // }
 
     useEffect(() => {
