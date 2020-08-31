@@ -45,7 +45,7 @@ const LessonControl = () => {
     }
 
     return (
-        <div className={`w-full h-full bg-gray-400 p-8`}>
+        <div className={`w-full h-screen bg-gray-400 p-8`}>
             <div className={`w-full h-full flex flex-col`}>
                 <div className={`relative w-full h-0.5/10 bg-gray-200 mb-2 shadow-elem-light rounded-lg px-4 flex flex-row items-center`}>
                     <h1 className={`w-4/10 text-3xl text-center font-extrabold font-open my-2`}>
@@ -150,7 +150,7 @@ const LessonControl = () => {
                                 </IconContext.Provider>
                             </div>
                             <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: 0}}>
-                                <button className="bg-red-600 bg-opacity-.9 text-gray-200 h-8 w-32 rounded-xl">
+                                <button className="bg-red-600 bg-opacity-90 text-gray-200 h-8 w-32 rounded-xl">
                                     share screen
                                 </button>
                             </div>
