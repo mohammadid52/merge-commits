@@ -10,6 +10,7 @@ interface props {
 const DoFirst = (props: props) => {
     const { student, fullscreen } = props;
     const { state } = useContext(LessonControlContext); 
+    const  doFirstComponent  = state.data.lesson.doFirst.questions.items;
     const [ input, setInput ] = useState('')
 
     useEffect(() => {
@@ -26,10 +27,16 @@ const DoFirst = (props: props) => {
                     Do First
                 </h3>
             <div className="w-full h-8/10 flex flex-col justify-evenly text-gray-200">
-                <p className="my-8">Write 3-5 facts about what that means to you and and your family.</p>
-                <textarea id="text" className={`${fullscreen ? 'text-2xl p-8' : 'text-sm p-4'} bg-gray-300 w-full h-full text-gray-800 rounded-lg shadow-2`} 
-                value={input}
+                {doFirstComponent.map((item: {question: any}, key: number) => (
+                    
+                    <>
+                    <p className={`${fullscreen ? 'text-xl' : 'text-base'} my-8`}>{item.question.question}</p>
+                    <textarea className={`${item.question.type === 'input' ? 'h-2/10 p-2' : 'h-full p-8'} ${fullscreen ? 'text-sm md:text-2xl' : 'text-base'} bg-gray-300 w-full text-gray-800 rounded-lg shadow-2`} 
+                    
                 />
+                    
+                    </>
+                ) )}
             </div>
         </div>
     )

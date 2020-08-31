@@ -120,7 +120,7 @@ const ChangePassword = () => {
                 </div>
 
                 <div className="h-full px-4 py-5 sm:px-6">
-                    <div className="text-center text-sm">* password must be at least 8 characters and include uppercase and lowercase</div>
+                    <div className="text-center text-sm">password must be at least 8 characters and include uppercase and lowercase</div>
                     <div className="w-full h-auto flex flex-col justify-between items-center my-4">
 
                         <div className="w-3.27/10 m-1 relative">

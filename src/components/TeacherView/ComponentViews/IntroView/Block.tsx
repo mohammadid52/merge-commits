@@ -72,7 +72,7 @@ const Block = (props: props) =>
             </div>
 
             <div className={`px-8 py-4 rounded-lg`}>
-                { select === 'Bio' ? <BioBlock /> : select === 'Keyword' ? <Keyword /> : select === 'Connect' ? <Connect /> : null}
+                { select === 'Bio' ? <BioBlock fullscreen={fullscreen}/> : select === 'Keyword' ? <Keyword fullscreen={fullscreen}/> : select === 'Connect' ? <Connect fullscreen={fullscreen}/> : null}
             </div>
 
     </div>

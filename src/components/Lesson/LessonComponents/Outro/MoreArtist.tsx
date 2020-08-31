@@ -4,12 +4,23 @@ import VideoBlock from './VideoBlock';
 import PhotoBlock from './PhotoBlock';
 import { IconContext } from "react-icons";
 import { IoLogoYoutube, } from 'react-icons/io';
+import { AiFillPlusCircle } from 'react-icons/ai';
+import { AiFillInstagram, } from 'react-icons/ai';
 import { FaSpotify, } from 'react-icons/fa';
 
 
 const MoreArtist = () => {
     const { state, dispatch } = useContext(LessonContext)
-    const [ fullscreen, setFullscreen ] = useState(false)
+    const [ fullscreen, setFullscreen ] = useState(false);
+    const [artistLink, setArtistLinks] = useState(
+        {
+            youtube: '',
+            spotify: '',
+            instagram: 'https://www.instagram.com/iconoclastartists/',
+            etc: 'https://linktr.ee/iconoclastartists'
+
+        }
+    )
 
     return(
         <div className="w-full h-full bg-dark-blue text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
@@ -24,28 +35,68 @@ const MoreArtist = () => {
                 <div className="w-4.8/10 flex flex-col items-center justify-center ">
                     <div className="h-full flex justify-center items-center">
                         <div className="flex flex-col w-4/10">
+                            {
+                                artistLink.youtube ?
                             <div className="cursor-pointer px-4 py-2"> 
+                                <a href={artistLink.youtube} target="_blank" rel="noopener noreferrer">
                                 <IconContext.Provider value={{ color: '#ff0000', size: '5rem'}}>
                                     <IoLogoYoutube />
                                 </IconContext.Provider>
-                            </div>
+                                </a>
+                            </div> :
+                            <div className="px-4 py-2"> 
+                            <IconContext.Provider value={{ color: '#666666', size: '5rem'}}>
+                                <IoLogoYoutube />
+                            </IconContext.Provider>
+                        </div>
+                            }
+                            { artistLink.spotify ?
                             <div className="cursor-pointer px-4 py-2">
+                                <a href={artistLink.spotify} target="_blank" rel="noopener noreferrer">
                                 <IconContext.Provider value={{ color: '#1DB954', size: '5rem'}}>
                                     <FaSpotify />
                                 </IconContext.Provider>
-                            </div>
+                                </a>
+                            </div> :
+                            <div className="px-4 py-2">
+                            <IconContext.Provider value={{ color: '#666666', size: '5rem'}}>
+                                <FaSpotify />
+                            </IconContext.Provider>
+                        </div>
+                            }
+                            
                         </div>
                         <div className="flex flex-col w-4/10">
-                            <div className="cursor-pointer px-4 py-2"> 
-                                <IconContext.Provider value={{ color: '#ff0000', size: '5rem'}}>
-                                    <IoLogoYoutube />
-                                </IconContext.Provider>
-                            </div>
-                            <div className="cursor-pointer px-4 py-2">
-                                <IconContext.Provider value={{ color: '#1DB954', size: '5rem'}}>
-                                    <FaSpotify />
-                                </IconContext.Provider>
-                            </div>
+                            {artistLink.instagram ?
+                                <div className="cursor-pointer px-4"> 
+                                    <a href={artistLink.instagram} target="_blank" rel="noopener noreferrer">
+                                    <IconContext.Provider  value={{ color: '#C13584', size: '6rem'}}>
+                                        <AiFillInstagram />
+                                    </IconContext.Provider>
+                                    </a>
+                                </div> :
+                                <div className="px-4"> 
+                                    <IconContext.Provider  value={{ color: '#666666', size: '6rem'}}>
+                                        <AiFillInstagram />
+                                    </IconContext.Provider>
+                                </div>
+                            }
+                            {artistLink.etc ?
+                                <div className="cursor-pointer px-4">
+                                    <a href={artistLink.etc} target="_blank" rel="noopener noreferrer">
+                                    <IconContext.Provider value={{ color: '#1a7fd8', size: '6rem'}}>
+                                        <AiFillPlusCircle />
+                                    </IconContext.Provider>
+                                    </a>
+                                </div> :
+                                <div className="px-4">
+                                    <IconContext.Provider value={{ color: '#666666', size: '6rem'}}>
+                                        <AiFillPlusCircle />
+                                    </IconContext.Provider>
+                                </div>
+                            }
+                            
+                            
                         </div>
                     </div>
                 </div>

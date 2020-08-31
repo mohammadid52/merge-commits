@@ -32,15 +32,15 @@ const Reset = () => {
     const [newPassToggle, setNewPassToggle] = useState(false);
 
     async function reset() {
-        if ( input.password !== input.match ) {
-            return setMessage(() => {
-                return {
-                    show: true,
-                    type: 'error',
-                    message: 'Passwords do not match',
-                }
-            })
-        }
+        // if ( input.password !== input.match ) {
+        //     return setMessage(() => {
+        //         return {
+        //             show: true,
+        //             type: 'error',
+        //             message: 'Passwords do not match',
+        //         }
+        //     })
+        // }
 
         let username = input.email;
         let password = input.password;
@@ -86,7 +86,7 @@ const Reset = () => {
                         type: 'error',
                         message: 'Please enter your confirmation password',
                     }
-                } if ( input.password !== input.match ) {
+                } if ( password !== match ) {
                     return {
                         show: true,
                         type: 'error',
@@ -166,7 +166,7 @@ const Reset = () => {
                         <div className="text-center text-xs">*password must be at least 8 characters and include uppercase and lowercase</div>
                             {
                                 message.show ? (
-                                    <p className={`text-xs ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                    <p className={`text-xs text-center ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
                                         { message.message }
                                     </p>
                                 ) : null
