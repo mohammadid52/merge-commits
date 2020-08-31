@@ -50,6 +50,12 @@ const Forgot = () => {
                                     type: 'error',
                                     message: 'Email was not found',
                                 }
+                    // case "UserNotFoundException":
+                    //         return {
+                    //                     show: true,
+                    //                     type: 'error',
+                    //                     message: 'Email was not found',
+                    //                 }
                     default: 
                     return {
                             show: true,

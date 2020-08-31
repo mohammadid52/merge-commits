@@ -14,6 +14,7 @@ interface UserInfoProps {
 }
 
 const ProfileEdit = (props: UserInfoProps) => {
+    console.log(props.user, 'user')
     const history = useHistory();
     const {user, getUser, status, setStatus} = props;
     const [editUser, setEditUser] = useState(user);
@@ -124,42 +125,20 @@ const ProfileEdit = (props: UserInfoProps) => {
                 </div>
 
                 <div className="h-full px-4 py-5 sm:px-6">
-                    
                     <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
-                        <div className="sm:col-span-3">
-                        <label htmlFor="firstName" className="block text-sm font-medium leading-5 text-gray-700">
-                            First name
-                        </label>
-                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="firstName" 
-                                onChange={onChange} 
-                                type="text"
-                                className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                defaultValue={user.firstName}
-                            />
-                        </div>
-                        </div>
-
-                        <div className="sm:col-span-3">
-                        <label htmlFor="lastName" className="block text-sm font-medium leading-5 text-gray-700">
-                            Last name
-                        </label>
-                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="lastName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                            defaultValue = {user.lastName} type="text"
-                            />
-                        </div>
-                        </div>
-
-                        <div className="sm:col-span-3">
-                        <label htmlFor="preferredName" className="block text-sm font-medium leading-5 text-gray-700">
-                            Nickname
-                        </label>
-                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="preferredName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                            defaultValue = {user.preferredName}
-                            />
-                        </div>
+                    
+                    {user.role === 'ST' ? 
+                    // what users with STUDENT can see
+                    <>
+                    <div className="sm:col-span-3">
+                            <label htmlFor="preferredName" className="block text-sm font-medium leading-5 text-gray-700">
+                                Nickname
+                            </label>
+                            <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                                <input id="preferredName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                defaultValue = {user.preferredName}
+                                />
+                            </div>
                         </div>
 
                         <div className="sm:col-span-3">
@@ -170,23 +149,87 @@ const ProfileEdit = (props: UserInfoProps) => {
                                 items= {Language}
                             />
                         </div>
+
                         <div className="sm:col-span-3">
-                        <label htmlFor="phone" className="block text-sm font-medium leading-5 text-gray-700">
-                            Contact Number
-                        </label>
-                        <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                            <input id="phone" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                            defaultValue = {user.phone}
+                            <label htmlFor="phone" className="block text-sm font-medium leading-5 text-gray-700">
+                                Contact Number
+                            </label>
+                            <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                                <input id="phone" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                defaultValue = {user.phone}
+                                />
+                            </div>
+                        </div>
+                        </>
+                        
+                        : 
+                        // everyone else can see
+                        <>
+                        <div className="sm:col-span-3">
+                            <label htmlFor="firstName" className="block text-sm font-medium leading-5 text-gray-700">
+                                First name
+                            </label>
+                            <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                                <input id="firstName" 
+                                    onChange={onChange} 
+                                    type="text"
+                                    className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                    defaultValue={user.firstName}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="sm:col-span-3">
+                            <label htmlFor="lastName" className="block text-sm font-medium leading-5 text-gray-700">
+                                Last name
+                            </label>
+                            <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                                <input id="lastName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                defaultValue = {user.lastName} type="text"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="sm:col-span-3">
+                            <label htmlFor="preferredName" className="block text-sm font-medium leading-5 text-gray-700">
+                                Nickname
+                            </label>
+                            <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                                <input id="preferredName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                defaultValue = {user.preferredName}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="sm:col-span-3">
+                            <DropdownForm
+                                handleChangeLanguage = {handleChangeLanguage}
+                                userLanguage = {user.language}
+                                label='Language Preference'
+                                items= {Language}
                             />
                         </div>
+
+                        <div className="sm:col-span-3">
+                            <label htmlFor="phone" className="block text-sm font-medium leading-5 text-gray-700">
+                                Contact Number
+                            </label>
+                            <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                                <input id="phone" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                defaultValue = {user.phone}
+                                />
+                            </div>
                         </div>
+                        </>
+                        }
+                    
                     </div>
-                </div>  
+                </div> 
                     
             
             </div>
 
-            <div className="h-auto bg-white shadow-5 sm:rounded-lg">
+            {/* <div className="h-auto bg-white shadow-5 sm:rounded-lg">
             
                 <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
@@ -221,7 +264,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                 </div>  
             
             
-            </div>
+            </div> */}
 
             <div className="px-4 pt-4 w-full flex justify-end">
                 <div className="flex w-4/10">
