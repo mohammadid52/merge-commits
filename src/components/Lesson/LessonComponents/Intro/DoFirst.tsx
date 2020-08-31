@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
+import { BsQuestion } from 'react-icons/bs';
 
 // interface EditBlockProps {
 //     editMode: {
@@ -10,14 +11,10 @@ import { useCookies } from 'react-cookie';
 // }
 
 const DoFirst = () => {
-//     const { editMode } = props;
-//     const { state, dispatch } = useContext(LessonContext);
-//     const [ cookies, setCookie ] = useCookies(['poem']);
-//     const [ editInput, setEditInput ] = useState<{title: string, text: string}>({
-//         title: '',
-//         text: editMode.input,
-//     })
-
+    const { state, dispatch } = useContext(LessonContext);
+    const  doFirstComponent  = state.data.lesson.doFirst.questions.items;
+    const [input, setInput] = useState([]);
+    console.log(doFirstComponent, 'do first')
 //     useEffect(() => {
 //         if ( cookies.poem && cookies.poem.editMode ) {
 //             setEditInput(() => {
@@ -59,15 +56,12 @@ const DoFirst = () => {
 //         } 
 //     }, [editInput.title])
 
-//     const handleChange = (e: { target: { id: string; value: string; }; }) => {
-//         const {id, value} = e.target
-//         setEditInput(editInput => {
-//             return {
-//                 ...editInput,
-//                 [id]: value,
-//             }
-//         })
-//     }
+    const handleInputChange = (e: { target: { id: string; value: string; }; }) => {
+        setInput({
+            ...input,
+            [e.target.id]: e.target.value
+        })
+    }
 
     return (
         <div className="bg-dark-blue w-full h-full rounded-lg shadow-2 ext-gray-200 px-4 md:px-8 py-6">
@@ -75,10 +69,19 @@ const DoFirst = () => {
                     Do First
                 </h3>
             <div className="w-full h-8/10 flex flex-col justify-evenly text-gray-200">
-                <p className="text-xl my-8">Write 3-5 facts about what that means to you and and your family.</p>
-                <textarea id="text" className="bg-gray-300 w-full h-full p-8 text-sm md:text-2xl text-gray-800 rounded-lg shadow-2" 
-                // value={editInput.text} onChange={handleChange}
+                {doFirstComponent.map((item: {question: any}, key: number) => (
+                    
+                    <>
+                    {console.log(item.question)}
+                    <p className="text-xl my-8">{item.question.question}</p>
+                    <textarea className={`${item.question.type === 'input' ? 'h-2/10 p-2' : 'h-full p-8'} bg-gray-300 w-full text-sm md:text-2xl text-gray-800 rounded-lg shadow-2`} 
+                    value={input} 
+                    // onChange={handleInputChange}
                 />
+                    
+                    </>
+                ) )}
+                
             </div>
         </div>
     )

@@ -148,10 +148,10 @@ console.log(data, 'data')
                             )): null
                             
                             }
-                            <div className="">
+                            {/* <div className="">
                                 <Pagination 
                                     data = {data}/>
-                            </div>
+                            </div> */}
 
                             </div>
 
