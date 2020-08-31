@@ -8,7 +8,6 @@ import { AiFillPlusCircle } from 'react-icons/ai';
 import { AiFillInstagram, } from 'react-icons/ai';
 import { FaSpotify, } from 'react-icons/fa';
 
-
 const MoreArtist = () => {
     const { state, dispatch } = useContext(LessonContext)
     const [ fullscreen, setFullscreen ] = useState(false);
@@ -21,6 +20,8 @@ const MoreArtist = () => {
 
         }
     )
+
+    const img = '../../../../../public/instagram.svg';
 
     return(
         <div className="w-full h-full bg-dark-blue text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
@@ -39,13 +40,13 @@ const MoreArtist = () => {
                                 artistLink.youtube ?
                             <div className="cursor-pointer px-4 py-2"> 
                                 <a href={artistLink.youtube} target="_blank" rel="noopener noreferrer">
-                                <IconContext.Provider value={{ color: '#ff0000', size: '5rem'}}>
+                                <IconContext.Provider value={{ color: '#ff0000', size: '4.5rem'}}>
                                     <IoLogoYoutube />
                                 </IconContext.Provider>
                                 </a>
                             </div> :
-                            <div className="px-4 py-2"> 
-                            <IconContext.Provider value={{ color: '#666666', size: '5rem'}}>
+                            <div className="px-4 py-2 opacity-25"> 
+                            <IconContext.Provider value={{ color: '#666666', size: '4.5rem', style: {opacity: '.25'}}}>
                                 <IoLogoYoutube />
                             </IconContext.Provider>
                         </div>
@@ -53,13 +54,13 @@ const MoreArtist = () => {
                             { artistLink.spotify ?
                             <div className="cursor-pointer px-4 py-2">
                                 <a href={artistLink.spotify} target="_blank" rel="noopener noreferrer">
-                                <IconContext.Provider value={{ color: '#1DB954', size: '5rem'}}>
+                                <IconContext.Provider value={{ color: '#1DB954', size: '4.5rem'}}>
                                     <FaSpotify />
                                 </IconContext.Provider>
                                 </a>
                             </div> :
-                            <div className="px-4 py-2">
-                            <IconContext.Provider value={{ color: '#666666', size: '5rem'}}>
+                            <div className="px-4 py-2 opacity-25">
+                            <IconContext.Provider value={{ color: '#666666', size: '4.5rem', style: {opacity: '.25'}}}>
                                 <FaSpotify />
                             </IconContext.Provider>
                         </div>
@@ -70,13 +71,13 @@ const MoreArtist = () => {
                             {artistLink.instagram ?
                                 <div className="cursor-pointer px-4"> 
                                     <a href={artistLink.instagram} target="_blank" rel="noopener noreferrer">
-                                    <IconContext.Provider  value={{ color: '#C13584', size: '6rem'}}>
+                                    <IconContext.Provider  value={{ size: '6rem' }}>
                                         <AiFillInstagram />
                                     </IconContext.Provider>
                                     </a>
                                 </div> :
-                                <div className="px-4"> 
-                                    <IconContext.Provider  value={{ color: '#666666', size: '6rem'}}>
+                                <div className="px-4 opacity-25"> 
+                                    <IconContext.Provider  value={{ color: '#666666', size: '6rem', style: {opacity: '.25'}}}>
                                         <AiFillInstagram />
                                     </IconContext.Provider>
                                 </div>
@@ -89,8 +90,8 @@ const MoreArtist = () => {
                                     </IconContext.Provider>
                                     </a>
                                 </div> :
-                                <div className="px-4">
-                                    <IconContext.Provider value={{ color: '#666666', size: '6rem'}}>
+                                <div className="px-4 opacity-25">
+                                    <IconContext.Provider value={{ color: '#666666', size: '6rem', style: {opacity: '.25'}}}>
                                         <AiFillPlusCircle />
                                     </IconContext.Provider>
                                 </div>

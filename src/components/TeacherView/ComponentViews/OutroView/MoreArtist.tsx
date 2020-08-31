@@ -49,7 +49,7 @@ const MoreArtist = (props: props) => {
                                 </IconContext.Provider>
                                 </a>
                             </div> :
-                            <div className={`${fullscreen ? 'px-4 py-2' : ''} `}> 
+                            <div className={`${fullscreen ? 'px-4 py-2' : ''} opacity-25`}> 
                             <IconContext.Provider value={{ color: '#666666', size: '5rem'}}>
                                 <IoLogoYoutube />
                             </IconContext.Provider>
@@ -63,7 +63,7 @@ const MoreArtist = (props: props) => {
                                 </IconContext.Provider>
                                 </a>
                             </div> :
-                            <div className={`${fullscreen ? 'px-4 py-2' : ''} `}>
+                            <div className={`${fullscreen ? 'px-4 py-2' : ''} opacity-25`}>
                             <IconContext.Provider value={{ color: '#666666', size: '5rem'}}>
                                 <FaSpotify />
                             </IconContext.Provider>
@@ -80,7 +80,7 @@ const MoreArtist = (props: props) => {
                                     </IconContext.Provider>
                                     </a>
                                 </div> :
-                                <div className={`${fullscreen ? 'px-4' : ''} `}> 
+                                <div className={`${fullscreen ? 'px-4' : ''} opacity-25`}> 
                                     <IconContext.Provider  value={{ color: '#666666', size: '6rem'}}>
                                         <AiFillInstagram />
                                     </IconContext.Provider>
@@ -94,7 +94,7 @@ const MoreArtist = (props: props) => {
                                     </IconContext.Provider>
                                     </a>
                                 </div> :
-                                <div className={`${fullscreen ? 'px-4' : ''}`}>
+                                <div className={`${fullscreen ? 'px-4' : ''} opacity-25`}>
                                     <IconContext.Provider value={{ color: '#666666', size: '5rem'}}>
                                         <AiFillPlusCircle />
                                     </IconContext.Provider>
