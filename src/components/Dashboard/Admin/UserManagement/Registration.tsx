@@ -1,7 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { 
-    useHistory,
-} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 import * as mutations from '../../../../graphql/mutations';
 import SuccessNote from '../../../../standard/Alert/SuccessNote';
@@ -29,28 +27,35 @@ interface newUserInput {
     }
 }
 
+const initialState = {   
+    key: 0,
+    authId: '',
+    email: '',
+    password: 'xIconoclast.5x',
+    firstName: '',
+    lastName: '',
+    phone: '',
+    birthdate: '',
+    grade: '',
+    role: '',
+    externalId: '',
+    message: {
+        show: false,
+        text: '',
+        type: '',
+    },
+}
+
 const Registration = () => {
     const history = useHistory();
-    const [ newUserInputs, setNewUserInputs ] = useState<newUserInput>(
-        {   
-            key: 0,
-            authId: '',
-            email: '',
-            password: 'xIconoclast.5x',
-            firstName: '',
-            lastName: '',
-            phone: '',
-            birthdate: '',
-            grade: '',
-            role: '',
-            externalId: '',
-            message: {
-                show: false,
-                text: '',
-                type: '',
-            },
-        },
-    )
+    
+    const [ newUserInputs, setNewUserInputs ] = useState<newUserInput>(initialState)
+
+    const [ message, setMessage ] = useState<{show: boolean, type: string, message: string,}>({
+        show: false,
+        type: '',
+        message: '',
+    })
 
     const Role = [
         {
@@ -114,6 +119,7 @@ const Registration = () => {
         } catch (error) {
             console.error('error registering user:', error)
             handleMessage('error', error.message)
+            
         }
     }
 
@@ -134,7 +140,79 @@ const Registration = () => {
             registerUser(user.userSub)
         } catch (error) {
             console.log('error signing up:', error);
+            setMessage(() => { 
+                if (!newUserInputs.firstName) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'User\'s first name cannot be blank',
+                    }
+                } if (!newUserInputs.lastName) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'User\'s last name cannot be blank',
+                    }
+                } if (!username) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'User\'s email cannot be blank',
+                    }
+                } if (!username.includes("@")) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'User\'s email is not in the expected email address format',
+                    }
+                } if (!newUserInputs.birthdate) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'User\'s birthday cannot be blank',
+                    }
+                } if (!newUserInputs.role) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'User\'s role cannot be blank',
+                    }
+                } if (!newUserInputs.grade) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'User\'s grade cannot be blank',
+                    }
+                } if (error.code.message === "Alias entry already exists for a different username") {
+                    return {
+                        show: false,
+                        type: 'error',
+                        message: 'User\'s grade cannot be blank',
+                    }
+                } 
+                switch (error.code) {
+                    case "InvalidParameterException":
+                        return {
+                                    show: true,
+                                    type: 'success',
+                                    message: '',
+                                }
+                    case "UsernameExistsException":
+                        return {
+                                    show: true,
+                                    type: 'error',
+                                    message: 'An account with this email exists',
+                                }
+                    default: 
+                    return {
+                            show: true,
+                            type: 'error',
+                            message: error.message,
+                        };  
+                }
+            })
             handleMessage('error', error.message)
+            
         }
     }
 
@@ -184,12 +262,22 @@ const Registration = () => {
         })
     }
 
-    const submitNewUsers = () => {
-        signUp()
-    }
+    // const submitNewUsers = () => {
+    //     signUp();
+    //     if (registerUser) {
+    //         console.log('success')
+    //         setNewUserInputs(initialState)
+    //     }
+        
+    // }
 
     const handleSubmit = (e: any) => {
-        submitNewUsers()
+        // submitNewUsers()
+        signUp();
+        if (newUserInputs.message.type === 'success') {
+            console.log('success state')
+            setNewUserInputs(initialState)
+        }
     }
 
     return (
@@ -208,12 +296,13 @@ const Registration = () => {
                         <div className="h-full w-full bg-white shadow-5 my-4 sm:rounded-lg">
                         <form>
 
-                            <div className="h-full px-4 py-5 sm:px-6">
-                                <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
+                            <div className="h-full px-4 pb-5 pt-2 sm:px-6">
+                                <div className="text-red-500 pb-2 text-right">* Required fields</div>
 
+                                <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">  
                                     <div className="sm:col-span-3">
                                         <label htmlFor="firstName" className="block text-m font-medium leading-5 text-gray-700">
-                                            First Name
+                                            <span className="text-red-500">*</span> First Name
                                         </label>
                                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                             <input 
@@ -229,7 +318,7 @@ const Registration = () => {
 
                                     <div className="sm:col-span-3">
                                         <label htmlFor="lastName" className="block text-m font-medium leading-5 text-gray-700">
-                                            Last Name
+                                            <span className="text-red-500">*</span> Last Name
                                         </label>
                                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                             <input 
@@ -245,7 +334,7 @@ const Registration = () => {
 
                                     <div className="sm:col-span-3">
                                         <label htmlFor="email" className="block text-m font-medium leading-5 text-gray-700">
-                                            Email
+                                            <span className="text-red-500">*</span> Email
                                         </label>
                                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                             <input 
@@ -261,7 +350,7 @@ const Registration = () => {
 
                                     <div className="sm:col-span-3">
                                         <label htmlFor="birthdate" className="block text-m font-medium leading-5 text-gray-700">
-                                            Date of Birth
+                                            <span className="text-red-500">*</span> Birthday
                                         </label>
                                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                             <input 
@@ -277,8 +366,9 @@ const Registration = () => {
 
                                     <div className="sm:col-span-3">
                                         <DropdownForm
+                                            style = {true}
                                             handleChange = {handleChangeRole}
-                                            userInfo = {'ST'}
+                                            userInfo = {'Choose One'}
                                             label='Role'
                                             id = 'role'
                                             items= {Role}
@@ -304,7 +394,7 @@ const Registration = () => {
 
                                     <div className="sm:col-span-3">
                                         <label htmlFor="grade" className="block text-m font-medium leading-5 text-gray-700">
-                                            Grade
+                                            <span className="text-red-500">*</span> Grade
                                         </label>
                                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                             <input 
@@ -339,15 +429,14 @@ const Registration = () => {
                             </div>
                         </form>
                         </div>
-
-                
+                        
                             <div className="w-full md:h-full flex justify-center items-center">
                             {
-                                newUserInputs.message.show ? (
+                                message.show ? (
                                     <div>
                                         {newUserInputs.message.type === 'success' ? <SuccessNote /> : 
                                         <ErrorNote 
-                                            note={newUserInputs.message.text}
+                                            note={message.message}
                                         />}
                                     </div>
                                         // <div className={`h-1/10 w-6/10 flex justify-center items-center text-sm border-2 ${  newUserInputs[key].message.type === 'success' ? 'text-green-500 bg-green-300  border-green-500' :  newUserInputs[key].message.type === 'error' ? 'text-red-500 bg-red-300  border-red-500' : 'text-gray-200'} py-8 px-4 rounded shadow-elem-light text-center`}>

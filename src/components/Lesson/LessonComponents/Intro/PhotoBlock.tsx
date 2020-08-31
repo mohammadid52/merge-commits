@@ -3,7 +3,7 @@ import { LessonContext } from '../../../../contexts/LessonContext';
 
 const PhotoBlock = () => {
     const { state, theme } = useContext(LessonContext);
-    const imgArray = state.data.artist.images;
+    const imgArray = state.data.lesson.artist.images;
 
     
 

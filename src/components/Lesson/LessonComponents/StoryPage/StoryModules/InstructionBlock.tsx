@@ -6,7 +6,7 @@ import { FaVideo } from 'react-icons/fa';
 const InstructionsBlock = () => {
     const { state } = useContext(LessonContext);
     const [ videoMode, setVideoMode ] = useState(false);
-    const { text, video, link } = state.data.warmUp.instructions ;
+    const { text, video, link } = state.data.lesson.warmUp.instructions ;
 
     const toggleVideoMode = () => {
         setVideoMode(!videoMode);
@@ -19,11 +19,11 @@ const InstructionsBlock = () => {
                     <h3 className="w-3/10 mr-2 flex-grow text-xl font-open font-bold">
                         Instructions
                     </h3>
-                    <p className="w-auto text-sm flex mr-4 items-center">(click the red icon for video instructions)</p>
+                    <p className="w-auto text-gray-600 text-sm flex mr-4 items-center">(click the red icon for video instructions)</p>
                 </div>
-                <div className={`w-full h-8/10 overflow-scroll flex justify-center text-sm px-2`}>
+                <div className={`w-full h-8/10 flex justify-center items-center text-sm px-2`}>
                 {   !videoMode ?
-                    <div className="h-auto mb-2">
+                    <div className="h-full overflow-scroll">
                         
                         {
                             text.map((inst: string, key: number) => (
@@ -36,8 +36,8 @@ const InstructionsBlock = () => {
                         }
                     </div>
                     :
-                    <div className="shadow-2 items-center" style={{ width: '225px'}}>
-                        <video controls width="225">
+                    <div className="h-full flex justify-center items-center" style={{ width: '250px'}}>
+                        <video controls width="250">
                             <source src={link} type="video/mp4" />
                             <p>Your browser does not support embedded video playback!</p>
                         </video>
@@ -46,7 +46,7 @@ const InstructionsBlock = () => {
                 </div>
             </div>
             <IconContext.Provider value={{ color: '#EDF2F7', size: '1rem'}}>
-                <div className="flex-grow-0 bg-dark-red h-8 w-8 flex flex-col items-center justify-center z-20 rounded-lg shadow-2" onClick={toggleVideoMode}>
+                <div className="cursor-pointer flex-grow-0 bg-dark-red h-8 w-8 flex flex-col items-center justify-center z-20 rounded-lg shadow-2" onClick={toggleVideoMode}>
                     <FaVideo />
                 </div>
             </IconContext.Provider>

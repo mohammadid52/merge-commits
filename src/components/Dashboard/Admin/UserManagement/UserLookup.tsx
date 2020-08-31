@@ -4,6 +4,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import * as queries from '../../../../graphql/queries';
 import UserSearch from './UserSearch';
 import UserStatus from './UserStatus';
+import UserRole from './UserRole';
 
 const UserLookup = () => {
     const [ data, setData ] = useState([]);
@@ -35,7 +36,7 @@ const UserLookup = () => {
 
     return (
         <div className={`w-full h-full`}>
-            <div className={`py-4 px-8 white_back w-full h-full rounded-lg shadow-elem-light`}>
+            <div className={`py-4 px-8 white_back w-full h-auto rounded-lg shadow-elem-light`}>
                 <div className="mb-2 font-bold text-lg">Look up users by:</div>
                 <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-4">
                     <UserSearch 
@@ -86,13 +87,13 @@ const UserLookup = () => {
                                 <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                     <span className="w-auto">Role</span>
                                 </div>
-                                <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                <div className="w-3.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                     <span className="w-auto">Institution</span>
                                 </div>
-                                <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                                <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                     <span className="w-auto">Status</span>
                                 </div>
-                                <div className="w-16 pr-4 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"></div>
+                                <div className="w-1/10 pr-4 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"></div>
                             </div>
                         { 
                     data.length > 0 ? data.map((item: any, key: number) => (
@@ -104,7 +105,7 @@ const UserLookup = () => {
                                             <img className="h-10 w-10 rounded-lg" src="https://i2.wp.com/www.quartzmasters.com/wp-content/uploads/2017/03/article-user-blank.jpg?ssl=1" alt="" />
                                         </div>
                                         <div className="ml-2">
-                                            <div id={item.id} className="cursor-pointer text-sm leading-5 font-medium text-gray-900" onClick={handleLink} >
+                                            <div id={item.id} className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900" onClick={handleLink} >
                                                 {`${item.lastName}, ${ item.preferredName ? item.preferredName : item.firstName }`}
                                             </div>
                                             <div id={item.id} className="text-sm leading-5 text-gray-500">
@@ -115,22 +116,23 @@ const UserLookup = () => {
                                 </div>
                                 <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-no-wrap">
                                         <span id={item.id} className="w-auto text-sm leading-5 text-gray-500">
-                                        { item.role }
+                                        <UserRole 
+                                            role = {item.role} />
                                         </span>
                                 </div>
-                                <div className="w-2/10 flex justify-center px-8 py-4 whitespace-no-wrap">
+                                <div className="w-3.5/10 flex justify-center px-8 py-4 whitespace-no-wrap">
                                     <div className="flex flex-col justify-center items-center">
                                         <div id={item.id} className="w-auto text-sm leading-5 text-gray-900">{item.institution ? item.institution : 'Some really long Institution Name'}</div>
                                         <div id={item.id} className="w-auto text-sm leading-5 text-gray-500">{item.grade ? item.grade : 'Grade'}</div>
                                     </div>
                                 </div>
-                                <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-no-wrap">
+                                <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-no-wrap">
                                     <div className="w-16 flex justify-center">
                                         <UserStatus 
                                         status= {item.status}/>
                                     </div>
                                 </div>
-                                <div className="w-16 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleLink} >
+                                <div className="w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleLink} >
                                     <div id={item.id} key={key} className="text-indigo-600 hover:text-indigo-900">View</div>
                                 </div>
                 

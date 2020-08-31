@@ -8,11 +8,9 @@ import { LessonContextProvider } from '../../contexts/LessonContext';
 
 const TeacherView = () => {
     return (
-        <LessonContextProvider>
-            <LessonControlContextProvider>
-                <LessonControl />
-            </LessonControlContextProvider>
-        </LessonContextProvider>
+        <LessonControlContextProvider>
+            <LessonControl />
+        </LessonControlContextProvider>
     )
 }
 

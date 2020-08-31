@@ -6,7 +6,7 @@ import {
 const LessonPlanHome = () => {
     return (
         <div>
-            <Link to="/lesson-control">
+            <Link to="/lesson-control?id=1">
                 Teacher View
             </Link>
         </div>

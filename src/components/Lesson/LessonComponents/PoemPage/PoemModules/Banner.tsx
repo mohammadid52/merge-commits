@@ -5,7 +5,7 @@ import { LessonContext } from '../../../../../contexts/LessonContext';
 
 const Banner = () => {
     const { state } = useContext(LessonContext);
-    const title = state.data.activity.title;
+    const title = state.data.lesson.activity.title;
 
     return (
 

@@ -1,10 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 const Success = () => {
+
+    const [open, setOpen] = useState(false);
+
+    const handleClick = () => {
+        setOpen(!open)
+    }
     
     return (
         ///change INFO, MARGIN and WIDTH if needed
-        <div className="rounded-md bg-green-100 p-2">
+        <div className={`${open ? 'hidden' : 'display'} rounded-md bg-green-100 p-2`}>
             <div className="flex">
                 <div className="flex-shrink-0 w-8">
                 <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
@@ -16,7 +22,7 @@ const Success = () => {
                     Successfully uploaded
                 </p>
                 </div>
-                <div className="ml-auto pl-3 w-8">
+                <div className="ml-auto pl-3 w-8" onClick={handleClick}>
                 <div className="-mx-1.5 -my-1.5">
                     <button className="flex justify-end rounded-md p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:bg-green-100 transition ease-in-out duration-150" aria-label="Dismiss">
                     <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

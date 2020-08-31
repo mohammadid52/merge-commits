@@ -2,8 +2,9 @@ type pageObject = {
     type: string
     stage: string
     open: boolean
-    disable: boolean
+    disabled: boolean
     active: boolean
+    displayMode: null | string
 }
 
 type studentObject = {
@@ -31,11 +32,15 @@ export interface lessonControlStateType  {
     error: string
     pages: Array<pageObject>
     roster: Array<studentObject>
+    data?: {
+        [key: string]: any;
+    }
 }
 
 export const lessonControlState: lessonControlStateType = {
     status: '',
     error: '',
     pages: [],
-    roster: []
+    roster: [],
+    data: {},
 }

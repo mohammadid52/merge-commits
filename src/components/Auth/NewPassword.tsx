@@ -5,7 +5,7 @@ import { Auth } from 'aws-amplify';
 import { useCookies } from 'react-cookie';
 import { IconContext } from "react-icons";
 import { FaKey } from 'react-icons/fa';
-import { MdEmail } from 'react-icons/md';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 const NewPassword = () => {
     const { state, dispatch  } = useContext(GlobalContext)
@@ -19,21 +19,13 @@ const NewPassword = () => {
         type: '',
         message: '',
     })
-    const [ cookies, setCookie ] = useCookies(['confirm_user'])
+    const [ cookies, setCookie ] = useCookies(['confirm_user']);
+    const [passToggle, setPassToggle] = useState(false);
+    const [passMatchToggle, setPassMatchToggle] = useState(false);
 
     async function changePassword() {
-        if ( input.password !== input.match ) {
-            return setMessage(() => {
-                return {
-                    show: true,
-                    type: 'error',
-                    message: 'Passwords do not match',
-                }
-            })
-        }
-
+        
         if ( cookies.confirm_user ) {
-
             let username = cookies.confirm_user
             let password = 'xIconoclast.5x'
 
@@ -47,18 +39,29 @@ const NewPassword = () => {
             } catch (error) {
                 console.error('error signing in', error);
                 setMessage(() => {
-                    if (!input.password) {
+                    if (!input.password) { 
                         return {
                             show: true,
                             type: 'error',
                             message: 'New password cannot be blank',
                         }
-                    }
-                    if (!input.match) {
+                    } if (!input.match) {
                         return {
                             show: true,
                             type: 'error',
                             message: 'Confirm password cannot be blank',
+                        }
+                    } if ( input.password !== input.match ) {
+                        return {
+                            show: true,
+                            type: 'error',
+                            message: 'Passwords do not match',
+                        }
+                    } if (error.code === "InvalidPasswordException" || "InvalidParameterException") {
+                        return {
+                            show: true,
+                            type: 'error',
+                            message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
                         }
                     }
                     return {
@@ -100,44 +103,70 @@ const NewPassword = () => {
                     <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                 </div>
 
-                <div className="w-full h-1/10 flex justify-center items-center">
-                    {
-                        message.show ? (
-                            <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
-                                { message.message }
-                            </p>
-                        ) : null
-                    }
+                <div className="w-full h-1/10 flex flex-col justify-center items-center">
+                    <div className="text-center text-xs mb-2">* Password must be at least 8 characters and include uppercase and lowercase</div>
+                        {
+                            message.show ? (
+                                <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                    { message.message }
+                                </p>
+                            ) : null
+                        }
                 </div>
 
             
                 <div className="h-5/10 flex-grow flex flex-col justify-center">
                     
                         
-                        <div className="input">
+                        <div className="input relative">
+                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                                <div onClick={() => setPassToggle(!passToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
+                                { passToggle ?
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEye />
+                                </IconContext.Provider> :
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEyeInvisible />
+                                </IconContext.Provider>
+                                }
+                                </div>
+                            </div>
+
                             <div className="icon">
                                 <IconContext.Provider value={{ size: '1.2rem'}}>
                                     <FaKey />
                                 </IconContext.Provider>
                             </div>
                             <label className="hidden" htmlFor="password">New Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type={passToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
-                        <div className="input">
+                        <div className="input relative">
+                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                                <div onClick={() => setPassMatchToggle(!passMatchToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
+                                { passMatchToggle ?
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEye />
+                                </IconContext.Provider> :
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEyeInvisible />
+                                </IconContext.Provider>
+                                }
+                                </div>
+                            </div>
                             <div className="icon">
                                 <IconContext.Provider value={{ size: '1.2rem'}}>
                                     <FaKey />
                                 </IconContext.Provider>
                             </div>
                             <label className="hidden" htmlFor="match">Confirm Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirm Password" type="password" id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirm Password" type={passMatchToggle ? 'text' : 'password'} id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
                     
                 </div>
                 
 
                 <div className="h-3/10 flex flex-col justify-center items-center">
-                    <button className="bg-dark-red text-gray-200 shadow-elem-light rounded-lg mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>Set New password</button>
+                    <button className="bg-dark-red text-gray-200 shadow-elem-light rounded-lg mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>Set New Password</button>
                 </div>
             </div>
             </div>

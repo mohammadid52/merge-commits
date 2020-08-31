@@ -5,7 +5,7 @@ import { FaMusic } from 'react-icons/fa';
 
 const Banner = () => {
     const { state } = useContext(LessonContext);
-    const { title, artist } = state.data.coreLesson.content
+    const { title, artist } = state.data.lesson.coreLesson.content
 
     return (
 

@@ -39,9 +39,9 @@ const ProfileInfo = (props: UserInfoProps) => {
                     <h3 className="px-4 py-5 text-lg leading-6 font-medium text-gray-900">
                     Personal Information
                     </h3>
-                    <div className="py-2 flex">
+                    {/* <div className="py-2 flex">
                     <Dropdown />
-                    </div>
+                    </div> */}
                 </div>
                 <div className="px-4 py-5 sm:px-6">
                     <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
@@ -134,6 +134,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                     </NavLink>
                 </span>
             </div>
+            
 
         </div>
     )

@@ -28,6 +28,8 @@ const Reset = () => {
         password: '',
         match: ''
     })
+    const [passToggle, setPassToggle] = useState(false);
+    const [newPassToggle, setNewPassToggle] = useState(false);
 
     async function reset() {
         if ( input.password !== input.match ) {
@@ -46,17 +48,76 @@ const Reset = () => {
         let code = input.code;
 
         try {
-            Auth.forgotPasswordSubmit(username, code, password)
-            .then(data => console.log(data))
-            .catch(err => console.log(err));
-            history.push('/login')
+            const forgot = await Auth.forgotPasswordSubmit(username, code, password);
+            // .then(data => console.log(data))
+            // .catch(err => console.log(err));
+            history.push('/login');
+            
         } catch (error) {
             console.error('error signing in', error);
-            setMessage(() => {
-                return {
-                    show: true,
-                    type: 'error',
-                    message: error.message,
+            setMessage (() => {
+                if (!username) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Email cannot be blank',
+                    }
+                } if (!username.includes("@")) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Email is not in the expected email address format',
+                    }
+                } if (!code) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Confirmation code cannot be blank',
+                    }
+                } if (!password) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'New password cannot be blank',
+                    }
+                } if (!match) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Confirm password cannot be blank',
+                    }
+                } if ( input.password !== input.match ) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Passwords do not match',
+                    }
+                }
+                switch (error.code) {
+                    case "InvalidPasswordException":
+                        return {
+                                    show: true,
+                                    type: 'error',
+                                    message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+                                }
+                    case "InvalidParameterException":
+                            return {
+                                        show: true,
+                                        type: 'error',
+                                        message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+                                    }
+                    case "UserNotFoundException":
+                        return {
+                                    show: true,
+                                    type: 'error',
+                                    message: 'Email not found',
+                                }
+                    default: 
+                    return {
+                            show: true,
+                            type: 'error',
+                            message: error.message,
+                        };  
                 }
             })
         }
@@ -74,12 +135,13 @@ const Reset = () => {
 
     const handleEnter = (e: any) => {
         if (e.key === 'Enter') {
-            reset()
+            reset();
         }
     }
 
     const handleSubmit = () => {
-        reset()
+        reset();
+        
     }
 
     return (
@@ -88,23 +150,25 @@ const Reset = () => {
              
             <div className="test login w-140 h-7/10 bg-gray-200 shadow-elem-light border border-gray-300 rounded pt-0">
                 <div className="h-.7/10 bg-dark w-full rounded-t-lg"></div>
-                <div className="h-9.3/10 flex flex-col items-center justify-center p-8">
+                <div className="h-9.3/10 flex flex-col items-center justify-center px-8 pt-4 pb-8">
                     <div className="2/10">
                         <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                     </div>
 
-                    <div className="w-full h-1/10 flex justify-center items-center">
-                        {
-                            message.show ? (
-                                <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
-                                    { message.message }
-                                </p>
-                            ) : null
-                        }
-                    </div>
+                    <div className="w-full h-2.2/10 flex flex-col justify-around items-center">
+                        <div className="text-center text-sm">Check your email for your confirmation code</div>
+                        <div className="text-center text-xs">*password must be at least 8 characters and include uppercase and lowercase</div>
+                            {
+                                message.show ? (
+                                    <p className={`text-xs ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                        { message.message }
+                                    </p>
+                                ) : null
+                            }
+                        </div>
             
-                    <div className="h-6/10 flex-grow flex flex-col">
-                        <div className="text-center text-lg">Check your email for your confirmation code</div>
+                    <div className="h-3.8/10 flex-grow flex flex-col">
+                    
 
                         <div className="input">
                                 <div className="icon">
@@ -126,33 +190,62 @@ const Reset = () => {
                             <input className="w-full px-2 py-1 ml-2" placeholder="Confirmation Code" type="text" id="code" name="code" value={input.code} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
         
-                        <div className="input">
+                        <div className="input relative">
+                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                                <div onClick={() => setNewPassToggle(!newPassToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
+                                { newPassToggle ?
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEye />
+                                </IconContext.Provider> :
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEyeInvisible />
+                                </IconContext.Provider>
+                                }
+                                </div>
+                            </div>
+
                             <div className="icon">
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
                                     <FaKey />
                                 </IconContext.Provider>
                             </div>
                             <label className="hidden" htmlFor="password">New Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type="password" id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type={ newPassToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
 
-                        <div className="input">
+                        <div className="input relative">
+                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                                <div onClick={() => setPassToggle(!passToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
+                                { passToggle ?
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEye />
+                                </IconContext.Provider> :
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <AiOutlineEyeInvisible />
+                                </IconContext.Provider>
+                                }
+                                </div>
+                            </div>
+
                             <div className="icon">
                             <IconContext.Provider value={{ size: '1.5rem'}}>
                                 <FaKey />
                             </IconContext.Provider>
                             </div>
                             <label className="hidden" htmlFor="match">Confirm Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirm Password" type="password" id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirm Password" type={passToggle ? 'text' : 'password'} id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
                     
                     </div>
                     
                 
                     <div className="h-2/10 flex flex-col justify-center items-center">
-                        <div className="cursor-pointer shadow-elem-light text-center rounded-lg bg-dark-red text-gray-200 mb-4" style={{borderRadius: '2rem', padding: '.75rem'}} onKeyPress={handleEnter} onClick={handleSubmit}>
-                            Submit
+                        <div className="cursor-pointer shadow-elem-light text-center rounded-lg bg-dark-red text-gray-200 my-4" style={{borderRadius: '2rem', padding: '.75rem'}} onKeyPress={handleEnter} onClick={handleSubmit}>
+                            Reset Password
                         </div>
+                        <NavLink to="/forgot-password">
+                        <div className="text-center text-sm hover:text-blue-500">request another confirmation code</div>
+                        </NavLink>
                     </div>
                     
                 </div>

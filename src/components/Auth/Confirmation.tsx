@@ -32,11 +32,39 @@ const Registration = () => {
         } catch (error) {
             console.log('error confirming sign up', error);
             /////change the error code
-            setMessage(() => {
-                return {
-                    show: true,
-                    type: 'error',
-                    message: error.message,
+            setMessage(() => { 
+                if (!username) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Email cannot be blank',
+                    }
+                } if (!username.includes("@")) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Email is not in the expected email address format',
+                    }
+                } if (!code) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'Confirmation code cannot be empty',
+                    }
+                } 
+                switch (error.code) {
+                    case "UserNotFoundException":
+                        return {
+                                    show: true,
+                                    type: 'error',
+                                    message: 'Email was not found',
+                                }
+                    default: 
+                    return {
+                            show: true,
+                            type: 'error',
+                            message: error.message,
+                        };  
                 }
             })
         }
@@ -106,7 +134,7 @@ const Registration = () => {
                 </div>
              
                 <div className="h-3/10 flex flex-col justify-center items-center">
-                    <button className="bg-dark-red text-gray-200 rounded shadow-elem-light mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>Confirm</button>
+                    <button className="bg-dark-red text-gray-200 rounded shadow-elem-light mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>Confirm Password</button>
                 </div>
             </div>
             </div>

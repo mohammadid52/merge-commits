@@ -6,7 +6,7 @@ import { LessonContext } from '../../../../contexts/LessonContext';
 const InstructionsBlock = () => {
     const { state } = useContext(LessonContext);
     const [ videoMode, setVideoMode ] = useState(false);
-    const { text, video, link } = state.data.coreLesson.instructions;
+    // const { text, video, link } = state.data..instructions;
 
     const toggleVideoMode = () => {
         setVideoMode(!videoMode);

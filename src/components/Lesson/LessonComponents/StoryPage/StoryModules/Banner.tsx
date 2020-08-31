@@ -5,7 +5,7 @@ import { LessonContext } from '../../../../../contexts/LessonContext';
 
 const Banner = () => {
     const { state } = useContext(LessonContext);
-    const title = state.data.warmUp.title
+    const title = state.data.lesson.warmUp.title
 
     return (
         <div className="w-full h-1/10 flex flex-row justify-center items-center">

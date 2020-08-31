@@ -6,6 +6,7 @@ import { IconContext } from 'react-icons';
 import { FaUserCircle } from 'react-icons/fa';
 import ProfileInfo from './ProfileInfo';
 import AboutMe from './AboutMe';
+import ChangePassword from './ChangePassword';
 import ProfileVault from './ProfileVault';
 import ProfileEdit from './ProfileEdit';
 import { 
@@ -104,6 +105,13 @@ const Profile: React.FC = () => {
                                 {`${ person.preferredName ? person.preferredName : person.firstName } ${ person.lastName }`} 
                                 <p className="text-md md:text-lg">{person.institution}</p>
                             </div>
+                            <span className="flex w-full inline-flex rounded-md shadow-sm mt-3">
+                                <NavLink to={`${match.url}/password`}>
+                                <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                                Change Password
+                                </button>
+                                </NavLink>
+                            </span>
                         </div>
 
                         <div className="w-full">
@@ -116,7 +124,7 @@ const Profile: React.FC = () => {
                                 
                                 <div onClick={() => setSelect('AboutMe')}className={` ${ select === 'AboutMe' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
                                     <NavLink to={`${match.url}/about`}>
-                                    Questionnaire  
+                                    About Me  
                                     </NavLink>
                                 </div>
 
@@ -159,6 +167,12 @@ const Profile: React.FC = () => {
                                     path={`${match.url}/vault`}
                                     render={() => (
                                         <ProfileVault />  
+                                    )} 
+                                />
+                                <Route 
+                                    path={`${match.url}/password`}
+                                    render={() => (
+                                        <ChangePassword />  
                                     )} 
                                 />
                             </Switch>

@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
 import Keyword from './Keyword';
-import BioBlock from './BioBLock';
+import BioBlock from './BioBlock';
 import Connect from './Connect';
 import { IconContext } from "react-icons";
 import { FaLink } from 'react-icons/fa';
 import { MdVpnKey } from 'react-icons/md';
 import { BsPersonSquare } from 'react-icons/bs';
-import { LessonContext } from '../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 import { 
     Switch, 
     Route,
@@ -15,11 +15,14 @@ import {
     NavLink
  } from 'react-router-dom';
  
+ interface props {
+        fullscreen: boolean
+    }    
 
-
-const Block = () => {
-    const { state, theme } = useContext(LessonContext);
-    const artistBio = state.data.artist.bio
+const Block = (props: props) => 
+    {const {  fullscreen } = props;
+    const { state, theme } = useContext(LessonControlContext);
+    const artistBio = state.data.lesson.artist.bio
     const match = useRouteMatch();
     const [bio, setBio] = useState(true);
     const [concept, setConcept] = useState(false);
