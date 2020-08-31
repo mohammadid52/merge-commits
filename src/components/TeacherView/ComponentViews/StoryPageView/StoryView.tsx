@@ -4,10 +4,10 @@ import {
     Route,
     useRouteMatch,
 } from "react-router-dom";
-import StoryActivity from './StoryModules/StoryActivityView';
-import StoryBreakdown from './StoryBreakdown/StoryBreakdownView';
+import StoryActivityView from './StoryModules/StoryActivityView';
+import StoryBreakdownView from './StoryBreakdown/StoryBreakdownView';
 // import ErrorPage from '../../Error/ErrorPage';
-import { LessonContext } from '../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
 interface props {
         student: number | null,
@@ -16,7 +16,7 @@ interface props {
 
 const StoryPage = (props: props) => {
     const { student, fullscreen } = props;
-    const { dispatch } = useContext(LessonContext);
+    const { dispatch } = useContext(LessonControlContext);
     const match = useRouteMatch();
 
     useEffect(() => {
@@ -27,10 +27,10 @@ const StoryPage = (props: props) => {
     return (
         <Switch>
             <Route path={`${match.url}/breakdown`}>
-                <StoryBreakdown fullscreen={fullscreen} student={student}/>
+                <StoryBreakdownView fullscreen={fullscreen} student={student}/>
             </Route>
             <Route exact path={`${match.url}`}>
-                <StoryActivity fullscreen={fullscreen} student={student}/>
+                <StoryActivityView fullscreen={fullscreen} student={student}/>
             </Route>
             {/* <Route>
                 <ErrorPage />

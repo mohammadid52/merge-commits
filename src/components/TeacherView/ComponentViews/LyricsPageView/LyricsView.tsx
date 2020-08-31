@@ -6,8 +6,9 @@ import {
     Route,
     useRouteMatch,
 } from "react-router-dom";
-import LyricsActivity from './LyricsModules/LyricsActivityView';
+import LyricsActivityView from './LyricsModules/LyricsActivityView';
 import LyricsBreakdownView from './LyricsBreakdown/LyricsBreakdownView';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 // import ErrorPage from '../../Error/ErrorPage';
 interface props {
         student: number | null,
@@ -15,7 +16,7 @@ interface props {
     }
 const Lyrics = (props: props) => {
     const { student, fullscreen } = props;
-    const { state, dispatch } = useContext(LessonContext);
+    const { state, dispatch } = useContext(LessonControlContext);
     const match = useRouteMatch();
     
     useEffect(() => {
@@ -28,7 +29,7 @@ const Lyrics = (props: props) => {
                 <LyricsBreakdownView fullscreen={fullscreen} student={student}/>
             </Route>
             <Route exact path={`${match.url}`}>
-                <LyricsActivity fullscreen={fullscreen} student={student}/>
+                <LyricsActivityView fullscreen={fullscreen} student={student}/>
             </Route>
             {/* <Route>
                 <ErrorPage />

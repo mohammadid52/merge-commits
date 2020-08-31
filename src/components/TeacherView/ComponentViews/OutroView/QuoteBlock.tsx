@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
 const QuoteBlock = () => { 
-    const { state } = useContext(LessonContext);
-    const quoteArray = state.data.quotes;
+    const { state } = useContext(LessonControlContext);
+    const quoteArray = state.data.lesson.artist.quotes;
 
     const randomQuote = () => {
         let quote = quoteArray[Math.floor(Math.random() * quoteArray.length)];

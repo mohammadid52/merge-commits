@@ -10,7 +10,7 @@ const ReflectionQuestions = (props: props) => {
     const [ question, setQuestion ] = useState(0);
     const { state } = useContext(LessonContext);
     console.log(state)
-    const questArr = state.data.warmUp.breakdown.reflectionQuestions;
+    const questArr = state.data.lesson.warmUp.breakdown.reflectionQuestions;
 
     const nextQuestion = () => {
         if (question < questArr.length - 1) {

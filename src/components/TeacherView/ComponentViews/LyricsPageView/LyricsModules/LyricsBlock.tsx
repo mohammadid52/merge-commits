@@ -2,6 +2,7 @@ import React, { useEffect, useContext } from 'react';
 import { IconContext } from "react-icons";
 import { FaHighlighter, FaExpand } from 'react-icons/fa';
 import { LessonContext } from '../../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
     
 const textParser = (str: string) => {
     let tempWord = '';
@@ -30,9 +31,9 @@ interface LyricsBlockProps {
 
 const LyricsBlock = (props: LyricsBlockProps) => {
     const { color, selected, setSelected, fullscreenLyrics, setFullscreenLyrics, fullscreen } = props;
-    const { state, dispatch } = useContext(LessonContext);
-    const buttons = state.data.coreLesson.tools
-    const rawText = state.data.coreLesson.content.text;
+    const { state, dispatch } = useContext(LessonControlContext);
+    const buttons = state.data.lesson.coreLesson.tools
+    const rawText = state.data.lesson.coreLesson.content.text;
     const displayTextArray: string[][] = [];
     rawText.map((line: string) => {
         let array = (textParser(line));

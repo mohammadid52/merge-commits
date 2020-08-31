@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { LessonContext } from '../../../../contexts/LessonContext';
+// import { LessonContext } from '../../../../contexts/LessonContext';
 import Banner from './Banner';
 import PhotoBlock from './PhotoBlock';
 import QuoteBlock from './QuoteBlock';
@@ -7,6 +7,7 @@ import TrophyBlock from './TrophyBlock';
 import MoreArtist from './MoreArtist';
 import Feedback from './Feedback';
 import Links from './Links';
+// import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
 interface props {
     student: number | null,
@@ -15,12 +16,7 @@ interface props {
 
 const OutroView = (props: props) => {
     const { student, fullscreen } = props;
-    const { dispatch } = useContext(LessonContext);
-
-    useEffect(() => {
-        dispatch({type: 'ACTIVATE_LESSON', payload: 'outro'})
-        dispatch({type: 'FINISH'})
-    }, [])
+    // const { dispatch } = useContext(LessonControlContext);
 
     return (
         <div className="w-full md:h-full flex flex-col justify-between items-center">

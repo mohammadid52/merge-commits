@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { IconContext } from "react-icons";
 import { FaVideo } from 'react-icons/fa';
-import { LessonContext } from '../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
 const InstructionsBlock = () => {
-    const { state } = useContext(LessonContext);
+    const { state } = useContext(LessonControlContext);
     const [ videoMode, setVideoMode ] = useState(false);
-    const { text, video, link } = state.data.coreLesson.instructions;
+    // const { text, video, link } = state.data.lesson.coreLesson.instructions;
 
     const toggleVideoMode = () => {
         setVideoMode(!videoMode);

@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-import { LessonContext } from '../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
 const PhotoBlock = () => {
-    const { state, theme } = useContext(LessonContext);
-    const imgArray = state.data.artist.images;
+    const { state, theme } = useContext(LessonControlContext);
+    const imgArray = state.data.lesson.artist.images;
 
     
 

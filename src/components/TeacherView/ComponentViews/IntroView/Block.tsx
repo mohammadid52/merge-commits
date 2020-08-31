@@ -6,7 +6,7 @@ import { IconContext } from "react-icons";
 import { FaLink } from 'react-icons/fa';
 import { MdVpnKey } from 'react-icons/md';
 import { BsPersonSquare } from 'react-icons/bs';
-import { LessonContext } from '../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 import { 
     Switch, 
     Route,
@@ -21,8 +21,8 @@ import {
 
 const Block = (props: props) => 
     {const {  fullscreen } = props;
-    const { state, theme } = useContext(LessonContext);
-    const artistBio = state.data.artist.bio
+    const { state, theme } = useContext(LessonControlContext);
+    const artistBio = state.data.lesson.artist.bio
     const match = useRouteMatch();
     const [bio, setBio] = useState(true);
     const [concept, setConcept] = useState(false);

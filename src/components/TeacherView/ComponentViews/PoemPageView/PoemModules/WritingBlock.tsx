@@ -3,6 +3,7 @@ import { LessonContext } from '../../../../../contexts/LessonContext';
 import { IconContext } from "react-icons";
 import { FaPlus } from 'react-icons/fa';
 import { useCookies } from 'react-cookie';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface WritingBlockProps {
     fullscreen: boolean,
@@ -19,13 +20,13 @@ interface WritingBlockProps {
 const WritingBlock = (props: WritingBlockProps) => {
     const { editMode, setEditMode, fullscreen } = props;
     const [ cookies, setCookie ] = useCookies(['poem']);
-    const { state, dispatch } = useContext(LessonContext);
-    const lineNo = state.data.activity.lineNumber;
-    const promptArray = state.data.activity.writingPrompts;
+    const { state, dispatch } = useContext(LessonControlContext);
+    const lineNo = state.data.lesson.activity.lineNumber;
+    const promptArray = state.data.lesson.activity.writingPrompts;
     const initialLines = [];
     for(let i = 0; i < lineNo; i++) {
         let tempObj = {
-            id: i,
+            id: `${i}`,
             text: '',
             example: '',
             menuOpen: false,
@@ -35,7 +36,8 @@ const WritingBlock = (props: WritingBlockProps) => {
     const [ lineState, setLineState ] = useState({
         focused: null,
         prompts: promptArray,
-        lines: state.componentState.poem && state.componentState.poem.lines ? state.componentState.poem.lines : initialLines,
+        lines: initialLines
+        // lines: state.componentState.poem && state.componentState.poem.lines ? state.componentState.poem.lines : initialLines,
     });
 
     useEffect(() => {
@@ -67,82 +69,82 @@ const WritingBlock = (props: WritingBlockProps) => {
             }
         })
 
-        if ( state.componentState.poem ) {
-            dispatch({
-                type: 'UPDATE_COMPONENT_STATE',
-                payload: {
-                    componentName: 'poem',
-                    inputName: 'lines',
-                    content: lineState.lines
-                }
-            })
+        // if ( state.componentState.poem ) {
+        //     dispatch({
+        //         type: 'UPDATE_COMPONENT_STATE',
+        //         payload: {
+        //             componentName: 'poem',
+        //             inputName: 'lines',
+        //             content: lineState.lines
+        //         }
+        //     })
 
-            dispatch({
-                type: 'UPDATE_COMPONENT_STATE',
-                payload: {
-                    componentName: 'poem',
-                    inputName: 'editInput',
-                    content: content
-                }
-            })
+        //     dispatch({
+        //         type: 'UPDATE_COMPONENT_STATE',
+        //         payload: {
+        //             componentName: 'poem',
+        //             inputName: 'editInput',
+        //             content: content
+        //         }
+        //     })
 
-            setCookie('poem', {
-                ...cookies.poem, 
-                lines: lineState.lines,
-                editInput: content
-            })
-        }
+        //     setCookie('poem', {
+        //         ...cookies.poem, 
+        //         lines: lineState.lines,
+        //         editInput: content
+        //     })
+        // }
     }, [lineState])
 
     const closeMenus = () => {
-        setLineState(lineState => {
-            return {
-                ...lineState,
-                lines: lineState.lines.map((line: { text: string }) => {
-                    return {
-                        ...line,
-                        menuOpen: false,
-                    }
-                })
-            }
-        })
+        // setLineState(lineState => {
+        //     return {
+        //         ...lineState,
+        //         lines: lineState.lines.map((line: { text: string }) => {
+        //             return {
+        //                 ...line,
+        //                 menuOpen: false,
+        //             }
+        //         })
+        //     }
+        // })
     }
 
     const handleAddInput = () => {
         let length = lineState.lines.length;
-        if (length < (lineNo * 2)) {
-            setLineState(lineState => {
-            return {
-                ...lineState,
-                lines: lineState.lines.concat({
-                    id: length,
-                    text: '',
-                    menuOpen: false,
-                    example: '',
-                })
-            }
-        })}
+        // if (length < (lineNo * 2)) {
+        //     setLineState(lineState => {
+        //     return {
+        //         ...lineState,
+        //         lines: lineState.lines.concat({
+        //             id: length,
+        //             text: '',
+        //             menuOpen: false,
+        //             example: '',
+        //         })
+        //     }
+        // })}
     }
 
     const handleDeleteInput = (e: any) => {
-        let { id } = e.currentTarget;
-        let length = lineState.lines.length;
-        if (length > lineNo) {
-            setLineState(lineState => {
-                let newLines = lineState.lines.filter((line: { id: string }, key: number) => {
-                    return id != line.id;
-                })
-                return {
-                    ...lineState,
-                    lines: newLines.map((line: { id: string }, key: number) => {
-                        return {
-                            ...line,
-                            id: key
-                        }
-                    }),
-                }
-            })
-        }
+        // let { id } = e.currentTarget;
+        // let length = lineState.lines.length;
+        // if (length > lineNo) {
+        //     setLineState(lineState => {
+        //         let newLines = lineState.lines.filter((line: { id: string }, key: number) => {
+        //             return id != line.id;
+        //         })
+        //         return {
+        //             ...lineState,
+        //             lines: newLines.map((line: { id: string }, key: number) => {
+        //                 return {
+        //                     ...line,
+        //                     id: key
+        //                 }
+        //             }),
+        //         }
+        //     })
+        // }
     }
 
     const handleSelectPrompt = (e: { currentTarget: any; }) => {
@@ -152,44 +154,44 @@ const WritingBlock = (props: WritingBlockProps) => {
             return item.id == selectedId
         }).pop();
 
-        setLineState(lineState => {
-            return {
-                ...lineState, 
-                lines: lineState.lines.map((line: { id: string }, key: number) => {
-                    if (line.id == current.id) {
-                        return {
-                            ...line, 
-                            text: selectedPrompt.prompt,
-                            example: selectedPrompt.example,
-                        }
-                    }
-                    return line
-                })
-            }
-        });
+        // setLineState(lineState => {
+            // return {
+            //     ...lineState, 
+            //     lines: lineState.lines.map((line: { id: string }, key: number) => {
+            //         if (line.id == current.id) {
+            //             return {
+            //                 ...line, 
+            //                 text: selectedPrompt.prompt,
+            //                 example: selectedPrompt.example,
+            //             }
+            //         }
+            //         return line
+            //     })
+            // }
+        // });
 
         closeMenus();
     }
 
     const handleMenuToggle = (e: any) => {
-        const { id } = e.target;
-        setLineState(lineState => {
-            return {
-                ...lineState,
-                lines: lineState.lines.map((line: { id: string, menuOpen: boolean }, key: number) => {
-                    if (line.id == id) {
-                        return {
-                            ...line,
-                            menuOpen: !line.menuOpen,
-                        }
-                    }
-                    return {
-                        ...line, 
-                        menuOpen: false,
-                    }
-                })
-            }
-        })
+        // const { id } = e.target;
+        // setLineState(lineState => {
+        //     return {
+        //         ...lineState,
+        //         lines: lineState.lines.map((line: { id: string, menuOpen: boolean }, key: number) => {
+        //             if (line.id == id) {
+        //                 return {
+        //                     ...line,
+        //                     menuOpen: !line.menuOpen,
+        //                 }
+        //             }
+        //             return {
+        //                 ...line, 
+        //                 menuOpen: false,
+        //             }
+        //         })
+        //     }
+        // })
     }
 
 
@@ -203,21 +205,21 @@ const WritingBlock = (props: WritingBlockProps) => {
     }
 
     const handleInputChange = (e: any) => {
-        const { id, value } = e.target;
-        setLineState(lineState => {
-            return {
-                ...lineState,
-                lines: lineState.lines.map((line: { id: string }, key: number) => {
-                    if (line.id == id) {
-                        return {
-                            ...line,
-                            text: value,
-                        }
-                    } 
-                    return line
-                })
-            }
-        })
+        // const { id, value } = e.target;
+        // setLineState(lineState => {
+        //     return {
+        //         ...lineState,
+        //         lines: lineState.lines.map((line: { id: string }, key: number) => {
+        //             if (line.id == id) {
+        //                 return {
+        //                     ...line,
+        //                     text: value,
+        //                 }
+        //             } 
+        //             return line
+        //         })
+        //     }
+        // })
     }
 
     const handleDragOver = (e: { preventDefault: () => void; }) => {
@@ -229,20 +231,20 @@ const WritingBlock = (props: WritingBlockProps) => {
         const { id } = e.currentTarget;
         const addWord = e.dataTransfer.getData('addWord');
         
-        setLineState(lineState => {
-            return {
-                ...lineState,
-                lines: lineState.lines.map((line: { id: string, text: string }, key: number) => {
-                    if (id == line.id) {
-                        return {
-                            ...line,
-                            text: line.text + ' ' + addWord
-                        };
-                    }
-                    return line;
-                })
-            }
-        })
+        // setLineState(lineState => {
+        //     return {
+        //         ...lineState,
+        //         lines: lineState.lines.map((line: { id: string, text: string }, key: number) => {
+        //             if (id == line.id) {
+        //                 return {
+        //                     ...line,
+        //                     text: line.text + ' ' + addWord
+        //                 };
+        //             }
+        //             return line;
+        //         })
+        //     }
+        // })
 
     }
 

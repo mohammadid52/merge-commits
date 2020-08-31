@@ -5,8 +5,9 @@ import {
     Route,
     useRouteMatch,
 } from "react-router-dom";
-import PoemActivity from './PoemModules/PoemActivityView';
-import PoemBreakdown from './PoemBreakdown/PoemBreakdownView'
+import PoemActivityView from './PoemModules/PoemActivityView';
+import PoemBreakdownView from './PoemBreakdown/PoemBreakdownView'
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 // import ErrorPage from '../../Error/ErrorPage';
 
 interface props {
@@ -16,17 +17,17 @@ interface props {
 
 const Poem = (props: props) => {
     const { student, fullscreen } = props;
-    const { state, dispatch } = useContext(LessonContext);
+    const { state, dispatch } = useContext(LessonControlContext);
     const match = useRouteMatch();
 
     useEffect(() => {
-        dispatch({type: 'ACTIVATE_LESSON', payload: 'activity'})
+        // dispatch({type: 'ACTIVATE_LESSON', payload: 'activity'})
 
-        if ( state.componentState.poem && state.componentState.poem.editMode === 'true' ) {
-            dispatch({ type: 'CAN_CONTINUE' })
-        } else {
-            dispatch({ type: 'NO_CONTINUE' })
-        }
+        // if ( state.componentState.poem && state.componentState.poem.editMode === 'true' ) {
+        //     dispatch({ type: 'CAN_CONTINUE' })
+        // } else {
+        //     dispatch({ type: 'NO_CONTINUE' })
+        // }
     }, [])
 
 
@@ -34,10 +35,10 @@ const Poem = (props: props) => {
     return (
         <Switch>
             <Route path={`${match.url}/breakdown`}>
-                <PoemBreakdown fullscreen={fullscreen} student={student}/>
+                <PoemBreakdownView fullscreen={fullscreen} student={student}/>
             </Route>
             <Route exact path={`${match.url}`}>
-                <PoemActivity fullscreen={fullscreen} student={student}/>
+                <PoemActivityView fullscreen={fullscreen} student={student}/>
             </Route>
             {/* <Route>
                 <ErrorPage />
