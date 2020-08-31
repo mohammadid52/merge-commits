@@ -41,19 +41,19 @@ const ChangePassword = () => {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Old password cannot be blank',
+                        message: 'Please enter your old password',
                     }
                 } if (!newPassword) {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'New password cannot be blank',
+                        message: 'Please enter your new password',
                     }
                 } if (!input.match) {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Confirm password cannot be blank',
+                        message: 'Please enter your confirmation password',
                     }
                 } if ( input.newPassword !== input.match ) {
                     return {
@@ -75,12 +75,6 @@ const ChangePassword = () => {
                                     type: 'error',
                                     message: 'Your old password is incorrect',
                                 }
-                    case "InvalidParameterException":
-                            return {
-                                        show: true,
-                                        type: 'error',
-                                        message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
-                                    }
                     default: 
                     return {
                             show: true,
