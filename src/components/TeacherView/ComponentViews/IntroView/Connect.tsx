@@ -3,7 +3,12 @@ import { IconContext } from "react-icons";
 import { FaMusic } from 'react-icons/fa';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
-const Connect = () => {
+interface props {
+        fullscreen: boolean
+    }
+
+const Connect = (props: props) => {
+    const {  fullscreen } = props;
     const { state, theme } = useContext(LessonControlContext);
     const artistBio = state.data.lesson.artist.bio
 
@@ -21,7 +26,7 @@ const Connect = () => {
         <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} rounded-sm shadow-inner`}>
             <h1 className="text-lg font-extrabold mb-6">Connect:</h1>
             <div>
-            <p className="text-sm">Ways students can connect to the lesson</p>
+            <p className={`${fullscreen ? 'text-base' : 'text-xs'}`}>Ways students can connect to the lesson</p>
             </div>
         </div>
     )

@@ -104,7 +104,7 @@ const Registration = () => {
                 <div className="w-full h-1/10 flex justify-center items-center">
                         {
                             message.show ? (
-                                <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                <p className={`text-sm text-center ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
                                     { message.message }
                                 </p>
                             ) : null

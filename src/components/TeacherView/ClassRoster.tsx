@@ -20,44 +20,69 @@ const ClassRoster = (props: props) => {
         switch(status) {
             case 'ONLINE':
                 return (
-                    <span className="w-auto px-2 inline-flex text-base leading-5 font-semibold uppercase rounded-full bg-green-100 text-green-800">
-                        ONLINE
-                    </span>
+                    <div className="flex justify-center items-center ">
+                        <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-green-400"></span>
+                    </div>
                 )
             case 'IDLE':
                 return (
-                    <span className="w-auto px-2 inline-flex text-base leading-5 font-semibold uppercase rounded-full bg-yellow-100 text-yellow-700">
-                        IDLE
-                    </span>
+                    <div className="flex justify-center items-center ">
+                        <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-gray-400"></span>
+                    </div>
                 )
             case 'OFFLINE':
                 return (
-                    <span className="w-auto px-2 inline-flex text-base leading-5 font-semibold uppercase rounded-full bg-red-100 text-red-800">
-                        OFFLINE
-                    </span>
+                    <div className="flex justify-center items-center ">
+                        <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-red-400"></span>
+                    </div>
                 )
             default:
                 return (
-                    <span className="w-auto px-2 inline-flex text-base leading-5 font-semibold uppercase rounded-full bg-gray-100 text-gray-600">
-                        N/A
-                    </span>
+                    <div className="flex justify-center items-center ">
+                        <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-gray-400"></span>
+                    </div>
                 )
+
+                // case 'ONLINE':
+                //     return (
+                //         <span className="w-auto px-2 inline-flex text-base leading-5 font-semibold uppercase rounded-full bg-green-100 text-green-800">
+                //             ONLINE
+                //         </span>
+                //     )
+                // case 'IDLE':
+                //     return (
+                //         <span className="w-auto px-2 inline-flex text-base leading-5 font-semibold uppercase rounded-full bg-yellow-100 text-yellow-700">
+                //             IDLE
+                //         </span>
+                //     )
+                // case 'OFFLINE':
+                //     return (
+                //         <span className="w-auto px-2 inline-flex text-base leading-5 font-semibold uppercase rounded-full bg-red-100 text-red-800">
+                //             OFFLINE
+                //         </span>
+                //     )
+                // default:
+                //     return (
+                //         <span className="w-auto px-2 inline-flex text-base leading-5 font-semibold uppercase rounded-full bg-gray-100 text-gray-600">
+                //             N/A
+                //         </span>
+                //     )
         }
     }
 
     return (
         <div className={`w-full h-full bg-gray-500 shadow-inner-dark rounded-lg pt-4 px-4 overflow-scroll`}>
             <div className={`w-full flex justify-center font-bold`}>
-                <div className={`w-2/10 mx-2`}>
+                <div className={`w-1.5/10 mx-2 text-center`}>
                     Status
                 </div>
                 <div className={`w-4/10 mx-2`}>
                     Name
                 </div>
-                <div className={`w-2/10 mx-2`}>
+                <div className={`w-3/10 mx-2`}>
                     Current Page
                 </div>
-                <div className={`w-2/10 mx-2`}>
+                <div className={`w-1/10 mx-2`}>
                     
                 </div>
             </div>
@@ -66,7 +91,7 @@ const ClassRoster = (props: props) => {
                     state.roster && state.roster.length > 0 ? 
                     state.roster.map((item: any, key: number) => (
                         <div key={key} className={`w-full flex my-2`}>
-                            <div className={`w-2/10 mx-2 text-xs`}>
+                            <div className={`w-1.5/10 text-center mx-2 text-xs flex`}>
                                 {studentStatus(item.status)}
                             </div>
                             <div className={`w-4/10 mx-2`}>

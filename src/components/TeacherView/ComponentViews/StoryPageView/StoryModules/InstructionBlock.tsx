@@ -18,7 +18,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
     }
 
     return (
-        <div className={`${fullscreen ? 'p-4' : 'p-2'} bg-dark-blue md:h-4/10 flex text-gray-200 shadow-2 rounded-lg`}>
+        <div className={`${fullscreen ? 'p-4' : 'p-3'} bg-dark-blue md:h-4/10 flex text-gray-200 shadow-2 rounded-lg`}>
             <div className="w-full flex flex-col">
                 <div className={`${fullscreen ? 'flex-row mb-3' : 'flex-col'} w-auto flex flex-row border-b border-white mr-4`}>
                     <h3 className={`${fullscreen ? 'text-xl w-auto mr-2' : 'text-base w-full'} w-3/10 flex-grow font-open font-bold`}>
@@ -33,7 +33,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
                         {
                             text.map((inst: string, key: number) => (
                                 
-                                <p key={key} className={`${fullscreen ? '' : 'text-xs'} mb-2`}>
+                                <p key={key} className={`${fullscreen ? 'mb-2' : 'text-xs'}`}>
                                 
                                     { inst }
                                 </p>

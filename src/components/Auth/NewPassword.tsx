@@ -104,7 +104,7 @@ const NewPassword = () => {
                 </div>
 
                 <div className="w-full h-1/10 flex flex-col justify-center items-center">
-                    <div className="text-center text-xs mb-2">* Password must be at least 8 characters and include uppercase and lowercase</div>
+                    <div className="text-center text-sm mb-2">Password must be at least 8 characters and include uppercase and lowercase</div>
                         {
                             message.show ? (
                                 <p className={`text-sm text-center ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>

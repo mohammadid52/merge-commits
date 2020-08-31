@@ -19,6 +19,8 @@ import StoryBreakdownView from './ComponentViews/StoryPageView/StoryBreakdown/St
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import { IconContext } from "react-icons";
 import { FaExpand, FaCompress } from 'react-icons/fa';
+import { FaHome } from 'react-icons/fa';
+import { NavLink } from 'react-router-dom';
 import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
 
 type selectedState = number | null
@@ -45,10 +47,19 @@ const LessonControl = () => {
     return (
         <div className={`w-full h-full bg-gray-400 p-8`}>
             <div className={`w-full h-full flex flex-col`}>
-                <div className={`w-full h-0.5/10 bg-gray-200 mb-2 shadow-elem-light rounded-lg px-4 flex flex-row items-center`}>
+                <div className={`relative w-full h-0.5/10 bg-gray-200 mb-2 shadow-elem-light rounded-lg px-4 flex flex-row items-center`}>
                     <h1 className={`w-4/10 text-3xl text-center font-extrabold font-open my-2`}>
                         Where I'm From
                     </h1>
+
+                    <div className={`absolute w-auto mr-8 flex flex-col justify-center items-center px-2 cursor-pointer`} style={{right: 0}}>
+                        <NavLink to="/dashboard">
+                            <IconContext.Provider value={{ size: '1.5rem'}}>
+                                <FaHome />
+                            </IconContext.Provider>
+                        </NavLink>
+                        <p className="text-xs text-center">Home</p>
+                    </div>
                 </div>
                 {/*  */}
                 <div className={`w-full h-9/10 flex bg-gray-200 shadow-elem-light p-4 rounded-lg`}>
@@ -133,10 +144,15 @@ const LessonControl = () => {
                                     />
                                 </Switch>
                             </Suspense>
-                            <div className="absolute cursor-pointer w-auto text-xl m-2" style={{top: 0, right: 0}} onClick={handleFullscreen}>
+                            <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{top: 0, right: 0}} onClick={handleFullscreen}>
                                 <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem' }}>
                                     {fullscreen ? < FaCompress /> :< FaExpand />}
                                 </IconContext.Provider>
+                            </div>
+                            <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: 0}}>
+                                <button className="bg-red-600 bg-opacity-.9 text-gray-200 h-8 w-32 rounded-xl">
+                                    share screen
+                                </button>
                             </div>
 
                         </div>
