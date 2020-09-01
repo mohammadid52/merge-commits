@@ -5,13 +5,19 @@ import { IconContext } from "react-icons";
 import { FaClock, FaUserAlt } from 'react-icons/fa';
 import ProgressRing from './ProgressRing';
 
+interface props {
+        link: string
+    }
 
-const Class: React.FC = () => {
+
+const Class = (props: props) => {
+    const {link} = props
     const history = useHistory();
     const { theme } = useContext(GlobalContext);
 
     const handleLink = () => {
-        history.push('/lesson?id=1');
+        // come back to this later
+        history.push(link);
     }
 
     return (
