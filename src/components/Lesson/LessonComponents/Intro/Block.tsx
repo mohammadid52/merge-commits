@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import Keyword from './Keyword';
-import BioBlock from './BioBLock';
+import BioBlock from './BioBlock';
 import Connect from './Connect';
 import { IconContext } from "react-icons";
 import { FaLink } from 'react-icons/fa';

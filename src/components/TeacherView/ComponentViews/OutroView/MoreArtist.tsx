@@ -4,6 +4,8 @@ import VideoBlock from './VideoBlock';
 import PhotoBlock from './PhotoBlock';
 import { IconContext } from "react-icons";
 import { IoLogoYoutube, } from 'react-icons/io';
+import { AiFillPlusCircle } from 'react-icons/ai';
+import { AiFillInstagram, } from 'react-icons/ai';
 import { FaSpotify, } from 'react-icons/fa';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
@@ -14,7 +16,16 @@ interface props {
 const MoreArtist = (props: props) => {
     const {  fullscreen } = props;
     const { state, dispatch } = useContext(LessonControlContext)
-    const [ fullscreenOutro, setFullscreenOutro ] = useState(false)
+    const [ fullscreenOutro, setFullscreenOutro ] = useState(false);
+    const [artistLink, setArtistLinks] = useState(
+        {
+            youtube: '',
+            spotify: '',
+            instagram: 'https://www.instagram.com/iconoclastartists/',
+            etc: 'https://linktr.ee/iconoclastartists'
+
+        }
+    )
 
     return(
         <div className="w-full h-full bg-dark-blue text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
@@ -26,17 +37,71 @@ const MoreArtist = (props: props) => {
                     <PhotoBlock fullscreen={fullscreen}/>
                 </div>
 
-                <div className="w-2/10 flex flex-col items-center justify-center ">
-                    <div className="h-full flex flex-col justify-center items-center">
-                        <div className="cursor-pointer"> 
-                            <IconContext.Provider value={{ color: '#ff0000', size: '5rem'}}>
+                <div className="w-4.8/10 flex flex-col items-center justify-center ">
+                    <div className="h-full flex justify-center items-center">
+                        <div className="flex flex-col w-4/10">
+                            {
+                                artistLink.youtube ?
+                            <div className={`${fullscreen ? 'px-4 py-2' : ''} cursor-pointer`}> 
+                                <a href={artistLink.youtube} target="_blank" rel="noopener noreferrer">
+                                <IconContext.Provider value={{ color: '#ff0000', size: '5rem', style: {height: 'auto'}}}>
+                                    <IoLogoYoutube />
+                                </IconContext.Provider>
+                                </a>
+                            </div> :
+                            <div className={`${fullscreen ? 'px-4 py-2' : ''} `}> 
+                            <IconContext.Provider value={{ color: '#666666', size: '5rem', style: {opacity: '.25', height: 'auto'}}}>
                                 <IoLogoYoutube />
                             </IconContext.Provider>
                         </div>
-                        <div className="cursor-pointer">
-                            <IconContext.Provider value={{ color: '#1DB954', size: '5rem'}}>
+                            }
+                            { artistLink.spotify ?
+                            <div className={`${fullscreen ? 'px-4 py-2' : ''} cursor-pointer`}>
+                                <a href={artistLink.spotify} target="_blank" rel="noopener noreferrer">
+                                <IconContext.Provider value={{ color: '#1DB954', size: '5rem', style: {height: 'auto'}}}>
+                                    <FaSpotify />
+                                </IconContext.Provider>
+                                </a>
+                            </div> :
+                            <div className={`${fullscreen ? 'px-4 py-2' : ''} `}>
+                            <IconContext.Provider value={{ color: '#666666', size: '5rem', style: {opacity: '.25', height: 'auto'}}}>
                                 <FaSpotify />
                             </IconContext.Provider>
+                        </div>
+                            }
+                            
+                        </div>
+                        <div className="flex flex-col w-4/10">
+                            {artistLink.instagram ?
+                                <div className={`${fullscreen ? 'px-4 py-2' : ''} cursor-pointer`}> 
+                                    <a href={artistLink.instagram} target="_blank" rel="noopener noreferrer">
+                                    <IconContext.Provider  value={{ color: '#C13584', size: '6rem', style: {height: 'auto'}}}>
+                                        <AiFillInstagram />
+                                    </IconContext.Provider>
+                                    </a>
+                                </div> :
+                                <div className={`${fullscreen ? 'px-4 py-2' : ''} `}> 
+                                    <IconContext.Provider  value={{ color: '#666666', size: '6rem', style: {opacity: '.25', height: 'auto'}}}>
+                                        <AiFillInstagram />
+                                    </IconContext.Provider>
+                                </div>
+                            }
+                            {artistLink.etc ?
+                                <div className={`${fullscreen ? 'px-4 py-2' : ''} cursor-pointer`}>
+                                    <a href={artistLink.etc} target="_blank" rel="noopener noreferrer">
+                                    <IconContext.Provider value={{ color: '#1a7fd8', size: '5rem', style: {height: 'auto'}}}>
+                                        <AiFillPlusCircle />
+                                    </IconContext.Provider>
+                                    </a>
+                                </div> :
+                                <div className={`${fullscreen ? 'px-4 py-2' : ''}`}>
+                                    <IconContext.Provider value={{ color: '#666666', size: '5rem', style: {opacity: '.25', height: 'auto'}}}>
+                                        <AiFillPlusCircle />
+                                    </IconContext.Provider>
+                                </div>
+                            }
+                            
+                            
                         </div>
                     </div>
                 </div>

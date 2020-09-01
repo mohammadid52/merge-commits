@@ -189,6 +189,8 @@ module.exports = {
         'container' : '1px 1px 10px 1px #e0e0e0',
       },
       colors: {
+        'background': '#f2f2f2',
+        'off-white': '#ffffffe6',
         'dark-red-faded': 'rgba(202, 34, 34, 0.2)',
         'dark-red': '#CA2222',
         'blueberry': '#488AC7',

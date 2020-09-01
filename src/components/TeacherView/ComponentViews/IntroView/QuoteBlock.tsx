@@ -25,7 +25,7 @@ const QuoteBlock = (props: props) => {
 
     return (
 
-    <div className={`flex-grow w-full min-h-24 ${theme.block.bg} ${theme.block.text} p-4 mt-2 flex items-center justify-center rounded-lg ${theme.block.shadow}`}>
+    <div className={`flex-grow w-full min-h-24 ${theme.block.bg} ${theme.block.text} p-4 flex items-center justify-center rounded-lg ${theme.block.shadow}`}>
         <div className="h-full flex flex-col items-center justify-around">
             <div className={`${fullscreen ? 'text-3xl' : 'text-lg'} w-8/10 text-center border-b-2 font-bold mb-4`}>
                 {artistName}

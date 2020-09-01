@@ -8,10 +8,11 @@ interface EditBlockProps {
         open: boolean;
         input: string;
     }
+    fullscreen: boolean
 }
 
 const EditBlock = (props: EditBlockProps) => {
-    const { editMode } = props;
+    const { editMode, fullscreen } = props;
     const { state, dispatch } = useContext(LessonControlContext);
     const [ cookies, setCookie ] = useCookies(['poem']);
     const [ editInput, setEditInput ] = useState<{title: string, text: string}>({
@@ -82,7 +83,7 @@ const EditBlock = (props: EditBlockProps) => {
                 <input id="title" name="title" className="bg-gray-300 w-7/10 h-4 md:h-12 mb-4 rounded-lg px-2 md:px-4 shadow-2" type="text" 
                 value={editInput.title} onChange={handleChange} 
                 placeholder="Choose a title"/>
-                <textarea id="text" className="bg-gray-300 w-full h-18 md:h-8/10 p-8 text-sm md:text-2xl text-gray-800 rounded-lg shadow-2" 
+                <textarea id="text" className={`${fullscreen ? 'p-8 text-2xl' : 'p-4 text-lg '} bg-gray-300 w-full h-8/10 text-gray-800 rounded-lg shadow-2`} 
                 value={editInput.text} onChange={handleChange}/>
             </div>
         </div>

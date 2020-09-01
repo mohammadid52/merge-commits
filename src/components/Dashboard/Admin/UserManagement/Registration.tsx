@@ -17,7 +17,7 @@ interface newUserInput {
     lastName: string
     phone: string
     birthdate: string
-    grade: string
+    grade: number | null
     role: string
     externalId: string
     message: {
@@ -27,7 +27,7 @@ interface newUserInput {
     }
 }
 
-const initialState = {   
+const initialState: newUserInput = {   
     key: 0,
     authId: '',
     email: '',
@@ -36,7 +36,7 @@ const initialState = {
     lastName: '',
     phone: '',
     birthdate: '',
-    grade: '',
+    grade: null,
     role: '',
     externalId: '',
     message: {
@@ -177,13 +177,15 @@ const Registration = () => {
                         type: 'error',
                         message: 'User\'s role cannot be blank',
                     }
-                } if (!newUserInputs.grade) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'User\'s grade cannot be blank',
-                    }
-                } if (error.code.message === "Alias entry already exists for a different username") {
+                } 
+                // if (!newUserInputs.grade) {
+                //     return {
+                //         show: true,
+                //         type: 'error',
+                //         message: 'User\'s grade cannot be blank',
+                //     }
+                // } 
+                if (error.code.message === "Alias entry already exists for a different username") {
                     return {
                         show: false,
                         type: 'error',
@@ -394,7 +396,7 @@ const Registration = () => {
 
                                     <div className="sm:col-span-3">
                                         <label htmlFor="grade" className="block text-m font-medium leading-5 text-gray-700">
-                                            <span className="text-red-500">*</span> Grade
+                                            Grade
                                         </label>
                                         <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                             <input 

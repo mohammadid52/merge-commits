@@ -3,10 +3,8 @@ import { LessonContext } from '../../../../../contexts/LessonContext';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface ToolBarProps {
-    editMode: {
-        open: boolean;
-        input: string;
-    },
+    fullscreen: boolean,
+    editMode: boolean,
     setEditMode: React.Dispatch<React.SetStateAction<{
         open: boolean;
         input: string;
@@ -14,7 +12,7 @@ interface ToolBarProps {
 }
 
 const ToolBar = (props: ToolBarProps) => {
-    const { editMode, setEditMode } = props;
+    const { editMode, setEditMode, fullscreen } = props;
     const { state, dispatch } = useContext(LessonControlContext);
     const [ search, setSearch ] = useState('');
 
@@ -33,7 +31,7 @@ const ToolBar = (props: ToolBarProps) => {
     }
 
     return (
-        <div className="w-full md:h-7/10 bg-gray-700 flex flex-col items-center text-gray-200 shadow-2 px-4 py-4 rounded-lg">
+        <div className={`${ editMode ? 'md:h-7/10' : 'md:h-4.8/10'} w-full bg-gray-700 flex flex-col items-center text-gray-200 shadow-2 px-4 py-4 rounded-lg`}>
             <div className="w-full h-full flex flex-col justify-between">
                 <h3 className="w-full h-1.5/10 text-xl text-gray-200 font-open font-bold border-b border-gray-900">Toolbox</h3>
                 <h3 className="h-1/10 text-lg font-bold font-open">My word bank:</h3>

@@ -54,25 +54,23 @@ const SelfDisplay = (props: props) => {
     // ${key === 0 ? 'md:mr-2' : key === modules.length - 1 ? 'md:ml-2' : 'md:mx-2'}
 
     return (
-        <div className="w-full h-full flex flex-col justify-between items-center">
+        <div className={`w-full h-full flex flex-col justify-between items-center`}>
             <Banner title={title} artist={artist} fullscreen={fullscreen}/>
-            <div className="h-7/10 w-full flex flex-col md:flex-row justify-between items-center">
+            <div className={`h-7/10 w-full flex flex-col md:flex-row justify-between items-center`}>
                 {   modules && modules.length >= 1 ?
                     modules.map((module: any, key: number) => (
-                        <div key={key} className={`bg-dark-blue h-64 md:h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-4 shadow-2 rounded-lg 
-                        
-                        `}>
-                            <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-white">
-                                <div className={`w-12 h-12 p-2 text-3xl rounded-lg bg-${module.color} flex justify-center items-center shadow-2`}>
+                        <div key={key} className={`bg-dark-blue h-64 md:h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-4 shadow-2 rounded-lg`}>
+                            <div className={`w-full flex flex-row justify-between items-center pb-2 border-b border-white`}>
+                                <div className={`${fullscreen ? 'text-3xl w-12 h-12' : 'text-base w-4 h-4'} p-2 rounded-lg bg-${module.color} flex justify-center items-center shadow-2`}>
                                     { module.label }
                                 </div>
-                                <div className="w-full pl-4 text-gray-200 font-open text-lg font-bold"> 
+                                <div className={`${fullscreen ? 'text-lg' : 'text-sm'} w-full pl-4 text-gray-200 font-open font-bold`}> 
                                     { module.name } 
                                 </div>
                             </div>
-                            <div className="w-full md:my-4 flex flex-col overflow-scroll px-6">
+                            <div className={`w-full md:my-4 flex flex-col overflow-scroll px-6`}>
                                 { module.content.map((line: string, key: number)=> (
-                                    <p key={key} className={`text-sm md:text-lg text-gray-200 font-bold mb-4`}>{line}</p>
+                                    <p key={key} className={`${fullscreen ? 'text-sm md:text-lg' : 'text-xs'} text-gray-200 font-bold mb-4`}>{line}</p>
                                 ))}
                             </div>
                         </div>

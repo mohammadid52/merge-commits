@@ -48,19 +48,19 @@ const Login = () => {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Email cannot be blank',
+                        message: 'Please enter your email',
                     }
                 } if (!username.includes("@")) {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Email is not in the expected email address format',
+                        message: 'Your email is not in the expected email address format',
                     }
                 } if (!password) {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Password cannot be blank',
+                        message: 'Please enter your password',
                     }
                 }
                 switch (error.code) {
@@ -68,13 +68,13 @@ const Login = () => {
                         return {
                                     show: true,
                                     type: 'error',
-                                    message: 'Email was not found',
+                                    message: 'The email you entered was not found',
                                 }
                     case "NotAuthorizedException":
                             return {
                                         show: true,
                                         type: 'error',
-                                        message: 'Incorrect email or password',
+                                        message: 'The email or password you entered was not correct',
                                     }
                     // case "UserNotConfirmedException":
                     //         return history.push('/confirm')
@@ -122,7 +122,7 @@ const Login = () => {
                     <div className="w-full h-1/10 flex justify-center items-center">
                         {
                             message.show ? (
-                                <p className={`text-sm ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                <p className={`text-sm text-center ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
                                     { message.message }
                                 </p>
                             ) : null

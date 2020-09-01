@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { LessonContext } from '../../../../contexts/LessonContext';
 
 const SampleSELQuestions = () => {
+    const {state} = useContext(LessonContext);
+    const checkpoint = state.data.lesson.checkpoints.items[0].checkpoint;
+    console.log(checkpoint, 'check point');
     const [ selected, setSelected ] = useState<Array<string>>([])
 
     const handleSelect = (e: any) => {
@@ -23,34 +27,34 @@ const SampleSELQuestions = () => {
 
     return (
         <div className={`h-full flex flex-col text-gray-200`}>
-            <h4 className={`text-2xl font-open font-bold mb-4`}>Answer these questions the best you can:</h4>
+            <h4 className={`text-2xl font-open font-bold mb-4`}>{checkpoint.instructions}</h4>
             <div className={`h-full flex justify-center items-center divide-x-2 divide-dark divide-opacity-50`}>
                 <div className={`w-1/2 h-full flex flex-col justify-around items-center p-6`}>
                     <div className={'w-full flex flex-col items-center mb-4'}>
-                        <label className="mb-2" htmlFor="traditions">What is one family, regional, or personal tradition that you would like to pass on?</label>
+                        <label className="mb-2" htmlFor="traditions">{checkpoint.questions.items[0].question.question}</label>
                         <input className="py-2 px-4 rounded-lg" type="text" id="traditions" name="traditions" />
                     </div>
                     <div className={'w-full flex flex-col items-center mb-4'}>
-                        <p className="mb-2"> Do you think it's important to learn about other cultures?</p>
+                        <p className="mb-2">{checkpoint.questions.items[1].question.question}</p>
                         <div className={`flex justify-around`}>
                             <div className={`flex justify-center items-center`}>
                                 <input className="w-4 mx-4" type="radio" id="no" name="cultures" />
-                                <label htmlFor="no">Yes</label>
+                                <label htmlFor="no">{checkpoint.questions.items[1].question.options[0]}</label>
                             </div>
                             <div className={`flex justify-center items-center`}>
                                 <input className="w-4 mx-4" type="radio" id="no" name="cultures" />
-                                <label htmlFor="no">No</label>
+                                <label htmlFor="no">{checkpoint.questions.items[1].question.options[1]}</label>
                             </div>
                         </div>
                     </div>
                     <div className={'w-full flex flex-col items-center mb-4'}>
-                        <label className="mb-2" htmlFor="culture">In one sentence or less, say why or why not:</label>
+                        <label className="mb-2" htmlFor="culture">{checkpoint.questions.items[2].question.question}</label>
                         <input className="py-2 px-4 rounded-lg" type="text" id="culture" name="culture" />
                     </div>
                 </div>
                 <div className={`w-1/2 h-full flex flex-col justify-start p-6`}>
                     <p className="mb-4">
-                        What did today's lesson cause you to reflect on? Select all that apply:
+                        {checkpoint.questions.items[3].question.question}
                     </p>
                     <div className={'w-8/10 flex flex-col items-center'}>
                         <div className={`w-3/4 flex items-center mb-4`}>
@@ -58,7 +62,7 @@ const SampleSELQuestions = () => {
                                 ❤️
                             </div>
                             <div className="mx-4">
-                                My culture
+                                {checkpoint.questions.items[3].question.options[0]}
                             </div>
                         </div>
                         <div className={`w-3/4 flex items-center mb-4`}>
@@ -66,7 +70,7 @@ const SampleSELQuestions = () => {
                                 ⚜️
                             </div>
                             <div className="mx-4">
-                                My traditions
+                                {checkpoint.questions.items[3].question.options[1]}
                             </div>
                         </div>
                         <div className={`w-3/4 flex items-center mb-4`}>
@@ -74,7 +78,7 @@ const SampleSELQuestions = () => {
                                 👨‍👩‍👧‍👦
                             </div>
                             <div className="mx-4">
-                                My family
+                               {checkpoint.questions.items[3].question.options[2]}
                             </div>
                         </div>
 

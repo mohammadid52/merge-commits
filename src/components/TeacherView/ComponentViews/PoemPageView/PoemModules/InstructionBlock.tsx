@@ -5,11 +5,12 @@ import { FaVideo } from 'react-icons/fa';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface InstructionsBlockProps {
-    editMode: boolean
+    editMode: boolean,
+    fullscreen: boolean
 }
 
 const InstructionsBlock = (props: InstructionsBlockProps) => {
-    const { editMode } = props
+    const { editMode, fullscreen } = props
     const { state } = useContext(LessonControlContext);
     const [ videoMode, setVideoMode ] = useState(false);
     const instructions = state.data.lesson.activity.instructions;
@@ -20,9 +21,9 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
 
     if (editMode) {
         return (
-            <div className="bg-dark-blue w-full md:h-2.8/10 flex flex-col p-6 shadow-3 rounded-lg text-gray-200 mt-4 md:mt-0">
+            <div className={`${fullscreen ? 'p-6' : 'p-3'} bg-dark-blue w-full md:h-2.8/10 flex flex-col shadow-3 rounded-lg text-gray-200 mt-4 md:mt-0`}>
                 <div className="w-full flex justify-between">
-                    <h3 className="flex-grow text-xl font-open font-bold mb-6 border-b border-white mr-4">
+                    <h3 className={`${fullscreen ? 'text-xl mb-6' : 'text-base'} flex-grow font-open font-bold border-b border-white mr-4`}>
                         Instructions
                     </h3>
                 </div>
@@ -34,15 +35,15 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
     }
 
     return (
-        <div className="bg-dark-blue w-full h-72 flex justify-center p-6 shadow-3 rounded-lg text-gray-200 mb-4">
+        <div className={`${fullscreen ? 'p-6' : 'p-3'} bg-dark-blue w-full md:h-5/10 flex justify-center shadow-3 rounded-lg text-gray-200`}>
             <div className="w-full flex flex-col">
-                <div className="w-auto flex flex-row mb-3 border-b border-white mr-4">
-                    <h3 className="w-3/10 mr-2 flex-grow text-xl font-open font-bold">
+                <div className={`${fullscreen ? 'flex-row mb-3' : 'flex-col'} w-auto flex border-b border-white mr-4`}>
+                    <h3 className={`${fullscreen ? 'text-xl w-auto mr-2' : 'text-base w-full'} flex-grow font-open font-bold`}>
                         Instructions
                     </h3>
-                    <p className="w-auto text-gray-600 text-xs flex mr-4 items-center">(click the red icon for video instructions)</p>
+                    <p className={`${fullscreen ? 'w-auto' : 'w-full'}  text-gray-600 text-xs flex mr-4 items-center`}>(click the red icon for video instructions)</p>
                 </div>
-                <div className={`w-full h-8/10 flex justify-center items-center text-sm px-2`}>
+                <div className={`w-full ${fullscreen ? 'h-8/10' : 'h-7.5/10'} flex justify-center items-center text-sm px-2`}>
                     {   !videoMode ? 
                         <div className="h-full overflow-scroll">
                         {

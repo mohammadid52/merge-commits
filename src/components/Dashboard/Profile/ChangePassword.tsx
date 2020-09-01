@@ -41,19 +41,19 @@ const ChangePassword = () => {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Old password cannot be blank',
+                        message: 'Please enter your old password',
                     }
                 } if (!newPassword) {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'New password cannot be blank',
+                        message: 'Please enter your new password',
                     }
                 } if (!input.match) {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'Confirm password cannot be blank',
+                        message: 'Please enter your confirmation password',
                     }
                 } if ( input.newPassword !== input.match ) {
                     return {
@@ -75,12 +75,6 @@ const ChangePassword = () => {
                                     type: 'error',
                                     message: 'Your old password is incorrect',
                                 }
-                    case "InvalidParameterException":
-                            return {
-                                        show: true,
-                                        type: 'error',
-                                        message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
-                                    }
                     default: 
                     return {
                             show: true,
@@ -126,7 +120,7 @@ const ChangePassword = () => {
                 </div>
 
                 <div className="h-full px-4 py-5 sm:px-6">
-                    <div className="text-center text-sm">* password must be at least 8 characters and include uppercase and lowercase</div>
+                    <div className="text-center text-sm">password must be at least 8 characters and include uppercase and lowercase</div>
                     <div className="w-full h-auto flex flex-col justify-between items-center my-4">
 
                         <div className="w-3.27/10 m-1 relative">
