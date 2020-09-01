@@ -5,6 +5,8 @@ import * as mutations from '../../../../graphql/mutations';
 import SuccessNote from '../../../../standard/Alert/SuccessNote';
 import ErrorNote from './ErrorNote';
 import DropdownForm from './DropdownForm';
+import { IconContext } from "react-icons";
+import { FaPlus } from 'react-icons/fa'; 
 
 interface newUserInput {
     key: number
@@ -25,7 +27,7 @@ interface newUserInput {
     }
 }
 
-const initialState: newUserInput  = {   
+const initialState: newUserInput = {   
     key: 0,
     authId: '',
     email: '',
@@ -93,52 +95,6 @@ const Registration = () => {
             }
         }
         })
-        
-    }
-
-    const validate = () => {
-        let username = newUserInputs.email
-        let password = newUserInputs.password
-        setMessage(() => { 
-            if (!newUserInputs.firstName) {
-                return {
-                    show: true,
-                    type: 'error',
-                    message: 'User\'s first name cannot be blank',
-                }
-            } if (!newUserInputs.lastName) {
-                return {
-                    show: true,
-                    type: 'error',
-                    message: 'User\'s last name cannot be blank',
-                }
-            } if (!username) {
-                return {
-                    show: true,
-                    type: 'error',
-                    message: 'User\'s email cannot be blank',
-                }
-            } if (!username.includes("@")) {
-                return {
-                    show: true,
-                    type: 'error',
-                    message: 'User\'s email is not in the expected email address format',
-                }
-            } if (!newUserInputs.birthdate) {
-                return {
-                    show: true,
-                    type: 'error',
-                    message: 'User\'s birthday cannot be blank',
-                }
-            } if (!newUserInputs.role) {
-                return {
-                    show: true,
-                    type: 'error',
-                    message: 'User\'s role cannot be blank',
-                }
-            } handleMessage('message', message.message);
-        });
-
     }
 
     async function registerUser(authId: string) {
@@ -185,6 +141,50 @@ const Registration = () => {
         } catch (error) {
             console.log('error signing up:', error);
             setMessage(() => { 
+                if (!newUserInputs.firstName) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'User\'s first name cannot be blank',
+                    }
+                } if (!newUserInputs.lastName) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'User\'s last name cannot be blank',
+                    }
+                } if (!username) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'User\'s email cannot be blank',
+                    }
+                } if (!username.includes("@")) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'User\'s email is not in the expected email address format',
+                    }
+                } if (!newUserInputs.birthdate) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'User\'s birthday cannot be blank',
+                    }
+                } if (!newUserInputs.role) {
+                    return {
+                        show: true,
+                        type: 'error',
+                        message: 'User\'s role cannot be blank',
+                    }
+                } 
+                // if (!newUserInputs.grade) {
+                //     return {
+                //         show: true,
+                //         type: 'error',
+                //         message: 'User\'s grade cannot be blank',
+                //     }
+                // } 
                 if (error.code.message === "Alias entry already exists for a different username") {
                     return {
                         show: false,

@@ -15,7 +15,7 @@ const DoFirst = () => {
         switch(type) {
             case "input" : 
                 return (
-                    <input className="bg-gray-300 w-full text-sm md:text-2xl text-gray-800 rounded-lg shadow-2" value={input} 
+                    <input className="p-2 bg-gray-300 w-full text-sm md:text-2xl text-gray-800 rounded-lg shadow-2" value={input} 
                     onChange={handleInputChange}/>
                 )
             case "text" :
