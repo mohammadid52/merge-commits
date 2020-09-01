@@ -17,7 +17,7 @@ interface newUserInput {
     lastName: string
     phone: string
     birthdate: string
-    grade: string
+    grade: number | null
     role: string
     externalId: string
     message: {
@@ -27,7 +27,7 @@ interface newUserInput {
     }
 }
 
-const initialState = {   
+const initialState: newUserInput = {   
     key: 0,
     authId: '',
     email: '',
@@ -36,7 +36,7 @@ const initialState = {
     lastName: '',
     phone: '',
     birthdate: '',
-    grade: '',
+    grade: null,
     role: '',
     externalId: '',
     message: {
