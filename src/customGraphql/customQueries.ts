@@ -64,7 +64,11 @@ export const getClassroom = /* GraphQL */ `
                     label
                     type
                     question
-                    options
+                    options {
+                        text
+                        icon
+                        color
+                    }
                   }
                 }
                 nextToken
@@ -84,7 +88,11 @@ export const getClassroom = /* GraphQL */ `
                 label
                 type
                 question
-                options
+                options {
+                    text
+                    icon
+                    color
+                }
               }
             }
             nextToken

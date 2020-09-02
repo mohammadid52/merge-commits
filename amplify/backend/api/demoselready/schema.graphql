@@ -214,7 +214,8 @@ type StudentData @model(subscriptions: null)
   classroom: Classroom @connection(fields: ["classroomID"])
   # studentDataClassroomId: String
   studentID: String!
-  student: Person! @connection(fields: ["studentID"])
+  studentAuthID: String!
+  student: Person! @connection(fields: ["studentID", "studentAuthID"])
   warmupData: WarmUpData
   corelessonData: CoreLessonData
   activityData: ActivityData
@@ -429,12 +430,18 @@ type CheckpointQuestions @model(queries: null)
   question: Question @connection(fields: ["questionID"])
 }
 
+type Option {
+  text: String!
+  icon: String
+  color: String
+}
+
 type Question @model {
   id: ID!
   label: String!
   type: String!
   question: String!
-  options: [String]
+  options: [Option]
 }
 
 type QuestionData @model {
