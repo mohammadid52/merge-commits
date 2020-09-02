@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+interface props {
+        fullscreen: boolean
+    }
 
-const SampleSELQuestions = () => {
+const SampleSELQuestions = (props: props) => {
+    const {fullscreen} = props;
     const [ selected, setSelected ] = useState<Array<string>>([])
 
     const handleSelect = (e: any) => {
@@ -23,14 +27,14 @@ const SampleSELQuestions = () => {
 
     return (
         <div className={`h-full flex flex-col text-gray-200`}>
-            <h4 className={`text-2xl font-open font-bold mb-4`}>Answer these questions the best you can:</h4>
+            <h4 className={`${fullscreen ? 'text-2xl' : 'text-lg'} font-open font-bold mb-4`}>Answer these questions the best you can:</h4>
             <div className={`h-full flex justify-center items-center divide-x-2 divide-dark divide-opacity-50`}>
-                <div className={`w-1/2 h-full flex flex-col justify-around items-center p-6`}>
-                    <div className={'w-full flex flex-col items-center mb-4'}>
+                <div className={`${fullscreen ? 'p-6' : 'p-2'} w-1/2 h-full flex flex-col justify-around items-center`}>
+                    <div className={`${fullscreen ? 'text-base' : 'text-sm'} w-full flex flex-col items-center mb-4`}>
                         <label className="mb-2" htmlFor="traditions">What is one family, regional, or personal tradition that you would like to pass on?</label>
                         <input className="py-2 px-4 rounded-lg" type="text" id="traditions" name="traditions" />
                     </div>
-                    <div className={'w-full flex flex-col items-center mb-4'}>
+                    <div className={`${fullscreen ? 'text-base' : 'text-sm'} w-full flex flex-col items-center mb-4`}>
                         <p className="mb-2"> Do you think it's important to learn about other cultures?</p>
                         <div className={`flex justify-around`}>
                             <div className={`flex justify-center items-center`}>
@@ -43,12 +47,12 @@ const SampleSELQuestions = () => {
                             </div>
                         </div>
                     </div>
-                    <div className={'w-full flex flex-col items-center mb-4'}>
+                    <div className={`${fullscreen ? 'text-base' : 'text-sm'} w-full flex flex-col items-center mb-4`}>
                         <label className="mb-2" htmlFor="culture">In one sentence or less, say why or why not:</label>
                         <input className="py-2 px-4 rounded-lg" type="text" id="culture" name="culture" />
                     </div>
                 </div>
-                <div className={`w-1/2 h-full flex flex-col justify-start p-6`}>
+                <div className={`${fullscreen ? 'text-base p-6' : 'text-sm p-2'} w-1/2 h-full flex flex-col justify-start`}>
                     <p className="mb-4">
                         What did today's lesson cause you to reflect on? Select all that apply:
                     </p>

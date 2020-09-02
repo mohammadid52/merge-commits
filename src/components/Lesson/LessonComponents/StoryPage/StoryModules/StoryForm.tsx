@@ -62,7 +62,12 @@ const StoryForm = () => {
         })
     }
     
+    useEffect(() => {
 
+        console.log(input, 'input')
+
+    }, [input])
+    
     return (
         <div className="bg-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-gray-200 shadow-2 rounded-lg">
             <h3 className="text-xl font-open font-bold mb-3 border-b border-white">Story</h3>

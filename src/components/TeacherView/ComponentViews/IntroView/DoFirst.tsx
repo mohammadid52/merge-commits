@@ -23,7 +23,7 @@ const DoFirst = (props: props) => {
                 )
             case "text" :
                 return (
-                    <textarea className="h-full p-8 bg-gray-300 w-full text-sm md:text-2xl text-gray-800 rounded-lg shadow-2" 
+                    <textarea className="h-full p-6 bg-gray-300 w-full text-sm md:text-2xl text-gray-800 rounded-lg shadow-2" 
                     />
                 )
             default :

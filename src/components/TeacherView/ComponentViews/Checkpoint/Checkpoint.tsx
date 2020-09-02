@@ -6,18 +6,23 @@ import SampleProfileQuestions from './SampleProfileQuestion';
 import SampleSELQuestions from './SampleSELQuestions';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
-const tempCheckPtSwitch = (type: string) => {
+interface props {
+        fullscreen: boolean
+    }
+
+const tempCheckPtSwitch = (type: string, props: props) => {
     switch(type) {
         case 'profile': 
             return <SampleProfileQuestions />
         case 'sel':
-            return <SampleSELQuestions />
+            return <SampleSELQuestions fullscreen={props.fullscreen}/>
         default:
             return
     }
 }
 
-const Checkpoint = () => {
+const Checkpoint = (props: props) => {
+    const {fullscreen} = props;
     const { state, dispatch } = useContext(LessonControlContext)
 
     // useEffect(() => {
@@ -36,8 +41,8 @@ const Checkpoint = () => {
                     Checkpoint
                 </div>
             </div>
-            <div className={`w-2/3 h-3/4 bg-dark-blue shadow-elem-dark rounded-lg p-8`}>
-                { tempCheckPtSwitch('sel') }
+            <div className={`${fullscreen ? 'p-8' : 'p-4'} w-2/3 h-3/4 bg-dark-blue shadow-elem-dark rounded-lg`}>
+                { tempCheckPtSwitch('sel', props) }
             </div>
         </div>
     )

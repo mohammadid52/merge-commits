@@ -122,7 +122,7 @@ const LessonControl = () => {
                                     <Route 
                                         path={`${match.url}/checkpoint`}
                                         render={() => (
-                                            <Checkpoint />
+                                            <Checkpoint fullscreen={fullscreen}/>
                                         )}
                                     />
                                     <Route 
@@ -150,12 +150,12 @@ const LessonControl = () => {
                                 </IconContext.Provider>
                             </div>
                             <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: 0}}>
-                                <button className="bg-purple-400 bg-opacity-90 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark">
+                                <button className="bg-purple-400 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark">
                                     share data
                                 </button>
                             </div>
                             <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
-                                <button className="bg-teal-500 bg-opacity-90 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark">
+                                <button className="bg-teal-500 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark">
                                     apply changes
                                 </button>
                             </div>
