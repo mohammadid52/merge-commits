@@ -68,7 +68,7 @@ export const getClassroom = /* GraphQL */ `
                         text
                         icon
                         color
-                        label
+                        
                     }
                   }
                 }
@@ -93,7 +93,7 @@ export const getClassroom = /* GraphQL */ `
                     text
                     icon
                     color
-                    label
+                    
                 }
               }
             }
