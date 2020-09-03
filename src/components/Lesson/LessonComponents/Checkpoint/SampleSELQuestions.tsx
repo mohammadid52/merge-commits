@@ -12,6 +12,7 @@ const setInitialState = (array: Array<any>) => {
 const SampleSELQuestions = () => {
     const {state} = useContext(LessonContext);
     const checkpoint = state.data.lesson.checkpoints.items[0].checkpoint;
+    console.log(checkpoint.questions.items, 'check point');
     const [ selected, setSelected ] = useState<Array<string>>([])
     const [input, setInput] = useState<any>(setInitialState(checkpoint.questions.items));
 
@@ -22,7 +23,7 @@ const SampleSELQuestions = () => {
                 let newArray = selected.filter(item => {
                    return item !== id
                 })
-                console.log(newArray, 'new')
+                console.log(newArray)
                 return newArray;
             }
             return [
