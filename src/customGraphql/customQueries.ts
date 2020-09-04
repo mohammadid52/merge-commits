@@ -216,6 +216,10 @@ export const getClassroom = /* GraphQL */ `
             selected {
               anchor
               color
+              content {
+                id
+                text
+              }
               focus
               id
             }
