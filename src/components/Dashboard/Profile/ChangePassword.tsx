@@ -5,6 +5,7 @@ import { FaKey } from 'react-icons/fa';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useHistory, NavLink } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
+import { validate } from 'json-schema';
 
 const ChangePassword = () => {
     const [oldPassToggle, setOldPassToggle] = useState(false);
@@ -22,6 +23,8 @@ const ChangePassword = () => {
         match: ''
     })
 
+    
+
 
     async function change() {
         let oldPassword = input.oldPassword;
@@ -29,39 +32,12 @@ const ChangePassword = () => {
         
         try {
             const user = await Auth.currentAuthenticatedUser();
-            console.log(user);
             const passwordChange = await Auth.changePassword(user, oldPassword, newPassword);
-            console.log(passwordChange)
             history.push('/dashboard/profile');
             
         } catch (error) {
             console.error('error signing in', error);
-            setMessage (() => {
-                if (!oldPassword) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'Please enter your old password',
-                    }
-                } if (!newPassword) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'Please enter your new password',
-                    }
-                } if (!input.match) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'Please enter your confirmation password',
-                    }
-                } if ( input.newPassword !== input.match ) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'Your new password and confirm password do not match',
-                    }
-                }
+            setMessage(() => {
                 switch (error.code) {
                     case "InvalidPasswordException":
                         return {
@@ -75,6 +51,12 @@ const ChangePassword = () => {
                                     type: 'error',
                                     message: 'Your old password is incorrect',
                                 }
+                    case "LimitExceededException":
+                            return {
+                                        show: true,
+                                        type: 'error',
+                                        message: 'The amount of attempts to change your password has been exceeded, please try again after some time',
+                                    }
                     default: 
                     return {
                             show: true,
@@ -82,9 +64,54 @@ const ChangePassword = () => {
                             message: 'Make sure your old password is correct and that your new password is at least 8 characters, including uppercase, lowercase and numbers',
                         };  
                 }
+
             })
+            
+            
         } 
     }
+
+
+    const validation = () => {
+        setMessage (() => {
+        let oldPassword = input.oldPassword;
+        let newPassword = input.newPassword;
+        if (!oldPassword) {
+            return {
+                show: true,
+                type: 'error',
+                message: 'Please enter your old password',
+            }
+        } if (!newPassword) {
+            return {
+                show: true,
+                type: 'error',
+                message: 'Please enter your new password',
+            }
+        } if (!input.match) {
+            return {
+                show: true,
+                type: 'error',
+                message: 'Please enter your confirmation password',
+            }
+        } if ( input.newPassword !== input.match ) {
+            return {
+                show: true,
+                type: 'error',
+                message: 'Your new password and confirm password do not match',
+            }
+        } return {
+            show: true,
+            type: 'success',
+            message: 'success',
+        }    
+        })
+
+
+    }
+
+    // const [valid, setValid] = useState(validation);
+
 
     const handleChange = (e: { target: { id: any; value: any; }; }) => {
         const { id, value } = e.target;
@@ -103,8 +130,13 @@ const ChangePassword = () => {
     }
 
     const handleSubmit = () => {
+        validation();
+        if (message.type === 'success') {
+            change();
+        }
+       
         console.log('change')
-        change();
+        // change();
     }
 
     return (
