@@ -141,57 +141,57 @@ const Registration = () => {
         } catch (error) {
             console.log('error signing up:', error);
             setMessage(() => { 
-                if (!newUserInputs.firstName) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'User\'s first name cannot be blank',
-                    }
-                } if (!newUserInputs.lastName) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'User\'s last name cannot be blank',
-                    }
-                } if (!username) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'User\'s email cannot be blank',
-                    }
-                } if (!username.includes("@")) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'User\'s email is not in the expected email address format',
-                    }
-                } if (!newUserInputs.birthdate) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'User\'s birthday cannot be blank',
-                    }
-                } if (!newUserInputs.role) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'User\'s role cannot be blank',
-                    }
-                } 
-                // if (!newUserInputs.grade) {
+                // if (!newUserInputs.firstName) {
                 //     return {
                 //         show: true,
+                //         type: 'error',
+                //         message: 'User\'s first name cannot be blank',
+                //     }
+                // } if (!newUserInputs.lastName) {
+                //     return {
+                //         show: true,
+                //         type: 'error',
+                //         message: 'User\'s last name cannot be blank',
+                //     }
+                // } if (!username) {
+                //     return {
+                //         show: true,
+                //         type: 'error',
+                //         message: 'User\'s email cannot be blank',
+                //     }
+                // } if (!username.includes("@")) {
+                //     return {
+                //         show: true,
+                //         type: 'error',
+                //         message: 'User\'s email is not in the expected email address format',
+                //     }
+                // } if (!newUserInputs.birthdate) {
+                //     return {
+                //         show: true,
+                //         type: 'error',
+                //         message: 'User\'s birthday cannot be blank',
+                //     }
+                // } if (!newUserInputs.role) {
+                //     return {
+                //         show: true,
+                //         type: 'error',
+                //         message: 'User\'s role cannot be blank',
+                //     }
+                // } 
+                // // if (!newUserInputs.grade) {
+                // //     return {
+                // //         show: true,
+                // //         type: 'error',
+                // //         message: 'User\'s grade cannot be blank',
+                // //     }
+                // // } 
+                // if (error.code.message === "Alias entry already exists for a different username") {
+                //     return {
+                //         show: false,
                 //         type: 'error',
                 //         message: 'User\'s grade cannot be blank',
                 //     }
                 // } 
-                if (error.code.message === "Alias entry already exists for a different username") {
-                    return {
-                        show: false,
-                        type: 'error',
-                        message: 'User\'s grade cannot be blank',
-                    }
-                } 
                 switch (error.code) {
                     case "InvalidParameterException":
                         return {
@@ -216,6 +216,64 @@ const Registration = () => {
             handleMessage('error', error.message)
             
         }
+    }
+
+    const validation = () => {
+        
+        let validated = false;
+        
+        setMessage (() => {
+            let username = newUserInputs.email
+            let password = newUserInputs.password
+            if (!newUserInputs.firstName) {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: 'User\'s first name cannot be blank',
+                }
+            } if (!newUserInputs.lastName) {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: 'User\'s last name cannot be blank',
+                }
+            } if (!username) {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: 'User\'s email cannot be blank',
+                }
+            } if (!username.includes("@")) {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: 'User\'s email is not in the expected email address format',
+                }
+            } if (!newUserInputs.birthdate) {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: 'User\'s birthday cannot be blank',
+                }
+            } if (!newUserInputs.role) {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: 'User\'s role cannot be blank',
+                }
+            } 
+        validated = true;
+        if (validated) {
+            signUp();
+        }
+        return {
+            show: false,
+            type: 'success',
+            message: 'success',
+        }    
+        })
+
+        
     }
 
     // const handleAddInput = () => {
@@ -275,11 +333,12 @@ const Registration = () => {
 
     const handleSubmit = (e: any) => {
         // submitNewUsers()
-        signUp();
-        if (newUserInputs.message.type === 'success') {
-            console.log('success state')
-            setNewUserInputs(initialState)
-        }
+        validation();
+        // signUp();
+        // if (newUserInputs.message.type === 'success') {
+        //     console.log('success state')
+        //     setNewUserInputs(initialState)
+        // }
     }
 
     return (

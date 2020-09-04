@@ -267,7 +267,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                         return (
                         <div key={key} className="relative bg-transparent flex flex-col items-center">
                             <div key={key} id={id} className={`${fullscreen ? 'h-12' : 'h-8'} w-full flex flex-row items-center rounded-lg`} onDragOver={handleDragOver} onDrop={handleDrop}>
-                                <input id={id} className={`${fullscreen ? 'h-10' : 'h-8 text-lg'} w-full px-4 py-2 rounded-l-lg text-gray-700 bg-gray-300 shadow-2`} name={id} type="text" value={line.text} onChange={handleInputChange} onDoubleClick={handleMenuToggle}/>
+                                <input id={id} className={`${fullscreen ? 'h-10' : 'h-8 text-base'} w-full px-4 py-2 rounded-l-lg text-gray-700 bg-gray-300 shadow-2`} name={id} type="text" value={line.text} onChange={handleInputChange} onDoubleClick={handleMenuToggle}/>
                                 <div id={id} className={`${fullscreen ? 'w-10 h-10' : 'w-8 h-8'}  bg-gray-300 rounded-r-lg  flex justify-center items-center shadow-2`} onClick={handleMenuToggle}>
                                     <div id={id} className="w-4 h-4 border-dark-blue border-b-8 border-r-8 transform rotate-45 mb-1"></div>
                                 </div>
