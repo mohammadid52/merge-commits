@@ -7,7 +7,7 @@ type lessonControlActions =
         payload: any
     }
 |   {
-        type: 'OPEN_LESSON' | 'DISABLE_LESSON' | 'CLOSE_LESSON';
+        type: 'OPEN_LESSON' | 'DISABLE_LESSON' | 'CLOSE_LESSON' | 'DELETE_DISPLAY_DATA' | 'SET_DISPLAY_DATA' | 'SET_STUDENT_VIEWING';
         payload: any
     }
 |   {
@@ -19,6 +19,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
     switch(action.type) {
         case 'INITIAL_LESSON_SETUP':
             return {
+                ...state,
                 status: 'loaded',
                 pages: action.payload.pages,
                 data: action.payload.data,
@@ -61,11 +62,44 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                         } else {
                             return {
                                 ...page,
-                                disabled: true,
+                                disabled: !page.disabled,
                             }
                         }
                     })
                 };
+        case 'SET_DISPLAY_DATA':
+            return {
+                ...state,
+                displayData: {
+                    ...state.displayData,
+                    breakdownComponent: action.payload.name,
+                    [action.payload.name]: action.payload.content
+                },
+            };
+        case 'DELETE_DISPLAY_DATA':
+            return {
+                ...state,
+                displayData: {
+                    ...state.displayData,
+                    breakdownComponent: '',
+                }
+            };
+        case 'SET_STUDENT_VIEWING':
+            if ( state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === action.payload.id ) {
+                return { 
+                    ...state,
+                    studentViewing: {
+                        live: false,
+                    }
+                }
+            }
+            return {
+                ...state,
+                studentViewing: {
+                    live: true,
+                    studentInfo: action.payload
+                }
+            };
         case 'CLEANUP': 
             return lessonControlState
         default:

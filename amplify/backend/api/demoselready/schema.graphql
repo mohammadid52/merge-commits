@@ -432,6 +432,7 @@ type CheckpointQuestions @model(queries: null)
 
 type Option {
   text: String!
+  label: String
   icon: String
   color: String
 }

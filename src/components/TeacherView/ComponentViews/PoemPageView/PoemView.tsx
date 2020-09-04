@@ -8,15 +8,15 @@ import {
 import PoemActivityView from './PoemModules/PoemActivityView';
 import PoemBreakdownView from './PoemBreakdown/PoemBreakdownView'
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
+import { studentObject } from '../../../../state/LessonControlState';
 // import ErrorPage from '../../Error/ErrorPage';
 
 interface props {
-        student: number | null,
         fullscreen: boolean
     }
 
 const Poem = (props: props) => {
-    const { student, fullscreen } = props;
+    const { fullscreen } = props;
     const { state, dispatch } = useContext(LessonControlContext);
     const match = useRouteMatch();
 
@@ -35,10 +35,10 @@ const Poem = (props: props) => {
     return (
         <Switch>
             <Route path={`${match.url}/breakdown`}>
-                <PoemBreakdownView fullscreen={fullscreen} student={student}/>
+                <PoemBreakdownView fullscreen={fullscreen}/>
             </Route>
             <Route exact path={`${match.url}`}>
-                <PoemActivityView fullscreen={fullscreen} student={student}/>
+                <PoemActivityView fullscreen={fullscreen}/>
             </Route>
             {/* <Route>
                 <ErrorPage />

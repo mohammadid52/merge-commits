@@ -2,14 +2,14 @@ import React, { useEffect, useContext, useState } from 'react';
 import ReflectionQuestions from './ReflectionQuestions';
 import Banner from './Banner';
 import { LessonContext } from '../../../../../contexts/LessonContext';
+import { studentObject } from '../../../../../state/LessonControlState';
 
 interface props {
-        student: number | null,
         fullscreen: boolean
     }
 
 const SelfDisplay = (props: props) => {
-    const { student, fullscreen } = props;
+    const { fullscreen } = props;
     const { dispatch, state } = useContext(LessonContext)
     const [ modules, setModules ] = useState<Array<any>>()
     const displayProps = state.componentState.lyrics.selected

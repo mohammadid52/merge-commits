@@ -180,6 +180,7 @@ module.exports = {
         '2': '0px 2px 4px black',
         '5': '0 1px 5px 0 rgba(0, 0, 0, 0.1)',
         'elem-dark': '0 2px 4px black',
+        'elem-semi-dark': '0 2px 4px #2f2f2f',
         'elem-light': '3px 3px 5px darkgray',
         'map': '5px -1px 8px #1A202C',
         'inner-dark': 'inset 0 2px 4px black',
@@ -187,6 +188,7 @@ module.exports = {
         'grayscale' : '0px 0px 10px 4px #fdfdfd',
         'inner-box' : 'inset 0 2px 4px 0 #191d25',
         'container' : '1px 1px 10px 1px #e0e0e0',
+
       },
       colors: {
         'background': '#f2f2f2',

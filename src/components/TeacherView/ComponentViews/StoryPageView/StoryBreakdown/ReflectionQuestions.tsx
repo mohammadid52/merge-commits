@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface props {
         fullscreen: boolean
@@ -8,7 +8,7 @@ interface props {
 const ReflectionQuestions = (props: props) => {
     const {  fullscreen } = props;
     const [ question, setQuestion ] = useState(0);
-    const { state } = useContext(LessonContext);
+    const { state } = useContext(LessonControlContext);
     console.log(state)
     const questArr = state.data.lesson.warmUp.breakdown.reflectionQuestions;
 

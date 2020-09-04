@@ -4,6 +4,7 @@ export interface LessonStateType  {
     data?: {
         [key: string]: any;
     }
+    studentDataID: string,
     currentPage: number;
     lessonProgress: number;
     canContinue: boolean;
@@ -22,7 +23,6 @@ export interface LessonStateType  {
     new_words: Array<string>;
     word_bank?: Array<string>;
     lessonComplete: boolean;
-    firstSave: boolean;
     unsavedChanges: boolean;
 }
 
@@ -30,6 +30,7 @@ export const lessonState: LessonStateType = {
     status: '',
     error: '',
     data: {},
+    studentDataID: '',
     currentPage: 0,
     lessonProgress: 0,
     canContinue: false,
@@ -38,6 +39,5 @@ export const lessonState: LessonStateType = {
     new_words: [],
     word_bank: null,
     lessonComplete: false,
-    firstSave: false,
     unsavedChanges: true,
 }

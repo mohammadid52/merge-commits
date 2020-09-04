@@ -4,8 +4,10 @@ import InstructionsBlock from './InstructionBlock';
 import StoryForm from './StoryForm';
 import Banner from './Banner';
 import Modules from './Modules';
+import { studentObject } from '../../../../../state/LessonControlState'
 import InstructionsPopup from '../../../../Lesson/Popup/InstructionsPopup';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
+import { string } from 'prop-types';
 
 export interface StoryState {
     story: string,
@@ -17,66 +19,27 @@ export interface StoryState {
 }
 
 interface props {
-    student: number | null,
     fullscreen: boolean
 }
 
 const Story = (props: props) => {
-    const { student, fullscreen } = props;
-    const { state, dispatch } = useContext(LessonControlContext);
-    const [ cookies, setCookie ] = useCookies(['story']);
+    const { fullscreen } = props;
+    const { state } = useContext(LessonControlContext);
     const inputs = state.data.lesson.warmUp.inputs;
     const video = state.data.lesson.warmUp.instructions.link
     const [ openPopup, setOpenPopup ] = useState(false)
-
+    const [ dataProps, setDataProps ] = useState<{ title?: string, story?: string, [key: string]: any}>()
     
-    
+    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'warmup' : false;
 
     useEffect(() => {
-        // if ( !cookies.story && !state.componentState.story ) {
-        //    let tempObj: StoryState = {
-        //         story: '',
-        //     }
-        //     if ( inputs.title ) {
-        //         tempObj.title = '';
-        //     }
-
-        //     if (inputs.additionalInputs.length > 0) {
-        //         let additional:Array<{name: string, text: string | []}>= [];
-        //         inputs.additionalInputs.forEach((input: { name: string; }) => {
-        //             let newInput = {
-        //                 name: input.name,
-        //                 text: '',
-        //             }
-
-        //             additional.push(newInput);
-        //         })
-
-        //         tempObj.additional = additional;
-        //     }
-
-        //     dispatch({
-        //         type: 'SET_INITIAL_COMPONENT_STATE',
-        //         payload: {
-        //             name: 'story',
-        //             content: tempObj
-        //         }
-        //     })
-
-        //     setCookie('story', tempObj)
-        // }
-        
-        // if ( cookies.story ) {
-        //     dispatch({
-        //         type: 'SET_INITIAL_COMPONENT_STATE',
-        //         payload: {
-        //             name: 'story',
-        //             content: cookies.story
-        //         }
-        //     })
-        // }
-
-    }, []);
+        if (displayStudentData) {
+            console.log(state.studentViewing.studentInfo);
+            if ( state.studentViewing.studentInfo.warmupData ) {
+                return setDataProps(state.studentViewing.studentInfo.warmupData)
+            } return setDataProps(null)
+        }
+    }, [state.studentViewing]);
 
 
     return (
@@ -89,8 +52,7 @@ const Story = (props: props) => {
                         <InstructionsBlock fullscreen={fullscreen}/>
                         { inputs.additionalInputs.length > 0 ?
                             <Modules 
-                                // breakdownProps={breakdownProps}
-                                // setBreakdownProps={setBreakdownProps}
+                                dataProps={dataProps}
                                 inputs={inputs.additionalInputs}
                                 fullscreen={fullscreen}
                             />
@@ -99,7 +61,7 @@ const Story = (props: props) => {
                         }
                     </div>
                     <div className="md:w-5.9/10 h-full flex flex-col items-center">
-                        <StoryForm fullscreen={fullscreen} />
+                        <StoryForm dataProps={dataProps} fullscreen={fullscreen} />
                     </div>
                 </div>
             </div>

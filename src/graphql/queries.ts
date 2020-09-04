@@ -527,6 +527,7 @@ export const getStudentData = /* GraphQL */ `
         updatedAt
       }
       studentID
+      studentAuthID
       student {
         id
         authId
@@ -632,6 +633,7 @@ export const listStudentDatas = /* GraphQL */ `
           updatedAt
         }
         studentID
+        studentAuthID
         student {
           id
           authId
@@ -879,6 +881,7 @@ export const getClassroom = /* GraphQL */ `
           live
           classroomID
           studentID
+          studentAuthID
           createdAt
           updatedAt
         }
@@ -1555,7 +1558,12 @@ export const getQuestion = /* GraphQL */ `
       label
       type
       question
-      options
+      options {
+        text
+        label
+        icon
+        color
+      }
       createdAt
       updatedAt
     }
@@ -1573,7 +1581,12 @@ export const listQuestions = /* GraphQL */ `
         label
         type
         question
-        options
+        options {
+          text
+          label
+          icon
+          color
+        }
         createdAt
         updatedAt
       }
@@ -1593,7 +1606,12 @@ export const getQuestionData = /* GraphQL */ `
         label
         type
         question
-        options
+        options {
+          text
+          label
+          icon
+          color
+        }
         createdAt
         updatedAt
       }
@@ -1638,7 +1656,6 @@ export const listQuestionDatas = /* GraphQL */ `
           label
           type
           question
-          options
           createdAt
           updatedAt
         }
