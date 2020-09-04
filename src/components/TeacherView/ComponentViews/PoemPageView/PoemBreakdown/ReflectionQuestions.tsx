@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface props {
         fullscreen: boolean
@@ -8,8 +8,8 @@ interface props {
 const ReflectionQuestions = (props: props) => {
     const {  fullscreen } = props;
     const [ question, setQuestion ] = useState(0);
-    const { state } = useContext(LessonContext);
-    const questArr = state.data.activity.breakdown.reflectionQuestions;
+    const { state } = useContext(LessonControlContext);
+    const questArr = state.data.lesson.activity.breakdown.reflectionQuestions;
 
     const nextQuestion = () => {
         if (question < questArr.length - 1) {

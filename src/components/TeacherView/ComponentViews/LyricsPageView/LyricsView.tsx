@@ -16,12 +16,7 @@ interface props {
     }
 const Lyrics = (props: props) => {
     const { fullscreen } = props;
-    const { state, dispatch } = useContext(LessonControlContext);
     const match = useRouteMatch();
-    
-    useEffect(() => {
-        dispatch({type: 'ACTIVATE_LESSON', payload: 'corelesson'})
-    }, [])
 
     return (
         <Switch>
