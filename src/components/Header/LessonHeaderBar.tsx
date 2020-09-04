@@ -39,48 +39,27 @@ const LessonHeaderBar = () => {
         }
     }, [state.lessonProgress])
 
-    async function createClassroomData() {
-        let data = {
-            lessonProgress: cookies.lesson.lessonProgress,
-            classroomID: 1,
-            studentID: cookies.auth.email,
-            data: {
-                warmup: state.componentState.story ? state.componentState.story : null,
-                corelesson: state.componentState.lyrics ? state.componentState.lyrics : null,
-                activity: state.componentState.poem ? state.componentState.poem : null
-            }
-        }
-
-        console.log('write', data)
-
-        try {
-            // const dataObject: any = await API.graphql(graphqlOperation(customMutations.createClassroomDataTest, { input: data }))
-            // console.log(dataObject)
-            // dispatch({ type: 'SAVED_CHANGES' })
-        } catch (error) {
-            console.error(error);   
-        }
-    }
 
     async function updateClassroomData() {
+        let lessonProgress = state.pages[state.lessonProgress].stage
+
         let data = {
-            lessonProgress: cookies.lesson.lessonProgress,
+            id: state.studentDataID,
+            lessonProgress: lessonProgress,
             classroomID: 1,
             studentID: cookies.auth.email,
-            data: {
-                warmup: state.componentState.story ? state.componentState.story : null,
-                corelesson: state.componentState.lyrics ? state.componentState.lyrics : null,
-                activity: state.componentState.poem ? state.componentState.poem : null
-            }
+            studentAuthID: cookies.auth.authId,
+            warmupData: state.componentState.story ? state.componentState.story : null,
+            corelessonData: state.componentState.lyrics ? state.componentState.lyrics : null,
+            activityData: state.componentState.poem ? state.componentState.poem : null
         }
 
         console.log('update', data);
         
-
         try {
-            // const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateClassroomDataTest, { input: data }))
-            // console.log(dataObject)
-            // dispatch({ type: 'SAVED_CHANGES' })
+            const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }))
+            console.log(dataObject)
+            dispatch({ type: 'SAVED_CHANGES' })
         } catch (error) {
             console.error(error);   
         }
@@ -88,13 +67,7 @@ const LessonHeaderBar = () => {
 
     const handleSave = () => {
         if ( state.unsavedChanges ) {
-            if ( !state.firstSave ) {
-                createClassroomData()
-            }
-    
-            if ( state.firstSave ) {
-                updateClassroomData()
-            }
+            updateClassroomData()
         }
     }
 

@@ -1,26 +1,29 @@
 import React, { useContext } from 'react';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
+import { studentObject } from '../../state/LessonControlState'
 
-interface props {
-    setSelectedStudent: React.Dispatch<React.SetStateAction<number>>
-}
-
-const ClassRoster = (props: props) => {
-    const { setSelectedStudent } = props
-    const { state } = useContext(LessonControlContext);
+const ClassRoster = () => {
+    const { state, dispatch } = useContext(LessonControlContext);
 
     console.log(state.roster)
 
     const handleSelect = (e: any) => {
         const { id } = e.target
-        setSelectedStudent(parseInt(id));
+        const selectedStudent = state.roster.filter((item: any) => {
+            return item.id === id
+        });
+
+        console.log(selectedStudent);
+
+        dispatch({ type: 'SET_STUDENT_VIEWING', payload: selectedStudent.pop() })
+    
     } 
 
     const studentStatus = (status: string) => {
         switch(status) {
-            case 'ONLINE':
+            case 'ACTIVE':
                 return (
-                    <div className="flex justify-center items-center ">
+                    <div className="flex justify-center items-center">
                         <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-green-400"></span>
                     </div>
                 )
@@ -80,7 +83,7 @@ const ClassRoster = (props: props) => {
                     Name
                 </div>
                 <div className={`w-3/10 mx-2`}>
-                    Current Page
+                    Page
                 </div>
                 <div className={`w-1/10 mx-2`}>
                     
@@ -95,13 +98,15 @@ const ClassRoster = (props: props) => {
                                 {studentStatus(item.status)}
                             </div>
                             <div className={`w-4/10 mx-2`}>
-                                {item.info.lastName}, {item.info.firstName}
+                                {item.student.lastName}, {item.student.preferredName ? item.student.preferredName : item.student.firstName }
                             </div>
                             <div className={`w-2/10 mx-2`}>
-                                {item.progress}
+                                {item.lessonProgress}
                             </div>
-                            <div id={`${key}`} className="w-2/10 flex justify-center items-center cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleSelect} >
-                                <div id={`${key}`} key={key} className="text-indigo-600 hover:text-indigo-900">View</div>
+                            <div id={`${item.id}`} className="w-2/10 flex justify-center items-center cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleSelect} >
+                                <button id={`${item.id}`} key={key} className="bg-indigo-500 w-9/10 shadow-elem-semi-dark rounded-xl text-gray-200 hover:text-white">
+                                    { state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === item.id ? 'Quit' : 'View' }
+                                </button>
                             </div>
                         </div>
                     )) : null

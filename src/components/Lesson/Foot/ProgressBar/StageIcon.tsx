@@ -18,11 +18,12 @@ interface StageIconProps {
     stage: string,
     type: string,
     active: boolean,
-    breakdown: boolean,
+    open: boolean, 
+    disabled: boolean,
 }
 
 const StageIcon = (props: StageIconProps) => {
-    const { stage, type, active, breakdown } = props;
+    const { stage, type, active, disabled, open, } = props;
     const { state, dispatch } = useContext(LessonContext);
     const match = useRouteMatch();
     const history = useHistory();
@@ -67,7 +68,9 @@ const StageIcon = (props: StageIconProps) => {
         }
     }
 
-    const iconColor = active ? '#EDF2F7' : '#A0AEC0';
+    const iconColor = open || active ? '#EDF2F7' : '#A0AEC0';
+
+    if ( disabled ) return null;
 
     if ( type === 'breakdown' ) {
         return (
@@ -82,7 +85,7 @@ const StageIcon = (props: StageIconProps) => {
     }
 
     return (
-        <div className={`${ breakdown ? 'flex-grow' : 'flex-grow-0'} w-auto flex flex-row justify-around items-center z-20`}>
+        <div className={`flex-grow-0 w-auto flex flex-row justify-around items-center z-20`}>
             <div className={`bg-gray-200 h-12 w-12 rounded-full flex items-center justify-center ${ active ? 'cursor-pointer' : 'cursor-default'}`} onClick={handleLink}>
                  <IconContext.Provider value={{ color: iconColor, size: '1.5rem' }}>
                     <div className={`h-10 w-10 rounded-full flex flex-col justify-center items-center ${ active ? 'bg-green-600'  : 'bg-gray-400'} z-30`}>

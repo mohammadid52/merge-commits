@@ -3,7 +3,7 @@ import { lessonControlState } from '../state/LessonControlState';
 import { lessonControlReducer } from '../reducers/LessonControlReducer';
 import queryString from 'query-string';
 import * as customQueries from '../customGraphql/customQueries';
-
+import * as customSubscriptions from '../customGraphql/customSubscriptions';
 import { API, graphqlOperation } from 'aws-amplify';
 import { useLocation } from 'react-router-dom';
 import { pageThemes } from './GlobalContext';
@@ -117,6 +117,7 @@ export const LessonControlContext = React.createContext(null);
 export const LessonControlContextProvider = ({ children }: LessonControlProps) => {
     const [ state, dispatch ] = useReducer(lessonControlReducer, lessonControlState);
     const [ lesson, setLesson ] = useState<LessonObject>()
+    const [ studentData, setStudentData ] = useState<{[key: string]: any}>();
     const [ lightOn, setLightOn ] = useState(false);
     const location = useLocation();
 
@@ -141,24 +142,28 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
             payload: { 
               pages: classroom.data.getClassroom.lessonPlan, 
               data: classroom.data.getClassroom,
-              students: students
+              students: classroom.data.getClassroom.data.items
           }})
+          subscribeToStudentData()
       } catch (error) {
           console.error(error)
       }
     }
 
-    // const subscribeToStudentData = () => {
-    //   let queryParams = queryString.parse(location.search)
-
-    //   // @ts-ignore
-    //   const studentDataSubscription = API.graphql(graphqlOperation(onChangeStudentData, 
-    //     { classroomID: queryParams.id })).subscribe({
-    //       next: (studentData: any) => console.log(classroomData)
-    //   });
-
-    //   console.log(studentDataSubscription)
+    // const listStudentData = async () => {
+    //   const studentData: any = await API.graphql(graphqlOperation(customQueries))
     // }
+
+    const subscribeToStudentData = () => {
+      let queryParams = queryString.parse(location.search)
+
+      // @ts-ignore
+      const studentDataSubscription = API.graphql(graphqlOperation(customSubscriptions.onChangeStudentData, { classroomID: queryParams.id })).subscribe({
+          next: (studentData: any) => console.log(studentData)
+      });
+
+      console.log('sub', studentDataSubscription)
+    }
 
     useEffect(() => {
       getClassroom()

@@ -3,12 +3,19 @@ import { IconContext } from "react-icons";
 import { FaScroll } from 'react-icons/fa';
 
 interface BannerProps {
-    title: string
+    dataProps?: {
+        title?: string,
+        story?: string,
+        additional?: [{
+            name: string,
+            input: string,
+        }]
+    }
     fullscreen: boolean
 }
 
 const Banner = (props: BannerProps) => {
-    const { title, fullscreen } = props;
+    const { dataProps, fullscreen } = props;
 
     return (
         <div className="w-full h-1/10 flex flex-row justify-center items-center">
@@ -20,7 +27,7 @@ const Banner = (props: BannerProps) => {
             </IconContext.Provider>
             
             <div className={`${fullscreen ? 'text-4xl' : 'text-2xl px-4 py-2'} bg-dark-blue w-full flex flex-row justify-center items-center text-center font-open font-bold text-gray-200 rounded-lg shadow-2 z-10`}>
-                    { title }
+                    { dataProps && dataProps.title ? dataProps.title : '' }
             </div>
         </div>
     )

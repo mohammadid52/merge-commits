@@ -7,6 +7,14 @@ type InputProp = [{ name: string; example: string; prompt: string; }];
 interface ModulesProps {
     inputs: InputProp;
     fullscreen: boolean
+    dataProps?: {
+        title?: string,
+        story?: string,
+        additional?: [{
+            name: string,
+            input: string,
+        }]
+    }
 }
 
 interface FormInputsState {
@@ -14,7 +22,7 @@ interface FormInputsState {
 }
 
 const Modules = (props: ModulesProps) => {
-    const { inputs, fullscreen } = props
+    const { inputs, fullscreen, dataProps } = props
     const { state, dispatch } = useContext(LessonControlContext);
     const [ cookies, setCookie ] = useCookies(['story'])
     const [ formInputs, setFormInputs ] = useState<FormInputsState>()
@@ -28,9 +36,13 @@ const Modules = (props: ModulesProps) => {
                 }
             })
         })
+    }, [])
 
-        if ( cookies.story && cookies.story.additional && cookies.story.additional.length > 0 ) {
-            cookies.story.additional.forEach((item: {name: string, input: string}) => {
+    useEffect(() => {
+        console.log('lookhere', dataProps, );
+
+        if ( dataProps && dataProps.additional ) {
+            dataProps.additional.forEach((item: { name: string; input: string }) => {
                 setFormInputs(prev => {
                     return {
                         ...prev,
@@ -40,43 +52,7 @@ const Modules = (props: ModulesProps) => {
             })
         }
 
-        // if ( state.componentState.story &&state.componentState.story.additional && state.componentState.story.additional.length > 0 ) {
-        //     state.componentState.story.additional.map((item: {name: string, input: string}) => {
-        //         setFormInputs(prev => {
-        //             return {
-        //                 ...prev,
-        //                 [item.name]: item.input,
-        //             }
-        //         })
-        //     })
-        // }
-    }, [])
-
-    useEffect(() => {
-        // if ( formInputs && state.componentState.story.additional
-        //     && state.componentState.story.additional.length > 0 ) {
-        //     let tempArray: Array<{name: string, input: string}> = [];
-        //     inputs.forEach(input => {
-        //         let tempObj = {
-        //             name: input.name,
-        //             input: formInputs[input.name]
-        //         }
-                
-        //         tempArray.push(tempObj)
-        //     })
-
-        //     dispatch({
-        //         type: 'UPDATE_COMPONENT_STATE',
-        //         payload: {
-        //             componentName: 'story',
-        //             inputName: 'additional',
-        //             content: tempArray
-        //         }
-        //     })
-
-        //     setCookie('story', {...cookies.story, additional: tempArray})
-        // }
-    }, [formInputs])
+    }, [dataProps])
 
     const handleFormInputChange = (e: { target: { id: string; value: string; }; }) => {
         setFormInputs({

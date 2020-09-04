@@ -168,6 +168,7 @@ export const onUpdateClassroom = /* GraphQL */ `
           live
           classroomID
           studentID
+          studentAuthID
           createdAt
           updatedAt
         }
@@ -242,6 +243,7 @@ export const onChangeStudentData = /* GraphQL */ `
         updatedAt
       }
       studentID
+      studentAuthID
       student {
         id
         authId
@@ -2373,7 +2375,12 @@ export const onCreateDoFirstQuestion = /* GraphQL */ `
         label
         type
         question
-        options
+        options {
+          text
+          label
+          icon
+          color
+        }
         createdAt
         updatedAt
       }
@@ -2403,7 +2410,12 @@ export const onUpdateDoFirstQuestion = /* GraphQL */ `
         label
         type
         question
-        options
+        options {
+          text
+          label
+          icon
+          color
+        }
         createdAt
         updatedAt
       }
@@ -2433,7 +2445,12 @@ export const onDeleteDoFirstQuestion = /* GraphQL */ `
         label
         type
         question
-        options
+        options {
+          text
+          label
+          icon
+          color
+        }
         createdAt
         updatedAt
       }
@@ -2834,7 +2851,12 @@ export const onCreateCheckpointQuestions = /* GraphQL */ `
         label
         type
         question
-        options
+        options {
+          text
+          label
+          icon
+          color
+        }
         createdAt
         updatedAt
       }
@@ -2866,7 +2888,12 @@ export const onUpdateCheckpointQuestions = /* GraphQL */ `
         label
         type
         question
-        options
+        options {
+          text
+          label
+          icon
+          color
+        }
         createdAt
         updatedAt
       }
@@ -2898,7 +2925,12 @@ export const onDeleteCheckpointQuestions = /* GraphQL */ `
         label
         type
         question
-        options
+        options {
+          text
+          label
+          icon
+          color
+        }
         createdAt
         updatedAt
       }
@@ -2914,7 +2946,12 @@ export const onCreateQuestion = /* GraphQL */ `
       label
       type
       question
-      options
+      options {
+        text
+        label
+        icon
+        color
+      }
       createdAt
       updatedAt
     }
@@ -2927,7 +2964,12 @@ export const onUpdateQuestion = /* GraphQL */ `
       label
       type
       question
-      options
+      options {
+        text
+        label
+        icon
+        color
+      }
       createdAt
       updatedAt
     }
@@ -2940,7 +2982,12 @@ export const onDeleteQuestion = /* GraphQL */ `
       label
       type
       question
-      options
+      options {
+        text
+        label
+        icon
+        color
+      }
       createdAt
       updatedAt
     }
@@ -2958,7 +3005,12 @@ export const onCreateQuestionData = /* GraphQL */ `
         label
         type
         question
-        options
+        options {
+          text
+          label
+          icon
+          color
+        }
         createdAt
         updatedAt
       }
@@ -2998,7 +3050,12 @@ export const onUpdateQuestionData = /* GraphQL */ `
         label
         type
         question
-        options
+        options {
+          text
+          label
+          icon
+          color
+        }
         createdAt
         updatedAt
       }
@@ -3038,7 +3095,12 @@ export const onDeleteQuestionData = /* GraphQL */ `
         label
         type
         question
-        options
+        options {
+          text
+          label
+          icon
+          color
+        }
         createdAt
         updatedAt
       }
@@ -3089,6 +3151,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           updatedAt
         }
         studentID
+        studentAuthID
         student {
           id
           authId
@@ -3136,7 +3199,6 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           label
           type
           question
-          options
           createdAt
           updatedAt
         }
@@ -3190,6 +3252,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           updatedAt
         }
         studentID
+        studentAuthID
         student {
           id
           authId
@@ -3237,7 +3300,6 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           label
           type
           question
-          options
           createdAt
           updatedAt
         }
@@ -3291,6 +3353,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           updatedAt
         }
         studentID
+        studentAuthID
         student {
           id
           authId
@@ -3338,7 +3401,6 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           label
           type
           question
-          options
           createdAt
           updatedAt
         }

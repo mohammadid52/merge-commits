@@ -65,10 +65,9 @@ export const getClassroom = /* GraphQL */ `
                     type
                     question
                     options {
-                        text
-                        icon
-                        color
-                        
+                      text
+                      icon
+                      color
                     }
                   }
                 }
@@ -90,10 +89,9 @@ export const getClassroom = /* GraphQL */ `
                 type
                 question
                 options {
-                    text
-                    icon
-                    color
-                    
+                  text
+                  icon
+                  color
                 }
               }
             }
@@ -188,19 +186,66 @@ export const getClassroom = /* GraphQL */ `
         type
         displayMode
       }
-      # data {
-      #   items {
-      #     id
-      #     lessonProgress
-      #     status
-      #     live
-      #     classroomID
-      #     studentID
-      #     createdAt
-      #     updatedAt
-      #   }
-      #   nextToken
-      # }
+      data {
+        items {
+          id
+          lessonProgress
+          status
+          live
+          classroomID
+          studentID
+          studentAuthID
+          student {
+            id
+            authId
+            email
+            firstName
+            preferredName
+            lastName
+            language
+          }
+          warmupData {
+            story
+            title
+            additional {
+              name
+              input
+            }
+          }
+          corelessonData {
+            selected {
+              anchor
+              color
+              focus
+              id
+            }
+          }
+          activityData {
+            editInput
+            editMode
+            lines {
+              example
+              id
+              menuOpen
+              text
+            }
+            title
+          }
+          # doFirstData {
+          #   items {
+          #     id
+          #     studentDataID
+          #     questionDataID
+          #     createdAt
+          #     updatedAt
+          #   }
+          #   nextToken
+          # }
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -216,6 +261,7 @@ export const getStudentData = /* GraphQL */ `
       live
       classroomID
       studentID
+      studentAuthID
       warmupData {
         story
         title

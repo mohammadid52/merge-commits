@@ -62,6 +62,10 @@ type LessonActions =
         payload: number;
     } 
 |   {
+        type: 'SET_STUDENT_DATA_ID';
+        payload: string;
+    } 
+|   {
         type: 'CLEANUP';
     } 
 |   {
@@ -117,6 +121,11 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 ...state, 
                 error: action.payload
             } 
+        case 'SET_STUDENT_DATA_ID':
+            return {
+                ...state, 
+                studentDataID: action.payload
+            } 
         case 'ADD_WORD':
             return {
                 ...state,
@@ -124,7 +133,6 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 word_bank: [...state.word_bank, action.payload]
             }
         case 'SET_INITIAL_COMPONENT_STATE_FROM_DB':
-            
             return {
                 ...state,
                 firstSave: true,
@@ -169,7 +177,6 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             return {
                 ...state,
                 unsavedChanges: false,
-                firstSave: state.firstSave ? state.firstSave : true,
             }
         case 'OPEN_LESSON': 
             return {

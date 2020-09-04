@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, { useState, useContext } from 'react';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 import PhotoBlock from './PhotoBlock';
 import QuoteBlock from './QuoteBlock';
 import Block from './Block';
@@ -7,12 +8,15 @@ import InstructionsBlock from './InstructionsBlock';
 import DoFirst from './DoFirst';
 
 interface props {
-    student: number | null,
     fullscreen: boolean
 }
 
 const IntroView = (props: props) => {
-    const { student, fullscreen } = props;
+    const { state, dispatch } = useContext(LessonControlContext);
+    const [ doFirstData, setDoFirstData ] = useState<{ [key: string]: any }>()
+    const { fullscreen } = props;
+
+    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'intro' : false;
 
 
     return (
@@ -30,7 +34,7 @@ const IntroView = (props: props) => {
             </div>
         </div>
         <div className="md:w-3.9/10 h-full flex flex-col justify-between items-center">
-            <DoFirst student={student} fullscreen={fullscreen}/>
+            <DoFirst data={ doFirstData ? doFirstData : null } fullscreen={fullscreen}/>
         </div>
     </div>
     )

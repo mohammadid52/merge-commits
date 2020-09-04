@@ -8,6 +8,7 @@ import Banner from './Banner';
 import EditBlock from './EditBlock';
 import InstructionsPopup from '../../../../Lesson/Popup/InstructionsPopup';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
+import { studentObject } from '../../../../../state/LessonControlState';
 
 type storageObject = {
     title: string
@@ -22,12 +23,11 @@ type storageObject = {
 }
 
 interface props {
-    student: number | null,
     fullscreen: boolean
 }
 
 const PoemActivity = (props: props) => {
-    const { student, fullscreen } = props;
+    const { fullscreen } = props;
     const { state, dispatch } = useContext(LessonControlContext);
     const [ cookies, setCookie ] = useCookies(['poem']);
     const [ editMode, setEditMode ] = useState({

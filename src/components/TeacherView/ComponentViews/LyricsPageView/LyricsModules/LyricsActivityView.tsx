@@ -8,6 +8,7 @@ import InstructionBlock from './InstructionBlock';
 import VideoBlock from './VideoBlock';
 import InstructionsPopup from '../../../../Lesson/Popup/InstructionsPopup';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
+import { studentObject } from '../../../../../state/LessonControlState';
 
 type SelectObject = {
         id?: string | number
@@ -18,70 +19,33 @@ type SelectObject = {
 }
 
 interface props {
-        student: number | null,
         fullscreen: boolean
     }
 
 const Body = (props: props) => {
-    const { student, fullscreen } = props
+    const { fullscreen } = props
     const { state, dispatch } = useContext(LessonControlContext)
     const [ color, setColor ] = useState('')
-    const [ selected, setSelected ] = useState<Array<SelectObject>>( 
-        // state.componentState.lyrics && state.componentState.lyrics.selected ? state.componentState.lyrics.selected :
-         []
-    )
-    const [ cookies, setCookie ] = useCookies(['lyrics'])
+    const [ selected, setSelected ] = useState<Array<SelectObject>>([])
     const [ fullscreenLyrics, setFullscreenLyrics ] = useState(false)
     const { video, link } = state.data.lesson.coreLesson.instructions
     const [ openPopup, setOpenPopup ] = useState(false)
+    const [ dataProps, setDataProps ] = useState<{ title?: string, story?: string, [key: string]: any}>()
+
+    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'corelesson' : false;
 
     useEffect(() => {
-        // if ( cookies.lyrics ) {
-        //     dispatch({
-        //         type: 'SET_INITIAL_COMPONENT_STATE',
-        //         payload: {
-        //             name: 'lyrics',
-        //             content: {
-        //                 selected: cookies.lyrics
-        //             },
-        //         }
-        //     })
+        if (displayStudentData) {
+            console.log(state.studentViewing.studentInfo);
+            if ( state.studentViewing.studentInfo.corelessonData ) {
+                return setDataProps(state.studentViewing.studentInfo.corelessonData)
+            } return setDataProps(null)
+        }
+    }, [state.studentViewing]);
 
-        //     setSelected(cookies.lyrics)
-        // }
-
-        // if ( !cookies.lyrics && !state.componentState.lyrics ) {
-        //     dispatch({
-        //         type: 'SET_INITIAL_COMPONENT_STATE',
-        //         payload: {
-        //             name: 'lyrics',
-        //             content: {
-        //                 selected: [],
-        //             },
-        //         }
-        //     })
-
-        //     setCookie('lyrics', []);
-        // }
-    }, [])
 
     useEffect(() => {
-        // console.log('state', state.componentState);
-        // console.log('selected', selected);
-        // console.log('cookies', cookies);
-        
-        // if ( state.componentState.lyrics ) {
-        //     dispatch({
-        //         type: 'UPDATE_COMPONENT_STATE',
-        //         payload: {
-        //             componentName: 'lyrics',
-        //             inputName: 'selected',
-        //             content: selected
-        //         }
-        //     })
-
-        //     setCookie('lyrics', selected)
-        // }
+       
     }, [selected])
 
     return (

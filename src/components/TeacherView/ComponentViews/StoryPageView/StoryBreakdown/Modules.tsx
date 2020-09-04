@@ -2,7 +2,14 @@ import React from 'react';
 
 interface props {
     fullscreen: boolean,
-    additional: any
+    dataProps?: {
+        title?: string,
+        story?: string,
+        additional?: [{
+            name: string,
+            input: string,
+        }]
+    }
 }
 
 const keywordCapitilizer = (str: string) => {
@@ -31,21 +38,19 @@ const keywordParser = (str: string) => {
 
 
 const Modules = (props: props) => {
-    const { fullscreen, additional } = props;
+    const { fullscreen, dataProps } = props;
 
-    if (!additional) {
+    if (!dataProps || !dataProps.additional) {
         return null;
     }
-    
-    console.log(additional)
 
     return (
         <div className={`flex flex-col md:w-2/10 h-full justify-between text-sm md:text-base text-gray-200 mb-4 md:mb-0`} >
-            {
-                additional.map((item: any, key: number) => {
+            {   dataProps && dataProps.additional ?
+                dataProps.additional.map((item: any, key: number) => {
                     let wordArray = keywordParser(item.input)
                     return (
-                    <div key={key} className={`md:h-3.2/10 bg-dark-blue font-open font-bold h-16 shadow-2 rounded-lg px-4 py-2 ${key === additional.length - 1 ? '' : ''}`}>
+                    <div key={key} className={`md:h-3.2/10 bg-dark-blue font-open font-bold h-16 shadow-2 rounded-lg px-4 py-2 ${key === dataProps.additional.length - 1 ? '' : ''}`}>
                         <h3>{keywordCapitilizer(item.name)}:</h3>
                         <div className="w-full px-2 overflow-scroll">
                             {   item.input ? wordArray.map((word: string, key: number) => (
@@ -59,6 +64,7 @@ const Modules = (props: props) => {
                         </div>
                     </div>
                 )})
+                : null
             }
             {/* <div className="bg-dark-blue font-open font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
                 <h3>Culture:</h3>

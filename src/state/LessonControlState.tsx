@@ -7,24 +7,34 @@ type pageObject = {
     displayMode: null | string
 }
 
-type studentObject = {
+export type studentObject = {
+    id: string
+    lessonProgress: string
     status: string
-    progress: string
-    data: {
-        dofirst: string
-    },
-    info: {
+    live: boolean
+    studentID: string
+    studentAuthID: string
+    student: {
         id: string
         authId: string
         email: string
         firstName: string
         language: string
         lastName: string
-        phone: string
         preferredName: string
-        role: string
-        status: string
-    },
+    }
+    doFirstData?: {
+         [key: string]: any 
+    }
+    warmUpData?: {
+        [key: string]: any
+    }
+    corelessonData: {
+        [key: string]: any
+    }
+    activityData: {
+        [key: string]: any
+    }
 }
 
 export interface lessonControlStateType  {
@@ -35,6 +45,23 @@ export interface lessonControlStateType  {
     data?: {
         [key: string]: any;
     }
+    displayData: {
+        breakdownComponent: string,
+        studentInfo?: {
+            id: string
+            firstName: string
+            preferredName?: string
+            lastName: string
+        }
+        doFirstData?: { [key: string]: any }
+        warmUpData?: { [key: string]: any }
+        corelessonData?: { [key: string]: any }
+        activityData?: { [key: string]: any }
+    },
+    studentViewing: {
+        live: boolean,
+        studentInfo?: studentObject
+    }
 }
 
 export const lessonControlState: lessonControlStateType = {
@@ -43,4 +70,10 @@ export const lessonControlState: lessonControlStateType = {
     pages: [],
     roster: [],
     data: {},
+    displayData: {
+        breakdownComponent: '',
+    },
+    studentViewing: {
+        live: false,
+    }
 }
