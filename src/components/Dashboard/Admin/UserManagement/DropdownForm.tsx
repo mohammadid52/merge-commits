@@ -7,12 +7,13 @@ interface DropdownProps {
     id: string,
     handleChange: (item: {code: string, name: string}) => void,
     style: boolean,
+    value: string
 }
 
 
 const DropdownForm = ( props: DropdownProps ) => {
 
-    const {label, items, userInfo, handleChange, id, style} = props;
+    const {label, items, userInfo, handleChange, id, style, value} = props;
 
     const options = () => {
         if (userInfo === 'ACTIVE') {
@@ -47,7 +48,6 @@ const DropdownForm = ( props: DropdownProps ) => {
         setSelectItem(item.name);   
         setShowItems(!showItems);
         handleChange(item)
-        console.log(handleChange);
     }
 
 
@@ -69,13 +69,14 @@ const DropdownForm = ( props: DropdownProps ) => {
             <div className="relative">
                 <span className="inline-block w-full rounded-md shadow-sm">
                 <button onClick={() => setShowItems(!showItems)} type="button" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label" className="flex cursor-pointer relative w-full rounded-md border border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition ease-in-out duration-150 sm:text-sm sm:leading-5">
-                    <span className="block truncate">
+                    <span className="block truncate" >
                     { selectedItem ? selectedItem : selectItem } 
+                        
                     </span>
                     <span className="relative justify-end inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="none" stroke="currentColor">
-                        <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                        <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                            <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
                     </span>
                 </button>
                 </span>
