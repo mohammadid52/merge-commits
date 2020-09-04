@@ -33,8 +33,15 @@ const SampleSELQuestions = () => {
         })
     }
 
-    const handleInputChange = () => {
+    useEffect(() => {
+        console.log(input, 'input')
+    }, [])
 
+    const handleInputChange = (e: any) => {
+        // setInput({
+        //     ...input,
+        //     [e.target.id]: e.target.value
+        // })
     }
 
     const inputSwitch = (question: {label: string, options: Array<{label: string, icon: string, color: string, text: string }>, question: string, type: string }) => {
@@ -44,14 +51,14 @@ const SampleSELQuestions = () => {
                     <div className={'w-full flex flex-col items-center mb-4'}>
                         <label className="mb-2" htmlFor="traditions">{question.question}</label>
                         <input id={question.label} className="py-2 px-4 rounded-lg" type="text" name="traditions" 
-                        // value={input[question.label]}
+                        value={input[question.label]}
                         onChange={handleInputChange}/>
                     </div>
                 )
             case "text" :
                 return (
                     <textarea id={question.label} className="h-full p-8 bg-gray-300 w-full text-sm md:text-2xl text-gray-800 rounded-lg shadow-2" 
-                    // value={input[question.label]} 
+                        value={input[question.label]} 
                         onChange={handleInputChange}/>
                 )
             case "selectOne" :
@@ -62,7 +69,7 @@ const SampleSELQuestions = () => {
                             {question.options.map((option: {label: string, icon: string, color: string, text: string }, key: number) => (
                                 <div key={key} className={`flex justify-center items-center`}>
                                     <input id={question.label} className="w-4 mx-4 cursor-pointer" type="radio" name="cultures" 
-                                    // value={input[question.label]}
+                                    value={input[question.label]}
                                     onChange={handleInputChange}/>
                                 <label htmlFor="no">{option.label}</label>
                             </div>
@@ -98,22 +105,6 @@ const SampleSELQuestions = () => {
                             </div>
                             
                         ))}
-                        {/* <div className={`w-3/4 flex items-center mb-4`}>
-                            <div id="traditions" className={`${ selected.indexOf('traditions') >= 0 ? 'bg-gold' : 'bg-gray-400 shadow-2'} w-12 h-12 p-2 text-3xl rounded  flex justify-center items-center`} onClick={handleSelect}>
-                                ⚜️
-                            </div>
-                            <div className="mx-4">
-                                {question.options[1]}
-                            </div>
-                        </div>
-                        <div className={`w-3/4 flex items-center mb-4`}>
-                            <div id="family" className={`${ selected.indexOf('family') >= 0 ? 'bg-blueberry' : 'bg-gray-400 shadow-2'} w-12 h-12 p-2 text-3xl rounded  flex justify-center items-center`} onClick={handleSelect}>
-                                👨‍👩‍👧‍👦
-                            </div>
-                            <div className="mx-4">
-                               {question.options[2]}
-                            </div>
-                        </div> */}
 
                     </div>
                     </>
@@ -122,6 +113,7 @@ const SampleSELQuestions = () => {
             return null
         }
     }
+    
 
     return (
         <div className={`h-full flex flex-col text-gray-200`}>

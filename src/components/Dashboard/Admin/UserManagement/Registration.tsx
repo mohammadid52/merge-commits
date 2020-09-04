@@ -316,7 +316,7 @@ const Registration = () => {
                                                 // defaultValue={`${newUserInputs[key].firstName}`}
                                                 placeholder="John"/>
                                         </div>
-                                    </div>
+                                    </div> 
 
                                     <div className="sm:col-span-3">
                                         <label htmlFor="lastName" className="block text-m font-medium leading-5 text-gray-700">
