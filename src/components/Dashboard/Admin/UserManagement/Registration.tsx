@@ -268,7 +268,7 @@ const Registration = () => {
         }
         return {
             show: false,
-            type: 'success',
+            type: 'error',
             message: 'success',
         }    
         })
