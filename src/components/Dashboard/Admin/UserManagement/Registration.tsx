@@ -178,13 +178,6 @@ const Registration = () => {
                         message: 'User\'s role cannot be blank',
                     }
                 } 
-                // if (!newUserInputs.grade) {
-                //     return {
-                //         show: true,
-                //         type: 'error',
-                //         message: 'User\'s grade cannot be blank',
-                //     }
-                // } 
                 if (error.code.message === "Alias entry already exists for a different username") {
                     return {
                         show: false,
