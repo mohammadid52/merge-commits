@@ -48,7 +48,7 @@ const NewPassword = () => {
                     } if (!input.match) {
                         return {
                             show: true,
-                            type: 'error',
+                            type: 'error', 
                             message: 'Please confirm your new password',
                         }
                     } if ( input.password !== input.match ) {

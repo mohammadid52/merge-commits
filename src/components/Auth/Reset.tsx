@@ -92,7 +92,7 @@ const Reset = () => {
                         type: 'error',
                         message: 'Your new password and confirmation password do not match',
                     }
-                }
+                } 
                 switch (error.code) {
                     case "InvalidPasswordException":
                         return {

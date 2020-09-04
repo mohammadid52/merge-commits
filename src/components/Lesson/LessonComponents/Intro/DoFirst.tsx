@@ -12,7 +12,7 @@ const setInitialState = (array: Array<any>) => {
 
 const DoFirst = () => {
     const { state, dispatch } = useContext(LessonContext);
-    const  { questions, required, type }  = state.data.lesson.doFirst; 
+    const  { questions, required, type }  = state.data.lesson.doFirst;  
     const questionArray = questions.items;
     const [input, setInput] = useState<any>(setInitialState(questionArray));
 
