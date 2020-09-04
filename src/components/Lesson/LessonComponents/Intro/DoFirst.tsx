@@ -2,25 +2,30 @@ import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
 const setInitialState = (array: Array<any>) => {
-    
+    let tempObj: any = {}
+    array.forEach((item: {question: {type: string, label: string}}) => {
+        
+        tempObj[item.question.label] = item.question.type === 'text' ? '' : item.question.type === 'input' ? '' : item.question.type === 'selectOne' ? null : item.question.type === 'selectMany' ? [] : null 
+    }) 
+    return tempObj;
 }
 
 const DoFirst = () => {
     const { state, dispatch } = useContext(LessonContext);
     const  { questions, required, type }  = state.data.lesson.doFirst; 
     const questionArray = questions.items;
-    const [input, setInput] = useState<any>({});
+    const [input, setInput] = useState<any>(setInitialState(questionArray));
 
-    const inputSwitch = (type: string) => {
+    const inputSwitch = (type: string, label: string) => {
         switch(type) {
             case "input" : 
                 return (
-                    <input className="p-2 bg-gray-300 w-full text-sm md:text-2xl text-gray-800 rounded-lg shadow-2" value={input} 
+                    <input id={label} className="p-2 bg-gray-300 w-full text-sm md:text-2xl text-gray-800 rounded-lg shadow-2" value={input[label]} 
                     onChange={handleInputChange}/>
                 )
             case "text" :
                 return (
-                    <textarea className="h-full p-8 bg-gray-300 w-full text-sm md:text-2xl text-gray-800 rounded-lg shadow-2" value={input} 
+                    <textarea id={label} className="h-full p-6 bg-gray-300 w-full text-sm md:text-2xl text-gray-800 rounded-lg shadow-2" value={input[label]} 
                     onChange={handleInputChange}/>
                 )
             default :
@@ -45,7 +50,7 @@ const DoFirst = () => {
                 {questionArray.map((item: {question: any}, key: number) => (
                     <div key={key}>
                         <p className="text-xl my-8">{item.question.question}</p>
-                        {inputSwitch(item.question.type)}
+                        {inputSwitch(item.question.type, item.question.label)}
                     </div>
                 ) )}
                 

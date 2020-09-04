@@ -17,7 +17,7 @@ const Modules = (props: ModulesProps) => {
     const { inputs } = props
     const { state, dispatch } = useContext(LessonContext);
     const [ cookies, setCookie ] = useCookies(['story'])
-    const [ formInputs, setFormInputs ] = useState<FormInputsState>()
+    const [ formInputs, setFormInputs ] = useState<FormInputsState>() 
 
     useEffect(() => {
         inputs.forEach((item: { name: string; example: string; prompt: string; }) => {

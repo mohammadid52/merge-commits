@@ -21,7 +21,7 @@ interface newUserInput {
     role: string
     externalId: string
     message: {
-        show: boolean
+        show: boolean 
         text: string
         type: string
     }

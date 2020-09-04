@@ -73,8 +73,8 @@ const LessonControl = () => {
     return (
         <div className={`w-full h-screen bg-gray-400 p-8`}>
             <div className={`w-full h-full flex flex-col`}>
-                <div className={`relative w-full h-0.5/10 bg-gray-200 mb-2 shadow-elem-light rounded-lg px-4 flex flex-row items-center`}>
-                    <h1 className={`w-4/10 text-3xl text-center font-extrabold font-open my-2`}>
+                <div className={`relative w-full px-8 h-0.5/10 bg-gray-200 mb-2 shadow-elem-light rounded-lg px-4 flex flex-row items-center`}>
+                    <h1 className={`w-4/10 text-3xl font-extrabold font-open my-2`}>
                         Where I'm From
                     </h1>
 
@@ -148,7 +148,7 @@ const LessonControl = () => {
                                     <Route 
                                         path={`${match.url}/checkpoint`}
                                         render={() => (
-                                            <Checkpoint />
+                                            <Checkpoint fullscreen={fullscreen}/>
                                         )}
                                     />
                                     <Route 

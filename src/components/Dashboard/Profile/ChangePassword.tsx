@@ -197,7 +197,7 @@ const ChangePassword = () => {
 
                     </div>
                     <NavLink to="/forgot-password">
-                        <div className="text-sm text-center hover:text-blue-500">can't remember your old password?</div>
+                        <div className="text-sm text-center text-gray-600 hover:text-blue-500">can't remember your old password?</div>
                     </NavLink>
                 </div>  
 
