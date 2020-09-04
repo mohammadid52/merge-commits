@@ -30,21 +30,21 @@ const Body = (props: props) => {
     const [ fullscreenLyrics, setFullscreenLyrics ] = useState(false)
     const { video, link } = state.data.lesson.coreLesson.instructions
     const [ openPopup, setOpenPopup ] = useState(false)
-    const [ dataProps, setDataProps ] = useState<{ title?: string, story?: string, [key: string]: any}>()
 
     let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'corelesson' : false;
 
     useEffect(() => {
         if (displayStudentData) {
             console.log(state.studentViewing.studentInfo);
-            if ( state.studentViewing.studentInfo.corelessonData ) {
-                return setDataProps(state.studentViewing.studentInfo.corelessonData)
-            } return setDataProps(null)
+            if ( state.studentViewing.studentInfo.corelessonData && state.studentViewing.studentInfo.corelessonData.selected ) {
+                return setSelected(state.studentViewing.studentInfo.corelessonData.selected)
+            } return setSelected([])
         }
     }, [state.studentViewing]);
 
 
     useEffect(() => {
+       console.log(selected);
        
     }, [selected])
 

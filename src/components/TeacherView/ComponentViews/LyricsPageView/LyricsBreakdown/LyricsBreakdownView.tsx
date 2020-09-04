@@ -1,20 +1,21 @@
 import React, { useEffect, useContext, useState } from 'react';
 import ReflectionQuestions from './ReflectionQuestions';
 import Banner from './Banner';
-import { LessonContext } from '../../../../../contexts/LessonContext';
-import { studentObject } from '../../../../../state/LessonControlState';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface props {
-        fullscreen: boolean
-    }
+    fullscreen: boolean
+}
 
 const SelfDisplay = (props: props) => {
     const { fullscreen } = props;
-    const { dispatch, state } = useContext(LessonContext)
+    const { dispatch, state } = useContext(LessonControlContext)
     const [ modules, setModules ] = useState<Array<any>>()
-    const displayProps = state.componentState.lyrics.selected
-    const { artist, title } = state.data.coreLesson.content
-    const moduleTypes = state.data.coreLesson.tools
+    const dataProps = state.studentViewing.studentInfo && state.studentViewing.studentInfo.corelessonData && state.studentViewing.studentInfo.corelessonData.selected ?  state.studentViewing.studentInfo.corelessonData.selected : []
+    const { artist, title } = state.data.lesson.coreLesson.content
+    const moduleTypes = state.data.lesson.coreLesson.tools
+
+    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'corelesson/breakdown' : false;
 
     const arrayParseToString = (arr: Array<Array<{[key: string]: any}>>) => {
         let resultArray = arr.map((item: Array<{ text: string, [key: string]: any}>) => {
@@ -28,14 +29,18 @@ const SelfDisplay = (props: props) => {
     }
 
     useEffect(() => {
-        if (displayProps) {
+        console.log('this one here', displayStudentData, dataProps, state);
+        
+        if ( displayStudentData && dataProps ) {
             let modulesArray = moduleTypes.map((item: {[key: string]: any}) => {
-                let contentArray = displayProps.filter((selection: { color: string, content: any }) => {
+                let contentArray = dataProps.filter((selection: { color: string, content: any }) => {
                     return item.color === selection.color
                 })
-                .map((selection: { content: any}) => {
+                .map((selection: { content: any }) => {
                     return selection.content
                 });
+
+                console.log(contentArray)
 
                 return {
                     name: item.name,
@@ -45,10 +50,20 @@ const SelfDisplay = (props: props) => {
                 }
             })
 
-            setModules(modulesArray)
+            return setModules(modulesArray)
         }
-
-        dispatch({type: 'ACTIVATE_LESSON', payload: 'corelesson/breakdown'})
+        
+        let modulesArray: any = moduleTypes.map((item: {[key: string]: any}) => {
+            let obj: any = {
+                name: item.name,
+                label: item.icon,
+                color: item.color,
+                content: [],
+            }
+            return obj
+        })
+        
+        return setModules(modulesArray)
     }, [])
 
     // ${key === 0 ? 'md:mr-2' : key === modules.length - 1 ? 'md:ml-2' : 'md:mx-2'}

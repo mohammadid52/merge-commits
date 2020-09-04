@@ -33,62 +33,28 @@ const PoemActivity = (props: props) => {
     const [ editMode, setEditMode ] = useState({
         open: false,
         input: ''
-        // open: state.componentState.poem && state.componentState.poem.editMode ? state.componentState.poem.editMode : false,
-        // input: state.componentState.poem && state.componentState.poem.editInput ? state.componentState.poem.editInput : '',
     })
     const { video, link, text } = state.data.lesson.activity.instructions
     const [ openPopup, setOpenPopup ] = useState(false);
 
+    console.log(state);
+
+    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'activity' : false;
     
+
     useEffect(() => {
-        // if ( cookies.poem ) {
-        //     if ( !cookies.poem.editMode ) {
-        //         dispatch({
-        //             type: 'SET_INITIAL_COMPONENT_STATE',
-        //             payload: {
-        //                 name: 'poem',
-        //                 content: cookies.poem
-        //             }
-        //         })
-        //     }
-
-        //     if ( cookies.poem.editMode && cookies.poem ) {
-        //         setEditMode(prev => {
-        //             return {
-        //                 ...prev,
-        //                 editMode: true,
-        //                 input: cookies.poem.editInput
-        //             }
-        //         })
-
-        //         dispatch({
-        //             type: 'SET_INITIAL_COMPONENT_STATE',
-        //             payload: {
-        //                 name: 'poem',
-        //                 content: cookies.poem
-        //             }
-        //         })
-        //     }
-        // }
-
-        // if ( !cookies.poem && !state.componentState.poem ) {
-        //     let storageObj: storageObject = {
-        //         title: '',
-        //         editMode: false,
-        //         editInput: '',
-        //         lines: [],
-        //     }
-
-        //     dispatch({
-        //         type: 'SET_INITIAL_COMPONENT_STATE',
-        //         payload: {
-        //             name: 'poem',
-        //             content: storageObj
-        //         }
-        //     })
-
-        //     setCookie('poem', storageObj)
-        // }
+        if ( displayStudentData && state.studentViewing.studentInfo.activityData ) {
+            console.log('activityData', state.studentViewing.studentInfo.activityData );
+            if ( state.studentViewing.studentInfo.activityData.editMode ) {
+                setEditMode(() => {
+                    return {
+                        open: state.studentViewing.studentInfo.activityData.editMode,
+                        input: state.studentViewing.studentInfo.activityData.editInput
+                    }
+                })
+            }
+        }  
+        
     }, [])
 
     useEffect(() => {
