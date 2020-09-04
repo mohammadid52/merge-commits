@@ -1,9 +1,10 @@
-import React, { useContext, useState, Suspense, lazy } from 'react';
+import React, { useContext, useState, useEffect, Suspense, lazy } from 'react';
 import {
    Switch,
    Route,
    Redirect,
-   useRouteMatch
+   useRouteMatch,
+   useHistory,
 } from 'react-router-dom';
 import LessonLoading from '../Lesson/Loading/LessonLoading';
 import ClassRoster from './ClassRoster';
@@ -22,13 +23,13 @@ import { FaExpand, FaCompress } from 'react-icons/fa';
 import { FaHome } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
 import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
-
-type selectedState = number | null
+import * as customMutations from '../../customGraphql/customMutations';
+import { API, graphqlOperation } from 'aws-amplify';
 
 const LessonControl = () => {
     const { state } = useContext(LessonControlContext);
-    const [ selectedStudent, setSelectedStudent ] = useState<selectedState>(null);
     const match = useRouteMatch();
+    const history = useHistory();
     const [ componentView, setComponentView ] = useState('');
     const [fullscreen, setFullscreen] = useState(false);
 
@@ -37,6 +38,31 @@ const LessonControl = () => {
             return !fullscreen
         });
     }
+
+    const handleSubmitChanges = async () => {
+        let updatedClassroomData: any = {
+            id: '1',
+            open: true,
+            displayData: null,
+            lessonPlan: state.pages
+        }
+        
+        try {
+            const updatedClassroom = await API.graphql(graphqlOperation(customMutations.updateClassroom, {input: updatedClassroomData}))
+            console.log(updatedClassroom)
+        } catch (err) {
+            console.error(err);   
+        }
+    }
+
+    useEffect(() => {
+        
+        if (state.studentViewing.live) {
+            console.log(state.studentViewing.live)
+            history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`)
+        }
+
+    }, [state.studentViewing])
 
     if ( state.status !== 'loaded') {
         return (
@@ -74,7 +100,7 @@ const LessonControl = () => {
                                 </h2>
                             </div>
                             <div className={`h-4/10 my-4`}>
-                                <ClassRoster setSelectedStudent={setSelectedStudent}/>
+                                <ClassRoster />
                             </div>
                             <div className={`w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between text-xl text-gray-200 font-extrabold font-open`}>
                                 <h2 className={`w-auto`}>
@@ -98,25 +124,25 @@ const LessonControl = () => {
                                     <Route 
                                         path={`${match.url}/intro`}
                                         render={() => (
-                                            <IntroView student={selectedStudent} fullscreen={fullscreen} />
+                                            <IntroView fullscreen={fullscreen} />
                                         )}
                                     />
                                     <Route 
                                         path={`${match.url}/warmup`}
                                         render={() => (
-                                            <StoryView student={selectedStudent} fullscreen={fullscreen} />
+                                            <StoryView fullscreen={fullscreen} />
                                         )}
                                     />
                                     <Route 
                                         path={`${match.url}/corelesson`}
                                         render={() => (
-                                            <LyricsView student={selectedStudent} fullscreen={fullscreen} />
+                                            <LyricsView fullscreen={fullscreen} />
                                         )}
                                     />
                                     <Route 
                                         path={`${match.url}/activity`}
                                         render={() => (
-                                            <PoemView student={selectedStudent} fullscreen={fullscreen} />
+                                            <PoemView fullscreen={fullscreen} />
                                         )}
                                     />
                                     <Route 
@@ -128,7 +154,7 @@ const LessonControl = () => {
                                     <Route 
                                         path={`${match.url}/outro`}
                                         render={() => (
-                                            <OutroView student={selectedStudent} fullscreen={fullscreen} />
+                                            <OutroView fullscreen={fullscreen} />
                                         )}
                                     />
                                     <Route 
@@ -150,12 +176,12 @@ const LessonControl = () => {
                                 </IconContext.Provider>
                             </div>
                             <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: 0}}>
-                                <button className="bg-purple-400 bg-opacity-90 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark">
-                                    share data
-                                </button>
+                                    <button className="bg-purple-400 bg-opacity-90 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark">
+                                        share data
+                                    </button>
                             </div>
                             <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
-                                <button className="bg-teal-500 bg-opacity-90 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark">
+                                <button className="bg-teal-500 bg-opacity-90 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleSubmitChanges}>
                                     apply changes
                                 </button>
                             </div>

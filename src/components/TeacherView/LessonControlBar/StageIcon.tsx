@@ -84,20 +84,20 @@ const StageIcon = (props: StageIconProps) => {
                 </IconContext.Provider>
                 {
                     menuOpen ? 
-                    <div className={`absolute flex flex-col items-center transform translate-y-20`}>
+                    <div className={`absolute flex flex-col items-center transform translate-y-16`}>
                         <div className={`arrow-up`}></div>
-                        <div className={`flex w-32 h-20 bg-gray-200 p-1 rounded-lg shadow-elem-light`}>
-                            <div className={`flex flex-wrap justify-around w-full h-full bg-gray-400 rounded-lg`}>
-                                <div className={`flex justify-center items-center w-4/10 h-4/10 bg-gray-200 text-gray-600 text-xs rounded-lg mx-1 mt-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={handleView}>
+                        <div className={`flex w-48 h-16 bg-gray-200 p-1 rounded-lg shadow-elem-light`}>
+                            <div className={`flex w-full h-full bg-gray-400 rounded-lg`}>
+                                <div className={`flex justify-center items-center w-3/10 h-8/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={handleView}>
                                     View
                                 </div>
-                                <div className={`flex justify-center items-center w-4/10 h-4/10 bg-gray-200 text-gray-600 text-xs rounded-lg mr-1 mt-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={() => handleStateChange('OPEN_LESSON')}>
-                                    Open
+                                <div className={`flex justify-center items-center w-3/10 h-8/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={() => handleStateChange( !open ? 'OPEN_LESSON' : 'CLOSE_LESSON' )}>
+                                    { !open ? 'Open' : 'Close' }
                                 </div>
-                                <div className={`flex justify-center items-center w-4/10 h-4/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={() => handleStateChange('CLOSE_LESSON')}>
+                                {/* <div className={`flex justify-center items-center w-4/10 h-4/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={() => handleStateChange('CLOSE_LESSON')}>
                                     Close
-                                </div>
-                                <div className={`flex justify-center items-center w-4/10 h-4/10 bg-gray-200 text-gray-600 text-xs rounded-lg my-1 mr-1 shadow-elem-light active:shadow-none active:shadow-none cursor-pointer`} onClick={() => handleStateChange('DISABLE_LESSON')}>
+                                </div> */}
+                                <div className={`flex justify-center items-center w-3/10 h-8/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none active:shadow-none cursor-pointer`} onClick={() => handleStateChange('DISABLE_LESSON')}>
                                     Disable
                                 </div>
                             </div>
@@ -120,20 +120,20 @@ const StageIcon = (props: StageIconProps) => {
             </div>
             {
                 menuOpen ? 
-                <div className={`absolute flex flex-col items-center transform translate-y-20 z-100`}>
+                <div className={`absolute flex flex-col items-center transform translate-y-16 z-100`}>
                     <div className={`arrow-up`}></div>
-                    <div className={`flex w-32 h-20 bg-gray-200 p-1 rounded-lg shadow-elem-light`}>
-                        <div className={`flex flex-wrap justify-around w-full h-full bg-gray-400 rounded-lg`}>
-                            <div className={`flex justify-center items-center w-4/10 h-4/10 bg-gray-200 text-gray-600 text-xs rounded-lg mx-1 mt-1 shadow-elem-light active:shadow-none cursor-pointer active:shadow-none cursor-pointer`} onClick={handleView}>
+                    <div className={`flex w-48 h-16 bg-gray-200 p-1 rounded-lg shadow-elem-light`}>
+                            <div className={`flex w-full h-full bg-gray-400 rounded-lg`}>
+                            <div className={`flex justify-center items-center w-3/10 h-8/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={handleView}>
                                 View
                             </div>
-                            <div className={`flex justify-center items-center w-4/10 h-4/10 bg-gray-200 text-gray-600 text-xs rounded-lg mr-1 mt-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={() => handleStateChange('OPEN_LESSON')}>
-                                Open
+                            <div className={`flex justify-center items-center w-3/10 h-8/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={() => handleStateChange( !open ? 'OPEN_LESSON' : 'CLOSE_LESSON' )}>
+                                { !open ? 'Open' : 'Close' }
                             </div>
-                            <div className={`flex justify-center items-center w-4/10 h-4/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={() => handleStateChange('CLOSE_LESSON')}>
+                            {/* <div className={`flex justify-center items-center w-4/10 h-4/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={() => handleStateChange('CLOSE_LESSON')}>
                                 Close
-                            </div>
-                            <div className={`flex justify-center items-center w-4/10 h-4/10 bg-gray-200 text-gray-600 text-xs rounded-lg my-1 mr-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={() => handleStateChange('DISABLE_LESSON')}>
+                            </div> */}
+                            <div className={`flex justify-center items-center w-3/10 h-8/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none active:shadow-none cursor-pointer`} onClick={() => handleStateChange('DISABLE_LESSON')}>
                                 Disable
                             </div>
                         </div>

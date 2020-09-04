@@ -2,14 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import Banner from './Banner';
 import ReflectionQuestions from './ReflectionQuestions';
+import { studentObject } from '../../../../../state/LessonControlState';
 
 interface props {
-    student: number | null,
     fullscreen: boolean
 }
 
 const PoemBreakdownView = (props: props) => {
-    const { student, fullscreen } = props;
+    const { fullscreen } = props;
     const { state, dispatch } = useContext(LessonContext);
     const displayProps = state.componentState.poem;
 

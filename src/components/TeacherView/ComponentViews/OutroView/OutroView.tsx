@@ -7,15 +7,15 @@ import TrophyBlock from './TrophyBlock';
 import MoreArtist from './MoreArtist';
 import Feedback from './Feedback';
 import Links from './Links';
+import { studentObject } from '../../../../state/LessonControlState';
 // import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
 interface props {
-    student: number | null,
     fullscreen: boolean
 }
 
 const OutroView = (props: props) => {
-    const { student, fullscreen } = props;
+    const { fullscreen } = props;
     // const { dispatch } = useContext(LessonControlContext);
 
     return (

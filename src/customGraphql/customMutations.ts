@@ -38,3 +38,82 @@ export const createStudentData = /* GraphQL */ `
     }
   }
 `;
+
+export const updateStudentData = /* GraphQL */ `
+  mutation UpdateStudentData(
+    $input: UpdateStudentDataInput!
+    $condition: ModelStudentDataConditionInput
+  ) {
+    updateStudentData(input: $input, condition: $condition) {
+      id
+      lessonProgress
+      status
+      live
+      studentID
+      studentAuthID
+      warmupData {
+        story
+        title
+        additional {
+          name
+          input
+        }
+      }
+      corelessonData {
+        selected {
+          anchor
+          color
+          focus
+          id
+        }
+      }
+      activityData {
+        editInput
+        editMode
+        lines {
+          example
+          id
+          menuOpen
+          text
+        }
+        title
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const updateClassroom = /* GraphQL */ `
+  mutation UpdateClassroom(
+    $input: UpdateClassroomInput!
+    $condition: ModelClassroomConditionInput
+  ) {
+    updateClassroom(input: $input, condition: $condition) {
+      id
+      open
+      displayData {
+        breakdownComponent
+        warmUpData {
+          story
+          title
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+      }
+      lessonPlan {
+        id
+        disabled
+        open
+        active
+        stage
+        type
+        displayMode
+      }
+      updatedAt
+    }
+  }
+`;

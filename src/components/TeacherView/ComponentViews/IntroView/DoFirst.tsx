@@ -1,25 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useCookies } from 'react-cookie';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
+import { studentObject } from '../../../../state/LessonControlState';
 
 interface props {
-    student: number | null,
+    data?: { [key: string]: any}
     fullscreen: boolean
 }
 
 const DoFirst = (props: props) => {
-    const { student, fullscreen } = props;
+    const { fullscreen } = props;
     const { state } = useContext(LessonControlContext); 
     const  doFirstComponent  = state.data.lesson.doFirst.questions.items;
     const [ input, setInput ] = useState('')
-
-    useEffect(() => {
-        if (typeof student === 'number') {
-            setInput(() => {
-                return state.roster[student].dofirst
-            })
-        }
-    }, [student])
 
     return (
         <div className="bg-dark-blue w-full h-full rounded-lg shadow-2 ext-gray-200 px-4 md:px-8 py-6">

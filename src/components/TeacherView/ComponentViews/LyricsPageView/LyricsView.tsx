@@ -9,13 +9,13 @@ import {
 import LyricsActivityView from './LyricsModules/LyricsActivityView';
 import LyricsBreakdownView from './LyricsBreakdown/LyricsBreakdownView';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
+import { studentObject } from '../../../../state/LessonControlState';
 // import ErrorPage from '../../Error/ErrorPage';
 interface props {
-        student: number | null,
         fullscreen: boolean
     }
 const Lyrics = (props: props) => {
-    const { student, fullscreen } = props;
+    const { fullscreen } = props;
     const { state, dispatch } = useContext(LessonControlContext);
     const match = useRouteMatch();
     
@@ -26,10 +26,10 @@ const Lyrics = (props: props) => {
     return (
         <Switch>
             <Route path={`${match.url}/breakdown`}>
-                <LyricsBreakdownView fullscreen={fullscreen} student={student}/>
+                <LyricsBreakdownView fullscreen={fullscreen} />
             </Route>
             <Route exact path={`${match.url}`}>
-                <LyricsActivityView fullscreen={fullscreen} student={student}/>
+                <LyricsActivityView fullscreen={fullscreen} />
             </Route>
             {/* <Route>
                 <ErrorPage />
