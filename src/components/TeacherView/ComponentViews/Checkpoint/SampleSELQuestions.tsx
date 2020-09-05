@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import {LessonControlContext} from '../../../../contexts/LessonControlContext';
 interface props {
         fullscreen: boolean
     }
 
+const setInitialState = (array: Array<any>) => {
+    let tempObj: any = {}
+    array.forEach((item: {question: {type: string, label: string}}) => {
+        tempObj[item.question.label] = item.question.type === 'text' ? '' : item.question.type === 'input' ? '' : item.question.type === 'selectOne' ? null : item.question.type === 'selectMany' ? [] : null 
+    }) 
+    return tempObj;
+}
+    
+
 const SampleSELQuestions = (props: props) => {
+    const { state } = useContext(LessonControlContext); 
+    const checkpoint = state.data.lesson.checkpoints.items[0].checkpoint;
     const {fullscreen} = props;
     const [ selected, setSelected ] = useState<Array<string>>([])
 
@@ -25,64 +37,88 @@ const SampleSELQuestions = (props: props) => {
         })
     }
 
-    return (
-        <div className={`h-full flex flex-col text-gray-200`}>
-            <h4 className={`${fullscreen ? 'text-2xl' : 'text-lg'} font-open font-bold mb-4`}>Answer these questions the best you can:</h4>
-            <div className={`h-full flex justify-center items-center divide-x-2 divide-dark divide-opacity-50`}>
-                <div className={`${fullscreen ? 'p-6' : 'p-2'} w-1/2 h-full flex flex-col justify-around items-center`}>
-                    <div className={`${fullscreen ? 'text-base' : 'text-sm'} w-full flex flex-col items-center mb-4`}>
-                        <label className="mb-2" htmlFor="traditions">What is one family, regional, or personal tradition that you would like to pass on?</label>
-                        <input className="py-2 px-4 rounded-lg" type="text" id="traditions" name="traditions" />
+    const inputSwitch = (question: {label: string, options: Array<{label: string, icon: string, color: string, text: string }>, question: string, type: string }) => {
+        switch(question.type) {
+            case "input" : 
+                return (
+                    <div className={'w-full flex flex-col items-center mb-4'}>
+                        <label className="mb-2" htmlFor="traditions">{question.question}</label>
+                        <input id={question.label} className="py-2 px-4 rounded-lg" type="text" name="traditions" 
+                        />
                     </div>
-                    <div className={`${fullscreen ? 'text-base' : 'text-sm'} w-full flex flex-col items-center mb-4`}>
-                        <p className="mb-2"> Do you think it's important to learn about other cultures?</p>
+                )
+            case "text" :
+                return (
+                    <textarea id={question.label} className="h-full p-8 bg-gray-300 w-full text-sm md:text-2xl text-gray-800 rounded-lg shadow-2" 
+                        />
+                )
+            case "selectOne" :
+                return (
+                    <div className={'w-full flex flex-col items-center mb-4'}>
+                        <p className="mb-2">{question.question}</p>
                         <div className={`flex justify-around`}>
-                            <div className={`flex justify-center items-center`}>
-                                <input className="w-4 mx-4" type="radio" id="no" name="cultures" />
-                                <label htmlFor="no">Yes</label>
+                            {question.options.map((option: {label: string, icon: string, color: string, text: string }, key: number) => (
+                                <div key={key} className={`flex justify-center items-center`}>
+                                    <input id={question.label} className="w-4 mx-4 cursor-pointer" type="radio" name="cultures" 
+                                    />
+                                <label htmlFor={`${option.text}`}>{option.text}</label>
                             </div>
-                            <div className={`flex justify-center items-center`}>
-                                <input className="w-4 mx-4" type="radio" id="no" name="cultures" />
-                                <label htmlFor="no">No</label>
-                            </div>
+                            ))}
                         </div>
                     </div>
-                    <div className={`${fullscreen ? 'text-base' : 'text-sm'} w-full flex flex-col items-center mb-4`}>
-                        <label className="mb-2" htmlFor="culture">In one sentence or less, say why or why not:</label>
-                        <input className="py-2 px-4 rounded-lg" type="text" id="culture" name="culture" />
-                    </div>
-                </div>
-                <div className={`${fullscreen ? 'text-base p-6' : 'text-sm p-2'} w-1/2 h-full flex flex-col justify-start`}>
+                )
+            case "selectMany" :
+                return (
+                    <>
                     <p className="mb-4">
-                        What did today's lesson cause you to reflect on? Select all that apply:
+                        {question.question}
                     </p>
-                    <div className={'w-8/10 flex flex-col items-center'}>
-                        <div className={`w-3/4 flex items-center mb-4`}>
-                            <div id="culture" className={`${ selected.indexOf('culture') >= 0 ? 'bg-dark-red' : 'bg-gray-400 shadow-2'} w-12 h-12 p-2 text-3xl rounded  flex justify-center items-center`} onClick={handleSelect}>
-                                ❤️
+                    <div id={question.label} className={'w-8/10 flex flex-col items-center'}>
+                        {question.options.map((option: {label: string, icon: string, color: string, text: string }, key: any) => (
+                            <div key={key} className={`w-3/4 flex items-center mb-4`} 
+                            >
+                                {
+                                    selected.indexOf(`${option.label}`) >= 0 ? 
+                                    <div className="cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center" 
+                                    style={{color: `${option.color}`}} 
+                                    >
+                                        {option.icon ? option.icon : ''}
+                                    </div>
+                                :
+                                    <div className="bg-gray-400 shadow-2 cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center">
+                                        {option.icon ? option.icon : ''}
+                                    </div> 
+                                }
+                                <div className="mx-4">
+                                    {option.text}
+                                </div>
                             </div>
-                            <div className="mx-4">
-                                My culture
-                            </div>
-                        </div>
-                        <div className={`w-3/4 flex items-center mb-4`}>
-                            <div id="traditions" className={`${ selected.indexOf('traditions') >= 0 ? 'bg-gold' : 'bg-gray-400 shadow-2'} w-12 h-12 p-2 text-3xl rounded  flex justify-center items-center`} onClick={handleSelect}>
-                                ⚜️
-                            </div>
-                            <div className="mx-4">
-                                My traditions
-                            </div>
-                        </div>
-                        <div className={`w-3/4 flex items-center mb-4`}>
-                            <div id="family" className={`${ selected.indexOf('family') >= 0 ? 'bg-blueberry' : 'bg-gray-400 shadow-2'} w-12 h-12 p-2 text-3xl rounded  flex justify-center items-center`} onClick={handleSelect}>
-                                👨‍👩‍👧‍👦
-                            </div>
-                            <div className="mx-4">
-                                My family
-                            </div>
-                        </div>
+                            
+                        ))}
 
                     </div>
+                    </>
+                )
+            default :
+            return null
+        }
+    }
+
+    return (
+        <div className={`h-full flex flex-col text-gray-200`}>
+            <h4 className={`${fullscreen ? 'text-2xl' : 'text-base'} font-open font-bold`}>{checkpoint.instructions}</h4>
+            
+            <div className={`h-9.5/10 flex justify-center items-center divide-x-2 divide-dark divide-opacity-50`}>
+                <div className="w-full h-full flex flex-col flex-wrap justify-around items-center">
+                    
+                    {checkpoint.questions.items.map((item: {question:any}, key: number) => {
+                        return (
+                            <div key={key} className="w-4.5/10">
+                                {inputSwitch(item.question)}
+                            </div>
+                        )
+                    })}
+                    
                 </div>
             </div>
         </div>

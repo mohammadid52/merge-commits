@@ -23,9 +23,6 @@ const ChangePassword = () => {
         match: ''
     })
 
-    
-
-
     async function change() {
         let oldPassword = input.oldPassword;
         let newPassword = input.newPassword;
@@ -73,6 +70,9 @@ const ChangePassword = () => {
 
 
     const validation = () => {
+        
+        let validated = false;
+        
         setMessage (() => {
         let oldPassword = input.oldPassword;
         let newPassword = input.newPassword;
@@ -82,35 +82,42 @@ const ChangePassword = () => {
                 type: 'error',
                 message: 'Please enter your old password',
             }
-        } if (!newPassword) {
+            
+        } 
+        if (!newPassword) {
             return {
                 show: true,
                 type: 'error',
                 message: 'Please enter your new password',
             }
-        } if (!input.match) {
+        } 
+        if (!input.match) {
             return {
                 show: true,
                 type: 'error',
                 message: 'Please enter your confirmation password',
             }
-        } if ( input.newPassword !== input.match ) {
+        } 
+        if ( input.newPassword !== input.match ) {
             return {
                 show: true,
                 type: 'error',
                 message: 'Your new password and confirm password do not match',
             }
-        } return {
-            show: true,
+        } 
+        validated = true;
+        if (validated) {
+            change();
+        }
+        return {
+            show: false,
             type: 'success',
             message: 'success',
         }    
         })
 
-
+        
     }
-
-    // const [valid, setValid] = useState(validation);
 
 
     const handleChange = (e: { target: { id: any; value: any; }; }) => {
@@ -131,12 +138,6 @@ const ChangePassword = () => {
 
     const handleSubmit = () => {
         validation();
-        if (message.type === 'success') {
-            change();
-        }
-       
-        console.log('change')
-        // change();
     }
 
     return (

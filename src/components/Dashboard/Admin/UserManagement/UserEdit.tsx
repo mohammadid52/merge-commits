@@ -197,6 +197,7 @@ const UserEdit = (props: UserInfoProps) => {
 
                         <div className="sm:col-span-3">
                             <DropdownForm
+                                value = ''
                                 style={false}
                                 handleChange = {handleChangeStatus}
                                 userInfo = {user.status}
@@ -208,6 +209,7 @@ const UserEdit = (props: UserInfoProps) => {
 
                         <div className="sm:col-span-3">
                             <DropdownForm
+                                value = ''
                                 style={false}
                                 handleChange = {handleChangeRole}
                                 userInfo = {user.role}
