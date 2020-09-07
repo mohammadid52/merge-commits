@@ -22,12 +22,12 @@ const Banner = (props: props) => {
     return (
 
         <div className="w-full h-1/10 flex flex-row justify-center items-center">
-            <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
+            <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem'}}>
                 <div className={`${fullscreen ? 'h-20 w-20' : 'h-12 w-12'} red bg-dark-red flex flex-col items-center justify-center z-20 rounded-lg shadow-2`}>
                     <FaTrophy />
                 </div>
             </IconContext.Provider>
-            <div className={`${fullscreen ? 'text-4xl' : 'text-2xl px-4 py-2'} bg-dark-blue w-full flex flex-row justify-center items-center text-center font-open font-bold text-gray-200 rounded-lg shadow-2 z-10`}>
+            <div className={`${fullscreen ? 'text-4xl' : 'text-3xl'} bg-dark-blue w-full flex flex-row justify-center items-center text-center font-open font-bold text-gray-200 rounded-lg shadow-2 z-10`}>
                 Congrats! You've completed the lesson!
             </div>
         </div>

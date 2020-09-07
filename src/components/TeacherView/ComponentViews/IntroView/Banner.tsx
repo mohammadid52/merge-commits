@@ -20,7 +20,7 @@ const Banner = (props: props) => {
                     <FaPenFancy />
                 </div>
             </IconContext.Provider>
-            <div className={`${fullscreen ? 'text-4xl' : 'text-2xl py-2'} ${theme.block.bg} h-full w-full flex flex-row justify-center items-center text-center font-open font-bold ${theme.block.text} rounded-lg ${theme.block.shadow} px-4 z-10`}>
+            <div className={`${fullscreen ? 'text-4xl' : 'text-3xl py-2'} ${theme.block.bg} h-full w-full flex flex-row justify-center items-center text-center font-open font-bold ${theme.block.text} rounded-lg ${theme.block.shadow} px-4 z-10`}>
                 { title }
             </div>
         </div>
