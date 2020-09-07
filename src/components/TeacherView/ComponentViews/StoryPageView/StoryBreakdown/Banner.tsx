@@ -26,7 +26,7 @@ const Banner = (props: BannerProps) => {
                 </div>
             </IconContext.Provider>
             
-            <div className={`${fullscreen ? 'text-4xl' : 'text-2xl px-4 py-2'} h-full bg-dark-blue w-full flex flex-row justify-center items-center text-center font-open font-bold text-gray-200 rounded-lg shadow-2 z-10`}>
+            <div className={`${fullscreen ? 'text-4xl' : 'text-3xl'} h-full bg-dark-blue w-full flex flex-row justify-center items-center text-center font-open font-bold text-gray-200 rounded-lg shadow-2 z-10`}>
                     { dataProps && dataProps.title ? dataProps.title : '' }
             </div>
         </div>

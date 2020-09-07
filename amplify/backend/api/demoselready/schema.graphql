@@ -76,7 +76,7 @@ type Person @model
   # institutionId: ID!
   # institution: Institution @connection(fields: ["institutionId"])
   externalId: String
-  grade: Int
+  grade: String
   # courses: [StudentCourse] @connection(keyName: "byStudent", field: ["id"])
   phone: String
   birthdate: AWSDate
