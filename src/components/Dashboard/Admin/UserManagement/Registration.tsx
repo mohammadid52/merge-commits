@@ -46,6 +46,7 @@ const initialState: newUserInput = {
     },
 }
 
+
 const Registration = () => {
     const history = useHistory();
     
@@ -116,6 +117,23 @@ const Registration = () => {
         try {
             const newPerson = await API.graphql(graphqlOperation(mutations.createPerson, { input: userData }))
             handleMessage('success', 'User registered successfully')
+            setNewUserInputs(prev => {
+                return {
+                    ...prev,
+                    key: 0,
+                    authId: '',
+                    email: '',
+                    password: 'xIconoclast.5x',
+                    firstName: '',
+                    lastName: '',
+                    phone: '',
+                    birthdate: '',
+                    grade: null,
+                    role: 'Choose One',
+                    externalId: '',
+                }
+            })
+            console.log(newUserInputs, 'in register user');
         } catch (error) {
             console.error('error registering user:', error)
             handleMessage('error', error.message)
@@ -138,66 +156,16 @@ const Registration = () => {
                 }
             })
             registerUser(user.userSub)
+            console.log(newUserInputs, 'in signup');
         } catch (error) {
             console.log('error signing up:', error);
             setMessage(() => { 
-                if (!newUserInputs.firstName) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'User\'s first name cannot be blank',
-                    }
-                } if (!newUserInputs.lastName) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'User\'s last name cannot be blank',
-                    }
-                } if (!username) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'User\'s email cannot be blank',
-                    }
-                } if (!username.includes("@")) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'User\'s email is not in the expected email address format',
-                    }
-                } if (!newUserInputs.birthdate) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'User\'s birthday cannot be blank',
-                    }
-                } if (!newUserInputs.role) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'User\'s role cannot be blank',
-                    }
-                } 
-                // if (!newUserInputs.grade) {
-                //     return {
-                //         show: true,
-                //         type: 'error',
-                //         message: 'User\'s grade cannot be blank',
-                //     }
-                // } 
-                if (error.code.message === "Alias entry already exists for a different username") {
-                    return {
-                        show: false,
-                        type: 'error',
-                        message: 'User\'s grade cannot be blank',
-                    }
-                } 
                 switch (error.code) {
                     case "InvalidParameterException":
                         return {
                                     show: true,
                                     type: 'success',
-                                    message: '',
+                                    message: 'Please make sure the user\'s email is correct',
                                 }
                     case "UsernameExistsException":
                         return {
@@ -216,6 +184,62 @@ const Registration = () => {
             handleMessage('error', error.message)
             
         }
+    }
+
+    const validation = () => {
+        let validated = false;
+        
+        setMessage (() => {
+            let username = newUserInputs.email
+            let password = newUserInputs.password
+            if (!newUserInputs.firstName) {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: 'User\'s first name cannot be blank',
+                }
+            } if (!newUserInputs.lastName) {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: 'User\'s last name cannot be blank',
+                }
+            } if (!username) {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: 'User\'s email cannot be blank',
+                }
+            } if (!username.includes("@")) {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: 'User\'s email is not in the expected email address format',
+                }
+            } if (!newUserInputs.birthdate) {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: 'User\'s birthday cannot be blank',
+                }
+            } if (!newUserInputs.role) {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: 'User\'s role cannot be blank',
+                }
+            } 
+        validated = true;
+        if (validated) {
+            signUp();
+        }
+        return {
+            show: true,
+            type: 'loading',
+            message: 'Loading...',
+        }    
+        })   
+        // handleMessage('error', message.message)
     }
 
     // const handleAddInput = () => {
@@ -274,12 +298,8 @@ const Registration = () => {
     // }
 
     const handleSubmit = (e: any) => {
-        // submitNewUsers()
-        signUp();
-        if (newUserInputs.message.type === 'success') {
-            console.log('success state')
-            setNewUserInputs(initialState)
-        }
+        validation();
+
     }
 
     return (
@@ -313,7 +333,7 @@ const Registration = () => {
                                                 name="firstName"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                // defaultValue={`${newUserInputs[key].firstName}`}
+                                                value={`${newUserInputs.firstName}`}
                                                 placeholder="John"/>
                                         </div>
                                     </div> 
@@ -329,7 +349,7 @@ const Registration = () => {
                                                 name="lastName"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                // defaultValue={`${newUserInputs[key].lastName}`}
+                                                value={`${newUserInputs.lastName}`}
                                                 placeholder="Doe"/>
                                         </div>
                                     </div>
@@ -345,7 +365,7 @@ const Registration = () => {
                                                 name="email"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                // defaultValue={`${newUserInputs[key].email}`}
+                                                value={`${newUserInputs.email}`}
                                                 placeholder="email@email.com"/>
                                         </div>
                                     </div>
@@ -361,7 +381,7 @@ const Registration = () => {
                                                 name="birthdate"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                // defaultValue={`${newUserInputs[key].birthdate}`}
+                                                value={`${newUserInputs.birthdate}`}
                                                 placeholder="01/01/2010"/>
                                         </div>
                                     </div>
@@ -374,6 +394,7 @@ const Registration = () => {
                                             label='Role'
                                             id = 'role'
                                             items= {Role}
+                                            value={`${newUserInputs.role}`}
                                         />
                                     </div>
 
@@ -388,7 +409,7 @@ const Registration = () => {
                                                 name="externalId"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                // defaultValue={`${newUserInputs[key].externalId}`}
+                                                value={`${newUserInputs.externalId}`}
                                                 placeholder="student ID"/>
                                         </div>
                                     </div>
@@ -405,7 +426,7 @@ const Registration = () => {
                                                 name="grade"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                // defaultValue={`${newUserInputs[key].grade}`}
+                                                value={`${newUserInputs.grade}`}
                                                 placeholder="9"/>
                                         </div>
                                     </div>
@@ -421,7 +442,7 @@ const Registration = () => {
                                                 name="phone"
                                                 onChange={handleChange}
                                                 className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
-                                                // defaultValue={`${newUserInputs[key].phone}`}
+                                                value={`${newUserInputs.phone}`}
                                                 placeholder="5551234567"/>
                                         </div>
                                     </div>
@@ -436,10 +457,16 @@ const Registration = () => {
                             {
                                 message.show ? (
                                     <div>
-                                        {newUserInputs.message.type === 'success' ? <SuccessNote /> : 
-                                        <ErrorNote 
-                                            note={message.message}
-                                        />}
+                                        {newUserInputs.message.type === 'success' ? <SuccessNote /> 
+
+                                        : message.type === 'error' ? <ErrorNote note={message.message} /> 
+
+                                        : message.type === 'loading' ? <div className="my-2 text-sm leading-5 text-gray-900">Loading...</div>
+
+                                        : newUserInputs.message.type === 'error' ? <ErrorNote note={message.message} /> 
+
+                                        : null
+                                    }
                                     </div>
                                         // <div className={`h-1/10 w-6/10 flex justify-center items-center text-sm border-2 ${  newUserInputs[key].message.type === 'success' ? 'text-green-500 bg-green-300  border-green-500' :  newUserInputs[key].message.type === 'error' ? 'text-red-500 bg-red-300  border-red-500' : 'text-gray-200'} py-8 px-4 rounded shadow-elem-light text-center`}>
                                         //     <p>{newUserInputs[key].message.text}</p>
