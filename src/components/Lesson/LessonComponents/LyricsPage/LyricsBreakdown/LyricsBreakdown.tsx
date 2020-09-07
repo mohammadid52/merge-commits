@@ -12,7 +12,7 @@ const LyricsBreakdown = () => {
     const { artist, title } = state.data.lesson.coreLesson.content
     const moduleTypes = state.data.lesson.coreLesson.tools
 
-    const [displayMode, setDisplayMode] = useState('COOP');
+    const [displayMode, setDisplayMode] = useState(state.data.lessonPlan[state.currentPage].displayMode);
 
     const arrayParseToString = (arr: Array<Array<{[key: string]: any}>>) => {
         let resultArray = arr.map((item: Array<{ text: string, [key: string]: any}>) => {
@@ -24,6 +24,12 @@ const LyricsBreakdown = () => {
         })
         return resultArray
     }
+
+    useEffect(() => {
+        if ( state.pages[state.currentPage].displayMode !== displayMode ) {
+            setDisplayMode(state.pages[state.currentPage].displayMode)
+        }
+    }, [state.pages])
 
     useEffect(() => {
         if (displayProps) {

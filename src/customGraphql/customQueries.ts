@@ -25,10 +25,32 @@ export const getClassroom = /* GraphQL */ `
         warmUpData {
           story
           title
+          additional {
+            name
+            input
+          }
+        }
+        corelessonData {
+          selected {
+            anchor
+            color
+            content {
+              id
+              text
+            }
+            focus
+            id
+          }
         }
         activityData {
           editInput
           editMode
+          lines {
+            example
+            id
+            menuOpen
+            text
+          }
           title
         }
       }
@@ -67,6 +89,7 @@ export const getClassroom = /* GraphQL */ `
                     options {
                       text
                       icon
+                      label
                       color
                     }
                   }
@@ -91,6 +114,7 @@ export const getClassroom = /* GraphQL */ `
                 options {
                   text
                   icon
+                  label
                   color
                 }
               }
@@ -278,6 +302,10 @@ export const getStudentData = /* GraphQL */ `
         selected {
           anchor
           color
+          content {
+            id
+            text
+          }
           focus
           id
         }

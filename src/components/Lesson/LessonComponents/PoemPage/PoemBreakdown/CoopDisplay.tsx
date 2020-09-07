@@ -6,17 +6,40 @@ import { IconContext } from "react-icons";
 import { FaExpand, FaCompress } from 'react-icons/fa';
 
 
+interface teacherData {
+    breakdownComponent: string,
+    studentInfo?: {
+        id: string
+        firstName: string
+        preferredName?: string
+        lastName: string
+    }
+    doFirstData?: { [key: string]: any }
+    warmUpData?: { [key: string]: any }
+    corelessonData?: { [key: string]: any }
+    activityData?: { [key: string]: any }
+}
+
 
 const CoopDisplay = () => {
     const { state, dispatch } = useContext(LessonContext);
     const displayProps = state.componentState.poem;
     const [fullscreen, setFullscreen] = useState(false);
 
+    const [ teacherData, setTeacherData ] = useState<teacherData>();
+
     const handleFullscreen = () => {
         setFullscreen(fullscreen => {
             return !fullscreen
         });
     }
+
+    useEffect(() => {
+        if ( state.displayData && state.displayData.breakdownComponent && state.displayData.breakdownComponent === 'activity/breakdown' ) {
+            console.log( 'got it', state.displayData );
+            setTeacherData(state.displayData)
+        }
+    }, [state.displayData])
 
     useEffect(() => {
         dispatch({type: 'ACTIVATE_LESSON', payload: 'activity/breakdown'})
@@ -48,13 +71,14 @@ const CoopDisplay = () => {
                     </IconContext.Provider>
                 </div>
                 <div className="w-full h-full flex flex-col justify-between items-center">
-                    <Banner title={displayProps ? displayProps.title : null} 
-                        display="COOP" fullscreen={fullscreen} />
+                    <Banner title={teacherData && teacherData.activityData &&teacherData.activityData.title  ? teacherData.activityData.title : null} 
+                        fullscreen={fullscreen}
+                        display="COOP" />
 
                     <div className="w-full h-8.8/10 flex flex-col justify-between items-center">
                         <div className={`${fullscreen ? 'text-2xl' : 'text-xl'} bg-dark-blue w-full h-full p-6 flex flex-col items-center text-gray-200 rounded-lg shadow-2 whitespace-pre-wrap overflow-scroll`}>
                             <div className="bg-lighter-blue shadow-inner-box p-4 h-full rounded-lg">
-                            { displayProps ? displayProps.editInput : null}
+                            { teacherData && teacherData.activityData && teacherData.activityData.editInput ? teacherData.activityData.editInput : null}
                             </div>
                         </div>
                     </div>

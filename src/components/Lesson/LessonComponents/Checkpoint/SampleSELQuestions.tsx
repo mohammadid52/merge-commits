@@ -42,6 +42,7 @@ const SampleSELQuestions = () => {
         //     ...input,
         //     [e.target.id]: e.target.value
         // })
+        console.log(input, 'input')
     }
 
     const inputSwitch = (question: {label: string, options: Array<{label: string, icon: string, color: string, text: string }>, question: string, type: string }) => {

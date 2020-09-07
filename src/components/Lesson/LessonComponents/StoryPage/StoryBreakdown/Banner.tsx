@@ -3,7 +3,7 @@ import { IconContext } from "react-icons";
 import { FaScroll } from 'react-icons/fa';
 
 interface BannerProps {
-    title: string,
+    title?: string,
     display: string
 }
 
