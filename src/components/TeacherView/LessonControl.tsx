@@ -71,7 +71,7 @@ const LessonControl = () => {
     const history = useHistory();
     const location = useLocation();
     const [ componentView, setComponentView ] = useState('');
-    const [fullscreen, setFullscreen] = useState(false);
+    const [ fullscreen, setFullscreen ] = useState(false);
     const [ shareable, setShareable ] = useState(false);
 
     const handleFullscreen = () => {
@@ -253,7 +253,7 @@ const LessonControl = () => {
                                     {fullscreen ? < FaCompress /> :< FaExpand />}
                                 </IconContext.Provider>
                             </div>
-                            {   
+                            { 
                                 shareable && state.studentViewing.live ? 
                                 <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: 0}}>
                                     <button className="bg-purple-400 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleShareStudentData}>
@@ -262,6 +262,16 @@ const LessonControl = () => {
                                 </div>
                                 : null
                             }
+
+                            <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: '50%', marginLeft: fullscreen ? '-60px' : '-80px' }}>
+                                <button className="bg-yellow-300 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark">
+                                    middle button
+                                </button>
+                            </div>
+
+
+                            
+                            
                             <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
                                 <button className="bg-teal-500 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleSubmitChanges}>
                                     apply changes

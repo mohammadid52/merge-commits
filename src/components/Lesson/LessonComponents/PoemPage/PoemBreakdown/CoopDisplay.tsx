@@ -52,7 +52,7 @@ const CoopDisplay = () => {
             {/* self display */}
             <div className={`${fullscreen ? 'hidden' : 'w-4.8/10'}  h-full flex flex-col justify-between items-center`}>
                 <Banner title={displayProps ? displayProps.title : null} 
-                    display="COOP"/>
+                    display="COOP" fullscreen={fullscreen}/>
 
                 <div className="w-full h-8.8/10 flex flex-col justify-between items-center">
                     <div className="bg-dark-blue w-full h-full p-6 flex flex-col items-center text-xl text-gray-200 rounded-lg shadow-2 whitespace-pre-wrap overflow-scroll">
@@ -72,6 +72,7 @@ const CoopDisplay = () => {
                 </div>
                 <div className="w-full h-full flex flex-col justify-between items-center">
                     <Banner title={teacherData && teacherData.activityData &&teacherData.activityData.title  ? teacherData.activityData.title : null} 
+                        fullscreen={fullscreen}
                         display="COOP" />
 
                     <div className="w-full h-8.8/10 flex flex-col justify-between items-center">
