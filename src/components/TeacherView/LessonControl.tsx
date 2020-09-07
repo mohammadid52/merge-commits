@@ -5,6 +5,7 @@ import {
    Redirect,
    useRouteMatch,
    useHistory,
+   useLocation
 } from 'react-router-dom';
 import LessonLoading from '../Lesson/Loading/LessonLoading';
 import ClassRoster from './ClassRoster';
@@ -14,9 +15,6 @@ const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'))
 const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
 const OutroView = lazy(() => import('./ComponentViews/OutroView/OutroView'));
 const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'))
-import LyricsBreakdownView from './ComponentViews/LyricsPageView/LyricsBreakdown/LyricsBreakdownView';
-import PoemBreakdownView from './ComponentViews/PoemPageView/PoemBreakdown/PoemBreakdownView';
-import StoryBreakdownView from './ComponentViews/StoryPageView/StoryBreakdown/StoryBreakdownView';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import { IconContext } from "react-icons";
 import { FaExpand, FaCompress } from 'react-icons/fa';
@@ -26,12 +24,55 @@ import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
 import * as customMutations from '../../customGraphql/customMutations';
 import { API, graphqlOperation } from 'aws-amplify';
 
+type displayData = 
+|   {
+        breakdownComponent: string
+        studentData: {
+            id: string,
+            firstName: string
+            preferredName?: string
+            lastName: string
+        }
+        warmUpData?: {
+            story: string
+            title: string
+            additional: Array<{
+                name: string
+                input: string
+            }>
+        }
+        corelessonData?: {
+            anchor: string
+            color: string
+            content: Array<{
+                id: number
+                text: string
+            }>
+            focus: string
+            id: number
+        }
+        activityData?: {
+            editInput: string
+            editMode: boolean
+            lines: Array<{
+                example: string
+                id: number
+                menuOpen: boolean
+                text: string
+            }>
+            title: string
+        }
+    } 
+| null
+
 const LessonControl = () => {
-    const { state } = useContext(LessonControlContext);
+    const { state, dispatch } = useContext(LessonControlContext);
     const match = useRouteMatch();
     const history = useHistory();
+    const location = useLocation();
     const [ componentView, setComponentView ] = useState('');
     const [fullscreen, setFullscreen] = useState(false);
+    const [ shareable, setShareable ] = useState(false);
 
     const handleFullscreen = () => {
         setFullscreen(fullscreen => {
@@ -43,7 +84,7 @@ const LessonControl = () => {
         let updatedClassroomData: any = {
             id: '1',
             open: true,
-            displayData: null,
+            displayData: state.displayData,
             lessonPlan: state.pages
         }
         
@@ -55,10 +96,47 @@ const LessonControl = () => {
         }
     }
 
+    const handleShareStudentData = async () => {
+        console.log(state.studentViewing);
+        if ( state.studentViewing.studentInfo ) {
+            let displayData = {
+                breakdownComponent: state.studentViewing.studentInfo.lessonProgress,
+                studentInfo: {
+                    id: state.studentViewing.studentInfo.student.id,
+                    firstName: state.studentViewing.studentInfo.student.firstName,
+                    preferredName: state.studentViewing.studentInfo.student.preferredName ? state.studentViewing.studentInfo.student.preferredName : null,
+                    lastName: state.studentViewing.studentInfo.student.lastName
+                },
+                warmUpData: state.studentViewing.studentInfo.warmupData ? state.studentViewing.studentInfo.warmupData : null, 
+                corelessonData: state.studentViewing.studentInfo.corelessonData ? state.studentViewing.studentInfo.corelessonData : null, 
+                activityData: state.studentViewing.studentInfo.activityData ? state.studentViewing.studentInfo.activityData : null, 
+            }
+            // console.log(displayData)
+            dispatch({ type: 'SET_SHARE_MODE', payload: state.studentViewing.studentInfo.lessonProgress })
+            dispatch({ type: 'SET_DISPLAY_DATA', payload: displayData })
+        }
+        
+    }
+
+    useEffect(() => {
+
+        let result = /.+\/(breakdown)\/*.*/.test(location.pathname)
+        console.log('breakdown?', result, location.pathname)
+
+        if ( result ) {
+            setShareable(true)
+        } 
+
+        if ( !result ) {
+            setShareable(false)
+        }
+
+    }, [location.pathname])
+
     useEffect(() => {
         
         if (state.studentViewing.live) {
-            console.log(state.studentViewing.live)
+            // console.log(state.studentViewing.live)
             history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`)
         }
 
@@ -175,12 +253,15 @@ const LessonControl = () => {
                                     {fullscreen ? < FaCompress /> :< FaExpand />}
                                 </IconContext.Provider>
                             </div>
-                            <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: 0}}>
-                                    <button className="bg-purple-400 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark">
+                            {   
+                                shareable && state.studentViewing.live ? 
+                                <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: 0}}>
+                                    <button className="bg-purple-400 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleShareStudentData}>
                                         share data
                                     </button>
-                            </div>
-                            
+                                </div>
+                                : null
+                            }
                             <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
                                 <button className="bg-teal-500 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleSubmitChanges}>
                                     apply changes

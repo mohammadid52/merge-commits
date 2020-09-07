@@ -1665,6 +1665,12 @@ export const createClassroom = /* GraphQL */ `
       roster
       displayData {
         breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
         warmUpData {
           story
           title
@@ -1845,6 +1851,12 @@ export const updateClassroom = /* GraphQL */ `
       roster
       displayData {
         breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
         warmUpData {
           story
           title
@@ -2025,6 +2037,12 @@ export const deleteClassroom = /* GraphQL */ `
       roster
       displayData {
         breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
         warmUpData {
           story
           title

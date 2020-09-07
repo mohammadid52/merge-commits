@@ -7,7 +7,7 @@ type lessonControlActions =
         payload: any
     }
 |   {
-        type: 'OPEN_LESSON' | 'DISABLE_LESSON' | 'CLOSE_LESSON' | 'DELETE_DISPLAY_DATA' | 'SET_DISPLAY_DATA' | 'SET_STUDENT_VIEWING';
+        type: 'OPEN_LESSON' | 'DISABLE_LESSON' | 'CLOSE_LESSON' | 'DELETE_DISPLAY_DATA' | 'SET_DISPLAY_DATA' | 'SET_STUDENT_VIEWING' | 'SET_SHARE_MODE' | 'QUIT_SHARE_MODE';
         payload: any
     }
 |   {
@@ -25,56 +25,76 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 data: action.payload.data,
                 roster: action.payload.students
             }
-            case 'OPEN_LESSON':
+        case 'OPEN_LESSON':
+            return {
+                ...state,
+                pages: state.pages.map(page => {
+                    if (action.payload !== page.stage) {
+                        return page
+                    } else {
+                        return {
+                            ...page,
+                            open: true,
+                        }
+                    }
+                })
+            };
+        case 'CLOSE_LESSON':
+            return {
+                ...state,
+                pages: state.pages.map(page => {
+                    if (action.payload !== page.stage) {
+                        return page
+                    } else {
+                        return {
+                            ...page,
+                            open: false,
+                        }
+                    }
+                })
+            };
+        case 'DISABLE_LESSON':
+            return {
+                ...state,
+                pages: state.pages.map(page => {
+                    if (action.payload !== page.stage) {
+                        return page
+                    } else {
+                        return {
+                            ...page,
+                            disabled: !page.disabled,
+                        }
+                    }
+                })
+            };
+        case 'SET_SHARE_MODE':
                 return {
                     ...state,
+                    sharing: true,
                     pages: state.pages.map(page => {
                         if (action.payload !== page.stage) {
                             return page
                         } else {
-                            return {
+                            return { 
                                 ...page,
-                                open: true,
-                            }
-                        }
-                    })
+                                displayMode: 'COOP',
+                            }}
+                        })
                 };
-            case 'CLOSE_LESSON':
+        case 'QUIT_SHARE_MODE':
                 return {
                     ...state,
+                    sharing: false,
                     pages: state.pages.map(page => {
-                        if (action.payload !== page.stage) {
-                            return page
-                        } else {
-                            return {
-                                ...page,
-                                open: false,
-                            }
-                        }
-                    })
-                };
-            case 'DISABLE_LESSON':
-                return {
-                    ...state,
-                    pages: state.pages.map(page => {
-                        if (action.payload !== page.stage) {
-                            return page
-                        } else {
-                            return {
-                                ...page,
-                                disabled: !page.disabled,
-                            }
-                        }
-                    })
+                        return { 
+                            ...page,
+                            displayMode: 'SELF',
+                        }})
                 };
         case 'SET_DISPLAY_DATA':
             return {
                 ...state,
-                displayData: {
-                    ...state.displayData,
-                    breakdownComponent: action.payload.name,
-                    [action.payload.name]: action.payload.content
-                },
+                displayData: action.payload,
             };
         case 'DELETE_DISPLAY_DATA':
             return {
@@ -90,6 +110,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                     ...state,
                     studentViewing: {
                         live: false,
+                        studentInfo: {}
                     }
                 }
             }
@@ -100,6 +121,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                     studentInfo: action.payload
                 }
             };
+        
         case 'CLEANUP': 
             return lessonControlState
         default:

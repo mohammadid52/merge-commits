@@ -31,10 +31,8 @@ export const createStudentData = /* GraphQL */ `
       lessonProgress
       status
       live
-      classroomID
       studentID
-      createdAt
-      updatedAt
+      studentAuthID
     }
   }
 `;
@@ -63,6 +61,10 @@ export const updateStudentData = /* GraphQL */ `
         selected {
           anchor
           color
+          content {
+            id
+            text
+          }
           focus
           id
         }
@@ -92,15 +94,39 @@ export const updateClassroom = /* GraphQL */ `
     updateClassroom(input: $input, condition: $condition) {
       id
       open
+      lessonID
+      roster
       displayData {
         breakdownComponent
         warmUpData {
           story
           title
+          additional {
+            name
+            input
+          }
+        }
+        corelessonData {
+          selected {
+            anchor
+            color
+            content {
+              id
+              text
+            }
+            focus
+            id
+          }
         }
         activityData {
           editInput
           editMode
+          lines {
+            example
+            id
+            menuOpen
+            text
+          }
           title
         }
       }
@@ -113,6 +139,7 @@ export const updateClassroom = /* GraphQL */ `
         type
         displayMode
       }
+      createdAt
       updatedAt
     }
   }

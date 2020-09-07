@@ -45,6 +45,7 @@ export interface lessonControlStateType  {
     data?: {
         [key: string]: any;
     }
+    sharing: boolean,
     displayData: {
         breakdownComponent: string,
         studentInfo?: {
@@ -70,6 +71,7 @@ export const lessonControlState: lessonControlStateType = {
     pages: [],
     roster: [],
     data: {},
+    sharing: false,
     displayData: {
         breakdownComponent: '',
     },

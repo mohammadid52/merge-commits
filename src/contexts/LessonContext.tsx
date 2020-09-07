@@ -31,6 +31,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     const [ state, dispatch ] = useReducer(lessonReducer, lessonState);
     const [ lightOn, setLightOn ] = useState(false);
     const location = useLocation();
+    let subscription: any;
 
     const lightSwitch = () => {
         setLightOn(prev => {
@@ -43,6 +44,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     async function getOrCreateStudentData() {
         let queryParams = queryString.parse(location.search)
         let studentID = cookies.auth.email
+        let studentAuthID = cookies.auth.authId
 
         try {
             const studentData: any = await API.graphql(graphqlOperation(customQueries.getStudentData, {
@@ -59,6 +61,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                     live: false,
                     classroomID: queryParams.id,
                     studentID: studentID,
+                    studentAuthID: studentAuthID,
                 }}))
                 console.log(newStudentData)
                 dispatch({ type: 'SET_STUDENT_DATA_ID', payload: newStudentData.data.createStudentData.id })
@@ -84,7 +87,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             console.log('classroom data', classroom);
             setLesson(classroom.data.getClassroom)
             getOrCreateStudentData()
-            subscribeToClassroom()
+            subscription = subscribeToClassroom()
         } catch (error) {
             console.error(error)
         }
@@ -95,27 +98,45 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         
         // @ts-ignore
         const classroomSubscription = API.graphql(graphqlOperation(customSubscriptions.onUpdateClassroom, { id: queryParams.id })).subscribe({
-            next: (classroomData: any) => console.log(classroomData)
+            next: (classroomData: any) => {
+                const updatedLessonPlan = classroomData.value.data.onUpdateClassroom
+                console.log('updated', updatedLessonPlan)
+                // dispatch({ type: 'SET_LOADING' })
+
+                dispatch({
+                    type: 'UPDATE_LESSON_PLAN', 
+                    payload: { 
+                        pages: updatedLessonPlan.lessonPlan, 
+                        displayData: updatedLessonPlan.displayData,
+                }})
+                
+            }
         });
   
         console.log('sub', classroomSubscription)
+
+        return classroomSubscription;
     }
 
     useEffect(() => {
         getClassroom()
 
-        return function cleanup() { dispatch({ type: 'CLEANUP' })};
+        return function cleanup() { 
+            subscription.unsubscribe()
+            dispatch({ type: 'CLEANUP' })
+        };
     }, []);
 
     useEffect(() => {
         if (lesson) {
-            // console.log('lesson'lesson);
+            console.log('lesson', lesson);
             const wordBank: Array<string> = ['Mimo provoz'];
 
             dispatch({
                 type: 'SET_INITIAL_STATE', 
                 payload: { 
                     pages: lesson.lessonPlan, 
+                    displayData: lesson.displayData,
                     word_bank: wordBank, 
                     data: lesson,
             }})
