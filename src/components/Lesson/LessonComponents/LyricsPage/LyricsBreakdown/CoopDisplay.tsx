@@ -5,6 +5,20 @@ import { LessonContext } from '../../../../../contexts/LessonContext';
 import { IconContext } from "react-icons";
 import { FaExpand, FaCompress } from 'react-icons/fa';
 
+interface teacherData {
+    breakdownComponent: string,
+    studentInfo?: {
+        id: string
+        firstName: string
+        preferredName?: string
+        lastName: string
+    }
+    doFirstData?: { [key: string]: any }
+    warmUpData?: { [key: string]: any }
+    corelessonData?: { [key: string]: any }
+    activityData?: { [key: string]: any }
+}
+
 const CoopDisplay = () => {
     const { dispatch, state } = useContext(LessonContext)
     const [ modules, setModules ] = useState<Array<any>>()
@@ -12,6 +26,9 @@ const CoopDisplay = () => {
     const { artist, title } = state.data.lesson.coreLesson.content 
     const moduleTypes = state.data.lesson.coreLesson.tools
     const [fullscreen, setFullscreen] = useState(false);
+
+    const [ teacherData, setTeacherData ] = useState<teacherData>();
+    const [ teacherModules, setTeacherModules ] = useState<Array<any>>()
 
     const handleFullscreen = () => {
         setFullscreen(fullscreen => {
@@ -54,6 +71,39 @@ const CoopDisplay = () => {
         dispatch({type: 'ACTIVATE_LESSON', payload: 'corelesson/breakdown'})
     }, [])
 
+    useEffect(() => {
+        if ( state.displayData && state.displayData.breakdownComponent && state.displayData.breakdownComponent === 'corelesson/breakdown' ) {
+            console.log( 'got it', state.displayData );
+            setTeacherData(state.displayData)
+        }
+    }, [state.displayData])
+
+    useEffect(() => {
+        console.log(teacherData);
+        if (teacherData && teacherData.corelessonData && teacherData.corelessonData.selected ) {
+            let modulesArray = moduleTypes.map((item: {[key: string]: any}) => {
+                let contentArray = teacherData.corelessonData.selected.filter((selection: { color: string, content: any }) => {
+                    return item.color === selection.color
+                })
+                .map((selection: { content: any}) => {
+                    return selection.content
+                });
+
+                return {
+                    name: item.name,
+                    label: item.icon,
+                    color: item.color,
+                    content: arrayParseToString(contentArray)
+                }
+            })
+
+            console.log(modulesArray);
+            
+
+            setTeacherModules(modulesArray)
+        }
+    }, [teacherData])
+
     // ${key === 0 ? 'md:mr-2' : key === modules.length - 1 ? 'md:ml-2' : 'md:mx-2'}
 
     return (
@@ -94,8 +144,8 @@ const CoopDisplay = () => {
                         </IconContext.Provider>
                     </div>
                     <div className="h-full w-full flex flex-col md:flex-row justify-between items-center">
-                    {   modules && modules.length >= 1 ?
-                        modules.map((module: any, key: number) => (
+                    {   teacherModules && teacherModules.length >= 1 ?
+                        teacherModules.map((module: any, key: number) => (
                             <div key={key} className={`bg-dark-blue h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-2 shadow-2 rounded-lg`}>
                                 <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-white">
                                     <div className={`${fullscreen ? 'text-2xl w-10 h-10' : 'text-lg w-8 h-8'} p-2 rounded-md bg-${module.color} flex justify-center items-center shadow-2`}>

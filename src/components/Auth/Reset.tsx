@@ -56,43 +56,6 @@ const Reset = () => {
         } catch (error) {
             console.error('error signing in', error);
             setMessage (() => {
-                if (!username) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'Please enter your email',
-                    }
-                } if (!username.includes("@")) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'Your email is not in the expected email address format',
-                    }
-                } if (!code) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'Please enter your confirmation code',
-                    }
-                } if (!password) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'Please enter your new password',
-                    }
-                } if (!match) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'Please enter your confirmation password',
-                    }
-                } if ( password !== match ) {
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: 'Your new password and confirmation password do not match',
-                    }
-                } 
                 switch (error.code) {
                     case "InvalidPasswordException":
                         return {
@@ -129,6 +92,65 @@ const Reset = () => {
         }
     }
 
+    const validation = () => {
+        let validated = false;
+        
+        setMessage (() => {
+        let username = input.email;
+        let password = input.password;
+        let match = input.match
+        let code = input.code;
+        if (!username) {
+            return {
+                show: true,
+                type: 'error',
+                message: 'Please enter your email',
+            }
+        } if (!username.includes("@")) {
+            return {
+                show: true,
+                type: 'error',
+                message: 'Your email is not in the expected email address format',
+            }
+        } if (!code) {
+            return {
+                show: true,
+                type: 'error',
+                message: 'Please enter your confirmation code',
+            }
+        } if (!password) {
+            return {
+                show: true,
+                type: 'error',
+                message: 'Please enter your new password',
+            }
+        } if (!match) {
+            return {
+                show: true,
+                type: 'error',
+                message: 'Please enter your confirmation password',
+            }
+        } if ( password !== match ) {
+            return {
+                show: true,
+                type: 'error',
+                message: 'Your new password and confirmation password do not match',
+            }
+        }  
+        validated = true;
+        if (validated) {
+            reset();
+        }
+        return {
+            show: false,
+            type: 'success',
+            message: 'success',
+        }    
+        })
+
+        
+    }
+
     const handleChange = (e: { target: { id: any; value: any; }; }) => {
         const { id, value } = e.target;
         setInput(input => {
@@ -141,12 +163,12 @@ const Reset = () => {
 
     const handleEnter = (e: any) => {
         if (e.key === 'Enter') {
-            reset();
+            validation();
         }
     }
 
     const handleSubmit = () => {
-        reset();
+        validation();
         
     }
 

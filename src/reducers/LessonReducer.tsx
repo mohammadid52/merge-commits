@@ -7,6 +7,14 @@ type LessonActions =
         data?: any;
         pages: any;
         word_bank?: any;
+        displayData?: any;
+        }
+    }
+|   {
+    type: 'UPDATE_LESSON_PLAN';
+    payload: {
+        pages: any;
+        displayData?: any;
         }
     }
 |   {
@@ -69,7 +77,7 @@ type LessonActions =
         type: 'CLEANUP';
     } 
 |   {
-        type: 'TEST' | 'PAGE_FORWARD' |  'PAGE_BACK' | 'CAN_CONTINUE' | 'NO_CONTINUE' | 'FINISH' | 'SAVED_CHANGES';
+        type: 'TEST' | 'PAGE_FORWARD' |  'PAGE_BACK' | 'CAN_CONTINUE' | 'NO_CONTINUE' | 'FINISH' | 'SAVED_CHANGES' | 'SET_LOADING';
     } 
 
 export const lessonReducer = (state: LessonStateType, action: LessonActions) => {
@@ -84,6 +92,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 data: action.payload.data,
                 pages: action.payload.pages,
                 word_bank: action.payload.word_bank,
+                displayData: action.payload.displayData,
             }
         case 'SET_CURRENT_PAGE':
             return {
@@ -126,6 +135,11 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 ...state, 
                 studentDataID: action.payload
             } 
+        case 'SET_LOADING':
+            return {
+                ...state, 
+                status: 'loading',
+            } 
         case 'ADD_WORD':
             return {
                 ...state,
@@ -158,6 +172,14 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                     }
                 },
             };
+        case 'UPDATE_LESSON_PLAN':
+            return {
+                ...state,
+                status: 'loaded',
+                displayData: action.payload.displayData,
+                pages: action.payload.pages,
+
+            }
         case 'CAN_CONTINUE':
             return {
                 ...state,

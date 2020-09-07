@@ -39,39 +39,66 @@ const NewPassword = () => {
             } catch (error) {
                 console.error('error signing in', error);
                 setMessage(() => {
-                    if (!input.password) { 
+                    switch (error.code) {
+                        case "InvalidPasswordException":
+                            return {
+                                        show: true,
+                                        type: 'error',
+                                        message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+                                    }
+                        case "InvalidParameterException":
+                                return {
+                                            show: true,
+                                            type: 'error',
+                                            message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+                                        }                
+                        default:
                         return {
                             show: true,
                             type: 'error',
-                            message: 'Please enter your new password',
+                            message: error.message,
                         }
-                    } if (!input.match) {
-                        return {
-                            show: true,
-                            type: 'error', 
-                            message: 'Please confirm your new password',
-                        }
-                    } if ( input.password !== input.match ) {
-                        return {
-                            show: true,
-                            type: 'error',
-                            message: 'Your new password and confirmation password do not match',
-                        }
-                    } if (error.code === "InvalidPasswordException" || "InvalidParameterException") {
-                        return {
-                            show: true,
-                            type: 'error',
-                            message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
-                        }
-                    }
-                    return {
-                        show: true,
-                        type: 'error',
-                        message: error.message,
-                    }
-                })
             }
+        })
+    }
+} }
+
+    const validation = () => {
+        
+        let validated = false;
+        
+        setMessage (() => {
+            if (!input.password) { 
+                return {
+                    show: true,
+                    type: 'error',
+                    message: 'Please enter your new password',
+                }
+            } if (!input.match) {
+                return {
+                    show: true,
+                    type: 'error', 
+                    message: 'Please confirm your new password',
+                }
+            } if ( input.password !== input.match ) {
+                return {
+                    show: true,
+                    type: 'error',
+                    message: 'Your new password and confirmation password do not match',
+                }
+            }
+        validated = true;
+        if (validated) {
+            changePassword();
         }
+        return {
+            show: false,
+            type: 'success',
+            message: 'success',
+        }    
+        })
+
+        
     }
 
     const handleChange = (e: { target: { id: any; value: any; }; }) => {
@@ -86,12 +113,12 @@ const NewPassword = () => {
 
     const handleEnter = (e: any) => {
         if (e.key === 'Enter') {
-            changePassword()
+            validation()
         }
     }
 
     const handleSubmit = () => {
-        changePassword()
+        validation()
     }
 
     return (

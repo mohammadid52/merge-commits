@@ -71,7 +71,7 @@ const SampleSELQuestions = () => {
                                     <input id={question.label} className="w-4 mx-4 cursor-pointer" type="radio" name="cultures" 
                                     value={input[question.label]}
                                     onChange={handleInputChange}/>
-                                <label htmlFor="no">{option.label}</label>
+                                <label htmlFor={`${option.text}`}>{option.text}</label>
                             </div>
                             ))}
                         </div>

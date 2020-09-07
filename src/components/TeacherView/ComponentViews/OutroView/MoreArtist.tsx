@@ -5,7 +5,7 @@ import PhotoBlock from './PhotoBlock';
 import { IconContext } from "react-icons";
 import { IoLogoYoutube, } from 'react-icons/io';
 import { AiFillPlusCircle } from 'react-icons/ai';
-import { AiFillInstagram, } from 'react-icons/ai';
+import { AiOutlineInstagram } from 'react-icons/ai';
 import { FaSpotify, } from 'react-icons/fa';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
@@ -17,92 +17,77 @@ const MoreArtist = (props: props) => {
     const {  fullscreen } = props;
     const { state, dispatch } = useContext(LessonControlContext)
     const [ fullscreenOutro, setFullscreenOutro ] = useState(false);
-    const [artistLink, setArtistLinks] = useState(
+    const [artistLink, setArtistLinks] = useState([
         {
-            youtube: '',
-            spotify: '',
-            instagram: 'https://www.instagram.com/iconoclastartists/',
-            etc: 'https://linktr.ee/iconoclastartists'
-
-        }
-    )
+            type: 'etc',
+            link: 'https://linktr.ee/iconoclastartists',
+            label: 'Iconoclast Website'
+        },
+        {
+            type: 'youtube',
+            link: 'https://youtube.com/',
+            label: 'YouTube'
+        },
+        {
+            type: 'instagram',
+            link: 'https://www.instagram.com/iconoclastartists/',
+            label: 'Instagram'
+        },
+        {
+            type: 'youtube',
+            link: 'https://youtube.com/',
+            label: 'YouTube'
+        },
+    ])
 
     return(
         <div className="w-full h-full bg-dark-blue text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
             <h3 className={`${fullscreen ? 'text-3xl' : 'text-lg'} h-.8/10 w-full text-gray-200 font-open font-bold border-b border-white`}>
                 Learn more about the artist
             </h3>
-            <div className="h-3.5/10 w-8/10 flex justify-around items-center rounded-lg">
+            <div className="h-3.5/10 w-9/10 flex justify-around items-center rounded-lg">
                 <div className="w-6/10 h-full">
                     <PhotoBlock fullscreen={fullscreen}/>
                 </div>
 
-                <div className="w-4.8/10 flex flex-col items-center justify-center ">
-                    <div className="h-full flex justify-center items-center">
-                        <div className="flex flex-col w-4/10">
-                            {
-                                artistLink.youtube ?
-                            <div className={`${fullscreen ? 'px-4 py-2' : ''} cursor-pointer`}> 
-                                <a href={artistLink.youtube} target="_blank" rel="noopener noreferrer">
-                                <IconContext.Provider value={{ color: '#ff0000', size: '5rem', style: {height: 'auto'}}}>
-                                    <IoLogoYoutube />
-                                </IconContext.Provider>
-                                </a>
-                            </div> :
-                            <div className={`${fullscreen ? 'px-4 py-2' : ''} `}> 
-                            <IconContext.Provider value={{ color: '#666666', size: '5rem', style: {opacity: '.25', height: 'auto'}}}>
-                                <IoLogoYoutube />
-                            </IconContext.Provider>
-                        </div>
-                            }
-                            { artistLink.spotify ?
-                            <div className={`${fullscreen ? 'px-4 py-2' : ''} cursor-pointer`}>
-                                <a href={artistLink.spotify} target="_blank" rel="noopener noreferrer">
-                                <IconContext.Provider value={{ color: '#1DB954', size: '5rem', style: {height: 'auto'}}}>
-                                    <FaSpotify />
-                                </IconContext.Provider>
-                                </a>
-                            </div> :
-                            <div className={`${fullscreen ? 'px-4 py-2' : ''} `}>
-                            <IconContext.Provider value={{ color: '#666666', size: '5rem', style: {opacity: '.25', height: 'auto'}}}>
-                                <FaSpotify />
-                            </IconContext.Provider>
-                        </div>
-                            }
-                            
-                        </div>
-                        <div className="flex flex-col w-4/10">
-                            {artistLink.instagram ?
-                                <div className={`${fullscreen ? 'px-4 py-2' : ''} cursor-pointer`}> 
-                                    <a href={artistLink.instagram} target="_blank" rel="noopener noreferrer">
-                                    <IconContext.Provider  value={{ color: '#C13584', size: '6rem', style: {height: 'auto'}}}>
-                                        <AiFillInstagram />
-                                    </IconContext.Provider>
+                <div className="w-4.8/10 h-full flex flex-col items-center justify-center ">
+                    <div className="h-full w-full flex justify-center items-center">
+                    <div className="h-full w-full flex flex-col flex-wrap justify-center items-start">
+                            {artistLink.map((item: {type: string, link: string, label: string}, key: number) => (
+    
+                                <div key={key} className={`${fullscreen ? 'px-4 py-2' : ''} cursor-pointer w-4.5/10 h-5/10 flex justify-center items-start`}> 
+                                    <a href={item.link} target="_blank" rel="noopener noreferrer">
+                                        {
+                                            item.type === 'youtube' ?
+                                            <IconContext.Provider value={{ color: '#ff0000', size: '2rem', className: 'flex-grow'}}>
+                                                <IoLogoYoutube />
+                                            </IconContext.Provider> :
+                                            item.type === 'etc' ?
+                                            <IconContext.Provider value={{ color: '#1a7fd8', size: '2rem', className: 'flex-grow'}}>
+                                                <AiFillPlusCircle />
+                                            </IconContext.Provider> :
+                                            item.type === 'spotify' ? 
+                                            <IconContext.Provider value={{ color: '#1DB954', size: '3.8rem', className: 'flex-grow'}}>
+                                                <FaSpotify />
+                                            </IconContext.Provider> :
+                                            item.type === 'instagram' ?
+                                            <IconContext.Provider  value={{ color: 'white', size: '2rem', className: 'flex-grow' }}>
+                                                <AiOutlineInstagram />
+                                            </IconContext.Provider> :
+                                            <IconContext.Provider value={{ color: '#1a7fd8', size: '2rem', className: 'flex-grow'}}>
+                                                <AiFillPlusCircle />
+                                            </IconContext.Provider>
+                                        }
+                                    
+                                    <p className={`${fullscreen ? 'text-sm' : 'text-xs'} flex-grow text-center`}>
+                                        {item.label}
+                                    </p>
                                     </a>
-                                </div> :
-                                <div className={`${fullscreen ? 'px-4 py-2' : ''} `}> 
-                                    <IconContext.Provider  value={{ color: '#666666', size: '6rem', style: {opacity: '.25', height: 'auto'}}}>
-                                        <AiFillInstagram />
-                                    </IconContext.Provider>
                                 </div>
-                            }
-                            {artistLink.etc ?
-                                <div className={`${fullscreen ? 'px-4 py-2' : ''} cursor-pointer`}>
-                                    <a href={artistLink.etc} target="_blank" rel="noopener noreferrer">
-                                    <IconContext.Provider value={{ color: '#1a7fd8', size: '5rem', style: {height: 'auto'}}}>
-                                        <AiFillPlusCircle />
-                                    </IconContext.Provider>
-                                    </a>
-                                </div> :
-                                <div className={`${fullscreen ? 'px-4 py-2' : ''}`}>
-                                    <IconContext.Provider value={{ color: '#666666', size: '5rem', style: {opacity: '.25', height: 'auto'}}}>
-                                        <AiFillPlusCircle />
-                                    </IconContext.Provider>
-                                </div>
-                            }
-                            
-                            
+                                    
+                            ))}
                         </div>
+                       
                     </div>
                 </div>
 

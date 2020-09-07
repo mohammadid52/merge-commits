@@ -1,23 +1,27 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import { studentObject } from '../../state/LessonControlState'
 
 const ClassRoster = () => {
     const { state, dispatch } = useContext(LessonControlContext);
 
-    console.log(state.roster)
+    // console.log(state.roster)
 
     const handleSelect = (e: any) => {
         const { id } = e.target
-        const selectedStudent = state.roster.filter((item: any) => {
+        const selected = state.roster.filter((item: any) => {
             return item.id === id
         });
 
-        console.log(selectedStudent);
+        console.log('selected student', id, selected[0]);
 
-        dispatch({ type: 'SET_STUDENT_VIEWING', payload: selectedStudent.pop() })
+        dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] })
     
     } 
+
+    useEffect(() => {
+        console.log(state.studentViewing)
+    }, [state.studentViewing])
 
     const studentStatus = (status: string) => {
         switch(status) {
@@ -103,8 +107,8 @@ const ClassRoster = () => {
                             <div className={`w-2/10 mx-2`}>
                                 {item.lessonProgress}
                             </div>
-                            <div id={`${item.id}`} className="w-2/10 flex justify-center items-center cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleSelect} >
-                                <button id={`${item.id}`} key={key} className="bg-indigo-500 w-9/10 shadow-elem-semi-dark rounded-xl text-gray-200 hover:text-white">
+                            <div id={`${item.id}`} className="w-2/10 flex justify-center items-center cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium">
+                                <button id={`${item.id}`} key={key} className="bg-indigo-500 w-9/10 shadow-elem-semi-dark rounded-xl text-gray-200 hover:text-white" onClick={handleSelect}>
                                     { state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === item.id ? 'Quit' : 'View' }
                                 </button>
                             </div>

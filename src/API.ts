@@ -556,9 +556,17 @@ export type CreateClassroomInput = {
 
 export type DisplayDataInput = {
   breakdownComponent?: string | null,
+  studentInfo?: StudentInfoInput | null,
   warmUpData?: WarmUpDataInput | null,
   corelessonData?: CoreLessonDataInput | null,
   activityData?: ActivityDataInput | null,
+};
+
+export type StudentInfoInput = {
+  id?: string | null,
+  firstName?: string | null,
+  preferredName?: string | null,
+  lastName?: string | null,
 };
 
 export type ComponentSummaryInput = {
@@ -3280,6 +3288,13 @@ export type CreateClassroomMutation = {
     displayData:  {
       __typename: "DisplayData",
       breakdownComponent: string | null,
+      studentInfo:  {
+        __typename: "StudentInfo",
+        id: string | null,
+        firstName: string | null,
+        preferredName: string | null,
+        lastName: string | null,
+      } | null,
       warmUpData:  {
         __typename: "WarmUpData",
         story: string | null,
@@ -3482,6 +3497,13 @@ export type UpdateClassroomMutation = {
     displayData:  {
       __typename: "DisplayData",
       breakdownComponent: string | null,
+      studentInfo:  {
+        __typename: "StudentInfo",
+        id: string | null,
+        firstName: string | null,
+        preferredName: string | null,
+        lastName: string | null,
+      } | null,
       warmUpData:  {
         __typename: "WarmUpData",
         story: string | null,
@@ -3684,6 +3706,13 @@ export type DeleteClassroomMutation = {
     displayData:  {
       __typename: "DisplayData",
       breakdownComponent: string | null,
+      studentInfo:  {
+        __typename: "StudentInfo",
+        id: string | null,
+        firstName: string | null,
+        preferredName: string | null,
+        lastName: string | null,
+      } | null,
       warmUpData:  {
         __typename: "WarmUpData",
         story: string | null,
@@ -7063,6 +7092,13 @@ export type GetClassroomQuery = {
     displayData:  {
       __typename: "DisplayData",
       breakdownComponent: string | null,
+      studentInfo:  {
+        __typename: "StudentInfo",
+        id: string | null,
+        firstName: string | null,
+        preferredName: string | null,
+        lastName: string | null,
+      } | null,
       warmUpData:  {
         __typename: "WarmUpData",
         story: string | null,
@@ -8288,6 +8324,13 @@ export type OnUpdateClassroomSubscription = {
     displayData:  {
       __typename: "DisplayData",
       breakdownComponent: string | null,
+      studentInfo:  {
+        __typename: "StudentInfo",
+        id: string | null,
+        firstName: string | null,
+        preferredName: string | null,
+        lastName: string | null,
+      } | null,
       warmUpData:  {
         __typename: "WarmUpData",
         story: string | null,
