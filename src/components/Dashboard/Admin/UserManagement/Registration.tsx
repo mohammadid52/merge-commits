@@ -129,7 +129,7 @@ const Registration = () => {
                     phone: '',
                     birthdate: '',
                     grade: null,
-                    role: 'Choose One',
+                    role: '',
                     externalId: '',
                 }
             })
@@ -298,7 +298,25 @@ const Registration = () => {
     // }
 
     const handleSubmit = (e: any) => {
-        validation();
+        setNewUserInputs(prev => {
+            return {
+                ...prev,
+                key: 0,
+                authId: '',
+                email: '',
+                password: 'xIconoclast.5x',
+                firstName: '',
+                lastName: '',
+                phone: '',
+                birthdate: '',
+                grade: null,
+                role: '',
+                externalId: '',
+            }
+        })
+
+        console.log(newUserInputs, 'new user inputs')
+        // validation();
 
     }
 
@@ -390,7 +408,7 @@ const Registration = () => {
                                         <DropdownForm
                                             style = {true}
                                             handleChange = {handleChangeRole}
-                                            userInfo = {'Choose One'}
+                                            userInfo = {`${newUserInputs.role}`}
                                             label='Role'
                                             id = 'role'
                                             items= {Role}
