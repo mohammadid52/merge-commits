@@ -248,8 +248,17 @@ type Artist @model
   quotes: [Quote!]!
 }
 
+type StudentInfo {
+  id: String
+  firstName: String
+  preferredName: String
+  lastName: String
+}
+
 type DisplayData {
   breakdownComponent: String
+  studentInfo: StudentInfo
+  # doFirstData: doFirstData
   warmUpData: WarmUpData
   corelessonData: CoreLessonData
   activityData: ActivityData
