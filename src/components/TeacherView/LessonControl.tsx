@@ -180,6 +180,23 @@ const LessonControl = () => {
                                         share data
                                     </button>
                             </div>
+
+                            {/* {fullscreen ? 
+                                <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: '50%', marginLeft: '-60px' }}>
+                                    <button className="bg-yellow-300 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark">
+                                        middle button
+                                    </button>
+                                </div>
+                            : 
+
+                                <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: '50%', marginLeft: '-80px' }}>
+                                    <button className="bg-yellow-300 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark">
+                                        middle button
+                                    </button>
+                                </div>
+                            } */}
+
+                            
                             
                             <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
                                 <button className="bg-teal-500 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleSubmitChanges}>

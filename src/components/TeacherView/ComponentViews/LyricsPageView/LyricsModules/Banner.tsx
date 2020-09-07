@@ -19,7 +19,7 @@ const Banner = (props: props) => {
                     <FaMusic />
                 </div>
             </IconContext.Provider>
-            <div className={`${fullscreen ? 'text-4xl' : 'text-2xl py-2'} title bg-dark-blue w-full flex flex-row justify-center items-center text-center font-open font-bold text-gray-200 rounded-lg shadow-2 z-10`}>
+            <div className={`${fullscreen ? 'text-4xl' : 'text-3xl py-2'} h-full bg-dark-blue w-full flex flex-row justify-center items-center text-center font-open font-bold text-gray-200 rounded-lg shadow-2 z-10`}>
                     { title }
             </div>
         </div>
