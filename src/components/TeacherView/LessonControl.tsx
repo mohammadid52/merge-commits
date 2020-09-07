@@ -91,6 +91,7 @@ const LessonControl = () => {
         try {
             const updatedClassroom = await API.graphql(graphqlOperation(customMutations.updateClassroom, {input: updatedClassroomData}))
             console.log(updatedClassroom)
+            dispatch({ type: 'SAVED_CHANGES' })
         } catch (err) {
             console.error(err);   
         }
@@ -115,7 +116,10 @@ const LessonControl = () => {
             dispatch({ type: 'SET_SHARE_MODE', payload: state.studentViewing.studentInfo.lessonProgress })
             dispatch({ type: 'SET_DISPLAY_DATA', payload: displayData })
         }
-        
+    }
+
+    const handleQuitShare = () => {
+        dispatch({ type: 'QUIT_SHARE_MODE' })
     }
 
     useEffect(() => {
@@ -248,11 +252,13 @@ const LessonControl = () => {
                                     />
                                 </Switch>
                             </Suspense>
+
                             <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{top: 0, right: 0}} onClick={handleFullscreen}>
                                 <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem' }}>
                                     {fullscreen ? < FaCompress /> :< FaExpand />}
                                 </IconContext.Provider>
                             </div>
+
                             { 
                                 shareable && state.studentViewing.live ? 
                                 <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: 0}}>
@@ -263,20 +269,26 @@ const LessonControl = () => {
                                 : null
                             }
 
-                            <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: '50%', marginLeft: fullscreen ? '-60px' : '-80px' }}>
-                                <button className="bg-yellow-300 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark">
-                                    middle button
-                                </button>
-                            </div>
+                            {   
+                                state.sharing ? 
+                                <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: '50%', marginLeft: fullscreen ? '-60px' : '-80px' }}>
+                                    <button className="bg-yellow-300 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleQuitShare}>
+                                        stop sharing
+                                    </button>
+                                </div>
+                                : null
+                            }   
 
+                            {   
+                                state.unsavedChanges ?
+                                <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
+                                    <button className="bg-teal-500 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleSubmitChanges}>
+                                        apply changes
+                                    </button>
+                                </div>
+                                : null
+                            }
 
-                            
-                            
-                            <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
-                                <button className="bg-teal-500 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleSubmitChanges}>
-                                    apply changes
-                                </button>
-                            </div>
                         </div>
 
                         <div className={`${fullscreen ? 'hidden' : 'display'} flex justify-center items-center`}>

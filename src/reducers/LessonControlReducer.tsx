@@ -1,5 +1,6 @@
 import React from 'react';
 import { lessonControlStateType, lessonControlState } from '../state/LessonControlState';
+import { turquoise } from 'color-name';
 
 type lessonControlActions = 
 |   {
@@ -7,7 +8,7 @@ type lessonControlActions =
         payload: any
     }
 |   {
-        type: 'OPEN_LESSON' | 'DISABLE_LESSON' | 'CLOSE_LESSON' | 'DELETE_DISPLAY_DATA' | 'SET_DISPLAY_DATA' | 'SET_STUDENT_VIEWING' | 'SET_SHARE_MODE' | 'QUIT_SHARE_MODE';
+        type: 'OPEN_LESSON' | 'DISABLE_LESSON' | 'CLOSE_LESSON' | 'DELETE_DISPLAY_DATA' | 'SET_DISPLAY_DATA' | 'SET_STUDENT_VIEWING' | 'SET_SHARE_MODE' | 'QUIT_SHARE_MODE' | 'SAVED_CHANGES';
         payload: any
     }
 |   {
@@ -28,6 +29,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         case 'OPEN_LESSON':
             return {
                 ...state,
+                unsavedChanges: true,
                 pages: state.pages.map(page => {
                     if (action.payload !== page.stage) {
                         return page
@@ -42,6 +44,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         case 'CLOSE_LESSON':
             return {
                 ...state,
+                unsavedChanges: true,
                 pages: state.pages.map(page => {
                     if (action.payload !== page.stage) {
                         return page
@@ -56,6 +59,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         case 'DISABLE_LESSON':
             return {
                 ...state,
+                unsavedChanges: true,
                 pages: state.pages.map(page => {
                     if (action.payload !== page.stage) {
                         return page
@@ -71,6 +75,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 return {
                     ...state,
                     sharing: true,
+                    unsavedChanges: true,
                     pages: state.pages.map(page => {
                         if (action.payload !== page.stage) {
                             return page
@@ -85,12 +90,18 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 return {
                     ...state,
                     sharing: false,
+                    unsavedChanges: true,
                     pages: state.pages.map(page => {
                         return { 
                             ...page,
                             displayMode: 'SELF',
                         }})
                 };
+        case 'SAVED_CHANGES':
+            return {
+                ...state,
+                unsavedChanges: false,
+            };
         case 'SET_DISPLAY_DATA':
             return {
                 ...state,
