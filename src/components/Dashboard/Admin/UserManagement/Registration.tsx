@@ -17,7 +17,7 @@ interface newUserInput {
     lastName: string
     phone: string
     birthdate: string
-    grade: number | null
+    grade: string
     role: string
     externalId: string
     message: {
@@ -36,7 +36,7 @@ const initialState: newUserInput = {
     lastName: '',
     phone: '',
     birthdate: '',
-    grade: null,
+    grade: '',
     role: '',
     externalId: '',
     message: {
@@ -128,7 +128,7 @@ const Registration = () => {
                     lastName: '',
                     phone: '',
                     birthdate: '',
-                    grade: null,
+                    grade: '',
                     role: '',
                     externalId: '',
                 }
@@ -298,25 +298,7 @@ const Registration = () => {
     // }
 
     const handleSubmit = (e: any) => {
-        setNewUserInputs(prev => {
-            return {
-                ...prev,
-                key: 0,
-                authId: '',
-                email: '',
-                password: 'xIconoclast.5x',
-                firstName: '',
-                lastName: '',
-                phone: '',
-                birthdate: '',
-                grade: null,
-                role: '',
-                externalId: '',
-            }
-        })
-
-        console.log(newUserInputs, 'new user inputs')
-        // validation();
+        validation();
 
     }
 
