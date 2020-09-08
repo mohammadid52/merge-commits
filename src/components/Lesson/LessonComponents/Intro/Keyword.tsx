@@ -18,12 +18,12 @@ const Keyword = () => {
 
 
     return (
-        <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} text-lx rounded-sm shadow-inner`}>
-            <h1 className="text-2xl font-extrabold mb-6 underline">Keywords we will cover in this lesson:</h1>
+        <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} text-lx rounded-sm`}>
+            <h1 className="text-2xl font-extrabold mb-4 underline">Keywords we will cover in this lesson:</h1>
             <div>
-            <p className="text-lg "><span className="text-lg font-bold">Culture:</span> the beliefs, social practices, and characteristics of a racial, religious, or social group </p>
-            <p className="text-lg "><span className="text-lg font-bold">Identity:</span> all of those things by which a person or thing is known or is considered as being </p>
-            <p className="text-lg "><span className="text-lg font-bold">Self-Awareness:</span> conscious knowledge of one's own personality, character, motives, and feelings </p>
+            <p className="text-base"><span className="text-lg font-bold">Culture:</span> the customs, arts, social institutions, and achievements of a particular nation, people, or other social group.</p>
+            <p className="text-base"><span className="text-lg font-bold">Dialects:</span> a particular form of a language which is peculiar to a specific region or social group.</p>
+            <p className="text-base"><span className="text-lg font-bold">Ancestors:</span> a person, typically one more remote than a grandparent, from whom one is descended.</p>
             </div>
         </div>
     )

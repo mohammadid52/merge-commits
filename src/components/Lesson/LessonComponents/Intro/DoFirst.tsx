@@ -42,7 +42,7 @@ const DoFirst = () => {
     }
 
     return (
-        <div className="bg-dark-blue w-full h-full rounded-lg shadow-2 ext-gray-200 px-4 md:px-8 py-6">
+        <div className="bg-dark-blue w-full h-full rounded-lg shadow-2 text-gray-200 px-4 md:px-8 py-6">
                 <h3 className="w-full text-4xl text-gray-200 font-open font-bold border-b border-white mr-4 mb-4">
                     Do First
                 </h3>

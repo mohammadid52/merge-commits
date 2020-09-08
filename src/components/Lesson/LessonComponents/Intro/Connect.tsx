@@ -18,10 +18,10 @@ const Connect = () => {
 
 
     return (
-        <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} text-lx rounded-sm shadow-inner`}>
-            <h1 className="text-2xl font-extrabold mb-6 underline">Connect:</h1>
+        <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} text-lx rounded-sm`}>
+            <h1 className="text-2xl font-extrabold mb-4 underline">Connection:</h1>
             <div>
-            <p className="text-lg ">Ways students can connect to the lesson</p>
+            <p className="text-lg ">This lesson explores the idea of self-identity, the characteristics, qualities, and abilities we choose to describe ourselves.  It is important in this lesson to remember that there are no judgments in how we see ourselves.  This week just think about all the things that make you who you are, and write about these things.</p>
             </div>
         </div>
     )
