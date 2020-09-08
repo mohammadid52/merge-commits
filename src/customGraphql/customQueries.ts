@@ -346,3 +346,63 @@ export const getStudentData = /* GraphQL */ `
     }
   }
 `;
+export const getCourse = /* GraphQL */ `
+  query GetCourse($id: ID!) {
+    getCourse(id: $id) {
+      id
+      name
+      classID
+      class {
+        id
+        name
+        students {
+          items {
+            student {
+              id
+              authId
+              status
+              email
+              firstName
+              preferredName
+              lastName
+              language
+            }
+          } 
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      curriculumID
+      curriculum {
+        id
+        name
+        languages
+        lessons {
+          items {
+            lesson {
+              title
+              artist {
+                id
+                images
+                name
+                type
+              }
+              language
+              summary
+            }
+          }
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      location
+      startDate
+      endDate
+      duration
+      createdAt
+      updatedAt
+    }
+  }
+`;
