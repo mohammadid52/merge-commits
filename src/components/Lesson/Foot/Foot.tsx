@@ -12,9 +12,11 @@ const Foot = () => {
     const match = useRouteMatch();
 
     useEffect(() => {
-        if ( state.pages[state.currentPage + 1].open ) {
-            console.log(state.pages);
-            return dispatch({ type: 'CAN_CONTINUE' })
+        if ( state.pages[state.currentPage + 1] ){
+            if ( state.pages[state.currentPage + 1].open ) {
+                console.log(state.pages);
+                return dispatch({ type: 'CAN_CONTINUE' })
+            } return dispatch({ type: 'NO_CONTINUE' })
         } return dispatch({ type: 'NO_CONTINUE' })
     }, [state.pages, state.currentPage])
 
