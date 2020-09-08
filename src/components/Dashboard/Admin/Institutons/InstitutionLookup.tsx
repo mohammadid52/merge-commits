@@ -6,8 +6,14 @@ import InstitutionSearch from './InstitutionSearch';
 import Actions from '../Actions/Actions';
 import InstitutionRow from './InstitutionRow';
 
+
+/**
+ * This component represents the bulk code of the institutions-lookup/all-institutions page
+ * which lists all the available institutions
+ */
+
 const InstitutionLookup: React.FC = () => {
-  const [institutionData, setInstitutionData] = useState([]);
+  const [institutionsData, setInstitutionsData] = useState([]);
 
   async function getInstitutionsData() {
     try {
@@ -18,7 +24,7 @@ const InstitutionLookup: React.FC = () => {
         throw new Error('fail!');
       } else {
         console.log('Log institutions BEFORE: ', fetchInstitutionData);
-        setInstitutionData(fetchInstitutionData.data.listInstitutions.items);
+        setInstitutionsData(fetchInstitutionData.data.listInstitutions.items);
       }
     } catch (error) {
       console.error(error);
@@ -54,7 +60,10 @@ const InstitutionLookup: React.FC = () => {
           <div className='white_back py-4 px-8 mt-8 align-middle rounded-lg border-b border-gray-200'>
             <div className='h-8/10 px-4'>
               <div className='w-full flex justify-between border-b border-gray-200 '>
-                <div className='w-`3.5`/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider'>
+                <div className='w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider'>
+                  <span>ID</span>
+                </div>
+                <div className='w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider'>
                   <span>Name</span>
                 </div>
                 <div className='w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider'>
@@ -68,11 +77,12 @@ const InstitutionLookup: React.FC = () => {
                 </div>
                 <div className='w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider'></div>
               </div>
-              {typeof institutionData !== 'undefined'
-                ? institutionData.map((instituteObject, i) => (
+              {typeof institutionsData !== 'undefined'
+                ? institutionsData.map((instituteObject, i) => (
                     <InstitutionRow
                       key={`instituteRow${i}`}
                       id={instituteObject.id}
+                      name={instituteObject.name}
                       state={instituteObject.state}
                       address={instituteObject.address}
                       website={instituteObject.website}
