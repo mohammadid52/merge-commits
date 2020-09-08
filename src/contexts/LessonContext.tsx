@@ -10,7 +10,15 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 
-export const LessonContext = React.createContext(null);
+const removeDisabled = (array: Array<{ disabled: boolean, [key: string]: any}>) => {
+    let updatedArray = array.filter((item: { disabled: boolean, [key: string]: any}) => {
+        return !item.disabled
+    })
+
+    console.log('updatedPages', updatedArray)
+
+    return updatedArray
+}
 
 interface LessonProps {
     children: React.ReactNode;
@@ -23,6 +31,8 @@ interface LessonObject {
 interface DataObject {
     [key: string]: any;
 }
+
+export const LessonContext = React.createContext(null);
 
 export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     const [ data, setData ] = useState<DataObject>();
@@ -100,6 +110,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         const classroomSubscription = API.graphql(graphqlOperation(customSubscriptions.onUpdateClassroom, { id: queryParams.id })).subscribe({
             next: (classroomData: any) => {
                 const updatedLessonPlan = classroomData.value.data.onUpdateClassroom
+
                 console.log('updated', updatedLessonPlan)
                 // dispatch({ type: 'SET_LOADING' })
                 console.log('state,', state)
@@ -107,7 +118,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                 dispatch({
                     type: 'UPDATE_LESSON_PLAN', 
                     payload: { 
-                        pages: updatedLessonPlan.lessonPlan, 
+                        pages: removeDisabled(updatedLessonPlan.lessonPlan), 
                         displayData: updatedLessonPlan.displayData,
                 }})
                 
@@ -133,10 +144,12 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             console.log('lesson', lesson);
             const wordBank: Array<string> = ['Mimo provoz'];
 
+            
+
             dispatch({
                 type: 'SET_INITIAL_STATE', 
                 payload: { 
-                    pages: lesson.lessonPlan, 
+                    pages: removeDisabled(lesson.lessonPlan), 
                     displayData: lesson.displayData,
                     word_bank: wordBank, 
                     data: lesson,
