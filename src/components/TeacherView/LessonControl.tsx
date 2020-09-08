@@ -262,7 +262,7 @@ const LessonControl = () => {
                             { 
                                 shareable && state.studentViewing.live ? 
                                 <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: 0}}>
-                                    <button className="bg-purple-400 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleShareStudentData}>
+                                    <button className="bg-purple-400 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleShareStudentData}>
                                         share data
                                     </button>
                                 </div>
@@ -272,7 +272,7 @@ const LessonControl = () => {
                             {   
                                 state.sharing ? 
                                 <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: '50%', marginLeft: fullscreen ? '-60px' : '-80px' }}>
-                                    <button className="bg-yellow-300 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleQuitShare}>
+                                    <button className="bg-yellow-300 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleQuitShare}>
                                         stop sharing
                                     </button>
                                 </div>
@@ -282,7 +282,7 @@ const LessonControl = () => {
                             {   
                                 state.unsavedChanges ?
                                 <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
-                                    <button className="bg-teal-500 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleSubmitChanges}>
+                                    <button className="bg-teal-500 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleSubmitChanges}>
                                         apply changes
                                     </button>
                                 </div>

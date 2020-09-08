@@ -20,13 +20,13 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
     return (
         <div className={`${fullscreen ? 'p-4' : 'p-3'} bg-dark-blue md:h-4/10 flex text-gray-200 shadow-2 rounded-lg`}>
             <div className="w-full flex flex-col">
-                <div className={`${fullscreen ? 'flex-row mb-3' : 'flex-col'} w-auto flex flex-row border-b border-white mr-4`}>
+                <div className={`${fullscreen ? 'flex-row mb-3' : 'flex-col'} w-auto flex flex-row border-b border-white mr-2`}>
                     <h3 className={`${fullscreen ? 'text-xl w-auto mr-2' : 'text-base w-full'} w-3/10 flex-grow font-open font-bold`}>
                         Instructions
                     </h3>
-                    <p className={`${fullscreen ? 'w-auto' : 'w-full'} text-gray-600 text-sm flex mr-4 items-center`}>(click the red icon for video instructions)</p>
+                    <p className={`${fullscreen ? 'w-auto' : 'hidden'} text-gray-600 text-sm flex items-center`}>(click the red icon for video instructions)</p>
                 </div>
-                <div className={`${fullscreen ? 'h-8/10' : 'h-5/10'} w-full  flex justify-center items-center text-sm px-2`}>
+                <div className={`${fullscreen ? 'h-8/10' : 'h-9/10'} w-full  flex justify-center items-center text-sm px-2`}>
                 {   !videoMode ?
                     <div className="h-full overflow-scroll">
                         
