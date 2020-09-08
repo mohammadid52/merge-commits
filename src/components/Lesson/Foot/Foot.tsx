@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { LessonContext } from '../../../contexts/LessonContext';
 import { 
     useHistory,
@@ -11,8 +11,17 @@ const Foot = () => {
     const history = useHistory();
     const match = useRouteMatch();
 
+    useEffect(() => {
+        if ( state.pages[state.currentPage + 1] ){
+            if ( state.pages[state.currentPage + 1].open ) {
+                console.log(state.pages);
+                return dispatch({ type: 'CAN_CONTINUE' })
+            } return dispatch({ type: 'NO_CONTINUE' })
+        } return dispatch({ type: 'NO_CONTINUE' })
+    }, [state.pages, state.currentPage])
+
     const handleForward = () => {
-        if (state.currentPage < state.pages.length - 1) {
+        if ( state.canContinue && state.currentPage < state.pages.length - 1 ) {
             history.push(`${match.url}/${state.pages[state.currentPage + 1].stage}`);
             dispatch({type: 'PAGE_FORWARD'});
         }

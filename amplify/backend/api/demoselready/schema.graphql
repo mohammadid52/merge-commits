@@ -12,6 +12,7 @@ enum PersonStatus {
 }
 
 enum Role {
+  SUP
   ADM
   BLD
   FLW
@@ -287,6 +288,12 @@ type SELStructure @model {
   description: String
 }
 
+type Keyword {
+  id: ID!
+  word: String
+  definition: String
+}
+
 type Lesson @model @key(fields: ["id"]) {
   id: ID!
   title: String! 
@@ -297,8 +304,8 @@ type Lesson @model @key(fields: ["id"]) {
   language: Language!
   SELStructureID: ID!
   SELStructure: SELStructure @connection(fields: ["SELStructureID"])
-  #keywords: Keywords
-  #connection: Connection
+  keywords: [Keyword]
+  connection: String
   summary: String!
   objectives: [String]!
   # primarySELType: SELType! @connection

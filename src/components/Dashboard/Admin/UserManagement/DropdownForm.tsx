@@ -39,7 +39,9 @@ const DropdownForm = ( props: DropdownProps ) => {
         } else {
             return 'Choose One'
         }
+
     }
+    console.log(userInfo, 'user info/options')
 
     
     let [selectedItem, setSelectItem] = useState(options());

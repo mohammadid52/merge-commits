@@ -19,9 +19,9 @@ const BioBlock = () => {
 
     return (
 
-    <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col justify-center ${theme.block.text} text-base rounded-sm shadow-inner`}>
-        <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} text-lx rounded-sm shadow-inner`}>
-            <h1 className="text-2xl font-extrabold mb-6 underline">Biography of the artist:</h1>
+    <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col justify-center ${theme.block.text} text-base rounded-sm `}>
+        <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} text-lx rounded-sm`}>
+            <h1 className="text-2xl font-extrabold mb-4 underline">Biography of the artist:</h1>
             <div className="overflow-scroll">
                 {artistBio}
             </div>

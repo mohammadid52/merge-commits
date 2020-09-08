@@ -1,16 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
 import { IconContext } from "react-icons";
 import { FaClock, FaUserAlt } from 'react-icons/fa';
-import ProgressRing from './ProgressRing';
-import { lessonReducer } from '../../../reducers/LessonReducer';
 
 
 const UpcomingClass: React.FC = () => {
     const history = useHistory();
     const { theme } = useContext(GlobalContext);
-
 
     // make sure to limit (max 5?) when fetching from data
     const [lessons, setLessons] = useState([

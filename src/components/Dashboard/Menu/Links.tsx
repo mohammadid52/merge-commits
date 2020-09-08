@@ -42,8 +42,8 @@ const Links: React.FC = () => {
                     return [
                         ...links,
                         {
-                            name: 'Classroom',
-                            path: 'classroom'
+                            name: 'Lesson Planner',
+                            path: 'lesson-planner'
                         },
                     ]
                 })
