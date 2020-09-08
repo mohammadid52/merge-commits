@@ -20,25 +20,23 @@ const LessonHeaderBar = () => {
     const [ searchTerm, setSearchTerm ] = useState('');
 
     useEffect(() => {
-        if ( cookies.lesson ) {
-            if ( cookies.lesson.lessonProgress > 0 ) {
-                dispatch({ type: 'SET_PROGRESS', payload: cookies.lesson.lessonProgress })
-                // history.push(`${match.url}/${state.pages[cookies.lesson.lessonProgress].stage}`)
-            }
-        }
+        console.log(state);
 
-        if ( !cookies.lesson ) {
-            setCookie('lesson', { lessonProgress: 0 })
-        }
-    }, [])
+        // dispatch({ type: 'SET_PROGRESS', payload: state.lessonProgress })
+    }, [state.pages, state.currentPage])
 
     useEffect(() => {
         if ( cookies.lesson ) {
             console.log(state.lessonProgress)
             setCookie('lesson', { ...cookies.lesson, lessonProgress: state.lessonProgress })
         }
+
+        if ( !cookies.lesson ) {
+            setCookie('lesson', { lessonProgress: 0 })
+        }
     }, [state.lessonProgress])
 
+    
 
     async function updateClassroomData() {
         let lessonProgress = state.pages[state.lessonProgress].stage

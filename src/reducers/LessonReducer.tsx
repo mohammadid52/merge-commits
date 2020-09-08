@@ -74,6 +74,10 @@ type LessonActions =
         payload: string;
     } 
 |   {
+        type: 'SET_LESSON_PROGRESS';
+        payload: string;
+    } 
+|   {
         type: 'CLEANUP';
     } 
 |   {
@@ -94,6 +98,12 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 word_bank: action.payload.word_bank,
                 displayData: action.payload.displayData,
             }
+        case 'SET_LESSON_PROGRESS':
+            let lessonProgress = state.pages.findIndex((page: { stage: string }) => {
+                page.stage == 'corelesson'
+            })
+            console.log('progress', state.pages,action.payload, lessonProgress);
+            return state
         case 'SET_CURRENT_PAGE':
             return {
                 ...state,
@@ -112,8 +122,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             }
         case 'SET_PROGRESS':
             return {
-                ...state,
-                lessonProgress: action.payload, 
+                ...state, 
                 pages: state.pages.map((page: {}, key: number) => {
                     if (key <= action.payload) {
                         return {

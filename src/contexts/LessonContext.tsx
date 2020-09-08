@@ -155,6 +155,11 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                 type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB',
                 payload: initialComponentState,
             })
+
+            // dispatch({
+            //     type: 'SET_LESSON_PROGRESS',
+            //     payload: data.lessonProgress
+            // })
         }
     }, [data])
 
