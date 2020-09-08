@@ -17,7 +17,7 @@ const Modules = (props: ModulesProps) => {
     const { inputs } = props
     const { state, dispatch } = useContext(LessonContext);
     const [ cookies, setCookie ] = useCookies(['story'])
-    const [ formInputs, setFormInputs ] = useState<FormInputsState>()
+    const [ formInputs, setFormInputs ] = useState<FormInputsState>() 
 
     useEffect(() => {
         inputs.forEach((item: { name: string; example: string; prompt: string; }) => {
@@ -86,7 +86,7 @@ const Modules = (props: ModulesProps) => {
     }
 
     return (
-        <div className="md:h-72 w-full bg-dark-blue text-gray-200 mb-4 md:mb-0 px-4 md:px-8 py-4 shadow-2 rounded-sm">
+        <div className="md:h-5.8/10 w-full bg-dark-blue text-gray-200 md:mb-0 px-4 md:px-8 py-4 shadow-2 rounded-lg">
             <h3 className="text-xl font-open font-bold mb-3 border-b border-white mb-2">Focus Questions</h3>
             <div className="w-full h-full">
                 { 

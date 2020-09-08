@@ -1,15 +1,16 @@
 import React from 'react';
-import { LessonContextProvider } from '../../contexts/LessonContext';
+import { LessonControlContextProvider } from '../../contexts/LessonControlContext';
 import LessonControl from './LessonControl';
+import { LessonContextProvider } from '../../contexts/LessonContext';
 
 
 
 
 const TeacherView = () => {
     return (
-        <LessonContextProvider>
+        <LessonControlContextProvider>
             <LessonControl />
-        </LessonContextProvider>
+        </LessonControlContextProvider>
     )
 }
 

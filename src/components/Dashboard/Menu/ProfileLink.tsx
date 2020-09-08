@@ -17,7 +17,7 @@ const ProfileLink: React.FC = () => {
     }
 
     return (
-        // <NavLink to={`${match.url}/profile`}>
+        <NavLink to={`${match.url}/profile`}>
             <div className="size h-14 flex justify-center items-center md:border-t md:border-b md:border-gray-200 py-4 md:px-4">
                 <IconContext.Provider value={{ size: '2rem', color: 'white' }}>
                     <FaUserCircle />
@@ -26,7 +26,7 @@ const ProfileLink: React.FC = () => {
                     {`${ state.user.firstName } ${ firstInitialFunc(state.user.lastName) }`}
                 </div>
             </div>
-        // {/* </NavLink> */}
+        </NavLink>
     )
 }
 

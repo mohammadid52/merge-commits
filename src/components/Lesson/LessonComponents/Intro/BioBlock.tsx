@@ -5,7 +5,7 @@ import { LessonContext } from '../../../../contexts/LessonContext';
 
 const BioBlock = () => {
     const { state, theme } = useContext(LessonContext);
-    const artistBio = state.data.artist.bio
+    const artistBio = state.data.lesson.artist.bio
 
     const firstLetterFunction = (str: string) => {
         let arr = str.split('');
@@ -18,43 +18,15 @@ const BioBlock = () => {
 
 
     return (
-        // <div className={`md:w-5/10 md:h-152 ${theme.block.bg} p-4 md:p-8 flex flex-col justify-start ${theme.block.text} text-sm rounded-sm ${theme.block.shadow} mt-3 md:mb-2 md:ml-4`}>
-        //     <div className="w-full flex flex-row items-center border-b border-gray-700">
-        //         {/* <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
-        //             <div className="bg-dark-red h-12 w-12 flex flex-col items-center justify-center z-20 rounded-sm shadow-2 mr-8">
-        //                 <FaMusic />
-        //             </div>
-        //         </IconContext.Provider> */}
-        //         <h1 className="header-font text-5xl font-open font-bold"> 
-        //             About the artist
-        //         </h1>
-        //     </div>
-        //     <div className="text-sm h-80 md:h-full md:text-base overflow-scroll mt-4 md:my-4 p-2">
-        //         { artistBio.map((line: string, key: number) => (
-        //             <p className="mb-2" key={key}>
-        //                 {line}
-        //             </p>
-        //         )) }
-        //     </div>
-        // </div>
-    <div className={`md:w-5/10 md:h-full ${theme.block.bg} p-4 md:p-8 flex flex-col justify-start ${theme.block.text} text-sm rounded-sm ${theme.block.shadow} mt-3 md:mt-0 md:ml-4`}>
-        <div className="w-full flex flex-row items-center border-b border-white">
-            {/* <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
-                <div className="bg-dark-red h-12 w-12 flex flex-col items-center justify-center z-20 rounded-sm shadow-2 mr-8">
-                    <FaMusic />
-                </div>
-            </IconContext.Provider> */}
-            <h1 className="border_tb header-font text-5xl font-open font-bold"> 
-                About the artist
-            </h1>
+
+    <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col justify-center ${theme.block.text} text-base rounded-sm shadow-inner`}>
+        <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} text-lx rounded-sm shadow-inner`}>
+            <h1 className="text-2xl font-extrabold mb-6 underline">Biography of the artist:</h1>
+            <div className="overflow-scroll">
+                {artistBio}
+            </div>
         </div>
-        <div className="text-sm h-80 md:h-full text-base overflow-scroll md:my-4 p-2">
-            { artistBio.map((line: string, key: number) => (
-                <p className="mb-2" key={key}>
-                    {line}
-                </p>
-            )) }
-        </div>
+
     </div>
     )
 }

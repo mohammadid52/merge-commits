@@ -20,6 +20,10 @@ const Links: React.FC = () => {
                     return [
                         ...links,
                         {
+                            name: 'User Management',
+                            path: 'manage-users'
+                        },
+                        {
                             name: 'Registration',
                             path: 'registration'
                         },
@@ -38,8 +42,8 @@ const Links: React.FC = () => {
                     return [
                         ...links,
                         {
-                            name: 'Classroom',
-                            path: 'classroom'
+                            name: 'Lesson Planner',
+                            path: 'lesson-planner'
                         },
                     ]
                 })

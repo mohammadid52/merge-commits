@@ -20,65 +20,42 @@ const LessonHeaderBar = () => {
     const [ searchTerm, setSearchTerm ] = useState('');
 
     useEffect(() => {
-        if ( cookies.lesson ) {
-            if ( cookies.lesson.lessonProgress > 0 ) {
-                dispatch({ type: 'SET_PROGRESS', payload: cookies.lesson.lessonProgress })
-                // history.push(`${match.url}/${state.pages[cookies.lesson.lessonProgress].stage}`)
-            }
-        }
+        console.log(state);
 
-        if ( !cookies.lesson ) {
-            setCookie('lesson', { lessonProgress: 0 })
-        }
-    }, [])
+        // dispatch({ type: 'SET_PROGRESS', payload: state.lessonProgress })
+    }, [state.pages, state.currentPage])
 
     useEffect(() => {
         if ( cookies.lesson ) {
             console.log(state.lessonProgress)
             setCookie('lesson', { ...cookies.lesson, lessonProgress: state.lessonProgress })
         }
+
+        if ( !cookies.lesson ) {
+            setCookie('lesson', { lessonProgress: 0 })
+        }
     }, [state.lessonProgress])
 
-    async function createClassroomData() {
-        let data = {
-            lessonProgress: cookies.lesson.lessonProgress,
-            classroomID: 1,
-            studentID: cookies.auth.email,
-            data: {
-                warmup: state.componentState.story ? state.componentState.story : null,
-                corelesson: state.componentState.lyrics ? state.componentState.lyrics : null,
-                activity: state.componentState.poem ? state.componentState.poem : null
-            }
-        }
-
-        console.log('write', data)
-
-        try {
-            const dataObject: any = await API.graphql(graphqlOperation(customMutations.createClassroomDataTest, { input: data }))
-            console.log(dataObject)
-            dispatch({ type: 'SAVED_CHANGES' })
-        } catch (error) {
-            console.error(error);   
-        }
-    }
+    
 
     async function updateClassroomData() {
+        let lessonProgress = state.pages[state.lessonProgress].stage
+
         let data = {
-            lessonProgress: cookies.lesson.lessonProgress,
+            id: state.studentDataID,
+            lessonProgress: lessonProgress,
             classroomID: 1,
             studentID: cookies.auth.email,
-            data: {
-                warmup: state.componentState.story ? state.componentState.story : null,
-                corelesson: state.componentState.lyrics ? state.componentState.lyrics : null,
-                activity: state.componentState.poem ? state.componentState.poem : null
-            }
+            studentAuthID: cookies.auth.authId,
+            warmupData: state.componentState.story ? state.componentState.story : null,
+            corelessonData: state.componentState.lyrics ? state.componentState.lyrics : null,
+            activityData: state.componentState.poem ? state.componentState.poem : null
         }
 
         console.log('update', data);
         
-
         try {
-            const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateClassroomDataTest, { input: data }))
+            const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }))
             console.log(dataObject)
             dispatch({ type: 'SAVED_CHANGES' })
         } catch (error) {
@@ -88,13 +65,7 @@ const LessonHeaderBar = () => {
 
     const handleSave = () => {
         if ( state.unsavedChanges ) {
-            if ( !state.firstSave ) {
-                createClassroomData()
-            }
-    
-            if ( state.firstSave ) {
-                updateClassroomData()
-            }
+            updateClassroomData()
         }
     }
 
@@ -117,7 +88,7 @@ const LessonHeaderBar = () => {
         
 
     return (
-        <div className={`center w-full h-12 ${theme.toolbar.bg} text-gray-200 shadow-2 flex justify-between`}>
+        <div className={`center w-full h-.7/10 ${theme.toolbar.bg} text-gray-200 shadow-2 flex justify-between`}>
             <div className={`w-56 h-full flex justify-center items-center text-2xl font-bold`}>
                 <NavLink to="/dashboard">
                     <img className="h-6 px-4" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg" alt="Iconoclast Artists"/>
