@@ -54,16 +54,18 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
       }
     }
 
-    // const listStudentData = async () => {
-    //   const studentData: any = await API.graphql(graphqlOperation(customQueries))
-    // }
-
     const subscribeToStudentData = () => {
       let queryParams = queryString.parse(location.search)
 
       // @ts-ignore
       const studentDataSubscription = API.graphql(graphqlOperation(customSubscriptions.onChangeStudentData, { classroomID: queryParams.id })).subscribe({
-          next: (studentData: any) => console.log(studentData)
+          next: (studentData: any) => {
+            let updatedData = studentData.value.data.onChangeStudentData
+            console.log(updatedData)
+
+            dispatch({ type: 'UPDATE_STUDENT_DATA', payload: updatedData })
+            // console.log(found)
+          }
       });
 
       console.log('sub', studentDataSubscription)

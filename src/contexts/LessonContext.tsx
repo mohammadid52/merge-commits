@@ -102,6 +102,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                 const updatedLessonPlan = classroomData.value.data.onUpdateClassroom
                 console.log('updated', updatedLessonPlan)
                 // dispatch({ type: 'SET_LOADING' })
+                console.log('state,', state)
 
                 dispatch({
                     type: 'UPDATE_LESSON_PLAN', 
@@ -154,6 +155,11 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                 type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB',
                 payload: initialComponentState,
             })
+
+            // dispatch({
+            //     type: 'SET_LESSON_PROGRESS',
+            //     payload: data.lessonProgress
+            // })
         }
     }, [data])
 
