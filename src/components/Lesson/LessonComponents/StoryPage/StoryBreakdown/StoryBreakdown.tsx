@@ -18,6 +18,12 @@ const StoryBreakdown = () => {
         dispatch({type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown'})
     }, [])
 
+    useEffect(() => {
+        if ( state.pages[state.currentPage].displayMode !== displayMode ) {
+            setDisplayMode(state.pages[state.currentPage].displayMode)
+        }
+    }, [state.pages])
+
 if (displayMode === 'SELF') {
     return (
         <SelfDisplay />

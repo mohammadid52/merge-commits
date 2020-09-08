@@ -32,12 +32,12 @@ const Checkpoint = (props: props) => {
     return (
         <div className={`w-full h-full flex flex-col justify-center items-center`}>
             <div className="w-2/3 flex flex-row justify-center items-center mb-4">
-                <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
-                    <div className="red bg-dark-red h-20 w-20 flex flex-col items-center justify-center z-20 rounded-lg shadow-2">
+                <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem'}}>
+                    <div className="bg-dark-red h-12 w-12 flex flex-col items-center justify-center z-20 rounded-lg shadow-2">
                         <FaCheckSquare />
                     </div>
                 </IconContext.Provider>
-                <div className="title bg-dark-blue w-full flex flex-row justify-center items-center text-4xl text-center font-open font-bold text-gray-200 rounded-lg shadow-2 px-4 py-2 z-10">
+                <div className="h-full text-2xl bg-dark-blue w-full flex flex-row justify-center items-center text-4xl text-center font-open font-bold text-gray-200 rounded-lg shadow-2 z-10">
                     Checkpoint
                 </div>
             </div>

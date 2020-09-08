@@ -23,7 +23,7 @@ const SampleSELQuestions = () => {
                 let newArray = selected.filter(item => {
                    return item !== id
                 })
-                console.log(newArray)
+                console.log(newArray, 'new array')
                 return newArray;
             }
             return [
@@ -31,45 +31,54 @@ const SampleSELQuestions = () => {
                 id
             ]
         })
+
+        setInput({
+            ...input, 
+            'where-im-from-lesson-reflection': selected
+        })
+        console.log(selected, 'selected')
     }
 
+ 
     useEffect(() => {
         console.log(input, 'input')
-    }, [])
+    }, [input])
 
     const handleInputChange = (e: any) => {
-        // setInput({
-        //     ...input,
-        //     [e.target.id]: e.target.value
-        // })
+        setInput({
+            ...input,
+            [e.target.id]: e.target.value
+        })
+        console.log(e, 'e.target')
+        console.log(input, 'input')
     }
 
     const inputSwitch = (question: {label: string, options: Array<{label: string, icon: string, color: string, text: string }>, question: string, type: string }) => {
         switch(question.type) {
             case "input" : 
                 return (
-                    <div className={'w-full flex flex-col items-center mb-4'}>
+                    <div className={'w-full flex flex-col mb-2'}>
                         <label className="mb-2" htmlFor="traditions">{question.question}</label>
-                        <input id={question.label} className="py-2 px-4 rounded-lg" type="text" name="traditions" 
+                        <input id={question.label} className="w-9/10 py-2 px-4 text-gray-800 rounded-lg" type="text" name="traditions" 
                         value={input[question.label]}
                         onChange={handleInputChange}/>
                     </div>
                 )
             case "text" :
                 return (
-                    <textarea id={question.label} className="h-full p-8 bg-gray-300 w-full text-sm md:text-2xl text-gray-800 rounded-lg shadow-2" 
+                    <textarea id={question.label} className="h-full w-9/10 p-8 bg-gray-300 text-gray-800 w-full text-sm md:text-2xl text-gray-800 rounded-lg shadow-2" 
                         value={input[question.label]} 
                         onChange={handleInputChange}/>
                 )
             case "selectOne" :
                 return (
-                    <div className={'w-full flex flex-col items-center mb-4'}>
+                    <div className={'w-full flex flex-col mb-2'}>
                         <p className="mb-2">{question.question}</p>
                         <div className={`flex justify-around`}>
                             {question.options.map((option: {label: string, icon: string, color: string, text: string }, key: number) => (
                                 <div key={key} className={`flex justify-center items-center`}>
                                     <input id={question.label} className="w-4 mx-4 cursor-pointer" type="radio" name="cultures" 
-                                    value={input[question.label]}
+                                    value={option.text}
                                     onChange={handleInputChange}/>
                                 <label htmlFor={`${option.text}`}>{option.text}</label>
                             </div>
@@ -80,26 +89,26 @@ const SampleSELQuestions = () => {
             case "selectMany" :
                 return (
                     <>
-                    <p className="mb-4">
+                    <p className="mb-2">
                         {question.question}
                     </p>
-                    <div id={question.label} className={'w-8/10 flex flex-col items-center'}>
+                    <div id={question.label} className={'w-8/10 flex flex-col '}>
                         {question.options.map((option: {label: string, icon: string, color: string, text: string }, key: any) => (
-                            <div key={key} className={`w-3/4 flex items-center mb-4`} 
-                            onChange={handleInputChange}>
+                            <div key={key} className={`w-3/4 flex items-center mb-2`} 
+                            onClick={handleSelect}>
                                 {
                                     selected.indexOf(`${option.label}`) >= 0 ? 
-                                    <div className="cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center" 
-                                    style={{color: `${option.color}`}} 
+                                    <div id={`${option.label}`} className="cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center" 
+                                    style={{backgroundColor: `${option.color}`}} 
                                     >
                                         {option.icon ? option.icon : ''}
                                     </div>
                                 :
-                                    <div className="bg-gray-400 shadow-2 cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center">
+                                    <div id={`${option.label}`} className="bg-gray-400 shadow-2 cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center">
                                         {option.icon ? option.icon : ''}
                                     </div> 
                                 }
-                                <div className="mx-4">
+                                <div id={`${option.label}`} className="mx-4">
                                     {option.text}
                                 </div>
                             </div>
@@ -119,11 +128,11 @@ const SampleSELQuestions = () => {
         <div className={`h-full flex flex-col text-gray-200`}>
             <h4 className={`text-2xl font-open font-bold`}>{checkpoint.instructions}</h4>
             <div className={`h-full flex justify-center items-center divide-x-2 divide-dark divide-opacity-50`}>
-                <div className="w-full h-full flex flex-col flex-wrap justify-around items-center p-6">
+                <div className="w-full h-full flex flex-col flex-wrap justify-around items-center py-4 px-2">
                     
                     {checkpoint.questions.items.map((item: {question:any}, key: number) => {
                         return (
-                            <div key={key} className="w-4.5/10">
+                            <div key={key} className="w-4.3/10">
                                 {inputSwitch(item.question)}
                             </div>
                         )

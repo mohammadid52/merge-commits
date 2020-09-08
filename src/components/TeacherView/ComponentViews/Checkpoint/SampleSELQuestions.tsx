@@ -105,10 +105,10 @@ const SampleSELQuestions = (props: props) => {
     }
 
     return (
-        <div className={`h-full flex flex-col text-gray-200`}>
-            <h4 className={`${fullscreen ? 'text-2xl' : 'text-base'} font-open font-bold`}>{checkpoint.instructions}</h4>
+        <div className={`h-full flex flex-col text-gray-200 justify-between`}>
+            <h4 className={`${fullscreen ? 'text-xl' : 'text-base'} font-open font-bold`}>{checkpoint.instructions}</h4>
             
-            <div className={`h-9.5/10 flex justify-center items-center divide-x-2 divide-dark divide-opacity-50`}>
+            <div className={`${fullscreen ? 'text-base' : 'text-xs'} h-9.5/10 flex justify-center items-center divide-x-2 divide-dark divide-opacity-50`}>
                 <div className="w-full h-full flex flex-col flex-wrap justify-around items-center">
                     
                     {checkpoint.questions.items.map((item: {question:any}, key: number) => {

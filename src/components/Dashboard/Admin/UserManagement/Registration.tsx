@@ -17,7 +17,7 @@ interface newUserInput {
     lastName: string
     phone: string
     birthdate: string
-    grade: number | null
+    grade: string
     role: string
     externalId: string
     message: {
@@ -36,7 +36,7 @@ const initialState: newUserInput = {
     lastName: '',
     phone: '',
     birthdate: '',
-    grade: null,
+    grade: '',
     role: '',
     externalId: '',
     message: {
@@ -128,8 +128,8 @@ const Registration = () => {
                     lastName: '',
                     phone: '',
                     birthdate: '',
-                    grade: null,
-                    role: 'Choose One',
+                    grade: '',
+                    role: '',
                     externalId: '',
                 }
             })
@@ -390,7 +390,7 @@ const Registration = () => {
                                         <DropdownForm
                                             style = {true}
                                             handleChange = {handleChangeRole}
-                                            userInfo = {'Choose One'}
+                                            userInfo = {`${newUserInputs.role}`}
                                             label='Role'
                                             id = 'role'
                                             items= {Role}

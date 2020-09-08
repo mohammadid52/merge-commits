@@ -76,7 +76,7 @@ type Person @model
   # institutionId: ID!
   # institution: Institution @connection(fields: ["institutionId"])
   externalId: String
-  grade: Int
+  grade: String
   # courses: [StudentCourse] @connection(keyName: "byStudent", field: ["id"])
   phone: String
   birthdate: AWSDate
@@ -287,6 +287,12 @@ type SELStructure @model {
   description: String
 }
 
+type Keyword {
+  id: ID!
+  word: String
+  definition: String
+}
+
 type Lesson @model @key(fields: ["id"]) {
   id: ID!
   title: String! 
@@ -297,8 +303,8 @@ type Lesson @model @key(fields: ["id"]) {
   language: Language!
   SELStructureID: ID!
   SELStructure: SELStructure @connection(fields: ["SELStructureID"])
-  #keywords: Keywords
-  #connection: Connection
+  keywords: [Keyword]
+  connection: String
   summary: String!
   objectives: [String]!
   # primarySELType: SELType! @connection

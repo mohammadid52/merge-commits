@@ -25,10 +25,32 @@ export const getClassroom = /* GraphQL */ `
         warmUpData {
           story
           title
+          additional {
+            name
+            input
+          }
+        }
+        corelessonData {
+          selected {
+            anchor
+            color
+            content {
+              id
+              text
+            }
+            focus
+            id
+          }
         }
         activityData {
           editInput
           editMode
+          lines {
+            example
+            id
+            menuOpen
+            text
+          }
           title
         }
       }
@@ -67,6 +89,7 @@ export const getClassroom = /* GraphQL */ `
                     options {
                       text
                       icon
+                      label
                       color
                     }
                   }
@@ -91,6 +114,7 @@ export const getClassroom = /* GraphQL */ `
                 options {
                   text
                   icon
+                  label
                   color
                 }
               }
@@ -278,6 +302,10 @@ export const getStudentData = /* GraphQL */ `
         selected {
           anchor
           color
+          content {
+            id
+            text
+          }
           focus
           id
         }
@@ -293,26 +321,66 @@ export const getStudentData = /* GraphQL */ `
         }
         title
       }
-      doFirstData {
-        items {
-          id
-          studentDataID
-          questionDataID
-          createdAt
-          updatedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const getCourse = /* GraphQL */ `
+  query GetCourse($id: ID!) {
+    getCourse(id: $id) {
+      id
+      name
+      classID
+      class {
+        id
+        name
+        students {
+          items {
+            student {
+              id
+              authId
+              status
+              email
+              firstName
+              preferredName
+              lastName
+              language
+            }
+          } 
+          nextToken
         }
-        nextToken
+        createdAt
+        updatedAt
       }
-      checkpointData {
-        items {
-          id
-          studentDataID
-          questionDataID
-          createdAt
-          updatedAt
+      curriculumID
+      curriculum {
+        id
+        name
+        languages
+        lessons {
+          items {
+            lesson {
+              title
+              artist {
+                id
+                images
+                name
+                type
+              }
+              language
+              summary
+            }
+          }
+          nextToken
         }
-        nextToken
+        createdAt
+        updatedAt
       }
+      location
+      startDate
+      endDate
+      duration
       createdAt
       updatedAt
     }

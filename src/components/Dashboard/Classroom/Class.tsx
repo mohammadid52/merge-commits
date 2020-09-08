@@ -1,17 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
 import { IconContext } from "react-icons";
 import { FaClock, FaUserAlt } from 'react-icons/fa';
 import ProgressRing from './ProgressRing';
+import { CurriculumInfo } from './Classroom';
 
 interface props {
-        link: string
+        link: string,
+        curriculum: CurriculumInfo
     }
 
 
 const Class = (props: props) => {
-    const {link} = props
+    const {link, curriculum} = props
     const history = useHistory();
     const { theme } = useContext(GlobalContext);
 
@@ -20,24 +22,30 @@ const Class = (props: props) => {
         history.push(link);
     }
 
+    if (curriculum) {console.log(curriculum, 'curr');}
+
+    // useEffect(() => {
+        
+    // }, [])
+
     return (
             <div className={`test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto rounded-sm p-6 flex flex-col mb-8`}>
                 <h1 className={`h-2.5/10 bg-dark text-4xl text-gray-200 font-bold font-open px-8 shadow-elem-light`}>
-                    Where I'm From
+                    { curriculum && curriculum.title ? curriculum.title : null }
                 </h1>
                 <div className={`h-7.5/10 flex flex-col md:flex-row justify-around items-center pt-4`}>
                     <div className={`block1 w-1/5 h-full flex flex-col items-center text-center`}>
                         <h2 className={`text-2xl font-open font-bold mb-4`}>
-                            Marlon Lizama
+                            { curriculum && curriculum.artist.name ? curriculum.artist.name : null }
                         </h2>
-                        <img className="w-32 shadow-elem-light" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/marlon.jpeg" alt="Marlon Lizama" />
+                    <img className="w-32 shadow-elem-light" src={`${curriculum && curriculum.artist.images ? curriculum.artist.images : null}`} alt={`${curriculum && curriculum.artist.name ? curriculum.artist.name : ''}`} />
                     </div>
                     <div className={`block2 w-1/2 h-full flex flex-col`}>
                         <h2 className={`text-xl font-bold font-open md:mb-2`}>
                             Lesson Description
                         </h2>
                         <p className="text-md">
-                            In this lesson, we'll be discussing heritage and culture in the context of stories and experiences passed down through the generations. We'll be analysing and reacting to a poem by our own Marlon Lizama, called 'Where I'm from'. In reponse, you'll have the opportunity to write and present your own poem too!
+                            { curriculum && curriculum.summary ? curriculum.summary : null }
                         </p>
                     </div>
                     

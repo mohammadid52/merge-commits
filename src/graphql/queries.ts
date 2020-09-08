@@ -725,6 +725,12 @@ export const getClassroom = /* GraphQL */ `
       roster
       displayData {
         breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
         warmUpData {
           story
           title

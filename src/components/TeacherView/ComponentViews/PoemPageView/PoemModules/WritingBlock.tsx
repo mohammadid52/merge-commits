@@ -270,7 +270,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                                     <div className="absolute w-full shadow-3 h-32 bg-gray-300 rounded-lg p-4 transform translate-y-12 overflow-scroll z-20 shadow-2">
                                         { 
                                             lineState.prompts.map((prompt: any, key: number) => (
-                                                <div key={key} id={id} className="w-full mb-2" onClick={handleSelectPrompt}>
+                                                <div key={key} id={id} className={`${fullscreen ? '' : 'text-xs'} w-full mb-2`} onClick={handleSelectPrompt}>
                                                     <span id={prompt.id}>{ prompt.prompt }</span>
                                                 </div>
                                             ))

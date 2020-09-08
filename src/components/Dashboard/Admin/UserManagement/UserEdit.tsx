@@ -83,6 +83,8 @@ const UserEdit = (props: UserInfoProps) => {
         })
     }
 
+    console.log(editUser, 'edit user')
+
     const Status = [
         {
             code: 'ACTIVE',
@@ -200,7 +202,7 @@ const UserEdit = (props: UserInfoProps) => {
                                 value = ''
                                 style={false}
                                 handleChange = {handleChangeStatus}
-                                userInfo = {user.status}
+                                userInfo = {editUser.status}
                                 label='Status'
                                 id = 'status'
                                 items= {Status}
@@ -212,7 +214,7 @@ const UserEdit = (props: UserInfoProps) => {
                                 value = ''
                                 style={false}
                                 handleChange = {handleChangeRole}
-                                userInfo = {user.role}
+                                userInfo = {editUser.role}
                                 label='Role'
                                 id = 'role'
                                 items= {Role}

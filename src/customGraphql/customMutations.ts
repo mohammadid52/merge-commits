@@ -33,6 +33,67 @@ export const createStudentData = /* GraphQL */ `
       live
       classroomID
       studentID
+      studentAuthID
+      student {
+        id
+        authId
+        email
+        firstName
+        preferredName
+        lastName
+        language
+      }
+      warmupData {
+        story
+        title
+        additional {
+          name
+          input
+        }
+      }
+      corelessonData {
+        selected {
+          anchor
+          color
+          content {
+            id
+            text
+          }
+          focus
+          id
+        }
+      }
+      activityData {
+        editInput
+        editMode
+        lines {
+          example
+          id
+          menuOpen
+          text
+        }
+        title
+      }
+      doFirstData {
+        items {
+          id
+          studentDataID
+          questionDataID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      checkpointData {
+        items {
+          id
+          studentDataID
+          questionDataID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -49,8 +110,18 @@ export const updateStudentData = /* GraphQL */ `
       lessonProgress
       status
       live
+      classroomID
       studentID
       studentAuthID
+      student {
+        id
+        authId
+        email
+        firstName
+        preferredName
+        lastName
+        language
+      }
       warmupData {
         story
         title
@@ -63,6 +134,10 @@ export const updateStudentData = /* GraphQL */ `
         selected {
           anchor
           color
+          content {
+            id
+            text
+          }
           focus
           id
         }
@@ -92,15 +167,39 @@ export const updateClassroom = /* GraphQL */ `
     updateClassroom(input: $input, condition: $condition) {
       id
       open
+      lessonID
+      roster
       displayData {
         breakdownComponent
         warmUpData {
           story
           title
+          additional {
+            name
+            input
+          }
+        }
+        corelessonData {
+          selected {
+            anchor
+            color
+            content {
+              id
+              text
+            }
+            focus
+            id
+          }
         }
         activityData {
           editInput
           editMode
+          lines {
+            example
+            id
+            menuOpen
+            text
+          }
           title
         }
       }
@@ -113,6 +212,7 @@ export const updateClassroom = /* GraphQL */ `
         type
         displayMode
       }
+      createdAt
       updatedAt
     }
   }

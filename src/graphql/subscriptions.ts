@@ -12,6 +12,12 @@ export const onUpdateClassroom = /* GraphQL */ `
       roster
       displayData {
         breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
         warmUpData {
           story
           title
