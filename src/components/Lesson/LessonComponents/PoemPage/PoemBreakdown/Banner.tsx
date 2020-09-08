@@ -21,7 +21,7 @@ const Banner = (props: BannerProps) => {
                             <FaPenFancy />
                         </div>
                     </IconContext.Provider> 
-                    <div className="title bg-dark-blue w-full flex flex-row justify-center items-center text-xl md:text-4xl text-center font-open font-bold text-gray-200 rounded-lg shadow-2 px-4 py-2 z-10">
+                    <div className="title bg-dark-blue w-full flex flex-row justify-center items-center text-xl md:text-3xl text-center font-open font-bold text-gray-200 rounded-lg shadow-2 px-4 py-2 z-10">
                             { title }
                     </div>
                 </div> 

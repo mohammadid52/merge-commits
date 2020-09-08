@@ -3,11 +3,18 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
 import { IconContext } from "react-icons";
 import { FaClock, FaUserAlt } from 'react-icons/fa';
+import { CurriculumInfo } from './Classroom';
 
+interface UpcomingProps{
+    curriculum: CurriculumInfo
+}
 
-const UpcomingClass: React.FC = () => {
+const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
     const history = useHistory();
     const { theme } = useContext(GlobalContext);
+    const {curriculum} = props;
+
+    console.log(curriculum, 'upcoming curriculum')
 
     // make sure to limit (max 5?) when fetching from data
     const [lessons, setLessons] = useState([
