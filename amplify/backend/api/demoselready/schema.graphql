@@ -12,6 +12,7 @@ enum PersonStatus {
 }
 
 enum Role {
+  SUP
   ADM
   BLD
   FLW
