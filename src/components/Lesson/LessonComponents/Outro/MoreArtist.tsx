@@ -14,12 +14,12 @@ const MoreArtist = () => {
     const [artistLink, setArtistLinks] = useState([
         {
             type: 'etc',
-            link: 'https://linktr.ee/iconoclastartists',
+            link: 'https://iconoclastartists.org/',
             label: 'Iconoclast Website'
         },
         {
             type: 'youtube',
-            link: 'https://youtube.com/',
+            link: 'https://youtu.be/pguAGyNHVAo',
             label: 'YouTube'
         },
         {
@@ -29,7 +29,7 @@ const MoreArtist = () => {
         },
         {
             type: 'youtube',
-            link: 'https://youtube.com/',
+            link: 'https://youtu.be/gNtJewsy-3w',
             label: 'YouTube'
         },
     ])
@@ -38,7 +38,7 @@ const MoreArtist = () => {
 
     return(
         <div className="w-full h-full bg-dark-blue text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
-            <h3 className="h-.8/10 w-full text-3xl text-gray-200 font-open font-bold border-b border-white">
+            <h3 className="w-full text-3xl text-gray-200 font-open font-bold border-b border-white">
                 Learn more about the artist
             </h3>
             <div className="h-3.5/10 w-9/10 flex justify-between items-center rounded-lg">
@@ -90,7 +90,7 @@ const MoreArtist = () => {
 
             </div>
             <div className="h-5/10 rounded-lg">
-                <VideoBlock link={state.data.lesson.coreLesson.content.link} fullscreen={fullscreen}/>
+                <VideoBlock link='https://www.youtube.com/embed/bp10ZOtv_zY' fullscreen={fullscreen}/>
             </div>
         </div>
     )
