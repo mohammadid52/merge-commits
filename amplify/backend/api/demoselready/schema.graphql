@@ -2,6 +2,7 @@ enum Language {
   EN
   ES
   VT
+  TR
 }
 
 enum PersonStatus {

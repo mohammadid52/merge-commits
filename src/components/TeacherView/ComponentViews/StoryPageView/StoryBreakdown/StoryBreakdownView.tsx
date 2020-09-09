@@ -12,7 +12,7 @@ interface props {
 const SelfDisplay = (props: props) => {
     const { fullscreen } = props;
     const { state, dispatch } = useContext(LessonControlContext);
-    const [ dataProps, setDataProps ] = useState<{ title?: string, story?: string, [key: string]: any}>()
+    const [ dataProps, setDataProps ] = useState<{ title?: string, story?: string, [key: string]: any} | null>(null)
 
     useEffect(() => {
         dispatch({type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown'})
@@ -25,8 +25,8 @@ const SelfDisplay = (props: props) => {
             console.log(state.studentViewing.studentInfo);
             if ( state.studentViewing.studentInfo.warmupData ) {
                 return setDataProps(state.studentViewing.studentInfo.warmupData)
-            } return setDataProps(null)
-        }
+            }
+        } return setDataProps(null)
     }, [state.studentViewing]);
 
 
