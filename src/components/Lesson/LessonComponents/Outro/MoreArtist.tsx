@@ -19,7 +19,7 @@ const MoreArtist = () => {
         },
         {
             type: 'youtube',
-            link: 'https://youtube.com/',
+            link: 'https://youtu.be/pguAGyNHVAo',
             label: 'YouTube'
         },
         {
@@ -29,7 +29,7 @@ const MoreArtist = () => {
         },
         {
             type: 'youtube',
-            link: 'https://youtube.com/',
+            link: 'https://youtu.be/gNtJewsy-3w',
             label: 'YouTube'
         },
     ])
@@ -90,7 +90,7 @@ const MoreArtist = () => {
 
             </div>
             <div className="h-5/10 rounded-lg">
-                <VideoBlock link={state.data.lesson.coreLesson.content.link} fullscreen={fullscreen}/>
+                <VideoBlock link='https://www.youtube.com/embed/bp10ZOtv_zY' fullscreen={fullscreen}/>
             </div>
         </div>
     )
