@@ -14,7 +14,7 @@ const MoreArtist = () => {
     const [artistLink, setArtistLinks] = useState([
         {
             type: 'etc',
-            link: 'https://linktr.ee/iconoclastartists',
+            link: 'https://iconoclastartists.org/',
             label: 'Iconoclast Website'
         },
         {
@@ -38,7 +38,7 @@ const MoreArtist = () => {
 
     return(
         <div className="w-full h-full bg-dark-blue text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
-            <h3 className="h-.8/10 w-full text-3xl text-gray-200 font-open font-bold border-b border-white">
+            <h3 className="w-full text-3xl text-gray-200 font-open font-bold border-b border-white">
                 Learn more about the artist
             </h3>
             <div className="h-3.5/10 w-9/10 flex justify-between items-center rounded-lg">

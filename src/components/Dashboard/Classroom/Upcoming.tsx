@@ -3,7 +3,11 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
 import { IconContext } from "react-icons";
 import { FaClock, FaUserAlt } from 'react-icons/fa';
+import {CurriculumInfo} from './Classroom';
 
+interface UpcomingProps{
+    curriculum: Array<CurriculumInfo>
+}
 
 const UpcomingClass: React.FC = () => {
     const history = useHistory();
@@ -12,39 +16,51 @@ const UpcomingClass: React.FC = () => {
     // make sure to limit (max 5?) when fetching from data
     const [lessons, setLessons] = useState([
         {
-            title: 'Where I\'m From',
-            artist: 'Marlon Lizama',
-            image: 'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/marlon.jpeg',
+            title: 'The Rose That Grew from Concrete',
+            artist: {
+                id: '',
+                images: ['https://zoiqclients.s3.amazonaws.com/IconoclastArtist/AppFiles/LessonPlans/2_TheRoseThatGrewFromTheConcrete/Tupac-Shakur-1993.jpg'],
+                name: 'Tupac Shakur',
+                type: ''
+            },
             instructor: 'Marlon',
             lessonTime: '45',
-            lessonDate: 'Sept 15th',
-            lessonDescription: 'In this lesson, we will be discussing heritage and culture in the context of stories and experiences passed down through the generations. We will be analysing and reacting to a poem by our own Marlon Lizama, called Where I am from. In reponse, you will have the opportunity to write and present your own poem too!',
+            lessonDate: 'Sept 22nd',
+            summary: "In this lesson we will be exploring self awareness and the beautiful things about us that others might miss or consider imperfections using Tupac Shakur's poem to explore this idea about how to recognize our emotions and thoughts and how they influence our behavior.",
             open: false,
         },
         {
-            title: '2',
-            artist: '2',
-            image: '2',
-            instructor: '2',
-            lessonTime: '2',
-            lessonDate: 'Sept 22nd',
-            lessonDescription: '2',
-            open: false
+            title: 'OCD Love poem',
+            artist: {
+                id: '',
+                images: ['https://media2.fdncms.com/chicago/imager/u/original/40711495/neil_poster_2016-1_1_copy.jpg'],
+                name: 'Neil Hilborn',
+                type: ''
+            },
+            instructor: 'Marlon',
+            lessonTime: '45',
+            lessonDate: 'Sept 29th',
+            summary: '',
+            open: false,
         },
         {
-            title: '3',
-            artist: '3',
-            image: '3',
-            instructor: '3',
-            lessonTime: '3',
-            lessonDate: 'Sept 29th',
-            lessonDescription: '3',
-            open: false
+            title: 'Be Free',
+            artist: {
+                id: '',
+                images: ['https://static.onecms.io/wp-content/uploads/sites/20/2020/07/21/j-cole.jpg'],
+                name: 'J. Cole',
+                type: ''
+            },
+            instructor: 'Marlon',
+            lessonTime: '45',
+            lessonDate: 'Oct 6th',
+            summary: '',
+            open: false,
         }
     ]);
 
     const toggle = (key: number) => {
-        setLessons( lessons.map( (lesson: {title: string, artist: string, image: string, instructor: string, lessonTime: string, lessonDescription: string, lessonDate: string, open: boolean}, i: number) => {
+        setLessons( lessons.map( (lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, instructor: string, lessonTime: string, summary: string, lessonDate: string, open: boolean}, i: number) => {
             if (i === key) {
                 lesson.open = !lesson.open
             } 
@@ -65,7 +81,7 @@ const UpcomingClass: React.FC = () => {
                 </span>
                   
                 
-                { lessons.map( (lesson: {title: string, artist: string, image: string, instructor: string, lessonTime: string, lessonDescription: string, lessonDate: string, open: boolean}, i: number) => 
+                { lessons.map( (lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, instructor: string, lessonTime: string, summary: string, lessonDate: string, open: boolean}, i: number) => 
                 (
                     <div key={i} className="py-2 px-4">
                     <button 
@@ -98,16 +114,16 @@ const UpcomingClass: React.FC = () => {
                     <div className={`flex flex-col pt-2 md:flex-row justify-around items-center`}>
                         <div className={`block1 w-1/5 h-full flex flex-col items-center text-center`}>
                             <h2 className={`text-xl font-open font-bold mb-2`}>
-                                {lesson.artist}
+                                {lesson.artist.name}
                             </h2>
-                            <img className="w-24 shadow-elem-light" src={`${lesson.image}`} alt="Marlon Lizama" />
+                            <img className="h-24 w-24 shadow-elem-light" src={`${lesson.artist.images}`} alt={`${lesson.artist.name}`} style={{backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}/>
                         </div>
                         <div className={`block2 w-1/2 h-full flex flex-col`}>
                             <h2 className={`text-lg font-bold font-open md:mb-2`}>
                                 Lesson Description
                             </h2>
-                            <p className="text-xs">
-                                {lesson.lessonDescription}
+                            <p className="text-sm">
+                                {lesson.summary ? lesson.summary : 'No Information Available'}
                             </p>
                         </div>
                         

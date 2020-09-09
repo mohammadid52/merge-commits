@@ -16,7 +16,7 @@ const TrophyBlock = () => {
     return (
         <div className="h-full w-6.8/10 bg-dark-blue flex flex-col justify-between items-center shadow-2 rounded-lg p-4">
             <div className="h-full flex flex-col justify-between items-center">
-                <div className="h-1.5/10 text-2xl text-gray-200 font-open font-bold border-b border-white">
+                <div className="text-2xl text-gray-200 font-open font-bold border-b border-white">
                     You have completed
                 </div>
 
