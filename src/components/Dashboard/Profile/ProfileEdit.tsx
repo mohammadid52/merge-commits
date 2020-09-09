@@ -4,7 +4,7 @@ import * as customMutations from '../../../customGraphql/customMutations';
 import { NavLink, useHistory } from 'react-router-dom';
 import DropdownForm from './DropdownForm';
 import { UserInfo } from './Profile';
-import LessonLoading from '../../Lesson/Loading/LessonLoading';
+import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 
 interface UserInfoProps {
     user: UserInfo

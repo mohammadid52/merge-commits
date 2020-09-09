@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
+import { CurriculumInfo } from './Classroom';
 import { IconContext } from "react-icons";
 import { FaClock, FaUserAlt } from 'react-icons/fa';
-import { CurriculumInfo } from './Classroom';
 
 interface UpcomingProps{
-    curriculum: CurriculumInfo
+    curriculum: Array<CurriculumInfo>
 }
 
 const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
@@ -14,50 +14,26 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
     const { theme } = useContext(GlobalContext);
     const {curriculum} = props;
 
+    // make sure to limit (max 5?) when fetching from data
+    
     console.log(curriculum, 'upcoming curriculum')
 
-    // make sure to limit (max 5?) when fetching from data
-    const [lessons, setLessons] = useState([
-        {
-            title: 'Where I\'m From',
-            artist: 'Marlon Lizama',
-            image: 'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/marlon.jpeg',
-            instructor: 'Marlon',
-            lessonTime: '45',
-            lessonDate: 'Sept 15th',
-            lessonDescription: 'In this lesson, we will be discussing heritage and culture in the context of stories and experiences passed down through the generations. We will be analysing and reacting to a poem by our own Marlon Lizama, called Where I am from. In reponse, you will have the opportunity to write and present your own poem too!',
-            open: false,
-        },
-        {
-            title: '2',
-            artist: '2',
-            image: '2',
-            instructor: '2',
-            lessonTime: '2',
-            lessonDate: 'Sept 22nd',
-            lessonDescription: '2',
-            open: false
-        },
-        {
-            title: '3',
-            artist: '3',
-            image: '3',
-            instructor: '3',
-            lessonTime: '3',
-            lessonDate: 'Sept 29th',
-            lessonDescription: '3',
-            open: false
-        }
-    ]);
-
     const toggle = (key: number) => {
-        setLessons( lessons.map( (lesson: {title: string, artist: string, image: string, instructor: string, lessonTime: string, lessonDescription: string, lessonDate: string, open: boolean}, i: number) => {
+        { typeof curriculum !== 'undefined' ?
+        curriculum.map( (lesson: {language: string, artist: {id: string, images: [], name: string, type: string}, summary: string, title: string, open: boolean}, i: number) => {
             if (i === key) {
                 lesson.open = !lesson.open
             } 
             return lesson;
-        }));
-    }
+        }) : null
+        // setLessons(
+        //     lessons.map( (lesson: {language: string, artist: {id: string, images: [], name: string, type: string}, summary: string, title: string, open: boolean}, i: number) => {
+        //     if (i === key) {
+        //         lesson.open = !lesson.open
+        //     } 
+        //     return lesson;
+        // }));
+    }}
 
     const handleLink = () => {
         history.push('/lesson');
@@ -72,7 +48,8 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                 </span>
                   
                 
-                { lessons.map( (lesson: {title: string, artist: string, image: string, instructor: string, lessonTime: string, lessonDescription: string, lessonDate: string, open: boolean}, i: number) => 
+                { typeof curriculum !== 'undefined' ?
+                    curriculum.map( (lesson: {language: string, artist: {id: string, images: [], name: string, type: string}, summary: string, title: string, open: boolean}, i: number) => 
                 (
                     <div key={i} className="py-2 px-4">
                     <button 
@@ -84,7 +61,9 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                                 {lesson.title} 
                             </div>
                             <div className="w-auto">
-                                {lesson.lessonDate}
+                                {console.log(lesson, 'lesson')}
+                                {/* {lesson.lessonDate ? lesson.lessonDate : '9/27'} */}
+                                9/27
                             </div>
                         </div>
                         <div className="absolute w-auto flex items-center mr-8" style={{right: 0}}>
@@ -105,16 +84,16 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                     <div className={`flex flex-col pt-2 md:flex-row justify-around items-center`}>
                         <div className={`block1 w-1/5 h-full flex flex-col items-center text-center`}>
                             <h2 className={`text-xl font-open font-bold mb-2`}>
-                                {lesson.artist}
+                                {lesson.artist.name}
                             </h2>
-                            <img className="w-24 shadow-elem-light" src={`${lesson.image}`} alt="Marlon Lizama" />
+                            <img className="w-24 shadow-elem-light" src={`${lesson.artist.images}`} alt="Marlon Lizama" />
                         </div>
                         <div className={`block2 w-1/2 h-full flex flex-col`}>
                             <h2 className={`text-lg font-bold font-open md:mb-2`}>
                                 Lesson Description
                             </h2>
                             <p className="text-xs">
-                                {lesson.lessonDescription}
+                                {lesson.summary}
                             </p>
                         </div>
                         
@@ -128,7 +107,8 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                                         </IconContext.Provider>
                                     </div>
                                     <div className={`w-1/2 mx-2 text-sm`}>
-                                        {lesson.lessonTime} min.
+                                        {/* {lesson.lessonTime} min. */}
+                                        45 min.
                                     </div>
                                 </div>
                                 <div className={`flex my-1`} >
@@ -138,7 +118,8 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                                         </IconContext.Provider>
                                     </div>
                                     <div className={`w-1/2 mx-2 text-sm`}>
-                                        {lesson.instructor}
+                                        {/* {lesson.instructor} */}
+                                        Marlon
                                     </div>
                                 </div>
                             </div>
@@ -146,8 +127,8 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                     </div>
                         : null}
                     </div>
-                )
-                )}
+                ) 
+                ) :null }
                 
             </div>
     )
