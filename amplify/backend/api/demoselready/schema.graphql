@@ -80,7 +80,7 @@ type Person @model
   externalId: String
   grade: String
   # courses: [StudentCourse] @connection(keyName: "byStudent", field: ["id"]
-  # wordbank: [StudentWord] @connection(keyName: "wordsByStudent", fields: ["email"]))
+  wordbank: [StudentWord] @connection(keyName: "wordsByStudent", fields: ["email"])
   phone: String
   birthdate: AWSDate
   image: String
@@ -241,6 +241,17 @@ type Quote {
   text: String!
 }
 
+type Link {
+  type: String
+  text: String
+  link: String
+}
+
+type AdditionalContent {
+  video: String
+  links: [Link]
+}
+
 type Artist @model
 {
   id: ID!
@@ -249,6 +260,7 @@ type Artist @model
   type: String!
   bio: [String!]!
   quotes: [Quote!]!
+  additionalContent: AdditionalContent
 }
 
 type StudentInfo {

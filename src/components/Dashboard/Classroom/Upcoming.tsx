@@ -19,14 +19,14 @@ const UpcomingClass: React.FC = () => {
             title: 'The Rose That Grew from Concrete',
             artist: {
                 id: '',
-                images: ['https://www.gstatic.com/tv/thumb/persons/63862/63862_v9_ba.jpg'],
+                images: ['https://zoiqclients.s3.amazonaws.com/IconoclastArtist/AppFiles/LessonPlans/2_TheRoseThatGrewFromTheConcrete/Tupac-Shakur-1993.jpg'],
                 name: 'Tupac Shakur',
                 type: ''
             },
             instructor: 'Marlon',
             lessonTime: '45',
-            lessonDate: 'Sept 15th',
-            summary: '',
+            lessonDate: 'Sept 22nd',
+            summary: "In this lesson we will be exploring self awareness and the beautiful things about us that others might miss or consider imperfections using Tupac Shakur's poem to explore this idea about how to recognize our emotions and thoughts and how they influence our behavior.",
             open: false,
         },
         {
@@ -39,7 +39,7 @@ const UpcomingClass: React.FC = () => {
             },
             instructor: 'Marlon',
             lessonTime: '45',
-            lessonDate: 'Sept 22nd',
+            lessonDate: 'Sept 29th',
             summary: '',
             open: false,
         },
@@ -53,7 +53,7 @@ const UpcomingClass: React.FC = () => {
             },
             instructor: 'Marlon',
             lessonTime: '45',
-            lessonDate: 'Sept 29th',
+            lessonDate: 'Oct 6th',
             summary: '',
             open: false,
         }
@@ -123,7 +123,7 @@ const UpcomingClass: React.FC = () => {
                                 Lesson Description
                             </h2>
                             <p className="text-sm">
-                                {lesson.summary ? lesson.summary : 'to be updated..'}
+                                {lesson.summary ? lesson.summary : 'No Information Available'}
                             </p>
                         </div>
                         
