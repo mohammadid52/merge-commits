@@ -420,6 +420,10 @@ export const createCurriculumLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -527,6 +531,10 @@ export const updateCurriculumLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -634,6 +642,10 @@ export const deleteCurriculumLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -1220,6 +1232,7 @@ export const createStudentData = /* GraphQL */ `
           artistID
           language
           SELStructureID
+          connection
           summary
           objectives
           doFirstID
@@ -1358,6 +1371,7 @@ export const updateStudentData = /* GraphQL */ `
           artistID
           language
           SELStructureID
+          connection
           summary
           objectives
           doFirstID
@@ -1496,6 +1510,7 @@ export const deleteStudentData = /* GraphQL */ `
           artistID
           language
           SELStructureID
+          connection
           summary
           objectives
           doFirstID
@@ -1757,6 +1772,10 @@ export const createClassroom = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -1943,6 +1962,10 @@ export const updateClassroom = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -2129,6 +2152,10 @@ export const deleteClassroom = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -2305,6 +2332,17 @@ export const createLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
       summary
       objectives
       checkpoints {
@@ -2472,6 +2510,17 @@ export const updateLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
       summary
       objectives
       checkpoints {
@@ -2639,6 +2688,17 @@ export const deleteLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
       summary
       objectives
       checkpoints {
@@ -2789,6 +2849,10 @@ export const createLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -2894,6 +2958,10 @@ export const updateLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -2999,6 +3067,10 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -4290,6 +4362,480 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           updatedAt
         }
         response
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createWord = /* GraphQL */ `
+  mutation CreateWord(
+    $input: CreateWordInput!
+    $condition: ModelWordConditionInput
+  ) {
+    createWord(input: $input, condition: $condition) {
+      id
+      word
+      definition
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateWord = /* GraphQL */ `
+  mutation UpdateWord(
+    $input: UpdateWordInput!
+    $condition: ModelWordConditionInput
+  ) {
+    updateWord(input: $input, condition: $condition) {
+      id
+      word
+      definition
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteWord = /* GraphQL */ `
+  mutation DeleteWord(
+    $input: DeleteWordInput!
+    $condition: ModelWordConditionInput
+  ) {
+    deleteWord(input: $input, condition: $condition) {
+      id
+      word
+      definition
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createLessonKeyWord = /* GraphQL */ `
+  mutation CreateLessonKeyWord(
+    $input: CreateLessonKeyWordInput!
+    $condition: ModelLessonKeyWordConditionInput
+  ) {
+    createLessonKeyWord(input: $input, condition: $condition) {
+      id
+      wordID
+      lessonID
+      word {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      lesson {
+        id
+        title
+        contributors {
+          nextToken
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructureID
+        SELStructure {
+          id
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateLessonKeyWord = /* GraphQL */ `
+  mutation UpdateLessonKeyWord(
+    $input: UpdateLessonKeyWordInput!
+    $condition: ModelLessonKeyWordConditionInput
+  ) {
+    updateLessonKeyWord(input: $input, condition: $condition) {
+      id
+      wordID
+      lessonID
+      word {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      lesson {
+        id
+        title
+        contributors {
+          nextToken
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructureID
+        SELStructure {
+          id
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteLessonKeyWord = /* GraphQL */ `
+  mutation DeleteLessonKeyWord(
+    $input: DeleteLessonKeyWordInput!
+    $condition: ModelLessonKeyWordConditionInput
+  ) {
+    deleteLessonKeyWord(input: $input, condition: $condition) {
+      id
+      wordID
+      lessonID
+      word {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      lesson {
+        id
+        title
+        contributors {
+          nextToken
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructureID
+        SELStructure {
+          id
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createStudentWord = /* GraphQL */ `
+  mutation CreateStudentWord(
+    $input: CreateStudentWordInput!
+    $condition: ModelStudentWordConditionInput
+  ) {
+    createStudentWord(input: $input, condition: $condition) {
+      id
+      wordID
+      studentID
+      studentAuthID
+      word {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      student {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        phone
+        birthdate
+        image
+        language
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateStudentWord = /* GraphQL */ `
+  mutation UpdateStudentWord(
+    $input: UpdateStudentWordInput!
+    $condition: ModelStudentWordConditionInput
+  ) {
+    updateStudentWord(input: $input, condition: $condition) {
+      id
+      wordID
+      studentID
+      studentAuthID
+      word {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      student {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        phone
+        birthdate
+        image
+        language
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteStudentWord = /* GraphQL */ `
+  mutation DeleteStudentWord(
+    $input: DeleteStudentWordInput!
+    $condition: ModelStudentWordConditionInput
+  ) {
+    deleteStudentWord(input: $input, condition: $condition) {
+      id
+      wordID
+      studentID
+      studentAuthID
+      word {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      student {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        phone
+        birthdate
+        image
+        language
         createdAt
         updatedAt
       }

@@ -20,9 +20,10 @@ const LessonHeaderBar = () => {
     const [ searchTerm, setSearchTerm ] = useState('');
 
     useEffect(() => {
-        console.log(state);
-
-        // dispatch({ type: 'SET_PROGRESS', payload: state.lessonProgress })
+        if ( !state.pages[0].active ) {
+            console.log('here', state);
+            dispatch({ type: 'SET_PROGRESS', payload: state.lessonProgress })
+        }
     }, [state.pages, state.currentPage])
 
     useEffect(() => {
