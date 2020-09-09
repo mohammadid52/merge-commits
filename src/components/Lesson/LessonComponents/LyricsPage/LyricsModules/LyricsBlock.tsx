@@ -187,7 +187,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
                         </IconContext.Provider>
                     </div> */}
                 </div>
-                <div className="text-gray-200 text-sm overflow-scroll md:px-4">
+                <div className="text-gray-200 text-sm overflow-scroll md:px-4" onPointerUp={handleSelect}>
                     {
                         displayTextArray.map((array, keyA) => {
                             return (
@@ -199,8 +199,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
                                             return (
                                                 <span 
                                                     key={keyB}
-                                                    id={id} 
-                                                    onPointerUp={handleSelect}  
+                                                    id={id}
                                                     className={`text-${idCheck(id) ? colorFunc(id) : null} ${idCheck(id) ? `${colorFunc(id)}-tag` : null}`}
                                                     // draggable={ color ? 'false' : 'true' }
                                                     // onDragStart={handleDragStart}
