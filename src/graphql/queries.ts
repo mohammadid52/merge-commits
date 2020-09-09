@@ -133,6 +133,17 @@ export const getPerson = /* GraphQL */ `
       lastName
       externalId
       grade
+      wordbank {
+        items {
+          id
+          wordID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       phone
       birthdate
       image
@@ -170,6 +181,9 @@ export const listPersons = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -540,6 +554,9 @@ export const getStudentData = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -687,6 +704,14 @@ export const getArtist = /* GraphQL */ `
         source
         text
       }
+      additionalContent {
+        video
+        links {
+          type
+          text
+          link
+        }
+      }
       createdAt
       updatedAt
     }
@@ -708,6 +733,9 @@ export const listArtists = /* GraphQL */ `
         quotes {
           source
           text
+        }
+        additionalContent {
+          video
         }
         createdAt
         updatedAt
@@ -1036,6 +1064,9 @@ export const getLesson = /* GraphQL */ `
         quotes {
           source
           text
+        }
+        additionalContent {
+          video
         }
         createdAt
         updatedAt
@@ -1653,6 +1684,9 @@ export const getQuestionData = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -1767,6 +1801,9 @@ export const userById = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -1804,6 +1841,9 @@ export const usersByRole = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -1865,6 +1905,9 @@ export const searchPersons = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
