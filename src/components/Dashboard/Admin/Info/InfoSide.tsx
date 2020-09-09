@@ -4,7 +4,7 @@ import { FaUserCircle } from 'react-icons/fa';
 
 interface InfoSide {
   children?: React.ReactNode;
-  belowImg?: string;
+  subtitle?: string;
 }
 
 const InfoSide: React.FC<InfoSide> = (iSidePrps: InfoSide) => {
@@ -18,11 +18,13 @@ const InfoSide: React.FC<InfoSide> = (iSidePrps: InfoSide) => {
             <FaUserCircle />
           </IconContext.Provider>
         </div>
-        <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
-                                <p className="text-md md:text-lg">
-                                {`${ iSidePrps.belowImg ? iSidePrps.belowImg : '' }`}
-                                </p>
-                            </div>
+        <div
+          className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}
+        >
+          <p className='text-md md:text-lg'>
+            {`${iSidePrps.subtitle ? iSidePrps.subtitle : ''}`}
+          </p>
+        </div>
       </div>
     </>
   );

@@ -44,10 +44,10 @@ const InstitutionRow: React.FC<InstitutionRowProps> = (
       <div className='w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider'>
         <span className='w-auto'>{instRowPrps.website}</span>
       </div>
-      <div className='w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider'>
+      <div className='w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left whitespace-no-wrap text-right text-sm leading-5 font-medium'>
         <span className='w-auto'>
           <ActionButton
-            label='view'
+            label='View'
             compClass='text-indigo-600 hover:text-indigo-900'
             func={handleInstitutionView}
           />

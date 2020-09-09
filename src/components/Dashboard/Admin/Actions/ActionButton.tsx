@@ -11,9 +11,9 @@ interface ButtonProps {
 const ActionButton: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
   return (
     <>
-      <a href='#' onClick={btnPrps.func} className={btnPrps.compClass}>
+      <button onClick={btnPrps.func} className={btnPrps.compClass}>
         {btnPrps.label}
-      </a>
+      </button>
     </>
   );
 };

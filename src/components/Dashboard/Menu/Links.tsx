@@ -37,7 +37,7 @@ const Links: React.FC = () => {
                         },
                         {
                             name: 'Institutions',
-                            path: 'institutions'
+                            path: 'manage-institutions'
                         }
                     ]
                 })

@@ -4,11 +4,14 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { useLocation } from 'react-router-dom';
 import * as queries from '../../../../graphql/queries';
 import queryString from 'query-string';
+import { useHistory } from 'react-router-dom';
 import ActionButton from '../Actions/ActionButton';
+/* import Button from '../../../../standard/Button/Button'; */
 import InfoSide from '../Info/InfoSide';
 import InstitutionInfo from './InstitutionInfo';
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
-interface InstitutionInfoIntf {
+export interface InstitutionInfo{
   id: string;
   name: string;
   institutionTypeId: string;
@@ -19,7 +22,7 @@ interface InstitutionInfoIntf {
   state: string;
   zip: string;
   phone: null;
-  contact: {};
+  contact: { name: string; email: string };
   website: string;
   type: null;
   image: string | null;
@@ -27,6 +30,11 @@ interface InstitutionInfoIntf {
   updatedAt: string;
 }
 
+/**
+ * Institution parent component
+ * Responsible for fetching institution data and populating the component
+ * with data from the API
+ */
 const Institution: React.FC = () => {
   const [institutionData, setInstitutionData] = useState<InstitutionInfoIntf>({
     id: '',
@@ -39,7 +47,7 @@ const Institution: React.FC = () => {
     state: '',
     zip: '',
     phone: null,
-    contact: {},
+    contact: { name: '', email: '' },
     website: '',
     type: null,
     image: '',
@@ -47,7 +55,9 @@ const Institution: React.FC = () => {
     updatedAt: '',
   });
   const { theme } = useContext(GlobalContext);
+  const history = useHistory();
   const location = useLocation();
+  const match = useRouteMatch();
   const urlQueryParams = queryString.parse(location.search);
 
   async function getInstitutionData() {
@@ -82,9 +92,44 @@ const Institution: React.FC = () => {
       <div
         className={`w-full h-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}
       >
-        <div className='h-9/10 flex flex-col md:flex-row'>
-          <InfoSide belowImg={institutionData.name} />
-          <InstitutionInfo />
+        <div className='h-9/10 flex flex-row flex-end'>
+          <InfoSide subtitle={institutionData.name} />
+
+          <div className='w-full md:px-2 pt-2 flex flex-col'>
+            {/* <Button label='Back' /> */}
+            <div className='mb-4 w-full flex justify-end'>
+              <ActionButton
+                func={history.goBack}
+                label='Back'
+                compClass='w-20 text-white bg-indigo-600 hover:bg-indigo-500 focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700
+          inline-flex justify-center py-2 px-4 border border-transparent text-m leading-5 font-medium rounded-md focus:outline-none transition duration-150 ease-in-out'
+              />
+            </div>
+
+            <Switch>
+              <Route 
+                    path={`${match.url}/edit`}
+                    render={() => (
+                        <h1>Hello</h1>
+                    )} 
+                />
+              <Route
+                path={`${match.url}/`}
+                render={() => (
+                  <InstitutionInfo
+                    id={institutionData.id}
+                    /* name={institutionData.name} */
+                    website={institutionData.website}
+                    contactPerson={institutionData.contact.name}
+                    email={institutionData.contact.email}
+                    phone={institutionData.phone}
+                    state={institutionData.state}
+                    address={institutionData.address}
+                  />
+                )}
+              />
+            </Switch>
+          </div>
         </div>
       </div>
     </div>

@@ -114,7 +114,7 @@ const Dashboard: React.FC = () => {
                             )}
                         />
                         <Route 
-                            path={`${match.url}/institutions`}
+                            path={`${match.url}/manage-institutions`}
                             render={() => (
                                 <InstitutionsHome />
                             )}
