@@ -7,7 +7,7 @@ import Upcoming from '../Classroom//Upcoming';
 import Completed from '../Classroom/Completed';
 import * as customQueries from '../../../customGraphql/customQueries';
 import { API, graphqlOperation } from 'aws-amplify';
-import LessonLoading from '../../Lesson/Loading/ComponentLoading';
+import Loading from '../../Lesson/Loading/ComponentLoading';
 
 export interface Artist {
     id: string
@@ -46,7 +46,7 @@ const LessonPlanHome = () => {
 
     if ( status !== 'done') {
         return (
-            <LessonLoading />
+            <Loading />
         )
     }
     {
@@ -57,10 +57,11 @@ const LessonPlanHome = () => {
             {/* <Link to="/lesson-control?id=1">
                 Teacher View 
             </Link> */}
-            {/* <Upcoming curriculum={curriculum}/> */}
-            <Completed />
+            {/* <Upcoming /> */}
+            <Completed /> 
         </div>
     )
-}}
+        }
+}
 
 export default LessonPlanHome;

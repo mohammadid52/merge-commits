@@ -15,17 +15,68 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
     const {curriculum} = props;
 
     // make sure to limit (max 5?) when fetching from data
-    
     console.log(curriculum, 'upcoming curriculum')
 
+    // const toggle = (key: number) => {
+    //     { typeof curriculum !== 'undefined' ?
+    //     curriculum.map( (lesson: {language: string, artist: {id: string, images: [], name: string, type: string}, summary: string, title: string, open: boolean}, i: number) => {
+
+
+
+    const [lessons, setLessons] = useState([
+        {
+            title: 'The Rose That Grew from Concrete',
+            artist: {
+                id: '',
+                images: ['https://zoiqclients.s3.amazonaws.com/IconoclastArtist/AppFiles/LessonPlans/2_TheRoseThatGrewFromTheConcrete/Tupac-Shakur-1993.jpg'],
+                name: 'Tupac Shakur',
+                type: ''
+            },
+            instructor: 'Marlon',
+            lessonTime: '45',
+            lessonDate: 'Sept 15th',
+            summary: "In this lesson we will be exploring self awareness and the beautiful things about us that others might miss or consider imperfections using Tupac Shakur's poem to explore this idea about how to recognize our emotions and thoughts and how they influence our behavior.",
+            open: false,
+        },
+        {
+            title: 'OCD Love poem',
+            artist: {
+                id: '',
+                images: ['https://media2.fdncms.com/chicago/imager/u/original/40711495/neil_poster_2016-1_1_copy.jpg'],
+                name: 'Neil Hilborn',
+                type: ''
+            },
+            instructor: 'Marlon',
+            lessonTime: '45',
+            lessonDate: 'Sept 22nd',
+            summary: '',
+            open: false,
+        },
+        {
+            title: 'Be Free',
+            artist: {
+                id: '',
+                images: ['https://static.onecms.io/wp-content/uploads/sites/20/2020/07/21/j-cole.jpg'],
+                name: 'J. Cole',
+                type: ''
+            },
+            instructor: 'Marlon',
+            lessonTime: '45',
+            lessonDate: 'Sept 29th',
+            summary: '',
+            open: false,
+        }
+    ]);
+
     const toggle = (key: number) => {
-        { typeof curriculum !== 'undefined' ?
-        curriculum.map( (lesson: {language: string, artist: {id: string, images: [], name: string, type: string}, summary: string, title: string, open: boolean}, i: number) => {
+        setLessons( lessons.map( (lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, instructor: string, lessonTime: string, summary: string, lessonDate: string, open: boolean}, i: number) => {
             if (i === key) {
                 lesson.open = !lesson.open
             } 
             return lesson;
-        }) : null
+        }) 
+        )
+        // : null
         // setLessons(
         //     lessons.map( (lesson: {language: string, artist: {id: string, images: [], name: string, type: string}, summary: string, title: string, open: boolean}, i: number) => {
         //     if (i === key) {
@@ -33,7 +84,8 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
         //     } 
         //     return lesson;
         // }));
-    }}
+    // }
+}
 
     const handleLink = () => {
         history.push('/lesson');
@@ -50,6 +102,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                 
                 { typeof curriculum !== 'undefined' ?
                     curriculum.map( (lesson: {language: string, artist: {id: string, images: [], name: string, type: string}, summary: string, title: string, open: boolean}, i: number) => 
+                // { lessons.map( (lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, instructor: string, lessonTime: string, summary: string, lessonDate: string, open: boolean}, i: number) => 
                 (
                     <div key={i} className="py-2 px-4">
                     <button 
@@ -86,14 +139,14 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                             <h2 className={`text-xl font-open font-bold mb-2`}>
                                 {lesson.artist.name}
                             </h2>
-                            <img className="w-24 shadow-elem-light" src={`${lesson.artist.images}`} alt="Marlon Lizama" />
+                            <img className="h-24 w-24 shadow-elem-light" src={`${lesson.artist.images}`} alt={`${lesson.artist.name}`} style={{backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}/>
                         </div>
                         <div className={`block2 w-1/2 h-full flex flex-col`}>
                             <h2 className={`text-lg font-bold font-open md:mb-2`}>
                                 Lesson Description
                             </h2>
-                            <p className="text-xs">
-                                {lesson.summary}
+                            <p className="text-sm">
+                                {lesson.summary ? lesson.summary : 'to be updated..'}
                             </p>
                         </div>
                         

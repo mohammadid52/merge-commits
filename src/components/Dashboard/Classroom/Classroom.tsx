@@ -6,7 +6,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import Class from './Class';
 import Upcoming from './Upcoming';
 import Completed from './Completed';
-import LessonLoading from '../../Lesson/Loading/ComponentLoading';
+import Loading from '../../Lesson/Loading/ComponentLoading';
 
 interface Artist {
     id: string
@@ -37,6 +37,7 @@ const Classroom: React.FC = () => {
             setStatus('done');
             setCurriculum(nextLesson);
             setListCurriculum(lessonsInfo);
+            console.log(lessonsInfo, 'list');
         } catch (error) {
             console.error(error);  
         }
@@ -52,7 +53,7 @@ const Classroom: React.FC = () => {
 
     if ( status !== 'done') {
         return (
-            <LessonLoading />
+            <Loading />
         )
     }
     {
