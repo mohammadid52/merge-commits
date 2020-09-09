@@ -1,6 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { NavLink, useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import { 
+    NavLink,
+    // useHistory, 
+    // useLocation, 
+    // useRouteMatch 
+} from 'react-router-dom';
 import { IconContext } from "react-icons";
 import { FaRegSave, FaHome, FaBook } from 'react-icons/fa';
 import { LessonContext } from '../../contexts/LessonContext';
@@ -11,18 +16,19 @@ import useDictionary from '../../customHooks/dictionary';
 
 const LessonHeaderBar = () => {
     const [ cookies, setCookie, removeCookie ] = useCookies(['lesson']);
-    const match = useRouteMatch();
-    const location = useLocation();
-    const history = useHistory();
+    // const match = useRouteMatch();
+    // const location = useLocation();
+    // const history = useHistory();
     const { theme, state, dispatch } = useContext(LessonContext);
     const [ dictOpen, setDictOpen ] = useState(false);
     const { lookUp } = useDictionary('EN');
     const [ searchTerm, setSearchTerm ] = useState('');
 
     useEffect(() => {
-        console.log(state);
-
-        // dispatch({ type: 'SET_PROGRESS', payload: state.lessonProgress })
+        if ( !state.pages[0].active ) {
+            console.log('here', state);
+            dispatch({ type: 'SET_PROGRESS', payload: state.lessonProgress })
+        }
     }, [state.pages, state.currentPage])
 
     useEffect(() => {
