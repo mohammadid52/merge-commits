@@ -37,6 +37,7 @@ const Classroom: React.FC = () => {
             setStatus('done');
             setCurriculum(nextLesson);
             setListCurriculum(lessonsInfo);
+            console.log(lessonsInfo, 'list');
         } catch (error) {
             console.error(error);  
         }
