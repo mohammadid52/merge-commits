@@ -123,7 +123,7 @@ const UpcomingClass: React.FC = () => {
                                 Lesson Description
                             </h2>
                             <p className="text-sm">
-                                {lesson.summary ? lesson.summary : 'to be updated..'}
+                                {lesson.summary ? lesson.summary : 'No Information Available'}
                             </p>
                         </div>
                         
