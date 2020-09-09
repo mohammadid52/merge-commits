@@ -104,6 +104,10 @@ export const onUpdateClassroom = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -224,6 +228,7 @@ export const onChangeStudentData = /* GraphQL */ `
           artistID
           language
           SELStructureID
+          connection
           summary
           objectives
           doFirstID
@@ -699,6 +704,10 @@ export const onCreateCurriculumLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -803,6 +812,10 @@ export const onUpdateCurriculumLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -907,6 +920,10 @@ export const onDeleteCurriculumLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -1549,6 +1566,17 @@ export const onCreateLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
       summary
       objectives
       checkpoints {
@@ -1713,6 +1741,17 @@ export const onUpdateLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
       summary
       objectives
       checkpoints {
@@ -1877,6 +1916,17 @@ export const onDeleteLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
       summary
       objectives
       checkpoints {
@@ -2024,6 +2074,10 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -2126,6 +2180,10 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -2228,6 +2286,10 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -3429,6 +3491,453 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           updatedAt
         }
         response
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateWord = /* GraphQL */ `
+  subscription OnCreateWord {
+    onCreateWord {
+      id
+      word
+      definition
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateWord = /* GraphQL */ `
+  subscription OnUpdateWord {
+    onUpdateWord {
+      id
+      word
+      definition
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteWord = /* GraphQL */ `
+  subscription OnDeleteWord {
+    onDeleteWord {
+      id
+      word
+      definition
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateLessonKeyWord = /* GraphQL */ `
+  subscription OnCreateLessonKeyWord {
+    onCreateLessonKeyWord {
+      id
+      wordID
+      lessonID
+      word {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      lesson {
+        id
+        title
+        contributors {
+          nextToken
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructureID
+        SELStructure {
+          id
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateLessonKeyWord = /* GraphQL */ `
+  subscription OnUpdateLessonKeyWord {
+    onUpdateLessonKeyWord {
+      id
+      wordID
+      lessonID
+      word {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      lesson {
+        id
+        title
+        contributors {
+          nextToken
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructureID
+        SELStructure {
+          id
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteLessonKeyWord = /* GraphQL */ `
+  subscription OnDeleteLessonKeyWord {
+    onDeleteLessonKeyWord {
+      id
+      wordID
+      lessonID
+      word {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      lesson {
+        id
+        title
+        contributors {
+          nextToken
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructureID
+        SELStructure {
+          id
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateStudentWord = /* GraphQL */ `
+  subscription OnCreateStudentWord {
+    onCreateStudentWord {
+      id
+      wordID
+      studentID
+      studentAuthID
+      word {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      student {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        phone
+        birthdate
+        image
+        language
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateStudentWord = /* GraphQL */ `
+  subscription OnUpdateStudentWord {
+    onUpdateStudentWord {
+      id
+      wordID
+      studentID
+      studentAuthID
+      word {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      student {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        phone
+        birthdate
+        image
+        language
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteStudentWord = /* GraphQL */ `
+  subscription OnDeleteStudentWord {
+    onDeleteStudentWord {
+      id
+      wordID
+      studentID
+      studentAuthID
+      word {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      student {
+        id
+        authId
+        status
+        email
+        role
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        phone
+        birthdate
+        image
+        language
         createdAt
         updatedAt
       }
