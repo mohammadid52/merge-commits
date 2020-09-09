@@ -502,6 +502,7 @@ export const getStudentData = /* GraphQL */ `
           artistID
           language
           SELStructureID
+          connection
           summary
           objectives
           doFirstID
@@ -817,6 +818,10 @@ export const getClassroom = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -936,6 +941,7 @@ export const listClassrooms = /* GraphQL */ `
           artistID
           language
           SELStructureID
+          connection
           summary
           objectives
           doFirstID
@@ -1043,6 +1049,17 @@ export const getLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
       summary
       objectives
       checkpoints {
@@ -1198,6 +1215,10 @@ export const listLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -1691,6 +1712,35 @@ export const listQuestionDatas = /* GraphQL */ `
     }
   }
 `;
+export const getWord = /* GraphQL */ `
+  query GetWord($id: ID!) {
+    getWord(id: $id) {
+      id
+      word
+      definition
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listWords = /* GraphQL */ `
+  query ListWords(
+    $filter: ModelWordFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listWords(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID
@@ -1758,6 +1808,32 @@ export const usersByRole = /* GraphQL */ `
         birthdate
         image
         language
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const searchByWord = /* GraphQL */ `
+  query SearchByWord(
+    $word: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelWordFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    searchByWord(
+      word: $word
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        word
+        definition
         createdAt
         updatedAt
       }
