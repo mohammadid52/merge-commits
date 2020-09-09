@@ -174,6 +174,17 @@ export const createPerson = /* GraphQL */ `
       lastName
       externalId
       grade
+      wordbank {
+        items {
+          id
+          wordID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       phone
       birthdate
       image
@@ -199,6 +210,17 @@ export const updatePerson = /* GraphQL */ `
       lastName
       externalId
       grade
+      wordbank {
+        items {
+          id
+          wordID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       phone
       birthdate
       image
@@ -224,6 +246,17 @@ export const deletePerson = /* GraphQL */ `
       lastName
       externalId
       grade
+      wordbank {
+        items {
+          id
+          wordID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       phone
       birthdate
       image
@@ -1092,6 +1125,9 @@ export const createClassStudent = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -1135,6 +1171,9 @@ export const updateClassStudent = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -1178,6 +1217,9 @@ export const deleteClassStudent = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -1270,6 +1312,9 @@ export const createStudentData = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -1409,6 +1454,9 @@ export const updateStudentData = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -1548,6 +1596,9 @@ export const deleteStudentData = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -1622,6 +1673,14 @@ export const createArtist = /* GraphQL */ `
         source
         text
       }
+      additionalContent {
+        video
+        links {
+          type
+          text
+          link
+        }
+      }
       createdAt
       updatedAt
     }
@@ -1642,6 +1701,14 @@ export const updateArtist = /* GraphQL */ `
         source
         text
       }
+      additionalContent {
+        video
+        links {
+          type
+          text
+          link
+        }
+      }
       createdAt
       updatedAt
     }
@@ -1661,6 +1728,14 @@ export const deleteArtist = /* GraphQL */ `
       quotes {
         source
         text
+      }
+      additionalContent {
+        video
+        links {
+          type
+          text
+          link
+        }
       }
       createdAt
       updatedAt
@@ -2320,6 +2395,9 @@ export const createLesson = /* GraphQL */ `
           source
           text
         }
+        additionalContent {
+          video
+        }
         createdAt
         updatedAt
       }
@@ -2498,6 +2576,9 @@ export const updateLesson = /* GraphQL */ `
           source
           text
         }
+        additionalContent {
+          video
+        }
         createdAt
         updatedAt
       }
@@ -2675,6 +2756,9 @@ export const deleteLesson = /* GraphQL */ `
         quotes {
           source
           text
+        }
+        additionalContent {
+          video
         }
         createdAt
         updatedAt
@@ -3949,6 +4033,9 @@ export const createQuestionData = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -3997,6 +4084,9 @@ export const updateQuestionData = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -4045,6 +4135,9 @@ export const deleteQuestionData = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -4752,6 +4845,9 @@ export const createStudentWord = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -4792,6 +4888,9 @@ export const updateStudentWord = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -4832,6 +4931,9 @@ export const deleteStudentWord = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
