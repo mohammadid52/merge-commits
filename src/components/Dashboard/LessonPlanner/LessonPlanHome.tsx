@@ -7,6 +7,7 @@ import Upcoming from '../Classroom//Upcoming';
 import Completed from '../Classroom/Completed';
 import * as customQueries from '../../../customGraphql/customQueries';
 import { API, graphqlOperation } from 'aws-amplify';
+import Loading from '../../Lesson/Loading/ComponentLoading';
 
 export interface Artist {
     id: string
@@ -24,20 +25,30 @@ export interface CurriculumInfo {
 
 const LessonPlanHome = () => {
     const [curriculum, setCurriculum] = useState<CurriculumInfo>();
+    const [status, setStatus] = useState('');
 
     async function getCourse(id: string) {
         try {
             const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: id }))
-            const lessons = courses.data.getCourse.curriculum.lessons.items.pop();
-            console.log(lessons, 'courses')
-            // const userData = result.data.userById.items.pop();
-            setCurriculum(lessons);
+            const nextLesson = courses.data.getCourse.curriculum.lessons.items[0].lesson;
+            setStatus('done');
+            setCurriculum(nextLesson);
             
         } catch (error) {
             console.error(error);  
         }
     }
 
+    useEffect(() => {
+        getCourse('1')
+    }, [])
+
+    if ( status !== 'done') {
+        return (
+            <Loading />
+        )
+    }
+    {
 
     return (
         <div className={`w-full h-9.28/10 md:h-auto flex flex-col p-4 md:p-8`}>
@@ -46,9 +57,10 @@ const LessonPlanHome = () => {
                 Teacher View 
             </Link> */}
             <Upcoming />
-            <Completed />
+            <Completed /> 
         </div>
     )
+        }
 }
 
 export default LessonPlanHome;

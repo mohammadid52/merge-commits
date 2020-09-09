@@ -3,7 +3,11 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
 import { IconContext } from "react-icons";
 import { FaClock, FaUserAlt } from 'react-icons/fa';
+import {CurriculumInfo} from './Classroom';
 
+interface UpcomingProps{
+    curriculum: Array<CurriculumInfo>
+}
 
 const UpcomingClass: React.FC = () => {
     const history = useHistory();
