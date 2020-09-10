@@ -215,7 +215,6 @@ export const getClassroom = /* GraphQL */ `
           id
           lessonProgress
           status
-          live
           classroomID
           studentID
           studentAuthID
@@ -488,7 +487,6 @@ export const getStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
-      live
       classroomID
       studentID
       studentAuthID

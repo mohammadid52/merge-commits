@@ -1241,7 +1241,6 @@ export const createStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
-      live
       classroomID
       classroom {
         id
@@ -1383,7 +1382,6 @@ export const updateStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
-      live
       classroomID
       classroom {
         id
@@ -1525,7 +1523,6 @@ export const deleteStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
-      live
       classroomID
       classroom {
         id
@@ -1918,7 +1915,6 @@ export const createClassroom = /* GraphQL */ `
           id
           lessonProgress
           status
-          live
           classroomID
           studentID
           studentAuthID
@@ -2108,7 +2104,6 @@ export const updateClassroom = /* GraphQL */ `
           id
           lessonProgress
           status
-          live
           classroomID
           studentID
           studentAuthID
@@ -2298,7 +2293,6 @@ export const deleteClassroom = /* GraphQL */ `
           id
           lessonProgress
           status
-          live
           classroomID
           studentID
           studentAuthID
@@ -4163,7 +4157,6 @@ export const createQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
-        live
         classroomID
         classroom {
           id
@@ -4267,7 +4260,6 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
-        live
         classroomID
         classroom {
           id
@@ -4371,7 +4363,6 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
-        live
         classroomID
         classroom {
           id
