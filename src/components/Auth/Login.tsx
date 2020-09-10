@@ -142,7 +142,7 @@ const Login = () => {
                         </div>
                     
                         <div className="input relative">
-                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                            <div style={{right: 0}} className="absolute w-6">
                                 <div onClick={() => setPassToggle(!passToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
                                 { passToggle ?
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
