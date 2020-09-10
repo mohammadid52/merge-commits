@@ -8,7 +8,7 @@ module.exports = {
   //     './src/**/*.js',
   //     './src/**/*.jsx',
   //   ],
-  // },
+  // }, 
   future: {
     removeDeprecatedGapUtilities: true,
   },

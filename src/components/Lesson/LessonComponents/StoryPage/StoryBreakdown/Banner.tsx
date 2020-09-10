@@ -16,7 +16,7 @@ const Banner = (props: BannerProps) => {
             {display === 'SELF' ? 
             <div className="w-full h-1/10 flex flex-row justify-center items-center">
             <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
-                <div className="red bg-dark-red h-20 w-20 flex flex-col items-center justify-center z-20 rounded-lg shadow-2">
+                <div className="h-full bg-dark-red h-20 w-20 flex flex-col items-center justify-center z-20 rounded-lg shadow-2">
                     <FaScroll />
                 </div>
             </IconContext.Provider>
@@ -27,7 +27,7 @@ const Banner = (props: BannerProps) => {
             : display === 'COOP' ?
             <div className="w-full h-full flex flex-row justify-center items-center">
                 <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem'}}>
-                    <div className="red bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg shadow-2">
+                    <div className="h-full bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg shadow-2">
                         <FaScroll />
                     </div>
                 </IconContext.Provider>
@@ -38,7 +38,7 @@ const Banner = (props: BannerProps) => {
             :    
             <div className="w-full h-1/10 flex flex-row justify-center items-center">
             <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem'}}>
-                <div className="red bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg shadow-2">
+                <div className="h-full bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg shadow-2">
                     <FaScroll />
                 </div>
             </IconContext.Provider>
