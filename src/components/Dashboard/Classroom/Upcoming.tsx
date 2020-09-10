@@ -78,8 +78,8 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
 
     return (
             <div className={`relative test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto flex flex-col mb-8 p-2`}>        
-                <span style={{right: 0, top: -20}}
-                className="absolute right-0 mr-4 p-4 sm:h-8 bg-opacity-60 w-auto inline-flex items-center rounded-md text-sm sm:text-2xl font-bold leading-5 bg-blue-300 text-blue-800">
+                <span style={{left: 0, top: -20}}
+                className="absolute right-0 ml-4 p-4 sm:h-8 bg-opacity-60 w-auto inline-flex items-center rounded-md text-sm sm:text-2xl font-extrabold leading-5 text-purple-800">
                 Upcoming Lessons
                 </span>
                   
@@ -91,7 +91,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                         key={i}
                         onClick={() => toggle(i)} 
                         className={`relative cursor-pointer focus:outline-none flex justify-between items-center bg-dark text-xl text-gray-200 font-bold font-open px-8 shadow-elem-light`}>
-                        <div className="w-8.5/10 flex justify-between">
+                        <div className="w-8.5/10 flex justify-between my-1">
                             <div className="w-auto">
                                 {lesson.title} 
                             </div>

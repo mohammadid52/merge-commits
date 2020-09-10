@@ -2,27 +2,27 @@
     width: 47%;
 }
 
-.classroom {
-    height: 25rem;
+// .classroom {
+//     height: 25rem;
 
-    .block3 {
-        .flex_column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-    }
-}
+//     .block3 {
+//         .flex_column {
+//             display: flex;
+//             flex-direction: column; 
+//             align-items: center;
+//         }
+//     }
+// }
 
-.border_tb {
-    border-top: 3px solid white;
-    border-bottom: 3px solid white;
-    @media screen and (max-width: 767px) {
-        border-top: none;
-        border-bottom: 1px solid white;
-    }
+// .border_tb {
+//     border-top: 3px solid white;
+//     border-bottom: 3px solid white;
+//     @media screen and (max-width: 767px) {
+//         border-top: none;
+//         border-bottom: 1px solid white;
+//     }
 
-}
+// }
 
 .quote {
     border-left: 7px solid #CA2222;
