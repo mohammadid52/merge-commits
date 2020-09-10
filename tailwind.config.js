@@ -1,4 +1,14 @@
 module.exports = {
+  // purge: {
+  //   enabled: true,
+  //   content: [
+  //     './src/**/*.html',
+  //     './src/**/*.tsx',
+  //     './src/**/*.ts',
+  //     './src/**/*.js',
+  //     './src/**/*.jsx',
+  //   ],
+  // },
   future: {
     removeDeprecatedGapUtilities: true,
   },
