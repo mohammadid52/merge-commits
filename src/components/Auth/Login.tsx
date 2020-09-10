@@ -141,7 +141,7 @@ const Login = () => {
                             <input className="w-full px-2 py-1 ml-2" placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
                         </div>
                     
-                        <div className="input relative">
+                        <div className="input relative w-full">
                             <div style={{right: 0}} className="absolute w-6">
                                 <div onClick={() => setPassToggle(!passToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
                                 { passToggle ?
@@ -171,7 +171,7 @@ const Login = () => {
                     <div className="h-3/10 flex flex-col justify-center items-center">
                         <button className="bg-dark-red text-gray-200 rounded-lg mb-4 shadow-elem-light" onKeyPress={handleEnter} onClick={handleSubmit}>Login</button>
                         <NavLink to="/forgot-password">
-                        <div className="text-center hover:text-blue-500">forgot password?</div>
+                            <div className="text-center hover:text-blue-500">forgot password?</div>
                         </NavLink>
                     </div>
                 </div>

@@ -218,8 +218,8 @@ const Reset = () => {
                             <input className="w-full px-2 py-1 ml-2" placeholder="Confirmation Code" type="text" id="code" name="code" value={input.code} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
         
-                        <div className="input relative">
-                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                        <div className="input relative w-full">
+                            <div style={{right: 0}} className="absolute w-6">
                                 <div onClick={() => setNewPassToggle(!newPassToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
                                 { newPassToggle ?
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
@@ -241,8 +241,8 @@ const Reset = () => {
                             <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type={ newPassToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
 
-                        <div className="input relative">
-                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                        <div className="input relative w-full">
+                            <div style={{right: 0}} className="absolute w-6">
                                 <div onClick={() => setPassToggle(!passToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
                                 { passToggle ?
                                 <IconContext.Provider value={{ size: '1.5rem'}}>

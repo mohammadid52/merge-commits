@@ -3,7 +3,7 @@ import { GlobalContext } from '../../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
 import { IconContext } from "react-icons";
 import { MdEmail } from 'react-icons/md';
-import { useHistory } from 'react-router-dom';
+import { useHistory, NavLink } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 
 const Forgot = () => {
@@ -134,6 +134,9 @@ const Forgot = () => {
                             <button className="bg-dark-red shadow-elem-light text-gray-200 rounded-lg mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>
                                 Submit
                             </button>
+                            <NavLink to="/login">
+                                <div className="text-center hover:text-blue-500">go back to login</div>
+                            </NavLink>
                         
                     </div>
                 </div>
