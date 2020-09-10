@@ -6,6 +6,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import Class from './Class';
 import Upcoming from './Upcoming';
 import Completed from './Completed';
+import Dashboard from './Dashboard';
 import Loading from '../../Lesson/Loading/ComponentLoading';
 
 interface Artist {
@@ -58,10 +59,19 @@ const Classroom: React.FC = () => {
     }
     {
         return (
-            <div className={`w-full h-9.28/10 md:h-auto flex flex-col p-4 md:p-8`}>
+            <div className={`w-full h-9.28/10 md:h-auto flex flex-col p-4 px-8 pb-8 pt-4 overflow-scroll md:overflow-auto`}>
+                
+                <p className="md:hidden text-xl text-center flex justify-center mb-4" style={{top: '0'}}>* lessons are available on PC or laptop *</p>
+                <div className="w-full p-4 flex justify-center items-center">
+                    <div className={`w-auto h-auto border-4 border-dark p-2 px-8 bg-white shadow-container rounded-xl text-4xl text-center flex justify-center items-center font-bold`}>
+                        <img style={{height: '3rem', width: 'auto', marginRight: '1rem'}} src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
+                        <p style={{color: '#2c2f40'}}>Online Classroom</p>
+                    </div>
+                </div>
                 <Class link={'/lesson?id=1'} curriculum={curriculum}/>
                 <Upcoming curriculum={listCurriculum}/>
-                <Completed />
+                <Dashboard />
+                
             </div>
         )
     }

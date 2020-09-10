@@ -58,9 +58,9 @@ const LyricsBreakdown = () => {
     // ${key === 0 ? 'md:mr-2' : key === modules.length - 1 ? 'md:ml-2' : 'md:mx-2'}
 
     if (displayMode === 'SELF') {
-        return (
-            <SelfDisplay />
-        )} if (displayMode === 'COOP') {
+        // return (
+        //     <SelfDisplay />
+        // )} if (displayMode === 'COOP') {
             return (
                 <CoopDisplay />
             )
