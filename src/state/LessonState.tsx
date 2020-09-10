@@ -1,6 +1,17 @@
+export type PagesType = Array<{
+    disabled: boolean;
+    displayMode: null | string;
+    type: string;
+    stage: string;
+    open: boolean;
+    active: boolean;
+    // save: boolean;
+}> | null
+
 export interface LessonStateType  {
     status: string;
     error: string;
+    studentStatus: string;
     data?: {
         [key: string]: any;
     }
@@ -8,15 +19,7 @@ export interface LessonStateType  {
     currentPage: number;
     lessonProgress: number;
     canContinue: boolean;
-    pages: Array<{
-        disabled: boolean;
-        displayMode: null | string;
-        type: string;
-        stage: string;
-        open: boolean;
-        active: boolean;
-        save: boolean;
-    }>
+    pages: PagesType
     componentState: {
         [key: string]: any
     }
@@ -27,11 +30,13 @@ export interface LessonStateType  {
     word_bank?: Array<string>;
     lessonComplete: boolean;
     unsavedChanges: boolean;
+    saveFunction?: Promise<void>
 }
 
 export const lessonState: LessonStateType = {
     status: '',
     error: '',
+    studentStatus: 'ACTIVE',
     data: {},
     studentDataID: '',
     currentPage: 0,
@@ -44,4 +49,5 @@ export const lessonState: LessonStateType = {
     word_bank: null,
     lessonComplete: false,
     unsavedChanges: true,
+    saveFunction: null,
 }

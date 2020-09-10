@@ -22,7 +22,7 @@ const Class = (props: props) => {
         history.push(link);
     }
 
-    if (curriculum) {console.log(curriculum, 'curr');}
+    // if (curriculum) {console.log(curriculum, 'curr');}
 
     // useEffect(() => {
         

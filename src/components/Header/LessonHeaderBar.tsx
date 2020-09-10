@@ -13,30 +13,29 @@ import { LessonContext } from '../../contexts/LessonContext';
 import { API, graphqlOperation } from 'aws-amplify';
 import * as customMutations from '../../customGraphql/customMutations';
 // import useDictionary from '../../customHooks/dictionary';
-import useStudentTimer from '../../customHooks/timer'
+import useStudentTimer from '../../customHooks/timer';
 
 
 const LessonHeaderBar = () => {
-    const [ cookies, setCookie, removeCookie ] = useCookies(['lesson']);
+    const [ cookies, setCookie ] = useCookies(['lesson']);
     // const match = useRouteMatch();
     // const location = useLocation();
     // const history = useHistory();
-    const { startTimer, startAutoSave, clearAutoSave } = useStudentTimer();
-    const { theme, state, dispatch } = useContext(LessonContext);
-    const [ dictOpen, setDictOpen ] = useState(false);
+    const { theme, state, dispatch, subscription } = useContext(LessonContext);
+    // const [ dictOpen, setDictOpen ] = useState(false);
     // const { lookUp } = useDictionary('EN');
-    const [ searchTerm, setSearchTerm ] = useState('');
+    // const [ searchTerm, setSearchTerm ] = useState('');
 
     useEffect(() => {
         if ( !state.pages[0].active ) {
-            console.log('here', state);
+            // console.log('here', state);
             dispatch({ type: 'SET_PROGRESS', payload: state.lessonProgress })
         }
     }, [state.pages, state.currentPage])
 
     useEffect(() => {
         if ( cookies.lesson ) {
-            console.log(state.lessonProgress)
+            // console.log(state.lessonProgress)
             setCookie('lesson', { ...cookies.lesson, lessonProgress: state.lessonProgress })
         }
 
@@ -45,14 +44,20 @@ const LessonHeaderBar = () => {
         }
     }, [state.lessonProgress])
 
-    
+    useEffect(() => {
+        console.log(state.studentStatus);
+        
+    }, [state.studentStatus])
 
-    async function updateClassroomData() {
-        let lessonProgress = state.pages[state.lessonProgress].stage
+    const updateStudentData = async () => {
+        let lessonProgress = state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
+
+        // console.log('thisone', state )
 
         let data = {
             id: state.studentDataID,
             lessonProgress: lessonProgress,
+            status: state.studentStatus,
             classroomID: 1,
             studentID: cookies.auth.email,
             studentAuthID: cookies.auth.authId,
@@ -61,12 +66,13 @@ const LessonHeaderBar = () => {
             activityData: state.componentState.poem ? state.componentState.poem : null
         }
 
-        console.log('update', data);
+        // console.log('update', data);
         
         try {
             const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }))
             console.log(dataObject)
             dispatch({ type: 'SAVED_CHANGES' })
+            console.log('state', state)
         } catch (error) {
             console.error(error);   
         }
@@ -74,7 +80,7 @@ const LessonHeaderBar = () => {
 
     const handleSave = () => {
         if ( state.unsavedChanges ) {
-            updateClassroomData()
+            updateStudentData()
         }
     }
 
@@ -94,7 +100,16 @@ const LessonHeaderBar = () => {
     //        lookUp(searchTerm) 
     //     }
     // }
+
+    const { startTimer, startAutoSave, clearAutoSave } = useStudentTimer({
+        dispatch: dispatch,
+        subscription: subscription,
+        callback: updateStudentData,
+    });
         
+    // useEffect(() => {
+    //     startTimer()
+    // }, [state.currentPage, state.componentState])
 
     return (
         <div className={`center w-full h-.7/10 ${theme.toolbar.bg} text-gray-200 shadow-2 flex justify-between`}>
@@ -126,14 +141,25 @@ const LessonHeaderBar = () => {
                         : null
                     } 
                 </div> */}
-                <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onPointerDown={() => { startAutoSave(() => {console.log('save')}
-                ) }} onPointerUp={clearAutoSave}>
+                <div className={`flex flex-col justify-center items-center px-2`} onClick={() => { dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'IDLE' }) }}>
+                    <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
+                        <FiClock />
+                    </IconContext.Provider>
+                    <p className="text-xs text-gray-200 text-center">SetIdle</p>
+                </div>
+                <div className={`flex flex-col justify-center items-center px-2`} onClick={() => { dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' }) }}>
+                    <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
+                        <FiClock />
+                    </IconContext.Provider>
+                    <p className="text-xs text-gray-200 text-center">SetActive</p>
+                </div>
+                <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onPointerDown={startAutoSave} onPointerUp={clearAutoSave}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">AutoSave</p>
                 </div>
-                <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={() => {startTimer(() => {console.log('save')})}}>
+                <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={startTimer}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>

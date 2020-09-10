@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect, useState, } from 'react';
-import { lessonState } from '../state/LessonState'
+import { lessonState, PagesType } from '../state/LessonState'
 import { lessonReducer } from '../reducers/LessonReducer'
 import { pageThemes } from './GlobalContext';
 import { useCookies } from 'react-cookie';
@@ -10,13 +10,11 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 
-const removeDisabled = (array: Array<{ disabled: boolean, [key: string]: any}>) => {
+const removeDisabled = (array: PagesType) => {
     let updatedArray = array.filter((item: { disabled: boolean, [key: string]: any}) => {
         return !item.disabled
     })
-
-    console.log('updatedPages', updatedArray)
-
+    // console.log('updatedPages', updatedArray)
     return updatedArray
 }
 
@@ -68,7 +66,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                 const newStudentData: any = await API.graphql(graphqlOperation(customMutations.createStudentData, { input: {
                     lessonProgress: 'intro',
                     status: 'ACTIVE',
-                    live: false,
                     classroomID: queryParams.id,
                     studentID: studentID,
                     studentAuthID: studentAuthID,
@@ -177,7 +174,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     }, [data])
 
     return (
-        <LessonContext.Provider value={{state, dispatch, theme }}>
+        <LessonContext.Provider value={{state, dispatch, theme, subscription }}>
             { children }
         </LessonContext.Provider>
     )

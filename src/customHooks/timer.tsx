@@ -1,35 +1,56 @@
-import React, { useContext } from 'react'
-import { LessonContext } from '../contexts/LessonContext'
+import React from 'react'
+import { LessonActions } from '../reducers/LessonReducer'
+import { LessonStateType } from '../state/LessonState';
 
+interface inputs {
+    subscription?: any,
+    dispatch: React.Dispatch<LessonActions>,
+    callback: () => Promise<void>;
+    // state: any;
+}
 
-const useStudentTimer = () => {
-    const { state, dispatch } = useContext(LessonContext)
+const useStudentTimer = (inputs?: inputs) => {
+    const { subscription, dispatch, callback } = inputs;
     let activeTimer: any;
     let idleTimer: any;
     let autoSaveInterval: any;
 
-    const startTimer = (func: () => void) => {
+    const startTimer = () => {
         clearTimeout(activeTimer)
         clearTimeout(idleTimer)
-        console.log('active');
+        dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' })
+        // console.log('active');
+
         activeTimer = setTimeout(() => {
             clearTimeout(activeTimer)
-            console.log('idle')
-            func()
+            // console.log('idle')
+            dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'IDLE' })
+            callback()
+
             idleTimer = setTimeout(() => {
                 clearTimeout(idleTimer)
-                func()
-                console.log('offline')
-            }, 3000)
-        }, 3000)
+                dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'OFFLINE' })
+                callback()
+                if ( subscription ) { subscription.unsubscribe() }
+                // console.log('offline')
+
+            }, 10000)
+
+        }, 6000)
+
     }
 
-    const startAutoSave = (func: () => void) => {
+    const startAutoSave = () => {
         clearTimeout(activeTimer)
         clearTimeout(idleTimer)
+        // callback()
+        console.log('save');
+        
         autoSaveInterval = setInterval(() => {
-            func()
-        }, 1000)
+            console.log('save');
+            
+            // callback() 
+        }, 1500)
     }
 
     const clearAutoSave = () => {

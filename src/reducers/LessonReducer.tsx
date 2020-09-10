@@ -1,23 +1,32 @@
-import { LessonStateType, lessonState } from '../state/LessonState';
+import { LessonStateType, PagesType, lessonState } from '../state/LessonState';
+import { Stats } from 'fs';
 // import { useStudentTimer } from '../customHooks/timer'
 
 
-type LessonActions = 
+export type LessonActions = 
 |   {
-    type: 'SET_INITIAL_STATE';
-    payload: {
-        data?: any;
-        pages: any;
-        word_bank?: any;
-        displayData?: any;
+        type: 'SET_INITIAL_STATE';
+        payload: {
+            data?: any;
+            pages: PagesType
+            word_bank?: any;
+            displayData?: any;
         }
     }
 |   {
-    type: 'UPDATE_LESSON_PLAN';
-    payload: {
-        pages: any;
-        displayData?: any;
+        type: 'UPDATE_LESSON_PLAN';
+        payload: {
+            pages: PagesType;
+            displayData?: any;
         }
+    }
+|   {
+        type: 'UPDATE_STUDENT_STATUS';
+        payload: string
+    }
+|   {
+        type: 'SET_SAVE_FUNCTION';
+        payload: Promise<void>
     }
 |   {
         type: 'SET_CURRENT_PAGE';
@@ -99,6 +108,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 pages: action.payload.pages,
                 word_bank: action.payload.word_bank,
                 displayData: action.payload.displayData,
+                // timer: action.payload.timer
             }
         case 'SET_CURRENT_PAGE':
             return {
@@ -135,6 +145,17 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 ...state, 
                 error: action.payload
             } 
+        case 'UPDATE_STUDENT_STATUS':
+            console.log('status', action.payload);
+            return {
+                ...state,
+                studentStatus: action.payload
+            }
+        case 'SET_SAVE_FUNCTION':
+            return {
+                ...state,
+                saveFunction: action.payload
+            }
         case 'SET_STUDENT_DATA_ID':
             return {
                 ...state, 
