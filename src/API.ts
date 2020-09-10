@@ -161,6 +161,7 @@ export enum PersonStatus {
 
 
 export enum Role {
+  SUP = "SUP",
   ADM = "ADM",
   BLD = "BLD",
   FLW = "FLW",
@@ -512,11 +513,23 @@ export type CreateArtistInput = {
   type: string,
   bio: Array< string >,
   quotes: Array< QuoteInput >,
+  additionalContent?: AdditionalContentInput | null,
 };
 
 export type QuoteInput = {
   source: string,
   text: string,
+};
+
+export type AdditionalContentInput = {
+  video?: string | null,
+  links?: Array< LinkInput | null > | null,
+};
+
+export type LinkInput = {
+  type?: string | null,
+  text?: string | null,
+  link?: string | null,
 };
 
 export type ModelArtistConditionInput = {
@@ -536,6 +549,7 @@ export type UpdateArtistInput = {
   type?: string | null,
   bio?: Array< string > | null,
   quotes?: Array< QuoteInput > | null,
+  additionalContent?: AdditionalContentInput | null,
 };
 
 export type DeleteArtistInput = {
@@ -638,6 +652,7 @@ export type CreateLessonInput = {
   artistID: string,
   language: Language,
   SELStructureID: string,
+  connection?: string | null,
   summary: string,
   objectives: Array< string | null >,
   doFirstID: string,
@@ -652,6 +667,7 @@ export type ModelLessonConditionInput = {
   artistID?: ModelIDInput | null,
   language?: ModelLanguageInput | null,
   SELStructureID?: ModelIDInput | null,
+  connection?: ModelStringInput | null,
   summary?: ModelStringInput | null,
   objectives?: ModelStringInput | null,
   doFirstID?: ModelIDInput | null,
@@ -670,6 +686,7 @@ export type UpdateLessonInput = {
   artistID?: string | null,
   language?: Language | null,
   SELStructureID?: string | null,
+  connection?: string | null,
   summary?: string | null,
   objectives?: Array< string | null > | null,
   doFirstID?: string | null,
@@ -1069,6 +1086,81 @@ export type DeleteQuestionDataStudentDataInput = {
   id?: string | null,
 };
 
+export type CreateWordInput = {
+  id?: string | null,
+  word: string,
+  definition?: string | null,
+};
+
+export type ModelWordConditionInput = {
+  word?: ModelStringInput | null,
+  definition?: ModelStringInput | null,
+  and?: Array< ModelWordConditionInput | null > | null,
+  or?: Array< ModelWordConditionInput | null > | null,
+  not?: ModelWordConditionInput | null,
+};
+
+export type UpdateWordInput = {
+  id: string,
+  word?: string | null,
+  definition?: string | null,
+};
+
+export type DeleteWordInput = {
+  id?: string | null,
+};
+
+export type CreateLessonKeyWordInput = {
+  id?: string | null,
+  wordID: string,
+  lessonID: string,
+};
+
+export type ModelLessonKeyWordConditionInput = {
+  wordID?: ModelIDInput | null,
+  lessonID?: ModelIDInput | null,
+  and?: Array< ModelLessonKeyWordConditionInput | null > | null,
+  or?: Array< ModelLessonKeyWordConditionInput | null > | null,
+  not?: ModelLessonKeyWordConditionInput | null,
+};
+
+export type UpdateLessonKeyWordInput = {
+  id: string,
+  wordID?: string | null,
+  lessonID?: string | null,
+};
+
+export type DeleteLessonKeyWordInput = {
+  id?: string | null,
+};
+
+export type CreateStudentWordInput = {
+  id?: string | null,
+  wordID: string,
+  studentID: string,
+  studentAuthID: string,
+};
+
+export type ModelStudentWordConditionInput = {
+  wordID?: ModelIDInput | null,
+  studentID?: ModelStringInput | null,
+  studentAuthID?: ModelStringInput | null,
+  and?: Array< ModelStudentWordConditionInput | null > | null,
+  or?: Array< ModelStudentWordConditionInput | null > | null,
+  not?: ModelStudentWordConditionInput | null,
+};
+
+export type UpdateStudentWordInput = {
+  id: string,
+  wordID?: string | null,
+  studentID?: string | null,
+  studentAuthID?: string | null,
+};
+
+export type DeleteStudentWordInput = {
+  id?: string | null,
+};
+
 export type ModelInstitutionTypeFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -1224,6 +1316,7 @@ export type ModelLessonFilterInput = {
   artistID?: ModelIDInput | null,
   language?: ModelLanguageInput | null,
   SELStructureID?: ModelIDInput | null,
+  connection?: ModelStringInput | null,
   summary?: ModelStringInput | null,
   objectives?: ModelStringInput | null,
   doFirstID?: ModelIDInput | null,
@@ -1313,6 +1406,15 @@ export type ModelQuestionDataFilterInput = {
   and?: Array< ModelQuestionDataFilterInput | null > | null,
   or?: Array< ModelQuestionDataFilterInput | null > | null,
   not?: ModelQuestionDataFilterInput | null,
+};
+
+export type ModelWordFilterInput = {
+  id?: ModelIDInput | null,
+  word?: ModelStringInput | null,
+  definition?: ModelStringInput | null,
+  and?: Array< ModelWordFilterInput | null > | null,
+  or?: Array< ModelWordFilterInput | null > | null,
+  not?: ModelWordFilterInput | null,
 };
 
 export type SearchablePersonFilterInput = {
@@ -1585,6 +1687,19 @@ export type CreatePersonMutation = {
     lastName: string,
     externalId: string | null,
     grade: string | null,
+    wordbank:  {
+      __typename: "ModelStudentWordConnection",
+      items:  Array< {
+        __typename: "StudentWord",
+        id: string,
+        wordID: string,
+        studentID: string,
+        studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     phone: string | null,
     birthdate: string | null,
     image: string | null,
@@ -1612,6 +1727,19 @@ export type UpdatePersonMutation = {
     lastName: string,
     externalId: string | null,
     grade: string | null,
+    wordbank:  {
+      __typename: "ModelStudentWordConnection",
+      items:  Array< {
+        __typename: "StudentWord",
+        id: string,
+        wordID: string,
+        studentID: string,
+        studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     phone: string | null,
     birthdate: string | null,
     image: string | null,
@@ -1639,6 +1767,19 @@ export type DeletePersonMutation = {
     lastName: string,
     externalId: string | null,
     grade: string | null,
+    wordbank:  {
+      __typename: "ModelStudentWordConnection",
+      items:  Array< {
+        __typename: "StudentWord",
+        id: string,
+        wordID: string,
+        studentID: string,
+        studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     phone: string | null,
     birthdate: string | null,
     image: string | null,
@@ -1862,6 +2003,11 @@ export type CreateCurriculumLessonsMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -1983,6 +2129,11 @@ export type UpdateCurriculumLessonsMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -2104,6 +2255,11 @@ export type DeleteCurriculumLessonsMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -2614,6 +2770,10 @@ export type CreateClassStudentMutation = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -2662,6 +2822,10 @@ export type UpdateClassStudentMutation = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -2710,6 +2874,10 @@ export type DeleteClassStudentMutation = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -2770,6 +2938,7 @@ export type CreateStudentDataMutation = {
         artistID: string,
         language: Language,
         SELStructureID: string,
+        connection: string | null,
         summary: string,
         objectives: Array< string | null >,
         doFirstID: string,
@@ -2810,6 +2979,10 @@ export type CreateStudentDataMutation = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -2927,6 +3100,7 @@ export type UpdateStudentDataMutation = {
         artistID: string,
         language: Language,
         SELStructureID: string,
+        connection: string | null,
         summary: string,
         objectives: Array< string | null >,
         doFirstID: string,
@@ -2967,6 +3141,10 @@ export type UpdateStudentDataMutation = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -3084,6 +3262,7 @@ export type DeleteStudentDataMutation = {
         artistID: string,
         language: Language,
         SELStructureID: string,
+        connection: string | null,
         summary: string,
         objectives: Array< string | null >,
         doFirstID: string,
@@ -3124,6 +3303,10 @@ export type DeleteStudentDataMutation = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -3211,6 +3394,16 @@ export type CreateArtistMutation = {
       source: string,
       text: string,
     } >,
+    additionalContent:  {
+      __typename: "AdditionalContent",
+      video: string | null,
+      links:  Array< {
+        __typename: "Link",
+        type: string | null,
+        text: string | null,
+        link: string | null,
+      } | null > | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3234,6 +3427,16 @@ export type UpdateArtistMutation = {
       source: string,
       text: string,
     } >,
+    additionalContent:  {
+      __typename: "AdditionalContent",
+      video: string | null,
+      links:  Array< {
+        __typename: "Link",
+        type: string | null,
+        text: string | null,
+        link: string | null,
+      } | null > | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3257,6 +3460,16 @@ export type DeleteArtistMutation = {
       source: string,
       text: string,
     } >,
+    additionalContent:  {
+      __typename: "AdditionalContent",
+      video: string | null,
+      links:  Array< {
+        __typename: "Link",
+        type: string | null,
+        text: string | null,
+        link: string | null,
+      } | null > | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3382,6 +3595,11 @@ export type CreateClassroomMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -3591,6 +3809,11 @@ export type UpdateClassroomMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -3800,6 +4023,11 @@ export type DeleteClassroomMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -3984,6 +4212,10 @@ export type CreateLessonMutation = {
         source: string,
         text: string,
       } >,
+      additionalContent:  {
+        __typename: "AdditionalContent",
+        video: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -3997,6 +4229,19 @@ export type CreateLessonMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    keywords:  {
+      __typename: "ModelLessonKeyWordConnection",
+      items:  Array< {
+        __typename: "LessonKeyWord",
+        id: string,
+        wordID: string,
+        lessonID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    connection: string | null,
     summary: string,
     objectives: Array< string | null >,
     checkpoints:  {
@@ -4175,6 +4420,10 @@ export type UpdateLessonMutation = {
         source: string,
         text: string,
       } >,
+      additionalContent:  {
+        __typename: "AdditionalContent",
+        video: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -4188,6 +4437,19 @@ export type UpdateLessonMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    keywords:  {
+      __typename: "ModelLessonKeyWordConnection",
+      items:  Array< {
+        __typename: "LessonKeyWord",
+        id: string,
+        wordID: string,
+        lessonID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    connection: string | null,
     summary: string,
     objectives: Array< string | null >,
     checkpoints:  {
@@ -4366,6 +4628,10 @@ export type DeleteLessonMutation = {
         source: string,
         text: string,
       } >,
+      additionalContent:  {
+        __typename: "AdditionalContent",
+        video: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -4379,6 +4645,19 @@ export type DeleteLessonMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    keywords:  {
+      __typename: "ModelLessonKeyWordConnection",
+      items:  Array< {
+        __typename: "LessonKeyWord",
+        id: string,
+        wordID: string,
+        lessonID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    connection: string | null,
     summary: string,
     objectives: Array< string | null >,
     checkpoints:  {
@@ -4552,6 +4831,11 @@ export type CreateLessonCheckpointMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -4670,6 +4954,11 @@ export type UpdateLessonCheckpointMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -4788,6 +5077,11 @@ export type DeleteLessonCheckpointMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -5798,6 +6092,10 @@ export type CreateQuestionDataMutation = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -5851,6 +6149,10 @@ export type UpdateQuestionDataMutation = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -5904,6 +6206,10 @@ export type DeleteQuestionDataMutation = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -6265,6 +6571,549 @@ export type DeleteQuestionDataStudentDataMutation = {
   } | null,
 };
 
+export type CreateWordMutationVariables = {
+  input: CreateWordInput,
+  condition?: ModelWordConditionInput | null,
+};
+
+export type CreateWordMutation = {
+  createWord:  {
+    __typename: "Word",
+    id: string,
+    word: string,
+    definition: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateWordMutationVariables = {
+  input: UpdateWordInput,
+  condition?: ModelWordConditionInput | null,
+};
+
+export type UpdateWordMutation = {
+  updateWord:  {
+    __typename: "Word",
+    id: string,
+    word: string,
+    definition: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteWordMutationVariables = {
+  input: DeleteWordInput,
+  condition?: ModelWordConditionInput | null,
+};
+
+export type DeleteWordMutation = {
+  deleteWord:  {
+    __typename: "Word",
+    id: string,
+    word: string,
+    definition: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateLessonKeyWordMutationVariables = {
+  input: CreateLessonKeyWordInput,
+  condition?: ModelLessonKeyWordConditionInput | null,
+};
+
+export type CreateLessonKeyWordMutation = {
+  createLessonKeyWord:  {
+    __typename: "LessonKeyWord",
+    id: string,
+    wordID: string,
+    lessonID: string,
+    word:  {
+      __typename: "Word",
+      id: string,
+      word: string,
+      definition: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    lesson:  {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      contributors:  {
+        __typename: "ModelPersonConnection",
+        nextToken: string | null,
+      } | null,
+      grades: Array< number | null > | null,
+      artistID: string,
+      artist:  {
+        __typename: "Artist",
+        id: string,
+        images: Array< string > | null,
+        name: string,
+        type: string,
+        bio: Array< string >,
+        createdAt: string,
+        updatedAt: string,
+      },
+      language: Language,
+      SELStructureID: string,
+      SELStructure:  {
+        __typename: "SELStructure",
+        id: string,
+        name: string,
+        description: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
+      summary: string,
+      objectives: Array< string | null >,
+      checkpoints:  {
+        __typename: "ModelLessonCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      doFirstID: string,
+      doFirst:  {
+        __typename: "DoFirst",
+        id: string,
+        type: string,
+        required: boolean,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      warmUpId: string,
+      warmUp:  {
+        __typename: "WarmUp",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      coreLessonId: string,
+      coreLesson:  {
+        __typename: "CoreLesson",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      activityId: string,
+      activity:  {
+        __typename: "Activity",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateLessonKeyWordMutationVariables = {
+  input: UpdateLessonKeyWordInput,
+  condition?: ModelLessonKeyWordConditionInput | null,
+};
+
+export type UpdateLessonKeyWordMutation = {
+  updateLessonKeyWord:  {
+    __typename: "LessonKeyWord",
+    id: string,
+    wordID: string,
+    lessonID: string,
+    word:  {
+      __typename: "Word",
+      id: string,
+      word: string,
+      definition: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    lesson:  {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      contributors:  {
+        __typename: "ModelPersonConnection",
+        nextToken: string | null,
+      } | null,
+      grades: Array< number | null > | null,
+      artistID: string,
+      artist:  {
+        __typename: "Artist",
+        id: string,
+        images: Array< string > | null,
+        name: string,
+        type: string,
+        bio: Array< string >,
+        createdAt: string,
+        updatedAt: string,
+      },
+      language: Language,
+      SELStructureID: string,
+      SELStructure:  {
+        __typename: "SELStructure",
+        id: string,
+        name: string,
+        description: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
+      summary: string,
+      objectives: Array< string | null >,
+      checkpoints:  {
+        __typename: "ModelLessonCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      doFirstID: string,
+      doFirst:  {
+        __typename: "DoFirst",
+        id: string,
+        type: string,
+        required: boolean,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      warmUpId: string,
+      warmUp:  {
+        __typename: "WarmUp",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      coreLessonId: string,
+      coreLesson:  {
+        __typename: "CoreLesson",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      activityId: string,
+      activity:  {
+        __typename: "Activity",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteLessonKeyWordMutationVariables = {
+  input: DeleteLessonKeyWordInput,
+  condition?: ModelLessonKeyWordConditionInput | null,
+};
+
+export type DeleteLessonKeyWordMutation = {
+  deleteLessonKeyWord:  {
+    __typename: "LessonKeyWord",
+    id: string,
+    wordID: string,
+    lessonID: string,
+    word:  {
+      __typename: "Word",
+      id: string,
+      word: string,
+      definition: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    lesson:  {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      contributors:  {
+        __typename: "ModelPersonConnection",
+        nextToken: string | null,
+      } | null,
+      grades: Array< number | null > | null,
+      artistID: string,
+      artist:  {
+        __typename: "Artist",
+        id: string,
+        images: Array< string > | null,
+        name: string,
+        type: string,
+        bio: Array< string >,
+        createdAt: string,
+        updatedAt: string,
+      },
+      language: Language,
+      SELStructureID: string,
+      SELStructure:  {
+        __typename: "SELStructure",
+        id: string,
+        name: string,
+        description: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
+      summary: string,
+      objectives: Array< string | null >,
+      checkpoints:  {
+        __typename: "ModelLessonCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      doFirstID: string,
+      doFirst:  {
+        __typename: "DoFirst",
+        id: string,
+        type: string,
+        required: boolean,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      warmUpId: string,
+      warmUp:  {
+        __typename: "WarmUp",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      coreLessonId: string,
+      coreLesson:  {
+        __typename: "CoreLesson",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      activityId: string,
+      activity:  {
+        __typename: "Activity",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateStudentWordMutationVariables = {
+  input: CreateStudentWordInput,
+  condition?: ModelStudentWordConditionInput | null,
+};
+
+export type CreateStudentWordMutation = {
+  createStudentWord:  {
+    __typename: "StudentWord",
+    id: string,
+    wordID: string,
+    studentID: string,
+    studentAuthID: string,
+    word:  {
+      __typename: "Word",
+      id: string,
+      word: string,
+      definition: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    student:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateStudentWordMutationVariables = {
+  input: UpdateStudentWordInput,
+  condition?: ModelStudentWordConditionInput | null,
+};
+
+export type UpdateStudentWordMutation = {
+  updateStudentWord:  {
+    __typename: "StudentWord",
+    id: string,
+    wordID: string,
+    studentID: string,
+    studentAuthID: string,
+    word:  {
+      __typename: "Word",
+      id: string,
+      word: string,
+      definition: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    student:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteStudentWordMutationVariables = {
+  input: DeleteStudentWordInput,
+  condition?: ModelStudentWordConditionInput | null,
+};
+
+export type DeleteStudentWordMutation = {
+  deleteStudentWord:  {
+    __typename: "StudentWord",
+    id: string,
+    wordID: string,
+    studentID: string,
+    studentAuthID: string,
+    word:  {
+      __typename: "Word",
+      id: string,
+      word: string,
+      definition: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    student:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type GetInstitutionTypeQueryVariables = {
   id: string,
 };
@@ -6411,6 +7260,19 @@ export type GetPersonQuery = {
     lastName: string,
     externalId: string | null,
     grade: string | null,
+    wordbank:  {
+      __typename: "ModelStudentWordConnection",
+      items:  Array< {
+        __typename: "StudentWord",
+        id: string,
+        wordID: string,
+        studentID: string,
+        studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     phone: string | null,
     birthdate: string | null,
     image: string | null,
@@ -6444,6 +7306,10 @@ export type ListPersonsQuery = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -6830,6 +7696,7 @@ export type GetStudentDataQuery = {
         artistID: string,
         language: Language,
         SELStructureID: string,
+        connection: string | null,
         summary: string,
         objectives: Array< string | null >,
         doFirstID: string,
@@ -6870,6 +7737,10 @@ export type GetStudentDataQuery = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -7034,6 +7905,16 @@ export type GetArtistQuery = {
       source: string,
       text: string,
     } >,
+    additionalContent:  {
+      __typename: "AdditionalContent",
+      video: string | null,
+      links:  Array< {
+        __typename: "Link",
+        type: string | null,
+        text: string | null,
+        link: string | null,
+      } | null > | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -7060,6 +7941,10 @@ export type ListArtistsQuery = {
         source: string,
         text: string,
       } >,
+      additionalContent:  {
+        __typename: "AdditionalContent",
+        video: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -7186,6 +8071,11 @@ export type GetClassroomQuery = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -7319,6 +8209,7 @@ export type ListClassroomsQuery = {
         artistID: string,
         language: Language,
         SELStructureID: string,
+        connection: string | null,
         summary: string,
         objectives: Array< string | null >,
         doFirstID: string,
@@ -7431,6 +8322,10 @@ export type GetLessonQuery = {
         source: string,
         text: string,
       } >,
+      additionalContent:  {
+        __typename: "AdditionalContent",
+        video: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -7444,6 +8339,19 @@ export type GetLessonQuery = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    keywords:  {
+      __typename: "ModelLessonKeyWordConnection",
+      items:  Array< {
+        __typename: "LessonKeyWord",
+        id: string,
+        wordID: string,
+        lessonID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    connection: string | null,
     summary: string,
     objectives: Array< string | null >,
     checkpoints:  {
@@ -7616,6 +8524,11 @@ export type ListLessonsQuery = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -8133,6 +9046,10 @@ export type GetQuestionDataQuery = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -8197,6 +9114,42 @@ export type ListQuestionDatasQuery = {
   } | null,
 };
 
+export type GetWordQueryVariables = {
+  id: string,
+};
+
+export type GetWordQuery = {
+  getWord:  {
+    __typename: "Word",
+    id: string,
+    word: string,
+    definition: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListWordsQueryVariables = {
+  filter?: ModelWordFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListWordsQuery = {
+  listWords:  {
+    __typename: "ModelWordConnection",
+    items:  Array< {
+      __typename: "Word",
+      id: string,
+      word: string,
+      definition: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
 export type UserByIdQueryVariables = {
   id?: string | null,
   sortDirection?: ModelSortDirection | null,
@@ -8220,6 +9173,10 @@ export type UserByIdQuery = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -8254,10 +9211,37 @@ export type UsersByRoleQuery = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
       language: Language,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type SearchByWordQueryVariables = {
+  word?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelWordFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type SearchByWordQuery = {
+  searchByWord:  {
+    __typename: "ModelWordConnection",
+    items:  Array< {
+      __typename: "Word",
+      id: string,
+      word: string,
+      definition: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -8287,6 +9271,10 @@ export type SearchPersonsQuery = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -8418,6 +9406,11 @@ export type OnUpdateClassroomSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -8554,6 +9547,7 @@ export type OnChangeStudentDataSubscription = {
         artistID: string,
         language: Language,
         SELStructureID: string,
+        connection: string | null,
         summary: string,
         objectives: Array< string | null >,
         doFirstID: string,
@@ -8594,6 +9588,10 @@ export type OnChangeStudentDataSubscription = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -8823,6 +9821,19 @@ export type OnCreatePersonSubscription = {
     lastName: string,
     externalId: string | null,
     grade: string | null,
+    wordbank:  {
+      __typename: "ModelStudentWordConnection",
+      items:  Array< {
+        __typename: "StudentWord",
+        id: string,
+        wordID: string,
+        studentID: string,
+        studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     phone: string | null,
     birthdate: string | null,
     image: string | null,
@@ -8845,6 +9856,19 @@ export type OnUpdatePersonSubscription = {
     lastName: string,
     externalId: string | null,
     grade: string | null,
+    wordbank:  {
+      __typename: "ModelStudentWordConnection",
+      items:  Array< {
+        __typename: "StudentWord",
+        id: string,
+        wordID: string,
+        studentID: string,
+        studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     phone: string | null,
     birthdate: string | null,
     image: string | null,
@@ -8867,6 +9891,19 @@ export type OnDeletePersonSubscription = {
     lastName: string,
     externalId: string | null,
     grade: string | null,
+    wordbank:  {
+      __typename: "ModelStudentWordConnection",
+      items:  Array< {
+        __typename: "StudentWord",
+        id: string,
+        wordID: string,
+        studentID: string,
+        studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     phone: string | null,
     birthdate: string | null,
     image: string | null,
@@ -9070,6 +10107,11 @@ export type OnCreateCurriculumLessonsSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -9186,6 +10228,11 @@ export type OnUpdateCurriculumLessonsSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -9302,6 +10349,11 @@ export type OnDeleteCurriculumLessonsSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -9762,6 +10814,10 @@ export type OnCreateClassStudentSubscription = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -9805,6 +10861,10 @@ export type OnUpdateClassStudentSubscription = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -9848,6 +10908,10 @@ export type OnDeleteClassStudentSubscription = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -9873,6 +10937,16 @@ export type OnCreateArtistSubscription = {
       source: string,
       text: string,
     } >,
+    additionalContent:  {
+      __typename: "AdditionalContent",
+      video: string | null,
+      links:  Array< {
+        __typename: "Link",
+        type: string | null,
+        text: string | null,
+        link: string | null,
+      } | null > | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -9891,6 +10965,16 @@ export type OnUpdateArtistSubscription = {
       source: string,
       text: string,
     } >,
+    additionalContent:  {
+      __typename: "AdditionalContent",
+      video: string | null,
+      links:  Array< {
+        __typename: "Link",
+        type: string | null,
+        text: string | null,
+        link: string | null,
+      } | null > | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -9909,6 +10993,16 @@ export type OnDeleteArtistSubscription = {
       source: string,
       text: string,
     } >,
+    additionalContent:  {
+      __typename: "AdditionalContent",
+      video: string | null,
+      links:  Array< {
+        __typename: "Link",
+        type: string | null,
+        text: string | null,
+        link: string | null,
+      } | null > | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -9989,6 +11083,10 @@ export type OnCreateLessonSubscription = {
         source: string,
         text: string,
       } >,
+      additionalContent:  {
+        __typename: "AdditionalContent",
+        video: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -10002,6 +11100,19 @@ export type OnCreateLessonSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    keywords:  {
+      __typename: "ModelLessonKeyWordConnection",
+      items:  Array< {
+        __typename: "LessonKeyWord",
+        id: string,
+        wordID: string,
+        lessonID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    connection: string | null,
     summary: string,
     objectives: Array< string | null >,
     checkpoints:  {
@@ -10175,6 +11286,10 @@ export type OnUpdateLessonSubscription = {
         source: string,
         text: string,
       } >,
+      additionalContent:  {
+        __typename: "AdditionalContent",
+        video: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -10188,6 +11303,19 @@ export type OnUpdateLessonSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    keywords:  {
+      __typename: "ModelLessonKeyWordConnection",
+      items:  Array< {
+        __typename: "LessonKeyWord",
+        id: string,
+        wordID: string,
+        lessonID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    connection: string | null,
     summary: string,
     objectives: Array< string | null >,
     checkpoints:  {
@@ -10361,6 +11489,10 @@ export type OnDeleteLessonSubscription = {
         source: string,
         text: string,
       } >,
+      additionalContent:  {
+        __typename: "AdditionalContent",
+        video: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -10374,6 +11506,19 @@ export type OnDeleteLessonSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    keywords:  {
+      __typename: "ModelLessonKeyWordConnection",
+      items:  Array< {
+        __typename: "LessonKeyWord",
+        id: string,
+        wordID: string,
+        lessonID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    connection: string | null,
     summary: string,
     objectives: Array< string | null >,
     checkpoints:  {
@@ -10542,6 +11687,11 @@ export type OnCreateLessonCheckpointSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -10655,6 +11805,11 @@ export type OnUpdateLessonCheckpointSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -10768,6 +11923,11 @@ export type OnDeleteLessonCheckpointSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
       summary: string,
       objectives: Array< string | null >,
       checkpoints:  {
@@ -11653,6 +12813,10 @@ export type OnCreateQuestionDataSubscription = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -11701,6 +12865,10 @@ export type OnUpdateQuestionDataSubscription = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -11749,6 +12917,10 @@ export type OnDeleteQuestionDataSubscription = {
       lastName: string,
       externalId: string | null,
       grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -12087,6 +13259,504 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         updatedAt: string,
       } | null,
       response: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateWordSubscription = {
+  onCreateWord:  {
+    __typename: "Word",
+    id: string,
+    word: string,
+    definition: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateWordSubscription = {
+  onUpdateWord:  {
+    __typename: "Word",
+    id: string,
+    word: string,
+    definition: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteWordSubscription = {
+  onDeleteWord:  {
+    __typename: "Word",
+    id: string,
+    word: string,
+    definition: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateLessonKeyWordSubscription = {
+  onCreateLessonKeyWord:  {
+    __typename: "LessonKeyWord",
+    id: string,
+    wordID: string,
+    lessonID: string,
+    word:  {
+      __typename: "Word",
+      id: string,
+      word: string,
+      definition: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    lesson:  {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      contributors:  {
+        __typename: "ModelPersonConnection",
+        nextToken: string | null,
+      } | null,
+      grades: Array< number | null > | null,
+      artistID: string,
+      artist:  {
+        __typename: "Artist",
+        id: string,
+        images: Array< string > | null,
+        name: string,
+        type: string,
+        bio: Array< string >,
+        createdAt: string,
+        updatedAt: string,
+      },
+      language: Language,
+      SELStructureID: string,
+      SELStructure:  {
+        __typename: "SELStructure",
+        id: string,
+        name: string,
+        description: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
+      summary: string,
+      objectives: Array< string | null >,
+      checkpoints:  {
+        __typename: "ModelLessonCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      doFirstID: string,
+      doFirst:  {
+        __typename: "DoFirst",
+        id: string,
+        type: string,
+        required: boolean,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      warmUpId: string,
+      warmUp:  {
+        __typename: "WarmUp",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      coreLessonId: string,
+      coreLesson:  {
+        __typename: "CoreLesson",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      activityId: string,
+      activity:  {
+        __typename: "Activity",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateLessonKeyWordSubscription = {
+  onUpdateLessonKeyWord:  {
+    __typename: "LessonKeyWord",
+    id: string,
+    wordID: string,
+    lessonID: string,
+    word:  {
+      __typename: "Word",
+      id: string,
+      word: string,
+      definition: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    lesson:  {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      contributors:  {
+        __typename: "ModelPersonConnection",
+        nextToken: string | null,
+      } | null,
+      grades: Array< number | null > | null,
+      artistID: string,
+      artist:  {
+        __typename: "Artist",
+        id: string,
+        images: Array< string > | null,
+        name: string,
+        type: string,
+        bio: Array< string >,
+        createdAt: string,
+        updatedAt: string,
+      },
+      language: Language,
+      SELStructureID: string,
+      SELStructure:  {
+        __typename: "SELStructure",
+        id: string,
+        name: string,
+        description: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
+      summary: string,
+      objectives: Array< string | null >,
+      checkpoints:  {
+        __typename: "ModelLessonCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      doFirstID: string,
+      doFirst:  {
+        __typename: "DoFirst",
+        id: string,
+        type: string,
+        required: boolean,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      warmUpId: string,
+      warmUp:  {
+        __typename: "WarmUp",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      coreLessonId: string,
+      coreLesson:  {
+        __typename: "CoreLesson",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      activityId: string,
+      activity:  {
+        __typename: "Activity",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteLessonKeyWordSubscription = {
+  onDeleteLessonKeyWord:  {
+    __typename: "LessonKeyWord",
+    id: string,
+    wordID: string,
+    lessonID: string,
+    word:  {
+      __typename: "Word",
+      id: string,
+      word: string,
+      definition: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    lesson:  {
+      __typename: "Lesson",
+      id: string,
+      title: string,
+      contributors:  {
+        __typename: "ModelPersonConnection",
+        nextToken: string | null,
+      } | null,
+      grades: Array< number | null > | null,
+      artistID: string,
+      artist:  {
+        __typename: "Artist",
+        id: string,
+        images: Array< string > | null,
+        name: string,
+        type: string,
+        bio: Array< string >,
+        createdAt: string,
+        updatedAt: string,
+      },
+      language: Language,
+      SELStructureID: string,
+      SELStructure:  {
+        __typename: "SELStructure",
+        id: string,
+        name: string,
+        description: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
+      } | null,
+      connection: string | null,
+      summary: string,
+      objectives: Array< string | null >,
+      checkpoints:  {
+        __typename: "ModelLessonCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      doFirstID: string,
+      doFirst:  {
+        __typename: "DoFirst",
+        id: string,
+        type: string,
+        required: boolean,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      warmUpId: string,
+      warmUp:  {
+        __typename: "WarmUp",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      coreLessonId: string,
+      coreLesson:  {
+        __typename: "CoreLesson",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      activityId: string,
+      activity:  {
+        __typename: "Activity",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateStudentWordSubscription = {
+  onCreateStudentWord:  {
+    __typename: "StudentWord",
+    id: string,
+    wordID: string,
+    studentID: string,
+    studentAuthID: string,
+    word:  {
+      __typename: "Word",
+      id: string,
+      word: string,
+      definition: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    student:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateStudentWordSubscription = {
+  onUpdateStudentWord:  {
+    __typename: "StudentWord",
+    id: string,
+    wordID: string,
+    studentID: string,
+    studentAuthID: string,
+    word:  {
+      __typename: "Word",
+      id: string,
+      word: string,
+      definition: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    student:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteStudentWordSubscription = {
+  onDeleteStudentWord:  {
+    __typename: "StudentWord",
+    id: string,
+    wordID: string,
+    studentID: string,
+    studentAuthID: string,
+    word:  {
+      __typename: "Word",
+      id: string,
+      word: string,
+      definition: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    student:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
       createdAt: string,
       updatedAt: string,
     } | null,

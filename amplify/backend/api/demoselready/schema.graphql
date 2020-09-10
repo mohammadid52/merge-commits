@@ -2,6 +2,7 @@ enum Language {
   EN
   ES
   VT
+  TR
 }
 
 enum PersonStatus {
@@ -78,7 +79,8 @@ type Person @model
   # institution: Institution @connection(fields: ["institutionId"])
   externalId: String
   grade: String
-  # courses: [StudentCourse] @connection(keyName: "byStudent", field: ["id"])
+  # courses: [StudentCourse] @connection(keyName: "byStudent", field: ["id"]
+  wordbank: [StudentWord] @connection(keyName: "wordsByStudent", fields: ["email"])
   phone: String
   birthdate: AWSDate
   image: String
@@ -239,6 +241,17 @@ type Quote {
   text: String!
 }
 
+type Link {
+  type: String
+  text: String
+  link: String
+}
+
+type AdditionalContent {
+  video: String
+  links: [Link]
+}
+
 type Artist @model
 {
   id: ID!
@@ -247,6 +260,7 @@ type Artist @model
   type: String!
   bio: [String!]!
   quotes: [Quote!]!
+  additionalContent: AdditionalContent
 }
 
 type StudentInfo {
@@ -288,11 +302,6 @@ type SELStructure @model {
   description: String
 }
 
-type Keyword {
-  id: ID!
-  word: String
-  definition: String
-}
 
 type Lesson @model @key(fields: ["id"]) {
   id: ID!
@@ -304,7 +313,7 @@ type Lesson @model @key(fields: ["id"]) {
   language: Language!
   SELStructureID: ID!
   SELStructure: SELStructure @connection(fields: ["SELStructureID"])
-  keywords: [Keyword]
+  keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
   connection: String
   summary: String!
   objectives: [String]!
@@ -479,4 +488,33 @@ type QuestionDataStudentData @model(queries: null)
   studentData: StudentData @connection(fields: ["studentDataID"])
   questionDataID: ID!
   questionData: QuestionData @connection(fields: ["questionDataID"])
+}
+
+type Word @model
+@key(name: "byWord", fields: ["word"], queryField: "searchByWord")
+{
+  id: ID!
+  word: String!
+  definition: String
+}
+
+type LessonKeyWord @model(queries: null)
+@key(name: "wordsByLesson", fields: ["lessonID", "wordID"])
+{
+  id: ID!
+  wordID: ID!
+  lessonID: ID!
+  word: Word @connection(fields: ["wordID"])
+  lesson: Lesson @connection(fields: ["lessonID"])
+}
+
+type StudentWord @model(queries: null)
+@key(name: "wordsByStudent", fields: ["studentID", "wordID"])
+{
+  id: ID!
+  wordID: ID!
+  studentID: String!
+  studentAuthID: String!
+  word: Word @connection(fields: ["wordID"])
+  student: Person @connection(fields: ["studentID", "studentAuthID"])
 }

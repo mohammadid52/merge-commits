@@ -98,12 +98,6 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 word_bank: action.payload.word_bank,
                 displayData: action.payload.displayData,
             }
-        case 'SET_LESSON_PROGRESS':
-            let lessonProgress = state.pages.findIndex((page: { stage: string }) => {
-                page.stage == 'corelesson'
-            })
-            console.log('progress', state.pages,action.payload, lessonProgress);
-            return state
         case 'SET_CURRENT_PAGE':
             return {
                 ...state,

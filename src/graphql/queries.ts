@@ -133,6 +133,17 @@ export const getPerson = /* GraphQL */ `
       lastName
       externalId
       grade
+      wordbank {
+        items {
+          id
+          wordID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       phone
       birthdate
       image
@@ -170,6 +181,9 @@ export const listPersons = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -502,6 +516,7 @@ export const getStudentData = /* GraphQL */ `
           artistID
           language
           SELStructureID
+          connection
           summary
           objectives
           doFirstID
@@ -539,6 +554,9 @@ export const getStudentData = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -686,6 +704,14 @@ export const getArtist = /* GraphQL */ `
         source
         text
       }
+      additionalContent {
+        video
+        links {
+          type
+          text
+          link
+        }
+      }
       createdAt
       updatedAt
     }
@@ -707,6 +733,9 @@ export const listArtists = /* GraphQL */ `
         quotes {
           source
           text
+        }
+        additionalContent {
+          video
         }
         createdAt
         updatedAt
@@ -817,6 +846,10 @@ export const getClassroom = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -936,6 +969,7 @@ export const listClassrooms = /* GraphQL */ `
           artistID
           language
           SELStructureID
+          connection
           summary
           objectives
           doFirstID
@@ -1031,6 +1065,9 @@ export const getLesson = /* GraphQL */ `
           source
           text
         }
+        additionalContent {
+          video
+        }
         createdAt
         updatedAt
       }
@@ -1043,6 +1080,17 @@ export const getLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
       summary
       objectives
       checkpoints {
@@ -1198,6 +1246,10 @@ export const listLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        keywords {
+          nextToken
+        }
+        connection
         summary
         objectives
         checkpoints {
@@ -1632,6 +1684,9 @@ export const getQuestionData = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -1691,6 +1746,35 @@ export const listQuestionDatas = /* GraphQL */ `
     }
   }
 `;
+export const getWord = /* GraphQL */ `
+  query GetWord($id: ID!) {
+    getWord(id: $id) {
+      id
+      word
+      definition
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listWords = /* GraphQL */ `
+  query ListWords(
+    $filter: ModelWordFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listWords(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID
@@ -1717,6 +1801,9 @@ export const userById = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
@@ -1754,10 +1841,39 @@ export const usersByRole = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image
         language
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const searchByWord = /* GraphQL */ `
+  query SearchByWord(
+    $word: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelWordFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    searchByWord(
+      word: $word
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        word
+        definition
         createdAt
         updatedAt
       }
@@ -1789,6 +1905,9 @@ export const searchPersons = /* GraphQL */ `
         lastName
         externalId
         grade
+        wordbank {
+          nextToken
+        }
         phone
         birthdate
         image

@@ -93,7 +93,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         
         try {
             // this any needs to be changed once a solution is found!!!
-            const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: queryParams.id }))
+            const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroomStudent, { id: queryParams.id }))
             console.log('classroom data', classroom);
             setLesson(classroom.data.getClassroom)
             getOrCreateStudentData()

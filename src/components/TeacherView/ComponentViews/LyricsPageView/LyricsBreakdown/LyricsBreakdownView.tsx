@@ -64,7 +64,7 @@ const SelfDisplay = (props: props) => {
         })
         
         return setModules(modulesArray)
-    }, [])
+    }, [state.studentViewing])
 
     // ${key === 0 ? 'md:mr-2' : key === modules.length - 1 ? 'md:ml-2' : 'md:mx-2'}
 

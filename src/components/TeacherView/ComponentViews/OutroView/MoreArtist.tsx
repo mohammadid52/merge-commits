@@ -21,22 +21,22 @@ const MoreArtist = (props: props) => {
         {
             type: 'etc',
             link: 'https://linktr.ee/iconoclastartists',
-            label: 'Iconoclast Website'
+            text: 'Iconoclast Website'
         },
         {
             type: 'youtube',
             link: 'https://youtube.com/',
-            label: 'YouTube'
+            text: 'YouTube'
         },
         {
             type: 'instagram',
             link: 'https://www.instagram.com/iconoclastartists/',
-            label: 'Instagram'
+            text: 'Instagram'
         },
         {
             type: 'youtube',
             link: 'https://youtube.com/',
-            label: 'YouTube'
+            text: 'YouTube'
         },
     ])
 
@@ -53,7 +53,7 @@ const MoreArtist = (props: props) => {
                 <div className="w-4.8/10 h-full flex flex-col items-center justify-center ">
                     <div className="h-full w-full flex justify-center items-center">
                     <div className="h-full w-full flex flex-col flex-wrap justify-center items-start">
-                            {artistLink.map((item: {type: string, link: string, label: string}, key: number) => (
+                            {artistLink.map((item: {type: string, link: string, text: string}, key: number) => (
     
                                 <div key={key} className={`${fullscreen ? 'px-4 py-2' : ''} cursor-pointer w-4.5/10 h-5/10 flex justify-center items-start`}> 
                                     <a href={item.link} target="_blank" rel="noopener noreferrer">
@@ -80,7 +80,7 @@ const MoreArtist = (props: props) => {
                                         }
                                     
                                     <p className={`${fullscreen ? 'text-sm' : 'text-xs'} flex-grow text-center`}>
-                                        {item.label}
+                                        {item.text}
                                     </p>
                                     </a>
                                 </div>
