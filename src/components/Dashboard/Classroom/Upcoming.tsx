@@ -1,28 +1,20 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
-import { CurriculumInfo } from './Classroom';
 import { IconContext } from "react-icons";
 import { FaClock, FaUserAlt } from 'react-icons/fa';
+import {CurriculumInfo} from './Classroom';
 
 interface UpcomingProps{
     curriculum: Array<CurriculumInfo>
 }
 
 const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
+    const {curriculum} = props;
     const history = useHistory();
     const { theme } = useContext(GlobalContext);
-    const {curriculum} = props;
 
     // make sure to limit (max 5?) when fetching from data
-    console.log(curriculum, 'upcoming curriculum')
-
-    // const toggle = (key: number) => {
-    //     { typeof curriculum !== 'undefined' ?
-    //     curriculum.map( (lesson: {language: string, artist: {id: string, images: [], name: string, type: string}, summary: string, title: string, open: boolean}, i: number) => {
-
-
-
     const [lessons, setLessons] = useState([
         {
             title: 'The Rose That Grew from Concrete',
@@ -68,24 +60,16 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
         }
     ]);
 
+    console.log(curriculum, 'upcoming curr')
+
     const toggle = (key: number) => {
         setLessons( lessons.map( (lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, instructor: string, lessonTime: string, summary: string, lessonDate: string, open: boolean}, i: number) => {
             if (i === key) {
                 lesson.open = !lesson.open
             } 
             return lesson;
-        }) 
-        )
-        // : null
-        // setLessons(
-        //     lessons.map( (lesson: {language: string, artist: {id: string, images: [], name: string, type: string}, summary: string, title: string, open: boolean}, i: number) => {
-        //     if (i === key) {
-        //         lesson.open = !lesson.open
-        //     } 
-        //     return lesson;
-        // }));
-    // }
-}
+        }));
+    }
 
     const handleLink = () => {
         history.push('/lesson');
@@ -100,9 +84,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                 </span>
                   
                 
-                { typeof curriculum !== 'undefined' ?
-                    curriculum.map( (lesson: {language: string, artist: {id: string, images: [], name: string, type: string}, summary: string, title: string, open: boolean}, i: number) => 
-                // { lessons.map( (lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, instructor: string, lessonTime: string, summary: string, lessonDate: string, open: boolean}, i: number) => 
+                { lessons.map( (lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, instructor: string, lessonTime: string, summary: string, lessonDate: string, open: boolean}, i: number) => 
                 (
                     <div key={i} className="py-2 px-4">
                     <button 
@@ -114,9 +96,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                                 {lesson.title} 
                             </div>
                             <div className="w-auto">
-                                {console.log(lesson, 'lesson')}
-                                {/* {lesson.lessonDate ? lesson.lessonDate : '9/27'} */}
-                                9/27
+                                {lesson.lessonDate}
                             </div>
                         </div>
                         <div className="absolute w-auto flex items-center mr-8" style={{right: 0}}>
@@ -160,8 +140,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                                         </IconContext.Provider>
                                     </div>
                                     <div className={`w-1/2 mx-2 text-sm`}>
-                                        {/* {lesson.lessonTime} min. */}
-                                        45 min.
+                                        {lesson.lessonTime} min.
                                     </div>
                                 </div>
                                 <div className={`flex my-1`} >
@@ -171,8 +150,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                                         </IconContext.Provider>
                                     </div>
                                     <div className={`w-1/2 mx-2 text-sm`}>
-                                        {/* {lesson.instructor} */}
-                                        Marlon
+                                        {lesson.instructor}
                                     </div>
                                 </div>
                             </div>
@@ -180,8 +158,8 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                     </div>
                         : null}
                     </div>
-                ) 
-                ) :null }
+                )
+                )}
                 
             </div>
     )

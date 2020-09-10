@@ -130,14 +130,12 @@ const Forgot = () => {
                     
 
                     <div className="h-3/10 flex flex-col justify-center items-center">
-                        
-                            <button className="bg-dark-red shadow-elem-light text-gray-200 rounded-lg mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>
-                                Submit
-                            </button>
-                            <NavLink to="/login">
-                                <div className="text-center hover:text-blue-500">go back to login</div>
-                            </NavLink>
-                        
+                        <button className="bg-dark-red shadow-elem-light text-gray-200 rounded-lg mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>
+                            Submit
+                        </button>
+                        <NavLink to="/login">
+                            <div className="text-center hover:text-blue-500">go back to login</div>
+                        </NavLink>
                     </div>
                 </div>
             </div>
