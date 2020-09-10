@@ -60,7 +60,7 @@ const Classroom: React.FC = () => {
         return (
             <div className={`w-full h-9.28/10 md:h-auto flex flex-col p-4 md:p-8`}>
                 <Class link={'/lesson?id=1'} curriculum={curriculum}/>
-                <Upcoming />
+                <Upcoming curriculum={listCurriculum}/>
                 <Completed />
             </div>
         )

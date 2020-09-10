@@ -9,7 +9,8 @@ interface UpcomingProps{
     curriculum: Array<CurriculumInfo>
 }
 
-const UpcomingClass: React.FC = () => {
+const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
+    const {curriculum} = props;
     const history = useHistory();
     const { theme } = useContext(GlobalContext);
 
@@ -58,6 +59,8 @@ const UpcomingClass: React.FC = () => {
             open: false,
         }
     ]);
+
+    console.log(curriculum, 'upcoming curr')
 
     const toggle = (key: number) => {
         setLessons( lessons.map( (lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, instructor: string, lessonTime: string, summary: string, lessonDate: string, open: boolean}, i: number) => {

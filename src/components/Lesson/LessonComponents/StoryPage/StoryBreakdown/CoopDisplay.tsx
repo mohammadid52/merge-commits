@@ -51,7 +51,7 @@ const CoopDisplay = () => {
                     {/* self display */}
                     <div className={`${fullscreen ? 'hidden' : 'w-4.85/10'} h-full flex flex-col justify-between items-center`}>
                         <Banner title={displayProps.title}
-                            display='COOP' />
+                            display='COOP' fullscreen={fullscreen}/>
 
                         <div className="w-full h-8.8/10 flex flex-col md:flex-row justify-between">
                             <div className={`bg-dark-blue ${displayProps.additional ? 'md:w-7.9/10' : 'w-full'} md:mb-0 overflow-scroll h-full p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg shadow-2`}>
@@ -75,6 +75,7 @@ const CoopDisplay = () => {
                                 </IconContext.Provider>
                             </div>
                             <Banner title={teacherData && teacherData.warmUpData && teacherData.warmUpData.title ? teacherData.warmUpData.title : null} 
+                                fullscreen={fullscreen}
                                 display='COOP'/>
 
                             <div className="w-full h-8.8/10 flex md:flex-col justify-between">

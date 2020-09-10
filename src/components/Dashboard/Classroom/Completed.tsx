@@ -146,9 +146,6 @@ const Completed: React.FC = () => {
                     </div>
                 </div> }
                   
-                
-                
-                
             </div>
     )
 }

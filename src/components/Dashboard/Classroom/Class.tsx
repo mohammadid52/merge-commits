@@ -6,13 +6,13 @@ import { FaClock, FaUserAlt } from 'react-icons/fa';
 import ProgressRing from './ProgressRing';
 import { CurriculumInfo } from './Classroom';
 
-interface props {
+interface ClassProps {
         link: string,
         curriculum: CurriculumInfo
     }
 
 
-const Class = (props: props) => {
+const Class: React.FC<ClassProps> = (props: ClassProps) => {
     const {link, curriculum} = props
     const history = useHistory();
     const { theme } = useContext(GlobalContext);
@@ -21,12 +21,6 @@ const Class = (props: props) => {
         // come back to this later
         history.push(link);
     }
-
-    if (curriculum) {console.log(curriculum, 'curr');}
-
-    // useEffect(() => {
-        
-    // }, [])
 
     return (
             <div className={`test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto rounded-sm p-6 flex flex-col mb-8`}>

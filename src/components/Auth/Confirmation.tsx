@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Auth } from 'aws-amplify';
+import { Auth } from 'aws-amplify'; 
 import { IconContext } from "react-icons";
 import { FaUnlockAlt } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';

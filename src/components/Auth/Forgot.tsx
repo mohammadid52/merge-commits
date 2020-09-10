@@ -98,13 +98,13 @@ const Forgot = () => {
                         <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                     </div>
 
-                    <div className="h-1/10 text-center text-xl">Input your email to reset your password</div>
+                    <div className="h-1/10 text-center text-base">Input your email to reset your password</div>
 
                     
             
-                    <div className="h-4/10 flex-grow flex flex-col justify-around">
+                    <div className="h-3/10 flex-grow flex flex-col justify-center">
 
-                        <div className="w-full flex justify-center items-center">
+                        <div className="w-full flex justify-center items-center mb-8">
                             {
                                 message.show ? (
                                     <p className={`text-sm text-center ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
@@ -129,15 +129,13 @@ const Forgot = () => {
                     
                     
 
-                    <div className="h-3/10 flex flex-col justify-center items-center">
-                        
-                            <button className="bg-dark-red shadow-elem-light text-gray-200 rounded-lg mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>
-                                Submit
-                            </button>
-                            <NavLink to="/login">
-                                <div className="text-center hover:text-blue-500">go back to login</div>
-                            </NavLink>
-                        
+                    <div className="h-4/10 flex flex-col justify-center items-center">
+                        <button className="bg-dark-red shadow-elem-light text-gray-200 rounded-lg mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>
+                            Submit
+                        </button>
+                        <NavLink to="/login">
+                            <div className="text-center hover:text-blue-500">go back to login</div>
+                        </NavLink>
                     </div>
                 </div>
             </div>
