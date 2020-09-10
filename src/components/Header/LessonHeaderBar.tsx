@@ -169,7 +169,7 @@ const LessonHeaderBar = () => {
                     <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
                         <FaRegSave />
                     </IconContext.Provider>
-                    <p className="text-xs text-gray-200 text-center">Save</p>
+                    <p className={`text-xs text-gray-200 text-center`} style={{color: state.unsavedChanges ? '#EDF2F7' : '#4A5568'}}>Save</p>
                 </div>
                 <div className={`flex flex-col justify-center items-center px-2 cursor-pointer`}>
                     <NavLink to="/dashboard">

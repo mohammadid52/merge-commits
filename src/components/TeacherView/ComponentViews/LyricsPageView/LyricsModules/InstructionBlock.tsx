@@ -37,11 +37,11 @@ const InstructionsBlock = (props: props) => {
     return (
         <div className="md:h-3.8/10 bg-dark-blue w-full flex justify-center p-4 shadow-2 rounded-lg text-gray-200">
             <div className="w-full flex flex-col">
-                <div className="w-auto flex flex-row mb-3 border-b border-white mr-4">
+                <div className="w-auto flex flex-row mb-3 border-b border-white mr-2">
                     <h3 className={`${fullscreen ? 'text-xl' : 'text-md'} w-3/10 mr-2 flex-grow font-open font-bold`}>
                         Instructions
                     </h3>
-                    <p className={`${fullscreen ? 'mr-4' : 'ml-3'} w-auto text-gray-600 text-xs flex items-center`}>(click the red icon for video instructions)</p>
+                    <p className={`${fullscreen ? 'mr-4' : 'hidden'} w-auto text-gray-600 text-xs flex items-center`}>(click the red icon for video instructions)</p>
                 </div>
                 <div className={`${fullscreen ? 'text-sm' : 'text-xs'} w-full h-8/10 flex justify-center items-center text-sm px-2`}>
                     {   !videoMode ?

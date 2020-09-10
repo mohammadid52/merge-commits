@@ -22,7 +22,7 @@ const Banner = () => {
                     <FaTrophy />
                 </div>
             </IconContext.Provider>
-            <div className="title bg-dark-blue w-full flex flex-row justify-center items-center text-xl md:text-4xl text-center font-open font-bold text-gray-200 rounded-lg shadow-2 px-4 py-2 z-10">
+            <div className="h-full bg-dark-blue w-full flex flex-row justify-center items-center text-xl md:text-5xl text-center font-open font-bold text-gray-200 rounded-lg shadow-2 z-10">
                 <p>Congrats! You've completed the lesson!</p>
             </div>
         </div>
