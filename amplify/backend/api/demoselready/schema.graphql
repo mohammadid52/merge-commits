@@ -212,7 +212,6 @@ type StudentData @model(subscriptions: null)
   id: ID!
   lessonProgress: String!
   status: String!
-  live: Boolean!
   classroomID: ID!
   classroom: Classroom @connection(fields: ["classroomID"])
   # studentDataClassroomId: String
