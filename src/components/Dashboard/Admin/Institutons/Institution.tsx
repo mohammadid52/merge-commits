@@ -22,8 +22,7 @@ export interface InstitutionInfo {
   city?: string;
   state?: string;
   zip?: string;
-  phone?: null;
-  contact?: { name: string; email: string };
+  contact?: { name: string; email: string; phone: string };
   website?: string;
   type?: null;
   image?: string | null;
@@ -47,8 +46,7 @@ const Institution: React.FC = () => {
     city: '',
     state: '',
     zip: '',
-    phone: null,
-    contact: { name: '', email: '' },
+    contact: { name: '', email: '', phone: '' },
     website: '',
     type: null,
     image: '',
@@ -126,32 +124,50 @@ const Institution: React.FC = () => {
               <Route
                 path={`${match.url}/edit`}
                 render={() => (
-                  <InstitutionEdit
-                    id={institutionData.id}
-                    name={institutionData.name}
-                    website={institutionData.website}
-                    contact={institutionData.contact}
-                    phone={institutionData.phone}
-                    state={institutionData.state}
-                    address={institutionData.address}
-                    city={institutionData.city}
-                    zip={institutionData.zip}
-                  />
+                  // <InstitutionEdit
+                  //   id={institutionData.id}
+                  //   name={institutionData.name}
+                  //   website={institutionData.website}
+                  //   contact={institutionData.contact}
+                  //   phone={institutionData.phone}
+                  //   state={institutionData.state}
+                  //   address={institutionData.address}
+                  //   city={institutionData.city}
+                  //   zip={institutionData.zip}
+                  // />
+
+                  /**
+                   *
+                   * REFACTORED TO ONELINE BELOW
+                   *
+                   * BOOYA !
+                   *
+                   */
+                  <InstitutionEdit institute={institutionData} />
                 )}
               />
 
               <Route
                 path={`${match.url}/`}
                 render={() => (
-                  <InstitutionInfo
-                    id={institutionData.id}
-                    name={institutionData.name}
-                    website={institutionData.website}
-                    contact={institutionData.contact}
-                    phone={institutionData.phone}
-                    state={institutionData.state}
-                    address={institutionData.address}
-                  />
+                  // <InstitutionInfo
+                  //   id={institutionData.id}
+                  //   name={institutionData.name}
+                  //   website={institutionData.website}
+                  //   contact={institutionData.contact}
+                  //   phone={institutionData.phone}
+                  //   state={institutionData.state}
+                  //   address={institutionData.address}
+                  // />
+
+                  /**
+                   *
+                   * REFACTORED TO ONELINE BELOW
+                   *
+                   * BOOYA !
+                   *
+                   */
+                  <InstitutionInfo institute={institutionData} />
                 )}
               />
             </Switch>

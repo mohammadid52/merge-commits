@@ -6,13 +6,13 @@ import { FaClock, FaUserAlt } from 'react-icons/fa';
 import ProgressRing from './ProgressRing';
 import { CurriculumInfo } from './Classroom';
 
-interface props {
+interface ClassProps {
         link: string,
         curriculum: CurriculumInfo
     }
 
 
-const Class = (props: props) => {
+const Class: React.FC<ClassProps> = (props: ClassProps) => {
     const {link, curriculum} = props
     const history = useHistory();
     const { theme } = useContext(GlobalContext);
@@ -22,18 +22,16 @@ const Class = (props: props) => {
         history.push(link);
     }
 
-    if (curriculum) {console.log(curriculum, 'curr');}
-
-    // useEffect(() => {
-        
-    // }, [])
-
     return (
-            <div className={`test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto rounded-sm p-6 flex flex-col mb-8`}>
+            <div className={`relative test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto rounded-sm p-6 flex flex-col mb-8`}>
+                <span style={{left: 0, top: -20}}
+                    className="absolute right-0 ml-4 p-4 sm:h-8 bg-opacity-60 w-auto inline-flex items-center rounded-md text-sm sm:text-2xl font-bold leading-5 bg-purple-300 text-purple-800">
+                    Today's Lesson
+                </span>
                 <h1 className={`h-2.5/10 bg-dark text-4xl text-gray-200 font-bold font-open px-8 shadow-elem-light`}>
                     { curriculum && curriculum.title ? curriculum.title : null }
                 </h1>
-                <div className={`h-7.5/10 flex flex-col md:flex-row justify-around items-center pt-4`}>
+                <div className={`h-7.5/10 flex flex-col md:flex-row justify-around items-center pt-4 overflow-scroll md:overflow-auto`}>
                     <div className={`block1 w-1/5 h-full flex flex-col items-center text-center`}>
                         <h2 className={`text-2xl font-open font-bold mb-4`}>
                             { curriculum && curriculum.artist.name ? curriculum.artist.name : null }

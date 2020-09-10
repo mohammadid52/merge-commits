@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Auth } from 'aws-amplify';
+import { Auth } from 'aws-amplify'; 
 import { IconContext } from "react-icons";
 import { FaUnlockAlt } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
@@ -97,7 +97,8 @@ const Registration = () => {
         <div className="w-full h-screen flex items-center justify-center">
             <div className="test login w-140 h-7/10 bg-gray-200 shadow-elem-light border border-gray-300 rounded pt-0">
             <div className="h-.7/10 bg-dark w-full rounded-t-lg"></div>
-            <div className="h-9.3/10 flex flex-col items-center p-8">
+            <div className="relative h-9.3/10 flex flex-col items-center p-8">
+                <div className="absolute text-center text-xs mb-4" style={{bottom: '0'}}> © Copyright 2020 </div>
                 <div className="h-2/10">
                     <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                 </div>

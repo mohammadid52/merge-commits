@@ -5,8 +5,12 @@ import { IconContext } from 'react-icons';
 import { FaGraduationCap } from 'react-icons/fa';
 import { InstitutionInfo } from './Institution';
 
-const InstitutionInfo: React.FC<InstitutionInfo> = (
-  instPrps: InstitutionInfo
+interface InstitutionInfoProps {
+  institute: InstitutionInfo;
+}
+
+const InstitutionInfo: React.FC<InstitutionInfoProps> = (
+  instPrps: InstitutionInfoProps
 ) => {
   const match = useRouteMatch();
 
@@ -14,7 +18,7 @@ const InstitutionInfo: React.FC<InstitutionInfo> = (
     <>
       <div className='w-full'>
         <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg'>
-          {/* <p>{instPrps.temp}</p> */}
+          {/* <p>{instPrps.institute.temp}</p> */}
           <div className='px-4 py-5 flex border-b border-gray-200 sm:px-6'>
             <span style={{ display: 'inline-block' }}>
               Specific Institution Info
@@ -28,7 +32,7 @@ const InstitutionInfo: React.FC<InstitutionInfo> = (
                   Title
                 </dt>
                 <dd className='mt-2 text-base leading-5 text-gray-900'>
-                  {`${instPrps.name ? instPrps.name : 'n/a'}`}
+                  {`${instPrps.institute.name ? instPrps.institute.name : 'n/a'}`}
                 </dd>
               </div>
               <div className='sm:col-span-1'>
@@ -36,7 +40,7 @@ const InstitutionInfo: React.FC<InstitutionInfo> = (
                   Website
                 </dt>
                 <dd className='mt-2 text-base leading-5 text-gray-900'>
-                  {`${instPrps.website ? instPrps.website : 'n/a'}`}
+                  {`${instPrps.institute.website ? instPrps.institute.website : 'n/a'}`}
                 </dd>
               </div>
               <div className='sm:col-span-1'>
@@ -44,7 +48,7 @@ const InstitutionInfo: React.FC<InstitutionInfo> = (
                   Contact Person
                 </dt>
                 <dd className='mt-2 text-base leading-5 text-gray-900'>
-                  {`${instPrps.contact.name ? instPrps.contact.name : 'n/a'}`}
+                  {`${instPrps.institute.contact.name ? instPrps.institute.contact.name : 'n/a'}`}
                 </dd>
               </div>
               <div className='sm:col-span-1'>
@@ -52,7 +56,7 @@ const InstitutionInfo: React.FC<InstitutionInfo> = (
                   Email
                 </dt>
                 <dd className='mt-2 text-base leading-5 text-gray-900'>
-                  {`${instPrps.contact.email ? instPrps.contact.email : 'n/a'}`}
+                  {`${instPrps.institute.contact.email ? instPrps.institute.contact.email : 'n/a'}`}
                 </dd>
               </div>
               <div className='sm:col-span-1'>
@@ -60,7 +64,7 @@ const InstitutionInfo: React.FC<InstitutionInfo> = (
                   Phone
                 </dt>
                 <dd className='mt-2 text-base leading-5 text-gray-900'>
-                  {`${instPrps.phone ? instPrps.phone : 'n/a'}`}
+                  {`${instPrps.institute.phone ? instPrps.institute.phone : 'n/a'}`}
                 </dd>
               </div>
               <div className='sm:col-span-1'>
@@ -68,7 +72,7 @@ const InstitutionInfo: React.FC<InstitutionInfo> = (
                   State
                 </dt>
                 <dd className='mt-2 text-base leading-5 text-gray-900'>
-                  {`${instPrps.state ? instPrps.state : 'n/a'}`}
+                  {`${instPrps.institute.state ? instPrps.institute.state : 'n/a'}`}
                 </dd>
               </div>
               <div className='sm:col-span-1'>
@@ -76,7 +80,7 @@ const InstitutionInfo: React.FC<InstitutionInfo> = (
                   Address
                 </dt>
                 <dd className='mt-2 text-base leading-5 text-gray-900'>
-                  {`${instPrps.address ? instPrps.address : 'n/a'}`}
+                  {`${instPrps.institute.address ? instPrps.institute.address : 'n/a'}`}
                 </dd>
               </div>
             </dl>

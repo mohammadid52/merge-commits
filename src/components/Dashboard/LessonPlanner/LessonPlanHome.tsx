@@ -25,15 +25,17 @@ export interface CurriculumInfo {
 
 const LessonPlanHome = () => {
     const [curriculum, setCurriculum] = useState<CurriculumInfo>();
+    const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
     const [status, setStatus] = useState('');
 
     async function getCourse(id: string) {
         try {
-            const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: id }))
+            const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: '1' }))
             const nextLesson = courses.data.getCourse.curriculum.lessons.items[0].lesson;
+            const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
             setStatus('done');
             setCurriculum(nextLesson);
-            
+            setListCurriculum(lessonsInfo);
         } catch (error) {
             console.error(error);  
         }
@@ -56,7 +58,7 @@ const LessonPlanHome = () => {
             {/* <Link to="/lesson-control?id=1">
                 Teacher View 
             </Link> */}
-            <Upcoming />
+            <Upcoming curriculum={listCurriculum}/>
             <Completed /> 
         </div>
     )

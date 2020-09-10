@@ -2,6 +2,7 @@ import React from 'react';
 
 interface ButtonProps {
   children?: React.ReactNode;
+  type?: 'button' | 'submit';
   label?: string;
   img?: string;
   compClass?: string;
@@ -11,7 +12,10 @@ interface ButtonProps {
 const ActionButton: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
   return (
     <>
-      <button onClick={btnPrps.func} className={btnPrps.compClass}>
+      <button
+        type={btnPrps.type}
+        onClick={btnPrps.func}
+        className={btnPrps.compClass}>
         {btnPrps.label}
       </button>
     </>

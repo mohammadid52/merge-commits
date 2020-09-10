@@ -16,7 +16,7 @@ import {
     Link,
     NavLink
  } from 'react-router-dom';
- import LessonLoading from '../../Lesson/Loading/LessonLoading';
+ import LessonLoading from '../../Lesson/Loading/ComponentLoading';
  export interface UserInfo {
     authId: string
     courses?: string

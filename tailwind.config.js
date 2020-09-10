@@ -8,7 +8,7 @@ module.exports = {
   //     './src/**/*.js',
   //     './src/**/*.jsx',
   //   ],
-  // },
+  // }, 
   future: {
     removeDeprecatedGapUtilities: true,
   },
@@ -240,6 +240,7 @@ module.exports = {
         'darker-blue': '#101a27',
         'dark': '#051429',
         'gold': '#F1C40F',
+<<<<<<< HEAD
         'grayscale': '#666666',
         'grayscale-light': '#d2cbcb',
         'grayscale-lighter': '#f7f7f7',
@@ -247,6 +248,16 @@ module.exports = {
         'orange-light': '#e4a04f',
         'orange-medium': '#e4714f',
         'pink-light': '#c64575',
+=======
+        'grayscale' : '#66666673',
+        // 'grayscale' : '#666666',
+        // 'grayscale-light' : '#d2cbcb96',
+        'grayscale-light' : '#959aa3',
+        'grayscale-lighter' : '#f9f9f947',
+        'grayscale-lightest' : '#fffbfb',
+        // 'grayscale-lighter' : '#f7f7f7',
+
+>>>>>>> d4cf2a7770b865792c73fd9a7cd92cbb3b3b7f80
       },
     },
   },
