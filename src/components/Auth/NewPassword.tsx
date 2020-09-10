@@ -143,7 +143,7 @@ const NewPassword = () => {
 
             
                 <div className="h-5/10 flex-grow flex flex-col justify-center">
-                    
+                     
                         
                         <div className="input relative w-full">
                             <div style={{right: 0}} className="absolute w-6">

@@ -235,7 +235,7 @@ const Reset = () => {
                             <div className="icon">
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
                                     <FaKey />
-                                </IconContext.Provider>
+                                </IconContext.Provider> 
                             </div>
                             <label className="hidden" htmlFor="password">New Password</label>
                             <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type={ newPassToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
