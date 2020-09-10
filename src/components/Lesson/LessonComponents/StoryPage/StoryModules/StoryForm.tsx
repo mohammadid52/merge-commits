@@ -69,14 +69,14 @@ const StoryForm = () => {
     }, [input])
     
     return (
-        <div className="bg-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-gray-200 shadow-2 rounded-lg">
-            <h3 className="text-xl font-open font-bold mb-3 border-b border-white">Story</h3>
+        <div className="bg-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue shadow-2 rounded-lg border-l-8 border-blueberry">
+            <h3 className="text-xl text-gray-200 font-open font-bold mb-3 border-b border-white">Story <span className="text-gray-600 text-sm mr-4">(Fill in the form below!)</span></h3>
             <div className="h-full flex flex-col mb-5 mt-2">
-                <label className="text-lg mb-2" htmlFor="title">
+                <label className="text-lg text-gray-200 mb-2" htmlFor="title">
                     Title
                 </label>
-                <input id="title" className="md:w-88 text-sm md:text-xl px-4 py-2 mb-4 rounded-lg shadow-2 text-gray-700 bg-gray-300" name="title" type="text" placeholder="La Llorona" value={input.title} onChange={handleInputChange}/>
-                <textarea id="story" className="w-full h-9/10 text-sm md:text-xl p-4 rounded-lg shadow-2 text-gray-700 bg-gray-300" name="story" placeholder="Write your story here!" value={input.story} onChange={handleInputChange}/>
+                <input id="title" className="md:w-88 text-sm md:text-xl px-4 py-2 mb-4 rounded-lg text-gray-700 bg-gray-100 border border-grayscale" name="title" type="text" placeholder="La Llorona" value={input.title} onChange={handleInputChange}/>
+                <textarea id="story" className="w-full h-9/10 text-sm md:text-xl p-4 rounded-lg text-gray-700 bg-gray-100 border border-grayscale" name="story" placeholder="Write your story here!" value={input.story} onChange={handleInputChange}/>
             </div>
         </div>
     )

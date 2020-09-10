@@ -21,7 +21,7 @@ module.exports = {
       '0': '0',
       '2': '2px',
       '3': '3px',
-      '4': '4px', 
+      '4': '4px',
       '6': '6px',
       '8': '8px',
     },
@@ -56,11 +56,36 @@ module.exports = {
       '28': '28rem',
       '29': '29rem',
       '30': '30rem',
-  },
+    },
     fontFamily: {
       'open': ['Open Sans Condensed', 'sans-serif']
     },
     extend: {
+      animation: {
+        'bounce': 'bounce 2.5s linear 4',
+      },
+      keyframes: {
+        bounce: {
+          '0%': {
+            transform: 'translateY(0)'
+          },
+          '60%': {
+            transform: 'translateY(0)'
+          },
+          '65%': {
+            transform: 'translateY(-4px)'
+          },
+          '75%': {
+            transform: 'translateY(-6px)'
+          },
+          '78%': {
+            transform: 'translateY(0)'
+          },
+          '100%': {
+            transform: 'translateY(0)'
+          },
+        },
+      },
       width: {
         '1/2': '48%',
         '1/3': '30%',
@@ -96,7 +121,7 @@ module.exports = {
         '88': '22rem',
         '96': '24rem',
         '100': '25rem',
-        '104': '26rem', 
+        '104': '26rem',
         '112': '28rem',
         '120': '30rem',
         '124': '31rem',
@@ -152,8 +177,8 @@ module.exports = {
         '5/10': '50%',
         '5.1/10': '51%',
         '5.5/10': '55%',
-        '5.8/10' : '58%',
-        '5.9/10' : '59%',
+        '5.8/10': '58%',
+        '5.9/10': '59%',
         '6/10': '60%',
         '6.5/10': '65%',
         '6.8/10': '68%',
@@ -186,9 +211,9 @@ module.exports = {
         'map': '5px -1px 8px #1A202C',
         'inner-dark': 'inset 0 2px 4px black',
         'gray': '0px 0px 10px 4px #e2e8f0',
-        'grayscale' : '0px 0px 10px 4px #fdfdfd',
-        'inner-box' : 'inset 0 2px 4px 0 #191d25',
-        'container' : '1px 1px 10px 1px #e0e0e0',
+        'grayscale': '0px 0px 10px 4px #fdfdfd',
+        'inner-box': 'inset 0 2px 4px 0 #191d25',
+        'container': '1px 1px 10px 1px #e0e0e0',
 
       },
       colors: {
@@ -200,19 +225,23 @@ module.exports = {
         'sea-green': '#17A589',
         'fire-orange': '#FF5733',
         // 'dark-blue': '#04111A',
-        'lighter-blue': '#1a202c66',
+        'lighter-blue': '#1a202c',
         'dark-blue': '#1C2C42',
         'darker-blue': '#101a27',
         'dark': '#051429',
         'gold': '#F1C40F',
-        'grayscale' : '#666666',
-        'grayscale-light' : '#d2cbcb96',
-        'grayscale-lighter' : '#f7f7f7',
-
+        'grayscale': '#666666',
+        'grayscale-light': '#d2cbcb',
+        'grayscale-lighter': '#f7f7f7',
+        'green-light': '#38a169',
+        'orange-light': '#e4a04f',
+        'orange-medium': '#e4714f',
+        'pink-light': '#c64575',
       },
     },
   },
   variants: {
+    animation: ['responsive', 'hover', 'focus'],
     backgroundColor: ['responsive', 'hover', 'focus', 'active'],
     color: ['responsive', 'hover', 'focus', 'active'],
     boxShadow: ['responsive', 'hover', 'focus', 'active'],

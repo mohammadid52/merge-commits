@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { IconContext } from 'react-icons';
+import { FaGraduationCap } from 'react-icons/fa';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import { API, graphqlOperation } from 'aws-amplify';
 import { useLocation } from 'react-router-dom';
@@ -6,28 +8,27 @@ import * as queries from '../../../../graphql/queries';
 import queryString from 'query-string';
 import { useHistory } from 'react-router-dom';
 import ActionButton from '../Actions/ActionButton';
-/* import Button from '../../../../standard/Button/Button'; */
-import InfoSide from '../Info/InfoSide';
 import InstitutionInfo from './InstitutionInfo';
+import InstitutionEdit from './InstitutionEdit';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
-export interface InstitutionInfo{
+export interface InstitutionInfo {
   id: string;
   name: string;
-  institutionTypeId: string;
-  institutionType: null;
-  district: null;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  phone: null;
-  contact: { name: string; email: string };
-  website: string;
-  type: null;
-  image: string | null;
-  createdAt: string;
-  updatedAt: string;
+  institutionTypeId?: string;
+  institutionType?: null;
+  district?: null;
+  address?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  phone?: null;
+  contact?: { name: string; email: string };
+  website?: string;
+  type?: null;
+  image?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 /**
@@ -36,7 +37,7 @@ export interface InstitutionInfo{
  * with data from the API
  */
 const Institution: React.FC = () => {
-  const [institutionData, setInstitutionData] = useState<InstitutionInfoIntf>({
+  const [institutionData, setInstitutionData] = useState<InstitutionInfo>({
     id: '',
     name: '',
     institutionTypeId: '',
@@ -86,18 +87,31 @@ const Institution: React.FC = () => {
 
   return (
     <div className={`w-9/10 h-full`}>
-      {/* <p>{JSON.stringify(institutionData)}</p> */}
-      {/* <ActionButton label='Test fetch' func={getInstitutionData} /> */}
-
       <div
-        className={`w-full h-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}
-      >
+        className={`w-full h-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
         <div className='h-9/10 flex flex-row flex-end'>
-          <InfoSide subtitle={institutionData.name} />
-
+          {/* 
+            Info side section
+          */}
+          <div className='w-auto p-4 flex flex-col text-center items-center'>
+            <div
+              className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+              <IconContext.Provider value={{ size: '8rem', color: '#4a5568' }}>
+                <FaGraduationCap />
+              </IconContext.Provider>
+            </div>
+            <div
+              className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
+              <p className='text-md md:text-lg'>
+                {`${institutionData.name ? institutionData.name : ''}`}
+              </p>
+            </div>
+          </div>
           <div className='w-full md:px-2 pt-2 flex flex-col'>
-            {/* <Button label='Back' /> */}
             <div className='mb-4 w-full flex justify-end'>
+              {/* 
+              Back btn
+              */}
               <ActionButton
                 func={history.goBack}
                 label='Back'
@@ -105,23 +119,35 @@ const Institution: React.FC = () => {
           inline-flex justify-center py-2 px-4 border border-transparent text-m leading-5 font-medium rounded-md focus:outline-none transition duration-150 ease-in-out'
               />
             </div>
-
+            {/* 
+              INFO/edit switch
+              */}
             <Switch>
-              <Route 
-                    path={`${match.url}/edit`}
-                    render={() => (
-                        <h1>Hello</h1>
-                    )} 
-                />
+              <Route
+                path={`${match.url}/edit`}
+                render={() => (
+                  <InstitutionEdit
+                    id={institutionData.id}
+                    name={institutionData.name}
+                    website={institutionData.website}
+                    contact={institutionData.contact}
+                    phone={institutionData.phone}
+                    state={institutionData.state}
+                    address={institutionData.address}
+                    city={institutionData.city}
+                    zip={institutionData.zip}
+                  />
+                )}
+              />
+
               <Route
                 path={`${match.url}/`}
                 render={() => (
                   <InstitutionInfo
                     id={institutionData.id}
-                    /* name={institutionData.name} */
+                    name={institutionData.name}
                     website={institutionData.website}
-                    contactPerson={institutionData.contact.name}
-                    email={institutionData.contact.email}
+                    contact={institutionData.contact}
                     phone={institutionData.phone}
                     state={institutionData.state}
                     address={institutionData.address}

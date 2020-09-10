@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconContext } from 'react-icons';
-import { FaUserCircle } from 'react-icons/fa';
+import { FaGraduationCap } from 'react-icons/fa';
 
 interface InfoSide {
   children?: React.ReactNode;
@@ -15,7 +15,7 @@ const InfoSide: React.FC<InfoSide> = (iSidePrps: InfoSide) => {
           className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}
         >
           <IconContext.Provider value={{ size: '8rem', color: '#4a5568' }}>
-            <FaUserCircle />
+            <FaGraduationCap />
           </IconContext.Provider>
         </div>
         <div
