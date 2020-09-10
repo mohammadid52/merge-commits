@@ -175,6 +175,7 @@ export enum Language {
   EN = "EN",
   ES = "ES",
   VT = "VT",
+  TR = "TR",
 }
 
 
@@ -420,7 +421,6 @@ export type CreateStudentDataInput = {
   id?: string | null,
   lessonProgress: string,
   status: string,
-  live: boolean,
   classroomID: string,
   studentID: string,
   studentAuthID: string,
@@ -474,25 +474,16 @@ export type LineInputInput = {
 export type ModelStudentDataConditionInput = {
   lessonProgress?: ModelStringInput | null,
   status?: ModelStringInput | null,
-  live?: ModelBooleanInput | null,
   studentAuthID?: ModelStringInput | null,
   and?: Array< ModelStudentDataConditionInput | null > | null,
   or?: Array< ModelStudentDataConditionInput | null > | null,
   not?: ModelStudentDataConditionInput | null,
 };
 
-export type ModelBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-};
-
 export type UpdateStudentDataInput = {
   id: string,
   lessonProgress?: string | null,
   status?: string | null,
-  live?: boolean | null,
   classroomID: string,
   studentID: string,
   studentAuthID?: string | null,
@@ -603,6 +594,13 @@ export type ModelClassroomConditionInput = {
   and?: Array< ModelClassroomConditionInput | null > | null,
   or?: Array< ModelClassroomConditionInput | null > | null,
   not?: ModelClassroomConditionInput | null,
+};
+
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
 };
 
 export type UpdateClassroomInput = {
@@ -1267,7 +1265,6 @@ export type ModelStudentDataFilterInput = {
   id?: ModelIDInput | null,
   lessonProgress?: ModelStringInput | null,
   status?: ModelStringInput | null,
-  live?: ModelBooleanInput | null,
   classroomID?: ModelIDInput | null,
   studentID?: ModelStringInput | null,
   studentAuthID?: ModelStringInput | null,
@@ -2901,7 +2898,6 @@ export type CreateStudentDataMutation = {
     id: string,
     lessonProgress: string,
     status: string,
-    live: boolean,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -3063,7 +3059,6 @@ export type UpdateStudentDataMutation = {
     id: string,
     lessonProgress: string,
     status: string,
-    live: boolean,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -3225,7 +3220,6 @@ export type DeleteStudentDataMutation = {
     id: string,
     lessonProgress: string,
     status: string,
-    live: boolean,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -3675,7 +3669,6 @@ export type CreateClassroomMutation = {
         id: string,
         lessonProgress: string,
         status: string,
-        live: boolean,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -3889,7 +3882,6 @@ export type UpdateClassroomMutation = {
         id: string,
         lessonProgress: string,
         status: string,
-        live: boolean,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -4103,7 +4095,6 @@ export type DeleteClassroomMutation = {
         id: string,
         lessonProgress: string,
         status: string,
-        live: boolean,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -6238,7 +6229,6 @@ export type CreateQuestionDataStudentDataMutation = {
       id: string,
       lessonProgress: string,
       status: string,
-      live: boolean,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -6354,7 +6344,6 @@ export type UpdateQuestionDataStudentDataMutation = {
       id: string,
       lessonProgress: string,
       status: string,
-      live: boolean,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -6470,7 +6459,6 @@ export type DeleteQuestionDataStudentDataMutation = {
       id: string,
       lessonProgress: string,
       status: string,
-      live: boolean,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -7659,7 +7647,6 @@ export type GetStudentDataQuery = {
     id: string,
     lessonProgress: string,
     status: string,
-    live: boolean,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -7827,7 +7814,6 @@ export type ListStudentDatasQuery = {
       id: string,
       lessonProgress: string,
       status: string,
-      live: boolean,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -8151,7 +8137,6 @@ export type GetClassroomQuery = {
         id: string,
         lessonProgress: string,
         status: string,
-        live: boolean,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -9486,7 +9471,6 @@ export type OnUpdateClassroomSubscription = {
         id: string,
         lessonProgress: string,
         status: string,
-        live: boolean,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -9510,7 +9494,6 @@ export type OnChangeStudentDataSubscription = {
     id: string,
     lessonProgress: string,
     status: string,
-    live: boolean,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -12944,7 +12927,6 @@ export type OnCreateQuestionDataStudentDataSubscription = {
       id: string,
       lessonProgress: string,
       status: string,
-      live: boolean,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -13055,7 +13037,6 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
       id: string,
       lessonProgress: string,
       status: string,
-      live: boolean,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -13166,7 +13147,6 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
       id: string,
       lessonProgress: string,
       status: string,
-      live: boolean,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",

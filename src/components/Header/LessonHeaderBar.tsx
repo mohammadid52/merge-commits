@@ -8,10 +8,12 @@ import {
 } from 'react-router-dom';
 import { IconContext } from "react-icons";
 import { FaRegSave, FaHome, FaBook } from 'react-icons/fa';
+import { FiClock } from 'react-icons/fi'
 import { LessonContext } from '../../contexts/LessonContext';
 import { API, graphqlOperation } from 'aws-amplify';
 import * as customMutations from '../../customGraphql/customMutations';
-import useDictionary from '../../customHooks/dictionary';
+// import useDictionary from '../../customHooks/dictionary';
+import useStudentTimer from '../../customHooks/timer'
 
 
 const LessonHeaderBar = () => {
@@ -19,9 +21,10 @@ const LessonHeaderBar = () => {
     // const match = useRouteMatch();
     // const location = useLocation();
     // const history = useHistory();
+    const { startTimer, startAutoSave, clearAutoSave } = useStudentTimer();
     const { theme, state, dispatch } = useContext(LessonContext);
     const [ dictOpen, setDictOpen ] = useState(false);
-    const { lookUp } = useDictionary('EN');
+    // const { lookUp } = useDictionary('EN');
     const [ searchTerm, setSearchTerm ] = useState('');
 
     useEffect(() => {
@@ -75,22 +78,22 @@ const LessonHeaderBar = () => {
         }
     }
 
-    const toggleDictionary = () => {
-        setDictOpen(() => {
-            return !dictOpen
-        })
-    }
+    // const toggleDictionary = () => {
+    //     setDictOpen(() => {
+    //         return !dictOpen
+    //     })
+    // }
 
-    const handleSearchChange = (e: { target: any }) => {
-        const { value } = e.target
-        setSearchTerm(value)
-    }
+    // const handleSearchChange = (e: { target: any }) => {
+    //     const { value } = e.target
+    //     setSearchTerm(value)
+    // }
 
-    const handleEnterSearch = (e: { key: string }) => {
-        if (e.key === 'Enter') {
-           lookUp(searchTerm) 
-        }
-    }
+    // const handleEnterSearch = (e: { key: string }) => {
+    //     if (e.key === 'Enter') {
+    //        lookUp(searchTerm) 
+    //     }
+    // }
         
 
     return (
@@ -123,6 +126,19 @@ const LessonHeaderBar = () => {
                         : null
                     } 
                 </div> */}
+                <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onPointerDown={() => { startAutoSave(() => {console.log('save')}
+                ) }} onPointerUp={clearAutoSave}>
+                    <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
+                        <FiClock />
+                    </IconContext.Provider>
+                    <p className="text-xs text-gray-200 text-center">AutoSave</p>
+                </div>
+                <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={() => {startTimer(() => {console.log('save')})}}>
+                    <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
+                        <FiClock />
+                    </IconContext.Provider>
+                    <p className="text-xs text-gray-200 text-center">Timer</p>
+                </div>
                 <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={handleSave}>
                     <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
                         <FaRegSave />
