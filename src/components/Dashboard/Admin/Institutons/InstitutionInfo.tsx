@@ -59,14 +59,14 @@ const InstitutionInfo: React.FC<InstitutionInfoProps> = (
                   {`${instPrps.institute.contact.email ? instPrps.institute.contact.email : 'n/a'}`}
                 </dd>
               </div>
-              <div className='sm:col-span-1'>
+              {/* <div className='sm:col-span-1'>
                 <dt className='text-base leading-5 font-medium text-gray-500'>
                   Phone
                 </dt>
                 <dd className='mt-2 text-base leading-5 text-gray-900'>
                   {`${instPrps.institute.phone ? instPrps.institute.phone : 'n/a'}`}
                 </dd>
-              </div>
+              </div> */}
               <div className='sm:col-span-1'>
                 <dt className='text-base leading-5 font-medium text-gray-500'>
                   State
