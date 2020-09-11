@@ -169,15 +169,15 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     return (
         <>
             <div className={`md:h-8/10 relative bg-dark-blue ${fullscreen ? 'md:h-120' : 'h-68'} mb-4 md:mb-0 w-full px-6 py-4 flex flex-col justify-between rounded-lg shadow-2 text-gray-400 text-lg`}>
-                <div className="w-full flex flex-row justify-between">
-                    <div className="w-9/10 flex flex-row justify-between border-b border-white mb-4 mr-4 md:mr-0">
+                <div className="w-full flex flex-row justify-between mb-3">
+                    <div className="w-9/10 flex flex-row justify-between border-b border-white mr-4 md:mr-0">
                         <h3 className="text-xl font-open font-bold mr-4">
                             Lyrics
                         </h3>
                        
                     </div>
                     <div className="w-auto">
-                            <IconContext.Provider value={{ color: colorPicker(color), size: '2rem'}}>
+                            <IconContext.Provider value={{ color: colorPicker(color), size: '2rem', style: { width: 'auto'} }}>
                                 <FaHighlighter />
                             </IconContext.Provider>
                     </div>
@@ -187,7 +187,9 @@ const LyricsBlock = (props: LyricsBlockProps) => {
                         </IconContext.Provider>
                     </div> */}
                 </div>
-                <div className="text-gray-200 text-sm overflow-scroll md:px-4" onPointerUp={handleSelect}>
+                <div className="h-9/10 text-gray-200 text-sm overflow-scroll md:px-4" 
+                // onPointerUp={handleSelect}
+                >
                     {
                         displayTextArray.map((array, keyA) => {
                             return (
@@ -201,6 +203,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
                                                     key={keyB}
                                                     id={id}
                                                     className={`text-${idCheck(id) ? colorFunc(id) : null} ${idCheck(id) ? `${colorFunc(id)}-tag` : null}`}
+                                                    onPointerUp={handleSelect}
                                                     // draggable={ color ? 'false' : 'true' }
                                                     // onDragStart={handleDragStart}
                                                     // onDragOver={handleDragOver}

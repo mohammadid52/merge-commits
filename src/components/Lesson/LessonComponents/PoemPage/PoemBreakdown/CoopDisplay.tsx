@@ -66,8 +66,8 @@ const CoopDisplay = () => {
 
             {/* teacher display */}
             <div className={`relative ${fullscreen ? 'w-full' : 'w-4.85/10 '} h-full rounded-lg border shadow-inner-dark bg-darker-blue p-4`}>
-                <div className="absolute cursor-pointer w-auto text-xl m-2" style={{bottom: 0, right: 0}} onClick={handleFullscreen}>
-                    <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem' }}>
+                <div className="absolute cursor-pointer w-full text-xl m-2" style={{bottom: 0, right: 0}} onClick={handleFullscreen}>
+                    <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem', style: {width: 'auto', right: '0', bottom: '0', position: 'absolute'} }}>
                         {fullscreen ? < FaCompress /> :< FaExpand />}
                     </IconContext.Provider>
                 </div>
