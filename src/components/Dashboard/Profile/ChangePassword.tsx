@@ -161,17 +161,17 @@ const ChangePassword = () => {
                             <div style={{right: 0}} className="absolute right-0 w-auto mr-2">
                                 <div onClick={() => setOldPassToggle(!oldPassToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
                                 { oldPassToggle ?
-                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                     <AiOutlineEye />
                                 </IconContext.Provider> :
-                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                     <AiOutlineEyeInvisible />
                                 </IconContext.Provider>
                                 }
                                 </div>
                             </div>
                             <div className="w-auto flex justify-center items-center mr-2">
-                                <IconContext.Provider value={{ size: '1.2rem'}}>
+                                <IconContext.Provider value={{ size: '1.2rem', style: {width: 'auto'}}}>
                                     <FaKey />
                                 </IconContext.Provider>
                             </div>
@@ -185,17 +185,17 @@ const ChangePassword = () => {
                             <div style={{right: 0}} className="absolute right-0 w-auto mr-2">
                                 <div onClick={() => setPassToggle(!passToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
                                 { passToggle ?
-                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                     <AiOutlineEye />
                                 </IconContext.Provider> :
-                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                     <AiOutlineEyeInvisible />
                                 </IconContext.Provider>
                                 }
                                 </div>
                             </div>
                             <div className="w-auto flex justify-center items-center mr-2">
-                                <IconContext.Provider value={{ size: '1.2rem'}}>
+                                <IconContext.Provider value={{ size: '1.2rem', style: {width: 'auto'}}}>
                                     <FaKey />
                                 </IconContext.Provider>
                             </div>
@@ -209,17 +209,17 @@ const ChangePassword = () => {
                             <div style={{right: 0}} className="absolute right-0 w-auto mr-2">
                                 <div onClick={() => setPassMatchToggle(!passMatchToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
                                 { passMatchToggle ?
-                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                     <AiOutlineEye />
                                 </IconContext.Provider> :
-                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                     <AiOutlineEyeInvisible />
                                 </IconContext.Provider>
                                 }
                                 </div>
                             </div>
                                 <div className="w-auto flex justify-center items-center mr-2">
-                                    <IconContext.Provider value={{ size: '1.2rem'}}>
+                                    <IconContext.Provider value={{ size: '1.2rem', style: {width: 'auto'}}}>
                                         <FaKey />
                                     </IconContext.Provider>
                                 </div>
@@ -227,11 +227,16 @@ const ChangePassword = () => {
                                 <input className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder="Confirm Password" type={passMatchToggle ? 'text' : 'password'}  id="match" name="match" defaultValue={input.match} onChange={handleChange}/>
                             </div>
                         </div>
-
                     </div>
-                    <NavLink to="/forgot-password">
-                        <div className="text-sm text-center text-gray-600 hover:text-blue-500">can't remember your old password?</div>
-                    </NavLink>
+
+                    
+                        
+                    <div className="w-auto text-sm text-center text-gray-600 ">
+                        <NavLink to="/forgot-password" className={`hover:text-blue-500`}>can't remember your old password?</NavLink>
+                    </div>
+                        
+                    
+
                 </div>  
 
 

@@ -83,7 +83,7 @@ const Body = () => {
     }, [state.currentPage, state.pages]);
 
     return (
-        <div className="p-4 md:px-8 md:h-8.3/10"> 
+        <div className="p-4 md:px-8 md:h-8.3/10 flex justify-center items-center"> 
             <Switch>
                 <Route exact path={`${match.url}/`}>
                     <Intro />
