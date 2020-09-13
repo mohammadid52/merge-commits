@@ -18,20 +18,25 @@ const tempCheckPtSwitch = (type: string) => {
 
 const Checkpoint = () => {
     const { state, dispatch } = useContext(LessonContext)
+    const { theme } = useContext(LessonContext);
 
     useEffect(() => {
         dispatch({ type: 'ACTIVATE_CHECKPOINT', payload: state.pages[state.currentPage].type })
     }, [])
 
+    useEffect(() => {
+        console.log('CHECKPOINTO  :: ', theme.block.text);
+      }, []);
+
     return (
         <div className={`w-full h-full flex flex-col justify-center items-center`}>
             <div className="w-2/3 flex flex-row justify-center items-center mb-4">
                 <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
-                    <div className="red bg-dark-red h-20 w-20 flex flex-col items-center justify-center z-20 rounded-lg shadow-2">
+                    <div className="bg-dark-red absolute left-0 h-8 w-8 flex flex-col items-center z-20 rounded-lg">
                         <FaCheckSquare />
                     </div>
                 </IconContext.Provider>
-                <div className="title bg-dark-blue w-full flex flex-row justify-center items-center text-4xl text-center font-open font-bold text-gray-200 rounded-lg shadow-2 px-4 py-2 z-10">
+                <div className={`border-b border-white border-opacity-50 title w-full flex flex-row justify-center items-center text-5xl text-center font-open font-light px-4 py-2 ${theme.block.text} z-10`}>
                     Checkpoint
                 </div>
             </div>

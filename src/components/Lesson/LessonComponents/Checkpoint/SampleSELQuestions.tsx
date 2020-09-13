@@ -92,7 +92,7 @@ const SampleSELQuestions = () => {
                     <p className="mb-2">
                         {question.question}
                     </p>
-                    <div id={question.label} className={'w-8/10 flex flex-col '}>
+                    <div id={question.label} className={'w-8/10 flex flex-row '}>
                         {question.options.map((option: {label: string, icon: string, color: string, text: string }, key: any) => (
                             <div key={key} className={`w-3/4 flex items-center mb-2`} 
                             onClick={handleSelect}>
@@ -128,11 +128,11 @@ const SampleSELQuestions = () => {
         <div className={`h-full flex flex-col text-gray-200`}>
             <h4 className={`text-2xl font-open font-bold`}>{checkpoint.instructions}</h4>
             <div className={`h-full flex justify-center items-center divide-x-2 divide-dark divide-opacity-50`}>
-                <div className="w-full h-full flex flex-col flex-wrap justify-around items-center py-4 px-2">
+                <div className="w-full h-full flex flex-col flex-wrap items-center py-4 px-2">
                     
                     {checkpoint.questions.items.map((item: {question:any}, key: number) => {
                         return (
-                            <div key={key} className="w-4.3/10">
+                            <div key={key} className="w-8/10">
                                 {inputSwitch(item.question)}
                             </div>
                         )
