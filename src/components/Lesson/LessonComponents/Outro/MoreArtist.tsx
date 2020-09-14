@@ -38,21 +38,21 @@ const MoreArtist = () => {
 
     return(
         // <div className="w-full h-full bg-dark-blue text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
-        <div className="w-full h-full text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
+        <div className="w-full h-6/10 text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
             <h3 className="w-full text-2xl font-medium border-b border-white mb-4 pb-4 border-opacity-50">
                 Learn more about the artist
             </h3>
-            <div className="h-3.5/10 w-full flex justify-between items-center rounded-lg">
-                <div className="w-5/10 h-full">
+            <div className="h-full w-full flex flex-col items-center rounded-lg">
+                
                     <PhotoBlock />
-                </div>
+                
 
-                <div className="w-4.8/10 h-full flex flex-col items-center justify-center ">
+                <div className="w-full w-4/10 flex flex-row items-center justify-center ">
                     <div className="h-full w-full flex justify-center items-start">
-                        <div className="h-full w-full flex flex-col flex-wrap justify-center items-start">
+                        <div className="h-full w-full flex flex-row">
                             {artistLink.map((item: {type: string, link: string, label: string}, key: number) => (
     
-                                <div key={key} className="cursor-pointer px-4 py-2 w-4.5/10 h-5/10 flex justify-center items-center"> 
+                                <div key={key} className="cursor-pointer px-4 py-2 h-5/10 flex justify-center items-center"> 
                                     <a href={item.link} target="_blank" rel="noopener noreferrer">
                                         {
                                             item.type === 'youtube' ?
@@ -90,9 +90,9 @@ const MoreArtist = () => {
 
 
             </div>
-            <div className="h-5/10 rounded-lg">
+            {/* <div className="h-5/10 rounded-lg">
                 <VideoBlock link='https://www.youtube.com/embed/bp10ZOtv_zY' fullscreen={fullscreen}/>
-            </div>
+            </div> */}
         </div>
     )
 }

@@ -9,33 +9,38 @@ import Feedback from './Feedback';
 import Links from './Links';
 
 const Outro = () => {
-    const { dispatch } = useContext(LessonContext);
+  const { dispatch } = useContext(LessonContext);
 
-    useEffect(() => {
-        dispatch({type: 'ACTIVATE_LESSON', payload: 'outro'})
-        dispatch({type: 'FINISH'})
-    }, [])
+  useEffect(() => {
+    dispatch({ type: 'ACTIVATE_LESSON', payload: 'outro' });
+    dispatch({ type: 'FINISH' });
+  }, []);
 
-    return (
-        <div className="w-full md:h-full flex flex-col justify-between items-center">
-            <Banner />
+  return (
+    <div className='w-full md:h-full flex flex-col justify-between items-center'>
+      <Banner />
 
-            <div className="w-full md:h-8.8/10 flex flex-col md:flex-row justify-between items-center">
-                <div className="w-5/10 h-full mt-4 md:mt-0 md:ml-2">
+      {/* <div className='w-full md:h-8.8/10 flex flex-col md:flex-row justify-between items-center'> */}
+      <div className='w-6/10 md:h-8.8/10 flex-col justify-center items-center overflow-auto'>
+        {/* <div className="w-5/10 h-full mt-4 md:mt-0 md:ml-2">
                     <MoreArtist />
                 </div>
 
                 <div className="w-4.8/10 h-full flex flex-col justify-between">
                     <div className="flex justify-between h-5/10">
                         <TrophyBlock />
-                        {/* <Links /> */}
+                        <Links />
                     </div>
                     <Feedback />
-                </div>
-            </div>
+                </div> */}
 
-        </div>
-    )
-}
+        <TrophyBlock />
+        <MoreArtist />
 
-export default Outro
+        <Feedback />
+      </div>
+    </div>
+  );
+};
+
+export default Outro;
