@@ -40,7 +40,7 @@ const Modules = (props: any) => {
                 additional.map((item: any, key: number) => {
                     let wordArray = keywordParser(item.input)
                     return (
-                    <div key={key} className={`${displayMode === 'SELF' ? 'md:h-3.2/10' : displayMode === 'COOP' ? 'md:h-full md:w-3.2/10' : 'md:h-3.2/10' } bg-dark-blue font-open font-bold h-16 shadow-2 rounded-lg px-4 py-2 ${key === additional.length - 1 ? '' : ''}`}>
+                    <div key={key} className={`${displayMode === 'SELF' ? 'md:h-3.2/10' : displayMode === 'COOP' ? 'md:h-full md:w-3.2/10' : 'md:h-3.2/10' } bg-dark-blue font-open font-light h-16 rounded-lg px-4 py-2 ${key === additional.length - 1 ? '' : ''}`}>
                         <h3>{keywordCapitilizer(item.name)}:</h3>
                         <div className="w-full px-2 overflow-scroll">
                             {   item.input ? wordArray.map((word: string, key: number) => (
@@ -55,15 +55,15 @@ const Modules = (props: any) => {
                     </div>
                 )})
             }
-            {/* <div className="bg-dark-blue font-open font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
+            {/* <div className="bg-dark-blue font-open font-light h-32 shadow-2 rounded px-4 py-2 mb-2">
                 <h3>Culture:</h3>
                 <p className="text-2xl">{displayProps.culture}</p>
             </div>
-            <div className="bg-dark-blue font-open font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
+            <div className="bg-dark-blue font-open font-light h-32 shadow-2 rounded px-4 py-2 mb-2">
                 <h3>My Storyteller:</h3>
                 <p className="text-2xl">{displayProps.storyteller}</p>
             </div>
-            <div className="bg-dark-blue font-open font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
+            <div className="bg-dark-blue font-open font-light h-32 shadow-2 rounded px-4 py-2 mb-2">
                 <h3>Morals:</h3>
                 <div className="h-24 flex flex-col overflow-scroll">
                     {keywordParser(displayProps.lessons).map((term, key) => (

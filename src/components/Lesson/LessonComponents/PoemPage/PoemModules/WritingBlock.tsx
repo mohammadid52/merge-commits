@@ -246,9 +246,9 @@ const WritingBlock = (props: WritingBlockProps) => {
     }
 
     return (
-        <div className="bg-dark-blue w-full h-80 md:h-full flex flex-col items-center p-4 md:px-8 md:py-6 rounded-lg shadow-2 mb-4 md:mb-0 " >
+        <div className="bg-dark-blue w-full h-80 md:h-full flex flex-col items-center p-4 md:px-8 md:py-6 rounded-lg mb-4 md:mb-0 border-l-4 border-mustard-yellow" >
             <div className="w-full flex flex-row justify-between mb-4">
-                <h3 className="w-full flex-grow text-xl text-gray-200 font-open font-bold border-b border-white mr-2">
+                <h3 className="w-full flex-grow text-xl text-gray-200 font-open font-light border-b border-white mr-2">
                     Line Prompts
                 </h3>
                 <IconContext.Provider value={{ color: '#E2E8F0', size: '1.5rem', style: { opacity: `${lineState.lines.length < (lineNo * 2) ? '100%' : '10%'}`}}}>
@@ -295,7 +295,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                     )}) : null
                 }
             </div>
-            <button className="self-start w-24 h-8 text-xl font-open font-bold bg-green-500 text-gray-200 shadow-2 rounded-lg mt-2" onClick={handleSubmit}>
+            <button className="self-start w-24 h-8 text-xl font-open font-light bg-green-500 text-gray-200 rounded-lg mt-2" onClick={handleSubmit}>
                 Submit
             </button>
         </div>

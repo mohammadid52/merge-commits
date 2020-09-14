@@ -37,11 +37,12 @@ const MoreArtist = () => {
     const img = '../../../../../public/instagram.svg';
 
     return(
-        <div className="w-full h-full bg-dark-blue text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
-            <h3 className="w-full text-3xl text-gray-200 font-open font-bold border-b border-white">
+        // <div className="w-full h-full bg-dark-blue text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
+        <div className="w-full h-full text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
+            <h3 className="w-full text-2xl font-medium border-b border-white mb-4 pb-4 border-opacity-50">
                 Learn more about the artist
             </h3>
-            <div className="h-3.5/10 w-9/10 flex justify-between items-center rounded-lg">
+            <div className="h-3.5/10 w-full flex justify-between items-center rounded-lg">
                 <div className="w-5/10 h-full">
                     <PhotoBlock />
                 </div>
@@ -55,27 +56,27 @@ const MoreArtist = () => {
                                     <a href={item.link} target="_blank" rel="noopener noreferrer">
                                         {
                                             item.type === 'youtube' ?
-                                            <IconContext.Provider value={{ color: '#ff0000', size: '3rem', className: 'flex-grow'}}>
+                                            <IconContext.Provider value={{ color: '#ff0000', size: '2rem', className: 'flex flex-grow'}}>
                                                 <IoLogoYoutube />
                                             </IconContext.Provider> :
                                             item.type === 'etc' ?
-                                            <IconContext.Provider value={{ color: '#1a7fd8', size: '3rem', className: 'flex-grow'}}>
+                                            <IconContext.Provider value={{ color: '#1a7fd8', size: '2rem', className: 'flex flex-grow'}}>
                                                 <AiFillPlusCircle />
                                             </IconContext.Provider> :
                                             item.type === 'spotify' ? 
-                                            <IconContext.Provider value={{ color: '#1DB954', size: '4.8rem', className: 'flex-grow'}}>
+                                            <IconContext.Provider value={{ color: '#1DB954', size: '2rem', className: 'flex flex-grow'}}>
                                                 <FaSpotify />
                                             </IconContext.Provider> :
                                             item.type === 'instagram' ?
-                                            <IconContext.Provider  value={{ color: 'white', size: '3rem', className: 'flex-grow' }}>
+                                            <IconContext.Provider  value={{ color: 'white', size: '2rem', className: 'flex flex-grow' }}>
                                                 <AiOutlineInstagram />
                                             </IconContext.Provider> :
-                                            <IconContext.Provider value={{ color: '#1a7fd8', size: '3rem', className: 'flex-grow'}}>
+                                            <IconContext.Provider value={{ color: '#1a7fd8', size: '2rem', className: 'flex flex-grow'}}>
                                                 <AiFillPlusCircle />
                                             </IconContext.Provider>
                                         }
                                     
-                                    <p className="flex-grow text-center">
+                                    <p className="flex-grow text-center text-blue-100 text-opacity-75">
                                         {item.label}
                                     </p>
                                     </a>

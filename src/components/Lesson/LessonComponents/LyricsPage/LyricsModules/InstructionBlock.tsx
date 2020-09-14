@@ -30,10 +30,10 @@ const InstructionsBlock = () => {
     }
     
     return (
-        <div className="md:h-3.8/10 bg-dark-blue border-l-8 border-green-light w-full flex justify-center p-4 shadow-2 rounded-lg text-gray-200">
+        <div className="md:h-3.8/10 bg-dark-blue border-l-8 border-green-light w-full flex justify-center p-4 rounded-lg text-gray-200 shadow-2xlr">
             <div className="w-full flex flex-col">
                 <div className="w-auto flex flex-row mb-3 border-b border-white mr-4">
-                    <h3 className="w-3/10 mr-2 flex-grow text-xl font-open font-bold animate-bounce">
+                    <h3 className="w-3/10 mr-2 flex-grow text-xl font-open font-light animate-bounce">
                         Instructions
                     </h3>
                     <p className="w-auto text-gray-600 text-sm flex mr-4 items-center">(click the red icon for video instructions)</p>

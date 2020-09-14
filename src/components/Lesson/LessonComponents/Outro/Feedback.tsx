@@ -6,9 +6,9 @@ import { LessonContext } from '../../../../contexts/LessonContext';
 const Feedback = () => {
 
     return(
-        <div className="bg-dark-blue w-full h-4.8/10 flex flex-col justify-between rounded-lg shadow-2 text-gray-200 p-4">
+        <div className="bg-dark-blue w-full h-4.8/10 flex flex-col justify-between rounded-lg text-gray-200 p-4 border-l-8 border-green-light">
             <div className="h-2/10 w-full flex justify-between items-center">
-                <div className="w-7/10 text-xl text-gray-200 font-open font-bold">
+                <div className="w-7/10 text-xl font-open font-light text-base text-blue-100 text-opacity-70">
                     What did you think about the lesson?
                 </div>
                 <div className="w-3/10 flex justify-center items-center">
@@ -25,7 +25,7 @@ const Feedback = () => {
                 </div>
             </div>
             <div className="h-8/10 w-full">
-                <div className="h-2/10 w-full text-lg text-gray-200">
+                <div className="h-2/10 w-full text-lg font-light text-base text-blue-100 text-opacity-70">
                     Do you have any comments?
                 </div>
                 <textarea id="text" className="h-8/10 bg-gray-300 w-full p-2 text-md text-gray-800 rounded-lg shadow-2" 

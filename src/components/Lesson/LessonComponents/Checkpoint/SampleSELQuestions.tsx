@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, SyntheticEvent } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
 const setInitialState = (array: Array<any>) => {
@@ -27,31 +27,49 @@ const SampleSELQuestions = () => {
     setInitialState(checkpoint.questions.items)
   );
 
-  /**
-   * Setinput => id of form 'where-im-from-lesson-reflection' 
-   * Array of objects
-   * Output: array with all clicked items
-   * @param e 
-   */
-  const handleSelect = (e: any) => {
-    const { id } = e.target;
-    setSelected((prev) => {
-      if (selected.indexOf(id) >= 0) {
-        let newArray = selected.filter((item) => {
-          return item !== id;
-        });
-        console.log(newArray, 'new array');
-        return newArray;
-      }
-      return [...prev, id];
-    });
+  const handleSelect = (e: SyntheticEvent) => {
+    const { id } = e.target as HTMLInputElement;
 
-    setInput({
-      ...input,
-      'where-im-from-lesson-reflection': selected,
+    setSelected(() => {
+      let newSelected: string[];
+
+      if (selected.includes(id)) {
+        newSelected = selected.filter((arrayItem) => arrayItem !== id);
+        setInput({
+          ...input,
+          'where-im-from-lesson-reflection': newSelected,
+        });
+      } else {
+        newSelected = [id, ...selected];
+        setInput({
+          ...input,
+          'where-im-from-lesson-reflection': newSelected,
+        });
+      }
+
+      return newSelected;
     });
-    console.log(selected, 'selected');
   };
+
+  // const handleSelect = (e: any) => {
+  //   const { id } = e.target;
+  //   setSelected((prev) => {
+  //     if (selected.indexOf(id) >= 0) {
+  //       let newArray = selected.filter((item) => {
+  //         return item !== id;
+  //       });
+  //       console.log(newArray, 'new array');
+  //       return newArray;
+  //     }
+  //     return [...prev, id];
+  //   });
+
+  //   setInput({
+  //     ...input,
+  //     'where-im-from-lesson-reflection': selected,
+  //   });
+  //   console.log(selected, 'selected');
+  // };
 
   useEffect(() => {
     console.log(input, 'input');
@@ -98,7 +116,7 @@ const SampleSELQuestions = () => {
         return (
           <textarea
             id={question.label}
-            className='h-full w-9/10 p-8 bg-gray-300 text-gray-800 w-full text-sm md:text-2xl text-gray-800 rounded-lg shadow-2 m-auto'
+            className='h-full w-9/10 p-8 bg-gray-300 text-gray-800 w-full text-sm md:text-2xl text-gray-800 rounded-lg  m-auto'
             value={input[question.label]}
             onChange={handleInputChange}
           />
@@ -118,18 +136,18 @@ const SampleSELQuestions = () => {
                   },
                   key: number
                 ) => (
-                    // <div key={key} className={`flex justify-center items-center`}>
-                    <div key={key} className={`text-center`}>
-                      <input
-                        id={question.label}
-                        className='w-4 mx-4 cursor-pointer'
-                        type='radio'
-                        name='cultures'
-                        value={option.text}
-                        onChange={handleInputChange}
-                      />
-                      <label htmlFor={`${option.text}`}>{option.text}</label>
-                    </div>
+                  // <div key={key} className={`flex justify-center items-center`}>
+                  <div key={key} className={`text-center`}>
+                    <input
+                      id={question.label}
+                      className='w-4 mx-4 cursor-pointer'
+                      type='radio'
+                      name='cultures'
+                      value={option.text}
+                      onChange={handleInputChange}
+                    />
+                    <label htmlFor={`${option.text}`}>{option.text}</label>
+                  </div>
                 )
               )}
             </div>
@@ -164,7 +182,7 @@ const SampleSELQuestions = () => {
                     ) : (
                       <div
                         id={`${option.label}`}
-                        className='bg-gray-400 shadow-2 cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center'>
+                        className='bg-gray-400  cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center'>
                         {option.icon ? option.icon : ''}
                       </div>
                     )}
@@ -184,16 +202,17 @@ const SampleSELQuestions = () => {
 
   return (
     <div className={`h-full flex flex-col text-gray-200`}>
-      <h4 className={`text-2xl font-medium border-b border-white border-opacity-50  mb-4 pb-4`}>
-        {checkpoint.instructions}
-      </h4>
+      {/* <h4 className={`text-2xl font-medium border-b border-white border-opacity-50  mb-4 pb-4`}> */}
+      <h4 className={`text-2xl font-medium mb-4`}>{checkpoint.instructions}</h4>
       <div
         className={`h-full flex justify-center items-center divide-x-2 divide-dark divide-opacity-50`}>
-        <div className='w-full h-full flex flex-col flex-wrap items-center py-4 px-2'>
+        <div className='w-full h-full flex flex-col flex-wrap items-center px-2'>
           {checkpoint.questions.items.map(
             (item: { question: any }, key: number) => {
               return (
-                <div key={key} className='w-8/10 mb-4 border-b border-white border-opacity-10 pb-8'>
+                <div
+                  key={key}
+                  className='w-8/10 mb-4 border-b border-white border-opacity-10 pb-4'>
                   {inputSwitch(item.question)}
                 </div>
               );

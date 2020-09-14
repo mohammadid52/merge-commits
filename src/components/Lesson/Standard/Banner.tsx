@@ -16,7 +16,7 @@ const Banner = (props: BannerProps) => {
                 <FaScroll />
             </div>
             </IconContext.Provider>
-            <div className="title bg-dark-blue shadow-2 w-full flex flex-row justify-between items-center text-xl md:text-4xl text-center font-open font-bold text-gray-200 px-4 py-2 z-10">
+            <div className="title bg-dark-blue w-full flex flex-row justify-between items-center text-xl md:text-4xl text-center font-open font-bold text-gray-200 px-4 py-2 z-10">
                     { title }
             </div>
         </div>

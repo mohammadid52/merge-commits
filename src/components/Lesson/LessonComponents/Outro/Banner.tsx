@@ -10,19 +10,20 @@ const keywordCapitilizer = (str: string) => {
 
 const Banner = () => {
     const { state } = useContext(LessonContext);
+    const { theme } = useContext(LessonContext);
     // const achievements = state.data.lesson.achievements;
     // const studentPortfolio = state.data.student.portfolio;
 
 
     return (
 
-        <div className="w-full h-1/10 flex flex-row justify-center items-center">
-            <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
-                <div className="red bg-dark-red h-20 w-20 flex flex-col items-center justify-center z-20 rounded-lg shadow-2">
+        <div className="w-full h-1/10 relative flex flex-row justify-center items-center">
+            <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
+                <div className="bg-dark-red absolute left-0 h-8 w-8 flex flex-col justify-center items-center z-20 rounded-lg">
                     <FaTrophy />
                 </div>
             </IconContext.Provider>
-            <div className="h-full bg-dark-blue w-full flex flex-row justify-center items-center text-xl md:text-5xl text-center font-open font-bold text-gray-200 rounded-lg shadow-2 z-10">
+            <div className={`border-b border-white border-opacity-50 title w-full flex flex-row justify-center items-center text-5xl text-center font-open font-light px-4 py-2 ${theme.block.text} z-10`}>
                 <p>Congrats! You've completed the lesson!</p>
             </div>
         </div>

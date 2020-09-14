@@ -25,10 +25,10 @@ const Checkpoint = () => {
     }, [])
 
     return (
-        <div className={`w-full h-full flex flex-col justify-center items-center`}>
-            <div className="w-2/3 flex flex-row justify-center items-center mb-4">
-                <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
-                    <div className="bg-dark-red absolute left-0 h-8 w-8 flex flex-col items-center z-20 rounded-lg">
+        <div className={`w-full h-8/10 flex flex-col justify-between items-center`}>
+            <div className="w-2/3 h-1.3/10 relative flex flex-row justify-center items-center mb-4">
+                <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
+                    <div className="bg-dark-red absolute left-0 h-8 w-8 flex flex-col justify-center items-center z-20 rounded-lg">
                         <FaCheckSquare />
                     </div>
                 </IconContext.Provider>
@@ -36,7 +36,7 @@ const Checkpoint = () => {
                     Checkpoint
                 </div>
             </div>
-            <div className={`w-2/3 bg-dark-blue shadow-2xl rounded-lg p-8`}>
+            <div className={`w-2/3 bg-dark-blue xl rounded-lg p-4`}>
                 { tempCheckPtSwitch(state.pages[state.currentPage].type) }
             </div>
         </div>

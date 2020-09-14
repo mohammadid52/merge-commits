@@ -56,7 +56,7 @@ const CoopDisplay = () => {
                             display='SELFinCOOP' fullscreen={fullscreen}/>
 
                         <div className="w-full h-8.8/10 flex flex-col md:flex-row justify-between">
-                            <div className={`bg-dark-blue ${displayProps.additional ? 'md:w-7.9/10' : 'w-full'} md:mb-0 overflow-scroll h-full p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg shadow-2`}>
+                            <div className={`bg-dark-blue ${displayProps.additional ? 'md:w-7.9/10' : 'w-full'} md:mb-0 overflow-scroll h-full p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg`}>
                                 {/* bg-lighter-blue shadow-inner-box  */}
                                 <div className="h-full rounded-lg">
                                     { displayProps.story }
@@ -71,8 +71,8 @@ const CoopDisplay = () => {
                     {/* teacher display */}
                     <div className={`relative ${fullscreen ? 'w-full' : 'w-4.85/10'} h-full rounded-lg border shadow-inner-dark bg-darker-blue p-4`}>
                         <div className="w-full h-full flex flex-col justify-between items-center">
-                            <div className="absolute cursor-pointer w-auto text-xl m-2" style={{bottom: 0, right: 0}} onClick={handleFullscreen}>
-                                <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem' }}>
+                            <div className="absolute cursor-pointer w-full text-xl m-2" style={{bottom: 0, right: 0}} onClick={handleFullscreen}>
+                                <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem', style: {width: 'auto', right: '0', bottom: '0', position: 'absolute'} }}>
                                     {fullscreen ? < FaCompress /> :< FaExpand />}
                                 </IconContext.Provider>
                             </div>

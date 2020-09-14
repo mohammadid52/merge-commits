@@ -55,7 +55,7 @@ const CoopDisplay = () => {
                     display="SELFinCOOP" fullscreen={fullscreen}/>
 
                 <div className="w-full h-8.8/10 flex flex-col justify-between items-center">
-                    <div className="bg-dark-blue w-full h-full p-6 flex flex-col items-center text-xl text-gray-200 rounded-lg shadow-2 whitespace-pre-wrap overflow-scroll">
+                    <div className="bg-dark-blue w-full h-full p-6 flex flex-col items-center text-xl text-gray-200 rounded-lg whitespace-pre-wrap overflow-scroll">
                         {/* bg-lighter-blue shadow-inner-box  */}
                         <div className="p-4 h-full rounded-lg">
                         { displayProps ? displayProps.editInput : null}
@@ -66,8 +66,8 @@ const CoopDisplay = () => {
 
             {/* teacher display */}
             <div className={`relative ${fullscreen ? 'w-full' : 'w-4.85/10 '} h-full rounded-lg border shadow-inner-dark bg-darker-blue p-4`}>
-                <div className="absolute cursor-pointer w-auto text-xl m-2" style={{bottom: 0, right: 0}} onClick={handleFullscreen}>
-                    <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem' }}>
+                <div className="absolute cursor-pointer w-full text-xl m-2" style={{bottom: 0, right: 0}} onClick={handleFullscreen}>
+                    <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem', style: {width: 'auto', right: '0', bottom: '0', position: 'absolute'} }}>
                         {fullscreen ? < FaCompress /> :< FaExpand />}
                     </IconContext.Provider>
                 </div>
@@ -85,7 +85,7 @@ const CoopDisplay = () => {
                     </div>
 
                     <div className="w-full h-8.8/10 flex flex-col justify-between items-center">
-                        <div className={`${fullscreen ? 'text-2xl' : 'text-xl'} bg-dark-blue w-full h-full p-6 flex flex-col items-center text-gray-200 rounded-lg shadow-2 whitespace-pre-wrap overflow-scroll`}>
+                        <div className={`${fullscreen ? 'text-2xl' : 'text-xl'} bg-dark-blue w-full h-full p-6 flex flex-col items-center text-gray-200 rounded-lg whitespace-pre-wrap overflow-scroll`}>
                             {/* bg-lighter-blue  shadow-inner-box */}
                             <div className="p-4 h-full rounded-lg">
                             { teacherData && teacherData.activityData && teacherData.activityData.editInput ? teacherData.activityData.editInput : null}

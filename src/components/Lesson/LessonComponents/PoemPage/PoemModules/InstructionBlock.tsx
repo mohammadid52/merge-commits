@@ -21,7 +21,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
         return (
             <div className="bg-dark-blue border-l-8 border-green-light w-full md:h-2.8/10 flex flex-col p-6 shadow-3 rounded-lg text-gray-200 mt-4 md:mt-0">
                 <div className="w-full flex justify-between">
-                    <h3 className="flex-grow text-xl font-open font-bold mb-6 border-b border-white mr-4 animate-bounce">
+                    <h3 className="flex-grow text-xl font-open font-light mb-6 border-b border-white mr-4 animate-bounce">
                         Instructions
                     </h3>
                 </div>
@@ -33,10 +33,10 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
     }
 
     return (
-        <div className="bg-dark-blue w-full h-72 flex justify-center p-6 shadow-3 rounded-lg text-gray-200 mb-4">
+        <div className="bg-dark-blue w-full h-72 flex justify-center p-6 shadow-3 rounded-lg text-gray-200 mb-4 shadow-2xlr border-l-8 border-green-light">
             <div className="w-full flex flex-col">
                 <div className="w-auto flex flex-row mb-3 border-b border-white mr-4">
-                    <h3 className="w-3/10 mr-2 flex-grow text-xl font-open font-bold">
+                    <h3 className="w-3/10 mr-2 flex-grow text-xl font-open font-light">
                         Instructions
                     </h3>
                     <p className="w-auto text-gray-600 text-xs flex mr-4 items-center">(click the red icon for video instructions)</p>

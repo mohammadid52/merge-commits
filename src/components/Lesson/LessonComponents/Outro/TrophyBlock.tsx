@@ -14,9 +14,9 @@ const keywordCapitilizer = (str: string) => {
 const TrophyBlock = () => {
 
     return (
-        <div className="h-full w-6.8/10 bg-dark-blue flex flex-col justify-between items-center shadow-2 rounded-lg p-4">
+        <div className="h-full w-6.8/10 bg-dark-blue flex flex-col justify-between items-center rounded-lg p-4">
             <div className="h-full flex flex-col justify-between items-center">
-                <div className="text-2xl text-gray-200 font-open font-bold border-b border-white">
+                <div className="text-2xl text-gray-200 font-light font-medium border-b border-white mb-4 pb-4 border-opacity-50">
                     You have completed
                 </div>
 
@@ -27,7 +27,7 @@ const TrophyBlock = () => {
                                 <FaScroll />
                             </IconContext.Provider>
                         </div>
-                        <div className="flex justify-center text-2xl text-gray-200 font-open font-bold mt-2">
+                        <div className="flex justify-center text-2xl text-gray-200 font-open font-light mt-2">
                             1 Story
                         </div>
                     </div>
@@ -37,7 +37,7 @@ const TrophyBlock = () => {
                                 <FaPenFancy />
                             </IconContext.Provider>
                         </div>
-                        <div className="flex justify-center text-2xl text-gray-200 font-open font-bold mt-2">
+                        <div className="flex justify-center text-2xl text-gray-200 font-open font-light mt-2">
                             1 Poem
                         </div>
                     </div>
