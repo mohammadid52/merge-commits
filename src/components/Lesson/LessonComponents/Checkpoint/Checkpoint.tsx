@@ -24,10 +24,6 @@ const Checkpoint = () => {
         dispatch({ type: 'ACTIVATE_CHECKPOINT', payload: state.pages[state.currentPage].type })
     }, [])
 
-    useEffect(() => {
-        console.log('CHECKPOINTO  :: ', theme.block.text);
-      }, []);
-
     return (
         <div className={`w-full h-full flex flex-col justify-center items-center`}>
             <div className="w-2/3 flex flex-row justify-center items-center mb-4">
@@ -40,7 +36,7 @@ const Checkpoint = () => {
                     Checkpoint
                 </div>
             </div>
-            <div className={`w-2/3 h-3/4 bg-dark-blue shadow-elem-dark rounded-lg p-8`}>
+            <div className={`w-2/3 bg-dark-blue shadow-2xl rounded-lg p-8`}>
                 { tempCheckPtSwitch(state.pages[state.currentPage].type) }
             </div>
         </div>
