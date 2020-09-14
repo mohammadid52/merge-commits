@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import {
     Link
 } from 'react-router-dom'
-import Class from '../Classroom/Class';
+import Today from '../Classroom/TodayLesson';
 import Upcoming from '../Classroom//Upcoming';
 import Completed from '../Classroom/Completed';
 import * as customQueries from '../../../customGraphql/customQueries';
 import { API, graphqlOperation } from 'aws-amplify';
 import Loading from '../../Lesson/Loading/ComponentLoading';
+import Dashboard from '../Classroom/Dashboard';
 
 export interface Artist {
     id: string
@@ -54,12 +55,12 @@ const LessonPlanHome = () => {
 
     return (
         <div className={`w-full h-9.28/10 md:h-auto flex flex-col p-4 md:p-8`}>
-            <Class link="/lesson-control?id=1" curriculum={curriculum}/>
+            <Today link="/lesson-control?id=1" curriculum={curriculum}/>
             {/* <Link to="/lesson-control?id=1">
                 Teacher View 
             </Link> */}
             <Upcoming curriculum={listCurriculum}/>
-            <Completed /> 
+            <Dashboard /> 
         </div>
     )
         }

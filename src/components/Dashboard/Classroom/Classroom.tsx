@@ -3,7 +3,7 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
 import * as customQueries from '../../../customGraphql/customQueries';
 import { API, graphqlOperation } from 'aws-amplify';
-import Class from './Class';
+import Today from './TodayLesson';
 import Upcoming from './Upcoming';
 import Completed from './Completed';
 import Dashboard from './Dashboard';
@@ -76,7 +76,7 @@ const Classroom: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <Class link={'/lesson?id=1'} curriculum={curriculum}/>
+                <Today link={'/lesson?id=1'} curriculum={curriculum}/>
                 <Upcoming curriculum={listCurriculum}/>
                 <Dashboard />
                 

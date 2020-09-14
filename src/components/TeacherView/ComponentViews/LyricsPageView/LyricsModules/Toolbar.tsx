@@ -40,8 +40,8 @@ const ToolBar = (props: ToolbarProps) => {
 
 
     return (
-        <div className="bg-gray-500 h-1.8/10 w-full p-4 shadow-2 rounded-lg flex flex-col items-center justify-around">
-            <h3 className="w-auto text-xl text-gray-200 font-open font-bold border-b border-white">Highlighters</h3>
+        <div className={`${fullscreen ? 'p-2' : 'p-1'} bg-gray-500 h-1.8/10 w-full shadow-2 rounded-lg flex flex-col items-center justify-around`}>
+            <h3 className={`${fullscreen ? 'text-xl' : 'text-lg'} w-auto text-gray-200 font-open font-bold border-b border-white`}>Highlighters</h3>
             <div className="w-auto cursor-pointer flex flex-row justify-center items-center pt-2">
                
                 {

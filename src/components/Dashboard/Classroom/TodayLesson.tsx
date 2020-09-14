@@ -12,7 +12,7 @@ interface ClassProps {
     }
 
 
-const Class: React.FC<ClassProps> = (props: ClassProps) => {
+const Today: React.FC<ClassProps> = (props: ClassProps) => {
     const {link, curriculum} = props
     const history = useHistory();
     const { theme } = useContext(GlobalContext);
@@ -116,4 +116,4 @@ const Class: React.FC<ClassProps> = (props: ClassProps) => {
     )
 }
 
-export default Class;
+export default Today;
