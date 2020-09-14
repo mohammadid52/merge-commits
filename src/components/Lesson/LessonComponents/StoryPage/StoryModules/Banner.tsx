@@ -10,7 +10,7 @@ const Banner = () => {
   return (
     <div className='w-full h-1/10 flex flex-row justify-center items-center'>
       <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem' }}>
-        <div className='h-full bg-dark-red h-20 w-20 flex flex-col items-center justify-center z-20 rounded-lg'>
+        <div className='h-full bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg'>
           <FaScroll />
         </div>
       </IconContext.Provider>

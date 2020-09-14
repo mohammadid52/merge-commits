@@ -28,7 +28,7 @@ const Feedback = () => {
                 <div className="h-2/10 w-full text-lg font-light text-base text-blue-100 text-opacity-70">
                     Do you have any comments?
                 </div>
-                <textarea id="text" className="h-8/10 bg-gray-300 w-full p-2 text-md text-gray-800 rounded-lg shadow-2" 
+                <textarea id="text" className="h-8/10 bg-gray-300 w-full p-2 text-md text-gray-800 rounded-lg " 
                 // value={editInput.text} onChange={handleChange}
                 />
             </div>

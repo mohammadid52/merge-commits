@@ -52,7 +52,7 @@ const MoreArtist = () => {
                         <div className="h-full w-full flex flex-col flex-wrap justify-center items-start">
                             {artistLink.map((item: {type: string, link: string, label: string}, key: number) => (
     
-                                <div key={key} className="cursor-pointer px-4 py-2 w-4.5/10 h-5/10 flex justify-center items-start"> 
+                                <div key={key} className="cursor-pointer px-4 py-2 w-4.5/10 h-5/10 flex justify-center items-center"> 
                                     <a href={item.link} target="_blank" rel="noopener noreferrer">
                                         {
                                             item.type === 'youtube' ?

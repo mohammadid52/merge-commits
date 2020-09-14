@@ -86,9 +86,9 @@ const Modules = (props: ModulesProps) => {
     }
 
     return (
-        <div className="md:h-5.8/10 w-full bg-dark-blue text-gray-200 md:mb-0 px-4 md:px-8 py-4 rounded-lg">
+        <div className="md:h-5.8/10 w-full bg-dark-blue text-gray-200 md:mb-0 px-4 md:px-8 py-4 rounded-lg overflow-auto">
             <h3 className="text-xl font-open font-light mb-3 border-b border-white border-opacity-10 mb-4 pb-4">Focus Questions</h3>
-            <div className="w-full h-full">
+            <div className="w-full h-full ">
                 { 
                     formInputs ? inputs.map((input, key) => (
                         <div key={key} className={`flex flex-col ${key !== inputs.length-1 && 'border-b border-white border-opacity-10 mb-4 pb-4'}`}>

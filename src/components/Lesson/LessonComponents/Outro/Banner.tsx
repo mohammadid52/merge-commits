@@ -18,8 +18,8 @@ const Banner = () => {
     return (
 
         <div className="w-full h-1/10 relative flex flex-row justify-center items-center">
-            <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
-                <div className="bg-dark-red absolute left-0 h-8 w-8 flex flex-col justify-center items-center z-20 rounded-lg">
+            <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
+                <div className="bg-dark-red absolute left-0 h-16 w-16 flex flex-col justify-center items-center z-20 rounded-lg">
                     <FaTrophy />
                 </div>
             </IconContext.Provider>

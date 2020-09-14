@@ -58,7 +58,7 @@ const DoFirst = () => {
 
   return (
     // <div className='bg-dark-blue w-full h-full rounded-lg  text-gray-200 px-4 md:px-8 py-6'>
-    <div className='bg-dark-blue w-full h-full rounded-lg text-gray-200 py-4 pr-4 pl-4 border-l-4 border-mustard-yellow'>
+    <div className='bg-dark-blue w-full h-full rounded-lg text-gray-200 py-4 pr-4 pl-4 border-l-4 border-ketchup'>
       <h3 className='w-full text-4xl text-gray-200 font-open font-light border-b border-white border-opacity-10 mr-4'>
         Do First
       </h3>

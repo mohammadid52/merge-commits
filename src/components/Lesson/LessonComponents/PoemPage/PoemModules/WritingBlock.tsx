@@ -246,7 +246,7 @@ const WritingBlock = (props: WritingBlockProps) => {
     }
 
     return (
-        <div className="bg-dark-blue w-full h-80 md:h-full flex flex-col items-center p-4 md:px-8 md:py-6 rounded-lg mb-4 md:mb-0 border-l-4 border-mustard-yellow" >
+        <div className="bg-dark-blue w-full h-80 md:h-full flex flex-col items-center p-4 md:px-8 md:py-6 rounded-lg mb-4 md:mb-0 border-l-4 border-orange-600" >
             <div className="w-full flex flex-row justify-between mb-4">
                 <h3 className="w-full flex-grow text-xl text-gray-200 font-open font-light border-b border-white mr-2">
                     Line Prompts
@@ -264,8 +264,8 @@ const WritingBlock = (props: WritingBlockProps) => {
                         return (
                         <div key={key} className="relative bg-transparent flex flex-col items-center">
                             <div key={key} id={id} className="w-full h-12 flex flex-row items-center rounded-lg" onDragOver={handleDragOver} onDrop={handleDrop}>
-                                <input id={id} className="w-full h-10 px-4 py-2 rounded-l-lg text-gray-700 bg-gray-300 shadow-2" name={id} type="text" value={line.text} onChange={handleInputChange} onDoubleClick={handleMenuToggle}/>
-                                <div id={id} className="w-10 h-10 bg-gray-300 rounded-r-lg  flex justify-center items-center shadow-2" onClick={handleMenuToggle}>
+                                <input id={id} className="w-full h-10 px-4 py-2 rounded-l-lg text-gray-700 bg-gray-300 " name={id} type="text" value={line.text} onChange={handleInputChange} onDoubleClick={handleMenuToggle}/>
+                                <div id={id} className="w-10 h-10 bg-gray-300 rounded-r-lg  flex justify-center items-center " onClick={handleMenuToggle}>
                                     <div id={id} className="w-4 h-4 border-dark-blue border-b-8 border-r-8 transform rotate-45 mb-1"></div>
                                 </div>
                                 <div id={id} className="w-8 h-8 ml-2 flex justify-center items-center" onClick={handleDeleteInput}>
@@ -278,7 +278,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                                 ( ex. {line.example} )
                             </label>
                             {   line.menuOpen ?
-                                    <div className="absolute w-full shadow-3 h-32 bg-gray-300 rounded-lg p-4 transform translate-y-12 overflow-scroll z-20 shadow-2">
+                                    <div className="absolute w-full shadow-3 h-32 bg-gray-300 rounded-lg p-4 transform translate-y-12 overflow-scroll z-20 ">
                                         { 
                                             lineState.prompts.map((prompt: any, key: string) => (
                                                 <div key={key} id={id} className="w-full mb-2" onClick={handleSelectPrompt}>

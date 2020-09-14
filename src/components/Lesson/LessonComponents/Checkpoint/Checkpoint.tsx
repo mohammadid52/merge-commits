@@ -27,8 +27,8 @@ const Checkpoint = () => {
     return (
         <div className={`w-full h-8/10 flex flex-col justify-between items-center`}>
             <div className="w-2/3 h-1.3/10 relative flex flex-row justify-center items-center mb-4">
-                <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
-                    <div className="bg-dark-red absolute left-0 h-8 w-8 flex flex-col justify-center items-center z-20 rounded-lg">
+                <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
+                    <div className="bg-dark-red absolute left-0 h-16 w-16 flex flex-col justify-center items-center z-20 rounded-lg">
                         <FaCheckSquare />
                     </div>
                 </IconContext.Provider>

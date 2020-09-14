@@ -13,7 +13,7 @@ const InstructionsBlock = () => {
   };
 
   return (
-    <div className='bg-dark-blue border-l-8 border-green-light md:h-4/10 p-4 flex text-gray-200 rounded-lg shadow-2xlr'>
+    <div className='bg-dark-blue border-l-4 border-green-light md:h-4/10 p-4 flex text-gray-200 rounded-lg shadow-2xlr'>
       <div className='w-full flex flex-col'>
         <div className='w-auto flex flex-row mb-3 border-b border-white mr-4'>
           <h3 className='w-3/10 mr-2 mb-4 flex-grow text-xl font-open font-light animate-bounce'>

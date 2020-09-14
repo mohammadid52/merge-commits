@@ -8,7 +8,7 @@ module.exports = {
   //     './src/**/*.js',
   //     './src/**/*.jsx',
   //   ],
-  // }, 
+  // },
   future: {
     removeDeprecatedGapUtilities: true,
   },
@@ -252,6 +252,7 @@ module.exports = {
         'off-white': '#ffffffe6',
         'dark-red-faded': 'rgba(202, 34, 34, 0.2)',
         'dark-red': '#CA2222',
+        'ketchup': '#CA2222',
         'blueberry': '#488AC7',
         'sea-green': '#17A589',
         'green-light': '#38a169',

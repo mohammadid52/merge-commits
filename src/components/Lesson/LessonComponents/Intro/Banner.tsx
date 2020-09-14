@@ -13,10 +13,10 @@ const Banner = () => {
 
   return (
     <div className={`w-full h-1/10  text-xl md:text-5xl ${theme.banner}`}>
-      <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
+      <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem' }}>
         {/* <div className={`h-full bg-dark-red h-24 w-24 flex flex-col items-center justify-center z-20 rounded-lg  ${theme.block.shadow}`}> */}
         <div
-          className={`bg-dark-red absolute left-0 h-8 w-8 flex flex-col items-center justify-center z-20 rounded-lg`}>
+          className={`bg-dark-red absolute left-0 h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg`}>
           <FaPenFancy />
         </div>
       </IconContext.Provider>

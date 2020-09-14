@@ -28,7 +28,7 @@ const Outro = () => {
                 <div className="w-4.8/10 h-full flex flex-col justify-between">
                     <div className="flex justify-between h-5/10">
                         <TrophyBlock />
-                        <Links />
+                        {/* <Links /> */}
                     </div>
                     <Feedback />
                 </div>
