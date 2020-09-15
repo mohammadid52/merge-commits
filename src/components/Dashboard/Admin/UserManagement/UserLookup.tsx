@@ -124,7 +124,7 @@ console.log(data, 'data')
                                 <div className="w-3.5/10 px-8 py-4 whitespace-no-wrap">
                                     <div className="flex items-center">
                                         <div className="flex-shrink-0 h-10 w-10">
-                                            <div className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold" style={{background: `${stringToHslColor(item.firstName + ' ' + item.lastName)}`}} >
+                                            <div className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold" style={{background: `${stringToHslColor(item.firstName + ' ' + item.lastName)}`, textShadow: '0.1rem 0.1rem 2px #423939b3'}} >
                                                 {initials(item.preferredName ? item.preferredName : item.firstName, item.lastName)}
                                             </div>
                                         </div>

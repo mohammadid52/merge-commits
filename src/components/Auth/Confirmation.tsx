@@ -135,7 +135,7 @@ const Registration = () => {
                 </div>
              
                 <div className="h-3/10 flex flex-col justify-center items-center">
-                    <button className="bg-dark-red text-gray-200 rounded shadow-elem-light mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>Confirm Password</button>
+                    <button className="bg-dark-red text-gray-200 rounded shadow-elem-light mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>Confirm Code</button>
                 </div>
             </div>
             </div>
