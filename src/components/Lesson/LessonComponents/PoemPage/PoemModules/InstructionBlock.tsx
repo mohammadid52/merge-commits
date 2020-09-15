@@ -20,8 +20,8 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
     if (editMode) {
         return (
             <div className="bg-dark-blue border-l-4 border-green-light w-full md:h-2.8/10 flex flex-col p-6 shadow-3 rounded-lg text-gray-200 mt-4 md:mt-0">
-                <div className="w-full flex justify-between">
-                    <h3 className="flex-grow text-xl font-open font-light mb-6 border-b border-white mr-4 animate-bounce">
+                <div className="w-full flex justify-between border-b border-white border-opacity-20">
+                    <h3 className="flex-grow text-xl font-open font-light mb-6  mr-4 animate-bounce">
                         Instructions
                     </h3>
                 </div>

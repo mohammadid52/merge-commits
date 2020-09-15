@@ -260,6 +260,7 @@ module.exports = {
         // 'dark-blue': '#04111A',
         'lighter-blue': '#1a202c',
         'medium-blue': '#30445e',
+        'med-dark-blue': '#273548',
         'dark-blue': '#1C2C42',
         'darker-blue': '#384f68',
         'denim': '#153057',

@@ -29,7 +29,7 @@ interface LyricsBlockProps {
 
 const LyricsBlock = (props: LyricsBlockProps) => {
   const { color, selected, setSelected, fullscreen, setFullscreen } = props;
-  const { state, dispatch } = useContext(LessonContext);
+  const { state, theme, dispatch } = useContext(LessonContext);
   const buttons = state.data.lesson.coreLesson.tools;
   const rawText = state.data.lesson.coreLesson.content.text;
   const displayTextArray: string[][] = [];
@@ -180,7 +180,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   return (
     <>
       <div
-        className={`md:h-8/10 relative bg-dark-blue ${
+        className={`md:h-8/10 relative ${theme.gradient.cardBase} ${
           fullscreen ? 'md:h-120' : 'h-68'
         } mb-4 md:mb-0 w-full px-6 py-4 flex flex-col justify-between rounded-lg text-gray-400 text-lg border-l-4 border-orange-600`}>
         <div className='w-full flex flex-row justify-between mb-3'>

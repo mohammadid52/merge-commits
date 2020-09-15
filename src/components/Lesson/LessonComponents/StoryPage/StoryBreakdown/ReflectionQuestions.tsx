@@ -26,10 +26,10 @@ const ReflectionQuestions = () => {
     return (
        
             <div className="reflection w-full h-1.5/10 flex flex-row text-gray-200 mx-8">
-                <div className="w-1/10 h-full flex justify-center items-center bg-dark-blue mr-2 md:mr-4 rounded-lg " onClick={prevQuestion}>
+                <div className="w-1/10 h-full flex justify-center items-center bg-gradient-to-tl from-dark-blue to-med-dark-blue mr-2 md:mr-4 rounded-lg " onClick={prevQuestion}>
                     <div className="w-6 h-6 border-dark border-t-8 border-l-8 transform -rotate-45 ml-2"></div>
                 </div>
-                <div className="w-8/10 bg-dark-blue flex-grow rounded-lg px-2 md:px-4 py-1 md:py-2 flex flex-col">
+                <div className="w-8/10 bg-gradient-to-tl from-dark-blue to-med-dark-blue flex-grow rounded-lg px-2 md:px-4 py-1 md:py-2 flex flex-col">
                     <h3 className="font-open font-light mb-2">
                     Discussion Questions
                     </h3>
@@ -37,7 +37,7 @@ const ReflectionQuestions = () => {
                         <p className="text-center">{ questArr[question] }</p>
                     </div>
                 </div>
-                <div className="w-1/10 h-full flex justify-center items-center bg-dark-blue ml-2 md:ml-4 rounded-lg " onClick={nextQuestion}>
+                <div className="w-1/10 h-full flex justify-center items-center bg-gradient-to-tl from-dark-blue to-med-dark-blue ml-2 md:ml-4 rounded-lg " onClick={nextQuestion}>
                     <div className="w-6 h-6 border-dark border-t-8 border-r-8 transform rotate-45 mr-2"></div>
                 </div>
             </div> 

@@ -12,10 +12,12 @@ const keywordCapitilizer = (str: string) => {
 };
 
 const TrophyBlock = () => {
+  const { theme } = useContext(LessonContext);
+
   return (
-    <div className='w-10/10 bg-dark-blue flex flex-col justify-between items-center rounded-lg p-4 shadow-xl'>
+    <div className={`w-10/10 ${theme.gradient.cardBase} flex flex-col justify-between items-center rounded-lg p-4 mb-4 shadow-xl`}>
       <div className='h-full flex flex-col justify-between items-center '>
-        <div className='text-2xl text-gray-200 font-light font-medium border-b border-white mb-4 pb-4 border-opacity-50'>
+        <div className='text-2xl text-gray-200 font-light font-medium border-b border-white mb-4 border-opacity-50'>
           You have completed
         </div>
 
@@ -30,8 +32,8 @@ const TrophyBlock = () => {
               <FaScroll />
             </IconContext.Provider>
 
-            <div className=' text-gray-200 font-open font-light'>
-            <span className="rounded-full bg-indigo-500 uppercase px-3 py-2 font-bold mr-3">1</span> Story
+            <div className=' text-gray-200 font-open font-light flex flex-row items-center'>
+            <span className='rounded-full bg-indigo-500 uppercase px-3 py-2 font-bold mr-3'>1</span> Story
             </div>
           </div>
           <div className='bg-medium-blue rounded-lg cursor-pointer px-4 py-2 w-3/10 h-5/10 flex justify-center items-center'>
@@ -44,15 +46,15 @@ const TrophyBlock = () => {
               <FaPenFancy />
             </IconContext.Provider>
 
-            <div className='text-gray-200 font-open font-light'>
-            <span className="rounded-full bg-indigo-500 uppercase px-3 py-2 font-bold mr-3">1</span> Poem
+            <div className='text-gray-200 font-open font-light flex flex-row items-center'>
+            <span className=' rounded-full bg-indigo-500 uppercase px-3 py-2 font-bold mr-3'>1</span> Poem
             </div>
           </div>
-          {/* <div className="column-center">
+          {/* <div className='column-center'>
                         <IconContext.Provider value={{ color: '#F1C40F', size: '5rem',}}>
                             <FaPenFancy />
                         </IconContext.Provider>
-                        <div className="flex justify-center text-2xl text-gray-200 font-open font-bold mt-2">
+                        <div className='flex justify-center text-2xl text-gray-200 font-open font-bold mt-2'>
                             1 Poem
                         </div>
                     </div> */}

@@ -69,7 +69,7 @@ const StoryForm = () => {
     }, [input])
     
     return (
-        <div className="bg-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600">
+        <div className="bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600">
             <h3 className="text-xl text-gray-200 font-open font-light mb-4 pb-4 border-b border-white">Story <span className="text-gray-600 font-light text-sm mr-4">(Fill in the form below!)</span></h3>
             <div className="h-full flex flex-col mb-5 mt-2">
                 <label className="text-lg font-light text-base text-blue-100 text-opacity-70 mb-2" htmlFor="title">

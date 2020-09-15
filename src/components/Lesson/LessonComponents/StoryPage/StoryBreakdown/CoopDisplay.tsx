@@ -56,7 +56,7 @@ const CoopDisplay = () => {
                             display='SELFinCOOP' fullscreen={fullscreen}/>
 
                         <div className="w-full h-8.8/10 flex flex-col md:flex-row justify-between">
-                            <div className={`bg-dark-blue ${displayProps.additional ? 'md:w-7.9/10' : 'w-full'} md:mb-0 overflow-scroll h-full p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg`}>
+                            <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${displayProps.additional ? 'md:w-7.9/10' : 'w-full'} md:mb-0 overflow-scroll h-full p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg`}>
                                 {/* bg-lighter-blue shadow-inner-box  */}
                                 <div className="h-full rounded-lg">
                                     { displayProps.story }
@@ -90,7 +90,7 @@ const CoopDisplay = () => {
                             
 
                             <div className="w-full h-8.8/10 flex md:flex-col justify-between">
-                                <div className={`bg-dark-blue ${ teacherData &&teacherData.warmUpData && teacherData.warmUpData.additional ? 'md:h-7.85/10' : 'h-full'} ${fullscreen ? 'text-lg md:text-2xl' : 'text-md md:text-xl'} md:mb-0 overflow-scroll w-full p-4 md:p-6 items-center text-gray-200 rounded-lg shadow-2`}>
+                                <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${ teacherData &&teacherData.warmUpData && teacherData.warmUpData.additional ? 'md:h-7.85/10' : 'h-full'} ${fullscreen ? 'text-lg md:text-2xl' : 'text-md md:text-xl'} md:mb-0 overflow-scroll w-full p-4 md:p-6 items-center text-gray-200 rounded-lg shadow-2`}>
                                     {/* bg-lighter-blue shadow-inner-box  */}
                                     <div className="h-full rounded-lg">
                                         { teacherData && teacherData.warmUpData && teacherData.warmUpData.story }

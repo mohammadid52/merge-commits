@@ -39,7 +39,7 @@ const MoreArtist = () => {
   return (
     // <div className="w-full h-full bg-dark-blue text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
     <div className='w-full h-6/10 text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg'>
-      <h3 className='w-full text-2xl font-medium border-b border-white mb-4 pb-4 border-opacity-50'>
+      <h3 className='w-full text-2xl font-medium border-b border-white mb-4 border-opacity-50'>
         Learn more about the artist
       </h3>
       <div className='h-full w-full flex flex-col items-center rounded-lg'>
@@ -54,7 +54,7 @@ const MoreArtist = () => {
               ) => (
                 <div
                   key={key}
-                  className='h-6/10 px-4 py-4 my-auto flex justify-center items-center'>
+                  className='h-6/10 px-4 py-2 my-auto flex justify-center items-start'>
                   <a href={item.link} target='_blank' rel='noopener noreferrer'>
                     {item.type === 'youtube' ? (
                       <IconContext.Provider

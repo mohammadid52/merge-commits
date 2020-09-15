@@ -36,7 +36,7 @@ const Checkpoint = () => {
                     Checkpoint
                 </div>
             </div>
-            <div className={`w-2/3 bg-dark-blue xl rounded-lg p-4`}>
+            <div className={`w-2/3 ${theme.gradient.cardBase} xl rounded-lg p-4`}>
                 { tempCheckPtSwitch(state.pages[state.currentPage].type) }
             </div>
         </div>
