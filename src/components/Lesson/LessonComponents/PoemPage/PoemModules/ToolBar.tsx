@@ -72,12 +72,12 @@ const ToolBar = (props: ToolBarProps) => {
         //     </div>
         // </div>
 
-        <div className="w-full md:h-7/10 bg-grayscale-light flex flex-col items-center text-grayscale-lighter shadow-2 px-4 py-4 rounded-lg">
+        <div className="w-full md:h-7/10 bg-grayscale-light flex flex-col items-center text-grayscale-lighter px-4 py-4 rounded-lg">
             <div className="w-full h-full flex flex-col justify-between">
-                <h3 className="w-full text-xl text-grayscale-lighter font-open font-bold border-b border-grayscale-lighter">Toolbox</h3>
-                <h3 className="text-lg font-bold font-open">My word bank:</h3>
+                <h3 className="w-full text-xl text-grayscale-lighter font-open font-light border-b border-grayscale-lighter">Toolbox</h3>
+                <h3 className="text-lg font-light font-open">My word bank:</h3>
                 <div id="search" className="h-1/10 pl-2 rounded-lg text-grayscale text-sm bg-grayscale-lighter">Search...</div>
-                <div className="w-full h-40 opacity-70 md:h-6/10 text-2xl bg-grayscale-lighter flex flex-col text-center justify-center font-bold text-grayscale-lightest px-4 rounded-lg overflow-scroll">
+                <div className="w-full h-40 opacity-70 md:h-6/10 text-2xl bg-grayscale-lighter flex flex-col text-center justify-center font-light text-grayscale-lightest px-4 rounded-lg overflow-scroll">
                     Toolbox coming soon...
                 </div>
             </div>

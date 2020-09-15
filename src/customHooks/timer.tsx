@@ -136,7 +136,7 @@ const useStudentTimer = (inputs?: inputs) => {
             console.log('save');
             params.dispatch({ type: 'INCREMENT_SAVE_COUNT' })
             // callback() 
-        }, 10000)
+        }, 5000)
     }
 
     const clearAutoSave = () => {

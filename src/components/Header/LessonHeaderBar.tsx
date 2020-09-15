@@ -59,14 +59,14 @@ const LessonHeaderBar = () => {
             lessonProgress: lessonProgress,
             status: state.studentStatus,
             classroomID: 1,
-            studentID: cookies.auth.email,
-            studentAuthID: cookies.auth.authId,
+            studentID: state.studentUsername,
+            studentAuthID: state.studentAuthID,
             warmupData: state.componentState.story ? state.componentState.story : null,
             corelessonData: state.componentState.lyrics ? state.componentState.lyrics : null,
             activityData: state.componentState.poem ? state.componentState.poem : null
         }
 
-        // console.log('update', data);
+        console.log('update', data);
         
         try {
             const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }))
@@ -101,7 +101,7 @@ const LessonHeaderBar = () => {
     //     }
     // }
 
-    const { startTimer, startAutoSave, clearAutoSave, changeParams } = useStudentTimer({
+    const { startTimer, changeParams } = useStudentTimer({
         dispatch: dispatch,
         subscription: subscription,
         callback: updateStudentData,
@@ -115,7 +115,7 @@ const LessonHeaderBar = () => {
     }, [state.studentStatus, state.viewing, state.saveCount])
 
     return (
-        <div className={`center w-full h-.7/10 ${theme.toolbar.bg} text-gray-200 shadow-2 flex justify-between`}>
+        <div className={`z-40 center w-full h-.7/10 ${theme.toolbar.bg} text-gray-200 shadow-2xl flex justify-between`}>
             <div className={`w-56 h-full flex justify-center items-center text-2xl font-bold`}>
                 <NavLink to="/dashboard">
                     <img className="h-6 px-4" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg" alt="Iconoclast Artists"/>
@@ -161,8 +161,8 @@ const LessonHeaderBar = () => {
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">AutoSave</p>
-                </div>
-                <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={startTimer}>
+                </div> */}
+                {/* <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={startTimer}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>
@@ -170,14 +170,14 @@ const LessonHeaderBar = () => {
                 </div> */}
                 {
                     !state.viewing ?
-                    <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={handleSave}>
+                    <div className={`w-4.5/10 ${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={handleSave}>
                         <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
                             <FaRegSave />
                         </IconContext.Provider>
                         <p className={`text-xs text-gray-200 text-center`} style={{color: state.unsavedChanges ? '#EDF2F7' : '#4A5568'}}>Save</p>
                     </div>
                     :
-                    <div className={`cursor-default flex flex-col justify-center items-center px-2`} onClick={handleSave}>
+                    <div className={`w-4.5/10 cursor-default flex flex-col justify-center items-center px-2`} onClick={handleSave}>
                         <div className="relative flex items-center justify-center h-4 w-4 m-1">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-4 w-4 bg-green-600"></span>
@@ -185,7 +185,7 @@ const LessonHeaderBar = () => {
                         <p className={`self-end text-xs text-gray-200 text-center`}>AutoSave</p>
                     </div>
                 }
-                <div className={`flex flex-col justify-center items-center px-2 cursor-pointer`}>
+                <div className={`w-4.5/10 flex flex-col justify-center items-center px-2 cursor-pointer`}>
                     <NavLink to="/dashboard">
                         <IconContext.Provider value={{ size: '1.5rem'}}>
                             <FaHome />

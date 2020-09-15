@@ -19,6 +19,7 @@ const UserLookup = () => {
                 // { limit: limit }
                 ))
             setData(users.data.listPersons.items)
+           
         } catch (error) {
             console.error(error);  
         }
@@ -34,9 +35,25 @@ console.log(data, 'data')
         history.push(`${match.url}/user?id=${id}`)
     }
 
+    const initials = (firstName: string, lastName: string) => {
+        if (listUsers()) {
+            let firstInitial = firstName.charAt(0).toUpperCase() 
+            let lastInitial = lastName.charAt(0).toUpperCase()
+            return firstInitial + lastInitial;
+        }
+    }
+
+    const stringToHslColor = (str: string) => {
+        let hash = 0;
+        let i;
+        for (i = 0; i < str.length; i ++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+
+        let h = hash % 360;
+        return 'hsl('+h+', 70%, 72%)';
+    }
     
-
-
     return (
         <div className={`w-full h-full`}>
             <div className={`py-4 px-8 white_back w-full h-auto rounded-lg shadow-elem-light`}>
@@ -101,12 +118,15 @@ console.log(data, 'data')
                         { 
                     data.length > 0 ? data.map((item: any, key: number) => (
                             <>
+                        {console.log(item, 'item')}
                             <div id={item.id} key={key} className="flex justify-between bg-white w-full border-b border-gray-200">
                             
                                 <div className="w-3.5/10 px-8 py-4 whitespace-no-wrap">
                                     <div className="flex items-center">
                                         <div className="flex-shrink-0 h-10 w-10">
-                                            <img className="h-10 w-10 rounded-lg" src="https://i2.wp.com/www.quartzmasters.com/wp-content/uploads/2017/03/article-user-blank.jpg?ssl=1" alt="" />
+                                            <div className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold" style={{background: `${stringToHslColor(item.firstName + ' ' + item.lastName)}`, textShadow: '0.1rem 0.1rem 2px #423939b3'}} >
+                                                {initials(item.preferredName ? item.preferredName : item.firstName, item.lastName)}
+                                            </div>
                                         </div>
                                         <div className="ml-2">
                                             <div id={item.id} className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900" onClick={handleLink} >

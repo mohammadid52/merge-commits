@@ -68,6 +68,23 @@ const Profile: React.FC = () => {
     const [status, setStatus] = useState('');
     const [select, setSelect] = useState('Profile');
 
+    const initials = (firstName: string, lastName: string) => {
+        let firstInitial = firstName.charAt(0).toUpperCase() 
+        let lastInitial = lastName.charAt(0).toUpperCase()
+        return firstInitial + lastInitial;
+    }
+
+    const stringToHslColor = (str: string) => {
+        let hash = 0;
+        let i;
+        for (i = 0; i < str.length; i ++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+
+        let h = hash % 360;
+        return 'hsl('+h+', 70%, 72%)';
+    }
+
     async function getUser() {
         try {
             const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: state.user.email, authId: state.user.authId }))
@@ -97,9 +114,13 @@ const Profile: React.FC = () => {
                         
                         <div className="w-auto p-4 flex flex-col text-center items-center">
                             <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
-                                <IconContext.Provider value={{ size: '8rem', color: '#4a5568' }}>
+                                <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{background: `${stringToHslColor(person.firstName + ' ' + person.lastName)}`, 
+                                textShadow: '0.2rem 0.2rem 3px #423939b3'}}>
+                                    {initials(person.preferredName ? person.preferredName : person.firstName, person.lastName)}
+                                </div>
+                                {/* <IconContext.Provider value={{ size: '8rem', color: '#4a5568' }}>
                                     <FaUserCircle />
-                                </IconContext.Provider>
+                                </IconContext.Provider> */}
                             </div>
                             <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
                                 {`${ person.preferredName ? person.preferredName : person.firstName } ${ person.lastName }`} 

@@ -24,47 +24,6 @@ import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
 import * as customMutations from '../../customGraphql/customMutations';
 import { API, graphqlOperation } from 'aws-amplify';
 
-type displayData = 
-|   {
-        breakdownComponent: string
-        studentData: {
-            id: string,
-            firstName: string
-            preferredName?: string
-            lastName: string
-        }
-        warmUpData?: {
-            story: string
-            title: string
-            additional: Array<{
-                name: string
-                input: string
-            }>
-        }
-        corelessonData?: {
-            anchor: string
-            color: string
-            content: Array<{
-                id: number
-                text: string
-            }>
-            focus: string
-            id: number
-        }
-        activityData?: {
-            editInput: string
-            editMode: boolean
-            lines: Array<{
-                example: string
-                id: number
-                menuOpen: boolean
-                text: string
-            }>
-            title: string
-        }
-    } 
-| null
-
 const LessonControl = () => {
     const { state, dispatch } = useContext(LessonControlContext);
     const match = useRouteMatch();
@@ -275,7 +234,7 @@ const LessonControl = () => {
                             {   
                                 state.sharing ? 
                                 <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: '50%', marginLeft: fullscreen ? '-60px' : '-80px' }}>
-                                    <button className="bg-yellow-300 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleQuitShare}>
+                                    <button className="bg-gold text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleQuitShare}>
                                         stop sharing
                                     </button>
                                 </div>

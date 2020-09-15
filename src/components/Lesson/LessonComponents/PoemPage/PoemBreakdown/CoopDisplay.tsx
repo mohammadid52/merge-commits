@@ -22,7 +22,7 @@ interface teacherData {
 
 
 const CoopDisplay = () => {
-    const { state, dispatch } = useContext(LessonContext);
+    const { state, theme, dispatch } = useContext(LessonContext);
     const displayProps = state.componentState.poem;
     const [fullscreen, setFullscreen] = useState(false);
 
@@ -55,7 +55,7 @@ const CoopDisplay = () => {
                     display="SELFinCOOP" fullscreen={fullscreen}/>
 
                 <div className="w-full h-8.8/10 flex flex-col justify-between items-center">
-                    <div className="bg-dark-blue w-full h-full p-6 flex flex-col items-center text-xl text-gray-200 rounded-lg shadow-2 whitespace-pre-wrap overflow-scroll">
+                    <div className={`${theme.gradient.cardBase} w-full h-full p-6 flex flex-col items-center text-xl text-gray-200 rounded-lg whitespace-pre-wrap overflow-scroll`}>
                         {/* bg-lighter-blue shadow-inner-box  */}
                         <div className="p-4 h-full rounded-lg">
                         { displayProps ? displayProps.editInput : null}
@@ -76,16 +76,18 @@ const CoopDisplay = () => {
                         <Banner title={teacherData && teacherData.activityData &&teacherData.activityData.title  ? teacherData.activityData.title : null} 
                             fullscreen={fullscreen}
                             display="COOP" />
-                        <div className="absolute w-auto z-50" style={{bottom: '-15px', right: 0, }}>
+
+                        {/* <div className="absolute w-auto z-50" style={{bottom: '-15px', right: 0, }}>
                             <div className="bg-yellow-300 text-gray-800 text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
                                 <p>by: student name</p>
-                                {/* <p>{state.displayData.breakdownComponent}</p> */}
+                                <p>{state.displayData.breakdownComponent}</p>
                             </div>
-                        </div>
+                        </div> */}
+
                     </div>
 
                     <div className="w-full h-8.8/10 flex flex-col justify-between items-center">
-                        <div className={`${fullscreen ? 'text-2xl' : 'text-xl'} bg-dark-blue w-full h-full p-6 flex flex-col items-center text-gray-200 rounded-lg shadow-2 whitespace-pre-wrap overflow-scroll`}>
+                        <div className={`${fullscreen ? 'text-2xl' : 'text-xl'} bg-dark-blue w-full h-full p-6 flex flex-col items-center text-gray-200 rounded-lg whitespace-pre-wrap overflow-scroll`}>
                             {/* bg-lighter-blue  shadow-inner-box */}
                             <div className="p-4 h-full rounded-lg">
                             { teacherData && teacherData.activityData && teacherData.activityData.editInput ? teacherData.activityData.editInput : null}
