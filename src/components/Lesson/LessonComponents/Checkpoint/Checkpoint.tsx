@@ -32,7 +32,7 @@ const Checkpoint = () => {
                         <FaCheckSquare />
                     </div>
                 </IconContext.Provider>
-                <div className={`border-b border-white border-opacity-50 title w-full flex flex-row justify-center items-center text-5xl font-medium text-center font-open px-4 py-2 ${theme.block.text} z-10`}>
+                <div className={`title w-full flex flex-row justify-center items-center text-5xl font-medium text-center font-open px-4 py-2 ${theme.block.text} z-10`}>
                     Checkpoint
                 </div>
             </div>

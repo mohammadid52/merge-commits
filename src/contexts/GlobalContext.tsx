@@ -9,7 +9,7 @@ export const pageThemes = {
       cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue',
     },
     banner:
-      'relative flex flex-row justify-center items-center text-center font-open font-light text-base text-gray-200 border-b border-white border-opacity-50',
+      'relative flex flex-row justify-center items-center text-center font-open font-light text-base text-gray-200',
     elem: {
       bg: 'bg-gray-200',
       text: 'text-dark',
@@ -35,7 +35,7 @@ export const pageThemes = {
       cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue',
     },
     banner:
-      'relative flex flex-row justify-center items-center text-center font-open font-light text-base text-gray-200 border-b border-white border-opacity-50',
+      'relative flex flex-row justify-center items-center text-center font-open font-light text-base text-gray-200',
     elem: {
       bg: 'bg-dark-blue',
       text: 'text-gray-200',

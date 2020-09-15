@@ -76,12 +76,14 @@ const CoopDisplay = () => {
                         <Banner title={teacherData && teacherData.activityData &&teacherData.activityData.title  ? teacherData.activityData.title : null} 
                             fullscreen={fullscreen}
                             display="COOP" />
-                        <div className="absolute w-auto z-50" style={{bottom: '-15px', right: 0, }}>
+
+                        {/* <div className="absolute w-auto z-50" style={{bottom: '-15px', right: 0, }}>
                             <div className="bg-yellow-300 text-gray-800 text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
                                 <p>by: student name</p>
-                                {/* <p>{state.displayData.breakdownComponent}</p> */}
+                                <p>{state.displayData.breakdownComponent}</p>
                             </div>
-                        </div>
+                        </div> */}
+
                     </div>
 
                     <div className="w-full h-8.8/10 flex flex-col justify-between items-center">
