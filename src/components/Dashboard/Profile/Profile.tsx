@@ -114,7 +114,7 @@ const Profile: React.FC = () => {
                         
                         <div className="w-auto p-4 flex flex-col text-center items-center">
                             <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
-                                <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{background: `${stringToHslColor(person.firstName + ' ' + person.lastName)}`}}>
+                                <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{background: `${stringToHslColor(person.firstName + ' ' + person.lastName)}`, textShadow: ''}}>
                                     {initials(person.preferredName ? person.preferredName : person.firstName, person.lastName)}
                                 </div>
                                 {/* <IconContext.Provider value={{ size: '8rem', color: '#4a5568' }}>

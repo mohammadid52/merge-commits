@@ -7,7 +7,7 @@ const setInitialState = (array: Array<any>) => {
         
         tempObj[item.question.label] = item.question.type === 'text' ? '' : item.question.type === 'input' ? '' : item.question.type === 'selectOne' ? null : item.question.type === 'selectMany' ? [] : null 
     }) 
-    return tempObj;
+    return tempObj; 
 }
 
 const DoFirst = () => {
@@ -32,7 +32,34 @@ const DoFirst = () => {
             return null
         }
     }
+    useEffect(() => {
+        if ( state.componentState.story ) {
 
+            dispatch({
+                type: 'UPDATE_COMPONENT_STATE',
+                payload: {
+                    componentName: 'story',
+                    inputName: 'title',
+                    content: input.question.label
+                }
+            })
+        }
+    }, [input.title])
+
+    // useEffect(() => {
+    //     if ( state.componentState.story ) {
+
+    //         dispatch({
+    //             type: 'UPDATE_COMPONENT_STATE',
+    //             payload: {
+    //                 componentName: 'story',
+    //                 inputName: 'story',
+    //                 content: input.story
+    //             }
+    //         })
+    //     }
+    // }, [input.story])
+   
 
     const handleInputChange = (e: { target: { id: string; value: string; }; }) => {
         setInput({
