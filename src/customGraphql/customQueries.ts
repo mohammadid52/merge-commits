@@ -20,8 +20,15 @@ export const getClassroom = /* GraphQL */ `
       id
       open
       roster
+      viewing
       displayData {
         breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
         warmUpData {
           story
           title
@@ -285,8 +292,15 @@ export const getClassroomStudent = /* GraphQL */ `
       id
       open
       roster
+      viewing
       displayData {
         breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
         warmUpData {
           story
           title

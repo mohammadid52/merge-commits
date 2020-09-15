@@ -80,10 +80,11 @@ const LessonControl = () => {
         });
     }
 
-    const handleSubmitChanges = async () => {
+    const handleUpdateClassroom = async () => {
         let updatedClassroomData: any = {
             id: '1',
             open: true,
+            viewing: state.studentViewing.studentInfo && state.studentViewing.studentInfo.studentAuthID ? state.studentViewing.studentInfo.studentAuthID : null,
             displayData: state.displayData,
             lessonPlan: state.pages
         }
@@ -182,7 +183,9 @@ const LessonControl = () => {
                                 </h2>
                             </div>
                             <div className={`h-4/10 my-4`}>
-                                <ClassRoster />
+                                <ClassRoster 
+                                    handleUpdateClassroom={handleUpdateClassroom}
+                                />
                             </div>
                             <div className={`w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between text-xl text-gray-200 font-extrabold font-open`}>
                                 <h2 className={`w-auto`}>
@@ -282,7 +285,7 @@ const LessonControl = () => {
                             {   
                                 state.unsavedChanges ?
                                 <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
-                                    <button className="bg-teal-500 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleSubmitChanges}>
+                                    <button className="bg-teal-500 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleUpdateClassroom}>
                                         apply changes
                                     </button>
                                 </div>

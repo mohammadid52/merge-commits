@@ -90,6 +90,7 @@ module.exports = {
     extend: {
       animation: {
         'bounce': 'bounce 2.5s linear 4',
+        'ping': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite'
       },
       keyframes: {
         bounce: {
@@ -112,6 +113,16 @@ module.exports = {
             transform: 'translateY(0)'
           },
         },
+        ping: {
+          '0%': {
+            transform: 'scale(1)',
+            opacity: '0.7'
+          },
+          '75%, 100%': {
+            transform: 'scale(2)',
+            opacity: '0'
+          }
+        }
       },
       width: {
         '1/2': '48%',
