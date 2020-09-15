@@ -99,7 +99,7 @@ const Forgot = () => {
                         <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                     </div>
 
-                    <div className="h-1/10 text-center text-base">Input your email to reset your password</div>
+                    <div className="h-1/10 text-center text-base">Enter your email to reset your password</div>
 
                     
             
