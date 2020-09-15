@@ -11,6 +11,7 @@ module.exports = {
   // },
   future: {
     removeDeprecatedGapUtilities: true,
+    purgeLayersByDefault: true,
   },
   theme: {
     zIndex: {
@@ -89,7 +90,7 @@ module.exports = {
     },
     extend: {
       animation: {
-        'bounce': 'bounce 2.5s linear 4',
+        'bounce': 'bounce 2.5s linear 2',
         'ping': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite'
       },
       keyframes: {
