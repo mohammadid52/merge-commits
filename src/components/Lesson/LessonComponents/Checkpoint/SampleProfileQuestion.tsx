@@ -3,7 +3,7 @@ import React from 'react';
 const SampleProfileQuestions = () => {
     return (
         <div className={`flex flex-col text-gray-200`}>
-            <h4 className={`text-2xl font-open font-bold mb-8`}>Answer these questions the best you can:</h4>
+            <h4 className={`text-2xl font-open font-light mb-8`}>Answer these questions the best you can:</h4>
             <div className={`flex justify-center items-center divide-x-2 divide-dark divide-opacity-50`}>
                 <div className={`w-1/2 h-full flex flex-col items-center p-6`}>
                     <p className="mb-4">

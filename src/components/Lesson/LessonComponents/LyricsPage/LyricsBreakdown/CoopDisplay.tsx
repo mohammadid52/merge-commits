@@ -20,7 +20,7 @@ interface teacherData {
 }
 
 const CoopDisplay = () => {
-    const { dispatch, state } = useContext(LessonContext)
+    const { dispatch, theme, state } = useContext(LessonContext)
     const [ modules, setModules ] = useState<Array<any>>()
     const displayProps = state.componentState.lyrics.selected
     const { artist, title } = state.data.lesson.coreLesson.content 
@@ -116,12 +116,12 @@ const CoopDisplay = () => {
                 <div className={`${fullscreen ? 'hidden' : 'h-4.7/10'} w-full flex flex-col md:flex-row justify-between items-center`}>
                     {   modules && modules.length >= 1 ?
                         modules.map((module: any, key: number) => (
-                            <div key={key} className={`bg-dark-blue h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-2 shadow-2 rounded-lg`}>
+                            <div key={key} className={`${theme.gradient.cardBase} h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-2 rounded-lg`}>
                                 <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-white">
                                     <div className={`w-8 h-8 p-2 text-lg rounded-lg bg-${module.color} flex justify-center items-center shadow-2`}>
                                         { module.label }
                                     </div>
-                                    <div className="w-full pl-4 text-gray-200 font-open text-lg font-bold"> 
+                                    <div className="w-full pl-4 text-gray-200 font-open text-lg font-light"> 
                                         { module.name } 
                                     </div>
                                 </div>
@@ -137,7 +137,7 @@ const CoopDisplay = () => {
                 </div>
 
                 {/* teacher view */}
-                <div className={`relative ${fullscreen ? 'h-full' : 'h-4.85/10'}  w-full rounded-lg border shadow-inner-dark bg-darker-blue p-4`}>
+                <div className={`relative ${fullscreen ? 'h-full' : 'h-4.85/10'}  w-full rounded-lg border  bg-darker-blue p-4`}>
                     <div className="absolute w-auto z-50" style={{top: '-24px', right: 0, }}>
                         <div className="bg-yellow-300 text-gray-800 text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
                             <p>by: student name</p>
@@ -153,12 +153,12 @@ const CoopDisplay = () => {
                     <div className="h-full w-full flex flex-col md:flex-row justify-between items-center">
                     {   teacherModules && teacherModules.length >= 1 ?
                         teacherModules.map((module: any, key: number) => (
-                            <div key={key} className={`bg-dark-blue h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-2 shadow-2 rounded-lg`}>
+                            <div key={key} className={`${theme.gradient.cardBase} h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-2 rounded-lg`}>
                                 <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-white">
                                     <div className={`${fullscreen ? 'text-2xl w-10 h-10' : 'text-lg w-8 h-8'} p-2 rounded-md bg-${module.color} flex justify-center items-center shadow-2`}>
                                         { module.label }
                                     </div>
-                                    <div className={`${fullscreen ? 'text-xl' : 'text-lg'} w-full pl-4 text-gray-200 font-open font-bold`}> 
+                                    <div className={`${fullscreen ? 'text-xl' : 'text-lg'} w-full pl-4 text-gray-200 font-open font-light`}> 
                                         { module.name } 
                                     </div>
                                 </div>
