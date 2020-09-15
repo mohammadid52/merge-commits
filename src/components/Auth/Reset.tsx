@@ -178,7 +178,8 @@ const Reset = () => {
              
             <div className="test login w-140 h-7/10 bg-gray-200 shadow-elem-light border border-gray-300 rounded pt-0">
                 <div className="h-.7/10 bg-dark w-full rounded-t-lg"></div>
-                <div className="h-9.3/10 flex flex-col items-center justify-center px-8 pt-4 pb-8">
+                <div className="relative h-9.3/10 flex flex-col items-center justify-center px-8 pt-4 pb-8">
+                    <div className="absolute text-center text-xs mb-4" style={{bottom: '0'}}> © Copyright 2020 </div>
                     <div className="2/10">
                         <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                     </div>
@@ -218,8 +219,8 @@ const Reset = () => {
                             <input className="w-full px-2 py-1 ml-2" placeholder="Confirmation Code" type="text" id="code" name="code" value={input.code} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
         
-                        <div className="input relative">
-                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                        <div className="input relative w-full">
+                            <div style={{right: 0}} className="absolute w-6">
                                 <div onClick={() => setNewPassToggle(!newPassToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
                                 { newPassToggle ?
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
@@ -235,14 +236,14 @@ const Reset = () => {
                             <div className="icon">
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
                                     <FaKey />
-                                </IconContext.Provider>
+                                </IconContext.Provider> 
                             </div>
                             <label className="hidden" htmlFor="password">New Password</label>
                             <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type={ newPassToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
 
-                        <div className="input relative">
-                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                        <div className="input relative w-full">
+                            <div style={{right: 0}} className="absolute w-6">
                                 <div onClick={() => setPassToggle(!passToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
                                 { passToggle ?
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
@@ -268,7 +269,7 @@ const Reset = () => {
                     
                 
                     <div className="h-2/10 flex flex-col justify-center items-center">
-                        <div className="cursor-pointer shadow-elem-light text-center rounded-lg bg-dark-red text-gray-200 my-4" style={{borderRadius: '2rem', padding: '.75rem'}} onKeyPress={handleEnter} onClick={handleSubmit}>
+                        <div className="cursor-pointer shadow-elem-light text-center rounded-lg bg-dark-red text-gray-200 mb-4" style={{borderRadius: '2rem', padding: '.75rem'}} onKeyPress={handleEnter} onClick={handleSubmit}>
                             Reset Password
                         </div>
                         <NavLink to="/forgot-password">

@@ -5,8 +5,15 @@ export const onUpdateClassroom = /* GraphQL */ `
         open
         lessonID
         roster
+        viewing
         displayData {
             breakdownComponent
+            studentInfo {
+                id
+                firstName
+                preferredName
+                lastName
+            }
             warmUpData {
                 story
                 title
@@ -60,7 +67,6 @@ export const onChangeStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
-        live
         classroomID
         studentID
         studentAuthID

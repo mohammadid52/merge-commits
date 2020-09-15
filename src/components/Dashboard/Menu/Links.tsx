@@ -35,6 +35,10 @@ const Links: React.FC = () => {
                             name: 'Lesson Planner',
                             path: 'lesson-planner'
                         },
+                        {
+                            name: 'Institutions',
+                            path: 'manage-institutions'
+                        }
                     ]
                 })
             case 'FLW':

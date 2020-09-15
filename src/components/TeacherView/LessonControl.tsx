@@ -24,47 +24,6 @@ import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
 import * as customMutations from '../../customGraphql/customMutations';
 import { API, graphqlOperation } from 'aws-amplify';
 
-type displayData = 
-|   {
-        breakdownComponent: string
-        studentData: {
-            id: string,
-            firstName: string
-            preferredName?: string
-            lastName: string
-        }
-        warmUpData?: {
-            story: string
-            title: string
-            additional: Array<{
-                name: string
-                input: string
-            }>
-        }
-        corelessonData?: {
-            anchor: string
-            color: string
-            content: Array<{
-                id: number
-                text: string
-            }>
-            focus: string
-            id: number
-        }
-        activityData?: {
-            editInput: string
-            editMode: boolean
-            lines: Array<{
-                example: string
-                id: number
-                menuOpen: boolean
-                text: string
-            }>
-            title: string
-        }
-    } 
-| null
-
 const LessonControl = () => {
     const { state, dispatch } = useContext(LessonControlContext);
     const match = useRouteMatch();
@@ -80,10 +39,11 @@ const LessonControl = () => {
         });
     }
 
-    const handleSubmitChanges = async () => {
+    const handleUpdateClassroom = async () => {
         let updatedClassroomData: any = {
             id: '1',
             open: true,
+            viewing: state.studentViewing.studentInfo && state.studentViewing.studentInfo.studentAuthID ? state.studentViewing.studentInfo.studentAuthID : null,
             displayData: state.displayData,
             lessonPlan: state.pages
         }
@@ -182,7 +142,9 @@ const LessonControl = () => {
                                 </h2>
                             </div>
                             <div className={`h-4/10 my-4`}>
-                                <ClassRoster />
+                                <ClassRoster 
+                                    handleUpdateClassroom={handleUpdateClassroom}
+                                />
                             </div>
                             <div className={`w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between text-xl text-gray-200 font-extrabold font-open`}>
                                 <h2 className={`w-auto`}>
@@ -253,8 +215,8 @@ const LessonControl = () => {
                                 </Switch>
                             </Suspense>
 
-                            <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{top: 0, right: 0}} onClick={handleFullscreen}>
-                                <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem' }}>
+                            <div className="cursor-pointer w-full text-xl m-2 z-50"  onClick={handleFullscreen}>
+                                <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem', style: {width: 'auto', right: '0', top: '0', position: 'absolute', marginRight: '.5rem', marginTop: '.5rem', zIndex: 50} }}>
                                     {fullscreen ? < FaCompress /> :< FaExpand />}
                                 </IconContext.Provider>
                             </div>
@@ -262,7 +224,7 @@ const LessonControl = () => {
                             { 
                                 shareable && state.studentViewing.live ? 
                                 <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: 0}}>
-                                    <button className="bg-purple-400 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleShareStudentData}>
+                                    <button className="bg-purple-400 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleShareStudentData}>
                                         share data
                                     </button>
                                 </div>
@@ -272,7 +234,7 @@ const LessonControl = () => {
                             {   
                                 state.sharing ? 
                                 <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: '50%', marginLeft: fullscreen ? '-60px' : '-80px' }}>
-                                    <button className="bg-yellow-300 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleQuitShare}>
+                                    <button className="bg-gold text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleQuitShare}>
                                         stop sharing
                                     </button>
                                 </div>
@@ -282,7 +244,7 @@ const LessonControl = () => {
                             {   
                                 state.unsavedChanges ?
                                 <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
-                                    <button className="bg-teal-500 bg-opacity-70 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleSubmitChanges}>
+                                    <button className="bg-teal-500 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleUpdateClassroom}>
                                         apply changes
                                     </button>
                                 </div>

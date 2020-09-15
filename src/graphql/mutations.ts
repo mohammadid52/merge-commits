@@ -1241,7 +1241,6 @@ export const createStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
-      live
       classroomID
       classroom {
         id
@@ -1249,6 +1248,7 @@ export const createStudentData = /* GraphQL */ `
         openedAt
         closedAt
         roster
+        viewing
         displayData {
           breakdownComponent
         }
@@ -1383,7 +1383,6 @@ export const updateStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
-      live
       classroomID
       classroom {
         id
@@ -1391,6 +1390,7 @@ export const updateStudentData = /* GraphQL */ `
         openedAt
         closedAt
         roster
+        viewing
         displayData {
           breakdownComponent
         }
@@ -1525,7 +1525,6 @@ export const deleteStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
-      live
       classroomID
       classroom {
         id
@@ -1533,6 +1532,7 @@ export const deleteStudentData = /* GraphQL */ `
         openedAt
         closedAt
         roster
+        viewing
         displayData {
           breakdownComponent
         }
@@ -1753,6 +1753,7 @@ export const createClassroom = /* GraphQL */ `
       openedAt
       closedAt
       roster
+      viewing
       displayData {
         breakdownComponent
         studentInfo {
@@ -1918,7 +1919,6 @@ export const createClassroom = /* GraphQL */ `
           id
           lessonProgress
           status
-          live
           classroomID
           studentID
           studentAuthID
@@ -1943,6 +1943,7 @@ export const updateClassroom = /* GraphQL */ `
       openedAt
       closedAt
       roster
+      viewing
       displayData {
         breakdownComponent
         studentInfo {
@@ -2108,7 +2109,6 @@ export const updateClassroom = /* GraphQL */ `
           id
           lessonProgress
           status
-          live
           classroomID
           studentID
           studentAuthID
@@ -2133,6 +2133,7 @@ export const deleteClassroom = /* GraphQL */ `
       openedAt
       closedAt
       roster
+      viewing
       displayData {
         breakdownComponent
         studentInfo {
@@ -2298,7 +2299,6 @@ export const deleteClassroom = /* GraphQL */ `
           id
           lessonProgress
           status
-          live
           classroomID
           studentID
           studentAuthID
@@ -4163,7 +4163,6 @@ export const createQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
-        live
         classroomID
         classroom {
           id
@@ -4171,6 +4170,7 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           openedAt
           closedAt
           roster
+          viewing
           courseID
           lessonID
           createdAt
@@ -4267,7 +4267,6 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
-        live
         classroomID
         classroom {
           id
@@ -4275,6 +4274,7 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           openedAt
           closedAt
           roster
+          viewing
           courseID
           lessonID
           createdAt
@@ -4371,7 +4371,6 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
-        live
         classroomID
         classroom {
           id
@@ -4379,6 +4378,7 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           openedAt
           closedAt
           roster
+          viewing
           courseID
           lessonID
           createdAt

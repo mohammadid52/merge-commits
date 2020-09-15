@@ -70,12 +70,12 @@ const EditBlock = (props: EditBlockProps) => {
     }
 
     return (
-        <div className="bg-dark-blue w-full md:h-full flex flex-col justify-between rounded-lg shadow-2 px-4 md:px-8 py-6">
-            <h3 className="text-xl text-gray-200 font-open font-bold mb-3 border-b border-white">
+        <div className="bg-dark-blue w-full md:h-full flex flex-col justify-between rounded-lg px-4 md:px-8 py-6">
+            <h3 className="text-xl text-gray-200 font-open font-light mb-3 border-b border-white">
                 Final Edits
             </h3>
             <div className="w-full md:h-9/10 flex flex-col justify-center">
-                <label className="w-7/10 text-gray-200 text-lg font-open font-bold mb-2" htmlFor="title">
+                <label className="w-7/10 text-gray-800 text-lg font-open font-light mb-2" htmlFor="title">
                     Your poem's title
                 </label>
                 <input id="title" name="title" className="bg-gray-300 w-7/10 h-4 md:h-12 mb-4 rounded-lg px-2 md:px-4 shadow-2" type="text" 

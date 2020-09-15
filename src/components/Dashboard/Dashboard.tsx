@@ -19,6 +19,7 @@ const UserManagement = lazy(() => import('./Admin/UserManagement/UserManagement'
 import * as queries from '../../graphql/queries';
 import PageHeaderBar from '../Header/PageHeaderBar';
 import LessonPlanHome from './LessonPlanner/LessonPlanHome';
+import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
 
 
 type userObject = {
@@ -64,7 +65,7 @@ const Dashboard: React.FC = () => {
     }, [])
 
     return ( 
-            <div className={`w-screen md:w-full md:h-auto flex`}>
+            <div className={`w-screen md:w-full h-screen md:h-auto flex`}>
                 <SideMenu>
                     <ProfileLink />
                     <Links />
@@ -110,6 +111,12 @@ const Dashboard: React.FC = () => {
                             path={`${match.url}/lesson-planner`}
                             render={() => (
                                 <LessonPlanHome />
+                            )}
+                        />
+                        <Route 
+                            path={`${match.url}/manage-institutions`}
+                            render={() => (
+                                <InstitutionsHome />
                             )}
                         />
                     </Switch>

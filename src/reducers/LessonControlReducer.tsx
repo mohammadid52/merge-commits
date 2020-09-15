@@ -89,7 +89,25 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 return student.id === action.payload.id
             })
 
-            if (found) {
+            let viewing = state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.id === action.payload.id : null;
+
+            if ( found ) {
+
+                if ( viewing ) {
+                    return {
+                        ...state,
+                        roster: state.roster.map((student: any) => {
+                            if ( student.id === action.payload.id ) {
+                                return action.payload
+                            } return student
+                        }),
+                        studentViewing: {
+                            ...state.studentViewing,
+                            studentInfo: action.payload
+                        }
+                    }
+                }
+
                 return {
                     ...state,
                     roster: state.roster.map((student: any) => {
@@ -139,6 +157,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 }
             };
         case 'SET_STUDENT_VIEWING':
+            console.log(action.payload);
             if ( state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === action.payload.id ) {
                 return { 
                     ...state,

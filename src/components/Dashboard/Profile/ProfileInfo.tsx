@@ -3,7 +3,7 @@ import Dropdown from './Dropdown';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { NavLink, useRouteMatch } from 'react-router-dom';
 import { UserInfo } from './Profile';
-import LessonLoading from '../../Lesson/Loading/LessonLoading';
+import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 
 interface UserInfoProps {
     user: UserInfo

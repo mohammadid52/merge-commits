@@ -30,7 +30,6 @@ export const createStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
-      live
       classroomID
       studentID
       studentAuthID
@@ -109,7 +108,6 @@ export const updateStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
-      live
       classroomID
       studentID
       studentAuthID
@@ -169,8 +167,15 @@ export const updateClassroom = /* GraphQL */ `
       open
       lessonID
       roster
+      viewing
       displayData {
         breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
         warmUpData {
           story
           title

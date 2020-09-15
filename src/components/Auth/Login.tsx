@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
 import { IconContext } from "react-icons";
-import { FaKey } from 'react-icons/fa';
+import { FaKey } from 'react-icons/fa'; 
 import { AiOutlineEye } from 'react-icons/ai';
 import { AiOutlineEyeInvisible } from 'react-icons/ai';
 import { MdEmail } from 'react-icons/md';
@@ -115,7 +115,8 @@ const Login = () => {
              
             <div className="test login w-140 h-7/10 bg-gray-200 shadow-elem-light border border-gray-300 rounded-lg pt-0">
                 <div className="h-.7/10 bg-dark w-full rounded-t-lg"></div>
-                <div className="h-9.3/10 flex flex-col items-center p-8">
+                <div className="relative h-9.3/10 flex flex-col items-center p-8">
+                    <div className="absolute text-center text-xs mb-4" style={{bottom: '0'}}> © Copyright 2020 </div>
                     <div className="h-2/10">
                         <img className="" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                     </div>
@@ -141,8 +142,8 @@ const Login = () => {
                             <input className="w-full px-2 py-1 ml-2" placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
                         </div>
                     
-                        <div className="input relative">
-                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                        <div className="input relative w-full">
+                            <div style={{right: 0}} className="absolute w-6">
                                 <div onClick={() => setPassToggle(!passToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
                                 { passToggle ?
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
@@ -171,8 +172,9 @@ const Login = () => {
                     <div className="h-3/10 flex flex-col justify-center items-center">
                         <button className="bg-dark-red text-gray-200 rounded-lg mb-4 shadow-elem-light" onKeyPress={handleEnter} onClick={handleSubmit}>Login</button>
                         <NavLink to="/forgot-password">
-                        <div className="text-center hover:text-blue-500">forgot password?</div>
+                            <div className="text-center hover:text-blue-500">forgot password?</div>
                         </NavLink>
+                        
                     </div>
                 </div>
             </div>

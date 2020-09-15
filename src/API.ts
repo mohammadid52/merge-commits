@@ -175,6 +175,7 @@ export enum Language {
   EN = "EN",
   ES = "ES",
   VT = "VT",
+  TR = "TR",
 }
 
 
@@ -420,7 +421,6 @@ export type CreateStudentDataInput = {
   id?: string | null,
   lessonProgress: string,
   status: string,
-  live: boolean,
   classroomID: string,
   studentID: string,
   studentAuthID: string,
@@ -474,25 +474,16 @@ export type LineInputInput = {
 export type ModelStudentDataConditionInput = {
   lessonProgress?: ModelStringInput | null,
   status?: ModelStringInput | null,
-  live?: ModelBooleanInput | null,
   studentAuthID?: ModelStringInput | null,
   and?: Array< ModelStudentDataConditionInput | null > | null,
   or?: Array< ModelStudentDataConditionInput | null > | null,
   not?: ModelStudentDataConditionInput | null,
 };
 
-export type ModelBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-};
-
 export type UpdateStudentDataInput = {
   id: string,
   lessonProgress?: string | null,
   status?: string | null,
-  live?: boolean | null,
   classroomID: string,
   studentID: string,
   studentAuthID?: string | null,
@@ -562,6 +553,7 @@ export type CreateClassroomInput = {
   openedAt?: string | null,
   closedAt?: string | null,
   roster: Array< string >,
+  viewing?: string | null,
   displayData?: DisplayDataInput | null,
   courseID: string,
   lessonID: string,
@@ -598,11 +590,19 @@ export type ModelClassroomConditionInput = {
   openedAt?: ModelStringInput | null,
   closedAt?: ModelStringInput | null,
   roster?: ModelStringInput | null,
+  viewing?: ModelStringInput | null,
   courseID?: ModelIDInput | null,
   lessonID?: ModelIDInput | null,
   and?: Array< ModelClassroomConditionInput | null > | null,
   or?: Array< ModelClassroomConditionInput | null > | null,
   not?: ModelClassroomConditionInput | null,
+};
+
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
 };
 
 export type UpdateClassroomInput = {
@@ -611,6 +611,7 @@ export type UpdateClassroomInput = {
   openedAt?: string | null,
   closedAt?: string | null,
   roster?: Array< string > | null,
+  viewing?: string | null,
   displayData?: DisplayDataInput | null,
   courseID?: string | null,
   lessonID?: string | null,
@@ -1267,7 +1268,6 @@ export type ModelStudentDataFilterInput = {
   id?: ModelIDInput | null,
   lessonProgress?: ModelStringInput | null,
   status?: ModelStringInput | null,
-  live?: ModelBooleanInput | null,
   classroomID?: ModelIDInput | null,
   studentID?: ModelStringInput | null,
   studentAuthID?: ModelStringInput | null,
@@ -1293,6 +1293,7 @@ export type ModelClassroomFilterInput = {
   openedAt?: ModelStringInput | null,
   closedAt?: ModelStringInput | null,
   roster?: ModelStringInput | null,
+  viewing?: ModelStringInput | null,
   courseID?: ModelIDInput | null,
   lessonID?: ModelIDInput | null,
   and?: Array< ModelClassroomFilterInput | null > | null,
@@ -2901,7 +2902,6 @@ export type CreateStudentDataMutation = {
     id: string,
     lessonProgress: string,
     status: string,
-    live: boolean,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -2910,6 +2910,7 @@ export type CreateStudentDataMutation = {
       openedAt: string | null,
       closedAt: string | null,
       roster: Array< string >,
+      viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
         breakdownComponent: string | null,
@@ -3063,7 +3064,6 @@ export type UpdateStudentDataMutation = {
     id: string,
     lessonProgress: string,
     status: string,
-    live: boolean,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -3072,6 +3072,7 @@ export type UpdateStudentDataMutation = {
       openedAt: string | null,
       closedAt: string | null,
       roster: Array< string >,
+      viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
         breakdownComponent: string | null,
@@ -3225,7 +3226,6 @@ export type DeleteStudentDataMutation = {
     id: string,
     lessonProgress: string,
     status: string,
-    live: boolean,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -3234,6 +3234,7 @@ export type DeleteStudentDataMutation = {
       openedAt: string | null,
       closedAt: string | null,
       roster: Array< string >,
+      viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
         breakdownComponent: string | null,
@@ -3488,6 +3489,7 @@ export type CreateClassroomMutation = {
     openedAt: string | null,
     closedAt: string | null,
     roster: Array< string >,
+    viewing: string | null,
     displayData:  {
       __typename: "DisplayData",
       breakdownComponent: string | null,
@@ -3675,7 +3677,6 @@ export type CreateClassroomMutation = {
         id: string,
         lessonProgress: string,
         status: string,
-        live: boolean,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -3702,6 +3703,7 @@ export type UpdateClassroomMutation = {
     openedAt: string | null,
     closedAt: string | null,
     roster: Array< string >,
+    viewing: string | null,
     displayData:  {
       __typename: "DisplayData",
       breakdownComponent: string | null,
@@ -3889,7 +3891,6 @@ export type UpdateClassroomMutation = {
         id: string,
         lessonProgress: string,
         status: string,
-        live: boolean,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -3916,6 +3917,7 @@ export type DeleteClassroomMutation = {
     openedAt: string | null,
     closedAt: string | null,
     roster: Array< string >,
+    viewing: string | null,
     displayData:  {
       __typename: "DisplayData",
       breakdownComponent: string | null,
@@ -4103,7 +4105,6 @@ export type DeleteClassroomMutation = {
         id: string,
         lessonProgress: string,
         status: string,
-        live: boolean,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -6238,7 +6239,6 @@ export type CreateQuestionDataStudentDataMutation = {
       id: string,
       lessonProgress: string,
       status: string,
-      live: boolean,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -6247,6 +6247,7 @@ export type CreateQuestionDataStudentDataMutation = {
         openedAt: string | null,
         closedAt: string | null,
         roster: Array< string >,
+        viewing: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -6354,7 +6355,6 @@ export type UpdateQuestionDataStudentDataMutation = {
       id: string,
       lessonProgress: string,
       status: string,
-      live: boolean,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -6363,6 +6363,7 @@ export type UpdateQuestionDataStudentDataMutation = {
         openedAt: string | null,
         closedAt: string | null,
         roster: Array< string >,
+        viewing: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -6470,7 +6471,6 @@ export type DeleteQuestionDataStudentDataMutation = {
       id: string,
       lessonProgress: string,
       status: string,
-      live: boolean,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -6479,6 +6479,7 @@ export type DeleteQuestionDataStudentDataMutation = {
         openedAt: string | null,
         closedAt: string | null,
         roster: Array< string >,
+        viewing: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -7659,7 +7660,6 @@ export type GetStudentDataQuery = {
     id: string,
     lessonProgress: string,
     status: string,
-    live: boolean,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -7668,6 +7668,7 @@ export type GetStudentDataQuery = {
       openedAt: string | null,
       closedAt: string | null,
       roster: Array< string >,
+      viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
         breakdownComponent: string | null,
@@ -7827,7 +7828,6 @@ export type ListStudentDatasQuery = {
       id: string,
       lessonProgress: string,
       status: string,
-      live: boolean,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -7836,6 +7836,7 @@ export type ListStudentDatasQuery = {
         openedAt: string | null,
         closedAt: string | null,
         roster: Array< string >,
+        viewing: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -7964,6 +7965,7 @@ export type GetClassroomQuery = {
     openedAt: string | null,
     closedAt: string | null,
     roster: Array< string >,
+    viewing: string | null,
     displayData:  {
       __typename: "DisplayData",
       breakdownComponent: string | null,
@@ -8151,7 +8153,6 @@ export type GetClassroomQuery = {
         id: string,
         lessonProgress: string,
         status: string,
-        live: boolean,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -8181,6 +8182,7 @@ export type ListClassroomsQuery = {
       openedAt: string | null,
       closedAt: string | null,
       roster: Array< string >,
+      viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
         breakdownComponent: string | null,
@@ -9299,6 +9301,7 @@ export type OnUpdateClassroomSubscription = {
     openedAt: string | null,
     closedAt: string | null,
     roster: Array< string >,
+    viewing: string | null,
     displayData:  {
       __typename: "DisplayData",
       breakdownComponent: string | null,
@@ -9486,7 +9489,6 @@ export type OnUpdateClassroomSubscription = {
         id: string,
         lessonProgress: string,
         status: string,
-        live: boolean,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -9510,7 +9512,6 @@ export type OnChangeStudentDataSubscription = {
     id: string,
     lessonProgress: string,
     status: string,
-    live: boolean,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -9519,6 +9520,7 @@ export type OnChangeStudentDataSubscription = {
       openedAt: string | null,
       closedAt: string | null,
       roster: Array< string >,
+      viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
         breakdownComponent: string | null,
@@ -12944,7 +12946,6 @@ export type OnCreateQuestionDataStudentDataSubscription = {
       id: string,
       lessonProgress: string,
       status: string,
-      live: boolean,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -12953,6 +12954,7 @@ export type OnCreateQuestionDataStudentDataSubscription = {
         openedAt: string | null,
         closedAt: string | null,
         roster: Array< string >,
+        viewing: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -13055,7 +13057,6 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
       id: string,
       lessonProgress: string,
       status: string,
-      live: boolean,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -13064,6 +13065,7 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
         openedAt: string | null,
         closedAt: string | null,
         roster: Array< string >,
+        viewing: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -13166,7 +13168,6 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
       id: string,
       lessonProgress: string,
       status: string,
-      live: boolean,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -13175,6 +13176,7 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         openedAt: string | null,
         closedAt: string | null,
         roster: Array< string >,
+        viewing: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,

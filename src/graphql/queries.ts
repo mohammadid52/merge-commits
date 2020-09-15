@@ -483,7 +483,6 @@ export const getStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
-      live
       classroomID
       classroom {
         id
@@ -491,6 +490,7 @@ export const getStudentData = /* GraphQL */ `
         openedAt
         closedAt
         roster
+        viewing
         displayData {
           breakdownComponent
         }
@@ -637,7 +637,6 @@ export const listStudentDatas = /* GraphQL */ `
         id
         lessonProgress
         status
-        live
         classroomID
         classroom {
           id
@@ -645,6 +644,7 @@ export const listStudentDatas = /* GraphQL */ `
           openedAt
           closedAt
           roster
+          viewing
           courseID
           lessonID
           createdAt
@@ -752,6 +752,7 @@ export const getClassroom = /* GraphQL */ `
       openedAt
       closedAt
       roster
+      viewing
       displayData {
         breakdownComponent
         studentInfo {
@@ -917,7 +918,6 @@ export const getClassroom = /* GraphQL */ `
           id
           lessonProgress
           status
-          live
           classroomID
           studentID
           studentAuthID
@@ -944,6 +944,7 @@ export const listClassrooms = /* GraphQL */ `
         openedAt
         closedAt
         roster
+        viewing
         displayData {
           breakdownComponent
         }

@@ -125,7 +125,8 @@ const NewPassword = () => {
         <div className="w-full h-screen flex items-center justify-center">
             <div className="test login w-140 h-7/10 bg-gray-200 shadow-elem-light border border-gray-300 rounded pt-0">
             <div className="h-.7/10 bg-dark w-full rounded-t-lg"></div>
-            <div className="h-9.3/10 flex flex-col items-center p-8">
+            <div className="relative h-9.3/10 flex flex-col items-center p-8">
+            <div className="absolute text-center text-xs mb-4" style={{bottom: '0'}}> © Copyright 2020 </div>
                 <div className="h-2/10">
                     <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                 </div>
@@ -143,10 +144,10 @@ const NewPassword = () => {
 
             
                 <div className="h-5/10 flex-grow flex flex-col justify-center">
-                    
+                     
                         
-                        <div className="input relative">
-                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                        <div className="input relative w-full">
+                            <div style={{right: 0}} className="absolute w-6">
                                 <div onClick={() => setPassToggle(!passToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
                                 { passToggle ?
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
@@ -167,8 +168,8 @@ const NewPassword = () => {
                             <label className="hidden" htmlFor="password">New Password</label>
                             <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type={passToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
-                        <div className="input relative">
-                            <div style={{right: 0}} className="absolute right-0 w-auto">
+                        <div className="input relative w-full">
+                            <div style={{right: 0}} className="absolute w-6">
                                 <div onClick={() => setPassMatchToggle(!passMatchToggle)} className="text-gray-500 cursor-pointer hover:text-grayscale">
                                 { passMatchToggle ?
                                 <IconContext.Provider value={{ size: '1.5rem'}}>

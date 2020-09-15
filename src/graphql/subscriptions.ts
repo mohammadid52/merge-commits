@@ -10,6 +10,7 @@ export const onUpdateClassroom = /* GraphQL */ `
       openedAt
       closedAt
       roster
+      viewing
       displayData {
         breakdownComponent
         studentInfo {
@@ -175,7 +176,6 @@ export const onUpdateClassroom = /* GraphQL */ `
           id
           lessonProgress
           status
-          live
           classroomID
           studentID
           studentAuthID
@@ -195,7 +195,6 @@ export const onChangeStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
-      live
       classroomID
       classroom {
         id
@@ -203,6 +202,7 @@ export const onChangeStudentData = /* GraphQL */ `
         openedAt
         closedAt
         roster
+        viewing
         displayData {
           breakdownComponent
         }
@@ -3292,7 +3292,6 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
-        live
         classroomID
         classroom {
           id
@@ -3300,6 +3299,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           openedAt
           closedAt
           roster
+          viewing
           courseID
           lessonID
           createdAt
@@ -3393,7 +3393,6 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
-        live
         classroomID
         classroom {
           id
@@ -3401,6 +3400,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           openedAt
           closedAt
           roster
+          viewing
           courseID
           lessonID
           createdAt
@@ -3494,7 +3494,6 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
-        live
         classroomID
         classroom {
           id
@@ -3502,6 +3501,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           openedAt
           closedAt
           roster
+          viewing
           courseID
           lessonID
           createdAt

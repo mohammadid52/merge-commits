@@ -141,18 +141,18 @@ const UserInformation = (props: UserInfoProps) => {
                     <div className="px-4 py-5 sm:px-6">
                         <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
                             <div className="sm:col-span-1">
-                                <dt className="text-lg leading-5 font-medium text-gray-500">
+                                <dt className="text-base leading-5 font-medium text-gray-500">
                                 Institution
                                 </dt>
-                                <dd className="mt-2 text-lg leading-5 text-gray-900">
+                                <dd className="mt-2 text-base leading-5 text-gray-900">
                                 {`${ user.institution ? user.institution : 'not set'}`}
                                 </dd>
                             </div>
                             <div className="sm:col-span-1">
-                                <dt className="text-lg leading-5 font-medium text-gray-500">
+                                <dt className="text-base leading-5 font-medium text-gray-500">
                                 Grade 
                                 </dt>
-                                <dd className="mt-2 text-lg leading-5 text-gray-900">
+                                <dd className="mt-2 text-base leading-5 text-gray-900">
                                 {`${ user.grade ? user.grade : 'not set'}`}
                                 </dd>
                             </div>
@@ -163,11 +163,11 @@ const UserInformation = (props: UserInfoProps) => {
                 <div className="px-4 pt-4 w-full flex justify-end">
                     <div className="flex w-32">
                         <span className="ml-3 inline-flex rounded-md shadow-sm">
-                        <NavLink to={`${match.url}/edit`}>
-                        <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
-                            Edit
-                        </button>
-                        </NavLink>
+                        {<NavLink to={`${match.url}/edit`}>
+                            <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                                Edit
+                            </button>
+                        </NavLink>}
                         </span>
                     </div>
                 </div>

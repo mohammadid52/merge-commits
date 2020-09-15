@@ -24,11 +24,11 @@ const Keyword = (props: props) => {
 
     return (
         <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} text rounded-sm shadow-inner`}>
-            <h1 className="font-extrabold mb-6">Keywords we will cover in this lesson:</h1>
+            <h1 className={`${fullscreen ? 'text-2xl font-extrabold mb-4 underline' : 'text-base font-extrabold mb-3'}`}>Keywords:</h1>
             <div>
-            <p className={`${fullscreen ? 'text-base' : 'text-xs'}`}><span className="font-bold">Culture:</span> the beliefs, social practices, and characteristics of a racial, religious, or social group </p>
-            <p className={`${fullscreen ? 'text-base' : 'text-xs'}`}><span className="font-bold">Identity:</span> all of those things by which a person or thing is known or is considered as being </p>
-            <p className={`${fullscreen ? 'text-base' : 'text-xs'}`}><span className="font-bold">Self-Awareness:</span> conscious knowledge of one's own personality, character, motives, and feelings </p>
+            <p className={`${fullscreen ? 'text-base' : 'text-xs'} `}><span className={`${fullscreen ? 'text-lg' : 'text-sm'} font-bold`}>Culture:</span> the customs, arts, social institutions, and achievements of a particular nation, people, or other social group.</p>
+            <p className={`${fullscreen ? 'text-base' : 'text-xs'} `}><span className={`${fullscreen ? 'text-lg' : 'text-sm'} font-bold`}>Dialects:</span> a particular form of a language which is peculiar to a specific region or social group.</p>
+            <p className={`${fullscreen ? 'text-base' : 'text-xs'} `}><span className={`${fullscreen ? 'text-lg' : 'text-sm'} font-bold`}>Ancestors:</span> a person, typically one more remote than a grandparent, from whom one is descended.</p>
             </div>
         </div>
     )
