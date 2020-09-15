@@ -31,7 +31,7 @@ const TrophyBlock = () => {
             </IconContext.Provider>
 
             <div className=' text-gray-200 font-open font-light'>
-              1 Story
+            <span className="rounded-full bg-indigo-500 uppercase px-3 py-2 font-bold mr-3">1</span> Story
             </div>
           </div>
           <div className='bg-medium-blue rounded-lg cursor-pointer px-4 py-2 w-3/10 h-5/10 flex justify-center items-center'>
@@ -45,7 +45,7 @@ const TrophyBlock = () => {
             </IconContext.Provider>
 
             <div className='text-gray-200 font-open font-light'>
-              1 Poem
+            <span className="rounded-full bg-indigo-500 uppercase px-3 py-2 font-bold mr-3">1</span> Poem
             </div>
           </div>
           {/* <div className="column-center">
