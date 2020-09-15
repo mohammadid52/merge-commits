@@ -18,24 +18,25 @@ const tempCheckPtSwitch = (type: string) => {
 
 const Checkpoint = () => {
     const { state, dispatch } = useContext(LessonContext)
+    const { theme } = useContext(LessonContext);
 
     useEffect(() => {
         dispatch({ type: 'ACTIVATE_CHECKPOINT', payload: state.pages[state.currentPage].type })
     }, [])
 
     return (
-        <div className={`w-2/3 h-8/10 flex flex-col justify-between items-center`}>
-            <div className="w-full h-1.3/10 flex flex-row justify-center items-center mb-4">
+        <div className={`w-full h-8/10 flex flex-col justify-between items-center`}>
+            <div className="w-2/3 h-1.3/10 relative flex flex-row justify-center items-center mb-4">
                 <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
-                    <div className="h-full bg-dark-red h-24 w-24 flex flex-col items-center justify-center z-20 rounded-lg shadow-2">
+                    <div className="bg-dark-red absolute left-0 h-16 w-16 flex flex-col justify-center items-center z-20 rounded-lg">
                         <FaCheckSquare />
                     </div>
                 </IconContext.Provider>
-                <div className="title bg-dark-blue w-full flex flex-row justify-center items-center text-4xl text-center font-open font-bold text-gray-200 rounded-lg shadow-2 px-4 py-2 z-10">
+                <div className={`border-b border-white border-opacity-50 title w-full flex flex-row justify-center items-center text-5xl text-center font-open font-light px-4 py-2 ${theme.block.text} z-10`}>
                     Checkpoint
                 </div>
             </div>
-            <div className={`w-full h-8.5/10 bg-dark-blue shadow-elem-dark rounded-lg p-8`}>
+            <div className={`w-2/3 ${theme.gradient.cardBase} xl rounded-lg p-4`}>
                 { tempCheckPtSwitch(state.pages[state.currentPage].type) }
             </div>
         </div>

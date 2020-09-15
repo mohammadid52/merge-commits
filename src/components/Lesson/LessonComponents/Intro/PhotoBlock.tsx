@@ -8,8 +8,10 @@ const PhotoBlock = () => {
     
 
     return(
-        <div className={`w-full h-full ${theme.block.bg} py-2 px-4 rounded-lg flex flex-col justify-center items-center`}>
-            <div className="picture w-full h-72 bg-local shadow-2 rounded-lg" style={{ backgroundImage: `url(${imgArray[0]})` }}>
+        // <div className={`w-full h-full ${theme.block.bg} py-2 px-4 rounded-lg flex flex-col justify-center items-center`}>
+        <div className={`w-full h-full py-2 rounded-lg flex flex-col justify-center items-center`}>
+            {/* <div className="picture w-full h-72 bg-local shadow-2xl rounded-lg" style={{ backgroundImage: `url(${imgArray[0]})` }}> */}
+            <div className="picture w-full h-72 bg-local rounded-lg border border-white20" style={{ backgroundImage: `url(${imgArray[0]})` }}>
             </div>
         </div>
     )
