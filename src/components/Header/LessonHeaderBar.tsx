@@ -44,10 +44,10 @@ const LessonHeaderBar = () => {
         }
     }, [state.lessonProgress])
 
-    useEffect(() => {
-        console.log(state.studentStatus);
+    // useEffect(() => {
+    //     console.log(state.studentStatus);
         
-    }, [state.studentStatus])
+    // }, [state.studentStatus])
 
     const updateStudentData = async () => {
         let lessonProgress = state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
@@ -101,15 +101,18 @@ const LessonHeaderBar = () => {
     //     }
     // }
 
-    const { startTimer, startAutoSave, clearAutoSave } = useStudentTimer({
+    const { startTimer, startAutoSave, clearAutoSave, changeParams } = useStudentTimer({
         dispatch: dispatch,
         subscription: subscription,
         callback: updateStudentData,
+        state: state,
     });
         
-    // useEffect(() => {
-    //     startTimer()
-    // }, [state.currentPage, state.componentState])
+    useEffect(() => {
+        changeParams('state', state)
+        // console.log('state', state);
+        // startTimer()
+    }, [state.studentStatus, state.viewing, state.saveCount])
 
     return (
         <div className={`center w-full h-.7/10 ${theme.toolbar.bg} text-gray-200 shadow-2 flex justify-between`}>
@@ -141,7 +144,7 @@ const LessonHeaderBar = () => {
                         : null
                     } 
                 </div> */}
-                <div className={`flex flex-col justify-center items-center px-2`} onClick={() => { dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'IDLE' }) }}>
+                {/* <div className={`flex flex-col justify-center items-center px-2`} onClick={() => { dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'IDLE' }) }}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>
@@ -164,13 +167,24 @@ const LessonHeaderBar = () => {
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">Timer</p>
-                </div>
-                <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={handleSave}>
-                    <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
-                        <FaRegSave />
-                    </IconContext.Provider>
-                    <p className={`text-xs text-gray-200 text-center`} style={{color: state.unsavedChanges ? '#EDF2F7' : '#4A5568'}}>Save</p>
-                </div>
+                </div> */}
+                {
+                    !state.viewing ?
+                    <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={handleSave}>
+                        <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
+                            <FaRegSave />
+                        </IconContext.Provider>
+                        <p className={`text-xs text-gray-200 text-center`} style={{color: state.unsavedChanges ? '#EDF2F7' : '#4A5568'}}>Save</p>
+                    </div>
+                    :
+                    <div className={`cursor-default flex flex-col justify-center items-center px-2`} onClick={handleSave}>
+                        <div className="relative flex items-center justify-center h-4 w-4 m-1">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-4 w-4 bg-green-600"></span>
+                        </div>
+                        <p className={`self-end text-xs text-gray-200 text-center`}>AutoSave</p>
+                    </div>
+                }
                 <div className={`flex flex-col justify-center items-center px-2 cursor-pointer`}>
                     <NavLink to="/dashboard">
                         <IconContext.Provider value={{ size: '1.5rem'}}>

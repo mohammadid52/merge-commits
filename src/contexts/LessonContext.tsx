@@ -6,7 +6,7 @@ import { useCookies } from 'react-cookie';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 import * as customMutations from '../customGraphql/customMutations';
 import * as customQueries from '../customGraphql/customQueries';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 
@@ -51,8 +51,15 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
     async function getOrCreateStudentData() {
         let queryParams = queryString.parse(location.search)
-        let studentID = cookies.auth.email
-        let studentAuthID = cookies.auth.authId
+        let studentID: string;
+        let studentAuthID: string;
+
+        await Auth.currentAuthenticatedUser()
+        .then(user => {
+            console.log(user);
+            studentID = user.attributes.email
+            studentAuthID = user.attributes.sub
+        })
 
         try {
             const studentData: any = await API.graphql(graphqlOperation(customQueries.getStudentData, {
@@ -71,10 +78,18 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                     studentAuthID: studentAuthID,
                 }}))
                 console.log(newStudentData)
-                dispatch({ type: 'SET_STUDENT_DATA_ID', payload: newStudentData.data.createStudentData.id })
+                dispatch({ type: 'SET_STUDENT_INFO', payload: {
+                    studentDataID: newStudentData.data.createStudentData.id,
+                    studentUsername: newStudentData.data.createStudentData.studentID,
+                    studentAuthID : newStudentData.data.createStudentData.studentAuthID
+                }})
                 return setData(newStudentData.data.createStudentData)
             } 
-            dispatch({ type: 'SET_STUDENT_DATA_ID', payload: studentData.data.getStudentData.id })
+            dispatch({ type: 'SET_STUDENT_INFO', payload: {
+                studentDataID: studentData.data.getStudentData.id,
+                studentUsername: studentData.data.getStudentData.studentID,
+                studentAuthID: studentData.data.getStudentData.studentAuthID
+            }})
             return setData(studentData.data.getStudentData)
 
         } catch (err) {
@@ -110,15 +125,16 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
                 console.log('updated', updatedLessonPlan)
                 // dispatch({ type: 'SET_LOADING' })
-                console.log('state,', state)
+                // console.log('state,', state)
 
                 dispatch({
                     type: 'UPDATE_LESSON_PLAN', 
                     payload: { 
                         pages: removeDisabled(updatedLessonPlan.lessonPlan), 
                         displayData: updatedLessonPlan.displayData,
+                        viewing: updatedLessonPlan.viewing
                 }})
-                
+
             }
         });
   

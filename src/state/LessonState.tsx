@@ -1,3 +1,5 @@
+import { internals } from "rx"
+
 export type PagesType = Array<{
     disabled: boolean;
     displayMode: null | string;
@@ -16,6 +18,8 @@ export interface LessonStateType  {
         [key: string]: any;
     }
     studentDataID: string,
+    studentUsername: string,
+    studentAuthID: string,
     currentPage: number;
     lessonProgress: number;
     canContinue: boolean;
@@ -23,6 +27,7 @@ export interface LessonStateType  {
     componentState: {
         [key: string]: any
     }
+    viewing: boolean,
     displayData?: {
         [key: string]: any
     }
@@ -30,24 +35,27 @@ export interface LessonStateType  {
     word_bank?: Array<string>;
     lessonComplete: boolean;
     unsavedChanges: boolean;
-    saveFunction?: Promise<void>
+    saveCount: number
 }
 
 export const lessonState: LessonStateType = {
     status: '',
     error: '',
     studentStatus: 'ACTIVE',
-    data: {},
     studentDataID: '',
+    studentUsername: '',
+    studentAuthID: '',
+    data: {},
     currentPage: 0,
     lessonProgress: 0,
     canContinue: false,
     componentState: {},
+    viewing: false,
     displayData: {},
     pages: null,
     new_words: [],
     word_bank: null,
     lessonComplete: false,
     unsavedChanges: true,
-    saveFunction: null,
+    saveCount: 0,
 }

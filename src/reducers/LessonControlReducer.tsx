@@ -139,6 +139,8 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 }
             };
         case 'SET_STUDENT_VIEWING':
+            console.log(action.payload);
+            
             if ( state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === action.payload.id ) {
                 return { 
                     ...state,

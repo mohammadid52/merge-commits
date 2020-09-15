@@ -18,6 +18,7 @@ export type LessonActions =
         payload: {
             pages: PagesType;
             displayData?: any;
+            viewing?: string
         }
     }
 |   {
@@ -81,8 +82,12 @@ export type LessonActions =
         payload: number;
     } 
 |   {
-        type: 'SET_STUDENT_DATA_ID';
-        payload: string;
+        type: 'SET_STUDENT_INFO';
+        payload: {
+            studentDataID: string
+            studentUsername: string
+            studentAuthID: string
+        };
     } 
 |   {
         type: 'SET_LESSON_PROGRESS';
@@ -92,7 +97,7 @@ export type LessonActions =
         type: 'CLEANUP';
     } 
 |   {
-        type: 'TEST' | 'PAGE_FORWARD' |  'PAGE_BACK' | 'CAN_CONTINUE' | 'NO_CONTINUE' | 'FINISH' | 'SAVED_CHANGES' | 'SET_LOADING';
+        type: 'TEST' | 'PAGE_FORWARD' |  'PAGE_BACK' | 'CAN_CONTINUE' | 'NO_CONTINUE' | 'FINISH' | 'SAVED_CHANGES' | 'SET_LOADING' | 'INCREMENT_SAVE_COUNT';
     } 
 
 export const lessonReducer = (state: LessonStateType, action: LessonActions) => {
@@ -156,10 +161,13 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 ...state,
                 saveFunction: action.payload
             }
-        case 'SET_STUDENT_DATA_ID':
+        case 'SET_STUDENT_INFO':
             return {
                 ...state, 
-                studentDataID: action.payload
+                studentDataID: action.payload.studentDataID,
+                studentUsername:
+                action.payload.studentUsername,
+                studentAuthID: action.payload.studentAuthID
             } 
         case 'SET_LOADING':
             return {
@@ -199,12 +207,19 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 },
             };
         case 'UPDATE_LESSON_PLAN':
+            console.log('this', action.payload, state.studentAuthID, action.payload.viewing === state.studentAuthID);
+            
             return {
                 ...state,
                 status: 'loaded',
                 displayData: action.payload.displayData,
                 pages: action.payload.pages,
-
+                viewing: action.payload.viewing === state.studentAuthID,
+            }
+        case 'INCREMENT_SAVE_COUNT':
+            return {
+                ...state,
+                saveCount: state.saveCount + 1,
             }
         case 'CAN_CONTINUE':
             return {

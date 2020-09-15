@@ -33,7 +33,7 @@ const MainRouter: React.FC = () => {
                 type: 'PREV_LOG_IN',
                 payload: {
                     email: user.attributes.email,
-                    authID: user.attributes.sub
+                    authId: user.attributes.sub
                 }
             })
             history.push('/dashboard');
