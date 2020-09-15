@@ -32,19 +32,19 @@ const DoFirst = () => {
             return null
         }
     }
-    useEffect(() => {
-        if ( state.componentState.story ) {
+    // useEffect(() => {
+    //     if ( state.componentState.story ) {
 
-            dispatch({
-                type: 'UPDATE_COMPONENT_STATE',
-                payload: {
-                    componentName: 'story',
-                    inputName: 'title',
-                    content: input.question.label
-                }
-            })
-        }
-    }, [input.title])
+    //         dispatch({
+    //             type: 'UPDATE_COMPONENT_STATE',
+    //             payload: {
+    //                 componentName: 'story',
+    //                 inputName: 'title',
+    //                 content: input.question.label
+    //             }
+    //         })
+    //     }
+    // }, [input.title])
 
     // useEffect(() => {
     //     if ( state.componentState.story ) {
