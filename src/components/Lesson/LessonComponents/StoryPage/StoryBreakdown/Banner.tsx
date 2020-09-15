@@ -22,14 +22,14 @@ const Banner = (props: BannerProps) => {
                     <FaScroll />
                 </div>
             </IconContext.Provider>
-            <div className={`h-full ${theme.banner} text-xl md:text-3xl rounded-lg px-4 py-2 z-10`}>
+            <div className={`h-full ${theme.banner} text-xl md:text-3xl rounded-xl px-4 py-2 z-10`}>
                     { title }
             </div>
             </div>
             : display === 'COOP' ?
             <div className="w-full h-full flex flex-row justify-center items-center">
                 <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem'}}>
-                    <div className="h-full bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg shadow-2">
+                    <div className="h-full bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-xl shadow-2">
                         <FaScroll />
                     </div>
                 </IconContext.Provider>
@@ -40,7 +40,7 @@ const Banner = (props: BannerProps) => {
             :    
             <div className="w-full h-1/10 flex flex-row justify-center items-center">
             <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem'}}>
-                <div className="h-full bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg shadow-2">
+                <div className="h-full bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-xl shadow-2">
                     <FaScroll />
                 </div>
             </IconContext.Provider>

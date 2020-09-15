@@ -86,12 +86,12 @@ const Modules = (props: ModulesProps) => {
     }
 
     return (
-        <div className="md:h-5.8/10 w-full bg-gradient-to-tl from-dark-blue to-med-dark-blue text-gray-200 md:mb-0 px-4 md:px-8 py-4 rounded-lg overflow-auto">
+        <div className="md:h-5.8/10 w-full bg-gradient-to-tl from-dark-blue to-med-dark-blue text-gray-200 md:mb-0 px-4 md:px-8 py-4 rounded-lg overflow-hidden">
             <h3 className="text-xl font-open font-light mb-3 border-b border-white border-opacity-10 mb-4 pb-4">Focus Questions</h3>
             <div className="w-full h-full ">
                 { 
                     formInputs ? inputs.map((input, key) => (
-                        <div key={key} className={`flex flex-col ${key !== inputs.length-1 && 'border-b border-white border-opacity-10 mb-4 pb-4'}`}>
+                        <div key={key} className={`flex flex-col ${key !== inputs.length-1 && 'border-b border-white border-opacity-10'}`}>
                             <label className="text-sm md:text-md mb-2 font-light text-base text-blue-100 text-opacity-70" htmlFor={input.name}>
                                 { input.prompt }
                             </label>
