@@ -15,7 +15,7 @@ const Banner = () => {
         </div>
       </IconContext.Provider>
       <div
-        className={`h-full w-full ${theme.banner}  text-xl md:text-5xl z-10`}>
+        className={`h-full w-full ${theme.banner} font-medium text-xl md:text-5xl z-10`}>
         {title}
       </div>
     </div>

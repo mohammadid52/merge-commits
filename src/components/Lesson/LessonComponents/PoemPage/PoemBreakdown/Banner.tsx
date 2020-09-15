@@ -23,23 +23,20 @@ const Banner = (props: BannerProps) => {
               <FaPenFancy />
             </div>
           </IconContext.Provider>
-          <div className={`h-full ${theme.banner}  text-xl md:text-5xl z-10`}>
+          <div className={`h-full ${theme.banner} text-gray-200 font-medium text-xl md:text-5xl z-10`}>
             {title}
           </div>
         </div>
-      ) : display === 'COOP' ? (
+      ) : display === 'COOP' ? ( 
         <div className='w-full h-full flex flex-row justify-center items-center'>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem' }}>
             <div className='red bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg shadow-2'>
               <FaPenFancy />
             </div>
           </IconContext.Provider>
-          <div
-            className={`${fullscreen ? 'text-4xl' : 'text-2xl'} h-full ${
-              theme.banner
-            }  text-xl md:text-5xl z-10`}>
-            {title}
-          </div>
+            <div className={`${fullscreen ? 'text-4xl' : 'text-3xl'} text-gray-200 h-full bg-dark-blue w-full flex flex-row justify-center items-center text-center rounded-lg px-4 py-2 z-10`}>
+                { title }
+            </div>
         </div>
       ) : (
         <div className='w-full h-1/10 flex flex-row justify-center items-center'>
@@ -49,9 +46,7 @@ const Banner = (props: BannerProps) => {
             </div>
           </IconContext.Provider>
           <div
-            className={`${fullscreen ? 'text-4xl' : 'text-2xl'} h-full ${
-              theme.banner
-            }  text-xl md:text-5xl z-10`}>
+            className={`text-3xl h-full ${theme.banner} text-gray-200 px-4 py-2 z-10`}>
             {title}
           </div>
         </div>

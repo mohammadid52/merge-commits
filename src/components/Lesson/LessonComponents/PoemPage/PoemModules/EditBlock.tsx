@@ -75,7 +75,7 @@ const EditBlock = (props: EditBlockProps) => {
                 Final Edits
             </h3>
             <div className="w-full md:h-9/10 flex flex-col justify-center">
-                <label className="w-7/10 text-gray-200 text-lg font-open font-light mb-2" htmlFor="title">
+                <label className="w-7/10 text-gray-800 text-lg font-open font-light mb-2" htmlFor="title">
                     Your poem's title
                 </label>
                 <input id="title" name="title" className="bg-gray-300 w-7/10 h-4 md:h-12 mb-4 rounded-lg px-2 md:px-4 shadow-2" type="text" 

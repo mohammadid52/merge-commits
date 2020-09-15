@@ -23,9 +23,9 @@ const Breakdown = () => {
     }, [state.pages])
 
     if (displayMode === 'SELF') {
-        return (
-            <SelfDisplay />
-        )} if (displayMode === 'COOP') {
+        // return (
+        //     <SelfDisplay />
+        // )} if (displayMode === 'COOP') {
             return (
                 <CoopDisplay />
             )
