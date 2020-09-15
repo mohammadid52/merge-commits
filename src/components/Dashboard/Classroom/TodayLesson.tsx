@@ -25,7 +25,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
     return (
             <div className={`relative test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto rounded-sm p-6 flex flex-col mb-8`}>
                 <span style={{left: 0, top: -20}}
-                    className="absolute right-0 ml-4 p-4 sm:h-8 bg-opacity-60 w-auto inline-flex items-center rounded-md text-sm sm:text-2xl font-bold leading-5 bg-purple-300 text-purple-800">
+                    className="absolute right-0 ml-4 p-4 sm:h-8 bg-opacity-60 w-52 inline-flex items-center rounded-md text-sm sm:text-2xl font-bold leading-5 bg-purple-300 text-purple-800">
                     Today's Lesson
                 </span>
                 <h1 className={`h-2.5/10 bg-dark text-4xl text-gray-200 font-bold font-open px-8 shadow-elem-light`}>

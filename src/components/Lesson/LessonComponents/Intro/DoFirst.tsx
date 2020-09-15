@@ -2,15 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
 const setInitialState = (array: Array<any>) => {
-<<<<<<< HEAD
-    let tempObj: any = {}
-    array.forEach((item: {question: {type: string, label: string}}) => {
-        
-        tempObj[item.question.label] = item.question.type === 'text' ? '' : item.question.type === 'input' ? '' : item.question.type === 'selectOne' ? null : item.question.type === 'selectMany' ? [] : null 
-    }) 
-    return tempObj; 
-}
-=======
   let tempObj: any = {};
   array.forEach((item: { question: { type: string; label: string } }) => {
     tempObj[item.question.label] =
@@ -26,7 +17,6 @@ const setInitialState = (array: Array<any>) => {
   });
   return tempObj;
 };
->>>>>>> 6cdcb6fceff2b86e16588258c9460012e3b1240d
 
 const DoFirst = () => {
   const { state, dispatch } = useContext(LessonContext);
@@ -57,7 +47,6 @@ const DoFirst = () => {
       default:
         return null;
     }
-<<<<<<< HEAD
     // useEffect(() => {
     //     if ( state.componentState.story ) {
 
@@ -86,7 +75,6 @@ const DoFirst = () => {
     //     }
     // }, [input.story])
    
-=======
   };
 
   const handleInputChange = (e: { target: { id: string; value: string } }) => {
@@ -95,7 +83,6 @@ const DoFirst = () => {
       [e.target.id]: e.target.value,
     });
   };
->>>>>>> 6cdcb6fceff2b86e16588258c9460012e3b1240d
 
   return (
     // <div className='bg-dark-blue w-full h-full rounded-lg  text-gray-200 px-4 md:px-8 py-6'>
