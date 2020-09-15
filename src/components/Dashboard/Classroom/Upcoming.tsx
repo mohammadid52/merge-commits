@@ -88,9 +88,9 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
 
 
     return (
-            <div className={`relative test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto flex flex-col mb-8 p-2`}>        
-                <span style={{left: 0, top: -20}}
-                className="absolute right-0 ml-4 p-4 sm:h-8 bg-opacity-60 w-auto inline-flex items-center rounded-md text-sm sm:text-2xl font-extrabold leading-5 text-purple-800">
+            <div className={`relative test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto flex flex-col mb-8 p-2 pt-4`}>        
+                <span style={{left: '50%', top: -20, transform: 'translateX(-50%)', textShadow:'1px 1px 2px #000000'}}
+                className="absolute p-5 sm:h-8 w-64 inline-flex items-center text-center rounded-md text-sm sm:text-2xl font-bold leading-5 bg-ketchup text-white bg-opacity-90">
                 Upcoming Lessons
                 </span>
                   
