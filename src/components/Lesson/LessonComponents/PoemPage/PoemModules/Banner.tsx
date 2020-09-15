@@ -14,7 +14,7 @@ const Banner = () => {
           <FaPenFancy />
         </div>
       </IconContext.Provider>
-      <div className={`h-full ${theme.banner}  text-xl md:text-5xl z-10`}>
+      <div className={`h-full ${theme.banner} font-medium text-xl md:text-5xl z-10`}>
         {title}
       </div>
     </div>

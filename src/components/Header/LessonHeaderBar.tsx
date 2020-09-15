@@ -162,22 +162,22 @@ const LessonHeaderBar = () => {
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">AutoSave</p>
                 </div> */}
-                <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={startTimer}>
+                {/* <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={startTimer}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">Timer</p>
-                </div>
+                </div> */}
                 {
                     !state.viewing ?
-                    <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={handleSave}>
+                    <div className={`w-4.5/10 ${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={handleSave}>
                         <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
                             <FaRegSave />
                         </IconContext.Provider>
                         <p className={`text-xs text-gray-200 text-center`} style={{color: state.unsavedChanges ? '#EDF2F7' : '#4A5568'}}>Save</p>
                     </div>
                     :
-                    <div className={`cursor-default flex flex-col justify-center items-center px-2`} onClick={handleSave}>
+                    <div className={`w-4.5/10 cursor-default flex flex-col justify-center items-center px-2`} onClick={handleSave}>
                         <div className="relative flex items-center justify-center h-4 w-4 m-1">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-4 w-4 bg-green-600"></span>
@@ -185,7 +185,7 @@ const LessonHeaderBar = () => {
                         <p className={`self-end text-xs text-gray-200 text-center`}>AutoSave</p>
                     </div>
                 }
-                <div className={`flex flex-col justify-center items-center px-2 cursor-pointer`}>
+                <div className={`w-4.5/10 flex flex-col justify-center items-center px-2 cursor-pointer`}>
                     <NavLink to="/dashboard">
                         <IconContext.Provider value={{ size: '1.5rem'}}>
                             <FaHome />

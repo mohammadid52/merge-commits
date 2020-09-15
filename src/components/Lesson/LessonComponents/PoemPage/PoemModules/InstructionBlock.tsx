@@ -21,11 +21,11 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
         return (
             <div className="bg-dark-blue border-l-4 border-green-light w-full md:h-2.8/10 flex flex-col p-6 shadow-3 rounded-lg text-gray-200 mt-4 md:mt-0">
                 <div className="w-full flex justify-between border-b border-white border-opacity-20">
-                    <h3 className="flex-grow text-xl font-open font-light mb-6  mr-4 animate-bounce">
+                    <h3 className="flex-grow text-xl font-open font-light mr-4 animate-bounce">
                         Instructions
                     </h3>
                 </div>
-                <div className="overflow-scroll text-sm mb-4 md:mb-0">
+                <div className="overflow-scroll text-sm mt-4 mb-4 md:mb-0">
                     Make the final edits to your poem, and get ready to present.
                 </div>
             </div>
