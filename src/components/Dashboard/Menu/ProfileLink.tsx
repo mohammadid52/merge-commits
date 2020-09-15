@@ -40,7 +40,7 @@ const ProfileLink: React.FC = () => {
                 style={{background: `${stringToHslColor(state.user.firstName + ' ' + state.user.lastName)}`, textShadow: '0.1rem 0.1rem 2px #423939b3'}}>
                     {`${initials(state.user.firstName, state.user.lastName)}`}
                 </div>
-                <div className="flex-grow w-auto h-full flex justify-start pl-4">
+                <div className="flex-grow w-auto h-full flex justify-start pl-4 overflow-hidden">
                     {`${ state.user.firstName } ${ firstInitialFunc(state.user.lastName) }`}
                 </div>
             </div>
