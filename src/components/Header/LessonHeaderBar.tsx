@@ -59,14 +59,14 @@ const LessonHeaderBar = () => {
             lessonProgress: lessonProgress,
             status: state.studentStatus,
             classroomID: 1,
-            studentID: cookies.auth.email,
-            studentAuthID: cookies.auth.authId,
+            studentID: state.studentUsername,
+            studentAuthID: state.studentAuthID,
             warmupData: state.componentState.story ? state.componentState.story : null,
             corelessonData: state.componentState.lyrics ? state.componentState.lyrics : null,
             activityData: state.componentState.poem ? state.componentState.poem : null
         }
 
-        // console.log('update', data);
+        console.log('update', data);
         
         try {
             const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }))
@@ -101,7 +101,7 @@ const LessonHeaderBar = () => {
     //     }
     // }
 
-    const { startTimer, startAutoSave, clearAutoSave, changeParams } = useStudentTimer({
+    const { startTimer, changeParams } = useStudentTimer({
         dispatch: dispatch,
         subscription: subscription,
         callback: updateStudentData,
@@ -161,13 +161,13 @@ const LessonHeaderBar = () => {
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">AutoSave</p>
-                </div>
+                </div> */}
                 <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={startTimer}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">Timer</p>
-                </div> */}
+                </div>
                 {
                     !state.viewing ?
                     <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={handleSave}>
