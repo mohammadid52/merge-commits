@@ -90,7 +90,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
     return (
             <div className={`relative test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto flex flex-col mb-8 p-2 pt-4`}>        
                 <span style={{left: '50%', top: -20, transform: 'translateX(-50%)', textShadow:'1px 1px 2px #000000'}}
-                className="absolute p-5 sm:h-8 w-64 inline-flex items-center text-center rounded-md text-sm sm:text-2xl font-bold leading-5 bg-ketchup text-white bg-opacity-90">
+                className="absolute p-5 sm:h-8 w-64 flex justify-center items-center text-center rounded-md text-sm sm:text-2xl font-bold leading-5 bg-ketchup text-white bg-opacity-90">
                 Upcoming Lessons
                 </span>
                   
