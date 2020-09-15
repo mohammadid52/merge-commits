@@ -22,7 +22,7 @@ const TrophyBlock = () => {
         </div>
 
         <div className='h-8/10 flex flex-row justify-around'>
-          <div className='bg-medium-blue rounded-lg cursor-pointer px-4 py-2 w-3/10 h-5/10 flex justify-center items-center'>
+          <div className='bg-medium-blue rounded-lg cursor-pointer px-4 py-2 w-3/10 h-full flex justify-center items-center'>
             <IconContext.Provider
               value={{
                 color: '#F1C40F',
@@ -32,11 +32,12 @@ const TrophyBlock = () => {
               <FaScroll />
             </IconContext.Provider>
 
-            <div className=' text-gray-200 font-open font-light flex flex-row items-center'>
-            <span className='rounded-full bg-indigo-500 uppercase px-3 py-2 font-bold mr-3'>1</span> Story
+            <div className='text-gray-200 font-open font-light flex flex-row items-center'>
+            <span className='w-8 h-8 rounded-full bg-indigo-500 uppercase px-3 py-2 flex items-center font-bold mr-3'>1</span> Story
             </div>
           </div>
-          <div className='bg-medium-blue rounded-lg cursor-pointer px-4 py-2 w-3/10 h-5/10 flex justify-center items-center'>
+
+          <div className='bg-medium-blue rounded-lg cursor-pointer px-4 py-2 w-3/10 h-full flex justify-center items-center'>
             <IconContext.Provider
               value={{
                 color: '#F1C40F',
@@ -47,7 +48,7 @@ const TrophyBlock = () => {
             </IconContext.Provider>
 
             <div className='text-gray-200 font-open font-light flex flex-row items-center'>
-            <span className=' rounded-full bg-indigo-500 uppercase px-3 py-2 font-bold mr-3'>1</span> Poem
+            <span className='w-8 h-8 rounded-full bg-indigo-500 uppercase px-3 py-2 flex items-center font-bold mr-3'>1</span> Poem
             </div>
           </div>
           {/* <div className='column-center'>
