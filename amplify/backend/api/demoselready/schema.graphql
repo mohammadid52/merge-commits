@@ -286,6 +286,7 @@ type Classroom @model(subscriptions: null)
   openedAt: AWSDate
   closedAt: AWSDate
   roster: [String!]!
+  viewing: String
   displayData: DisplayData
   courseID: ID!
   course: Course @connection(fields: ["courseID"])
