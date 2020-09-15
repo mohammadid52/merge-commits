@@ -10,6 +10,7 @@ export const onUpdateClassroom = /* GraphQL */ `
       openedAt
       closedAt
       roster
+      viewing
       displayData {
         breakdownComponent
         studentInfo {
@@ -201,6 +202,7 @@ export const onChangeStudentData = /* GraphQL */ `
         openedAt
         closedAt
         roster
+        viewing
         displayData {
           breakdownComponent
         }
@@ -3297,6 +3299,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           openedAt
           closedAt
           roster
+          viewing
           courseID
           lessonID
           createdAt
@@ -3397,6 +3400,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           openedAt
           closedAt
           roster
+          viewing
           courseID
           lessonID
           createdAt
@@ -3497,6 +3501,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           openedAt
           closedAt
           roster
+          viewing
           courseID
           lessonID
           createdAt

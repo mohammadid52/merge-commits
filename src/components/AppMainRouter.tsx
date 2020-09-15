@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState, Suspense, lazy } from 'react';
 import { GlobalContext } from '../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
+import { Auth } from 'aws-amplify';
 import PageHeaderBar from './Header/PageHeaderBar';
 import Login from './Auth/Login';
 import Forgot from './Auth/Forgot';
@@ -24,11 +25,25 @@ const MainRouter: React.FC = () => {
     const history = useHistory();
     const [ cookies ] = useCookies(['auth']);
 
-    useEffect(() => {
-        if (cookies.auth) {
-            dispatch({ type: 'PREV_LOG_IN', payload: cookies.auth })
+    const checkUserAuthenticated = () => {
+        Auth.currentAuthenticatedUser()
+        .then( user => {
+            console.log(user);
+            dispatch({
+                type: 'PREV_LOG_IN',
+                payload: {
+                    email: user.attributes.email,
+                    authId: user.attributes.sub
+                }
+            })
             history.push('/dashboard');
-        }
+        })
+        .catch((err) => console.error(err))
+    }
+
+
+    useEffect(() => {
+        checkUserAuthenticated()
     }, [])
     
     return (

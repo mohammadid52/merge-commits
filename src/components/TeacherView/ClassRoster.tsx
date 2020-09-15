@@ -2,12 +2,17 @@ import React, { useContext, useEffect } from 'react';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import { studentObject } from '../../state/LessonControlState'
 
-const ClassRoster = () => {
+interface classRosterProps {
+    handleUpdateClassroom: () => Promise<void>
+}
+
+const ClassRoster = (props: classRosterProps) => {
+    const { handleUpdateClassroom } = props;
     const { state, dispatch } = useContext(LessonControlContext);
 
     // console.log(state.roster)
 
-    const handleSelect = (e: any) => {
+    const handleSelect = async (e: any) => {
         const { id } = e.target
         const selected = state.roster.filter((item: any) => {
             return item.id === id
@@ -16,11 +21,14 @@ const ClassRoster = () => {
         console.log('selected student', id, selected[0]);
 
         dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] })
-    
     } 
 
     useEffect(() => {
-        console.log(state.studentViewing)
+        console.log(state.studentViewing) 
+    
+        if (state.studentViewing.studentInfo) {
+            handleUpdateClassroom()
+        }
     }, [state.studentViewing])
 
     const studentStatus = (status: string) => {
@@ -34,7 +42,7 @@ const ClassRoster = () => {
             case 'IDLE':
                 return (
                     <div className="flex justify-center items-center ">
-                        <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-gray-400"></span>
+                        <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-yellow-400"></span>
                     </div>
                 )
             case 'OFFLINE':

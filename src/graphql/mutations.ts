@@ -1248,6 +1248,7 @@ export const createStudentData = /* GraphQL */ `
         openedAt
         closedAt
         roster
+        viewing
         displayData {
           breakdownComponent
         }
@@ -1389,6 +1390,7 @@ export const updateStudentData = /* GraphQL */ `
         openedAt
         closedAt
         roster
+        viewing
         displayData {
           breakdownComponent
         }
@@ -1530,6 +1532,7 @@ export const deleteStudentData = /* GraphQL */ `
         openedAt
         closedAt
         roster
+        viewing
         displayData {
           breakdownComponent
         }
@@ -1750,6 +1753,7 @@ export const createClassroom = /* GraphQL */ `
       openedAt
       closedAt
       roster
+      viewing
       displayData {
         breakdownComponent
         studentInfo {
@@ -1939,6 +1943,7 @@ export const updateClassroom = /* GraphQL */ `
       openedAt
       closedAt
       roster
+      viewing
       displayData {
         breakdownComponent
         studentInfo {
@@ -2128,6 +2133,7 @@ export const deleteClassroom = /* GraphQL */ `
       openedAt
       closedAt
       roster
+      viewing
       displayData {
         breakdownComponent
         studentInfo {
@@ -4164,6 +4170,7 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           openedAt
           closedAt
           roster
+          viewing
           courseID
           lessonID
           createdAt
@@ -4267,6 +4274,7 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           openedAt
           closedAt
           roster
+          viewing
           courseID
           lessonID
           createdAt
@@ -4370,6 +4378,7 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           openedAt
           closedAt
           roster
+          viewing
           courseID
           lessonID
           createdAt
