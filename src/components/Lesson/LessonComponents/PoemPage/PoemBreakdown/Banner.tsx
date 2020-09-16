@@ -17,20 +17,20 @@ const Banner = (props: BannerProps) => {
   return (
     <>
       {display === 'SELF' ? (
-        <div className='w-full h-1/10 flex flex-row justify-center items-center'>
+        <div className={`w-full h-1/10 ${theme.banner} flex flex-row justify-center items-center`}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem' }}>
-            <div className='red bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg shadow-2'>
+            <div className='bg-dark-red h-16 w-16 flex flex-col items-center rounded-lg justify-center z-20 shadow-2'>
               <FaPenFancy />
             </div>
           </IconContext.Provider>
-          <div className={`h-full ${theme.banner} text-gray-200 font-medium text-xl md:text-5xl z-10`}>
+          <div className={`h-full text-gray-200 font-medium text-xl md:text-5xl z-10`}>
             {title}
           </div>
         </div>
       ) : display === 'COOP' ? ( 
-        <div className='w-full h-full flex flex-row justify-center items-center'>
+        <div className={`w-full h-1/10 ${theme.banner} flex flex-row justify-center items-center`}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem' }}>
-            <div className='red bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg shadow-2'>
+            <div className='bg-dark-red h-16 w-16 flex flex-col items-center rounded-lg justify-center z-20 shadow-2'>
               <FaPenFancy />
             </div>
           </IconContext.Provider>
@@ -39,14 +39,14 @@ const Banner = (props: BannerProps) => {
             </div>
         </div>
       ) : (
-        <div className='w-full h-1/10 flex flex-row justify-center items-center'>
+        <div className={`w-full h-1/10 ${theme.banner} flex flex-row justify-center items-center`}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem' }}>
-            <div className='red bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg shadow-2'>
+            <div className='bg-dark-red h-16 w-16 flex flex-col items-center rounded-lg justify-center z-20 shadow-2'>
               <FaPenFancy />
             </div>
           </IconContext.Provider>
           <div
-            className={`text-3xl h-full ${theme.banner} text-gray-200 px-4 py-2 z-10`}>
+            className={`text-3xl h-full text-gray-200 px-4 py-2 z-10`}>
             {title}
           </div>
         </div>

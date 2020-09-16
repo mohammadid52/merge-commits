@@ -17,13 +17,13 @@ const Banner = () => {
 
     return (
 
-        <div className="w-full h-1/10 relative flex flex-row justify-center items-center">
+        <div className={`w-full h-1/10  ${theme.banner} flex flex-row justify-center items-center`}>
             <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
-                <div className="bg-dark-red absolute left-0 h-16 w-16 flex flex-col justify-center items-center z-20 rounded-lg">
+                <div className="bg-dark-red h-16 w-16 flex flex-col items-center rounded-lg justify-center z-20 shadow-2">
                     <FaTrophy />
                 </div>
             </IconContext.Provider>
-            <div className={`border-b border-white border-opacity-50 title w-full flex flex-row justify-center items-center text-5xl text-center font-open font-medium px-4 py-2 ${theme.block.text} z-10`}>
+            <div className={`title w-full flex flex-row justify-center items-center text-5xl text-center font-open font-medium px-4 py-2 ${theme.block.text} z-10`}>
                 <p>Congrats! You've completed the lesson!</p>
             </div>
         </div>
