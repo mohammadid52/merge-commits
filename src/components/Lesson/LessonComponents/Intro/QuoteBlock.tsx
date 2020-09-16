@@ -27,7 +27,7 @@ const QuoteBlock = () => {
           <div className='w-8/10 text-center text-4xl font-light mb-4'>
             {artistName}
           </div>
-          <div className='h-auto quote flex flex-col justify-around items-center py-2 px-4 bg-gradient-to-r from-dark to-transparent'>
+          <div className='h-auto quote flex flex-col justify-around items-center py-2 px-4 bg-gradient-to-l from-transparent to-black80'>
             <div className='relative'>
               <div
                 className='absolute w-16'
@@ -38,7 +38,7 @@ const QuoteBlock = () => {
                 </IconContext.Provider>
               </div>
               <div
-                className='header-font text-2xl font-open font-light pl-8 md:pl-12'
+                className='header-font text-2xl font-open font-light pl-8 md:pl-12 '
                 style={{ textIndent: '-16px' }}>
                 {quote.text}
               </div>
