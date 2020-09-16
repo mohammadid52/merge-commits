@@ -13,6 +13,9 @@ module.exports = {
     removeDeprecatedGapUtilities: true,
     purgeLayersByDefault: true,
   },
+  corePlugins: {
+    translate: true,
+  },
   theme: {
     zIndex: {
       '0': 0,
@@ -83,6 +86,7 @@ module.exports = {
       '28': '28rem',
       '29': '29rem',
       '30': '30rem',
+      '1/2': '50%',
     },
     fontFamily: {
       'open': ['Barlow', 'sans-serif'],
@@ -91,7 +95,8 @@ module.exports = {
     extend: {
       animation: {
         'bounce': 'bounce 2.5s linear 2',
-        'ping': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite'
+        'ping': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
+        'fadeIn': 'fadeIn 1s ease-in-out'
       },
       keyframes: {
         bounce: {
@@ -123,7 +128,15 @@ module.exports = {
             transform: 'scale(2)',
             opacity: '0'
           }
-        }
+        },
+        fadeIn: {
+          '0%': {
+            opacity: '0'
+          },
+          '75%, 100%': {
+            opacity: '1'
+          }
+        },
       },
       width: {
         '1/2': '48%',

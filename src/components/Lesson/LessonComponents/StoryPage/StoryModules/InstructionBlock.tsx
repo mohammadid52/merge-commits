@@ -19,7 +19,7 @@ const InstructionsBlock = () => {
           <h3 className='w-3/10 mr-2 flex-grow text-xl font-open font-light animate-bounce'>
             Instructions
           </h3>
-          <p className='w-auto text-gray-600 text-sm flex mb-4 mr-4 items-center'>
+          <p className='w-auto text-gray-600 text-sm flex mr-4 items-center'>
             (click the red icon for video instructions)
           </p>
         </div>

@@ -4,7 +4,7 @@ import { FaVideo } from 'react-icons/fa';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 
 const InstructionsBlock = () => {
-    const { state } = useContext(LessonContext);
+    const { state, theme } = useContext(LessonContext);
     const [ videoMode, setVideoMode ] = useState(false);
     const { text, video, link } = state.data.lesson.coreLesson.instructions;
     const instructionsArr = [
@@ -32,7 +32,7 @@ const InstructionsBlock = () => {
     return (
         <div className="md:h-3.8/10 bg-dark-blue border-l-4 border-green-light w-full flex justify-center p-4 rounded-lg text-gray-200 shadow-2xlr">
             <div className="w-full flex flex-col">
-                <div className="w-auto flex flex-row mb-2 border-b border-white border-opacity-10 mr-4">
+                <div className={`w-auto flex flex-row ${theme.underline} mr-4`}>
                     <h3 className="w-3/10 mr-2 flex-grow text-xl font-open font-light animate-bounce">
                         Instructions
                     </h3>

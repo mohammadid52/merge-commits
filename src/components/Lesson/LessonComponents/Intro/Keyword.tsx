@@ -20,7 +20,7 @@ const Keyword = () => {
     <div
       className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} text-lx rounded-sm`}>
       {/* <h1 className="text-2xl font-extrabold mb-4 underline">Keywords we will cover in this lesson:</h1> */}
-      <h1 className='text-2xl font-medium border-b border-white border-opacity-10 mb-4 pb-4'>
+      <h1 className={`text-2xl font-medium ${theme.underline}`}>
         Keywords we will cover in this lesson:
       </h1>
       <div className='overflow-scroll'>
