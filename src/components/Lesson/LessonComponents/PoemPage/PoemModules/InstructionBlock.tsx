@@ -20,7 +20,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
     if (editMode) {
         return (
             <div className="bg-dark-blue border-l-4 border-green-light w-full md:h-2.8/10 flex flex-col p-6 shadow-3 rounded-lg text-gray-200 mt-4 md:mt-0">
-                <div className="w-full flex justify-between border-b border-white border-opacity-20">
+                <div className="w-full flex justify-between border-b border-white border-opacity-10">
                     <h3 className="flex-grow text-xl font-open font-light mr-4 animate-bounce">
                         Instructions
                     </h3>
@@ -35,7 +35,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
     return (
         <div className="bg-dark-blue w-full h-72 flex justify-center p-6 shadow-3 rounded-lg text-gray-200 mb-4 shadow-2xlr border-l-4 border-green-light">
             <div className="w-full flex flex-col">
-                <div className="w-auto flex flex-row mb-3 border-b border-white mr-4">
+                <div className="w-auto flex flex-row mb-3 border-b border-white border-opacity-10 mr-4">
                     <h3 className="w-3/10 mr-2 flex-grow text-xl font-open font-light">
                         Instructions
                     </h3>
