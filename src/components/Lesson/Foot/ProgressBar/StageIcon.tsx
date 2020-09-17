@@ -103,7 +103,7 @@ const StageIcon = (props: StageIconProps) => {
           <IconContext.Provider value={{ color: iconColor, size: '1rem' }}>
             <div
               className={`${
-                active ? 'bg-green-600' : 'bg-gray-400'
+                active ? 'bg-blueberry' : 'bg-gray-400'
               } h-8 w-8 flex justify-center items-center rounded-full z-30`}>
               {iconSwitch(type)}
             </div>
@@ -128,7 +128,7 @@ const StageIcon = (props: StageIconProps) => {
           <IconContext.Provider value={{ color: iconColor, size: '1.5rem' }}>
             <div
               className={`h-10 w-10 rounded-full flex flex-col justify-center items-center ${
-                active ? 'bg-green-600' : 'bg-gray-400'
+                active ? 'bg-blueberry' : 'bg-gray-400'
               } z-30`}>
               {iconSwitch(type)}
             </div>

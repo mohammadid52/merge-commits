@@ -28,7 +28,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
             (click the red icon for video instructions)
           </p>
         </div>
-        <div className='overflow-scroll text-sm mt-4 mb-4 md:mb-0'>
+        <div className='overflow-y-auto overflow-x-hidden text-sm mt-4 mb-4 md:mb-0'>
           Make the final edits to your poem, and get ready to present.
         </div>
       </div>

@@ -21,7 +21,7 @@ const Keyword = () => {
     <div className={`flex flex-col md:w-full md:h-full ${theme.block.text} text-lx rounded-r-lg`}>
       {/* <h1 className="text-2xl font-extrabold mb-4 underline">Keywords we will cover in this lesson:</h1> */}
       <h1 className={`text-2xl font-medium ${theme.underline}`}>Keywords we will cover in this lesson:</h1>
-      <div className='overflow-scroll'>
+      <div className='overflow-y-auto overflow-x-hidden'>
         <p className='text-base mb-4 text-blue-100 text-opacity-75'>
           <span className='text-lg font-semibold'>Culture:</span> <span className='font-light'>the customs, arts, social institutions, and achievements of a particular nation, people, or other social group.</span>
         </p>

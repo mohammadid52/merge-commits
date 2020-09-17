@@ -22,7 +22,7 @@ const BioBlock = () => {
       <div className={`md:w-full md:h-full p-4 flex flex-col ${theme.block.text} text-lx rounded-r-lg`}>
         {/* <h1 className="text-2xl font-extrabold mb-4 underline">Biography of the artist:</h1> */}
         <h1 className={`text-2xl font-medium ${theme.underline}`}>Biography of the artist:</h1>
-        <div className='overflow-contain overflow-y-auto font-light'>
+        <div className='overflow-y-auto overflow-x-hidden font-light'>
           {typeof artistBio !== 'undefined'
             ? artistBio.map((paragraph: string, i: number) => (
                 <p key={`paraBio${i}`} className='mb-2 text-blue-100 text-opacity-75'>

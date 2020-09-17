@@ -19,7 +19,7 @@
 //                 Instructions
 //             </h3>
 //         </div>
-//         <div className="overflow-scroll text-sm mb-4 md:mb-0">
+//         <div className="overflow-y-auto overflow-x-hidden text-sm mb-4 md:mb-0">
 //             <p>Where are you from?</p>
 //             <p>Write 3-5 facts about what that means to you and and your family.</p>
 //         </div>

@@ -26,7 +26,7 @@ const InstructionsBlock = () => {
         <div
           className={`w-full h-8/10 flex justify-center items-center font-light text-base text-blue-100 text-opacity-70 px-2`}>
           {!videoMode ? (
-            <div className='h-full overflow-scroll'>
+            <div className='h-full overflow-y-auto overflow-x-hidden'>
               {text.map((inst: string, key: number) => (
                 <p key={key} className='mb-2'>
                   {inst}

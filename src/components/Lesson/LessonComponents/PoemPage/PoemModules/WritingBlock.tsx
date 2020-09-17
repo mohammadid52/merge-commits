@@ -257,7 +257,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                     </div>
                 </IconContext.Provider>
             </div>
-            <div className="w-full h-full overflow-y-scroll flex flex-col ml-2">
+            <div className="w-full h-full overflow-y-auto overflow-x-hidden flex flex-col ml-2">
                 {   lineState.lines.length > 1 ? 
                     lineState.lines.map((line: { id: string, text: string, example: string, menuOpen: boolean }, key: number) => {
                         let id = line.id.toString()
@@ -278,7 +278,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                                 ( ex. {line.example} )
                             </label>
                             {   line.menuOpen ?
-                                    <div className="absolute w-full shadow-3 h-32 bg-gray-300 rounded-lg p-4 transform translate-y-12 overflow-scroll z-20 ">
+                                    <div className="absolute left-0 w-9.5/10 shadow-3 h-32 bg-gray-300 rounded-lg p-4 transform translate-y-12 overflow-y-auto overflow-x-hidden z-20 ">
                                         { 
                                             lineState.prompts.map((prompt: any, key: string) => (
                                                 <div key={key} id={id} className="w-full mb-2" onClick={handleSelectPrompt}>

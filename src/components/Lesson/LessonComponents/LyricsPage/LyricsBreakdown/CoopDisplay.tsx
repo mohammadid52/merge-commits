@@ -125,7 +125,7 @@ const CoopDisplay = () => {
                                         { module.name } 
                                     </div>
                                 </div>
-                                <div className="w-full md:my-2 flex flex-col overflow-scroll px-2">
+                                <div className="w-full md:my-2 flex flex-col overflow-y-auto overflow-x-hidden px-2">
                                     { module.content.map((line: string, key: number)=> (
                                         <p key={key} className={`text-sm text-gray-200`}>{line}</p>
                                     ))}
@@ -163,7 +163,7 @@ const CoopDisplay = () => {
                                         { module.name } 
                                     </div>
                                 </div>
-                                <div className="w-full md:my-2 flex flex-col overflow-scroll px-2">
+                                <div className="w-full md:my-2 flex flex-col overflow-y-auto overflow-x-hidden px-2">
                                     { module.content.map((line: string, key: number)=> (
                                         <p key={key} className={`${fullscreen ? 'text-lg' : 'text-sm'} text-gray-200`}>{line}</p>
                                     ))}
