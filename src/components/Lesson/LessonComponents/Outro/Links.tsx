@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { IconContext } from 'react-icons';
 import { FaRegSave, FaHome } from 'react-icons/fa';
+import { AiOutlineSave, AiOutlineHome } from 'react-icons/ai';
 import { NavLink } from 'react-router-dom';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
@@ -29,7 +30,7 @@ const Links = () => {
           // onClick={handleSave}
         >
           <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem' }}>
-            <FaRegSave />
+            <AiOutlineSave />
           </IconContext.Provider>
           <p className='font-light text-base text-blue-100 text-opacity-70 text-center'>
             Save your work
@@ -40,7 +41,7 @@ const Links = () => {
           className={`h-full w-3/10 bg-medium-blue p-4 rounded-lg flex flex-col justify-center items-center cursor-pointer`}>
           <NavLink to='/dashboard'>
             <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem' }}>
-              <FaHome />
+              <AiOutlineHome />
             </IconContext.Provider>
           </NavLink>
           <p className='font-light text-base text-blue-100 text-opacity-70 text-center'>

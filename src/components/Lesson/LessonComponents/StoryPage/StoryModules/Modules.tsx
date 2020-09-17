@@ -91,7 +91,7 @@ const Modules = (props: ModulesProps) => {
             <div className="w-full h-full ">
                 { 
                     formInputs ? inputs.map((input, key) => (
-                        <div key={key} className={`flex flex-col ${key !== inputs.length-1 && 'border-b border-white border-opacity-10'}`}>
+                        <div key={key} className={`flex flex-col animate-fadeIn ${key !== inputs.length-1 && 'border-b border-white border-opacity-10 '}`}>
                             <label className="text-sm md:text-md mb-2 font-light text-base text-blue-100 text-opacity-70" htmlFor={input.name}>
                                 { input.prompt }
                             </label>

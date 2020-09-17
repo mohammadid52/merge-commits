@@ -12,13 +12,13 @@ const InstructionsBlock = () => {
                 Read the lyrics to the song "Where I'm from" by Marlon Lizama.
             </p>,
             <p className="text-sm mb-2"> 
-                Highlight lines that <span className="underline">remind you of your culture</span> with <span className="text-dark-red">red</span>.
+                Highlight lines that <span className="underline">remind you of your culture</span> with <span className="text-dark-red font-bold animate-fadeIn">red</span>.
             </p>,
             <p className="text-sm mb-2"> 
-                Highlight any lines that you think are <span className="underline">powerful</span> in <span className="text-fire-orange">orange</span>.
+                Highlight any lines that you think are <span className="underline">powerful</span> in <span className="text-fire-orange font-bold animate-fadeIn">orange</span>.
             </p>,
             <p className="text-sm mb-2">
-                Mark words you don't know in <span className="text-sea-green">green</span>.
+                Mark words you don't know in <span className="text-sea-green font-bold animate-fadeIn">green</span>.
             </p>,
             <p className="text-sm mb-2">
                 Use the eraser to deselect!

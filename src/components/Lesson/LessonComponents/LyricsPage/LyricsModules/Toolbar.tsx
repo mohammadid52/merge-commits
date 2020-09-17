@@ -42,7 +42,7 @@ const ToolBar = (props: ToolbarProps) => {
   return (
     <div className='bg-medium-blue h-2.5/10 w-full p-4 rounded-lg flex flex-col items-center justify-around'>
       <div className='flex flex-row  border-b border-white border-opacity-10'>
-        <h3 className='w-full text-xl text-gray-200 font-open font-light'>
+        <h3 className='text-xl text-gray-200 font-open font-light'>
           Highlighters
         </h3>
         <p className='text-gray-600 text-sm'>
@@ -54,7 +54,7 @@ const ToolBar = (props: ToolbarProps) => {
           <div
             key={key}
             id={button.color}
-            className={`bg-${button.color} h-12 w-12 text-3xl rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center`}
+            className={`bg-${button.color} h-12 w-12 text-3xl rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center animate-fadeIn`}
             onClick={handleClick}>
             {button.icon}
           </div>
