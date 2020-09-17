@@ -101,7 +101,7 @@ const MoreArtist = () => {
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
-                        <FiGlobe />
+                        <IoIosGlobe />
                       </IconContext.Provider>
                     )}
 
