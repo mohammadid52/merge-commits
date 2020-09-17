@@ -5,6 +5,7 @@ import { globalState } from '../state/GlobalState';
 export const pageThemes = {
   light: {
     bg: 'bg-gray-200',
+    underline: 'border-b border-white border-opacity-10 pb-1 mb-1',
     gradient: {
       cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue',
     },
@@ -31,6 +32,7 @@ export const pageThemes = {
   },
   dark: {
     bg: 'bg-dark',
+    underline: 'border-b border-white border-opacity-10 pb-1 mb-1',
     gradient: {
       cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue',
     },

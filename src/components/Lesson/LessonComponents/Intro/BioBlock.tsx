@@ -17,18 +17,17 @@ const BioBlock = () => {
   // }
 
   return (
-    <div
-      className={`md:w-full md:h-full ${theme.block.bg} flex flex-col justify-center ${theme.block.text} text-base rounded-sm `}>
-      <div
-        className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} text-lx rounded-sm`}>
+    // <div className={`flex flex-col md:w-full md:h-full ${theme.block.bg} justify-center ${theme.block.text} text-base rounded-sm `}>
+    <div className={`flex flex-col md:w-full md:h-full ${theme.block.bg} justify-center ${theme.block.text} text-base rounded-r-lg `}>
+      <div className={`md:w-full md:h-full p-4 flex flex-col ${theme.block.text} text-lx rounded-r-lg`}>
         {/* <h1 className="text-2xl font-extrabold mb-4 underline">Biography of the artist:</h1> */}
-        <h1 className='text-2xl font-medium border-b border-white border-opacity-50  mb-4 pb-4'>
-          Biography of the artist:
-        </h1>
-        <div className='overflow-scroll font-light'>
+        <h1 className={`text-2xl font-medium ${theme.underline}`}>Biography of the artist:</h1>
+        <div className='overflow-y-auto overflow-x-hidden font-light'>
           {typeof artistBio !== 'undefined'
             ? artistBio.map((paragraph: string, i: number) => (
-                <p key={`paraBio${i}`} className='mb-2 text-blue-100 text-opacity-75'>{paragraph}</p>
+                <p key={`paraBio${i}`} className='mb-2 text-blue-100 text-opacity-75'>
+                  {paragraph}
+                </p>
               ))
             : ''}
         </div>
