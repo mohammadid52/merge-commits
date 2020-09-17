@@ -17,9 +17,7 @@ const ToolBar = (props: ToolbarProps) => {
     setColor(e.target.id);
   };
 
-  const handleChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
+  const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => {
     setSearch(e.target.value);
   };
 
@@ -42,10 +40,15 @@ const ToolBar = (props: ToolbarProps) => {
   };
 
   return (
-    <div className='bg-medium-blue h-1.8/10 w-full p-2 rounded-lg flex flex-col items-center justify-around'>
-      <h3 className='w-auto text-xl text-gray-200 font-open font-light border-b border-white'>
-        Highlighters
-      </h3>
+    <div className='bg-medium-blue h-2.5/10 w-full p-4 rounded-lg flex flex-col items-center justify-around'>
+      <div className='flex flex-row  border-b border-white border-opacity-10'>
+        <h3 className='w-full text-xl text-gray-200 font-open font-light'>
+          Highlighters
+        </h3>
+        <p className='text-gray-600 text-sm'>
+          (click a color and drag over words!)
+        </p>
+      </div>
       <div className='w-auto cursor-pointer flex flex-row justify-center items-center pt-2'>
         {buttons.map((button: { color: string; icon: string }, key: number) => (
           <div

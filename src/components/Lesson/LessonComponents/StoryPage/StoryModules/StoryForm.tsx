@@ -81,16 +81,17 @@ const StoryForm = () => {
         </label>
         <input
           id='title'
-          className='md:w-88 text-sm md:text-xl px-4 py-2 mb-4 rounded-lg text-gray-700 bg-gray-300'
+          className='md:w-88 px-4 py-1 mb-4 rounded-lg text-gray-700 bg-gray-300'
           name='title'
           type='text'
           placeholder='La Llorona'
           value={input.title}
           onChange={handleInputChange}
         />
+        <div className='py-2 border-t border-white border-opacity-10'></div>
         <textarea
           id='story'
-          className='w-full h-9/10 text-sm md:text-xl p-4 rounded-lg text-gray-700 bg-gray-300'
+          className='w-full h-9/10 px-4 py-1 rounded-lg text-gray-700 bg-gray-300'
           name='story'
           placeholder='Write your story here!'
           value={input.story}

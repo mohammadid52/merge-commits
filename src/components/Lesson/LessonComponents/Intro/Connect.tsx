@@ -18,7 +18,8 @@ const Connect = () => {
 
 
     return (
-        <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} text-lx rounded-sm`}>
+        // <div className={`flex flex-col md:w-full md:h-full ${theme.block.bg} ${theme.block.text} text-lx rounded-sm`}>
+        <div className={`flex flex-col md:w-full md:h-full ${theme.block.text} text-lx rounded-r-lg`}>
             {/* <h1 className="text-2xl font-extrabold mb-4 underline">SEL Connection:</h1> */}
             <h1 className={`text-2xl font-medium ${theme.underline}`}>SEL Connection:</h1>
             <div>
