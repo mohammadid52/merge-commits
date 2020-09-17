@@ -257,7 +257,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                     </div>
                 </IconContext.Provider>
             </div>
-            <div className="w-full h-full overflow-scroll flex flex-col ml-2">
+            <div className="w-full h-full overflow-y-scroll flex flex-col ml-2">
                 {   lineState.lines.length > 1 ? 
                     lineState.lines.map((line: { id: string, text: string, example: string, menuOpen: boolean }, key: number) => {
                         let id = line.id.toString()
