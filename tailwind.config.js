@@ -306,6 +306,7 @@ module.exports = {
         'grayscale-lighter': '#f9f9f947',
         'grayscale-lightest': '#fffbfb',
         // 'grayscale-lighter' : '#f7f7f7',
+        'white5': 'rgba(255,255,255,.05)',
         'white10': 'rgba(255,255,255,.1)',
         'white20': 'rgba(255,255,255,.2)',
         'white30': 'rgba(255,255,255,.3)',
