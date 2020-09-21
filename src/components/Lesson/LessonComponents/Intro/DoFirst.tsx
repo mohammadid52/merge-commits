@@ -30,7 +30,7 @@ const DoFirst = () => {
         return (
           <input
             id={label}
-            className='px-4 py-1 bg-gray-300 w-full text-gray-800 rounded-lg'
+            className='px-4 py-1 bg-gray-300 w-full text-lg text-gray-800 rounded-lg'
             value={input[label]}
             onChange={handleInputChange}
           />
@@ -39,7 +39,7 @@ const DoFirst = () => {
         return (
           <textarea
             id={label}
-            className='h-full px-4 py-1 bg-gray-300 w-full text-gray-800 rounded-lg'
+            className='h-full px-4 py-2 bg-gray-300 w-full text-lg text-gray-800 rounded-lg'
             value={input[label]}
             onChange={handleInputChange}
           />

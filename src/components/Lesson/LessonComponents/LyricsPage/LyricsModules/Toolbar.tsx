@@ -41,11 +41,11 @@ const ToolBar = (props: ToolbarProps) => {
 
   return (
     <div className='bg-medium-blue h-2.5/10 w-full p-4 rounded-lg flex flex-col items-center justify-around'>
-      <div className='flex flex-row  border-b border-white border-opacity-10'>
-        <h3 className='text-xl text-gray-200 font-open font-light'>
+      <div className='relative flex flex-row justify-center items-center border-b border-white border-opacity-10 pb-1 mb-1'>
+        <h3 className='absolute text-xl text-gray-200 font-open font-light pb-1' style={{left: '0'}}>
           Highlighters
         </h3>
-        <p className='text-gray-600 text-sm'>
+        <p className='text-gray-600 text-sm text-center'>
           (click a color and drag over words!)
         </p>
       </div>

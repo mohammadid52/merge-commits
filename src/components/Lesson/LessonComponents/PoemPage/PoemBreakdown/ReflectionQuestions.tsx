@@ -32,7 +32,7 @@ const ReflectionQuestions = () => {
                 Discussion Questions 
                 </div>
                 <div className="question w-full flex-grow text-xs md:text-xl text-gray-200 flex justify-center px-4">
-                    <p className="text-center">{ questArr[question] }</p>
+                    <p className="text-center font-light">{ questArr[question] }</p>
                 </div>
             </div>
             <div className="w-1/10 h-full flex justify-center items-center bg-dark-blue ml-2 md:ml-4 rounded-lg " onClick={nextQuestion}>
