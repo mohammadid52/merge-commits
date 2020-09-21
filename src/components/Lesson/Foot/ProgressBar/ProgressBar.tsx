@@ -32,7 +32,7 @@ const ProgressBar = () => {
                     state.pages.map((page: { stage: string; type: string; breakdown: boolean; disabled: boolean; }, key: number) => (
                         key > 0 && !page.disabled ?
                         <div key={key} className="h-4 flex-grow-0 bg-gray-200 z-10 flex items-center justify-center ">
-                            <div className={`h-2 w-full ${state.pages[key].active ? 'bg-blueberry' : 'bg-gray-400'}`}></div>
+                            <div className={`h-2 w-full ${state.pages[key].active ? 'bg-green-600' : 'bg-gray-400'}`}></div>
                         </div>
                         :
                         null

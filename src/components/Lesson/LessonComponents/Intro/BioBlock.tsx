@@ -27,7 +27,7 @@ const BioBlock = () => {
             ? artistBio.map((paragraph: string, i: number) => (
                 <p key={`paraBio${i}`} className='mb-2 text-blue-100 text-opacity-75'>
                   {paragraph}
-                </p>
+                </p> 
               ))
             : ''}
         </div>
