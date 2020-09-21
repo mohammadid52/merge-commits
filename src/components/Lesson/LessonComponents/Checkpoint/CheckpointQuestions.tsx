@@ -59,7 +59,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     // }
 
     if (state.questionData) {
-      ''
       setInput(() => {
         return state.questionData;
       });
