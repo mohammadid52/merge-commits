@@ -61,7 +61,7 @@ const Modules = (props: any) => {
               key === additional.length - 1 ? '' : ''
             }`}>
             <h3>{keywordCapitilizer(item.name)}:</h3>
-            <div className='w-full px-2 overflow-scroll'>
+            <div className='w-full px-2 overflow-y-auto overflow-x-hidden'>
               {item.input
                 ? wordArray.map((word: string, key: number) => (
                     <p
@@ -91,7 +91,7 @@ const Modules = (props: any) => {
             </div>
             <div className="bg-dark-blue font-open font-light h-32 shadow-2 rounded px-4 py-2 mb-2">
                 <h3>Morals:</h3>
-                <div className="h-24 flex flex-col overflow-scroll">
+                <div className="h-24 flex flex-col overflow-y-auto overflow-x-hidden">
                     {keywordParser(displayProps.lessons).map((term, key) => (
                         <p className="text-2xl" key={key}>
                             {term}

@@ -117,7 +117,7 @@ const CoopDisplay = () => {
                     {   modules && modules.length >= 1 ?
                         modules.map((module: any, key: number) => (
                             <div key={key} className={`${theme.gradient.cardBase} h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-2 rounded-lg`}>
-                                <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-white">
+                                <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-white border-opacity-10">
                                     <div className={`w-8 h-8 p-2 text-lg rounded-lg bg-${module.color} flex justify-center items-center shadow-2`}>
                                         { module.label }
                                     </div>
@@ -125,7 +125,7 @@ const CoopDisplay = () => {
                                         { module.name } 
                                     </div>
                                 </div>
-                                <div className="w-full md:my-2 flex flex-col overflow-scroll px-2">
+                                <div className="w-full md:my-2 flex flex-col overflow-y-auto overflow-x-hidden px-2">
                                     { module.content.map((line: string, key: number)=> (
                                         <p key={key} className={`text-sm text-gray-200`}>{line}</p>
                                     ))}
@@ -155,7 +155,7 @@ const CoopDisplay = () => {
                     {   teacherModules && teacherModules.length >= 1 ?
                         teacherModules.map((module: any, key: number) => (
                             <div key={key} className={`${theme.gradient.cardBase} h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-2 rounded-lg`}>
-                                <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-white">
+                                <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-white border-opacity-10">
                                     <div className={`${fullscreen ? 'text-2xl w-10 h-10' : 'text-lg w-8 h-8'} p-2 rounded-md bg-${module.color} flex justify-center items-center shadow-2`}>
                                         { module.label }
                                     </div>
@@ -163,7 +163,7 @@ const CoopDisplay = () => {
                                         { module.name } 
                                     </div>
                                 </div>
-                                <div className="w-full md:my-2 flex flex-col overflow-scroll px-2">
+                                <div className="w-full md:my-2 flex flex-col overflow-y-auto overflow-x-hidden px-2">
                                     { module.content.map((line: string, key: number)=> (
                                         <p key={key} className={`${fullscreen ? 'text-lg' : 'text-sm'} text-gray-200`}>{line}</p>
                                     ))}

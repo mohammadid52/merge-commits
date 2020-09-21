@@ -5,15 +5,25 @@ import { LessonContext } from '../../../../contexts/LessonContext';
 const ProgressBar = () => {
     const { state } = useContext(LessonContext);
 
+    /**
+     * Explanation
+     * 
+     * state.currentPage = number of current page from 0 - total nr of pages
+     * state.pages = array of available pages
+     * state.pages[i].type = name of page type/story/breakdown
+     */
+
     return (
         <div className="hidden w-full md:flex flex-col flex-grow items-center justify-center content-center px-4 z-0">
             <div className="w-full flex flex-row items-center justify-between">
                 { 
                     state.pages.map((page: { stage: string; type: string; open: boolean, disabled: boolean; }, key: React.ReactText) => (
-                        <StageIcon key={key} stage={page.stage} type={page.type} active={state.pages[key].active}
-                        open={page.open}
-                        disabled={page.disabled}
-                        />
+                        <>
+                            <StageIcon iconID={key} key={key} stage={page.stage} type={page.type} active={state.pages[key].active}
+                            open={page.open}
+                            disabled={page.disabled}
+                            />
+                        </>
                     ))
                 }
             </div>

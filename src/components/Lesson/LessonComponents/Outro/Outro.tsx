@@ -40,10 +40,10 @@ const Outro = () => {
           <VideoBlock link='https://www.youtube.com/embed/bp10ZOtv_zY' fullscreen={fullscreen}/>
         </div>
 
-        <div className='w-4.5/10 h-full my-4 md:ml-2'>
+        <div className='w-4.5/10 h-full flex flex-col justify-center my-4 md:ml-2'>
           <TrophyBlock />
-          <Feedback />
           <Links />
+          <Feedback />
         </div>
 
       </div>
