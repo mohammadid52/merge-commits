@@ -68,12 +68,14 @@ const Classroom: React.FC = () => {
                         <p style={{color: '#2c2f40'}}>Online Classroom</p>
                     </div>
                 </div> */}
-                <div className="relative w-full pb-4 flex flex-col justify-center items-center">
-                    <div className={`w-36 h-36 p-2 bg-white shadow-container rounded-full text-xl text-center flex flex-col justify-center items-center font-bold`}>
-                        <img style={{height: '6rem', width: 'auto', marginBottom: '2rem'}} src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Symbol.png" alt="Iconoclast Artists"/>
-                        <div className="absolute z-50" style={{color: '#2c2f40', bottom: '40px'}}>
+                <div className="relative w-full mb-4 pb-4 flex flex-col justify-center items-center">
+                    <div className={`w-64 h-32 p-2 text-xl text-center flex flex-col justify-center items-center font-bold`}>
+                        {/* <img style={{height: '6rem', width: 'auto', marginBottom: '2rem'}} src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Symbol.png" alt="Iconoclast Artists"/> */}
+                        <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color_notext.svg" alt="Iconoclast Artists Logo"/>
+                        <p className="font-light">ARTISTS</p>
+                        <p className="absolute z-50" style={{color: '#2c2f40', bottom: '24px'}}>
                             Classroom
-                        </div>
+                        </p>
                     </div>
                 </div>
                 <Today link={'/lesson?id=1'} curriculum={curriculum}/>

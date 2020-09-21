@@ -23,15 +23,15 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
     }
 
     return (
-            <div className={`relative test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto rounded-sm p-6 flex flex-col mb-8`}>
-                <span style={{left: 0, top: -20}}
-                    className="absolute right-0 ml-4 p-4 sm:h-8 bg-opacity-60 w-52 inline-flex items-center rounded-md text-sm sm:text-2xl font-bold leading-5 bg-purple-300 text-purple-800">
+            <div className={`relative test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto rounded-sm p-6 flex flex-col mb-8 mt-4`}>
+                <span style={{left: '50%', top: -20, transform: 'translateX(-50%)', textShadow:'1px 1px 2px #000000'}}
+                    className="absolute p-5 sm:h-8 w-64 flex justify-center items-center text-center rounded-md text-sm sm:text-2xl font-bold leading-5 bg-ketchup text-white bg-opacity-90">
                     Today's Lesson
                 </span>
-                <h1 className={`h-2.5/10 bg-dark text-4xl text-gray-200 font-bold font-open px-8 shadow-elem-light`}>
+                <h1 className={`h-2/10 bg-dark text-4xl text-gray-200 font-bold font-open px-8 shadow-elem-light`}>
                     { curriculum && curriculum.title ? curriculum.title : null }
                 </h1>
-                <div className={`h-7.5/10 flex flex-col md:flex-row justify-around items-center pt-4 overflow-scroll md:overflow-auto`}>
+                <div className={`h-7.5/10 flex flex-col md:flex-row justify-around items-center pt-8 overflow-scroll md:overflow-auto`}>
                     <div className={`block1 w-1/5 h-full flex flex-col items-center text-center`}>
                         <h2 className={`text-2xl font-open font-bold mb-4`}>
                             { curriculum && curriculum.artist.name ? curriculum.artist.name : null }

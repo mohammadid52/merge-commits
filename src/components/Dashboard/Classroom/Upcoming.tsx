@@ -88,9 +88,9 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
 
 
     return (
-            <div className={`relative test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto flex flex-col mb-8 p-2`}>        
-                <span style={{left: 0, top: -20}}
-                className="absolute right-0 ml-4 p-4 sm:h-8 bg-opacity-60 w-auto inline-flex items-center rounded-md text-sm sm:text-2xl font-extrabold leading-5 text-purple-800">
+            <div className={`relative test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto flex flex-col mb-8 p-2 pt-4`}>        
+                <span style={{left: '50%', top: -20, transform: 'translateX(-50%)', textShadow:'1px 1px 2px #000000'}}
+                className="absolute p-5 sm:h-8 w-64 flex justify-center items-center text-center rounded-md text-sm sm:text-2xl font-bold leading-5 bg-ketchup text-white bg-opacity-90">
                 Upcoming Lessons
                 </span>
                   
@@ -110,7 +110,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                                 {lesson.lessonDate}
                             </div>
                         </div>
-                        <div className="absolute w-auto flex items-center mr-8" style={{right: 0}}>
+                        <div className="absolute w-8 flex items-center mr-8" style={{right: 0}}>
                             <span key={i} className={`${lesson.open === true ? 'display opacity-100 ease-in duration-100' : 'hidden opacity-0 ease-out duration-100' } w-auto h-auto opacity-100 ease-in duration-200 absolute inset-0 flex items-center justify-center transition-opacity`}>
                             <svg className="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 12 12">
                                 <path d="M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2" stroke="currentColor" />

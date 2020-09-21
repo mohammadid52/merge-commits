@@ -4,7 +4,9 @@ import VideoBlock from './VideoBlock';
 import PhotoBlock from './PhotoBlock';
 import { IconContext } from 'react-icons';
 import { IoLogoYoutube } from 'react-icons/io';
+import { AiOutlineYoutube } from 'react-icons/ai';
 import { AiFillPlusCircle } from 'react-icons/ai';
+import { IoIosGlobe } from 'react-icons/io';
 import { AiOutlineInstagram } from 'react-icons/ai';
 import { FaSpotify } from 'react-icons/fa';
 
@@ -59,25 +61,25 @@ const MoreArtist = () => {
                     {item.type === 'youtube' ? (
                       <IconContext.Provider
                         value={{
-                          color: '#ff0000',
+                          color: '#CA2222',
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
-                        <IoLogoYoutube />
+                        <AiOutlineYoutube />
                       </IconContext.Provider>
                     ) : item.type === 'etc' ? (
                       <IconContext.Provider
                         value={{
-                          color: '#1a7fd8',
+                          color: 'white',
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
-                        <AiFillPlusCircle />
+                        <IoIosGlobe />
                       </IconContext.Provider>
                     ) : item.type === 'spotify' ? (
                       <IconContext.Provider
                         value={{
-                          color: '#1DB954',
+                          color: 'white',
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
@@ -95,11 +97,11 @@ const MoreArtist = () => {
                     ) : (
                       <IconContext.Provider
                         value={{
-                          color: '#1a7fd8',
+                          color: 'white',
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
-                        <AiFillPlusCircle />
+                        <IoIosGlobe />
                       </IconContext.Provider>
                     )}
 

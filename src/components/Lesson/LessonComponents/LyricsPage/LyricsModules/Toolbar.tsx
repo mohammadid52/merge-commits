@@ -17,9 +17,7 @@ const ToolBar = (props: ToolbarProps) => {
     setColor(e.target.id);
   };
 
-  const handleChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
+  const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => {
     setSearch(e.target.value);
   };
 
@@ -42,16 +40,21 @@ const ToolBar = (props: ToolbarProps) => {
   };
 
   return (
-    <div className='bg-medium-blue h-1.8/10 w-full p-2 rounded-lg flex flex-col items-center justify-around'>
-      <h3 className='w-auto text-xl text-gray-200 font-open font-light border-b border-white'>
-        Highlighters
-      </h3>
+    <div className='bg-medium-blue h-2.5/10 w-full p-4 rounded-lg flex flex-col items-center justify-around'>
+      <div className='flex flex-row  border-b border-white border-opacity-10'>
+        <h3 className='text-xl text-gray-200 font-open font-light'>
+          Highlighters
+        </h3>
+        <p className='text-gray-600 text-sm'>
+          (click a color and drag over words!)
+        </p>
+      </div>
       <div className='w-auto cursor-pointer flex flex-row justify-center items-center pt-2'>
         {buttons.map((button: { color: string; icon: string }, key: number) => (
           <div
             key={key}
             id={button.color}
-            className={`bg-${button.color} h-12 w-12 text-3xl rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center`}
+            className={`bg-${button.color} h-12 w-12 text-3xl rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center animate-fadeIn`}
             onClick={handleClick}>
             {button.icon}
           </div>
@@ -73,7 +76,7 @@ const ToolBar = (props: ToolbarProps) => {
       {/* <div className="w-full h-40">
                 <h3 className="text-gray-200 text-lg font-bold font-open mb-2">My word bank:</h3>
                 <input id="search" className="pl-2 mb-2 rounded-lg shadow-3 text-gray-700 bg-gray-200" type="text" value={search} placeholder="Search..." onChange={handleChange}/>
-                <div className="w-full h-16 md:h-10 bg-gray-300 flex flex-col shadow-3 text-gray-500 px-4 overflow-scroll" onDrop={handleDrop} onDragOver={handleDragOver}>
+                <div className="w-full h-16 md:h-10 bg-gray-300 flex flex-col shadow-3 text-gray-500 px-4 overflow-y-auto overflow-x-hidden" onDrop={handleDrop} onDragOver={handleDragOver}>
                         { 
                             search === '' ? state.word_bank.map((word: string, key: string) => (
                                 <span id={key} key={key}>
