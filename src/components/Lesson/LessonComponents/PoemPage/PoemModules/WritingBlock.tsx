@@ -262,7 +262,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                     lineState.lines.map((line: { id: string, text: string, example: string, menuOpen: boolean }, key: number) => {
                         let id = line.id.toString()
                         return (
-                        <div key={key} className="relative bg-transparent flex flex-col items-center">
+                        <div key={key} className="relative bg-transparent flex flex-col items-center animate-fadeIn">
                             <div key={key} id={id} className="w-full h-12 flex flex-row items-center rounded-lg" onDragOver={handleDragOver} onDrop={handleDrop}>
                                 <input id={id} className="w-full h-10 px-4 py-2 rounded-l-lg text-gray-700 bg-gray-300 " name={id} type="text" value={line.text} onChange={handleInputChange} onDoubleClick={handleMenuToggle}/>
                                 <div id={id} className="w-10 h-10 bg-gray-300 rounded-r-lg  flex justify-center items-center " onClick={handleMenuToggle}>
