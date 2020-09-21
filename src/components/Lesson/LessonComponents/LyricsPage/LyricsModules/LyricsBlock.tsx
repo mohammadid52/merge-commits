@@ -198,10 +198,10 @@ const LyricsBlock = (props: LyricsBlockProps) => {
             </IconContext.Provider>
           </div>
           {/* <div className="w-auto text-xl" onClick={handleFullscreen}>
-                        <IconContext.Provider value={{ color: '#E2E8F0', size: '1.5rem' }}>
-                            <FaExpand />
-                        </IconContext.Provider>
-                    </div> */}
+              <IconContext.Provider value={{ color: '#E2E8F0', size: '1.5rem' }}>
+                  <FaExpand />
+              </IconContext.Provider>
+          </div> */}
         </div>
         <div
           className='h-9/10 text-gray-200 text-sm overflow-y-auto overflow-x-hidden md:px-4'

@@ -29,30 +29,30 @@ const StageIcon = (props: StageIconProps) => {
   const match = useRouteMatch();
   const history = useHistory();
 
-  const iconSwitch = (type: string): ReactNode => {
-    switch (type) {
-      case 'intro':
-        return <FaHourglassStart />;
-      case 'map-game':
-        return <FaMap />;
-      case 'story':
-        return <FaScroll />;
-      case 'lyrics':
-        return <FaMusic />;
-      case 'poem':
-        return <FaPenFancy />;
-      case 'breakdown':
-        return <FaQuestion />;
-      case 'outro':
-        return <FaTrophy />;
-      case 'sel':
-        return <FaCheck />;
-      case 'profile':
-        return <FaCheck />;
-      default:
-        return <FaPencilRuler />;
+    const iconSwitch = (type: string): ReactNode => {
+        switch(type) {
+            case 'intro':
+                return <FaHourglassStart />
+            case 'map-game':
+                return <FaMap />
+            case 'story':
+                return <FaScroll />
+            case 'lyrics':
+                return <FaMusic />
+            case 'poem':
+                return <FaPenFancy />
+            case 'breakdown':
+                return <FaQuestion />
+            case 'outro':
+                return <FaTrophy />
+            case 'survey':
+                return <FaCheck />
+            case 'profile':
+                return <FaCheck />
+            default:
+                return <FaPencilRuler />
+        }
     }
-  };
 
   /**
    * Micro component for the icon labels

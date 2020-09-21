@@ -58,6 +58,10 @@ export type LessonActions =
         };
     } 
 |   {
+        type: 'SET_QUESTION_DATA';
+        payload: any
+    } 
+|   {
         type: 'ERROR';
         payload: string;
     } 
@@ -254,6 +258,24 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                         }
                     }
                 })
+            }
+        case 'SET_QUESTION_DATA':
+            let payloadKeys = Object.keys(action.payload);
+            let newObject = state.questionData;
+            
+            payloadKeys.forEach((key: string) => {
+                if ( action.payload[key] && action.payload[key] !== '') {
+                    return newObject[key] = action.payload[key]
+                }
+
+                return
+            })
+
+            console.log(newObject);
+            
+            return {
+                ...state,
+                questionData: newObject
             }
         case 'ACTIVATE_LESSON':
             return {
