@@ -184,6 +184,17 @@ export const onUpdateClassroom = /* GraphQL */ `
         }
         nextToken
       }
+      feedback {
+        items {
+          id
+          classroomID
+          liked
+          comment
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -248,6 +259,9 @@ export const onChangeStudentData = /* GraphQL */ `
           displayMode
         }
         data {
+          nextToken
+        }
+        feedback {
           nextToken
         }
         createdAt
@@ -1546,6 +1560,222 @@ export const onDeleteArtist = /* GraphQL */ `
           text
           link
         }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateFeedback = /* GraphQL */ `
+  subscription OnCreateFeedback {
+    onCreateFeedback {
+      id
+      classroomID
+      liked
+      comment
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateFeedback = /* GraphQL */ `
+  subscription OnUpdateFeedback {
+    onUpdateFeedback {
+      id
+      classroomID
+      liked
+      comment
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteFeedback = /* GraphQL */ `
+  subscription OnDeleteFeedback {
+    onDeleteFeedback {
+      id
+      classroomID
+      liked
+      comment
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt

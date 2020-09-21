@@ -78,11 +78,22 @@ export const getClassroom = /* GraphQL */ `
         }
         language
         summary
+        connection
+        keywords {
+          items {
+            wordID
+            word {
+              word
+              definition
+            }
+          }
+        }
         objectives
         checkpoints {
           items {
             position
             checkpoint {
+              id
               instructions
               label
               type
@@ -90,6 +101,7 @@ export const getClassroom = /* GraphQL */ `
                 items {
                   required
                   question {
+                    id
                     label
                     type
                     question
@@ -115,6 +127,7 @@ export const getClassroom = /* GraphQL */ `
           questions {
             items {
               question {
+                id
                 label
                 type
                 question
@@ -349,12 +362,23 @@ export const getClassroomStudent = /* GraphQL */ `
           }
         }
         language
+        connection
+        keywords {
+          items {
+            wordID
+            word {
+              word
+              definition
+            }
+          }
+        }
         summary
         objectives
         checkpoints {
           items {
             position
             checkpoint {
+              id
               instructions
               label
               type
@@ -362,6 +386,7 @@ export const getClassroomStudent = /* GraphQL */ `
                 items {
                   required
                   question {
+                    id
                     label
                     type
                     question
@@ -387,6 +412,7 @@ export const getClassroomStudent = /* GraphQL */ `
           questions {
             items {
               question {
+                id
                 label
                 type
                 question

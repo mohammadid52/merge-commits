@@ -294,6 +294,15 @@ type Classroom @model(subscriptions: null)
   lesson: Lesson @connection(fields: ["lessonID"])
   lessonPlan: [ComponentSummary!]!
   data: [StudentData]! @connection(keyName: "byClassroom", fields: ["id"])
+  feedback: [Feedback] @connection(fields: ["id"])
+}
+
+type Feedback @model {
+  id: ID!
+  classroomID: ID!
+  liked: Boolean
+  comment: String
+  classroom: Classroom @connection(fields: ["classroomID"])
 }
 
 type SELStructure @model {
@@ -324,9 +333,9 @@ type Lesson @model @key(fields: ["id"]) {
   warmUpId: ID!
   warmUp: WarmUp @connection(fields: ["warmUpId"])
   coreLessonId: ID!
-  coreLesson: CoreLesson! @connection(fields: ["coreLessonId"])
+  coreLesson: CoreLesson @connection(fields: ["coreLessonId"])
   activityId: ID!
-  activity: Activity! @connection(fields: ["activityId"])
+  activity: Activity @connection(fields: ["activityId"])
 }
 
 type LessonCheckpoint @model(queries: null)

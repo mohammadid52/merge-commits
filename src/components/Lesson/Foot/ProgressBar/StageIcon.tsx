@@ -44,7 +44,7 @@ const StageIcon = (props: StageIconProps) => {
                 return <FaQuestion />
             case 'outro':
                 return <FaTrophy />
-            case 'sel':
+            case 'survey':
                 return <FaCheck />
             case 'profile':
                 return <FaCheck />
