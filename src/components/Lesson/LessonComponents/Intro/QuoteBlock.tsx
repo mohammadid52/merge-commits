@@ -18,10 +18,8 @@ const QuoteBlock = () => {
   const quote = randomQuote();
 
   return (
-    // <div className={`flex-grow w-full min-h-24 ${theme.block.bg} ${theme.block.text} p-4 flex items-center justify-center rounded-lg ${theme.block.shadow}`}>
     <div className={`w-full min-h-24 flex flex-grow items-center justify-center ${theme.block.text} p-4 bg-gradient-to-tr from-transparent to-white5 rounded-lg`}>
       <div className='h-full flex flex-col items-center mr-4'>
-        {/* <div className="w-8/10 text-center border-b-2 text-4xl font-bold mb-4"> */}
         <div className='my-auto'>
           <div className='w-8/10 text-center text-4xl font-light mb-4'>{artistName}</div>
           <div className='h-auto quote flex flex-col justify-around items-center py-2 px-4 bg-gradient-to-l from-transparent to-black80'>
