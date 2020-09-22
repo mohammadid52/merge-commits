@@ -35,17 +35,17 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                         </div>
                     </div>
                     <div className="h-3/10 flex flex-row-reverse">
-                        <h2 className={`w-6/10 text-4xl font-open leading-8 font-medium tracking-widest mb-4`} style={{color: '#de6a6aab'}}>
-                            { curriculum && curriculum.artist.name ? curriculum.artist.name : null }
+                        <h2 className={`first w-6/10 text-4xl font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
+                            <p>{ curriculum && curriculum.artist.name ? curriculum.artist.name : null }</p>
                         </h2>
                     </div>
                 </div>
                 <div className="w-7.5/10 flex flex-col ">
                     <div className="h-8.7/10 px-12 py-4 flex flex-col justify-center items-center">
                         <h1 className="text-xl flex justify-center">
-                            <p className="w-auto border-b border-gray-500 font-light" style={{color: '#c52c2cb3'}}>Lesson Summary</p>
+                            <p className="w-auto text-black border-b border-ketchup font-light">Today's Lesson</p>
                         </h1>
-                        <h1 className={`text-4xl text-ketchup font-open px-8 text-center`}>
+                        <h1 className={`text-4xl text-black font-open px-8 text-center`}>
                             { curriculum && curriculum.title ? curriculum.title : null }
                         </h1>
                         <p className="text-md text-center">
@@ -65,7 +65,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                     <div className={`h-1.3/10 bg-dark flex justify-between rounded-br-xl`}>
                         <div className={`flex justify-center items-center my-2 w-3/10 text-gray-300`} >
                             <div className="w-auto text-gray-300">
-                                <IconContext.Provider value={{ size: '1.5rem' }}>
+                                <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                     <FaClock />
                                 </IconContext.Provider>
                             </div>
@@ -75,7 +75,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                         </div>
                         <div className={`flex justify-center items-center my-2 w-3/10`} >
                             <div className="w-auto text-gray-300">
-                                <IconContext.Provider value={{ size: '1.5rem' }}>
+                                <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'} }}>
                                     <FaUserAlt />
                                 </IconContext.Provider>
                             </div>
