@@ -60,41 +60,14 @@ const ToolBar = (props: ToolbarProps) => {
           </div>
         ))}
         <div
-          id=''
+          id='erase'
           className={`bg-gray-200 h-12 w-12 text-3xl rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center`}
           onClick={handleClick}>
           <IconContext.Provider value={{ color: 'darkgray', size: '2rem' }}>
-            <FaEraser />
+            <FaEraser id='erase'/>
           </IconContext.Provider>
         </div>
       </div>
-      {/* <div>
-                1. click on the colored icon you want to use
-                2. click on the words you want to Highlighter
-                3. to undo your highlighting, click on the erase icon and click on the words
-            </div> */}
-      {/* <div className="w-full h-40">
-                <h3 className="text-gray-200 text-lg font-bold font-open mb-2">My word bank:</h3>
-                <input id="search" className="pl-2 mb-2 rounded-lg shadow-3 text-gray-700 bg-gray-200" type="text" value={search} placeholder="Search..." onChange={handleChange}/>
-                <div className="w-full h-16 md:h-10 bg-gray-300 flex flex-col shadow-3 text-gray-500 px-4 overflow-y-auto overflow-x-hidden" onDrop={handleDrop} onDragOver={handleDragOver}>
-                        { 
-                            search === '' ? state.word_bank.map((word: string, key: string) => (
-                                <span id={key} key={key}>
-                                    { word }
-                                </span>
-                            )) 
-                            : state.word_bank.map((word: string, key: string) => {
-                                if (word.indexOf(search) > -1) {
-                                    return (
-                                        <span id={key} key={key}>
-                                            { word }
-                                        </span>
-                                    )
-                                }
-                            })
-                        }
-                </div>
-            </div> */}
     </div>
   );
 };

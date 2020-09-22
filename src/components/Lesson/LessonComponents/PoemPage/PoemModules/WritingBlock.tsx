@@ -249,7 +249,7 @@ const WritingBlock = (props: WritingBlockProps) => {
         <div className="bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600" >
             <div className="w-full flex flex-row justify-between mb-4">
                 <h3 className="w-full flex-grow text-xl text-gray-200 font-open font-light border-b border-white border-opacity-10 mr-2">
-                    Line Prompts
+                    Writing Block
                 </h3>
                 <IconContext.Provider value={{ color: '#E2E8F0', size: '1.5rem', style: { opacity: `${lineState.lines.length < (lineNo * 2) ? '100%' : '10%'}`}}}>
                     <div className="w-8" onClick={handleAddInput}>
