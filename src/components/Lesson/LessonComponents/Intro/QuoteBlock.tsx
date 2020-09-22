@@ -24,8 +24,8 @@ const QuoteBlock = () => {
         <div className='h-full flex flex-col items-center mr-4'>
           <div className=''>
             <div className='w-full text-center text-4xl font-light flex items-center'>
-              <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem' }}>
-                <div className={`bg-dark-red h-12 w-12 flex flex-col items-center justify-center z-20 rounded-lg`}>
+              <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
+                <div className={`bg-dark-red h-8 w-8 flex flex-col items-center justify-center z-20 rounded-lg`}>
                   <FaPenFancy />
                 </div>
               </IconContext.Provider>
@@ -33,7 +33,7 @@ const QuoteBlock = () => {
                 Featured Artist
               </div>
             </div>
-            <div className="h-4/10 leading-extra-tight text-6xl text-right flex items-center">
+            <div className="h-4/10 leading-extra-tight text-6xl text-center flex items-center">
                 {artistName}
             </div>
             <div className='h-auto mt-2 quote flex flex-col justify-around items-center py-1 px-3 bg-gradient-to-l from-transparent to-black80'>

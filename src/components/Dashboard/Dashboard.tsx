@@ -68,11 +68,11 @@ const Dashboard: React.FC = () => {
             <div className={`w-screen md:w-full h-screen md:h-auto flex`}>
                 <SideMenu>
                     <ProfileLink />
-                    <Links />
+                    <Links /> 
                 </SideMenu>
                 <div className={`height h-full flex flex-col`}>
                 <PageHeaderBar />
-                <Suspense fallback={<div className="h-screen">Loading...</div>}>
+                <Suspense fallback={<div className="h-screen">Loading...</div>}> 
                     <Switch>
                         {/* <Route 
                             exact
