@@ -1052,10 +1052,10 @@ const Privacy = () => {
           us:
         </div>
         <ul className="list-disc p-4 mx-6">
-          <li className="pb-2">By email: [email protected]</li>
+          <li className="pb-2">By email: Info@IconoclastArtists.org</li>
           <li className="pb-2">
             By visiting this page on our website:
-            https://www.projectcurate.org/contato-1
+            https://iconoclastartists.org/
           </li>
         </ul>
       </div>

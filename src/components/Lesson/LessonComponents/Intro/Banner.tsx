@@ -13,12 +13,7 @@ const Banner = () => {
 
   return (
     <div className={`w-full h-1/10  text-xl md:text-5xl ${theme.banner}`}>
-      <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem' }}>
-        <div
-          className={`bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg`}>
-          <FaPenFancy />
-        </div>
-      </IconContext.Provider>
+      
       <div
         className={`h-full w-full flex flex-row justify-center items-center text-5xl text-center font-open font-medium ${theme.block.text} z-10`}>
         {/* {title} */}

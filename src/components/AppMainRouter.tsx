@@ -48,7 +48,7 @@ const MainRouter: React.FC = () => {
     }, [])
     
     return (
-        <div className={`background-test h-screen md:h-full w-screen ${theme.bg} flex flex-col`}>
+        <div className={`background-test h-screen md:max-w-full md:h-full w-screen ${theme.bg} flex flex-col`}>
             <Suspense fallback={<div className="h-screen ">Loading...</div>}>
                 <Switch>
                     <Route 

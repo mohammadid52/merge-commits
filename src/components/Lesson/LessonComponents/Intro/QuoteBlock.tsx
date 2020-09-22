@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import { IconContext } from 'react-icons';
 import { GoQuote } from 'react-icons/go';
-import { FaQuoteLeft } from 'react-icons/fa';
+import { FaQuoteLeft, FaPenFancy } from 'react-icons/fa';
 import PhotoBlock from './PhotoBlock';
 
 const QuoteBlock = () => {
@@ -23,7 +23,16 @@ const QuoteBlock = () => {
       <div className="h-8/10 flex flex-grow items-center justify-center">
         <div className='h-full flex flex-col items-center mr-4'>
           <div className='my-auto'>
-            <div className='w-8/10 text-center text-4xl font-light mb-4'>{artistName}</div>
+            <div className='w-full text-center text-4xl font-light mb-4 flex justify-between'>
+              <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem' }}>
+                <div className={`bg-dark-red h-12 w-14 flex flex-col items-center justify-center z-20 rounded-lg`}>
+                  <FaPenFancy />
+                </div>
+              </IconContext.Provider>
+              <div>
+                {artistName}
+              </div>
+            </div>
             <div className='h-auto quote flex flex-col justify-around items-center py-2 px-4 bg-gradient-to-l from-transparent to-black80'>
               <div className='relative'>
                 <div className='absolute w-16' style={{ top: '-30px', left: '-5px' }}>

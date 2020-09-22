@@ -45,7 +45,7 @@ const InstructionsBlock = (props: props) => {
                 </div>
                 <div className={`${fullscreen ? 'text-sm' : 'text-xs'} w-full h-8/10 flex justify-center items-center text-sm px-2`}>
                     {   !videoMode ?
-                        <div className="h-full overflow-scroll">
+                        <div className="h-full overflow-y-scroll">
                             { instructionsArr.map((inst, key) => (
                                 <div className="mx-2" key={key}>{inst}</div>
                                 ))}
