@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
-import { useHistory } from 'react-router-dom';
+import { useHistory, NavLink } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 import { useCookies } from 'react-cookie';
 import { IconContext } from "react-icons";
@@ -126,7 +126,10 @@ const NewPassword = () => {
             <div className="test login w-140 h-7/10 bg-gray-200 shadow-elem-light border border-gray-300 rounded pt-0">
             <div className="h-.7/10 bg-dark w-full rounded-t-lg"></div>
             <div className="relative h-9.3/10 flex flex-col items-center p-8">
-            <div className="absolute text-center text-xs mb-4" style={{bottom: '0'}}> © Copyright 2020 </div>
+            <div className="absolute text-center text-xs mb-3" style={{bottom: '0'}}> 
+                <p>© Copyright 2020</p>
+                <p><NavLink className="underline text-sm hover:text-blue-500" to="/privacy-policy">Privacy Policy</NavLink></p>
+            </div>
                 <div className="h-2/10">
                     <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                 </div>

@@ -87,7 +87,7 @@ const CoopDisplay = () => {
                     </div>
 
                     <div className="w-full h-8.8/10 flex flex-col justify-between items-center">
-                        <div className={`${fullscreen ? 'text-2xl' : 'text-xl'} bg-dark-blue w-full h-full p-6 flex flex-col items-center text-gray-200 rounded-lg whitespace-pre-wrap overflow-y-auto overflow-x-hidden`}>
+                        <div className={`${fullscreen ? 'text-3xl' : 'text-xl'} bg-dark-blue w-full h-full p-6 flex flex-col items-center text-gray-200 rounded-lg whitespace-pre-wrap overflow-y-auto overflow-x-hidden`}>
                             {/* bg-lighter-blue  shadow-inner-box */}
                             <div className="p-4 h-full rounded-lg">
                             { teacherData && teacherData.activityData && teacherData.activityData.editInput ? teacherData.activityData.editInput : null}

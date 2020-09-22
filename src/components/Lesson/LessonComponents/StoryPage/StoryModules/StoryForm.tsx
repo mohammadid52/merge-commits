@@ -91,7 +91,7 @@ const StoryForm = () => {
         <div className='py-2 border-t border-white border-opacity-10'></div>
         <textarea
           id='story'
-          className='w-full h-9/10 px-4 py-2 rounded-lg text-lg text-gray-700 bg-gray-300'
+          className='w-full h-9/10 px-4 py-2 rounded-lg text-xl text-gray-700 bg-gray-300'
           name='story'
           placeholder='Write your story here!'
           value={input.story}
