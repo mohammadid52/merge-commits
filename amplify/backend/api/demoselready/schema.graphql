@@ -447,6 +447,8 @@ type Activity @model {
 type Checkpoint @model {
   id: ID!
   label: String!
+  title: String
+  subtitle: String
   type: String!
   instructions: String!
   questions: [CheckpointQuestions]! @connection(keyName: "byCheckpoint", fields: ["id"])
@@ -482,8 +484,10 @@ type Question @model {
 type QuestionData @model {
   id: ID!
   questionID: ID!
+  classroomID: ID!
   email: String!
   authID: String!
+  classroom: Classroom @connection(fields: ["classroomID"])
   question: Question @connection(fields: ["questionID"])
   person: Person @connection(fields: ["email", "authID"])
   response: String

@@ -271,7 +271,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 return
             })
 
-            console.log(newObject);
+            // console.log(newObject);
             
             return {
                 ...state,

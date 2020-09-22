@@ -4,7 +4,7 @@ import PhotoBlock from './PhotoBlock';
 import QuoteBlock from './QuoteBlock';
 import Block from './Block';
 import Banner from './Banner';
-import DoFirst from './DoFirst';
+import DoFirst from './DoFirst/DoFirst';
 
 
 

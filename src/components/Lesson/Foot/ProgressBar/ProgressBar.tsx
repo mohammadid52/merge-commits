@@ -18,12 +18,10 @@ const ProgressBar = () => {
             <div className="w-full flex flex-row items-center justify-between">
                 { 
                     state.pages.map((page: { stage: string; type: string; open: boolean, disabled: boolean; }, key: React.ReactText) => (
-                        <>
-                            <StageIcon iconID={key} key={key} stage={page.stage} type={page.type} active={state.pages[key].active}
-                            open={page.open}
-                            disabled={page.disabled}
-                            />
-                        </>
+                        <StageIcon iconID={key} key={key} stage={page.stage} type={page.type} active={state.pages[key].active}
+                        open={page.open}
+                        disabled={page.disabled}
+                        />
                     ))
                 }
             </div>
