@@ -101,7 +101,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                     <button 
                         key={i}
                         onClick={() => toggle(i)} 
-                        className={`relative cursor-pointer focus:outline-none flex justify-between items-center bg-dark text-xl text-gray-200 font-bold font-open px-8 shadow-elem-light`}>
+                        className={`relative cursor-pointer focus:outline-none flex justify-between items-center bg-dark text-xl text-gray-200 font-medium font-open px-8 shadow-elem-light`}>
                         <div className="w-8.5/10 flex justify-between my-1">
                             <div className="w-auto">
                                 {lesson.title} 

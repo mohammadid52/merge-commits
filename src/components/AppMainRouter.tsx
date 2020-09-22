@@ -6,6 +6,7 @@ import PageHeaderBar from './Header/PageHeaderBar';
 import Login from './Auth/Login';
 import Forgot from './Auth/Forgot';
 const Confirmation = lazy(() => import('./Auth/Confirmation'));
+const PrivacyPolicy = lazy(() => import('./Auth/PrivacyPolicy'));
 const Dashboard = lazy(() => import('./Dashboard/Dashboard'));
 const Registration = lazy(() => import('./Auth/Register'));
 const Lesson = lazy(() => import('./Lesson/Lesson'));
@@ -47,7 +48,7 @@ const MainRouter: React.FC = () => {
     }, [])
     
     return (
-        <div className={`background-test h-screen md:h-full w-screen ${theme.bg} flex flex-col`}>
+        <div className={`background-test h-screen md:max-w-full md:h-full w-screen ${theme.bg} flex flex-col`}>
             <Suspense fallback={<div className="h-screen ">Loading...</div>}>
                 <Switch>
                     <Route 
@@ -84,6 +85,12 @@ const MainRouter: React.FC = () => {
                         path="/reset-password"
                         render={() => (
                             <Reset />  
+                        )} 
+                    />
+                    <Route 
+                        path="/privacy-policy"
+                        render={() => (
+                            <PrivacyPolicy />  
                         )} 
                     />
                     <PrivateRoute path="/dashboard" >

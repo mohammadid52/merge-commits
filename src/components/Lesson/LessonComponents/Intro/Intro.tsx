@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import PhotoBlock from './PhotoBlock';
 import QuoteBlock from './QuoteBlock';
@@ -15,12 +15,11 @@ const Intro = () => {
         dispatch({type: 'ACTIVATE_LESSON', payload: ''})
     }, [])
 
-
     return (
     <div className="z-50 w-full h-full flex flex-col md:flex-row justify-between items-center">
         <div className="md:w-6/10 h-full md:mr-6 flex flex-col justify-between items-center">
-            <Banner />
-            <div className="w-full h-4.3/10 flex animate-fadeIn">
+            {/* <Banner /> */}
+            <div className="w-full h-5.5/10 flex animate-fadeIn">
                 <QuoteBlock />
             </div>
             <div className="w-full h-4.3/10 shadow-2xlr">

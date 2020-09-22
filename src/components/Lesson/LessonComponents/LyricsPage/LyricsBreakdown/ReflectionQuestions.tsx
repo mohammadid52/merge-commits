@@ -31,7 +31,7 @@ const ReflectionQuestions = () => {
                 <div className="font-open font-light mb-2">
                     Discussion Questions
                 </div>
-                <div className="question w-full flex-grow text-xs md:text-xl text-gray-200 flex justify-center px-4">
+                <div className="question w-full flex-grow text-xs md:text-xl text-gray-200 font-light flex justify-center px-4">
                     <p className="text-center">{ questArr[question] }</p>
                 </div>
             </div>

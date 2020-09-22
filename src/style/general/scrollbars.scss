@@ -8,6 +8,8 @@
 ::-webkit-scrollbar {
   width: 16px;
   height: 16px;
+  position: absolute;
+  right: 0;
 }
 
 /* Track */
@@ -27,3 +29,28 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #a0aec0;
 }
+
+
+// /* width */
+// ::-webkit-scrollbar {
+//   width: 16px;
+//   height: 16px;
+// }
+
+// /* Track */
+// ::-webkit-scrollbar-track {
+//   border-radius: 100vh;
+//   background: #2f425a;
+// }
+
+// /* Handle */
+// ::-webkit-scrollbar-thumb {
+//   background: #061326;
+//   border-radius: 100vh;
+//   border: 3px solid #1d2d42;
+// }
+
+// /* Handle on hover */
+// ::-webkit-scrollbar-thumb:hover {
+//   background: #0d1b2f;
+// }

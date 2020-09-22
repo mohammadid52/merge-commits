@@ -69,7 +69,7 @@ const StoryForm = () => {
       <h3
         className={`text-xl text-gray-200 font-open font-light ${theme.underline}`}>
         Story{' '}
-        <span className='text-gray-600 font-light text-sm mr-4'>
+        <span className='text-gray-600 font-light text-sm ml-4'>
           (Fill in the form below!)
         </span>
       </h3>
@@ -81,7 +81,7 @@ const StoryForm = () => {
         </label>
         <input
           id='title'
-          className='md:w-88 px-4 py-1 mb-4 rounded-lg text-gray-700 bg-gray-300'
+          className='md:w-88 px-4 py-1 mb-4 rounded-lg text-lg text-gray-700 bg-gray-300'
           name='title'
           type='text'
           placeholder='La Llorona'
@@ -91,7 +91,7 @@ const StoryForm = () => {
         <div className='py-2 border-t border-white border-opacity-10'></div>
         <textarea
           id='story'
-          className='w-full h-9/10 px-4 py-1 rounded-lg text-gray-700 bg-gray-300'
+          className='w-full h-9/10 px-4 py-2 rounded-lg text-xl text-gray-700 bg-gray-300'
           name='story'
           placeholder='Write your story here!'
           value={input.story}

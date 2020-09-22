@@ -95,7 +95,7 @@ const Modules = (props: ModulesProps) => {
                             <label className="text-sm md:text-md mb-2 font-light text-base text-blue-100 text-opacity-70" htmlFor={input.name}>
                                 { input.prompt }
                             </label>
-                            <input id={input.name} className="px-4 py-1 rounded-lg text-gray-700 bg-gray-300" name={input.name} type="text" placeholder={`${input.example}, etc.`} value={formInputs[input.name]} onChange={handleFormInputChange}/>
+                            <input id={input.name} className="px-4 py-1 text-lg rounded-lg text-gray-700 bg-gray-300" name={input.name} type="text" placeholder={`${input.example}, etc.`} value={formInputs[input.name]} onChange={handleFormInputChange}/>
                         </div>
                     )) : null
                 }
