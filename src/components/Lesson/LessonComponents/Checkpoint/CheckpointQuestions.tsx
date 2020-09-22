@@ -91,7 +91,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     }
 
     if (input && checkpoint.checkpoint.questions.items) {
-      console.log('şu da oldu');
       checkpoint.checkpoint.questions.items.forEach(
         (item: { question: { id: string; type: string; label: string } }) => {
           let inputKeys = Object.keys(input)
@@ -164,9 +163,9 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       });
     }
 
-    if (input && cookies.questionData !== input) {
-      setCookie('questionData', input);
-    }
+    // if (input && cookies.questionData !== input) {
+    //   setCookie('questionData', input);
+    // }
   }, [input]);
 
   const handleInputChange = (e: any) => {
