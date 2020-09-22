@@ -1690,6 +1690,8 @@ export const getCheckpoint = /* GraphQL */ `
     getCheckpoint(id: $id) {
       id
       label
+      title
+      subtitle
       type
       instructions
       questions {
@@ -1718,6 +1720,8 @@ export const listCheckpoints = /* GraphQL */ `
       items {
         id
         label
+        title
+        subtitle
         type
         instructions
         questions {
@@ -1778,8 +1782,69 @@ export const getQuestionData = /* GraphQL */ `
     getQuestionData(id: $id) {
       id
       questionID
+      classroomID
       email
       authID
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       question {
         id
         label
@@ -1831,8 +1896,21 @@ export const listQuestionDatas = /* GraphQL */ `
       items {
         id
         questionID
+        classroomID
         email
         authID
+        classroom {
+          id
+          open
+          openedAt
+          closedAt
+          roster
+          viewing
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
         question {
           id
           label

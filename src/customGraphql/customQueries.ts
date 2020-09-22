@@ -379,6 +379,7 @@ export const getClassroomStudent = /* GraphQL */ `
             position
             checkpoint {
               id
+              title
               instructions
               label
               type
