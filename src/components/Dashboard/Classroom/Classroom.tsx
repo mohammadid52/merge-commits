@@ -59,7 +59,7 @@ const Classroom: React.FC = () => {
     }
     {
         return (
-            <div className={`w-full h-9.28/10 md:h-auto flex flex-col p-4 px-8 pb-8 pt-4 overflow-scroll md:overflow-auto`}>
+            <div className={`h-9.28/10 md:h-auto flex flex-col p-4 px-8 pb-8 pt-4 overflow-scroll md:overflow-auto`}>
                 
                 <p className="md:hidden text-xl text-center flex justify-center mb-4" style={{top: '0'}}>* lessons are available on PC or laptop *</p>
                 {/* <div className="w-full p-4 flex justify-center items-center">

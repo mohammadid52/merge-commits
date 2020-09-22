@@ -116,7 +116,10 @@ const Login = () => {
             <div className="test login w-140 h-7/10 bg-gray-200 shadow-elem-light border border-gray-300 rounded-lg pt-0">
                 <div className="h-.7/10 bg-dark w-full rounded-t-lg"></div>
                 <div className="relative h-9.3/10 flex flex-col items-center p-8">
-                    <div className="absolute text-center text-xs mb-4" style={{bottom: '0'}}> © Copyright 2020 </div>
+                    <div className="absolute text-center text-xs mb-3" style={{bottom: '0'}}> 
+                        <p>© Copyright 2020</p>
+                        <p><NavLink className="underline text-sm hover:text-blue-500" to="/privacy-policy">Privacy Policy</NavLink></p>
+                    </div>
                     <div className="h-2/10">
                         <img className="" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                     </div>
@@ -130,7 +133,7 @@ const Login = () => {
                         }
                     </div>
             
-                    <div className="h-5/10 flex-grow flex flex-col justify-center">
+                    <div className="h-4/10 flex-grow flex flex-col justify-center">
                         
                         <div className="input">
                                 <div className="icon">
@@ -169,7 +172,7 @@ const Login = () => {
                     
                    
                     {/* <Link to="/register">Register</Link> */} 
-                    <div className="h-3/10 flex flex-col justify-center items-center">
+                    <div className="h-4/10 flex flex-col justify-center items-center">
                         <button className="bg-dark-red text-gray-200 rounded-lg mb-4 shadow-elem-light" onKeyPress={handleEnter} onClick={handleSubmit}>Login</button>
                         <NavLink to="/forgot-password">
                             <div className="text-center hover:text-blue-500">forgot password?</div>
