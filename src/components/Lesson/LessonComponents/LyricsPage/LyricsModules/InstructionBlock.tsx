@@ -8,19 +8,19 @@ const InstructionsBlock = () => {
     const [ videoMode, setVideoMode ] = useState(false);
     const { text, video, link } = state.data.lesson.coreLesson.instructions;
     const instructionsArr = [
-            <p className="text-sm mb-2">
+            <p className="text-sm font-light mb-2">
                 Read the lyrics to the song "Where I'm from" by Marlon Lizama.
             </p>,
-            <p className="text-sm mb-2"> 
+            <p className="text-sm font-light mb-2"> 
                 Highlight lines that <span className="underline">remind you of your culture</span> with <span className="text-dark-red font-bold animate-fadeIn">red</span>.
             </p>,
-            <p className="text-sm mb-2"> 
+            <p className="text-sm font-light mb-2"> 
                 Highlight any lines that you think are <span className="underline">powerful</span> in <span className="text-fire-orange font-bold animate-fadeIn">orange</span>.
             </p>,
-            <p className="text-sm mb-2">
+            <p className="text-sm font-light mb-2">
                 Mark words you don't know in <span className="text-sea-green font-bold animate-fadeIn">green</span>.
             </p>,
-            <p className="text-sm mb-2">
+            <p className="text-sm font-light mb-2">
                 Use the eraser to deselect!
             </p>,
     ]
@@ -32,7 +32,7 @@ const InstructionsBlock = () => {
     return (
         <div className="md:h-3.8/10 bg-dark-blue border-l-4 border-green-light w-full flex justify-center p-4 rounded-lg text-gray-200 shadow-2xlr">
             <div className="w-full flex flex-col">
-                <div className={`w-auto flex flex-row ${theme.underline} mr-4`}>
+                <div className={`w-auto flex flex-row ${theme.underline} mr-4 pb-1 mb-1`}>
                     <h3 className="w-3/10 mr-2 flex-grow text-xl font-open font-light animate-bounce">
                         Instructions
                     </h3>

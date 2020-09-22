@@ -68,7 +68,7 @@ const SelfDisplay = () => {
                     {module.name}
                   </div>
                 </div>
-                <div className='w-full md:my-4 flex flex-col overflow-y-auto overflow-x-hidden px-6'>
+                <div className='w-full md:my-4 flex flex-col overflow-y-auto overflow-x-hidden px-6 font-light'>
                   {module.content.map((line: string, key: number) => (
                     <p
                       key={key}

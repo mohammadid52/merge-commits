@@ -1,38 +1,28 @@
 import React, { useContext } from 'react';
-// import { IconContext } from "react-icons";
-// import { FaMusic } from 'react-icons/fa';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
 const Keyword = () => {
   const { state, theme } = useContext(LessonContext);
-  // const artistBio = state.data.artist.bio
+  const keywords = state.data.lesson.keywords.items
 
-  // const firstLetterFunction = (str: string) => {
-  //     let arr = str.split('');
-  //     arr.map((char, key) => {
-  //         if (key === 0) {
-  //             return <span>{char}</span>
-  //         }
-  //     })
-  // }
+  console.log(keywords, 'keyword')
 
   return (
-    // <div className={`flex flex-col md:w-full md:h-full ${theme.block.bg}  ${theme.block.text} text-lx rounded-sm`}>
     <div className={`flex flex-col md:w-full md:h-full ${theme.block.text} text-lx rounded-r-lg`}>
       <div className={`md:w-full md:h-full p-4 flex flex-col ${theme.block.text} text-lx rounded-r-lg`}>
-      {/* <h1 className="text-2xl font-extrabold mb-4 underline">Keywords we will cover in this lesson:</h1> */}
         <h1 className={`text-2xl font-medium ${theme.underline}`}>Keywords we will cover in this lesson:</h1>
         <div className='overflow-y-auto overflow-x-hidden'> 
-          <p className='text-base mb-4 text-blue-100 text-opacity-75'>
-            <span className='text-lg font-semibold'>Culture:</span> <span className='font-light'>the customs, arts, social institutions, and achievements of a particular nation, people, or other social group.</span>
-          </p>
-          <p className='text-base mb-4 text-blue-100 text-opacity-75'>
-            <span className='text-lg font-semibold'>Dialects:</span>
-            <span className='font-light'> a particular form of a language which is peculiar to a specific region or social group.</span>
-          </p>
-          <p className='text-base mb-4 text-blue-100 text-opacity-75'>
-            <span className='text-lg font-semibold'>Ancestors:</span> <span className='font-light'>a person, typically one more remote than a grandparent, from whom one is descended.</span>
-          </p>
+          { typeof keywords !== 'undefined' ?
+            keywords.map((item: {word: {word: string, definition: string}, wordID: number}, i: number) => {
+             return( <div key={i}>
+                {console.log(item.word.word, 'item')}
+                <p className='text-base mb-3 text-blue-100 text-opacity-75'>
+                  <span className='text-lg font-semibold'>{item.word.word}:</span> <span className='font-light'>{item.word.definition}</span>
+                </p>
+              </div>
+             )
+            }) 
+          : ''}
         </div>
       </div>
     </div>

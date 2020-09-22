@@ -247,8 +247,8 @@ const WritingBlock = (props: WritingBlockProps) => {
 
     return (
         <div className="bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600" >
-            <div className="w-full flex flex-row justify-between mb-4">
-                <h3 className="w-full flex-grow text-xl text-gray-200 font-open font-light border-b border-white border-opacity-10 mr-2">
+            <div className="w-full flex flex-row justify-between mb-2">
+                <h3 className="w-full flex-grow text-xl text-gray-200 font-open font-light border-b border-white border-opacity-10 mr-2 pb-1 mb-1">
                     Line Prompts
                 </h3>
                 <IconContext.Provider value={{ color: '#E2E8F0', size: '1.5rem', style: { opacity: `${lineState.lines.length < (lineNo * 2) ? '100%' : '10%'}`}}}>
@@ -274,14 +274,14 @@ const WritingBlock = (props: WritingBlockProps) => {
                                     </IconContext.Provider>
                                 </div>
                             </div>
-                            <label className={`${line.example ? 'visible' : 'invisible'} self-end flex justify-end text-gray-400 text-sm mr-12`} htmlFor={id}>
+                            <label className={`${line.example ? 'visible' : 'invisible'} font-light self-end flex justify-end text-gray-400 text-sm mr-12`} htmlFor={id}>
                                 ( ex. {line.example} )
                             </label>
                             {   line.menuOpen ?
                                     <div className="absolute left-0 w-9.5/10 shadow-3 h-32 bg-gray-300 rounded-lg p-4 transform translate-y-12 overflow-y-auto overflow-x-hidden z-20 ">
                                         { 
                                             lineState.prompts.map((prompt: any, key: string) => (
-                                                <div key={key} id={id} className="w-full mb-2" onClick={handleSelectPrompt}>
+                                                <div key={key} id={id} className="w-full mb-2 font-light" onClick={handleSelectPrompt}>
                                                     <span id={prompt.id}>{ prompt.prompt }</span>
                                                 </div>
                                             ))
