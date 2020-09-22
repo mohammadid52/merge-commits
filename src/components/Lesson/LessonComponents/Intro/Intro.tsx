@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import PhotoBlock from './PhotoBlock';
 import QuoteBlock from './QuoteBlock';
@@ -14,7 +14,6 @@ const Intro = () => {
     useEffect(() => {
         dispatch({type: 'ACTIVATE_LESSON', payload: ''})
     }, [])
-
 
     return (
     <div className="z-50 w-full h-full flex flex-col md:flex-row justify-between items-center">

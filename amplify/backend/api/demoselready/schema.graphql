@@ -236,7 +236,7 @@ type ComponentSummary {
 }
 
 type Quote {
-  source: String!
+  source: String
   text: String!
 }
 
