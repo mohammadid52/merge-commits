@@ -1,7 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 
 export interface CPQuestionProps {
+  checkpointID: string
   question: {
     id: string;
     label: string;
@@ -21,6 +22,23 @@ interface SelectOneRowState {
 
 const SelectOneQuestions = (selPrps: CPQuestionProps) => {
   const { state, dispatch } = useContext(LessonContext);
+  const [ input, setInput ] = useState('');
+
+  useEffect(() => {
+    if ( state.questionData[selPrps.checkpointID] && state.questionData[selPrps.checkpointID][selPrps.question.id] && state.questionData[selPrps.checkpointID][selPrps.question.id] !== '' ) {
+      setInput(state.questionData[selPrps.checkpointID][selPrps.question.id])
+    }
+
+    if( state.questionData[selPrps.checkpointID] === undefined || state.questionData[selPrps.checkpointID][selPrps.question.id] === undefined ){
+      setInput('');
+    }
+  }, [])
+
+  const handleRadioSelect = (e: { target: { value: string, id: string }}) => {
+    const { value } = e.target;
+    setInput(value)
+    selPrps.handleInputChange(e)
+  }
 
   return (
     <>
@@ -39,8 +57,9 @@ const SelectOneQuestions = (selPrps: CPQuestionProps) => {
                   type='radio'
                   name={selPrps.question.label}
                   value={option.label}
-                  onChange={selPrps.handleInputChange}
-                  checked={state.questionData[parseInt(selPrps.question.id)] === option.label}
+                  onChange={handleRadioSelect}
+                  checked={input === option.label}
+                  // checked={state.questionData[selPrps.checkpointID][parseInt(selPrps.question.id)] === option.label}
                 />
                 <label htmlFor={`${option.text}`}>{option.text}</label>
               </div>

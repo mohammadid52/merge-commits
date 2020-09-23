@@ -23,17 +23,14 @@ const TextQuestions = (txtPrps: CPQuestionProps) => {
   }
 
   useEffect(() => {
-    // console.log('contents: ', contents);
-    // console.log('quesData: ', state.questionData[txtPrps.question.id]);
-    // console.log('text area id: ', txtPrps.question.id);
-    if ( state.questionData[txtPrps.question.id] && state.questionData[txtPrps.question.id] !== '') {
-      setContents(state.questionData[txtPrps.question.id])
+    if ( state.questionData[txtPrps.checkpointID] && state.questionData[txtPrps.checkpointID][txtPrps.question.id] && state.questionData[txtPrps.checkpointID][txtPrps.question.id] !== '' ) {
+      setContents(state.questionData[txtPrps.checkpointID][txtPrps.question.id])
     }
 
-    if(state.questionData[txtPrps.question.id] === undefined){
+    if( state.questionData[txtPrps.checkpointID] === undefined || state.questionData[txtPrps.checkpointID][txtPrps.question.id] === undefined ){
       setContents('');
     }
-  })
+  }, [])
 
   return (
     <div key={txtPrps.keyProp} className={`w-4.5/10 h-5/10 flex flex-col my-2`}>

@@ -59,7 +59,12 @@ export type LessonActions =
     } 
 |   {
         type: 'SET_QUESTION_DATA';
-        payload: any
+        payload: {
+            key: string
+            data: {
+                [key: string]: any
+            }
+        }
     } 
 |   {
         type: 'ERROR';
@@ -260,22 +265,33 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 })
             }
         case 'SET_QUESTION_DATA':
-            let payloadKeys = Object.keys(action.payload);
-            let newObject = state.questionData;
-            
-            payloadKeys.forEach((key: string) => {
-                if ( action.payload[key] && action.payload[key] !== '') {
-                    return newObject[key] = action.payload[key]
-                }
+            let payloadKeys = Object.keys(action.payload.data);
+            let updatedQuestionData: any = state.questionData;
 
-                return
+            if ( !updatedQuestionData[action.payload.key] ) {
+                updatedQuestionData[action.payload.key] = action.payload.data;
+                return {
+                    ...state,
+                    questionData: updatedQuestionData
+                }
+            }
+
+            let updatedQuestionDataObject = updatedQuestionData[action.payload.key]
+
+            payloadKeys.forEach((key: string) => {
+                if ( action.payload.data[key] !== '' ) {
+                    updatedQuestionDataObject[key] = action.payload.data[key]
+                }
             })
 
             // console.log(newObject);
             
             return {
                 ...state,
-                questionData: newObject
+                questionData: {
+                    ...state.questionData,
+                    [action.payload.key]: updatedQuestionDataObject
+                }
             }
         case 'ACTIVATE_LESSON':
             return {
