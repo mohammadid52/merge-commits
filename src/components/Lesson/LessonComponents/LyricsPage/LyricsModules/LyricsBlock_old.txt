@@ -1,0 +1,125 @@
+  rawText.map((line: string) => {
+    let array = textParser(line);
+    displayTextArray.push(array);
+  });
+  let acc = 0;
+
+  useEffect(() => {
+    const sortFunc = (arr: [], sortKey: string) => {
+      let array: {}[] = [];
+      arr.forEach((item: { color: string; content: string }) => {
+        if (sortKey === item.color) {
+          array.push(item.content);
+        }
+      });
+      return array;
+    };
+
+    let displayProps = {
+      name: 'Lyrics Breakdown',
+      modules: buttons.map((button: any, key: string) => {
+        return {
+          id: key,
+          name: button.id,
+          label: button.content,
+          color: button.color,
+          description: button.description,
+          content: sortFunc(selected, button.color),
+        };
+      }),
+    };
+
+    dispatch({
+      type: 'SET_DISPLAY_PROPS',
+      payload: {
+        name: 'lyrics',
+        content: displayProps,
+      },
+    });
+  }, [selected]);
+
+  const idCheck = (key: string) => {
+    let check = selected.filter((selection: any) => {
+      return parseFloat(key) >= selection.anchor && parseFloat(key) <= selection.focus;
+    });
+    if (check.length > 0) {
+      return true;
+    }
+  };
+
+  const colorFunc = (key: string) => {
+    let check = selected.filter((selection: any) => {
+      return parseFloat(key) >= selection.anchor && parseFloat(key) <= selection.focus;
+    });
+    if (check.length > 0) {
+      return check[0].color;
+    }
+  };
+
+  const handleFullscreen = () => {
+    setFullscreen((fullscreen) => {
+      return !fullscreen;
+    });
+  };
+
+  const handleSelect = () => {
+    if (color) {
+      let selection = window.getSelection();
+      let anchor: { id?: string; [key: string]: any } = selection.anchorNode.parentNode;
+      let focus: { id?: string; [key: string]: any } = selection.focusNode.parentNode;
+
+      let textArr: any[] = [];
+      for (let i = parseInt(anchor.id); i < parseInt(focus.id) + 1; i++) {
+        let textObj = {
+          id: i,
+          text: document.getElementById(i.toString()).innerText,
+        };
+        textArr.push(textObj);
+      }
+
+      setSelected((selected) => {
+        return [
+          ...selected,
+          {
+            id: selected.length + 1,
+            anchor: anchor.id,
+            focus: focus.id,
+            color: color,
+            content: textArr,
+          },
+        ];
+      });
+    }
+
+    if (!color) {
+      let selection = window.getSelection();
+      let anchor: { id?: string; [key: string]: any } = selection.anchorNode.parentNode;
+      let focus: { id?: string; [key: string]: any } = selection.focusNode.parentNode;
+
+      let selections = selected.filter(
+        (selection: { anchor: string; focus: string; color: string }) => {
+          return (
+            parseInt(selection.anchor) > parseInt(focus.id) ||
+            parseInt(selection.focus) < parseInt(anchor.id)
+          );
+        }
+      );
+
+      setSelected(selections);
+    }
+  };
+
+  const colorPicker = (colorName: string): string => {
+    switch (colorName) {
+      case 'dark-red':
+        return '#CA2222';
+      case 'blueberry':
+        return '#488AC7';
+      case 'sea-green':
+        return '#17A589';
+      case 'fire-orange':
+        return '#FF5733';
+      case 'erase':
+        return 'erase';
+    }
+  };

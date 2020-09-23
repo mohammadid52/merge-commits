@@ -1,23 +1,9 @@
+import { access } from 'fs';
 import React, { useState, useEffect, useContext } from 'react';
 import { IconContext } from 'react-icons';
 import { FaHighlighter, FaExpand } from 'react-icons/fa';
+import { isMainThread } from 'worker_threads';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-
-const textParser = (str: string) => {
-  let tempWord = '';
-  let initialArray = Array.from(str);
-  let finalArray = [];
-  initialArray.map((letter) => {
-    if (letter !== ' ') {
-      tempWord = tempWord + letter;
-    } else {
-      finalArray.push(tempWord);
-      tempWord = '';
-    }
-  });
-  finalArray.push(tempWord);
-  return finalArray;
-};
 
 interface LyricsBlockProps {
   color: string;
@@ -28,33 +14,8 @@ interface LyricsBlockProps {
 }
 
 /**
- * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
- * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
- * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
- * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
- * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
- * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
- * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
+ * interfaces
  */
-
-/**
- * components & utils
- */
-
-// import ColorPicker from './components/ColorPicker/ColorPicker';
-const wordRegex = /([\w\(\)'’"“”-]+)/g;
-// import DisplaySelected from './components/DisplaySelected/DisplaySelected';
-
-/**
- * enums & interfaces
- */
-
-enum HighlightColor {
-  Green = 'green',
-  Orange = 'orange',
-  Red = 'red',
-  Erase = 'erase',
-}
 
 interface SelectedTextGroup {
   [key: string]: {
@@ -67,137 +28,12 @@ export interface FinalText {
   [key: string]: string[];
 }
 
-/**
- * Object path to lyrics:
- * state.data.lesson.coreLesson.content.text[]
- */
-
-/**
- * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
- * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
- * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
- * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
- * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
- * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
- * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
- */
-
 const LyricsBlock = (props: LyricsBlockProps) => {
   const { color, selected, setSelected, fullscreen, setFullscreen } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
   const buttons = state.data.lesson.coreLesson.tools;
   const rawText = state.data.lesson.coreLesson.content.text;
   const displayTextArray: string[][] = [];
-  rawText.map((line: string) => {
-    let array = textParser(line);
-    displayTextArray.push(array);
-  });
-  let acc = 0;
-
-  useEffect(() => {
-    const sortFunc = (arr: [], sortKey: string) => {
-      let array: {}[] = [];
-      arr.forEach((item: { color: string; content: string }) => {
-        if (sortKey === item.color) {
-          array.push(item.content);
-        }
-      });
-      return array;
-    };
-
-    let displayProps = {
-      name: 'Lyrics Breakdown',
-      modules: buttons.map((button: any, key: string) => {
-        return {
-          id: key,
-          name: button.id,
-          label: button.content,
-          color: button.color,
-          description: button.description,
-          content: sortFunc(selected, button.color),
-        };
-      }),
-    };
-
-    dispatch({
-      type: 'SET_DISPLAY_PROPS',
-      payload: {
-        name: 'lyrics',
-        content: displayProps,
-      },
-    });
-  }, [selected]);
-
-  const idCheck = (key: string) => {
-    let check = selected.filter((selection: any) => {
-      return parseFloat(key) >= selection.anchor && parseFloat(key) <= selection.focus;
-    });
-    if (check.length > 0) {
-      return true;
-    }
-  };
-
-  const colorFunc = (key: string) => {
-    let check = selected.filter((selection: any) => {
-      return parseFloat(key) >= selection.anchor && parseFloat(key) <= selection.focus;
-    });
-    if (check.length > 0) {
-      return check[0].color;
-    }
-  };
-
-  const handleFullscreen = () => {
-    setFullscreen((fullscreen) => {
-      return !fullscreen;
-    });
-  };
-
-  const handleSelect = () => {
-    if (color) {
-      let selection = window.getSelection();
-      let anchor: { id?: string; [key: string]: any } = selection.anchorNode.parentNode;
-      let focus: { id?: string; [key: string]: any } = selection.focusNode.parentNode;
-
-      let textArr: any[] = [];
-      for (let i = parseInt(anchor.id); i < parseInt(focus.id) + 1; i++) {
-        let textObj = {
-          id: i,
-          text: document.getElementById(i.toString()).innerText,
-        };
-        textArr.push(textObj);
-      }
-
-      setSelected((selected) => {
-        return [
-          ...selected,
-          {
-            id: selected.length + 1,
-            anchor: anchor.id,
-            focus: focus.id,
-            color: color,
-            content: textArr,
-          },
-        ];
-      });
-    }
-
-    if (!color) {
-      let selection = window.getSelection();
-      let anchor: { id?: string; [key: string]: any } = selection.anchorNode.parentNode;
-      let focus: { id?: string; [key: string]: any } = selection.focusNode.parentNode;
-
-      let selections = selected.filter(
-        (selection: { anchor: string; focus: string; color: string }) => {
-          return (
-            parseInt(selection.anchor) > parseInt(focus.id) ||
-            parseInt(selection.focus) < parseInt(anchor.id)
-          );
-        }
-      );
-
-      setSelected(selections);
-    }
-  };
 
   const colorPicker = (colorName: string): string => {
     switch (colorName) {
@@ -223,11 +59,12 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
    * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
    */
-
   const [mouseIsClicked, setMouseIsClicked] = useState<boolean>();
+  const [mouseIsHeld, setMouseIsHeld] = useState<boolean>();
   const [currentColor, setCurrentColor] = useState<string>('');
   const [selectGroup, setSelectGroup] = useState<number>(0);
   const [selectedTextGroups, setSelectedTextGroups] = useState<SelectedTextGroup>({});
+  const [expSelectedTextGroups, setExpSelectedTextGroups] = useState<SelectedTextGroup>({});
   const [finalText, setFinalText] = useState<FinalText>({});
 
   /**
@@ -236,8 +73,9 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    */
   const checkIfHighlighted = (mappedWordID: string) => {
     return (
-      Object.values(selectedTextGroups).filter((group) => group['selected'].includes(mappedWordID))
-        .length > 0
+      Object.values(expSelectedTextGroups).filter((group) =>
+        group['selected'].includes(mappedWordID)
+      ).length > 0
     );
   };
 
@@ -272,7 +110,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   };
 
   const getHighlightColor = (mappedWordID: string) => {
-    return Object.values(selectedTextGroups).filter((group) => {
+    return Object.values(expSelectedTextGroups).filter((group) => {
       if (group['selected'].includes(mappedWordID)) {
         return group['color'];
       }
@@ -301,7 +139,8 @@ const LyricsBlock = (props: LyricsBlockProps) => {
 
     e.preventDefault();
 
-    if (mouseIsClicked && color !== '') {
+    if ((mouseIsClicked || mouseIsHeld) && color !== '') {
+      console.log('handleSelectText: ', targetWordID);
       if (targetWordID.match(/mappedWord/) !== null) {
         if (color !== 'erase') {
           /**
@@ -355,19 +194,26 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    */
 
   const handleMouseUp = (e: React.MouseEvent) => {
-    if (mouseIsClicked) {
+    if (mouseIsHeld || mouseIsClicked) {
+      setMouseIsHeld(false);
       setMouseIsClicked(false);
     }
 
     if (checkIfSelectGroupExists(`group${selectGroup}`)) {
       setSelectGroup(selectGroup + 1);
     }
+
+    console.log('mouse up');
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (!mouseIsClicked) {
+    const t = e.target as HTMLElement;
+
+    if (!mouseIsHeld || !mouseIsClicked) {
+      setMouseIsHeld(true);
       setMouseIsClicked(true);
     }
+    handleSelectText(e);
   };
 
   /**
@@ -393,62 +239,16 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   };
 
   /**
-   * String / html functionality
+   * Lyric/state organization
    */
 
-  const combineLyrics = rawText.reduce((acc: string, val: string) => acc + ' ' + val);
+  const combineLyrics = rawText
+    .map((str: string) => [...str.split(' '), '\n'])
+    .reduce((acc: string[], val: string[]) => [...acc, ...val]);
 
-  /**
-   * 
-   * get words id'd like this = word_1 ... word_100
-   * spread the selected array to [...wordarray[1],...wordarray[100]]
-   */
-
-  /**
-   * Function that maps an input string to something selectable
-   * 1. check if string contains spaces
-   * 2. separate string into array of spaces and words/charactes
-   * 3. map over array of words/characters
-   * 4. replace words with <span></span>
-   *
-   * Punctuation: [,.-:;]
-   *
-   * @param str - any string constant/variable
-   */
-
-  const mapStrToSpan = (str: string, iTop: number) => {
-    return str
-      .replace(wordRegex, '@*@$1@*@')
-      .split('@*@')
-      ?.map((mappedWord: string, i: number) => {
-        if (mappedWord?.match(wordRegex) !== null) {
-          return (
-            <span
-              key={`mappedWord${i}${iTop}__${mappedWord}`}
-              id={`mappedWord${i}${iTop}__${mappedWord}`}
-              onMouseOver={handleSelectText}
-              onMouseUp={handleMouseUp}
-              className={`additionalClass 
-                ${
-                  checkIfHighlighted(`mappedWord${i}${iTop}__${mappedWord}`)
-                    ? `text-${getHighlightColor(`mappedWord${i}${iTop}__${mappedWord}`)}`
-                    : ''
-                }`}>{`${mappedWord}`}</span>
-          );
-        } else {
-          return mappedWord;
-        }
-      });
-  };
-
-  const mapStrArrayToHtml = (strArray: string[]) => {
-    return strArray.map((str: string, i: 1) => (
-      <>
-        {mapStrToSpan(str, i)}
-        <br />
-      </>
-    ));
-  };
+  const combineMappedWords = combineLyrics.map(
+    (word: string, i: number) => `mappedWord__${i}__${combineLyrics[i]}`
+  );
 
   /**
    * Trim function for array of strings
@@ -463,6 +263,43 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   };
 
   /**
+   * Function(s) specifically for expanding multiline selection
+   * in selectedTextGroup arrays
+   */
+
+  /**
+   * Find min,max indexes of selectedText
+   */
+  const minMaxOfArrays = (strArray: string[]) => {
+    const parsedNumbers = strArray.map((str: string) => {
+      return str.match(/\d+/).sort();
+    });
+    return [parseInt(parsedNumbers[0][0]), +parsedNumbers[parsedNumbers.length - 1] + 1];
+  };
+
+  /**
+   * Expand second state to include multiline selected words
+   */
+  const expandMultilineSelection = () => {
+    const groups = Object.keys(selectedTextGroups).map((grpName: string, i: number) => {
+      const minMax = minMaxOfArrays(selectedTextGroups[grpName]['selected']);
+      return {
+        [`${grpName}`]: {
+          color: selectedTextGroups[grpName]['color'],
+          selected: combineMappedWords.slice(minMax[0], minMax[1]),
+        },
+      };
+    });
+    if (Object.keys(selectedTextGroups).length > 0) {
+      setExpSelectedTextGroups(
+        groups.reduce((acc, grp) => {
+          return { ...acc, ...grp };
+        })
+      );
+    }
+  };
+
+  /**
    * Group final words together and trim strings
    * @param input - Array of objects with [key: string]:string[]
    */
@@ -471,31 +308,68 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       if (Object.keys(acc).includes(val.color)) {
         return {
           ...acc,
-          [val.color]: [[...trimWords(val.selected, /^mappedWord([0-9]+)__/)], ...acc[val.color]],
+          [val.color]: [[...trimWords(val.selected, /^mappedWord__([0-9]+)__/)], ...acc[val.color]],
         };
       } else {
-        return { ...acc, [val.color]: [[...trimWords(val.selected, /^mappedWord([0-9]+)__/)]] };
+        return { ...acc, [val.color]: [[...trimWords(val.selected, /^mappedWord__([0-9]+)__/)]] };
       }
     }, {});
   };
-
-  /**
-   * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
-   * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
-   * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
-   * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
-   * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
-   * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
-   * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
-   */
 
   /**
    * Lifecycle
    */
 
   useEffect(() => {
-    console.log('first step: ', combineLyrics);
-  });
+    expandMultilineSelection();
+  }, [selectedTextGroups]);
+
+  /**
+   * html functionality
+   */
+
+  /**
+   * Function that maps an input string to something selectable
+   * 1. check if string contains spaces
+   * 2. separate string into array of spaces and words/charactes
+   * 3. map over array of words/characters
+   * 4. replace words with <span></span>
+   *
+   * Punctuation: [,.-:;]
+   *
+   * @param str - any string constant/variable
+   */
+
+  const testMouse = (e: React.MouseEvent) => {
+    console.log();
+  };
+
+  const mapStrToSpan = (strArray: string[]) => {
+    return strArray?.map((mappedWord: string, i: number) => {
+      if (mappedWord !== '\n') {
+        return (
+          <span
+            key={`mappedWord__${i}__${mappedWord}`}
+            className={`p-1 relative
+                ${
+                  checkIfHighlighted(`mappedWord__${i}__${mappedWord}`)
+                    ? `text-${getHighlightColor(`mappedWord__${i}__${mappedWord}`)}`
+                    : ''
+                }`}>
+            &nbsp;{`${mappedWord}`}&nbsp;
+            <span
+              id={`mappedWord__${i}__${mappedWord}`}
+              onMouseOver={handleSelectText}
+              onMouseDown={handleMouseDown}
+              onMouseUp={handleMouseUp}
+              className='w-1/2 h-full absolute right-0 transform -translate-x-1/2'></span>
+          </span>
+        );
+      } else {
+        return <br />;
+      }
+    });
+  };
 
   return (
     <>
@@ -519,15 +393,16 @@ const LyricsBlock = (props: LyricsBlockProps) => {
           </div>
         </div>
         <div
-          className='h-9/10 text-gray-200 text-sm overflow-y-auto overflow-x-hidden md:px-4'
+          className='h-9/10 text-gray-200 text-sm overflow-y-auto overflow-x-hidden p-4'
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
           style={{
             MozUserSelect: 'none',
             WebkitUserSelect: 'none',
             msUserSelect: 'none',
           }}>
-          {mapStrArrayToHtml(rawText)}
+          {mapStrToSpan(combineLyrics)}
         </div>
       </div>
     </>
