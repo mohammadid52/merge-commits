@@ -62,7 +62,7 @@ const MoreArtist = () => {
               ) => (
                 <div
                   key={key}
-                  className='h-full p-2 flex justify-center items-center'>
+                  className='h-full p-2 flex justify-center items-start'>
                   <a href={item.link} target='_blank' rel='noopener noreferrer'>
                     {item.type === 'youtube' ? (
                       <IconContext.Provider
