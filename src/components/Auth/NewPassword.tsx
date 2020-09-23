@@ -134,20 +134,20 @@ const NewPassword = () => {
                     <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                 </div>
 
-                <div className="w-full h-1/10 flex flex-col justify-center items-center">
-                    <div className="text-center text-sm mb-2">Password must be at least 8 characters and include uppercase and lowercase</div>
-                        {
-                            message.show ? (
-                                <p className={`text-sm text-center ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
-                                    { message.message }
-                                </p>
-                            ) : null
-                        }
-                </div>
+                <div className="h-1/10 text-center text-sm mt-2 text-gray-700">Password must be at least 8 characters and include uppercase and lowercase</div>
 
             
-                <div className="h-5/10 flex-grow flex flex-col justify-center">
-                     
+                <div className="h-4/10 flex-grow flex flex-col justify-center">
+                    <div className="w-full h-1.5/10 flex flex-col justify-around items-center">
+                            {
+                                message.show ? (
+                                    <p className={`text-sm text-center ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                        { message.message }
+                                    </p>
+                                ) : null
+                            }
+                    </div>
+                    
                         
                         <div className="input relative w-full">
                             <div style={{right: 0}} className="absolute w-6">
@@ -169,7 +169,7 @@ const NewPassword = () => {
                                 </IconContext.Provider>
                             </div>
                             <label className="hidden" htmlFor="password">New Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type={passToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full bg-off-white px-2 py-1 ml-2" placeholder="New Password" type={passToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
                         <div className="input relative w-full">
                             <div style={{right: 0}} className="absolute w-6">
@@ -190,7 +190,7 @@ const NewPassword = () => {
                                 </IconContext.Provider>
                             </div>
                             <label className="hidden" htmlFor="match">Confirm Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirm Password" type={passMatchToggle ? 'text' : 'password'} id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full bg-off-white px-2 py-1 ml-2" placeholder="Confirm Password" type={passMatchToggle ? 'text' : 'password'} id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
                     
                 </div>

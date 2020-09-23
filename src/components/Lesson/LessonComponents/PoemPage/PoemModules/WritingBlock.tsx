@@ -265,10 +265,10 @@ const WritingBlock = (props: WritingBlockProps) => {
                         <div key={key} className="relative bg-transparent flex flex-col items-center animate-fadeIn">
                             <div key={key} id={id} className="w-full h-12 flex flex-row items-center rounded-lg" onDragOver={handleDragOver} onDrop={handleDrop}>
                                 <input id={id} className="w-full h-10 px-4 py-2 rounded-l-lg text-gray-700 bg-gray-300 " name={id} type="text" value={line.text} onChange={handleInputChange} onDoubleClick={handleMenuToggle}/>
-                                <div id={id} className="w-10 h-10 bg-gray-300 rounded-r-lg  flex justify-center items-center " onClick={handleMenuToggle}>
+                                <div id={id} className="w-10 h-10 bg-gray-300 rounded-r-lg  flex justify-center items-center cursor-pointer" onClick={handleMenuToggle}>
                                     <div id={id} className="w-4 h-4 border-dark-blue border-b-8 border-r-8 transform rotate-45 mb-1"></div>
                                 </div>
-                                <div id={id} className="w-8 h-8 ml-2 flex justify-center items-center" onClick={handleDeleteInput}>
+                                <div id={id} className="w-8 h-8 ml-2 flex justify-center items-center cursor-pointer" onClick={handleDeleteInput}>
                                     <IconContext.Provider value={{color: '#E2E8F0', size: '1.5rem', style: { transform: 'rotate(45deg)', opacity: `${lineState.lines.length > lineNo ? '100%' : '10%'}` }}}>
                                         <FaPlus/>
                                     </IconContext.Provider>
