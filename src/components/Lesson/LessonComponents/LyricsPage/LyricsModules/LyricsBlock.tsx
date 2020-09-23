@@ -326,7 +326,9 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * @param input - Object of color grouped words
    */
   const adaptGroupedWordsForDispatch = (input: any) => {
-    return Object.keys(input).map((inputKey: any) => concatStringArray(input[inputKey]));
+    return input.map((arr: string[]) => {
+      return arr.map((inputKey: any, i: number) => ({ id: i, text: inputKey }));
+    });
   };
 
   /**
@@ -352,15 +354,31 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     let displayProps = {
       name: 'Lyrics Breakdown',
       modules: buttons.map((button: any, key: string) => {
-        console.log('adapted: ', button.color);
+        if (typeof finalText[button.color] !== 'undefined') {
+          console.log('adapted: ', adaptGroupedWordsForDispatch(finalText[button.color]));
+        }
         return {
           id: key,
           name: button.id,
           label: button.content,
           color: button.color,
           description: button.description,
-          // content: finalText[button.color],
-          content: ['adaptGroupedWordsForDispatch(finalText[button.color])'],
+          // HELPPPPP
+          // Example output below
+          /* 
+          (1) […
+              0: (6) […]
+              0: Object { id: 0, text: "La" }
+              1: Object { id: 1, text: "Lechusa," }
+              2: Object { id: 2, text: "El" }
+              3: Object { id: 3, text: "Diablo" }
+              4: Object { id: 4, text: "and" }
+              5: Object { id: 5, text: "La" }
+          */
+          content:
+            typeof finalText[button.color] !== 'undefined'
+              ? adaptGroupedWordsForDispatch(finalText[button.color])
+              : [''],
         };
       }),
     };
