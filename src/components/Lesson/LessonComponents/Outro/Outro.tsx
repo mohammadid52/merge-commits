@@ -23,7 +23,7 @@ const Outro = () => {
       <Banner />
 
       {/* <div className='w-full md:h-8.8/10 flex flex-col md:flex-row justify-between items-center'> */}
-      <div className='w-full md:h-8.8/10 flex flex-row justify-center items-center overflow-auto'>
+      <div className='w-full md:h-8.8/10 flex flex-row justify-center items-center'>
         {/* <div className="w-5/10 h-full mt-4 md:mt-0 md:ml-2">
                     <MoreArtist />
                 </div>
@@ -35,14 +35,17 @@ const Outro = () => {
                     </div>
                     <Feedback />
                 </div> */}
-        <div className='w-4.5/10 h-full my-4 md:ml-2'>
-          <MoreArtist />
+        <div className='w-4.5/10 h-full my-4 md:ml-2 flex flex-col justify-center'>
           <VideoBlock link='https://www.youtube.com/embed/bp10ZOtv_zY' fullscreen={fullscreen}/>
+          
         </div>
 
-        <div className='w-4.5/10 h-full flex flex-col justify-center my-4 md:ml-2'>
+        <div className='w-4.5/10 h-full flex flex-col justify-between my-4 md:ml-2'>
+          <MoreArtist />
+          <div className="flex h-2.5/10">
           <TrophyBlock />
           <Links />
+          </div>
           <Feedback />
         </div>
 

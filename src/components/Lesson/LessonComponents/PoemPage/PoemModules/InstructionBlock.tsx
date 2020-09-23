@@ -56,7 +56,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
           ) : (
             <div
               className='h-full flex justify-center items-center'
-              style={{ width: '225px', paddingTop: '.5rem' }}>
+              style={{ width: '250px', paddingTop: '.5rem' }}>
               <video controls width='250'>
                 <source src={instructions.link} type='video/mp4' />
                 <p>Your browser does not support embedded video playback!</p>

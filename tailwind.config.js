@@ -31,6 +31,7 @@ module.exports = {
       '6xl': '4rem',
       '7xl': '5rem',
       '5.5xl': '3.5rem',
+      '4.5xl': '2.75rem',
     },
     zIndex: {
       '0': 0,
