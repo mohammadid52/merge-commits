@@ -81,12 +81,11 @@ const CoopDisplay = () => {
                                 fullscreen={fullscreen}
                                 display='COOP'/>
 
-                                {/* <div className="absolute w-auto z-50" style={{bottom: '-15px', right: 0, }}>
-                                    <div className="bg-yellow-300 text-gray-800 text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
-                                        <p>by: student name</p>
-                                        <p>{state.displayData.breakdownComponent}</p>
+                                <div className="absolute w-auto z-50" style={{bottom: '-15px', right: 0, }}>
+                                    <div className="bg-yellow-300 text-gray-800 font-light text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
+                                        <p>by: {state.displayData.studentInfo.firstName}</p>
                                     </div>
-                                </div> */}
+                                </div>
 
                             </div>
                             

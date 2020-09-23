@@ -44,7 +44,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
           </p>
         </div>
         <div
-          className={`w-full h-8/10 flex justify-center items-center text-sm px-2`}>
+          className={`w-full h-7.5/10 flex justify-center items-center text-sm px-2`}>
           {!videoMode ? (
             <div className='h-full overflow-auto'>
               {instructions.text.map((inst: string, key: number) => (
@@ -56,7 +56,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
           ) : (
             <div
               className='h-full flex justify-center items-center'
-              style={{ width: '250px' }}>
+              style={{ width: '250px', paddingTop: '.5rem' }}>
               <video controls width='250'>
                 <source src={instructions.link} type='video/mp4' />
                 <p>Your browser does not support embedded video playback!</p>

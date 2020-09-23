@@ -102,13 +102,13 @@ const Forgot = () => {
                         <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                     </div>
 
-                    <div className="h-1/10 text-center text-base">Enter your email to reset your password</div>
+                    <div className="h-2/10 flex justify-center items-center text-center text-xl text-gray-800">Enter your email to reset your password</div>
 
                     
             
-                    <div className="h-3/10 flex-grow flex flex-col justify-center">
+                    <div className="h-2.5/10 flex-grow flex flex-col justify-center">
 
-                        <div className="w-full flex justify-center items-center mb-8">
+                        <div className="h-1.8/10 w-full flex justify-center items-center">
                             {
                                 message.show ? (
                                     <p className={`text-sm text-center ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
@@ -126,14 +126,14 @@ const Forgot = () => {
                                 </IconContext.Provider>
                                 </div>
                             <label className="hidden" htmlFor="email">Email</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
+                            <input className="w-full bg-off-white px-2 py-1 ml-2" placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
                         </div>
                     
                     </div>
                     
                     
 
-                    <div className="h-4/10 flex flex-col justify-center items-center">
+                    <div className="h-3.5/10 flex flex-col justify-center items-center">
                         <button className="bg-dark-red shadow-elem-light text-gray-200 rounded-lg mb-4" onKeyPress={handleEnter} onClick={handleSubmit}>
                             Submit
                         </button>

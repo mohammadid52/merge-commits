@@ -123,17 +123,18 @@ const Login = () => {
                     <div className="h-2/10">
                         <img className="" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                     </div>
-                    <div className="w-full h-1/10 flex justify-center items-center">
-                        {
-                            message.show ? (
-                                <p className={`text-sm text-center ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
-                                    { message.message }
-                                </p>
-                            ) : null
-                        }
-                    </div>
+                   
             
-                    <div className="h-4/10 flex-grow flex flex-col justify-center">
+                    <div className="h-4.5/10 flex-grow flex flex-col justify-center">
+                        <div className="w-full h-1/10 flex justify-center items-center">
+                            {
+                                message.show ? (
+                                    <p className={`text-sm text-center ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                        { message.message }
+                                    </p>
+                                ) : null
+                            }
+                        </div>
                         
                         <div className="input">
                                 <div className="icon">
@@ -142,7 +143,7 @@ const Login = () => {
                                 </IconContext.Provider>
                                 </div>
                             <label className="hidden" htmlFor="email">Email</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
+                            <input className="w-full px-2 py-1 ml-2 bg-off-white" placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
                         </div>
                     
                         <div className="input relative w-full">
@@ -166,13 +167,13 @@ const Login = () => {
                             </div>
 
                             <label className="hidden" htmlFor="password">Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="Password" type={passToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full px-2 py-1 ml-2 bg-off-white" placeholder="Password" type={passToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
                     </div>
                     
                    
                     {/* <Link to="/register">Register</Link> */} 
-                    <div className="h-4/10 flex flex-col justify-center items-center">
+                    <div className="h-4.5/10 flex flex-col justify-center items-center">
                         <button className="bg-dark-red text-gray-200 rounded-lg mb-4 shadow-elem-light" onKeyPress={handleEnter} onClick={handleSubmit}>Login</button>
                         <NavLink to="/forgot-password">
                             <div className="text-center hover:text-blue-500">forgot password?</div>

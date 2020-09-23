@@ -11,7 +11,7 @@ import { AiOutlineInstagram } from 'react-icons/ai';
 import { FaSpotify } from 'react-icons/fa';
 
 const MoreArtist = () => {
-  const { state, dispatch } = useContext(LessonContext);
+  const { state, dispatch, theme } = useContext(LessonContext);
   const [fullscreen, setFullscreen] = useState(false);
   const [artistLink, setArtistLinks] = useState([
     {
@@ -20,14 +20,14 @@ const MoreArtist = () => {
       label: 'Iconoclast Website',
     },
     {
-      type: 'youtube',
-      link: 'https://youtu.be/pguAGyNHVAo',
-      label: 'YouTube',
-    },
-    {
       type: 'instagram',
       link: 'https://www.instagram.com/iconoclastartists/',
       label: 'Instagram',
+    },
+    {
+      type: 'youtube',
+      link: 'https://youtu.be/pguAGyNHVAo',
+      label: 'YouTube',
     },
     {
       type: 'youtube',
@@ -40,12 +40,12 @@ const MoreArtist = () => {
 
   return (
     // <div className="w-full h-full bg-dark-blue text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
-    <div className='w-full h-6/10 text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg'>
-      <h3 className='w-full text-2xl font-medium border-b border-white mb-4 border-opacity-50'>
-        Learn more about the artist
-      </h3>
+    <div className={`${theme.gradient.cardBase} bg-dark-blue w-full text-gray-200 py-3 px-6 flex flex-col justify-between items-center rounded-lg`}>
+        <h3 className='w-full text-gray-200 text-2xl font-medium border-b border-white border-opacity-50 mr-4'>
+          Learn more about the artist
+        </h3>
       <div className='h-full w-full flex flex-col items-center rounded-lg'>
-        <PhotoBlock />
+        {/* <PhotoBlock /> */}
 
         <div className='w-full flex flex-row items-center justify-center '>
           <div className='h-full w-full flex flex-row'>
@@ -56,7 +56,7 @@ const MoreArtist = () => {
               ) => (
                 <div
                   key={key}
-                  className='h-6/10 px-4 py-2 my-auto flex justify-center items-start'>
+                  className='h-full px-4 py-2 flex justify-center items-center'>
                   <a href={item.link} target='_blank' rel='noopener noreferrer'>
                     {item.type === 'youtube' ? (
                       <IconContext.Provider
@@ -70,7 +70,7 @@ const MoreArtist = () => {
                     ) : item.type === 'etc' ? (
                       <IconContext.Provider
                         value={{
-                          color: 'white',
+                          color: '#3d7cef',
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>

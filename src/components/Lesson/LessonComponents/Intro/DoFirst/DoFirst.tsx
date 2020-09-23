@@ -73,7 +73,7 @@ const DoFirst = () => {
     switch (question.type) {
       case 'input':
         return (
-          <div key={key} className={'w-8/10 h-full flex flex-col my-4 mx-2'}>
+          <div key={key} className={'w-full h-full flex flex-col my-4 mx-2'}>
             <label className='mb-2' htmlFor={question.id}>
               {question.question}
             </label>
