@@ -17,6 +17,22 @@ module.exports = {
     translate: true,
   },
   theme: {
+    fontSize: {
+      'xs': '.75rem',
+      'sm': '.875rem',
+      'tiny': '.875rem',
+      'base': '1rem',
+      'lg': '1.125rem',
+      'xl': '1.25rem',
+      '2xl': '1.5rem',
+      '3xl': '1.875rem',
+      '4xl': '2.25rem',
+      '5xl': '3rem',
+      '6xl': '4rem',
+      '7xl': '5rem',
+      '5.5xl': '3.5rem',
+      '4.5xl': '2.75rem',
+    },
     zIndex: {
       '0': 0,
       '10': 10,
@@ -93,6 +109,9 @@ module.exports = {
       // 'open': ['Open Sans Condensed', 'sans-serif'],
     },
     extend: {
+      lineHeight: {
+               'extra-tight': '.8',
+                },
       animation: {
         'bounce': 'bounce 2.5s linear 2',
         'ping': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
@@ -243,6 +262,7 @@ module.exports = {
         '8/10': '80%',
         '8.3/10': '83%',
         '8.5/10': '85%',
+        '8.7/10': '87%',
         '8.8/10': '88%',
         '9/10': '90%',
         '9.28/10': '92.8%',

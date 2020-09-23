@@ -28,9 +28,9 @@ const Banner = (props: BannerProps) => {
           </div>
         </div>
       ) : display === 'COOP' ? ( 
-        <div className={`w-full h-1/10 ${theme.banner} flex flex-row justify-center items-center`}>
+        <div className={`w-full h-full ${theme.banner} flex flex-row justify-center items-center`}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem' }}>
-            <div className='bg-dark-red h-16 w-16 flex flex-col items-center rounded-lg justify-center z-20 shadow-2'>
+            <div className='bg-dark-red h-12 w-12 flex flex-col items-center rounded-lg justify-center z-20 shadow-2'>
               <FaPenFancy />
             </div>
           </IconContext.Provider>
@@ -41,7 +41,7 @@ const Banner = (props: BannerProps) => {
       ) : (
         <div className={`w-full h-1/10 ${theme.banner} flex flex-row justify-center items-center`}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem' }}>
-            <div className='bg-dark-red h-16 w-16 flex flex-col items-center rounded-lg justify-center z-20 shadow-2'>
+            <div className='bg-dark-red h-12 w-12 flex flex-col items-center rounded-lg justify-center z-20 shadow-2'>
               <FaPenFancy />
             </div>
           </IconContext.Provider>

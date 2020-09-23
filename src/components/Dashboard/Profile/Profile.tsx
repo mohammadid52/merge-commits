@@ -135,7 +135,7 @@ const Profile: React.FC = () => {
                             </span>
                         </div>
 
-                        <div className="w-full">
+                        <div className="relative w-full">
                             <div className="w-9/10 md:w-6/10 h-8 pl-6 flex justify-between">
                                 <div onClick={() => setSelect('Profile')} className={` ${ select === 'Profile' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
                                     <NavLink to={`${match.url}`}>
@@ -156,6 +156,15 @@ const Profile: React.FC = () => {
                                 </div>
                                 
                             </div>
+
+                            <div className="absolute w-auto" style={{right: '0', top: '0'}}>
+                                <NavLink to={`/dashboard`}>
+                                    <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                                        Go Back
+                                    </button>
+                                </NavLink>
+                            </div>
+
                             <Switch>
                                 <Route 
                                     exact

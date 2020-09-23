@@ -64,11 +64,11 @@ const SelfDisplay = () => {
                     className={`w-12 h-12 p-2 text-3xl rounded-lg bg-${module.color} flex justify-center items-center shadow-2`}>
                     {module.label}
                   </div>
-                  <div className='w-full pl-4 text-gray-200 font-open text-lg font-light'>
+                  <div className='w-full pl-4 text-gray-200 font-open text-xl font-light'>
                     {module.name}
                   </div>
                 </div>
-                <div className='w-full md:my-4 flex flex-col overflow-y-auto overflow-x-hidden px-6'>
+                <div className='w-full md:my-4 flex flex-col overflow-y-auto overflow-x-hidden px-6 font-light'>
                   {module.content.map((line: string, key: number) => (
                     <p
                       key={key}

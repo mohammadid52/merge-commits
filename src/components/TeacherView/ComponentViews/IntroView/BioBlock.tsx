@@ -27,7 +27,7 @@ const BioBlock = (props: props) => {
     <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col justify-center ${theme.block.text} text-base rounded-sm shadow-inner`}>
         <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} rounded-sm shadow-inner`}>
             <h1 className={`${fullscreen ? 'text-2xl font-extrabold mb-4 underline' : 'text-base font-extrabold mb-3'}`}>Biography of the artist:</h1>
-            <div className={`${fullscreen ? 'text-base h-9/10' : 'text-xs h-full'} w-full flex-grow overflow-scroll`}>
+            <div className={`${fullscreen ? 'text-base h-9/10' : 'text-xs h-full'} w-full flex-grow overflow-y-scroll`}>
                 {artistBio}
             </div>
         </div> 

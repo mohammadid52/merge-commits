@@ -4,9 +4,11 @@ import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
 const Feedback = () => {
-  const { theme } = useContext(LessonContext);
+  const { theme, state } = useContext(LessonContext);
+  console.log(state.data, 'state')
+  
   return (
-    <div className={`${theme.gradient.cardBase} bg-dark-blue w-full h-4/10 flex flex-col items-start rounded-lg text-gray-200 p-4 mb-4 border-l-8 border-green-light`}>
+    <div className={`${theme.gradient.cardBase} bg-dark-blue w-full h-4/10 flex flex-col items-start rounded-lg text-gray-200 p-4 border-l-8 border-green-light`}>
       <div className='h-2/10 w-full mb-4 flex justify-between items-center'>
         <div className='w-7/10 text-xl font-open font-light text-base text-blue-100 text-opacity-70'>
           What did you think about the lesson?

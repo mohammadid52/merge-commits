@@ -2,8 +2,6 @@ import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import queryString from 'query-string';
 import { useCookies } from 'react-cookie';
-import { array } from 'prop-types';
-
 import SelectOneQuestions from './Questions/SelectOneQuestions';
 import TextQuestions from './Questions/TextQuestions';
 
@@ -44,13 +42,9 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   // console.log(checkpoint, 'checkpoint');
   // const checkpoint = state.data.lesson.checkpoints.items[0].checkpoint;
   const [ status, setStatus ] = useState('');
-  const [selected, setSelected] = useState<Array<string>>([]);
-  const [input, setInput] = useState<any>();
+  const [ input, setInput ] = useState<any>();
 
   useEffect(() => {
-    if (checkpoint.checkpoint.title) {
-      handleSetTitle(checkpoint.checkpoint.title);
-    }
     // if ( cookies.questionData ) {
     //     dispatch({
     //         type: 'SET_QUESTION_DATA',
@@ -58,13 +52,22 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     //     })
     // }
 
-    if (state.questionData) {
+    let questionDataKeys = []; 
+
+    if ( state.questionData[checkpoint.checkpoint.id] ) { questionDataKeys = Object.keys(state.questionData[checkpoint.checkpoint.id]) }
+
+
+    if (!input && questionDataKeys.length > 0) {
+      // console.log('oldu', state.questionData);
+      
       setInput(() => {
-        return state.questionData;
+        return state.questionData[checkpoint.checkpoint.id];
       });
     }
 
-    if (!input && !state.questionData) {
+    if (!input  && questionDataKeys.length <= 0) {
+      // console.log('bu da oldu');
+      
       setInput(() => {
         return setInitialState(checkpoint.checkpoint.questions.items);
       });
@@ -72,23 +75,16 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
 
     // if ( cookies.questionData ) {
     //     dispatch({
-    //         type: 'SET_QUESTION_DATA',
-    //         payload: cookies.questionData
-    //     })
-    // }
-
-    if (state.questionData) {
-      setInput(() => {
-        return state.questionData;
-      });
-    }
-
-    // if (!input && !state.questionData) {
-    //   setInput(() => {
-    //     return setInitialState(checkpoint.checkpoint.questions.items);
-    //   });
-    // }
-
+      //         type: 'SET_QUESTION_DATA',
+      //         payload: cookies.questionData
+      //     })
+      // }
+      
+      // if (!input && !state.questionData) {
+        //   setInput(() => {
+          //     return setInitialState(checkpoint.checkpoint.questions.items);
+          //   });
+          // }
     setStatus('loaded')
   }, []);
 
@@ -97,74 +93,86 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       handleSetTitle(checkpoint.checkpoint.title);
     }
 
-    if (checkpoint.checkpoint.questions.items) {
+    if (input && checkpoint.checkpoint.questions.items) {
       checkpoint.checkpoint.questions.items.forEach(
         (item: { question: { id: string; type: string; label: string } }) => {
-          setInput((prev: any) => {
-            return {
-              ...prev,
-              [item.question.id]:
-                item.question.type === 'text'
-                  ? ''
-                  : item.question.type === 'input'
-                  ? ''
-                  : item.question.type === 'selectOne'
-                  ? null
-                  : item.question.type === 'selectMany'
-                  ? []
-                  : null,
-            };
-          });
+          let inputKeys = Object.keys(input)
+          let found = inputKeys.some((key: string ) => {
+            item.question.id === key
+          })
+
+          if ( !found ) {
+            setInput((prev: any) => {
+              return {
+                ...prev,
+                [item.question.id]:
+                  item.question.type === 'text'
+                    ? ''
+                    : item.question.type === 'input'
+                    ? ''
+                    : item.question.type === 'selectOne'
+                    ? null
+                    : item.question.type === 'selectMany'
+                    ? []
+                    : null,
+              };
+            });
+          }
         }
       );
     }
   }, [checkpoint]);
 
-  // useEffect(() => {
+  useEffect(() => {
+    console.log('input', input);
+    console.log('qData', state.questionData);
 
-  //     // if ( state.questionData ) {
-  //     //     setInput(() => {
-  //     //         return state.questionData
-  //     //     })
-  //     // }
-
-  //     console.log(state.questionData);
-
-  // }, [state.questionData])
+  }, [input])
 
   const handleSelect = (e: any) => {
+    const questionID = e.target.getAttribute('data-key')
     const { id } = e.target;
-    setSelected((prev) => {
-      if (selected.indexOf(id) >= 0) {
-        let newArray = selected.filter((item) => {
-          return item !== id;
-        });
-        console.log(newArray, 'new array');
-        return newArray;
-      }
-      return [...prev, id];
-    });
 
+    let array;
+    let found = input[questionID].some((item: string) => {
+      return item === id
+    })
+
+    if ( found ) {
+      array = input[questionID].filter((item: string) => {
+        return item !== id
+      })
+    }
+
+    if ( !found ) {
+      array = input[questionID]
+      array.push(id)
+    }
+    
     setInput({
       ...input,
-      'where-im-from-lesson-reflection': selected,
+      [questionID]: array,
     });
+
     // console.log(selected, 'selected')
   };
 
   useEffect(() => {
-    console.log(input, 'input');
+    // console.log(state.questionData);
 
-    if (input && state.questionData !== input) {
+    if (input && state.questionData[checkpoint.checkpoint.id] !== input) {
       dispatch({
         type: 'SET_QUESTION_DATA',
-        payload: input,
+        payload: {
+          key: checkpoint.checkpoint.id,
+          data: input
+        },
       });
     }
 
-    if (input && cookies.questionData !== input) {
-      setCookie('questionData', input);
-    }
+    // if (input && cookies.questionData !== input) {
+    //   setCookie('questionData', input);
+    // }
   }, [input]);
 
   const handleInputChange = (e: any) => {
@@ -187,7 +195,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     switch (question.type) {
       case 'input':
         return (
-          <div key={key} className={'w-full flex flex-col mb-2'}>
+          <div key={key} className={'w-4.8/10 flex flex-col mb-4 mx-2'}>
             <label className='mb-2' htmlFor={question.label}>
               {question.question}
             </label>
@@ -208,6 +216,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
             question={question}
             value={input[question.label]}
             handleInputChange={handleInputChange}
+            checkpointID={checkpoint.checkpoint.id}
           />
         );
       case 'selectOne':
@@ -216,31 +225,36 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
             keyProp={key}
             question={question}
             handleInputChange={handleInputChange}
+            checkpointID={checkpoint.checkpoint.id}
           />
         );
       case 'selectMany':
         return (
-          <>
-            <p className='mb-2'>{question.question}</p>
-            <div id={question.label} className={'w-8/10 flex flex-col '}>
+          <div className={`w-4.8/10 flex flex-col mx-2`}>
+            <p className='mb-3'>{question.question}</p>
+            <div id={question.label} className={'w-9/10 flex flex-col'}>
               {question.options.map(
                 (
                   option: { label: string; icon: string; color: string; text: string },
                   key: any
                 ) => (
-                  <div key={key} className={`w-3/4 flex items-center mb-2`} onClick={handleSelect}>
-                    {selected.indexOf(`${option.label}`) >= 0 ? (
+                  <div key={key} className={`w-3/4 flex items-center mb-2`} onClick={handleSelect} data-key={question.id}>
+                    {input[question.id].indexOf(`${option.label}`) >= 0 ? (
                       <div
                         id={`${option.label}`}
                         className='cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center'
-                        style={{ backgroundColor: `${option.color}` }}>
-                        {option.icon ? option.icon : ''}
+                        style={{ backgroundColor: `${option.color}` }}
+                        data-key={question.id}
+                      >
+                        { option.icon ? option.icon : '' }
                       </div>
                     ) : (
                       <div
                         id={`${option.label}`}
-                        className='bg-gray-400 shadow-2 cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center'>
-                        {option.icon ? option.icon : ''}
+                        className='bg-gray-400 shadow-2 cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center'
+                        data-key={question.id}
+                      >
+                        { option.icon ? option.icon : '' }
                       </div>
                     )}
                     <div id={`${option.label}`} className='mx-4'>
@@ -250,12 +264,14 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                 )
               )}
             </div>
-          </>
+          </div>
         );
       default:
         return '';
     }
   };
+
+  if ( status !== 'loaded' ) return null;
 
   return (
     <div className={`w-full h-full flex flex-col text-gray-200`}>
@@ -263,7 +279,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
         className={`w-full text-2xl font-open font-bold ${
           checkpoint.checkpoint.subtitle ? 'border-b-2 border-gray-200 mb-2' : ''
         }`}>
-        {checkpoint.checkpoint.subtitle ? checkpoint.checkpoint.subtitle : null}
+        { checkpoint.checkpoint.subtitle ? checkpoint.checkpoint.subtitle : null }
       </h4>
       <h4 className={`w-full text-xl font-open font-bold`}>{checkpoint.checkpoint.instructions}</h4>
       <div

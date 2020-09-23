@@ -68,10 +68,11 @@ const Modules = (props: any) => {
                       key={key}
                       className={`${
                         displayMode === 'SELF'
-                          ? 'text-sm md:text-xl'
+                          ? 'text-base md:text-xl'
                           : displayMode === 'COOP'
-                          ? 'text-sm font-normal'
-                          : 'text-sm font-normal'
+                          ? 'text-base font-normal'
+                          // : displayMode === 'COOP' && fullscreen ?'text-base font-normal'
+                          :'text-base font-normal'
                       } `}>
                       {word}
                     </p>
