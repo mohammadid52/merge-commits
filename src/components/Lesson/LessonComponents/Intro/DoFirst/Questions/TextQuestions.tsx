@@ -37,7 +37,7 @@ const TextQuestions = (txtPrps: CPQuestionProps) => {
 
   return (
     <div key={txtPrps.keyProp} className={`w-9.5/10 h-full flex flex-col my-2`}>
-      <label className='mb-2 text-sm' htmlFor={txtPrps.question.id}>
+      <label className='mb-2 text-sm md:text-base w-full' htmlFor={txtPrps.question.id}>
         {txtPrps.question.question}
       </label>
       <textarea
