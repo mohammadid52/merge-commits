@@ -59,14 +59,14 @@ const ToolBar = (props: ToolbarProps) => {
             {button.icon}
           </div>
         ))}
-        <div
+        {/* <div
           id='erase'
           className={`bg-gray-200 h-12 w-12 text-3xl rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center`}
           onClick={handleClick}>
           <IconContext.Provider value={{ color: 'darkgray', size: '2rem' }}>
             <FaEraser id='erase'/>
           </IconContext.Provider>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -317,12 +317,28 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   };
 
   /**
+   * Function to adapt FinalText state to work with dispatch
+   * @param input - Object of color grouped words
+   */
+  const adaptGroupedWordsForDispatch = (input: any) => {
+
+  }
+
+  /**
    * Lifecycle
+   * 1. expand multi line text group when initial selected group is updated
+   * 2. merge generate color-grouped array
    */
 
   useEffect(() => {
     expandMultilineSelection();
   }, [selectedTextGroups]);
+
+  useEffect(() => {
+    if (Object.keys(expSelectedTextGroups).length > 0) {
+      setFinalText(groupWordsByColor(Object.values(expSelectedTextGroups)));
+    }
+  }, [expSelectedTextGroups]);
 
   /**
    * html functionality
@@ -340,9 +356,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * @param str - any string constant/variable
    */
 
-  const testMouse = (e: React.MouseEvent) => {
-    console.log();
-  };
 
   const mapStrToSpan = (strArray: string[]) => {
     return strArray?.map((mappedWord: string, i: number) => {
