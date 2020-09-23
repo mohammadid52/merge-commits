@@ -30,7 +30,7 @@ const QuoteBlock = () => {
             <div className='w-full text-center text-4.5xl leading-none font-light'>{artistName}</div>
           </div>
 
-          <div className="h-4.8/10 my-auto flex flex-col justify-center items-center">
+          <div className="h-4.8/10 my-auto flex flex-col justify-end items-center">
             <div className='h-auto quote flex flex-col justify-around items-center py-2 px-4 bg-gradient-to-l from-transparent to-black80'>
               <div className='relative'>
                 <div className='absolute w-16' style={{ top: '-30px', left: '-5px' }}>

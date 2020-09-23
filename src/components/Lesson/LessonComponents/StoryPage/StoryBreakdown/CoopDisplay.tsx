@@ -26,11 +26,19 @@ const CoopDisplay = () => {
     const [fullscreen, setFullscreen] = useState(false);
 
     const [ teacherData, setTeacherData ] = useState<teacherData>();
+    const student = state.displayData.studentInfo;
 
     const handleFullscreen = () => {
         setFullscreen(fullscreen => {
             return !fullscreen
         });
+    }
+
+    const firstInitialFunc = (str: string) => {
+        if (typeof str !== 'string' || str === '') { return 'Profile' }
+        let firstInitial = str.charAt(0)
+        firstInitial = firstInitial.toUpperCase() + '.';
+        return firstInitial;
     }
 
     useEffect(() => {
@@ -83,7 +91,7 @@ const CoopDisplay = () => {
 
                                 <div className="absolute w-auto z-50" style={{bottom: '-15px', right: 0, }}>
                                     <div className="bg-yellow-300 text-gray-800 font-light text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
-                                        <p>by: {state.displayData.studentInfo.firstName}</p>
+                                        <p>by: {student.preferredName ? student.preferredName : student.firstName} {firstInitialFunc(student.lastName)}</p>
                                     </div>
                                 </div>
 

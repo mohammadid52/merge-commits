@@ -72,7 +72,13 @@ const Dashboard: React.FC = () => {
                 </SideMenu>
                 <div className={`height h-full flex flex-col`}>
                 <PageHeaderBar />
-                <Suspense fallback={<div className="h-screen">Loading...</div>}> 
+                <Suspense fallback={
+                <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                    <div className="min-h-full w-full flex flex-col justify-center items-center">
+                        Give us one second! It is loading... 
+                    </div>
+                </div>
+                }> 
                     <Switch>
                         {/* <Route 
                             exact
