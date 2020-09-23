@@ -29,11 +29,10 @@ export interface FinalText {
 }
 
 const LyricsBlock = (props: LyricsBlockProps) => {
-  const { color, selected, setSelected, fullscreen, setFullscreen } = props;
+  const { color, fullscreen } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
   const buttons = state.data.lesson.coreLesson.tools;
   const rawText = state.data.lesson.coreLesson.content.text;
-  const displayTextArray: string[][] = [];
 
   const colorPicker = (colorName: string): string => {
     switch (colorName) {
@@ -299,6 +298,17 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     }
   };
 
+  const concatStringArray = (strArray: string[]) => {
+
+    return strArray.reduce((acc:any, str: string) => {
+      if(str !== '\n'){
+        return [[acc + str][0].replace(/(,)/, ' ')]
+      } else {
+        return [acc, str];
+      }
+    },[])
+  }
+
   /**
    * Group final words together and trim strings
    * @param input - Array of objects with [key: string]:string[]
@@ -321,7 +331,8 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * @param input - Object of color grouped words
    */
   const adaptGroupedWordsForDispatch = (input: any) => {
-
+    return Object.keys(input).map((inputKey:any) => input[inputKey]);
+    
   }
 
   /**
@@ -337,8 +348,40 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   useEffect(() => {
     if (Object.keys(expSelectedTextGroups).length > 0) {
       setFinalText(groupWordsByColor(Object.values(expSelectedTextGroups)));
+      if(Object.keys(finalText).length > 0) {
+        console.log('adapted: ' ,adaptGroupedWordsForDispatch(finalText));
+      }
     }
   }, [expSelectedTextGroups]);
+
+  /**
+   * ANDREW'S DISPATCH
+   */
+  useEffect(()=>{
+    let displayProps = {
+      name: 'Lyrics Breakdown',
+      modules: buttons.map((button: any, key: string) => {
+        return {
+          id: key,
+          name: button.id,
+          label: button.content,
+          color: button.color,
+          description: button.description,
+          content: finalText[button.color],
+        };
+      }),
+    };
+
+    dispatch({
+      type: 'SET_DISPLAY_PROPS',
+      payload: {
+        name: 'lyrics',
+        content: displayProps,
+      },
+    });
+
+    console.log('dispatch should be sent...')
+  },[selectedTextGroups])
 
   /**
    * html functionality
@@ -353,7 +396,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    *
    * Punctuation: [,.-:;]
    *
-   * @param str - any string constant/variable
+   * @param strArray - any string []
    */
 
 
