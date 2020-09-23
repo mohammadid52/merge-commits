@@ -176,7 +176,13 @@ const LessonControl = () => {
                                 student={selectedStudent}
                                 fullscreen={fullscreen}/> */}
                             {/*  */}
-                            <Suspense fallback={<div> Loading... </div>}>  
+                            <Suspense fallback={
+                            <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                                <div className="min-h-full w-full flex flex-col justify-center items-center">
+                                    Give us one second! It is loading... 
+                                </div>
+                            </div>
+                            }>  
                                 <Switch>
                                     <Route 
                                         path={`${match.url}/intro`}
