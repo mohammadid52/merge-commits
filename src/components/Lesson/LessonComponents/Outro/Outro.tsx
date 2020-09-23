@@ -25,7 +25,7 @@ const Outro = () => {
 
       {/* <div className='w-full md:h-8.8/10 flex flex-col md:flex-row justify-between items-center'> */}
       <div className='w-full md:h-full flex flex-col justify-around items-center'>
-        <div className="w-5/10 h-8/10 flex flex-col justify-around items-center">
+        <div className="w-5/10 h-8/10 flex flex-col justify-between items-center">
           <Feedback/>
           <MoreArtist/>
           <SaveQuit/>
