@@ -5,8 +5,8 @@ import SelectOneQuestions from './Questions/SelectOneQuestions';
 
 const setInitialState = (array: Array<any>) => {
   let tempObj: any = {};
-  array.forEach((item: { question: { type: string; label: string } }) => {
-    tempObj[item.question.label] =
+  array.forEach((item: { question: { id: string, type: string; label: string } }) => {
+    tempObj[item.question.id] =
       item.question.type === 'text'
         ? ''
         : item.question.type === 'input'
@@ -23,19 +23,27 @@ const setInitialState = (array: Array<any>) => {
 const DoFirst = () => {
   const { state, dispatch } = useContext(LessonContext);
   const { questions, required, type } = state.data.lesson.doFirst;
+  const doFirstID = state.data.lesson.doFirst.id
   const questionArray = questions.items;
-  const [input, setInput] = useState<any>();
+  const [ input, setInput ] = useState<any>();
   const [ status, setStatus ] = useState('');
 
+  useEffect(() => {
+    console.log(state.questionData);
+    
+  }, [state.questionData])
 
   useEffect(() => {
+    console.log(doFirstID);
+    
+    let questionDataKeys = []; 
 
-    let questionDataKeys = Object.keys(state.questionData)
+    if ( state.questionData.doFirst ) { questionDataKeys = Object.keys(state.questionData.doFirst) }
 
     if (!input && questionDataKeys.length > 0) {
       
       setInput(() => {
-        return state.questionData;
+        return state.questionData.doFirst;
       });
 
     }
@@ -84,7 +92,7 @@ const DoFirst = () => {
           <TextQuestions
             keyProp={key}
             question={question}
-            value={input[question.label]}
+            value={input[question.id]}
             handleInputChange={handleInputChange}
           />
         );
@@ -140,19 +148,21 @@ const DoFirst = () => {
   };
 
   useEffect(() => {
-    console.log(input);
-    
-    if (input && state.questionData !== input) {
+    console.log('input', input);
+
+    if (input && state.questionData.doFirst !== input) {
       dispatch({
         type: 'SET_QUESTION_DATA',
-        payload: input,
+        payload: {
+          key: 'doFirst',
+          data: input
+        },
       });
     }
 
     // if (input && cookies.questionData !== input) {
     //   setCookie('questionData', input);
     // }
-    
   }, [input]);
 
   const handleSelect = (e: any) => {

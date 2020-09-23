@@ -52,13 +52,16 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     //     })
     // }
 
-    let questionDataKeys = Object.keys(state.questionData)
+    let questionDataKeys = []; 
+
+    if ( state.questionData[checkpoint.checkpoint.id] ) { questionDataKeys = Object.keys(state.questionData[checkpoint.checkpoint.id]) }
+
 
     if (!input && questionDataKeys.length > 0) {
       // console.log('oldu', state.questionData);
       
       setInput(() => {
-        return state.questionData;
+        return state.questionData[checkpoint.checkpoint.id];
       });
     }
 
@@ -72,16 +75,16 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
 
     // if ( cookies.questionData ) {
     //     dispatch({
-    //         type: 'SET_QUESTION_DATA',
-    //         payload: cookies.questionData
-    //     })
-    // }
-
-    // if (!input && !state.questionData) {
-    //   setInput(() => {
-    //     return setInitialState(checkpoint.checkpoint.questions.items);
-    //   });
-    // }
+      //         type: 'SET_QUESTION_DATA',
+      //         payload: cookies.questionData
+      //     })
+      // }
+      
+      // if (!input && !state.questionData) {
+        //   setInput(() => {
+          //     return setInitialState(checkpoint.checkpoint.questions.items);
+          //   });
+          // }
     setStatus('loaded')
   }, []);
 
@@ -122,6 +125,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
 
   useEffect(() => {
     console.log('input', input);
+    console.log('qData', state.questionData);
 
   }, [input])
 
@@ -156,10 +160,13 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   useEffect(() => {
     // console.log(state.questionData);
 
-    if (input && state.questionData !== input) {
+    if (input && state.questionData[checkpoint.checkpoint.id] !== input) {
       dispatch({
         type: 'SET_QUESTION_DATA',
-        payload: input,
+        payload: {
+          key: checkpoint.checkpoint.id,
+          data: input
+        },
       });
     }
 
@@ -209,6 +216,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
             question={question}
             value={input[question.label]}
             handleInputChange={handleInputChange}
+            checkpointID={checkpoint.checkpoint.id}
           />
         );
       case 'selectOne':
@@ -217,6 +225,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
             keyProp={key}
             question={question}
             handleInputChange={handleInputChange}
+            checkpointID={checkpoint.checkpoint.id}
           />
         );
       case 'selectMany':

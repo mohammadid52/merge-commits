@@ -26,18 +26,18 @@ const TextQuestions = (txtPrps: CPQuestionProps) => {
     // console.log('contents: ', contents);
     // console.log('quesData: ', state.questionData[txtPrps.question.id]);
     // console.log('text area id: ', txtPrps.question.id);
-    if ( state.questionData[txtPrps.question.id] && state.questionData[txtPrps.question.id] !== '') {
-      setContents(state.questionData[txtPrps.question.id])
+    if ( state.questionData.doFirst && state.questionData.doFirst[txtPrps.question.id] && state.questionData.doFirst[txtPrps.question.id] !== '') {
+      setContents(state.questionData.doFirst[txtPrps.question.id])
     }
 
-    if(state.questionData[txtPrps.question.id] === undefined){
+    if( state.questionData.doFirst && state.questionData.doFirst[txtPrps.question.id] === undefined ){
       setContents('');
     }
   })
 
   return (
     <div key={txtPrps.keyProp} className={`w-9.5/10 h-full flex flex-col my-2`}>
-      <label className='mb-2 text-sm md:text-lg w-full' htmlFor={txtPrps.question.label}>
+      <label className='mb-2 text-sm' htmlFor={txtPrps.question.id}>
         {txtPrps.question.question}
       </label>
       <textarea

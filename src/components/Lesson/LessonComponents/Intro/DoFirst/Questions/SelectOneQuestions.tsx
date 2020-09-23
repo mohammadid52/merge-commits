@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { LessonContext } from '../../../../../../contexts/LessonContext'
+import DoFirst from '../DoFirst';
 
 export interface CPQuestionProps {
   question: {
@@ -40,7 +41,7 @@ const SelectOneQuestions = (selPrps: CPQuestionProps) => {
                   name={selPrps.question.label}
                   value={option.label}
                   onChange={selPrps.handleInputChange}
-                  checked={state.questionData[parseInt(selPrps.question.id)] === option.label}
+                  checked={state.questionData.doFirst[parseInt(selPrps.question.id)] === option.label}
                 />
                 <label htmlFor={`${option.text}`}>{option.text}</label>
               </div>
