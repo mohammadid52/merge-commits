@@ -8,7 +8,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import * as customMutations from '../../../../customGraphql/customMutations';
 
 const SaveQuit = () => {
-  const { state, theme } = useContext(LessonContext);
+  const { state, dispatch, theme } = useContext(LessonContext);
   const history = useHistory();
   // the bottom is from 'LessonHeaderBar.tsx'
   // const { theme, state, dispatch } = useContext(LessonContext);
@@ -23,22 +23,52 @@ const SaveQuit = () => {
   //         }
   //     }
   // }
+  const updateStudentData = async () => {
+    let lessonProgress = state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
+
+    // console.log('thisone', state )
+
+    let data = {
+        id: state.studentDataID,
+        lessonProgress: lessonProgress,
+        status: state.studentStatus,
+        classroomID: 1,
+        studentID: state.studentUsername,
+        studentAuthID: state.studentAuthID,
+        warmupData: state.componentState.story ? state.componentState.story : null,
+        corelessonData: state.componentState.lyrics ? state.componentState.lyrics : null,
+        activityData: state.componentState.poem ? state.componentState.poem : null
+    }
+
+    console.log('update', data);
+    
+    try {
+        const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }))
+        console.log(dataObject)
+        dispatch({ type: 'SAVED_CHANGES' })
+        // console.log('state', state)
+    } catch (error) {
+        console.error(error);   
+    }
+  }
 
 
-    const handleSave = async () => {       
-      if (typeof state.questionData === "object") {
-          let keys = Object.keys(state.questionData)
-          // console.log(Object.keys(state.questionData))
-          await keys.forEach(async (key: string) => {
-              let questionIDs = Object.keys(state.questionData[key])
-              questionIDs.forEach(async (questionID: string) => {
-                await saveQuestionData(key, questionID)
-            })
+  const handleSave = async () => {       
+    if (typeof state.questionData === "object") {
+        let keys = Object.keys(state.questionData)
+        // console.log(Object.keys(state.questionData))
+        await keys.forEach(async (key: string) => {
+            let questionIDs = Object.keys(state.questionData[key])
+            questionIDs.forEach(async (questionID: string) => {
+              await saveQuestionData(key, questionID)
           })
+        })
 
-          history.push('/dashboard')
-      }
-    } 
+        await updateStudentData()
+
+        history.push('/dashboard')
+    }
+  } 
     
     const saveQuestionData = async (key: string, questionID: string) => {
         let questiondDataObject = {
