@@ -163,7 +163,7 @@ const LessonControl = () => {
                                 student={selectedStudent}
                                 fullscreen={fullscreen}/> */}
                             {/*  */}
-                            <Suspense fallback={<div> Loading... </div>}>
+                            <Suspense fallback={<div> Loading... </div>}>  
                                 <Switch>
                                     <Route 
                                         path={`${match.url}/intro`}

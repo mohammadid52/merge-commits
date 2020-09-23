@@ -105,17 +105,16 @@ const Registration = () => {
                 <div className="h-2/10">
                     <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                 </div>
-                <div className="w-full h-1/10 flex justify-center items-center">
-                        {
-                            message.show ? (
-                                <p className={`text-sm text-center ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
-                                    { message.message }
-                                </p>
-                            ) : null
-                        }
-                </div>
-
-                <div className="h-5/10 flex-grow flex flex-col justify-center">
+                <div className="h-6/10 flex-grow flex flex-col justify-center">
+                    <div className="w-full h-1/10 flex justify-center items-center">
+                            {
+                                message.show ? (
+                                    <p className={`text-sm text-center ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
+                                        { message.message }
+                                    </p>
+                                ) : null
+                            }
+                    </div>
                     <div className="input">
                             <div className="icon">
                             <IconContext.Provider value={{ size: '1.5rem'}}>
@@ -123,7 +122,7 @@ const Registration = () => {
                             </IconContext.Provider>
                             </div>
                         <label className="hidden" htmlFor="email">Email</label>
-                        <input className="w-full px-2 py-1 ml-2" placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
+                        <input className="w-full bg-off-white px-2 py-1 ml-2" placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
                     </div>
 
                     <div className="input">
@@ -133,7 +132,7 @@ const Registration = () => {
                             </IconContext.Provider>
                             </div>
                         <label className="hidden" htmlFor="code">Confirmation Code</label>
-                        <input className="w-full px-2 py-1 ml-2" placeholder="Confirmation Code" type="text" id="code" name="code" value={input.code} onChange={handleChange}/>
+                        <input className="w-full bg-off-white px-2 py-1 ml-2" placeholder="Confirmation Code" type="text" id="code" name="code" value={input.code} onChange={handleChange}/>
                     </div>
                 </div>
              
