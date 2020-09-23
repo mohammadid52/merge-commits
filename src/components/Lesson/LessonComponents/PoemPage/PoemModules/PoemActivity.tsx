@@ -27,7 +27,7 @@ const PoemActivity = () => {
         open: state.componentState.poem && state.componentState.poem.editMode ? state.componentState.poem.editMode : false,
         input: state.componentState.poem && state.componentState.poem.editInput ? state.componentState.poem.editInput : '',
     })
-    const { video, link, text } = state.data.activity.instructions
+    const { video, link, text } = state.data.lesson.activity.instructions
     const [ openPopup, setOpenPopup ] = useState(false);
 
     
@@ -114,17 +114,17 @@ const PoemActivity = () => {
     return (
         <>
             <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/>
-            <div className="w-full flex flex-col items-center">
+            <div className="w-full h-full flex flex-col justify-between items-center">
                 <Banner />
-                <div className="w-full flex flex-col md:flex-row">
-                    <div className="md:w-7/12 md:h-128 flex flex-col md:w-full md:mr-2">
+                <div className="w-full h-8.8/10 justify-between flex flex-col md:flex-row">
+                    <div className="md:w-6/10 md:h-full flex flex-col">
                         {   !editMode.open ?
                             <WritingBlock editMode={editMode} setEditMode={setEditMode}/>
                             :
                             <EditBlock editMode={editMode}/>
                         }
                     </div>
-                    <div className="md:w-5/12 md:h-128 flex flex-col md:ml-2">
+                    <div className="md:w-3.9/10 justify-between md:h-full flex flex-col">
                         <InstructionBlock editMode={editMode.open} />
                         <ToolBar editMode={editMode} setEditMode={setEditMode} />
                     </div>

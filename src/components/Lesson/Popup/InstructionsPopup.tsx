@@ -22,7 +22,7 @@ const InstructionsPopup = (props: InstructionsPopupProps) => {
     return (
         <div className="absolute h-full w-full bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
             <div className="bg-dark-blue w-7/12 h-140 text-gray-900 text-2xl flex flex-col justify-around items-center py-4 px-8 shadow-2">
-                <div className="w-full flex justify-between mb-4 border-b border-white ">
+                <div className="w-full flex justify-between mb-4 border-b border-white border-opacity-10">
                     <h3 className="flex-grow text-4xl text-gray-200 font-open font-bold">
                         Instructions
                     </h3>

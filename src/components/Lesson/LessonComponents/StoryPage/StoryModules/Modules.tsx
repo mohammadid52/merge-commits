@@ -15,9 +15,9 @@ interface FormInputsState {
 
 const Modules = (props: ModulesProps) => {
     const { inputs } = props
-    const { state, dispatch } = useContext(LessonContext);
+    const { state, theme, dispatch } = useContext(LessonContext);
     const [ cookies, setCookie ] = useCookies(['story'])
-    const [ formInputs, setFormInputs ] = useState<FormInputsState>()
+    const [ formInputs, setFormInputs ] = useState<FormInputsState>() 
 
     useEffect(() => {
         inputs.forEach((item: { name: string; example: string; prompt: string; }) => {
@@ -86,16 +86,16 @@ const Modules = (props: ModulesProps) => {
     }
 
     return (
-        <div className="md:h-72 w-full bg-dark-blue text-gray-200 mb-4 md:mb-0 px-4 md:px-8 py-4 shadow-2 rounded-sm">
-            <h3 className="text-xl font-open font-bold mb-3 border-b border-white mb-2">Focus Questions</h3>
-            <div className="w-full h-full">
+        <div className="md:h-5.8/10 w-full bg-gradient-to-tl from-dark-blue to-med-dark-blue text-gray-200 md:mb-0 px-4 md:px-8 py-4 rounded-lg overflow-hidden">
+            <h3 className={`text-xl font-open font-light ${theme.underline}`}>Focus Questions</h3>
+            <div className="w-full h-full ">
                 { 
                     formInputs ? inputs.map((input, key) => (
-                        <div key={key} className="flex flex-col mb-2">
-                            <label className="text-sm md:text-md mb-2" htmlFor={input.name}>
+                        <div key={key} className={`flex flex-col animate-fadeIn ${key !== inputs.length-1 && 'border-b border-white border-opacity-10 '}`}>
+                            <label className="text-sm md:text-md mb-2 font-light text-base text-blue-100 text-opacity-70" htmlFor={input.name}>
                                 { input.prompt }
                             </label>
-                            <input id={input.name} className="md:w-72 text-sm md:text-md xl:text-lg px-4 py-1 rounded-lg shadow-2 text-gray-700 bg-gray-300" name={input.name} type="text" placeholder={`${input.example}, etc.`} value={formInputs[input.name]} onChange={handleFormInputChange}/>
+                            <input id={input.name} className="px-4 py-1 text-lg rounded-lg text-gray-700 bg-gray-300" name={input.name} type="text" placeholder={`${input.example}, etc.`} value={formInputs[input.name]} onChange={handleFormInputChange}/>
                         </div>
                     )) : null
                 }

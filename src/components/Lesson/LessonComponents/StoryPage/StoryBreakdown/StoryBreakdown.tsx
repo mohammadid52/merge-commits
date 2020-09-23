@@ -1,31 +1,37 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import ReflectionQuestions from './ReflectionQuestions';
 import Modules from './Modules';
 import Banner from './Banner';
+import SelfDisplay from './SelfDisplay';
+import CoopDisplay from './CoopDisplay';
 
 
 const StoryBreakdown = () => {
     const { state, dispatch } = useContext(LessonContext);
     const displayProps = state.componentState.story;
+    const [displayMode, setDisplayMode] = useState(state.data.lessonPlan[state.currentPage].displayMode);
+
+    console.log(state.currentPage)
 
     useEffect(() => {
         dispatch({type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown'})
     }, [])
 
+    useEffect(() => {
+        if ( state.pages[state.currentPage].displayMode !== displayMode ) {
+            setDisplayMode(state.pages[state.currentPage].displayMode)
+        }
+    }, [state.pages])
 
+if (displayMode === 'SELF') {
     return (
-        <div className="w-full h-full flex flex-col justify-center items-center">
-            <Banner title={displayProps.title} />
-            <div className="w-full flex flex-col md:flex-row md:mb-5">
-                <div className={`bg-dark-blue ${displayProps.additional ? 'md:w-8/10' : 'w-full'} mb-4 md:mb-0 overflow-scroll h-68 md:h-100 px-4 md:px-12 py-4 md:py-8 items-center text-md md:text-3xl text-gray-200 rounded shadow-2`}>
-                    { displayProps.story }
-                </div>
-                <Modules additional={displayProps.additional}/>
-            </div>
-            <ReflectionQuestions />
-        </div>
-    )
+        <SelfDisplay />
+    )} if (displayMode === 'COOP') {
+        return (
+            <CoopDisplay />
+        )
+    }
 }
 
 export default StoryBreakdown;

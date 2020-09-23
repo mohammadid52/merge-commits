@@ -1,13 +1,33 @@
-import { LessonStateType, lessonState } from '../state/LessonState';
+import { LessonStateType, PagesType, lessonState } from '../state/LessonState';
+import { Stats } from 'fs';
+// import { useStudentTimer } from '../customHooks/timer'
 
-type LessonActions = 
+
+export type LessonActions = 
 |   {
-    type: 'SET_INITIAL_STATE';
-    payload: {
-        data?: any;
-        pages: any;
-        word_bank?: any;
+        type: 'SET_INITIAL_STATE';
+        payload: {
+            data?: any;
+            pages: PagesType
+            word_bank?: any;
+            displayData?: any;
         }
+    }
+|   {
+        type: 'UPDATE_LESSON_PLAN';
+        payload: {
+            pages: PagesType;
+            displayData?: any;
+            viewing?: string
+        }
+    }
+|   {
+        type: 'UPDATE_STUDENT_STATUS';
+        payload: string
+    }
+|   {
+        type: 'SET_SAVE_FUNCTION';
+        payload: Promise<void>
     }
 |   {
         type: 'SET_CURRENT_PAGE';
@@ -38,6 +58,15 @@ type LessonActions =
         };
     } 
 |   {
+        type: 'SET_QUESTION_DATA';
+        payload: {
+            key: string
+            data: {
+                [key: string]: any
+            }
+        }
+    } 
+|   {
         type: 'ERROR';
         payload: string;
     } 
@@ -62,10 +91,22 @@ type LessonActions =
         payload: number;
     } 
 |   {
+        type: 'SET_STUDENT_INFO';
+        payload: {
+            studentDataID: string
+            studentUsername: string
+            studentAuthID: string
+        };
+    } 
+|   {
+        type: 'SET_LESSON_PROGRESS';
+        payload: string;
+    } 
+|   {
         type: 'CLEANUP';
     } 
 |   {
-        type: 'TEST' | 'PAGE_FORWARD' |  'PAGE_BACK' | 'CAN_CONTINUE' | 'NO_CONTINUE' | 'FINISH' | 'SAVED_CHANGES';
+        type: 'TEST' | 'PAGE_FORWARD' |  'PAGE_BACK' | 'CAN_CONTINUE' | 'NO_CONTINUE' | 'FINISH' | 'SAVED_CHANGES' | 'SET_LOADING' | 'INCREMENT_SAVE_COUNT';
     } 
 
 export const lessonReducer = (state: LessonStateType, action: LessonActions) => {
@@ -80,6 +121,8 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 data: action.payload.data,
                 pages: action.payload.pages,
                 word_bank: action.payload.word_bank,
+                displayData: action.payload.displayData,
+                // timer: action.payload.timer
             }
         case 'SET_CURRENT_PAGE':
             return {
@@ -99,8 +142,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             }
         case 'SET_PROGRESS':
             return {
-                ...state,
-                lessonProgress: action.payload, 
+                ...state, 
                 pages: state.pages.map((page: {}, key: number) => {
                     if (key <= action.payload) {
                         return {
@@ -117,6 +159,30 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 ...state, 
                 error: action.payload
             } 
+        case 'UPDATE_STUDENT_STATUS':
+            console.log('status', action.payload);
+            return {
+                ...state,
+                studentStatus: action.payload
+            }
+        case 'SET_SAVE_FUNCTION':
+            return {
+                ...state,
+                saveFunction: action.payload
+            }
+        case 'SET_STUDENT_INFO':
+            return {
+                ...state, 
+                studentDataID: action.payload.studentDataID,
+                studentUsername:
+                action.payload.studentUsername,
+                studentAuthID: action.payload.studentAuthID
+            } 
+        case 'SET_LOADING':
+            return {
+                ...state, 
+                status: 'loading',
+            } 
         case 'ADD_WORD':
             return {
                 ...state,
@@ -124,7 +190,6 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 word_bank: [...state.word_bank, action.payload]
             }
         case 'SET_INITIAL_COMPONENT_STATE_FROM_DB':
-            
             return {
                 ...state,
                 firstSave: true,
@@ -150,6 +215,21 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                     }
                 },
             };
+        case 'UPDATE_LESSON_PLAN':
+            console.log('this', action.payload, state.studentAuthID, action.payload.viewing === state.studentAuthID);
+            
+            return {
+                ...state,
+                status: 'loaded',
+                displayData: action.payload.displayData,
+                pages: action.payload.pages,
+                viewing: action.payload.viewing === state.studentAuthID,
+            }
+        case 'INCREMENT_SAVE_COUNT':
+            return {
+                ...state,
+                saveCount: state.saveCount + 1,
+            }
         case 'CAN_CONTINUE':
             return {
                 ...state,
@@ -169,7 +249,6 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             return {
                 ...state,
                 unsavedChanges: false,
-                firstSave: state.firstSave ? state.firstSave : true,
             }
         case 'OPEN_LESSON': 
             return {
@@ -184,6 +263,35 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                         }
                     }
                 })
+            }
+        case 'SET_QUESTION_DATA':
+            let payloadKeys = Object.keys(action.payload.data);
+            let updatedQuestionData: any = state.questionData;
+
+            if ( !updatedQuestionData[action.payload.key] ) {
+                updatedQuestionData[action.payload.key] = action.payload.data;
+                return {
+                    ...state,
+                    questionData: updatedQuestionData
+                }
+            }
+
+            let updatedQuestionDataObject = updatedQuestionData[action.payload.key]
+
+            payloadKeys.forEach((key: string) => {
+                if ( action.payload.data[key] !== '' ) {
+                    updatedQuestionDataObject[key] = action.payload.data[key]
+                }
+            })
+
+            // console.log(newObject);
+            
+            return {
+                ...state,
+                questionData: {
+                    ...state.questionData,
+                    [action.payload.key]: updatedQuestionDataObject
+                }
             }
         case 'ACTIVATE_LESSON':
             return {

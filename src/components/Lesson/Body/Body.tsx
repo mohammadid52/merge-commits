@@ -83,7 +83,8 @@ const Body = () => {
     }, [state.currentPage, state.pages]);
 
     return (
-        <div className="p-4 md:px-8 md:h-168"> 
+        // <div className="p-4 md:px-8 md:h-8.3/10"> 
+        <div className="z-0 p-4 md:h-8.3/10 bg-dark"> 
             <Switch>
                 <Route exact path={`${match.url}/`}>
                     <Intro />

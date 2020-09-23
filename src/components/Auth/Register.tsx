@@ -68,6 +68,7 @@ const Registration = () => {
             // dispatch({type: "SET_USER", payload: { user }});
         } catch (error) {
             console.log('error signing up:', error);
+            
         }
     }
 

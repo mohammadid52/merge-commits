@@ -1,15 +1,97 @@
-export const createClassroomData = /* GraphQL */ `
-  mutation CreateClassroomData(
-    $input: CreateClassroomDataInput!
-    $condition: ModelClassroomDataConditionInput
+export const updatePerson = /* GraphQL */ `
+  mutation UpdatePerson(
+    $input: UpdatePersonInput!
+    $condition: ModelPersonConditionInput
   ) {
-    createClassroomData(input: $input, condition: $condition) {
-      classID
+    updatePerson(input: $input, condition: $condition) {
+      id
+      authId
+      status
+      email
+      role
+      firstName
+      preferredName
+      lastName
+      grade
+      phone
+      birthdate
+      image
+      language
+    }
+  }
+`;
+
+export const createStudentData = /* GraphQL */ `
+  mutation CreateStudentData(
+    $input: CreateStudentDataInput!
+    $condition: ModelStudentDataConditionInput
+  ) {
+    createStudentData(input: $input, condition: $condition) {
+      id
       lessonProgress
+      status
+      classroomID
       studentID
-      dataObjects {
-        name
-        data
+      studentAuthID
+      student {
+        id
+        authId
+        email
+        firstName
+        preferredName
+        lastName
+        language
+      }
+      warmupData {
+        story
+        title
+        additional {
+          name
+          input
+        }
+      }
+      corelessonData {
+        selected {
+          anchor
+          color
+          content {
+            id
+            text
+          }
+          focus
+          id
+        }
+      }
+      activityData {
+        editInput
+        editMode
+        lines {
+          example
+          id
+          menuOpen
+          text
+        }
+        title
+      }
+      doFirstData {
+        items {
+          id
+          studentDataID
+          questionDataID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      checkpointData {
+        items {
+          id
+          studentDataID
+          questionDataID
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       createdAt
       updatedAt
@@ -17,25 +99,57 @@ export const createClassroomData = /* GraphQL */ `
   }
 `;
 
-export const createClassroomDataTest = /* GraphQL */ `
-  mutation CreateClassroomDataTest(
-    $input: CreateClassroomDataTestInput!
-    $condition: ModelClassroomDataTestConditionInput
+export const updateStudentData = /* GraphQL */ `
+  mutation UpdateStudentData(
+    $input: UpdateStudentDataInput!
+    $condition: ModelStudentDataConditionInput
   ) {
-    createClassroomDataTest(input: $input, condition: $condition) {
+    updateStudentData(input: $input, condition: $condition) {
+      id
       lessonProgress
+      status
       classroomID
       studentID
-      data {
-        warmup {
-          story
-          title
+      studentAuthID
+      student {
+        id
+        authId
+        email
+        firstName
+        preferredName
+        lastName
+        language
+      }
+      warmupData {
+        story
+        title
+        additional {
+          name
+          input
         }
-        activity {
-          editInput
-          editMode
-          title
+      }
+      corelessonData {
+        selected {
+          anchor
+          color
+          content {
+            id
+            text
+          }
+          focus
+          id
         }
+      }
+      activityData {
+        editInput
+        editMode
+        lines {
+          example
+          id
+          menuOpen
+          text
+        }
+        title
       }
       createdAt
       updatedAt
@@ -43,26 +157,84 @@ export const createClassroomDataTest = /* GraphQL */ `
   }
 `;
 
-export const updateClassroomDataTest = /* GraphQL */ `
-  mutation UpdateClassroomDataTest(
-    $input: UpdateClassroomDataTestInput!
-    $condition: ModelClassroomDataTestConditionInput
+export const updateClassroom = /* GraphQL */ `
+  mutation UpdateClassroom(
+    $input: UpdateClassroomInput!
+    $condition: ModelClassroomConditionInput
   ) {
-    updateClassroomDataTest(input: $input, condition: $condition) {
-      lessonProgress
-      classroomID
-      studentID
-      data {
-        warmup {
+    updateClassroom(input: $input, condition: $condition) {
+      id
+      open
+      lessonID
+      roster
+      viewing
+      displayData {
+        breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
+        warmUpData {
           story
           title
+          additional {
+            name
+            input
+          }
         }
-        activity {
+        corelessonData {
+          selected {
+            anchor
+            color
+            content {
+              id
+              text
+            }
+            focus
+            id
+          }
+        }
+        activityData {
           editInput
           editMode
+          lines {
+            example
+            id
+            menuOpen
+            text
+          }
           title
         }
       }
+      lessonPlan {
+        id
+        disabled
+        open
+        active
+        stage
+        type
+        displayMode
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const createQuestionData = /* GraphQL */ `
+  mutation CreateQuestionData(
+    $input: CreateQuestionDataInput!
+    $condition: ModelQuestionDataConditionInput
+  ) {
+    createQuestionData(input: $input, condition: $condition) {
+      id
+      questionID
+      classroomID
+      email
+      authID
+      response
       createdAt
       updatedAt
     }

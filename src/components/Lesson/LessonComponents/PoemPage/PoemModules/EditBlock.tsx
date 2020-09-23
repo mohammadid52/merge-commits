@@ -70,18 +70,18 @@ const EditBlock = (props: EditBlockProps) => {
     }
 
     return (
-        <div className="bg-dark-blue w-full md:h-128 flex flex-col justify-between rounded-sm shadow-2 px-4 md:px-8 py-6">
-            <h3 className="text-xl text-gray-200 font-open font-bold mb-3 border-b border-white">
+        <div className="bg-dark-blue w-full md:h-full flex flex-col justify-between rounded-lg px-4 md:px-8 py-6">
+            <h3 className="text-xl text-gray-200 font-open font-light mb-1 pb-1 border-b border-white border-opacity-10">
                 Final Edits
             </h3>
-            <div className="w-full md:h-140 flex flex-col justify-center">
-                <label className="w-7/10 text-gray-200 text-lg font-open font-bold mb-2" htmlFor="title">
+            <div className="w-full md:h-9/10 flex flex-col justify-center">
+                <label className="w-7/10 text-gray-200 text-lg font-open font-light mb-2" htmlFor="title">
                     Your poem's title
                 </label>
-                <input id="title" name="title" className="bg-gray-300 w-7/10 h-4 md:h-12 mb-4 rounded-lg px-2 md:px-4 shadow-2" type="text" 
+                <input id="title" name="title" className="bg-gray-300 w-7/10 h-4 text-lg font-light md:h-12 mb-4 rounded-lg px-2 md:px-4 shadow-2" type="text" 
                 value={editInput.title} onChange={handleChange} 
                 placeholder="Choose a title"/>
-                <textarea id="text" className="bg-gray-300 w-full h-18 md:h-80 p-8 text-sm md:text-2xl text-gray-800 rounded-sm shadow-2" 
+                <textarea id="text" className="bg-gray-300 w-full h-18 md:h-8/10 px-4 py-2 font-light text-sm md:text-xl text-gray-800 rounded-lg shadow-2" 
                 value={editInput.text} onChange={handleChange}/>
             </div>
         </div>

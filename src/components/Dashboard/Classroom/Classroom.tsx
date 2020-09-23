@@ -1,101 +1,90 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
-import { IconContext } from "react-icons";
-import { FaClock, FaUserAlt } from 'react-icons/fa';
-import ProgressRing from './ProgressRing';
+import * as customQueries from '../../../customGraphql/customQueries';
+import { API, graphqlOperation } from 'aws-amplify';
+import Today from './TodayLesson';
+import Upcoming from './Upcoming';
+import Completed from './Completed';
+import Dashboard from './Dashboard';
+import Loading from '../../Lesson/Loading/ComponentLoading';
 
+interface Artist {
+    id: string
+    images: []
+    name: string
+    type: string
+}
+
+export interface CurriculumInfo {
+    artist: Artist
+    language: string
+    summary: string
+    title: string
+}
 
 const Classroom: React.FC = () => {
     const history = useHistory();
     const { theme } = useContext(GlobalContext);
+    const [curriculum, setCurriculum] = useState<CurriculumInfo>();
+    const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
+    const [status, setStatus] = useState('');
+
+    async function getCourse(id: string) {
+        try {
+            const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: '1' }))
+            const nextLesson = courses.data.getCourse.curriculum.lessons.items[0].lesson;
+            const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
+            setStatus('done');
+            setCurriculum(nextLesson);
+            setListCurriculum(lessonsInfo);
+            // console.log(lessonsInfo, 'list');
+        } catch (error) {
+            console.error(error);  
+        }
+    }
+
+    useEffect(() => {
+        getCourse('1')
+    }, [])
 
     const handleLink = () => {
         history.push('/lesson');
     }
 
-    return (
-        <div className={`w-full h-full flex flex-col p-4 md:p-8`}>
-            <div className={`test classroom ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-80 rounded-sm p-8 flex flex-col`}>
-                <h1 className={`bg-dark text-4xl text-gray-200 font-bold font-open px-8 shadow-elem-light`}>
-                    Where I'm From
-                </h1>
-                <div className={`flex flex-col md:flex-row justify-around`} style={{height: "95%"}}>
-                    <div className={`block1 w-1/5 h-full flex flex-col items-center text-center mt-4`}>
-                        <h2 className={`text-3xl font-open font-bold mb-4`}>
-                            Marlon Lizama
-                        </h2>
-                        <img className="w-40 shadow-elem-light" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/marlon.jpeg" alt="Marlon Lizama" />
+    if ( status !== 'done') {
+        return (
+            <Loading />
+        )
+    }
+    {
+        return (
+            <div className={`h-9.28/10 md:h-auto flex flex-col p-4 px-8 pb-8 pt-4 overflow-scroll md:overflow-auto`}>
+                
+                <p className="md:hidden text-xl text-center flex justify-center mb-4" style={{top: '0'}}>* lessons are available on PC or laptop *</p>
+                {/* <div className="w-full p-4 flex justify-center items-center">
+                    <div className={`w-auto h-auto border-4 border-dark p-2 px-8 bg-white shadow-container rounded-xl text-4xl text-center flex justify-center items-center font-bold`}>
+                        <img style={{height: '3rem', width: 'auto', marginRight: '1rem'}} src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
+                        <p style={{color: '#2c2f40'}}>Online Classroom</p>
                     </div>
-                    <div className={`block2 w-1/2 h-full flex flex-col mt-8`}>
-                        <h2 className={`text-xl font-bold font-open md:mb-4`}>
-                            Lesson Description
-                        </h2>
-                        <p>
-                            In this lesson, we'll be discussing heritage and culture in the context of stories and experiences passed down through the generations. We'll be analysing and reacting to a poem by our own Marlon Lizama, called 'Where I'm from'. In reponse, you'll have the opportunity to write and present your own poem too!
+                </div> */}
+                <div className="relative w-full mb-4 pb-4 flex flex-col justify-center items-center">
+                    <div className={`w-64 h-32 p-2 text-xl text-center flex flex-col justify-center items-center font-bold`}>
+                        {/* <img style={{height: '6rem', width: 'auto', marginBottom: '2rem'}} src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Symbol.png" alt="Iconoclast Artists"/> */}
+                        <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color_notext.svg" alt="Iconoclast Artists Logo"/>
+                        <p className="font-light">ARTISTS</p>
+                        <p className="absolute z-50" style={{color: '#2c2f40', bottom: '24px'}}>
+                            Classroom
                         </p>
                     </div>
-                    
-                    <div className={`block3 w-2/10 h-full flex flex-col-reverse justify-end pt-12 items-center my-4`}>
-                        <div className={`cursor-pointer h-8 w-24 bg-green-500 text-gray-200 font-open font-bold shadow-elem-light flex justify-center items-center my-4`} onClick={handleLink}>
-                            Start Lesson!
-                        </div>
-
-
-                        {/* <div className="flex_column">
-                            <div className={`flex mb-2 md:my-2 justify-between`} >
-                                <IconContext.Provider value={{ size: '1.5rem' }}>
-                                    <FaClock />
-                                </IconContext.Provider>
-                                <div className={`mx-4`}>
-                                    45 min.
-                                </div>
-                            </div>
-                            <div className={`flex mb-2 md:my-2 justify-center`} >
-                                <IconContext.Provider value={{ size: '1.5rem' }}>
-                                    <FaUserAlt />
-                                </IconContext.Provider>
-                                <div className={`mx-4`}> */}
-
-                        <div className={`w-full`}>
-                            <div className={`hidden justify-center mb-4 text-center`} >
-                                <div className="w-1/3">
-                                    <ProgressRing
-                                        radius={24} 
-                                        stroke={3}
-                                        progress={80}
-                                    />
-                                </div>
-                                {/* <div className={`w-1/2`}>
-                                    75% complete
-                                </div> */}
-                            </div>
-                            <div className={`flex my-2`} >
-                                <div className="w-1/2">
-                                    <IconContext.Provider value={{ size: '1.5rem' }}>
-                                        <FaClock />
-                                    </IconContext.Provider>
-                                </div>
-                                <div className={`w-1/2 mx-4`}>
-                                    45 min.
-                                </div>
-                            </div>
-                            <div className={`flex my-2`} >
-                                <div className="w-1/2">
-                                    <IconContext.Provider value={{ size: '1.5rem' }}>
-                                        <FaUserAlt />
-                                    </IconContext.Provider>
-                                </div>
-                                <div className={`w-1/2 mx-4`}>
-                                    Marlon
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+                <Today link={'/lesson?id=1'} curriculum={curriculum}/>
+                <Upcoming curriculum={listCurriculum}/>
+                <Dashboard />
+                
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default Classroom;
