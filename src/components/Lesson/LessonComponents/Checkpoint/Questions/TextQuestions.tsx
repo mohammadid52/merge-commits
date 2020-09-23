@@ -27,7 +27,7 @@ const TextQuestions = (txtPrps: CPQuestionProps) => {
       setContents(state.questionData[txtPrps.checkpointID][txtPrps.question.id])
     }
 
-    if( state.questionData[txtPrps.checkpointID] === undefined || state.questionData[txtPrps.checkpointID][txtPrps.question.id] === undefined ){
+    if( state.questionData[txtPrps.checkpointID] === undefined || state.questionData[txtPrps.checkpointID][txtPrps.question.id] === undefined ) {
       setContents('');
     }
   }, [])

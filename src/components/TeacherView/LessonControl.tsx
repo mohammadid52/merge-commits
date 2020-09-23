@@ -7,14 +7,6 @@ import {
    useHistory,
    useLocation
 } from 'react-router-dom';
-import LessonLoading from '../Lesson/Loading/LessonLoading';
-import ClassRoster from './ClassRoster';
-import LessonControlBar from './LessonControlBar/LessonControlBar';
-const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
-const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
-const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
-const OutroView = lazy(() => import('./ComponentViews/OutroView/OutroView'));
-const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'))
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import { IconContext } from "react-icons";
 import { FaExpand, FaCompress } from 'react-icons/fa';
@@ -23,6 +15,14 @@ import { NavLink } from 'react-router-dom';
 import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
 import * as customMutations from '../../customGraphql/customMutations';
 import { API, graphqlOperation } from 'aws-amplify';
+import LessonLoading from '../Lesson/Loading/LessonLoading';
+import ClassRoster from './ClassRoster';
+import LessonControlBar from './LessonControlBar/LessonControlBar';
+const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
+const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
+const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
+const OutroView = lazy(() => import('./ComponentViews/OutroView/OutroView'));
+const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'))
 
 const LessonControl = () => {
     const { state, dispatch } = useContext(LessonControlContext);
@@ -223,7 +223,7 @@ const LessonControl = () => {
 
                             { 
                                 shareable && state.studentViewing.live ? 
-                                <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: 0}}>
+                                <div className={`absolute cursor-pointer w-auto text-xl m-2 z-50 ${ state.displayData.studentInfo && state.studentViewing.live && state.displayData.studentInfo.id === state.studentViewing.studentInfo.id ? 'hidden' : 'hi' }`} style={{bottom: 0, left: 0}}>
                                     <button className="bg-purple-400 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleShareStudentData}>
                                         share data
                                     </button>
