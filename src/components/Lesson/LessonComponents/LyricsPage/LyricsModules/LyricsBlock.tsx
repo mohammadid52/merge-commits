@@ -29,7 +29,7 @@ export interface FinalText {
 }
 
 const LyricsBlock = (props: LyricsBlockProps) => {
-  const { color, fullscreen } = props;
+  const { color, selected, setSelected, fullscreen, setFullscreen } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
   const buttons = state.data.lesson.coreLesson.tools;
   const rawText = state.data.lesson.coreLesson.content.text;
@@ -299,15 +299,10 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   };
 
   const concatStringArray = (strArray: string[]) => {
-
-    return strArray.reduce((acc:any, str: string) => {
-      if(str !== '\n'){
-        return [[acc + str][0].replace(/(,)/, ' ')]
-      } else {
-        return [acc, str];
-      }
-    },[])
-  }
+    return strArray.reduce((acc: any, str: string) => {
+      return (acc + str).replace(/(,)/g, ' ');
+    }, '');
+  };
 
   /**
    * Group final words together and trim strings
@@ -331,9 +326,8 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * @param input - Object of color grouped words
    */
   const adaptGroupedWordsForDispatch = (input: any) => {
-    return Object.keys(input).map((inputKey:any) => input[inputKey]);
-    
-  }
+    return Object.keys(input).map((inputKey: any) => concatStringArray(input[inputKey]));
+  };
 
   /**
    * Lifecycle
@@ -348,29 +342,32 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   useEffect(() => {
     if (Object.keys(expSelectedTextGroups).length > 0) {
       setFinalText(groupWordsByColor(Object.values(expSelectedTextGroups)));
-      if(Object.keys(finalText).length > 0) {
-        console.log('adapted: ' ,adaptGroupedWordsForDispatch(finalText));
-      }
     }
   }, [expSelectedTextGroups]);
 
   /**
    * ANDREW'S DISPATCH
    */
-  useEffect(()=>{
+  useEffect(() => {
     let displayProps = {
       name: 'Lyrics Breakdown',
       modules: buttons.map((button: any, key: string) => {
+        console.log('adapted: ', button.color);
         return {
           id: key,
           name: button.id,
           label: button.content,
           color: button.color,
           description: button.description,
-          content: finalText[button.color],
+          // content: finalText[button.color],
+          content: ['adaptGroupedWordsForDispatch(finalText[button.color])'],
         };
       }),
     };
+
+    setSelected((selected) => {
+      return [...selected, displayProps];
+    });
 
     dispatch({
       type: 'SET_DISPLAY_PROPS',
@@ -379,9 +376,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         content: displayProps,
       },
     });
-
-    console.log('dispatch should be sent...')
-  },[selectedTextGroups])
+  }, [finalText]);
 
   /**
    * html functionality
@@ -398,7 +393,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    *
    * @param strArray - any string []
    */
-
 
   const mapStrToSpan = (strArray: string[]) => {
     return strArray?.map((mappedWord: string, i: number) => {
