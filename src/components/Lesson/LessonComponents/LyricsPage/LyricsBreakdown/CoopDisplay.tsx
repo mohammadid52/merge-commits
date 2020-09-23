@@ -26,6 +26,7 @@ const CoopDisplay = () => {
     const { artist, title } = state.data.lesson.coreLesson.content 
     const moduleTypes = state.data.lesson.coreLesson.tools
     const [fullscreen, setFullscreen] = useState(false);
+    const student = state.displayData.studentInfo;
 
     const [ teacherData, setTeacherData ] = useState<teacherData>();
     const [ teacherModules, setTeacherModules ] = useState<Array<any>>()
@@ -34,6 +35,13 @@ const CoopDisplay = () => {
         setFullscreen(fullscreen => {
             return !fullscreen
         });
+    }
+
+    const firstInitialFunc = (str: string) => {
+        if (typeof str !== 'string' || str === '') { return 'Profile' }
+        let firstInitial = str.charAt(0)
+        firstInitial = firstInitial.toUpperCase() + '.';
+        return firstInitial;
     }
 
     const arrayParseToString = (arr: Array<Array<{[key: string]: any}>>) => {
@@ -117,7 +125,7 @@ const CoopDisplay = () => {
                     {   modules && modules.length >= 1 ?
                         modules.map((module: any, key: number) => (
                             <div key={key} className={`${theme.gradient.cardBase} h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-2 rounded-lg`}>
-                                <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-white">
+                                <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-white border-opacity-10">
                                     <div className={`w-8 h-8 p-2 text-lg rounded-lg bg-${module.color} flex justify-center items-center shadow-2`}>
                                         { module.label }
                                     </div>
@@ -125,9 +133,9 @@ const CoopDisplay = () => {
                                         { module.name } 
                                     </div>
                                 </div>
-                                <div className="w-full md:my-2 flex flex-col overflow-scroll px-2">
+                                <div className="w-full md:my-2 flex flex-col overflow-y-auto overflow-x-hidden px-2">
                                     { module.content.map((line: string, key: number)=> (
-                                        <p key={key} className={`text-sm text-gray-200`}>{line}</p>
+                                        <p key={key} className={`text-sm text-gray-200 font-light`}>{line}</p>
                                     ))}
                                 </div>
                             </div>
@@ -139,12 +147,11 @@ const CoopDisplay = () => {
                 {/* teacher view */}
                 <div className={`relative ${fullscreen ? 'h-full' : 'h-4.85/10'}  w-full rounded-lg border  bg-darker-blue p-4`}>
                     
-                    {/* <div className="absolute w-auto z-50" style={{top: '-24px', right: 0, }}>
-                        <div className="bg-yellow-300 text-gray-800 text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
-                            <p>by: student name</p>
-                            <p>{state.displayData.breakdownComponent}</p>
+                    <div className="absolute w-auto z-50" style={{top: '-24px', right: 0, }}>
+                        <div className="bg-yellow-300 text-gray-800 font-light text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
+                            <p>by: {student.preferredName ? student.preferredName : student.firstName} {firstInitialFunc(student.lastName)}</p>
                         </div>
-                    </div> */}
+                    </div>
 
                     <div className="absolute cursor-pointer w-full text-xl m-2" style={{bottom: 0, right: 0}} onClick={handleFullscreen}>
                         <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem', style: {width: 'auto', right: '0', bottom: '0', position: 'absolute'} }}>
@@ -155,7 +162,7 @@ const CoopDisplay = () => {
                     {   teacherModules && teacherModules.length >= 1 ?
                         teacherModules.map((module: any, key: number) => (
                             <div key={key} className={`${theme.gradient.cardBase} h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-2 rounded-lg`}>
-                                <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-white">
+                                <div className="w-full flex flex-row justify-between items-center pb-2 border-b border-white border-opacity-10">
                                     <div className={`${fullscreen ? 'text-2xl w-10 h-10' : 'text-lg w-8 h-8'} p-2 rounded-md bg-${module.color} flex justify-center items-center shadow-2`}>
                                         { module.label }
                                     </div>
@@ -163,9 +170,9 @@ const CoopDisplay = () => {
                                         { module.name } 
                                     </div>
                                 </div>
-                                <div className="w-full md:my-2 flex flex-col overflow-scroll px-2">
+                                <div className="w-full md:my-2 flex flex-col overflow-y-auto overflow-x-hidden px-2">
                                     { module.content.map((line: string, key: number)=> (
-                                        <p key={key} className={`${fullscreen ? 'text-lg' : 'text-sm'} text-gray-200`}>{line}</p>
+                                        <p key={key} className={`${fullscreen ? 'text-lg' : 'text-sm'} font-light text-gray-200`}>{line}</p>
                                     ))}
                                 </div>
                             </div>

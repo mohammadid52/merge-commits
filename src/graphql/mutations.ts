@@ -1296,6 +1296,9 @@ export const createStudentData = /* GraphQL */ `
         data {
           nextToken
         }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1438,6 +1441,9 @@ export const updateStudentData = /* GraphQL */ `
         data {
           nextToken
         }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1578,6 +1584,9 @@ export const deleteStudentData = /* GraphQL */ `
           displayMode
         }
         data {
+          nextToken
+        }
+        feedback {
           nextToken
         }
         createdAt
@@ -1927,6 +1936,17 @@ export const createClassroom = /* GraphQL */ `
         }
         nextToken
       }
+      feedback {
+        items {
+          id
+          classroomID
+          liked
+          comment
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -2112,6 +2132,17 @@ export const updateClassroom = /* GraphQL */ `
           classroomID
           studentID
           studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      feedback {
+        items {
+          id
+          classroomID
+          liked
+          comment
           createdAt
           updatedAt
         }
@@ -2306,6 +2337,242 @@ export const deleteClassroom = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      feedback {
+        items {
+          id
+          classroomID
+          liked
+          comment
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createFeedback = /* GraphQL */ `
+  mutation CreateFeedback(
+    $input: CreateFeedbackInput!
+    $condition: ModelFeedbackConditionInput
+  ) {
+    createFeedback(input: $input, condition: $condition) {
+      id
+      classroomID
+      liked
+      comment
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateFeedback = /* GraphQL */ `
+  mutation UpdateFeedback(
+    $input: UpdateFeedbackInput!
+    $condition: ModelFeedbackConditionInput
+  ) {
+    updateFeedback(input: $input, condition: $condition) {
+      id
+      classroomID
+      liked
+      comment
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteFeedback = /* GraphQL */ `
+  mutation DeleteFeedback(
+    $input: DeleteFeedbackInput!
+    $condition: ModelFeedbackConditionInput
+  ) {
+    deleteFeedback(input: $input, condition: $condition) {
+      id
+      classroomID
+      liked
+      comment
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -2993,6 +3260,8 @@ export const createLessonCheckpoint = /* GraphQL */ `
       checkpoint {
         id
         label
+        title
+        subtitle
         type
         instructions
         questions {
@@ -3102,6 +3371,8 @@ export const updateLessonCheckpoint = /* GraphQL */ `
       checkpoint {
         id
         label
+        title
+        subtitle
         type
         instructions
         questions {
@@ -3211,6 +3482,8 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
       checkpoint {
         id
         label
+        title
+        subtitle
         type
         instructions
         questions {
@@ -3745,6 +4018,8 @@ export const createCheckpoint = /* GraphQL */ `
     createCheckpoint(input: $input, condition: $condition) {
       id
       label
+      title
+      subtitle
       type
       instructions
       questions {
@@ -3771,6 +4046,8 @@ export const updateCheckpoint = /* GraphQL */ `
     updateCheckpoint(input: $input, condition: $condition) {
       id
       label
+      title
+      subtitle
       type
       instructions
       questions {
@@ -3797,6 +4074,8 @@ export const deleteCheckpoint = /* GraphQL */ `
     deleteCheckpoint(input: $input, condition: $condition) {
       id
       label
+      title
+      subtitle
       type
       instructions
       questions {
@@ -3828,6 +4107,8 @@ export const createCheckpointQuestions = /* GraphQL */ `
       checkpoint {
         id
         label
+        title
+        subtitle
         type
         instructions
         questions {
@@ -3868,6 +4149,8 @@ export const updateCheckpointQuestions = /* GraphQL */ `
       checkpoint {
         id
         label
+        title
+        subtitle
         type
         instructions
         questions {
@@ -3908,6 +4191,8 @@ export const deleteCheckpointQuestions = /* GraphQL */ `
       checkpoint {
         id
         label
+        title
+        subtitle
         type
         instructions
         questions {
@@ -4006,8 +4291,69 @@ export const createQuestionData = /* GraphQL */ `
     createQuestionData(input: $input, condition: $condition) {
       id
       questionID
+      classroomID
       email
       authID
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       question {
         id
         label
@@ -4057,8 +4403,69 @@ export const updateQuestionData = /* GraphQL */ `
     updateQuestionData(input: $input, condition: $condition) {
       id
       questionID
+      classroomID
       email
       authID
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       question {
         id
         label
@@ -4108,8 +4515,69 @@ export const deleteQuestionData = /* GraphQL */ `
     deleteQuestionData(input: $input, condition: $condition) {
       id
       questionID
+      classroomID
       email
       authID
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       question {
         id
         label
@@ -4218,8 +4686,21 @@ export const createQuestionDataStudentData = /* GraphQL */ `
       questionData {
         id
         questionID
+        classroomID
         email
         authID
+        classroom {
+          id
+          open
+          openedAt
+          closedAt
+          roster
+          viewing
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
         question {
           id
           label
@@ -4322,8 +4803,21 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
       questionData {
         id
         questionID
+        classroomID
         email
         authID
+        classroom {
+          id
+          open
+          openedAt
+          closedAt
+          roster
+          viewing
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
         question {
           id
           label
@@ -4426,8 +4920,21 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
       questionData {
         id
         questionID
+        classroomID
         email
         authID
+        classroom {
+          id
+          open
+          openedAt
+          closedAt
+          roster
+          viewing
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
         question {
           id
           label

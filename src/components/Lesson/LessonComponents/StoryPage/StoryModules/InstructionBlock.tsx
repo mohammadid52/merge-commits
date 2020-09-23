@@ -15,18 +15,18 @@ const InstructionsBlock = () => {
   return (
     <div className='bg-dark-blue border-l-4 border-green-light md:h-4/10 p-4 flex text-gray-200 rounded-lg shadow-2xlr overflow-hidden'>
       <div className='w-full flex flex-col'>
-        <div className='w-auto flex flex-row mb-3 border-b border-white mr-4'>
+        <div className='w-auto flex flex-row mb-1 pb-1 border-b border-white border-opacity-10 mr-4'>
           <h3 className='w-3/10 mr-2 flex-grow text-xl font-open font-light animate-bounce'>
             Instructions
           </h3>
-          <p className='w-auto text-gray-600 text-sm flex mb-4 mr-4 items-center'>
+          <p className='w-auto text-gray-600 text-sm flex mr-4 items-center'>
             (click the red icon for video instructions)
           </p>
         </div>
         <div
           className={`w-full h-8/10 flex justify-center items-center font-light text-base text-blue-100 text-opacity-70 px-2`}>
           {!videoMode ? (
-            <div className='h-full overflow-scroll'>
+            <div className='h-full overflow-y-auto overflow-x-hidden'>
               {text.map((inst: string, key: number) => (
                 <p key={key} className='mb-2'>
                   {inst}

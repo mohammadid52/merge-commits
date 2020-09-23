@@ -31,6 +31,9 @@ export interface LessonStateType  {
     displayData?: {
         [key: string]: any
     }
+    questionData?: {
+        [key: string]: string | null
+    }
     new_words: Array<string>;
     word_bank?: Array<string>;
     lessonComplete: boolean;
@@ -50,6 +53,7 @@ export const lessonState: LessonStateType = {
     lessonProgress: 0,
     canContinue: false,
     componentState: {},
+    questionData: {},
     viewing: false,
     displayData: {},
     pages: null,

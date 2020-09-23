@@ -25,6 +25,7 @@ const CoopDisplay = () => {
     const { state, theme, dispatch } = useContext(LessonContext);
     const displayProps = state.componentState.poem;
     const [fullscreen, setFullscreen] = useState(false);
+    const student = state.displayData.studentInfo;
 
     const [ teacherData, setTeacherData ] = useState<teacherData>();
 
@@ -32,6 +33,13 @@ const CoopDisplay = () => {
         setFullscreen(fullscreen => {
             return !fullscreen
         });
+    }
+
+    const firstInitialFunc = (str: string) => {
+        if (typeof str !== 'string' || str === '') { return 'Profile' }
+        let firstInitial = str.charAt(0)
+        firstInitial = firstInitial.toUpperCase() + '.';
+        return firstInitial;
     }
 
     useEffect(() => {
@@ -54,10 +62,10 @@ const CoopDisplay = () => {
                 <Banner title={displayProps ? displayProps.title : null} 
                     display="SELFinCOOP" fullscreen={fullscreen}/>
 
-                <div className="w-full h-8.8/10 flex flex-col justify-between items-center">
-                    <div className={`${theme.gradient.cardBase} w-full h-full p-6 flex flex-col items-center text-xl text-gray-200 rounded-lg whitespace-pre-wrap overflow-scroll`}>
+                <div className="w-full h-8.8/10 flex flex-col text-light justify-between items-center">
+                    <div className={`${theme.gradient.cardBase} w-full h-full p-6 flex flex-col items-center text-xl text-gray-200 rounded-lg whitespace-pre-wrap overflow-y-auto overflow-x-hidden`}>
                         {/* bg-lighter-blue shadow-inner-box  */}
-                        <div className="p-4 h-full rounded-lg">
+                        <div className="p-4 h-full rounded-lg font-light">
                         { displayProps ? displayProps.editInput : null}
                         </div>
                     </div>
@@ -77,17 +85,16 @@ const CoopDisplay = () => {
                             fullscreen={fullscreen}
                             display="COOP" />
 
-                        {/* <div className="absolute w-auto z-50" style={{bottom: '-15px', right: 0, }}>
-                            <div className="bg-yellow-300 text-gray-800 text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
-                                <p>by: student name</p>
-                                <p>{state.displayData.breakdownComponent}</p>
+                        <div className="absolute w-auto z-50" style={{bottom: '-15px', right: 0, }}>
+                            <div className="bg-yellow-300 font-light text-gray-800 text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
+                                <p>by: {student.preferredName ? student.preferredName : student.firstName} {firstInitialFunc(student.lastName)}</p>
                             </div>
-                        </div> */}
+                        </div>
 
                     </div>
 
                     <div className="w-full h-8.8/10 flex flex-col justify-between items-center">
-                        <div className={`${fullscreen ? 'text-2xl' : 'text-xl'} bg-dark-blue w-full h-full p-6 flex flex-col items-center text-gray-200 rounded-lg whitespace-pre-wrap overflow-scroll`}>
+                        <div className={`${fullscreen ? 'text-3xl' : 'text-xl'} font-light bg-dark-blue w-full h-full p-6 flex flex-col items-center text-gray-200 rounded-lg whitespace-pre-wrap overflow-y-auto overflow-x-hidden`}>
                             {/* bg-lighter-blue  shadow-inner-box */}
                             <div className="p-4 h-full rounded-lg">
                             { teacherData && teacherData.activityData && teacherData.activityData.editInput ? teacherData.activityData.editInput : null}

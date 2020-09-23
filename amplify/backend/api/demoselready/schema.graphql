@@ -236,7 +236,7 @@ type ComponentSummary {
 }
 
 type Quote {
-  source: String!
+  source: String
   text: String!
 }
 
@@ -294,6 +294,15 @@ type Classroom @model(subscriptions: null)
   lesson: Lesson @connection(fields: ["lessonID"])
   lessonPlan: [ComponentSummary!]!
   data: [StudentData]! @connection(keyName: "byClassroom", fields: ["id"])
+  feedback: [Feedback] @connection(fields: ["id"])
+}
+
+type Feedback @model {
+  id: ID!
+  classroomID: ID!
+  liked: Boolean
+  comment: String
+  classroom: Classroom @connection(fields: ["classroomID"])
 }
 
 type SELStructure @model {
@@ -324,9 +333,9 @@ type Lesson @model @key(fields: ["id"]) {
   warmUpId: ID!
   warmUp: WarmUp @connection(fields: ["warmUpId"])
   coreLessonId: ID!
-  coreLesson: CoreLesson! @connection(fields: ["coreLessonId"])
+  coreLesson: CoreLesson @connection(fields: ["coreLessonId"])
   activityId: ID!
-  activity: Activity! @connection(fields: ["activityId"])
+  activity: Activity @connection(fields: ["activityId"])
 }
 
 type LessonCheckpoint @model(queries: null)
@@ -438,6 +447,8 @@ type Activity @model {
 type Checkpoint @model {
   id: ID!
   label: String!
+  title: String
+  subtitle: String
   type: String!
   instructions: String!
   questions: [CheckpointQuestions]! @connection(keyName: "byCheckpoint", fields: ["id"])
@@ -473,8 +484,10 @@ type Question @model {
 type QuestionData @model {
   id: ID!
   questionID: ID!
+  classroomID: ID!
   email: String!
   authID: String!
+  classroom: Classroom @connection(fields: ["classroomID"])
   question: Question @connection(fields: ["questionID"])
   person: Person @connection(fields: ["email", "authID"])
   response: String

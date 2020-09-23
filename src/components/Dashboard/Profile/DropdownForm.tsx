@@ -29,15 +29,6 @@ const DropdownForm = ( props: DropdownProps ) => {
         handleChangeLanguage(item)
     }
 
-
-
-    // const handleHighlight = (e) => {
-    //     console.log(e.target);
-    //     // e.target.style.background = 'red'
-    // }
-
-
-
     return (
 
         <div className="space-y-1">

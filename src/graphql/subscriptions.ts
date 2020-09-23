@@ -184,6 +184,17 @@ export const onUpdateClassroom = /* GraphQL */ `
         }
         nextToken
       }
+      feedback {
+        items {
+          id
+          classroomID
+          liked
+          comment
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -248,6 +259,9 @@ export const onChangeStudentData = /* GraphQL */ `
           displayMode
         }
         data {
+          nextToken
+        }
+        feedback {
           nextToken
         }
         createdAt
@@ -1552,6 +1566,222 @@ export const onDeleteArtist = /* GraphQL */ `
     }
   }
 `;
+export const onCreateFeedback = /* GraphQL */ `
+  subscription OnCreateFeedback {
+    onCreateFeedback {
+      id
+      classroomID
+      liked
+      comment
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateFeedback = /* GraphQL */ `
+  subscription OnUpdateFeedback {
+    onUpdateFeedback {
+      id
+      classroomID
+      liked
+      comment
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteFeedback = /* GraphQL */ `
+  subscription OnDeleteFeedback {
+    onDeleteFeedback {
+      id
+      classroomID
+      liked
+      comment
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateSelStructure = /* GraphQL */ `
   subscription OnCreateSelStructure {
     onCreateSELStructure {
@@ -2212,6 +2442,8 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
       checkpoint {
         id
         label
+        title
+        subtitle
         type
         instructions
         questions {
@@ -2318,6 +2550,8 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
       checkpoint {
         id
         label
+        title
+        subtitle
         type
         instructions
         questions {
@@ -2424,6 +2658,8 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
       checkpoint {
         id
         label
+        title
+        subtitle
         type
         instructions
         questions {
@@ -2910,6 +3146,8 @@ export const onCreateCheckpoint = /* GraphQL */ `
     onCreateCheckpoint {
       id
       label
+      title
+      subtitle
       type
       instructions
       questions {
@@ -2933,6 +3171,8 @@ export const onUpdateCheckpoint = /* GraphQL */ `
     onUpdateCheckpoint {
       id
       label
+      title
+      subtitle
       type
       instructions
       questions {
@@ -2956,6 +3196,8 @@ export const onDeleteCheckpoint = /* GraphQL */ `
     onDeleteCheckpoint {
       id
       label
+      title
+      subtitle
       type
       instructions
       questions {
@@ -2984,6 +3226,8 @@ export const onCreateCheckpointQuestions = /* GraphQL */ `
       checkpoint {
         id
         label
+        title
+        subtitle
         type
         instructions
         questions {
@@ -3021,6 +3265,8 @@ export const onUpdateCheckpointQuestions = /* GraphQL */ `
       checkpoint {
         id
         label
+        title
+        subtitle
         type
         instructions
         questions {
@@ -3058,6 +3304,8 @@ export const onDeleteCheckpointQuestions = /* GraphQL */ `
       checkpoint {
         id
         label
+        title
+        subtitle
         type
         instructions
         questions {
@@ -3144,8 +3392,69 @@ export const onCreateQuestionData = /* GraphQL */ `
     onCreateQuestionData {
       id
       questionID
+      classroomID
       email
       authID
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       question {
         id
         label
@@ -3192,8 +3501,69 @@ export const onUpdateQuestionData = /* GraphQL */ `
     onUpdateQuestionData {
       id
       questionID
+      classroomID
       email
       authID
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       question {
         id
         label
@@ -3240,8 +3610,69 @@ export const onDeleteQuestionData = /* GraphQL */ `
     onDeleteQuestionData {
       id
       questionID
+      classroomID
       email
       authID
+      classroom {
+        id
+        open
+        openedAt
+        closedAt
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        courseID
+        course {
+          id
+          name
+          courseTypeID
+          classID
+          curriculumID
+          location
+          startDate
+          endDate
+          duration
+          createdAt
+          updatedAt
+        }
+        lessonID
+        lesson {
+          id
+          title
+          grades
+          artistID
+          language
+          SELStructureID
+          connection
+          summary
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          createdAt
+          updatedAt
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       question {
         id
         label
@@ -3347,8 +3778,21 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
       questionData {
         id
         questionID
+        classroomID
         email
         authID
+        classroom {
+          id
+          open
+          openedAt
+          closedAt
+          roster
+          viewing
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
         question {
           id
           label
@@ -3448,8 +3892,21 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
       questionData {
         id
         questionID
+        classroomID
         email
         authID
+        classroom {
+          id
+          open
+          openedAt
+          closedAt
+          roster
+          viewing
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
         question {
           id
           label
@@ -3549,8 +4006,21 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
       questionData {
         id
         questionID
+        classroomID
         email
         authID
+        classroom {
+          id
+          open
+          openedAt
+          closedAt
+          roster
+          viewing
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
         question {
           id
           label

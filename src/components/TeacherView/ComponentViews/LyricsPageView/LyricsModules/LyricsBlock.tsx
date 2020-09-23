@@ -184,7 +184,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
                         </IconContext.Provider>
                     </div> */}
                 </div>
-                <div className="h-9/10 text-gray-200 text-sm overflow-scroll md:px-4">
+                <div className="h-9/10 text-gray-200 text-sm overflow-y-scroll md:px-4">
                     {
                         displayTextArray.map((array, keyA) => {
                             return (

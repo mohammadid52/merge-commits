@@ -59,16 +59,16 @@ const SelfDisplay = () => {
               <div
                 key={key}
                 className={`${theme.gradient.cardBase} h-64 md:h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-4 rounded-lg shadow-2xlr`}>
-                <div className='w-full flex flex-row justify-between items-center pb-2 border-b border-white border-opacity-20'>
+                <div className='w-full flex flex-row justify-between items-center pb-2 border-b border-white border-opacity-10'>
                   <div
                     className={`w-12 h-12 p-2 text-3xl rounded-lg bg-${module.color} flex justify-center items-center shadow-2`}>
                     {module.label}
                   </div>
-                  <div className='w-full pl-4 text-gray-200 font-open text-lg font-light'>
+                  <div className='w-full pl-4 text-gray-200 font-open text-xl font-light'>
                     {module.name}
                   </div>
                 </div>
-                <div className='w-full md:my-4 flex flex-col overflow-scroll px-6'>
+                <div className='w-full md:my-4 flex flex-col overflow-y-auto overflow-x-hidden px-6 font-light'>
                   {module.content.map((line: string, key: number) => (
                     <p
                       key={key}

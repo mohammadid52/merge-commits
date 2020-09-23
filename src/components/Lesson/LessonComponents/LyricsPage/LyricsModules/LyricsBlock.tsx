@@ -180,11 +180,11 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   return (
     <>
       <div
-        className={`md:h-8/10 relative ${theme.gradient.cardBase} ${
+        className={`md:h-7.2/10 relative ${theme.gradient.cardBase} ${
           fullscreen ? 'md:h-120' : 'h-68'
-        } mb-4 md:mb-0 w-full px-6 py-4 flex flex-col justify-between rounded-lg text-gray-400 text-lg border-l-4 border-orange-600`}>
-        <div className='w-full flex flex-row justify-between mb-3'>
-          <div className='w-9/10 flex flex-row justify-between border-b border-white mr-4 md:mr-0'>
+        } mt-4 md:mb-0 w-full px-6 py-4 flex flex-col justify-between rounded-lg text-gray-400 text-lg border-l-4 border-orange-600`}>
+        <div className='w-full flex flex-row justify-between mb-1 pb-1'>
+          <div className='w-9/10 flex flex-row justify-between border-b border-white border-opacity-10 mr-4 md:mr-0'>
             <h3 className='text-xl font-open font-light mr-4'>Lyrics</h3>
           </div>
           <div className='w-auto'>
@@ -198,13 +198,13 @@ const LyricsBlock = (props: LyricsBlockProps) => {
             </IconContext.Provider>
           </div>
           {/* <div className="w-auto text-xl" onClick={handleFullscreen}>
-                        <IconContext.Provider value={{ color: '#E2E8F0', size: '1.5rem' }}>
-                            <FaExpand />
-                        </IconContext.Provider>
-                    </div> */}
+              <IconContext.Provider value={{ color: '#E2E8F0', size: '1.5rem' }}>
+                  <FaExpand />
+              </IconContext.Provider>
+          </div> */}
         </div>
         <div
-          className='h-9/10 text-gray-200 text-sm overflow-scroll md:px-4'
+          className='h-9/10 text-gray-200 text-sm overflow-y-auto overflow-x-hidden md:px-4'
           // onPointerUp={handleSelect}
         >
           {displayTextArray.map((array, keyA) => {
@@ -212,7 +212,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
               <div
                 id={keyA + 'a'}
                 key={keyA}
-                className='my-2 text-gray-200 text-sm md:text-base'>
+                className='my-2 text-gray-200 text-sm md:text-base font-light'>
                 {array.map((word, keyB) => {
                   acc = acc + 1;
                   let id = acc.toString();

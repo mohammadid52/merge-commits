@@ -11,7 +11,6 @@ import { Switch, Route, useRouteMatch, Link, NavLink } from 'react-router-dom';
 
 const Block = () => {
   const { state, theme } = useContext(LessonContext);
-  // const artistBio = state.data.artist.bio
   const match = useRouteMatch();
   const [bio, setBio] = useState(true);
   const [concept, setConcept] = useState(false);
@@ -32,15 +31,14 @@ const Block = () => {
   };
 
   return (
-    // <div className={`relative md:w-full md:h-full ${theme.block.bg} flex justify-start ${theme.block.text} rounded-lg ${theme.block.shadow} shadow-l-none text-sm `}>
-    <div className={`relative md:w-full md:h-full ${theme.block.bg} flex justify-start ${theme.block.text} rounded-lg text-sm `}>
+    <div className={`relative md:w-full md:h-full flex justify-start ${theme.block.text} rounded-r-lg text-sm `}>
       <div className='w-1.3/10 h-full flex flex-col justify-between font-medium text-lg'>
         <div
           onClick={() => setSelect('Bio')}
           className={`${
             select === 'Bio'
               ? `${theme.block.bg} font-extrabold`
-              : 'bg-medium-blue'
+              : 'bg-gradient-to-l from-med-dark-blue to-medium-blue'
           } h-3.2/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer rounded-tl-lg`}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem' }}>
             <div className={`flex justify-center items-center`}>
@@ -53,7 +51,7 @@ const Block = () => {
           className={`${
             select === 'Keyword'
               ? `${theme.block.bg} font-extrabold`
-              : 'bg-medium-blue'
+              : 'bg-gradient-to-l from-med-dark-blue to-medium-blue'
           } h-3.2/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer`}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem' }}>
             <div className={`flex justify-center items-center`}>
@@ -66,7 +64,7 @@ const Block = () => {
           className={`${
             select === 'Connect'
               ? `${theme.block.bg} font-extrabold`
-              : 'bg-medium-blue'
+              : 'bg-gradient-to-l from-med-dark-blue to-medium-blue'
           } h-3.2/10 pb-4 uppercase p-2 md:p-0 flex justify-end text-gray-400 text-md hover:text-gray-600 cursor-pointer rounded-bl-lg`}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem' }}>
             <div className={`flex justify-center items-center`}>
@@ -76,7 +74,7 @@ const Block = () => {
         </div>
       </div>
 
-      <div className={`p-4 rounded-lg`}>
+      <div className={`${theme.block.bg} rounded-r-lg`}>
         {select === 'Bio' ? (
           <BioBlock />
         ) : select === 'Keyword' ? (

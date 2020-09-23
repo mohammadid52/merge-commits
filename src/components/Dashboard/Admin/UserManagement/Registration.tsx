@@ -322,7 +322,7 @@ const Registration = () => {
                                 <div className="text-red-500 pb-2 text-right">* Required fields</div>
 
                                 <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">  
-                                    <div className="sm:col-span-3">
+                                    <div className="sm:col-span-3 p-2">
                                         <label htmlFor="firstName" className="block text-m font-medium leading-5 text-gray-700">
                                             <span className="text-red-500">*</span> First Name
                                         </label>
@@ -338,7 +338,7 @@ const Registration = () => {
                                         </div>
                                     </div> 
 
-                                    <div className="sm:col-span-3">
+                                    <div className="sm:col-span-3 p-2">
                                         <label htmlFor="lastName" className="block text-m font-medium leading-5 text-gray-700">
                                             <span className="text-red-500">*</span> Last Name
                                         </label>
@@ -354,7 +354,7 @@ const Registration = () => {
                                         </div>
                                     </div>
 
-                                    <div className="sm:col-span-3">
+                                    <div className="sm:col-span-3 p-2">
                                         <label htmlFor="email" className="block text-m font-medium leading-5 text-gray-700">
                                             <span className="text-red-500">*</span> Email
                                         </label>
@@ -370,7 +370,7 @@ const Registration = () => {
                                         </div>
                                     </div>
 
-                                    <div className="sm:col-span-3">
+                                    <div className="sm:col-span-3 p-2">
                                         <label htmlFor="birthdate" className="block text-m font-medium leading-5 text-gray-700">
                                             <span className="text-red-500">*</span> Birthday
                                         </label>
@@ -386,7 +386,7 @@ const Registration = () => {
                                         </div>
                                     </div>
 
-                                    <div className="sm:col-span-3">
+                                    <div className="sm:col-span-3 p-2">
                                         <DropdownForm
                                             style = {true}
                                             handleChange = {handleChangeRole}
@@ -398,7 +398,7 @@ const Registration = () => {
                                         />
                                     </div>
 
-                                    <div className="sm:col-span-3">
+                                    <div className="sm:col-span-3 p-2">
                                         <label htmlFor="externalId" className="block text-m font-medium leading-5 text-gray-700">
                                             Student ID
                                         </label>
@@ -415,7 +415,7 @@ const Registration = () => {
                                     </div>
 
 
-                                    <div className="sm:col-span-3">
+                                    <div className="sm:col-span-3 p-2">
                                         <label htmlFor="grade" className="block text-m font-medium leading-5 text-gray-700">
                                             Grade
                                         </label>
@@ -431,7 +431,7 @@ const Registration = () => {
                                         </div>
                                     </div>
 
-                                    <div className="sm:col-span-3">
+                                    <div className="sm:col-span-3 p-2">
                                         <label htmlFor="phone" className="block text-m font-medium leading-5 text-gray-700">
                                             Phone Number
                                         </label>

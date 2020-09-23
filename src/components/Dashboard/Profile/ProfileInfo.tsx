@@ -45,7 +45,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                 </div>
                 <div className="px-4 py-5 sm:px-6">
                     <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
-                    <div className="sm:col-span-1">
+                    <div className="sm:col-span-1 p-2">
                         <dt className="text-sm leading-5 font-medium text-gray-500">
                         Full Name
                         </dt>
@@ -53,7 +53,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                         {`${ user.firstName } ${ user.lastName }`} 
                         </dd>
                     </div>
-                    <div className="sm:col-span-1">
+                    <div className="sm:col-span-1 p-2">
                         <dt className="text-sm leading-5 font-medium text-gray-500">
                         Nickname
                         </dt>
@@ -61,7 +61,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                         {`${ user.preferredName ? user.preferredName : 'not set' }`} 
                         </dd>
                     </div>
-                    <div className="sm:col-span-1">
+                    <div className="sm:col-span-1 p-2">
                         <dt className="text-sm leading-5 font-medium text-gray-500">
                         Birthday
                         </dt>
@@ -69,7 +69,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                         {`${ user.birthdate ? user.birthdate : 'not set' }`} 
                         </dd>
                     </div>
-                    <div className="sm:col-span-1">
+                    <div className="sm:col-span-1 p-2">
                         <dt className="text-sm leading-5 font-medium text-gray-500">
                         Language
                         </dt>
@@ -77,7 +77,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                         { language() } 
                         </dd>
                     </div>
-                    <div className="sm:col-span-1">
+                    <div className="sm:col-span-1 p-2">
                         <dt className="text-sm leading-5 font-medium text-gray-500">
                         Email address
                         </dt>
@@ -85,7 +85,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                         {`${ user.email }`} 
                         </dd>
                     </div>
-                    <div className="sm:col-span-1">
+                    <div className="sm:col-span-1 p-2">
                         <dt className="text-sm leading-5 font-medium text-gray-500">
                         Contact Number 
                         </dt>
@@ -105,7 +105,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                 </div>
                 <div className="px-4 py-5 sm:px-6">
                     <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
-                        <div className="sm:col-span-1">
+                        <div className="sm:col-span-1 p-2">
                             <dt className="text-sm leading-5 font-medium text-gray-500">
                             Institution
                             </dt>
@@ -113,7 +113,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                             {`${ user.institution ? user.institution : 'not set' }`}
                             </dd>
                         </div>
-                        <div className="sm:col-span-1">
+                        <div className="sm:col-span-1 p-2">
                             <dt className="text-sm leading-5 font-medium text-gray-500">
                             Grade 
                             </dt>

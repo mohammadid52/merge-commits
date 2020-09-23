@@ -36,7 +36,7 @@ const ReflectionQuestions = (props: props) => {
                 <div className={`${fullscreen ? 'text-lg' : 'text-sm'} font-open font-bold mb-2`}>
                 Discussion Questions 
                 </div>
-                <div className={`${fullscreen ? 'text-base' : 'text-xs'} question w-full flex-grow text-gray-200 flex justify-center px-4`}>
+                <div className={`${fullscreen ? 'text-lg' : 'text-xs'} question w-full flex-grow text-gray-200 flex justify-center px-4`}>
                     <p className="text-center">{ questArr[question] }</p>
                 </div>
             </div>

@@ -8,6 +8,7 @@ import TrophyBlock from './TrophyBlock';
 import MoreArtist from './MoreArtist';
 import Feedback from './Feedback';
 import Links from './Links';
+import SaveQuit from './SaveQuit';
 
 const Outro = () => {
   const { dispatch } = useContext(LessonContext);
@@ -23,8 +24,14 @@ const Outro = () => {
       <Banner />
 
       {/* <div className='w-full md:h-8.8/10 flex flex-col md:flex-row justify-between items-center'> */}
-      <div className='w-full md:h-8.8/10 flex flex-row justify-center items-center overflow-auto'>
-        {/* <div className="w-5/10 h-full mt-4 md:mt-0 md:ml-2">
+      <div className='w-full md:h-full flex flex-col justify-around items-center'>
+        <div className="w-5/10 h-8/10 flex flex-col justify-between items-center">
+          <Feedback/>
+          <MoreArtist/>
+          <SaveQuit/>
+        </div>
+        {/* ///
+        <div className="w-5/10 h-full mt-4 md:mt-0 md:ml-2">
                     <MoreArtist />
                 </div>
 
@@ -34,17 +41,21 @@ const Outro = () => {
                         <Links />
                     </div>
                     <Feedback />
-                </div> */}
-        <div className='w-4.5/10 h-full my-4 md:ml-2'>
-          <MoreArtist />
+                </div>
+             ///   
+        <div className='w-4.5/10 h-full my-4 md:ml-2 flex flex-col justify-center'>
           <VideoBlock link='https://www.youtube.com/embed/bp10ZOtv_zY' fullscreen={fullscreen}/>
+          
         </div>
 
-        <div className='w-4.5/10 h-full my-4 md:ml-2'>
+        <div className='w-4.5/10 h-full flex flex-col justify-between my-4 md:ml-2'>
+          <MoreArtist />
+          <div className="flex h-2.5/10">
           <TrophyBlock />
-          <Feedback />
           <Links />
-        </div>
+          </div>
+          <Feedback />
+        </div> */}
 
       </div>
     </div>

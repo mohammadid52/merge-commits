@@ -13,7 +13,26 @@ module.exports = {
     removeDeprecatedGapUtilities: true,
     purgeLayersByDefault: true,
   },
+  corePlugins: {
+    translate: true,
+  },
   theme: {
+    fontSize: {
+      'xs': '.75rem',
+      'sm': '.875rem',
+      'tiny': '.875rem',
+      'base': '1rem',
+      'lg': '1.125rem',
+      'xl': '1.25rem',
+      '2xl': '1.5rem',
+      '3xl': '1.875rem',
+      '4xl': '2.25rem',
+      '5xl': '3rem',
+      '6xl': '4rem',
+      '7xl': '5rem',
+      '5.5xl': '3.5rem',
+      '4.5xl': '2.75rem',
+    },
     zIndex: {
       '0': 0,
       '10': 10,
@@ -83,15 +102,20 @@ module.exports = {
       '28': '28rem',
       '29': '29rem',
       '30': '30rem',
+      '1/2': '50%',
     },
     fontFamily: {
       'open': ['Barlow', 'sans-serif'],
       // 'open': ['Open Sans Condensed', 'sans-serif'],
     },
     extend: {
+      lineHeight: {
+               'extra-tight': '.8',
+                },
       animation: {
         'bounce': 'bounce 2.5s linear 2',
-        'ping': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite'
+        'ping': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
+        'fadeIn': 'fadeIn 1s ease-in-out'
       },
       keyframes: {
         bounce: {
@@ -123,7 +147,15 @@ module.exports = {
             transform: 'scale(2)',
             opacity: '0'
           }
-        }
+        },
+        fadeIn: {
+          '0%': {
+            opacity: '0'
+          },
+          '75%, 100%': {
+            opacity: '1'
+          }
+        },
       },
       width: {
         '1/2': '48%',
@@ -230,6 +262,7 @@ module.exports = {
         '8/10': '80%',
         '8.3/10': '83%',
         '8.5/10': '85%',
+        '8.7/10': '87%',
         '8.8/10': '88%',
         '9/10': '90%',
         '9.28/10': '92.8%',
@@ -293,6 +326,7 @@ module.exports = {
         'grayscale-lighter': '#f9f9f947',
         'grayscale-lightest': '#fffbfb',
         // 'grayscale-lighter' : '#f7f7f7',
+        'white5': 'rgba(255,255,255,.05)',
         'white10': 'rgba(255,255,255,.1)',
         'white20': 'rgba(255,255,255,.2)',
         'white30': 'rgba(255,255,255,.3)',
@@ -303,6 +337,9 @@ module.exports = {
         'black30': 'rgba(0,0,0,.3)',
         'black40': 'rgba(0,0,0,.4)',
         'black50': 'rgba(0,0,0,.5)',
+        'black60': 'rgba(0,0,0,.6)',
+        'black70': 'rgba(0,0,0,.7)',
+        'black80': 'rgba(0,0,0,.8)',
       },
     },
   },

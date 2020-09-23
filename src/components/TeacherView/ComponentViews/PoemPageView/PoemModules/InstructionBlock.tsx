@@ -27,7 +27,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
                         Instructions
                     </h3>
                 </div>
-                <div className="overflow-scroll text-sm mb-4 md:mb-0">
+                <div className="overflow-y-scroll text-sm mb-4 md:mb-0">
                     Make the final edits to your poem, and get ready to present.
                 </div>
             </div>
@@ -45,7 +45,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
                 </div>
                 <div className={`w-full ${fullscreen ? 'h-8/10' : 'h-7.5/10'} flex justify-center items-center text-sm px-2`}>
                     {   !videoMode ? 
-                        <div className="h-full overflow-scroll">
+                        <div className="h-full overflow-y-scroll">
                         {
                             instructions.text.map((inst: string, key: number) => (
                                 <p key={key} className="mb-2 text-sm">

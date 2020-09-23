@@ -222,3 +222,21 @@ export const updateClassroom = /* GraphQL */ `
     }
   }
 `;
+
+export const createQuestionData = /* GraphQL */ `
+  mutation CreateQuestionData(
+    $input: CreateQuestionDataInput!
+    $condition: ModelQuestionDataConditionInput
+  ) {
+    createQuestionData(input: $input, condition: $condition) {
+      id
+      questionID
+      classroomID
+      email
+      authID
+      response
+      createdAt
+      updatedAt
+    }
+  }
+`;

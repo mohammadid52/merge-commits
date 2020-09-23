@@ -130,7 +130,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                     {user.role === 'ST' ? 
                     // what users with STUDENT can see
                     <>
-                    <div className="sm:col-span-3">
+                    <div className="sm:col-span-3 px-2">
                             <label htmlFor="preferredName" className="block text-sm font-medium leading-5 text-gray-700">
                                 Nickname
                             </label>
@@ -141,7 +141,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                             </div>
                         </div>
 
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-3 px-2">
                             <DropdownForm
                                 handleChangeLanguage = {handleChangeLanguage}
                                 userLanguage = {user.language}
@@ -150,7 +150,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                             />
                         </div>
 
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-3 px-2">
                             <label htmlFor="phone" className="block text-sm font-medium leading-5 text-gray-700">
                                 Contact Number
                             </label>
@@ -165,7 +165,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                         : 
                         // everyone else can see
                         <>
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-3 px-2">
                             <label htmlFor="firstName" className="block text-sm font-medium leading-5 text-gray-700">
                                 First name
                             </label>
@@ -179,7 +179,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                             </div>
                         </div>
 
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-3 px-2">
                             <label htmlFor="lastName" className="block text-sm font-medium leading-5 text-gray-700">
                                 Last name
                             </label>
@@ -190,7 +190,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                             </div>
                         </div>
 
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-3 px-2">
                             <label htmlFor="preferredName" className="block text-sm font-medium leading-5 text-gray-700">
                                 Nickname
                             </label>
@@ -201,7 +201,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                             </div>
                         </div>
 
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-3 px-2">
                             <DropdownForm
                                 handleChangeLanguage = {handleChangeLanguage}
                                 userLanguage = {user.language}
@@ -210,7 +210,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                             />
                         </div>
 
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-3 px-2">
                             <label htmlFor="phone" className="block text-sm font-medium leading-5 text-gray-700">
                                 Contact Number
                             </label>

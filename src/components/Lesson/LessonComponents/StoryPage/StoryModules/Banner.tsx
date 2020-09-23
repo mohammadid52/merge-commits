@@ -8,14 +8,14 @@ const Banner = () => {
   const title = state.data.lesson.warmUp.title;
 
   return (
-    <div className='w-full h-1/10 flex flex-row justify-center items-center'>
-      <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem' }}>
-        <div className='h-full bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg'>
+    <div className={`w-full h-1/10  ${theme.banner} flex flex-row justify-center items-center`}>
+      <IconContext.Provider value={{ color: '#EDF2F7', size: '2.7rem' }}>
+        <div className='bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg'>
           <FaScroll />
         </div>
       </IconContext.Provider>
       <div
-        className={`h-full w-full ${theme.banner} font-medium text-xl md:text-5xl z-10`}>
+        className={`h-full w-full font-medium text-xl md:text-5xl z-10`}>
         {title}
       </div>
     </div>

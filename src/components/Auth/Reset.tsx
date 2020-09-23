@@ -179,14 +179,23 @@ const Reset = () => {
             <div className="test login w-140 h-7/10 bg-gray-200 shadow-elem-light border border-gray-300 rounded pt-0">
                 <div className="h-.7/10 bg-dark w-full rounded-t-lg"></div>
                 <div className="relative h-9.3/10 flex flex-col items-center justify-center px-8 pt-4 pb-8">
-                    <div className="absolute text-center text-xs mb-4" style={{bottom: '0'}}> © Copyright 2020 </div>
-                    <div className="2/10">
+                    <div className="absolute text-center text-xs mb-3" style={{bottom: '0'}}> 
+                        <p>© Copyright 2020</p>
+                        <p><NavLink className="underline text-sm hover:text-blue-500" to="/privacy-policy">Privacy Policy</NavLink></p>
+                    </div>
+                    <div className="2.2/10">
                         <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
                     </div>
 
-                    <div className="w-full h-2.2/10 flex flex-col justify-around items-center">
-                        <div className="text-center text-sm">Check your email for your confirmation code</div>
-                        <div className="text-center text-xs">*password must be at least 8 characters and include uppercase and lowercase</div>
+                    <div className="w-full h-1/10 flex flex-col justify-around">
+                        <div className="text-center text-sm text-gray-700">Password must be at least 8 characters and include uppercase and lowercase</div>
+                    </div>
+                    
+            
+                    <div className="h-4.5/10 flex-grow flex flex-col justify-center">
+
+                    <div className="w-full h-1/10 flex flex-col justify-around items-center">
+                        
                             {
                                 message.show ? (
                                     <p className={`text-xs text-center ${ message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null}`}>
@@ -195,18 +204,16 @@ const Reset = () => {
                                 ) : null
                             }
                         </div>
-            
-                    <div className="h-3.8/10 flex-grow flex flex-col">
                     
 
-                        <div className="input">
-                                <div className="icon">
+                        <div className="input pt-0">
+                                <div className="icon pt-0">
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
                                     <MdEmail />
                                 </IconContext.Provider>
                                 </div>
                             <label className="hidden" htmlFor="email">Email</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full bg-off-white px-2 py-1 ml-2" placeholder="Email" type="text" id="email" name="email" value={input.email} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
 
                         <div className="input">
@@ -216,7 +223,7 @@ const Reset = () => {
                                 </IconContext.Provider>
                                 </div>
                             <label className="hidden" htmlFor="code">Confirmation Code</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirmation Code" type="text" id="code" name="code" value={input.code} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full bg-off-white px-2 py-1 ml-2" placeholder="Confirmation Code" type="text" id="code" name="code" value={input.code} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
         
                         <div className="input relative w-full">
@@ -239,7 +246,7 @@ const Reset = () => {
                                 </IconContext.Provider> 
                             </div>
                             <label className="hidden" htmlFor="password">New Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="New Password" type={ newPassToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full bg-off-white px-2 py-1 ml-2" placeholder="New Password" type={ newPassToggle ? 'text' : 'password'} id="password" name="password" value={input.password} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
 
                         <div className="input relative w-full">
@@ -262,14 +269,14 @@ const Reset = () => {
                             </IconContext.Provider>
                             </div>
                             <label className="hidden" htmlFor="match">Confirm Password</label>
-                            <input className="w-full px-2 py-1 ml-2" placeholder="Confirm Password" type={passToggle ? 'text' : 'password'} id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <input className="w-full bg-off-white px-2 py-1 ml-2" placeholder="Confirm Password" type={passToggle ? 'text' : 'password'} id="match" name="match" value={input.match} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
                     
                     </div>
                     
                 
-                    <div className="h-2/10 flex flex-col justify-center items-center">
-                        <div className="cursor-pointer shadow-elem-light text-center rounded-lg bg-dark-red text-gray-200 mb-4" style={{borderRadius: '2rem', padding: '.75rem'}} onKeyPress={handleEnter} onClick={handleSubmit}>
+                    <div className="h-3/10 flex flex-col justify-center items-center">
+                        <div className="cursor-pointer shadow-elem-light text-center rounded-lg bg-dark-red text-gray-200 mb-2" style={{borderRadius: '2rem', padding: '.75rem'}} onKeyPress={handleEnter} onClick={handleSubmit}>
                             Reset Password
                         </div>
                         <NavLink to="/forgot-password">
