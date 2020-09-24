@@ -11,11 +11,7 @@ const keywordCapitilizer = (str: string) => {
 const Banner = () => {
     const { state } = useContext(LessonContext);
     const { theme } = useContext(LessonContext);
-    // const achievements = state.data.lesson.achievements;
-    // const studentPortfolio = state.data.student.portfolio;
     
-
-
     return (
 
         <div className={`w-full h-1/10  ${theme.banner} flex flex-row justify-center items-center`}>

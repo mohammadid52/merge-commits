@@ -12,7 +12,6 @@ const Banner = (props: props) => {
     const { state, theme } = useContext(LessonControlContext);
     const title = state.data.lesson.warmUp.title
 
-
     return (
         <div className={`w-full h-1/10  ${theme.banner} flex flex-row justify-center items-center`}>
             <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem'}}>
