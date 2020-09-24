@@ -25,30 +25,36 @@ const QuoteBlock = (props: props) => {
 
     return (
 
-    <div className={`flex-grow w-full min-h-24 ${theme.block.bg} ${theme.block.text} p-4 flex items-center justify-center rounded-lg ${theme.block.shadow}`}>
-        <div className="h-full flex flex-col items-center justify-around">
-            <div className={`${fullscreen ? 'text-3xl' : 'text-lg'} w-8/10 text-center border-b-2 font-bold mb-4`}>
-                {artistName}
+    <div className={`w-full min-h-24 flex flex-grow items-center justify-center ${theme.block.text} ${fullscreen ? 'p-4' : 'p-2'} bg-gradient-to-tr from-transparent to-white5 rounded-lg`}>
+        <div className='h-full flex flex-col items-center mr-4'>
+          <div className='h-full flex flex-col justify-around'>
+  
+            <div className="h-4.5/10 my-auto flex flex-col justify-center">
+              <div className={`w-40 ${fullscreen ? 'text-2xl' : 'text-base'} flex text-left justify-center items-center`}>
+                Featured Artist:
+              </div>
+              <div className={`w-full text-center ${fullscreen ? 'text-3xl' : 'text-lg'} leading-none font-light`}>{artistName}</div>
             </div>
-            <div className="h-full quote flex flex-col justify-around items-center px-4">
-                <div className="relative">
-                    <div className="absolute w-16" style={{top: '-30px', left: '-5px'}}>
-                        <IconContext.Provider value={{ size: '7rem', style: { opacity: '40%' }}}>
-                            <GoQuote /> 
-                        </IconContext.Provider>
-                    </div>
-                    <div className={`${fullscreen ? 'text-2xl' : 'text-sm'} header-font font-open font-bold pl-8`} style={{ textIndent: '-16px'}}>
-                        { quote.text }
-                    </div>
+  
+            <div className="h-4.8/10 my-auto flex flex-col justify-end items-center">
+              <div className={`h-auto quote flex flex-col justify-around items-center py-2 ${fullscreen ? 'px-4' : 'px-0'} bg-gradient-to-l from-transparent to-black80`}>
+                <div className='relative'>
+                  <div className='absolute w-16' style={{ top: '-30px', left: '-5px' }}>
+                    <IconContext.Provider value={{ size: '7rem', style: { opacity: '40%' } }}>
+                      <GoQuote />
+                    </IconContext.Provider>
+                  </div>
+                  <div className={`header-font ${fullscreen ? 'text-lg' : 'text-sm'} font-open font-light pl-8 md:pl-12`} style={{ textIndent: '-16px' }}>
+                    {quote.text}
+                  </div>
                 </div>
-
-                <div className="text-gray-500 self-end text-right mt-2">
-                    - { quote.source }
-                </div>
+                <div className={`${fullscreen ? 'text-sm' : 'text-xs'} text-gray-500 text-sm self-end text-right mt-2`}>- {quote.source}</div>
+              </div>
             </div>
+          </div>
         </div>
         <PhotoBlock />
-    </div>
+      </div>
     )
 }
 
