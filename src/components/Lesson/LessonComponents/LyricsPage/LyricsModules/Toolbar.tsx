@@ -46,7 +46,7 @@ const ToolBar = (props: ToolbarProps) => {
           Highlighters
         </h3>
         <p className='text-gray-600 text-sm text-center'>
-          (click a color and drag over words!)
+          (click a color!)
         </p>
       </div>
       <div className='w-auto cursor-pointer flex flex-row justify-center items-center pt-2'>
