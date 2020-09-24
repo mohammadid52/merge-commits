@@ -24,7 +24,7 @@ const Banner = (props: BannerProps) => {
             </div>
           </IconContext.Provider>
           <div
-            className={`h-full text-xl text-gray-200 md:text-5xl px-4 py-2 z-10 font-medium`}>
+            className={`h-full text-xl text-gray-200 md:text-5xl z-10 font-medium flex justify-center items-center`}>
             {title}
           </div>
         </div>
@@ -38,7 +38,7 @@ const Banner = (props: BannerProps) => {
           <div
             className={`${
               fullscreen ? 'text-4xl' : 'text-3xl'
-            } text-gray-200 h-full bg-dark-blue w-full flex flex-row font-medium justify-center items-center text-center rounded-lg px-4 py-2 z-10`}>
+            } text-gray-200 h-full bg-dark-blue w-full flex flex-row font-medium justify-center items-center text-center rounded-lg z-10`}>
             {title}
           </div>
         </div>
@@ -50,7 +50,7 @@ const Banner = (props: BannerProps) => {
               <FaScroll />
             </div>
           </IconContext.Provider>
-          <div className={`text-3xl h-full text-gray-200 px-4 py-2 z-10 font-medium`}>
+          <div className={`text-3xl h-full text-gray-200 z-10 font-medium flex justify-center items-center`}>
             {title}
           </div>
         </div>
