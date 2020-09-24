@@ -32,6 +32,7 @@ const LessonControl = () => {
     const [ componentView, setComponentView ] = useState('');
     const [ fullscreen, setFullscreen ] = useState(false);
     const [ shareable, setShareable ] = useState(false);
+    const [ sharing, setSharing ] = useState(false);
 
     const handleFullscreen = () => {
         setFullscreen(fullscreen => {
@@ -106,6 +107,18 @@ const LessonControl = () => {
 
     }, [state.studentViewing])
 
+    useEffect(() => {
+        if ( state.displayData && state.displayData.studentInfo && state.studentViewing.studentInfo && state.studentViewing.studentInfo.student ) {
+            if ( state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id ) {
+                setSharing(true)
+            }
+
+            if ( state.displayData.studentInfo.id !== state.studentViewing.studentInfo.student.id ) {
+                setSharing(false)
+            }
+        }
+    }, [state.displayData])
+
     if ( state.status !== 'loaded') {
         return (
             <LessonLoading />
@@ -163,7 +176,13 @@ const LessonControl = () => {
                                 student={selectedStudent}
                                 fullscreen={fullscreen}/> */}
                             {/*  */}
-                            <Suspense fallback={<div> Loading... </div>}>  
+                            <Suspense fallback={
+                            <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                                <div className="min-h-full w-full flex flex-col justify-center items-center">
+                                    Give us one second! It is loading... 
+                                </div>
+                            </div>
+                            }>  
                                 <Switch>
                                     <Route 
                                         path={`${match.url}/intro`}
@@ -222,7 +241,7 @@ const LessonControl = () => {
                             </div>
 
                             { 
-                                shareable && state.studentViewing.live ? 
+                                shareable && state.studentViewing.live && !sharing ?
                                 <div className={`absolute cursor-pointer w-auto text-xl m-2 z-50 ${ state.displayData.studentInfo && state.studentViewing.live && state.displayData.studentInfo.id === state.studentViewing.studentInfo.id ? 'hidden' : 'hi' }`} style={{bottom: 0, left: 0}}>
                                     <button className="bg-purple-400 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleShareStudentData}>
                                         share data

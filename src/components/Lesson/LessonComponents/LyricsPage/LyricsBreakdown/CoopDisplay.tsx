@@ -26,6 +26,7 @@ const CoopDisplay = () => {
     const { artist, title } = state.data.lesson.coreLesson.content 
     const moduleTypes = state.data.lesson.coreLesson.tools
     const [fullscreen, setFullscreen] = useState(false);
+    const student = state.displayData.studentInfo;
 
     const [ teacherData, setTeacherData ] = useState<teacherData>();
     const [ teacherModules, setTeacherModules ] = useState<Array<any>>()
@@ -34,6 +35,13 @@ const CoopDisplay = () => {
         setFullscreen(fullscreen => {
             return !fullscreen
         });
+    }
+
+    const firstInitialFunc = (str: string) => {
+        if (typeof str !== 'string' || str === '') { return 'Profile' }
+        let firstInitial = str.charAt(0)
+        firstInitial = firstInitial.toUpperCase() + '.';
+        return firstInitial;
     }
 
     const arrayParseToString = (arr: Array<Array<{[key: string]: any}>>) => {
@@ -141,7 +149,7 @@ const CoopDisplay = () => {
                     
                     <div className="absolute w-auto z-50" style={{top: '-24px', right: 0, }}>
                         <div className="bg-yellow-300 text-gray-800 font-light text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
-                            <p>by: {state.displayData.studentInfo.firstName}</p>
+                            <p>by: { student ? student.preferredName ? student.preferredName : student.firstName : null } { student ? firstInitialFunc(student.lastName) : null}</p>
                         </div>
                     </div>
 

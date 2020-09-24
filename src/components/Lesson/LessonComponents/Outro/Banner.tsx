@@ -13,6 +13,7 @@ const Banner = () => {
     const { theme } = useContext(LessonContext);
     // const achievements = state.data.lesson.achievements;
     // const studentPortfolio = state.data.student.portfolio;
+    
 
 
     return (
@@ -24,7 +25,7 @@ const Banner = () => {
                 </div>
             </IconContext.Provider>
             <div className={`title w-full flex flex-row justify-center items-center text-5xl text-center font-open font-medium px-4 py-2 ${theme.block.text} z-10`}>
-                <p>Congrats! You've completed the lesson!</p>
+                <p>Congrats! You've completed '{state.data.lesson.title}'!</p>
             </div>
         </div>
 
