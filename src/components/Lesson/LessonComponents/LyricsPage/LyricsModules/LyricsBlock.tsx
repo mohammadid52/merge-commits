@@ -201,13 +201,9 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     if (checkIfSelectGroupExists(`group${selectGroup}`)) {
       setSelectGroup(selectGroup + 1);
     }
-
-    console.log('mouse up');
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    const t = e.target as HTMLElement;
-
     if (!mouseIsHeld || !mouseIsClicked) {
       setMouseIsHeld(true);
       setMouseIsClicked(true);
@@ -354,6 +350,9 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     let displayProps = {
       name: 'Lyrics Breakdown',
       modules: buttons.map((button: any, key: string) => {
+        // HELPPPPP
+        // Console logging for debugging
+        // What would Andrew do?
         if (typeof finalText[button.color] !== 'undefined') {
           console.log('adapted: ', adaptGroupedWordsForDispatch(finalText[button.color]));
         }
@@ -384,16 +383,30 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     };
 
     setSelected((selected) => {
-      return [...selected, displayProps];
+      return [
+        ...selected,
+        {
+          id: selected.length + 1,
+          anchor: anchor.id,
+          focus: focus.id,
+          color: color,
+          content: textArr,
+        },
+      ];
     });
 
-    dispatch({
-      type: 'SET_DISPLAY_PROPS',
-      payload: {
-        name: 'lyrics',
-        content: displayProps,
-      },
-    });
+    // setSelected((selected) => {
+    //   console.log('selected (context): ', selected);
+    //   return [...selected, displayProps];
+    // });
+
+    // dispatch({
+    //   type: 'SET_DISPLAY_PROPS',
+    //   payload: {
+    //     name: 'lyrics',
+    //     content: displayProps,
+    //   },
+    // });
   }, [finalText]);
 
   /**
