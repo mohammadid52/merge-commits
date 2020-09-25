@@ -90,7 +90,10 @@ const StageIcon = (props: StageIconProps) => {
     }
   };
 
-  const iconColor = open || active ? '#EDF2F7' : '#54575c';
+  const iconColor = open || active ? '#EDF2F7' : ' gray';
+  const iconBackgroundColor = active ? '#38A169' : open || active ? '#cbd5e0' : '#54575c';
+  const iconBorder =  open || active ? '#cbd5e0' : '#54575c';
+  
 
   if (disabled) return null;
 
@@ -98,13 +101,13 @@ const StageIcon = (props: StageIconProps) => {
     return (
       <>
         <div
-          className='relative bg-gray-200 h-10 w-10 flex justify-center items-center rounded-full z-20'
-          onClick={handleLink}>
+          className='relative h-10 w-10 flex justify-center items-center rounded-full z-20'
+          onClick={handleLink} style={{backgroundColor: iconBorder}}>
           <IconContext.Provider value={{ color: iconColor, size: '1rem' }}>
             <div
               className={`${
                 active ? 'bg-green-600' : 'bg-gray-400'
-              } h-8 w-8 flex justify-center items-center rounded-full z-30`}>
+              } h-8 w-8 flex justify-center items-center rounded-full z-30`} style={{backgroundColor: iconBackgroundColor}}>
               {iconSwitch(type)}
             </div>
             {/* ICON LABEL */}
@@ -123,13 +126,12 @@ const StageIcon = (props: StageIconProps) => {
         <div
           className={`relative bg-gray-200 h-12 w-12 rounded-full flex items-center justify-center ${
             active ? 'cursor-pointer' : 'cursor-default'
-          }`}
+          }`} style={{backgroundColor: iconBorder}}
           onClick={handleLink}>
           <IconContext.Provider value={{ color: iconColor, size: '1.5rem' }}>
             <div
-              className={`h-10 w-10 rounded-full flex flex-col justify-center items-center ${
-                active ? 'bg-green-600' : 'bg-gray-400'
-              } z-30`}>
+              className={`h-10 w-10 rounded-full flex flex-col justify-center items-center 
+              ${active ? 'bg-green-600' : 'bg-gray-400'} z-30`} style={{backgroundColor: iconBackgroundColor}}>
               {iconSwitch(type)}
             </div>
           </IconContext.Provider>
