@@ -37,7 +37,7 @@ const Checkpoint = (props: props) => {
                         <FaCheckSquare />
                     </div>
                 </IconContext.Provider>
-                <div className="h-full text-2xl bg-dark-blue w-full flex flex-row justify-center items-center text-4xl text-center font-open font-bold text-gray-200 rounded-lg shadow-2 z-10">
+                <div className="title text-gray-200 w-full flex flex-row justify-center items-center text-5xl text-center font-open font-medium px-4 py-2 ${theme.block.text} z-10">
                     Checkpoint
                 </div>
             </div>

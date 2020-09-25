@@ -14,7 +14,7 @@ const Banner = () => {
           <FaMusic />
         </div>
       </IconContext.Provider>
-      <div className={`h-full  font-medium text-xl md:text-5xl z-10`}>
+      <div className={`h-full flex justify-center items-center font-medium text-xl md:text-5xl z-10`}>
         {title}
       </div>
     </div>
