@@ -146,11 +146,13 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         case 'SET_DISPLAY_DATA':
             return {
                 ...state,
+                unsavedChanges: true,
                 displayData: action.payload,
             };
         case 'DELETE_DISPLAY_DATA':
             return {
                 ...state,
+                unsavedChanges: true,
                 displayData: {
                     ...state.displayData,
                     breakdownComponent: '',
@@ -161,14 +163,17 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
             if ( state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === action.payload.id ) {
                 return { 
                     ...state,
+                    unsavedChanges: true,
                     studentViewing: {
                         live: false,
                         studentInfo: {}
                     }
                 }
             }
+            
             return {
                 ...state,
+                unsavedChanges: true,
                 studentViewing: {
                     live: true,
                     studentInfo: action.payload
