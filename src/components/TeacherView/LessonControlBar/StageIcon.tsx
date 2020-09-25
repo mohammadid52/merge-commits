@@ -117,7 +117,7 @@ const StageIcon = (props: StageIconProps) => {
                                     Close
                                 </div> */}
                                 <div className={`flex justify-center items-center w-3/10 h-8/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none active:shadow-none cursor-pointer`} onClick={() => handleStateChange('DISABLE_LESSON')}>
-                                    Disable
+                                    { !disabled ? 'Disable' : 'Enable' }
                                 </div>
                             </div>
                         </div>
