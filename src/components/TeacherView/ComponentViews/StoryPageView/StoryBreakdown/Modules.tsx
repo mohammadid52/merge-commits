@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface props {
     fullscreen: boolean,
@@ -39,22 +40,23 @@ const keywordParser = (str: string) => {
 
 const Modules = (props: props) => {
     const { fullscreen, dataProps } = props;
+    const { theme } = useContext(LessonControlContext);
 
     if (!dataProps || !dataProps.additional) {
         return null;
     }
 
     return (
-        <div className={`flex flex-col md:w-2/10 h-full justify-between text-sm md:text-base text-gray-200 mb-4 md:mb-0`} >
+        <div className={`flex md:w-full h-2.8/10 justify-between text-sm md:text-base text-gray-200 mb-4 md:mb-0`} >
             {   dataProps && dataProps.additional ?
                 dataProps.additional.map((item: any, key: number) => {
                     let wordArray = keywordParser(item.input)
                     return (
-                    <div key={key} className={`md:h-3.2/10 bg-dark-blue font-open font-bold h-16 shadow-2 rounded-lg px-4 py-2 ${key === dataProps.additional.length - 1 ? '' : ''}`}>
+                    <div key={key} className={`md:w-3.2/10 h-full ${theme.gradient.cardBase} font-open font-light shadow-2 rounded-lg px-4 py-2 ${key === dataProps.additional.length - 1 ? '' : ''}`}>
                         <h3>{keywordCapitilizer(item.name)}:</h3>
-                        <div className="w-full px-2 overflow-scroll">
+                        <div className="w-full px-2 overflow-scroll h-8/10">
                             {   item.input ? wordArray.map((word: string, key: number) => (
-                                    <p key={key} className={`${fullscreen ? 'text-sm md:text-xl' : 'text-base'} `}>
+                                    <p key={key} className={`${fullscreen ? 'text-sm md:text-base' : 'text-xs'} font-normal`}>
                                         { word }
                                     </p>
                                 ))

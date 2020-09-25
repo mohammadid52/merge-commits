@@ -31,45 +31,18 @@ const ToolBar = (props: ToolBarProps) => {
     }
 
     return (
-        <div className={`${ editMode ? 'md:h-7/10' : 'md:h-4.8/10'} ${fullscreen ? 'p-6' : 'p-3'} w-full bg-gray-700 flex flex-col items-center text-gray-200 shadow-2 rounded-lg`}>
+
+        <div className={`${ editMode ? 'md:h-7/10' : 'md:h-4.5/10'} ${fullscreen ? 'p-4' : 'p-2'} w-full md:h-7/10 bg-grayscale-light flex flex-col items-center text-grayscale-lighter px-4 py-4 rounded-lg`}>
             <div className="w-full h-full flex flex-col justify-between">
-                <h3 className="w-full text-xl text-gray-200 font-open font-bold border-b border-gray-900">Toolbox</h3>
-                <h3 className="h-1/10 text-lg font-bold font-open">My word bank:</h3>
-                <div id="search" className="h-1/10 pl-2 rounded-lg shadow-elem-dark text-gray-700 text-sm bg-gray-200">Search...</div>
-                <div className={`${ editMode ? 'h-40 md:h-6.5/10' : 'h-40 md:h-5.5/10'} w-full bg-gray-300 flex flex-col shadow-elem-dark text-gray-500 px-4 rounded-lg overflow-scroll`}>
-                    {/* { 
-                        search === '' ? state.word_bank.map((word: string, key: string) => (
-                            <div 
-                                key={key} 
-                                className="text-sm w-auto"  
-                                onDragStart={handleDragStart}
-                                onDragOver={handleDragOver}
-                                draggable>
-                                    <span id={key}>
-                                        { word }
-                                    </span>
-                            </div>
-                        )) 
-                        : state.word_bank.map((word: string, key: string) => {
-                            if (word.indexOf(search) > -1) {
-                                return (
-                                   <div
-                                    key={key} 
-                                    className="text-sm w-auto"  
-                                    onDragStart={handleDragStart}
-                                    onDragOver={handleDragOver}
-                                    draggable>
-                                        <span id={key}>
-                                            { word }
-                                        </span>
-                                   </div>
-                                )
-                            }
-                        })
-                    } */}
+                <h3 className={`${fullscreen ? 'text-xl' : 'text-base'} w-full text-grayscale-lighter font-open font-light border-b border-grayscale-lighter pb-1 mb-1`}>Toolbox</h3>
+                <h3 className={`${fullscreen ? 'text-lg' : 'text-sm'} font-light font-open`}>My word bank:</h3>
+                <div id="search" className="h-1/10 pl-2 rounded-lg text-grayscale text-sm bg-grayscale-lighter">Search...</div>
+                <div className={`${fullscreen ? 'text-2xl ' : 'text-lg'} w-full h-40 opacity-70 md:h-6/10 bg-grayscale-lighter flex flex-col text-center justify-center font-light text-grayscale-lightest px-4 rounded-lg overflow-y-auto overflow-x-hidden`}>
+                    Toolbox coming soon...
                 </div>
             </div>
         </div>
+
     )
 }
 

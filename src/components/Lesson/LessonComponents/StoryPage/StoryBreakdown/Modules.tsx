@@ -44,7 +44,7 @@ const Modules = (props: any) => {
           ? 'flex-col md:w-2/10 h-full'
           : displayMode === 'COOP'
           ? 'flex-row w-full h-2/10'
-          : 'flex-col md:w-2/10 h-full'
+          : 'flex-row w-full h-2/10'
       } justify-between text-sm md:text-base text-gray-200 mb-4 md:mb-0`}>
       {additional.map((item: any, key: number) => {
         let wordArray = keywordParser(item.input);
@@ -56,7 +56,7 @@ const Modules = (props: any) => {
                 ? 'md:h-3.2/10'
                 : displayMode === 'COOP'
                 ? 'md:h-full md:w-3.2/10'
-                : 'md:h-3.2/10'
+                : 'md:h-full md:w-3.2/10'
             } ${theme.gradient.cardBase} font-open font-light h-16 rounded-lg px-4 py-2 ${
               key === additional.length - 1 ? '' : ''
             }`}>
