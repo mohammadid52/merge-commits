@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { LessonActions } from '../reducers/LessonReducer'
-import { LessonStateType } from '../state/LessonState';
+// import { LessonStateType } from '../state/LessonState';
 import { API, graphqlOperation } from 'aws-amplify';
 import * as customMutations from '../customGraphql/customMutations';
-import { FaSatellite } from 'react-icons/fa';
+// import { FaSatellite } from 'react-icons/fa';
 
 interface inputs {
     subscription?: any,
@@ -157,7 +157,6 @@ const useStudentTimer = (inputs?: inputs) => {
         clearAllTimers,
         changeParams
     }
-
 }
 
 export default useStudentTimer;

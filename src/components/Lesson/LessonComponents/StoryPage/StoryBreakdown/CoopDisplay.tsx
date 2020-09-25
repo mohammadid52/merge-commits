@@ -63,8 +63,8 @@ const CoopDisplay = () => {
                         <Banner title={displayProps.title}
                             display='SELFinCOOP' fullscreen={fullscreen}/>
 
-                        <div className="w-full h-8.8/10 flex flex-col md:flex-row justify-between">
-                            <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${displayProps.additional ? 'md:w-7.9/10' : 'w-full'} md:mb-0 overflow-y-auto overflow-x-hidden h-full p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg`}>
+                        <div className="w-full h-8.8/10 flex flex-col justify-between">
+                            <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${displayProps.additional ? 'md:w-full' : 'w-full'} md:mb-0 overflow-y-auto overflow-x-hidden h-7.83/10 p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg`}>
                                 {/* bg-lighter-blue shadow-inner-box  */}
                                 <div className={`h-full rounded-lg font-light text-xl`}>
                                     { displayProps.story }
