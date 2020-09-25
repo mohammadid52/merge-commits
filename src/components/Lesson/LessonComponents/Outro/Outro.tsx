@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import Banner from './Banner';
+import { IconContext } from 'react-icons';
+import { FaPenFancy, FaCheckSquare } from 'react-icons/fa';
 import PhotoBlock from './PhotoBlock';
 import QuoteBlock from './QuoteBlock';
 import VideoBlock from './VideoBlock';
@@ -11,13 +13,36 @@ import Links from './Links';
 import SaveQuit from './SaveQuit';
 
 const Outro = () => {
-  const { dispatch } = useContext(LessonContext);
+  const { dispatch, state, theme } = useContext(LessonContext);
   const [fullscreen, setFullscreen] = useState(false);
 
   useEffect(() => {
     dispatch({ type: 'ACTIVATE_LESSON', payload: 'outro' });
     dispatch({ type: 'FINISH' });
   }, []);
+
+  // // if ( state.data.lesson.type !== 'lesson' ) {
+  //   return (
+  //       <div className={`z-50 w-full h-full flex flex-col justify-between items-center`}>
+  //           <div className={`w-full h-1/10  text-xl md:text-5xl ${theme.banner}`}>
+  //               <IconContext.Provider value={{ color: '#EDF2F7', size: '2.75rem'}}>
+  //                   <div className={`red bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg shadow-2 ${theme.block.shadow}`}>
+  //                       <FaCheckSquare />
+  //                   </div>
+  //               </IconContext.Provider>
+  //               <div className={`h-full w-full flex flex-row justify-center items-center text-5xl text-center font-open font-medium ${theme.block.text} z-10`}>
+  //                   Title
+  //               </div>
+  //           </div>
+
+  //           <div className={`w-5/10 h-6/10 flex flex-col justify-between items-center`}>
+  //             <Feedback/>
+  //             <SaveQuit/>
+  //           </div>
+            
+  //       </div>
+  //   )
+// }
 
   return (
     <div className='w-full md:h-full flex flex-col justify-between items-center'>
@@ -30,32 +55,6 @@ const Outro = () => {
           <MoreArtist/>
           <SaveQuit/>
         </div>
-        {/* ///
-        <div className="w-5/10 h-full mt-4 md:mt-0 md:ml-2">
-                    <MoreArtist />
-                </div>
-
-                <div className="w-4.8/10 h-full flex flex-col justify-between">
-                    <div className="flex justify-between h-5/10">
-                        <TrophyBlock />
-                        <Links />
-                    </div>
-                    <Feedback />
-                </div>
-             ///   
-        <div className='w-4.5/10 h-full my-4 md:ml-2 flex flex-col justify-center'>
-          <VideoBlock link='https://www.youtube.com/embed/bp10ZOtv_zY' fullscreen={fullscreen}/>
-          
-        </div>
-
-        <div className='w-4.5/10 h-full flex flex-col justify-between my-4 md:ml-2'>
-          <MoreArtist />
-          <div className="flex h-2.5/10">
-          <TrophyBlock />
-          <Links />
-          </div>
-          <Feedback />
-        </div> */}
 
       </div>
     </div>
