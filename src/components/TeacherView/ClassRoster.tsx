@@ -18,17 +18,18 @@ const ClassRoster = (props: classRosterProps) => {
             return item.id === id
         });
 
-        console.log('selected student', id, selected[0]);
+        // console.log('selected student', id, selected[0]);
 
         dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] })
     } 
 
     useEffect(() => {
-        console.log(state.studentViewing) 
+        // console.log(state.studentViewing) 
     
         if (state.studentViewing.studentInfo) {
             handleUpdateClassroom()
         }
+
     }, [state.studentViewing])
 
     const studentStatus = (status: string) => {

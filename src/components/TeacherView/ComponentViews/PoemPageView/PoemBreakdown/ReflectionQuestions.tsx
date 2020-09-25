@@ -28,22 +28,22 @@ const ReflectionQuestions = (props: props) => {
     }
 
     return (
-        <div className="reflection w-full h-1.5/10 flex flex-row text-gray-200">
-            <div className="w-1/10 h-full flex justify-center items-center bg-dark-blue mr-2 md:mr-4 rounded-lg " onClick={prevQuestion}>
-                <div className="w-6 h-6 border-dark border-t-8 border-l-8 transform -rotate-45 ml-2"></div>
+        <div className="reflection w-full h-1.5/10 flex flex-row text-gray-200 mx-8">
+            <div className="w-1/10 h-full flex justify-center items-center bg-gradient-to-tl from-dark-blue to-med-dark-blue mr-2 md:mr-4 rounded-lg cursor-pointer" onClick={prevQuestion}>
+                <div className="w-6 h-6 border-dark border-t-8 border-l-8 transform -rotate-45 ml-2 cursor-pointer"></div>
             </div>
-            <div className="w-8/10 bg-dark-blue flex-grow rounded-lg  px-4 py-2 flex flex-col">
-                <div className={`${fullscreen ? 'text-lg' : 'text-sm'} font-open font-bold mb-2`}>
-                Discussion Questions 
-                </div>
-                <div className={`${fullscreen ? 'text-lg' : 'text-xs'} question w-full flex-grow text-gray-200 flex justify-center px-4`}>
+            <div className="w-8/10 bg-gradient-to-tl from-dark-blue to-med-dark-blue flex-grow rounded-lg px-2 md:px-4 py-1 md:py-2 flex flex-col">
+                <h3 className={`${fullscreen ? 'text-base ' : 'text-xs'} font-open font-light`}>
+                Discussion Questions
+                </h3>
+                <div className={`${fullscreen ? 'text-lg' : 'text-sm'} question w-full flex-grow font-light text-gray-200 flex justify-center md:px-4`}>
                     <p className="text-center">{ questArr[question] }</p>
                 </div>
             </div>
-            <div className="w-1/10 h-full flex justify-center items-center bg-dark-blue ml-2 md:ml-4 rounded-lg " onClick={nextQuestion}>
-                <div className="w-6 h-6 border-dark border-t-8 border-r-8 transform rotate-45 mr-2"></div>
+            <div className="w-1/10 h-full flex justify-center items-center bg-gradient-to-tl from-dark-blue to-med-dark-blue ml-2 md:ml-4 rounded-lg cursor-pointer" onClick={nextQuestion}>
+                <div className="w-6 h-6 border-dark border-t-8 border-r-8 transform rotate-45 mr-2 cursor-pointer"></div>
             </div>
-        </div>
+        </div> 
     )
 }
 

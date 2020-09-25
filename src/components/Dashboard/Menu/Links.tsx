@@ -15,7 +15,7 @@ const Links: React.FC = () => {
 
     const userLinks = (role: string): void => {
         switch(role) {
-            case 'ADM':
+            case 'SUP':
                 return setLinks(links => {
                     return [
                         ...links,
@@ -41,6 +41,28 @@ const Links: React.FC = () => {
                         }
                     ]
                 })
+            case 'ADM':
+                return setLinks(links => {
+                    return [
+                        ...links,
+                        {
+                            name: 'User Management',
+                            path: 'manage-users'
+                        },
+                        {
+                            name: 'Registration',
+                            path: 'registration'
+                        },
+                        {
+                            name: 'Classroom',
+                            path: 'classroom'
+                        },
+                        {
+                            name: 'Lesson Planner',
+                            path: 'lesson-planner'
+                        },
+                    ]
+                })
             case 'FLW':
                 return setLinks(links => {
                     return [
@@ -48,6 +70,10 @@ const Links: React.FC = () => {
                         {
                             name: 'Lesson Planner',
                             path: 'lesson-planner'
+                        },
+                        {
+                            name: 'Registration',
+                            path: 'registration'
                         },
                     ]
                 })

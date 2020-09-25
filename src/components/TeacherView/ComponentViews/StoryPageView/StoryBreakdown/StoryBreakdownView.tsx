@@ -36,8 +36,8 @@ const SelfDisplay = (props: props) => {
             <Banner dataProps={dataProps}
                 fullscreen={fullscreen}
                 />
-            <div className="w-full h-7/10 flex flex-col md:flex-row justify-between">
-                <div className={`bg-dark-blue ${dataProps && dataProps.additional ? 'md:w-7.85/10' : 'w-full'} mb-4 md:mb-0 overflow-scroll h-full px-4 md:px-12 py-4 md:py-8 items-center text-md md:text-3xl text-gray-200 rounded-lg shadow-2`}>
+            <div className="w-full h-7.2/10 flex flex-col justify-between">
+                <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${dataProps && dataProps.additional ? 'md:h-7/10' : 'h-full'} ${fullscreen ? 'text-md md:text-2xl px-4 md:px-12 py-4 md:py-8' : 'text-ls px-2 md:px-6 py-2 md:py-4'} mb-4 md:mb-0 overflow-y-auto overflow-x-hidden h-full items-center text-gray-200 rounded-lg`}>
                     { dataProps && dataProps.story ? dataProps.story : null }
                 </div> 
                 <Modules 
