@@ -32,7 +32,7 @@ const LessonControl = () => {
     const [ componentView, setComponentView ] = useState('');
     const [ fullscreen, setFullscreen ] = useState(false);
     const [ shareable, setShareable ] = useState(false);
-    const [ sharing, setSharing ] = useState(false);
+    const [ isSameStudentShared, setIsSameStudentShared ] = useState(false);
 
     const handleFullscreen = () => {
         setFullscreen(fullscreen => {
@@ -59,7 +59,7 @@ const LessonControl = () => {
     }
 
     const handleShareStudentData = async () => {
-        console.log(state.studentViewing);
+        // console.log(state.studentViewing);
         if ( state.studentViewing.studentInfo ) {
             let displayData = {
                 breakdownComponent: state.studentViewing.studentInfo.lessonProgress,
@@ -85,8 +85,15 @@ const LessonControl = () => {
 
     useEffect(() => {
 
+        console.log('changes', state)
+        handleUpdateClassroom()
+
+    }, [state.unsavedChanges])
+
+    useEffect(() => {
+
         let result = /.+\/(breakdown)\/*.*/.test(location.pathname)
-        console.log('breakdown?', result, location.pathname)
+        // console.log('breakdown?', result, location.pathname)
 
         if ( result ) {
             setShareable(true)
@@ -108,16 +115,30 @@ const LessonControl = () => {
     }, [state.studentViewing])
 
     useEffect(() => {
+        // console.log('change', state);
+        
         if ( state.displayData && state.displayData.studentInfo && state.studentViewing.studentInfo && state.studentViewing.studentInfo.student ) {
+            
             if ( state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id ) {
-                setSharing(true)
+                // console.log('same student true');
+                
+                setIsSameStudentShared(true)
             }
 
             if ( state.displayData.studentInfo.id !== state.studentViewing.studentInfo.student.id ) {
-                setSharing(false)
+                // console.log('same student false inner');
+                
+                setIsSameStudentShared(false)
             }
         }
-    }, [state.displayData])
+
+        if ( !state.displayData || !state.displayData.studentInfo || !state.studentViewing.studentInfo || !state.studentViewing.studentInfo.student ) {
+            // console.log('same student false outer');
+            
+            setIsSameStudentShared(false)
+        }
+        
+    }, [state.displayData, state.studentViewing])
 
     if ( state.status !== 'loaded') {
         return (
@@ -240,23 +261,29 @@ const LessonControl = () => {
                                 </IconContext.Provider>
                             </div>
 
-                            { 
-                                shareable && state.studentViewing.live && !sharing ?
-                                <div className={`absolute cursor-pointer w-auto text-xl m-2 z-50 ${ state.displayData.studentInfo && state.studentViewing.live && state.displayData.studentInfo.id === state.studentViewing.studentInfo.id ? 'hidden' : 'hi' }`} style={{bottom: 0, left: 0}}>
-                                    <button className="bg-purple-400 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleShareStudentData}>
-                                        share data
-                                    </button>
-                                </div>
+                            {   
+                                shareable && state.studentViewing.live &&!isSameStudentShared ? 
+                                    <div className={`absolute cursor-pointer w-auto text-xl m-2 z-50`} style={{bottom: 0, left: 0}}>
+                                        <button className="bg-purple-400 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleShareStudentData}>
+                                            share data
+                                        </button>
+                                    </div>
                                 : null
                             }
 
                             {   
-                                state.sharing ? 
-                                <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: '50%', marginLeft: fullscreen ? '-60px' : '-80px' }}>
-                                    <button className="bg-gold text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleQuitShare}>
-                                        stop sharing
-                                    </button>
-                                </div>
+                                state.sharing ? !isSameStudentShared ? 
+                                    <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: '50%', marginLeft: fullscreen ? '-60px' : '-80px' }}>
+                                        <button className="bg-gold text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleQuitShare}>
+                                            stop sharing
+                                        </button>
+                                    </div>
+                                : 
+                                    <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, left: 0}}>
+                                        <button className="bg-gold text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleQuitShare}>
+                                            stop sharing
+                                        </button>
+                                    </div>
                                 : null
                             }   
 
