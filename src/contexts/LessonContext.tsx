@@ -6,7 +6,9 @@ import { useCookies } from 'react-cookie';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 import * as customMutations from '../customGraphql/customMutations';
 import * as customQueries from '../customGraphql/customQueries';
-import { API, graphqlOperation, Auth } from 'aws-amplify';
+// import { API, graphqlOperation } from 'aws-amplify';
+import {Auth} from '@aws-amplify/auth';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, Suspense, lazy } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
+// import { API, graphqlOperation } from 'aws-amplify';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { 
     useRouteMatch,

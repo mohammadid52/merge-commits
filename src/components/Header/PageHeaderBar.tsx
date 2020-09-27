@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
 import { NavLink, useHistory, useLocation } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
+
+import {Auth} from '@aws-amplify/auth';
 
 
 const PageHeaderBar = () => {

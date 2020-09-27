@@ -11,7 +11,8 @@ import {
     useHistory,
     Link, NavLink
 } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
+// import { Auth } from 'aws-amplify';
+import {Auth} from '@aws-amplify/auth';
 
 const Reset = () => {
     const [ cookies, setCookie ] = useCookies(['auth']);

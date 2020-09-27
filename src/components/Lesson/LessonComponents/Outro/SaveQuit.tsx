@@ -4,7 +4,8 @@ import React, { useContext } from 'react';
 // import { AiOutlineSave, AiOutlineHome } from 'react-icons/ai';
 import { NavLink, useHistory } from 'react-router-dom';
 import { LessonContext } from '../../../../contexts/LessonContext';
-import { API, graphqlOperation } from 'aws-amplify';
+// import { API, graphqlOperation } from 'aws-amplify';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../../customGraphql/customMutations';
 
 const SaveQuit = () => {
