@@ -4,7 +4,8 @@ import { useCookies } from 'react-cookie';
 import { IconContext } from "react-icons";
 import { MdEmail } from 'react-icons/md';
 import { useHistory, NavLink } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
+// import { Auth } from 'aws-amplify';
+import Auth from '@aws-amplify/auth';
 
 const Forgot = () => {
     const [ cookies, setCookie ] = useCookies(['auth']);

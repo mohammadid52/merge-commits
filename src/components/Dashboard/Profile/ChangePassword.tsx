@@ -4,7 +4,8 @@ import { IconContext } from "react-icons";
 import { FaKey } from 'react-icons/fa';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useHistory, NavLink } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
+// import { Auth } from 'aws-amplify';
+import {Auth} from '@aws-amplify/auth';
 import { validate } from 'json-schema';
 
 const ChangePassword = () => {

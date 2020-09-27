@@ -5,7 +5,8 @@ import { FaUserCircle } from 'react-icons/fa'
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import * as queries from '../../../../graphql/queries';
-import { API, graphqlOperation } from 'aws-amplify';
+// import { API, graphqlOperation } from 'aws-amplify';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import { UserInfo } from './User';

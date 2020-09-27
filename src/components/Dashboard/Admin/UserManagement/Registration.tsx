@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Auth, API, graphqlOperation } from 'aws-amplify';
+// import { Auth, API, graphqlOperation } from 'aws-amplify';
+import {Auth} from '@aws-amplify/auth';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import * as mutations from '../../../../graphql/mutations';
 import SuccessNote from '../../../../standard/Alert/SuccessNote';
 import ErrorNote from './ErrorNote';

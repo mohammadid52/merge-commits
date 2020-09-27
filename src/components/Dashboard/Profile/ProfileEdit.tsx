@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
+// import { API, graphqlOperation } from 'aws-amplify';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../customGraphql/customMutations';
 import { NavLink, useHistory } from 'react-router-dom';
 import DropdownForm from './DropdownForm';

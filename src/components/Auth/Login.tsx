@@ -10,7 +10,8 @@ import {
     useHistory,
     Link, NavLink
 } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
+// import { Auth } from 'aws-amplify';
+import Auth from '@aws-amplify/auth';
 import Forgot from './Forgot';
 
 const Login = () => {

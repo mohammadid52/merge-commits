@@ -4,7 +4,9 @@ import {
     useHistory,
     Link
 } from 'react-router-dom';
-import { Auth, API, graphqlOperation } from 'aws-amplify';
+// import { API, graphqlOperation } from 'aws-amplify';
+import {Auth} from '@aws-amplify/auth';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
 
 

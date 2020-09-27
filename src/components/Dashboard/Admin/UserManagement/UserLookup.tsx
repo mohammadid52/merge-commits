@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { API, graphqlOperation } from 'aws-amplify';
+// import { API, graphqlOperation } from 'aws-amplify';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import * as queries from '../../../../graphql/queries';
 import UserSearch from './UserSearch';
 import UserStatus from './UserStatus';
