@@ -57,15 +57,10 @@ const StageIcon = (props: StageIconProps) => {
         }
     }
 
-    const iconLabel = (centerFix: 'center' | 'noCenter'): ReactElement => {
+    const iconLabel = (): ReactElement => {
         return (
           <p
-            className={`absolute transform translate-y-8 text-center z-50 font-light text-blue-100
-            ${centerFix === 'center' && 'left-1/2 -translate-x-1/2'} 
-            ${centerFix === 'noCenter' && '-translate-x-1/2'} 
-            ${state.currentPage === iconID ? 'text-opacity-75' : ''}
-            ${state.currentPage !== iconID ? 'text-opacity-20' : ''}
-            `}>
+            className={`absolute w-auto transform translate-y-8 mt-8 text-center z-50 font-light text-dark`}>
             {
                 /* Capitalize the first letter */
                 props.type.charAt(0).toUpperCase()+props.type.slice(1)
@@ -99,7 +94,7 @@ const StageIcon = (props: StageIconProps) => {
                     <div className={`${ coinColor } h-10 w-10 flex justify-center items-center rounded-full z-30`}>
                         { iconSwitch(type) }
                     </div>
-                    {iconLabel('noCenter')}
+                    {iconLabel()}
                 </IconContext.Provider>
                 {
                     menuOpen ? 
@@ -135,7 +130,7 @@ const StageIcon = (props: StageIconProps) => {
                     <div className={`h-14 w-14 rounded-full flex flex-col justify-center items-center ${ coinColor } z-30`}>
                         { iconSwitch(type) }
                     </div>
-                    {iconLabel('noCenter')}
+                    {iconLabel()}
                 </IconContext.Provider>
             </div>
             {
