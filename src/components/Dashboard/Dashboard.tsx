@@ -21,6 +21,7 @@ import * as queries from '../../graphql/queries';
 import PageHeaderBar from '../Header/PageHeaderBar';
 import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
+import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 
 
 type userObject = {
@@ -75,9 +76,10 @@ const Dashboard: React.FC = () => {
                 <PageHeaderBar />
                 <Suspense fallback={
                 <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                    <div className="min-h-full w-full flex flex-col justify-center items-center">
+                    {/* <div className="min-h-full w-full flex flex-col justify-center items-center">
                         Give us one second! It is loading... 
-                    </div>
+                    </div> */}
+                    <ComponentLoading/>
                 </div>
                 }> 
                     <Switch>
