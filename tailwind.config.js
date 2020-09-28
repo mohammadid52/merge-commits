@@ -17,6 +17,7 @@ module.exports = {
     translate: true,
   },
   theme: {
+    textColor: theme => theme('colors'),
     fontSize: {
       'xxs': '.5rem',
       'xs': '.75rem',
