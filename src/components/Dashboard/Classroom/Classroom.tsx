@@ -9,6 +9,7 @@ import Upcoming from './Upcoming';
 import Completed from './Completed';
 import Dashboard from './Dashboard';
 import Loading from '../../Lesson/Loading/ComponentLoading';
+import SurveyCard from './SurveyCard';
 
 interface Artist {
     id: string
@@ -26,14 +27,15 @@ export interface CurriculumInfo {
 
 const Classroom: React.FC = () => {
     const history = useHistory();
-    const { theme } = useContext(GlobalContext);
-    const [curriculum, setCurriculum] = useState<CurriculumInfo>();
-    const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
+    const { state, theme } = useContext(GlobalContext);
+    const [ curriculum, setCurriculum ] = useState<CurriculumInfo>();
+    const [ survey, setSurvey ] = useState<any>();
+    const [ listCurriculum, setListCurriculum ] = useState<Array<CurriculumInfo>>();
     const [status, setStatus] = useState('');
 
-    async function getCourse(id: string) {
+    async function getCourse(id: string, survey?: boolean) {
         try {
-            const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: '1' }))
+            const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: id }))
             const nextLesson = courses.data.getCourse.curriculum.lessons.items[0].lesson;
             const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
             setStatus('done');
@@ -45,9 +47,26 @@ const Classroom: React.FC = () => {
         }
     }
 
+    const getSurvey = async () => {
+        try {
+            const getClassroom: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: 'on-boarding-survey-1' }))
+            console.log('survey', getClassroom)
+            setSurvey(getClassroom)
+        } catch (error) {
+            console.error(error);  
+        }
+    }
+
     useEffect(() => {
         getCourse('1')
     }, [])
+
+    useEffect(() => {
+        if ( state.user && !state.user.onBoardSurvey ) {
+            console.log( 'state', state );
+            getSurvey()
+        }
+    }, [state.user])
 
     const handleLink = () => {
         history.push('/lesson');
@@ -79,6 +98,10 @@ const Classroom: React.FC = () => {
                         </p>
                     </div>
                 </div>
+                {   survey ? 
+                    <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum}/>
+                    : null
+                }
                 <Today link={'/lesson?id=1'} curriculum={curriculum}/>
                 <Upcoming curriculum={listCurriculum}/>
                 <Dashboard />

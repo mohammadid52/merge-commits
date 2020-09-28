@@ -11,7 +11,7 @@ import Links from './Links';
 import SaveQuit from './SaveQuit';
 
 const Outro = () => {
-  const { dispatch } = useContext(LessonContext);
+  const { state, dispatch } = useContext(LessonContext);
   const [fullscreen, setFullscreen] = useState(false);
 
   useEffect(() => {
@@ -27,7 +27,11 @@ const Outro = () => {
       <div className='w-full md:h-full flex flex-col justify-around items-center'>
         <div className="w-5/10 h-8/10 flex flex-col justify-between items-center">
           <Feedback/>
-          <MoreArtist/>
+          {
+            state.data.lesson.type !== 'survey' ?
+            <MoreArtist/>
+            : null
+          }
           <SaveQuit/>
         </div>
         {/* ///

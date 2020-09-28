@@ -144,6 +144,8 @@ export const getPerson = /* GraphQL */ `
         }
         nextToken
       }
+      onBoardSurvey
+      offBoardSurvey
       phone
       birthdate
       image
@@ -184,6 +186,8 @@ export const listPersons = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -212,6 +216,8 @@ export const getCurriculum = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -512,6 +518,8 @@ export const getStudentData = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -560,6 +568,8 @@ export const getStudentData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -666,6 +676,8 @@ export const listStudentDatas = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -827,6 +839,8 @@ export const getClassroom = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -980,6 +994,8 @@ export const listClassrooms = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -1051,6 +1067,8 @@ export const getFeedback = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -1153,6 +1171,8 @@ export const getLesson = /* GraphQL */ `
     getLesson(id: $id) {
       id
       title
+      type
+      instructions
       contributors {
         items {
           id
@@ -1165,6 +1185,8 @@ export const getLesson = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -1344,6 +1366,8 @@ export const listLessons = /* GraphQL */ `
       items {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -1813,6 +1837,8 @@ export const getQuestionData = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -1873,6 +1899,8 @@ export const getQuestionData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -1930,6 +1958,8 @@ export const listQuestionDatas = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -2003,6 +2033,8 @@ export const userById = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -2043,6 +2075,8 @@ export const usersByRole = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -2107,6 +2141,8 @@ export const searchPersons = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image

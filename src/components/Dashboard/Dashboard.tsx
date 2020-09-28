@@ -41,6 +41,7 @@ const Dashboard: React.FC = () => {
                 firstName: firstName,
                 lastName: user.lastName,
                 language: user.language,
+                onBoardSurvey: user.onBoardSurvey ? user.onBoardSurvey : false,
                 role: user.role,
             }
         })

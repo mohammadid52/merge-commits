@@ -65,6 +65,8 @@ export const getClassroom = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         artist {
           id
           images
@@ -350,6 +352,8 @@ export const getClassroomStudent = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         artist {
           id
           images

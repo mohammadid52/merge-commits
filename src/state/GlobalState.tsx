@@ -9,6 +9,7 @@ export interface globalStateType  {
         lastName: string,
         language: string,
         role: string,
+        onBoardSurvey?: boolean,
     }
 }
 
