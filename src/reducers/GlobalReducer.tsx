@@ -9,6 +9,7 @@ type globalActions =
             firstName: string,
             lastName: string,
             language: string,
+            onBoardSurvey: boolean,
             role: string,
         }
     }
@@ -42,6 +43,7 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
                     lastName: action.payload.lastName,
                     language: action.payload.language,
                     role: action.payload.role,
+                    onBoardSurvey: action.payload.onBoardSurvey,
                 }
             }
         case 'LOG_IN': 
