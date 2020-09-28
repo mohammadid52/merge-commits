@@ -10,6 +10,7 @@ import Completed from './Completed';
 import Dashboard from './Dashboard';
 import Loading from '../../Lesson/Loading/ComponentLoading';
 import SurveyCard from './SurveyCard';
+import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 
 interface Artist {
     id: string
@@ -74,7 +75,7 @@ const Classroom: React.FC = () => {
 
     if ( status !== 'done') {
         return (
-            <Loading />
+            <ComponentLoading />
         )
     }
     {
