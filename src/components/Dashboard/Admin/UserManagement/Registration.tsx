@@ -135,7 +135,6 @@ const Registration = () => {
                     externalId: '',
                 }
             })
-            console.log(newUserInputs, 'in register user');
         } catch (error) {
             console.error('error registering user:', error)
             handleMessage('error', error.message)
@@ -158,7 +157,6 @@ const Registration = () => {
                 }
             })
             registerUser(user.userSub)
-            console.log(newUserInputs, 'in signup');
         } catch (error) {
             console.log('error signing up:', error);
             setMessage(() => { 
@@ -290,14 +288,6 @@ const Registration = () => {
         })
     }
 
-    // const submitNewUsers = () => {
-    //     signUp();
-    //     if (registerUser) {
-    //         console.log('success')
-    //         setNewUserInputs(initialState)
-    //     }
-        
-    // }
 
     const handleSubmit = (e: any) => {
         validation();
