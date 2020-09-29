@@ -185,6 +185,8 @@ export const createPerson = /* GraphQL */ `
         }
         nextToken
       }
+      onBoardSurvey
+      offBoardSurvey
       phone
       birthdate
       image
@@ -221,6 +223,8 @@ export const updatePerson = /* GraphQL */ `
         }
         nextToken
       }
+      onBoardSurvey
+      offBoardSurvey
       phone
       birthdate
       image
@@ -257,6 +261,8 @@ export const deletePerson = /* GraphQL */ `
         }
         nextToken
       }
+      onBoardSurvey
+      offBoardSurvey
       phone
       birthdate
       image
@@ -286,6 +292,8 @@ export const createCurriculum = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -332,6 +340,8 @@ export const updateCurriculum = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -378,6 +388,8 @@ export const deleteCurriculum = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -430,6 +442,8 @@ export const createCurriculumLessons = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -541,6 +555,8 @@ export const updateCurriculumLessons = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -652,6 +668,8 @@ export const deleteCurriculumLessons = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -1128,6 +1146,8 @@ export const createClassStudent = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -1174,6 +1194,8 @@ export const updateClassStudent = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -1220,6 +1242,8 @@ export const deleteClassStudent = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -1270,6 +1294,8 @@ export const createStudentData = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -1318,6 +1344,8 @@ export const createStudentData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -1415,6 +1443,8 @@ export const updateStudentData = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -1463,6 +1493,8 @@ export const updateStudentData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -1560,6 +1592,8 @@ export const deleteStudentData = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -1608,6 +1642,8 @@ export const deleteStudentData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -1834,6 +1870,8 @@ export const createClassroom = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -2035,6 +2073,8 @@ export const updateClassroom = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -2236,6 +2276,8 @@ export const deleteClassroom = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -2392,6 +2434,8 @@ export const createFeedback = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -2467,6 +2511,8 @@ export const updateFeedback = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -2542,6 +2588,8 @@ export const deleteFeedback = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -2629,6 +2677,8 @@ export const createLesson = /* GraphQL */ `
     createLesson(input: $input, condition: $condition) {
       id
       title
+      type
+      instructions
       contributors {
         items {
           id
@@ -2641,6 +2691,8 @@ export const createLesson = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -2810,6 +2862,8 @@ export const updateLesson = /* GraphQL */ `
     updateLesson(input: $input, condition: $condition) {
       id
       title
+      type
+      instructions
       contributors {
         items {
           id
@@ -2822,6 +2876,8 @@ export const updateLesson = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -2991,6 +3047,8 @@ export const deleteLesson = /* GraphQL */ `
     deleteLesson(input: $input, condition: $condition) {
       id
       title
+      type
+      instructions
       contributors {
         items {
           id
@@ -3003,6 +3061,8 @@ export const deleteLesson = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -3177,6 +3237,8 @@ export const createLessonCheckpoint = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -3288,6 +3350,8 @@ export const updateLessonCheckpoint = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -3399,6 +3463,8 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -4322,6 +4388,8 @@ export const createQuestionData = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -4382,6 +4450,8 @@ export const createQuestionData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -4434,6 +4504,8 @@ export const updateQuestionData = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -4494,6 +4566,8 @@ export const updateQuestionData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -4546,6 +4620,8 @@ export const deleteQuestionData = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -4606,6 +4682,8 @@ export const deleteQuestionData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -4657,6 +4735,8 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -4720,6 +4800,8 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -4774,6 +4856,8 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -4837,6 +4921,8 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -4891,6 +4977,8 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -4954,6 +5042,8 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -5031,6 +5121,8 @@ export const createLessonKeyWord = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -5135,6 +5227,8 @@ export const updateLessonKeyWord = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -5239,6 +5333,8 @@ export const deleteLessonKeyWord = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -5355,6 +5451,8 @@ export const createStudentWord = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -5398,6 +5496,8 @@ export const updateStudentWord = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -5441,6 +5541,8 @@ export const deleteStudentWord = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image

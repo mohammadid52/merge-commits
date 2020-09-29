@@ -41,7 +41,6 @@ const DropdownForm = ( props: DropdownProps ) => {
         }
 
     }
-    console.log(userInfo, 'user info/options')
 
     
     let [selectedItem, setSelectItem] = useState(options());

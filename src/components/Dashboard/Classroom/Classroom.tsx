@@ -2,12 +2,15 @@ import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
 import * as customQueries from '../../../customGraphql/customQueries';
-import { API, graphqlOperation } from 'aws-amplify';
+// import { API, graphqlOperation } from 'aws-amplify';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import Today from './TodayLesson';
 import Upcoming from './Upcoming';
 import Completed from './Completed';
 import Dashboard from './Dashboard';
 import Loading from '../../Lesson/Loading/ComponentLoading';
+import SurveyCard from './SurveyCard';
+import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 
 interface Artist {
     id: string
@@ -25,28 +28,84 @@ export interface CurriculumInfo {
 
 const Classroom: React.FC = () => {
     const history = useHistory();
-    const { theme } = useContext(GlobalContext);
-    const [curriculum, setCurriculum] = useState<CurriculumInfo>();
-    const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
+    const { state, theme } = useContext(GlobalContext);
+    const [ curriculum, setCurriculum ] = useState<CurriculumInfo>();
+    const [ survey, setSurvey ] = useState<any>({
+        display: false,
+        data: null,
+    });
+    const [ listCurriculum, setListCurriculum ] = useState<Array<CurriculumInfo>>();
     const [status, setStatus] = useState('');
 
-    async function getCourse(id: string) {
+    async function getCourse( id: string ) {
         try {
-            const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: '1' }))
+            const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: id }))
             const nextLesson = courses.data.getCourse.curriculum.lessons.items[0].lesson;
             const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
-            setStatus('done');
             setCurriculum(nextLesson);
             setListCurriculum(lessonsInfo);
+            if ( state.user.onBoardSurvey ) setStatus('done');
             // console.log(lessonsInfo, 'list');
         } catch (error) {
             console.error(error);  
         }
     }
 
+    const getSurvey = async () => {
+        try {
+            const surveyData: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: 'on-boarding-survey-1' }))
+            console.log('survey', surveyData)
+            await setSurvey(() => {
+                // let surveyStatus: boolean = state.user.onBoardSurvey ? !state.user.onBoardSurvey : true;,
+                // console.log(surveyStatus, 'status', state);
+                
+                return {
+                    ...survey,
+                    // display: surveyStatus,
+                    data: surveyData.data.getClassroom,
+                }
+            })
+            setStatus('done');
+        } catch (error) {
+            console.error(error);  
+        }
+    }
+
     useEffect(() => {
+
         getCourse('1')
+
     }, [])
+
+    useEffect(() => {
+
+        if ( !state.user.onBoardSurvey && !survey.data ) {
+            getSurvey()
+        }
+
+        if ( state.user.onBoardSurvey ) {
+            // console.log('user', state.user);
+            setSurvey(() => {
+                console.log('setFalse');
+                return {
+                    ...survey,
+                    display: false,
+                }
+            })
+        }
+
+        if ( !state.user.onBoardSurvey ) {
+            // console.log('user', state.user);
+            setSurvey(() => {
+                console.log('setTrue');
+                return {
+                    ...survey,
+                    display: true,
+                }
+            })
+        }
+
+    }, [state])
 
     const handleLink = () => {
         history.push('/lesson');
@@ -54,7 +113,7 @@ const Classroom: React.FC = () => {
 
     if ( status !== 'done') {
         return (
-            <Loading />
+            <ComponentLoading />
         )
     }
     {
@@ -78,10 +137,14 @@ const Classroom: React.FC = () => {
                         </p>
                     </div>
                 </div>
-                <Today link={'/lesson?id=1'} curriculum={curriculum}/>
+                {   
+                    survey.display ? 
+                    <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum} />
+                    : null
+                }
+                <Today display={ survey.display } link={'/lesson?id=1'} curriculum={curriculum}/>
                 <Upcoming curriculum={listCurriculum}/>
                 <Dashboard />
-                
             </div>
         )
     }
