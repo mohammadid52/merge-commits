@@ -57,9 +57,6 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
         }
     ]);
 
-    console.log(curriculum, 'upcoming curr')
-
-
     const setOpen = () => {
         setLessons( lessons.map( (lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, instructor: string, lessonTime: string, summary: string, lessonDate: string}, i: number) => {
             return {
