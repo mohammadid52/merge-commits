@@ -82,7 +82,7 @@ const DoFirst = () => {
               className='w-9/10 py-2 px-4 text-gray-800 rounded-lg bg-gray-300'
               type='text'
               name={question.id}
-              value={input[question.id]}
+              defaultValue={input[question.id]}
               onChange={handleInputChange}
             />
           </div>
