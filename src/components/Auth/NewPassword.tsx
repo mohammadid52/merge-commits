@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { useHistory, NavLink } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
+// import { Auth } from 'aws-amplify';
+import Auth from '@aws-amplify/auth';
 import { useCookies } from 'react-cookie';
 import { IconContext } from "react-icons";
 import { FaKey } from 'react-icons/fa';

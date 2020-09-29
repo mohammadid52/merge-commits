@@ -6,8 +6,9 @@ import Today from '../Classroom/TodayLesson';
 import Upcoming from '../Classroom//Upcoming';
 import Completed from '../Classroom/Completed';
 import * as customQueries from '../../../customGraphql/customQueries';
-import { API, graphqlOperation } from 'aws-amplify';
-import Loading from '../../Lesson/Loading/ComponentLoading';
+// import { API, graphqlOperation } from 'aws-amplify';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 import Dashboard from '../Classroom/Dashboard';
 
 export interface Artist {
@@ -48,7 +49,7 @@ const LessonPlanHome = () => {
 
     if ( status !== 'done') {
         return (
-            <Loading />
+            <ComponentLoading />
         )
     }
     {

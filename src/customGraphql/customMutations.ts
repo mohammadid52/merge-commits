@@ -240,3 +240,17 @@ export const createQuestionData = /* GraphQL */ `
     }
   }
 `;
+
+export const updateSurveyStatus = /* GraphQL */ `
+  mutation UpdatePerson(
+    $input: UpdatePersonInput!
+    $condition: ModelPersonConditionInput
+  ) {
+    updatePerson(input: $input, condition: $condition) {
+      id
+      authId
+      email
+      onBoardSurvey
+    }
+  }
+`;

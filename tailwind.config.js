@@ -1,14 +1,14 @@
 module.exports = {
-  // purge: {
-  //   enabled: true,
-  //   content: [
-  //     './src/**/*.html',
-  //     './src/**/*.tsx',
-  //     './src/**/*.ts',
-  //     './src/**/*.js',
-  //     './src/**/*.jsx',
-  //   ],
-  // },
+  purge: {
+    enabled: true,
+    content: [
+      './src/**/*.html',
+      './src/**/*.tsx',
+      './src/**/*.ts',
+      './src/**/*.js',
+      './src/**/*.jsx',
+    ],
+  },
   future: {
     removeDeprecatedGapUtilities: true,
     purgeLayersByDefault: true,
@@ -17,6 +17,7 @@ module.exports = {
     translate: true,
   },
   theme: {
+    textColor: theme => theme('colors'),
     fontSize: {
       'xxs': '.5rem',
       'xs': '.75rem',
