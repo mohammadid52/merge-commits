@@ -40,7 +40,7 @@ const Intro = () => {
                 <div className={`w-8/10 h-8/10 flex flex-col ${theme.block.bg} justify-center items-center p-8 ${theme.block.text} text-base rounded-lg`}>
                     {
                         state.data.lesson.instructions ? state.data.lesson.instructions.map((item : string) => (
-                            <div className={`text-xl my-2`}>
+                            <div className={`text-xl my-2 text-center`}>
                                 { item }
                             </div>
                         ))
