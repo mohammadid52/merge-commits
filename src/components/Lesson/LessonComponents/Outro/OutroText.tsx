@@ -28,7 +28,7 @@ const OutroText = (props: OutroTextProps) => {
                 <div className={`h-8.5/10 w-full scrolling-touch overflow-x-scroll overflow-y-scroll md:overflow-auto bg-dark-blue shadow-elem-dark rounded-lg p-4 md:p-8`}>
                     { text ? text : 
                         <div className={`text-gray-200`}>
-                            Thanks for taking the survey!
+                            Thank you for answering those questions! Please click on the yellow button below to save and go back to the dashboard. Once you're there, please wait for more instructions from your teacher.
                         </div>
                     }
                 </div>
