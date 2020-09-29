@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import ActionButton from '../Actions/ActionButton';
-import { API, graphqlOperation } from 'aws-amplify';
+// import { API, graphqlOperation } from 'aws-amplify';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../../customGraphql/customMutations';
 import { useHistory } from 'react-router-dom';
 import { InstitutionInfo } from './Institution';

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Auth } from 'aws-amplify'; 
+// import { Auth } from 'aws-amplify'; 
+import Auth from '@aws-amplify/auth';
 import { IconContext } from "react-icons";
 import { FaUnlockAlt } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
@@ -22,7 +23,7 @@ const Registration = () => {
     })
 
     async function confirmSignUp() {
-        let username = input.email
+        let username = input.email;
         let code = input.code
         try {
             setCookie('confirm_user', input.email);
@@ -71,15 +72,22 @@ const Registration = () => {
     }
 
 
-    const handleChange = (e: { target: { id: any; value: any; }; }) => {
-        const { id, value } = e.target;
-        setInput(input => {
-            return {
-                ...input,
-                [id]: value,
-            }
-        })
-    }
+    const handleChange = (e: { target: { id: any; value: any } }) => {
+      const { id, value } = e.target;
+      setInput((input) => {
+        if (id === 'email') {
+          return {
+            ...input,
+            [id]: value.toLowerCase(),
+          };
+        } else {
+          return {
+            ...input,
+            [id]: value,
+          };
+        }
+      });
+    };
 
     const handleEnter = (e: any) => {
         if (e.key === 'Enter') {

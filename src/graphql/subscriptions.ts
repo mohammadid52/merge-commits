@@ -82,6 +82,8 @@ export const onUpdateClassroom = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -235,6 +237,8 @@ export const onChangeStudentData = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -283,6 +287,8 @@ export const onChangeStudentData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -504,6 +510,8 @@ export const onCreatePerson = /* GraphQL */ `
         }
         nextToken
       }
+      onBoardSurvey
+      offBoardSurvey
       phone
       birthdate
       image
@@ -537,6 +545,8 @@ export const onUpdatePerson = /* GraphQL */ `
         }
         nextToken
       }
+      onBoardSurvey
+      offBoardSurvey
       phone
       birthdate
       image
@@ -570,6 +580,8 @@ export const onDeletePerson = /* GraphQL */ `
         }
         nextToken
       }
+      onBoardSurvey
+      offBoardSurvey
       phone
       birthdate
       image
@@ -596,6 +608,8 @@ export const onCreateCurriculum = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -639,6 +653,8 @@ export const onUpdateCurriculum = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -682,6 +698,8 @@ export const onDeleteCurriculum = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -731,6 +749,8 @@ export const onCreateCurriculumLessons = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -839,6 +859,8 @@ export const onUpdateCurriculumLessons = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -947,6 +969,8 @@ export const onDeleteCurriculumLessons = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -1393,6 +1417,8 @@ export const onCreateClassStudent = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -1436,6 +1462,8 @@ export const onUpdateClassStudent = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -1479,6 +1507,8 @@ export const onDeleteClassStudent = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -1601,6 +1631,8 @@ export const onCreateFeedback = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -1673,6 +1705,8 @@ export const onUpdateFeedback = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -1745,6 +1779,8 @@ export const onDeleteFeedback = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -1820,6 +1856,8 @@ export const onCreateLesson = /* GraphQL */ `
     onCreateLesson {
       id
       title
+      type
+      instructions
       contributors {
         items {
           id
@@ -1832,6 +1870,8 @@ export const onCreateLesson = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -1998,6 +2038,8 @@ export const onUpdateLesson = /* GraphQL */ `
     onUpdateLesson {
       id
       title
+      type
+      instructions
       contributors {
         items {
           id
@@ -2010,6 +2052,8 @@ export const onUpdateLesson = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -2176,6 +2220,8 @@ export const onDeleteLesson = /* GraphQL */ `
     onDeleteLesson {
       id
       title
+      type
+      instructions
       contributors {
         items {
           id
@@ -2188,6 +2234,8 @@ export const onDeleteLesson = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -2359,6 +2407,8 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -2467,6 +2517,8 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -2575,6 +2627,8 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -3423,6 +3477,8 @@ export const onCreateQuestionData = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -3483,6 +3539,8 @@ export const onCreateQuestionData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -3532,6 +3590,8 @@ export const onUpdateQuestionData = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -3592,6 +3652,8 @@ export const onUpdateQuestionData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -3641,6 +3703,8 @@ export const onDeleteQuestionData = /* GraphQL */ `
         lesson {
           id
           title
+          type
+          instructions
           grades
           artistID
           language
@@ -3701,6 +3765,8 @@ export const onDeleteQuestionData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -3749,6 +3815,8 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -3812,6 +3880,8 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -3863,6 +3933,8 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -3926,6 +3998,8 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -3977,6 +4051,8 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -4040,6 +4116,8 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           lastName
           externalId
           grade
+          onBoardSurvey
+          offBoardSurvey
           phone
           birthdate
           image
@@ -4105,6 +4183,8 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -4206,6 +4286,8 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -4307,6 +4389,8 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
       lesson {
         id
         title
+        type
+        instructions
         contributors {
           nextToken
         }
@@ -4420,6 +4504,8 @@ export const onCreateStudentWord = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -4460,6 +4546,8 @@ export const onUpdateStudentWord = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image
@@ -4500,6 +4588,8 @@ export const onDeleteStudentWord = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        onBoardSurvey
+        offBoardSurvey
         phone
         birthdate
         image

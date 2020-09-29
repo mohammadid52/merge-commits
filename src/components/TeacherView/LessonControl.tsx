@@ -14,8 +14,9 @@ import { FaHome } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
 import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
 import * as customMutations from '../../customGraphql/customMutations';
-import { API, graphqlOperation } from 'aws-amplify';
-import LessonLoading from '../Lesson/Loading/LessonLoading';
+// import { API, graphqlOperation } from 'aws-amplify';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import ClassRoster from './ClassRoster';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
 const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
@@ -142,7 +143,7 @@ const LessonControl = () => {
 
     if ( state.status !== 'loaded') {
         return (
-            <LessonLoading />
+            <ComponentLoading />
         )
     }
 
@@ -199,9 +200,10 @@ const LessonControl = () => {
                             {/*  */}
                             <Suspense fallback={
                             <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                                <div className="min-h-full w-full flex flex-col justify-center items-center">
+                                {/* <div className="min-h-full w-full flex flex-col justify-center items-center">
                                     Give us one second! It is loading... 
-                                </div>
+                                </div> */}
+                                <ComponentLoading />
                             </div>
                             }>  
                                 <Switch>

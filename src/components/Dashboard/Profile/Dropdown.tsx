@@ -15,7 +15,6 @@ function Dropdown() {
     const light = () => {
         lightSwitch();
         setIsOpen(!isOpen);
-        console.log('light')
     }
 
     const match = useRouteMatch();

@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, Suspense, lazy } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
+// import { API, graphqlOperation } from 'aws-amplify';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { 
     useRouteMatch,
     Switch, 
     Route,
+    Redirect
  } from 'react-router-dom';
 // import PageHeaderBar from '../Header/PageHeaderBar';
 import SideMenu from './Menu/SideMenu';
@@ -20,6 +22,7 @@ import * as queries from '../../graphql/queries';
 import PageHeaderBar from '../Header/PageHeaderBar';
 import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
+import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 
 
 type userObject = {
@@ -40,6 +43,7 @@ const Dashboard: React.FC = () => {
                 firstName: firstName,
                 lastName: user.lastName,
                 language: user.language,
+                onBoardSurvey: user.onBoardSurvey ? user.onBoardSurvey : false,
                 role: user.role,
             }
         })
@@ -58,6 +62,10 @@ const Dashboard: React.FC = () => {
         }
     }
 
+    if (state.user.role === 'FLW') {
+        
+    }
+
     useEffect(() => {
         if( !state.user.firstName ) {
             getUser()
@@ -74,19 +82,23 @@ const Dashboard: React.FC = () => {
                 <PageHeaderBar />
                 <Suspense fallback={
                 <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                    <div className="min-h-full w-full flex flex-col justify-center items-center">
+                    {/* <div className="min-h-full w-full flex flex-col justify-center items-center">
                         Give us one second! It is loading... 
-                    </div>
+                    </div> */}
+                    <ComponentLoading/>
                 </div>
                 }> 
-                    <Switch>
+                    <Switch> 
                         {/* <Route 
                             exact
                             path={`${match.url}`}
-                            render={() => (
-                                <DashboardHome />
-                            )}
-                            
+                            render={({ location }) => (
+                                <Redirect 
+                                    to={{
+                                    pathname: '/dashboard',
+                                    state: { from: location }
+                                }}/>
+                            )} 
                         /> */}
                         <Route 
                             exact

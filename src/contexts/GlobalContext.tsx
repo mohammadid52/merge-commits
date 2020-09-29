@@ -101,6 +101,7 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
   };
 
   const theme = lightOn ? pageThemes.light : pageThemes.dark;
+  const globalStateAccess = state;
 
   return (
     <GlobalContext.Provider
@@ -112,6 +113,7 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
         dispatch,
         main_container,
         white_back,
+        globalStateAccess,
       }}>
       {children}
     </GlobalContext.Provider>

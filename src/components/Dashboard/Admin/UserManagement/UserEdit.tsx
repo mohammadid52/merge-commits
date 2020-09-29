@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
+// import { API, graphqlOperation } from 'aws-amplify';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../../customGraphql/customMutations';
 import { useHistory } from 'react-router-dom';
 import DropdownForm from './DropdownForm';
@@ -83,8 +84,6 @@ const UserEdit = (props: UserInfoProps) => {
       };
     });
   };
-
-  console.log(editUser, 'edit user');
 
   const Status = [
     {

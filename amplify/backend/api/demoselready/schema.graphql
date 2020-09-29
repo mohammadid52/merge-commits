@@ -82,6 +82,8 @@ type Person @model
   grade: String
   # courses: [StudentCourse] @connection(keyName: "byStudent", field: ["id"]
   wordbank: [StudentWord] @connection(keyName: "wordsByStudent", fields: ["email"])
+  onBoardSurvey: Boolean
+  offBoardSurvey: Boolean
   phone: String
   birthdate: AWSDate
   image: String
@@ -316,6 +318,8 @@ type SELStructure @model {
 type Lesson @model @key(fields: ["id"]) {
   id: ID!
   title: String! 
+  type: String
+  instructions: [String]
   contributors: [Person]! @connection(keyName: "byContributor", fields: ["id"])
   grades: [Int]
   artistID: ID!

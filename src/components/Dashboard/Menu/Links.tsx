@@ -68,6 +68,10 @@ const Links: React.FC = () => {
                     return [
                         ...links,
                         {
+                            name: 'User Management',
+                            path: 'manage-users'
+                        },
+                        {
                             name: 'Lesson Planner',
                             path: 'lesson-planner'
                         },
