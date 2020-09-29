@@ -42,7 +42,7 @@ const SelectOneQuestions = (selPrps: CPQuestionProps) => {
 
   return (
     <>
-      <div key={selPrps.keyProp} className={'w-4.8/10 flex flex-col mb-3 mx-2'}>
+      <div key={selPrps.keyProp} className={'w-4.8/10 flex flex-col mb-4 mx-2'}>
         <p className='mb-2 text-md'>{selPrps.question.question}</p>
         <div className={`flex justify-around`}>
           {selPrps.question.options.map(

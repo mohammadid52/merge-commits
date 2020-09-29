@@ -3,6 +3,7 @@ export interface globalStateType  {
     error: string
     isAuthenticated: boolean
     user: {
+        id: string,
         authId: string,
         email: string,
         firstName: string,
@@ -18,6 +19,7 @@ export const globalState: globalStateType = {
     error: '',
     isAuthenticated: false,
     user: {
+        id: '',
         authId: '',
         email: '',
         firstName: '',

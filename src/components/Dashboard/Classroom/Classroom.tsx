@@ -30,7 +30,10 @@ const Classroom: React.FC = () => {
     const history = useHistory();
     const { state, theme } = useContext(GlobalContext);
     const [ curriculum, setCurriculum ] = useState<CurriculumInfo>();
-    const [ survey, setSurvey ] = useState<any>();
+    const [ survey, setSurvey ] = useState<any>({
+        display: true,
+        survey: null,
+    });
     const [ listCurriculum, setListCurriculum ] = useState<Array<CurriculumInfo>>();
     const [status, setStatus] = useState('');
 
@@ -50,9 +53,14 @@ const Classroom: React.FC = () => {
 
     const getSurvey = async () => {
         try {
-            const getClassroom: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: 'on-boarding-survey-1' }))
-            console.log('survey', getClassroom)
-            setSurvey(getClassroom)
+            const surveyData: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: 'on-boarding-survey-1' }))
+            console.log('survey', surveyData)
+            setSurvey(() => {
+                return {
+                    display: true,
+                    survey: surveyData.data.getClassroom,
+                }
+            })
         } catch (error) {
             console.error(error);  
         }
@@ -66,6 +74,15 @@ const Classroom: React.FC = () => {
         if ( state.user && !state.user.onBoardSurvey ) {
             console.log( 'state', state );
             getSurvey()
+        }
+
+        if ( state.user && state.user.onBoardSurvey ) {
+            setSurvey(() => {
+                return {
+                    ...survey,
+                    display: false,
+                }
+            })
         }
     }, [state.user])
 
@@ -99,7 +116,7 @@ const Classroom: React.FC = () => {
                         </p>
                     </div>
                 </div>
-                {   survey ? 
+                {   survey.display ? 
                     <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum}/>
                     : null
                 }

@@ -9,6 +9,7 @@ import MoreArtist from './MoreArtist';
 import Feedback from './Feedback';
 import Links from './Links';
 import SaveQuit from './SaveQuit';
+import OutroText from './OutroText';
 
 const Outro = () => {
   const { state, dispatch } = useContext(LessonContext);
@@ -21,19 +22,26 @@ const Outro = () => {
 
   return (
     <div className='w-full md:h-full flex flex-col justify-between items-center'>
-      <Banner />
-
+      { state.data.lesson.type !== 'survey' ?
+        <Banner />
+        : null
+      }
       {/* <div className='w-full md:h-8.8/10 flex flex-col md:flex-row justify-between items-center'> */}
       <div className='w-full md:h-full flex flex-col justify-around items-center'>
-        <div className="w-5/10 h-8/10 flex flex-col justify-between items-center">
-          <Feedback/>
           {
             state.data.lesson.type !== 'survey' ?
-            <MoreArtist/>
-            : null
+            <div className="w-5/10 h-8/10 flex flex-col justify-between items-center">
+              <Feedback/>
+              <MoreArtist/>
+              <SaveQuit id={state.data.lesson.id}/>
+            </div>
+            :
+            <div className="w-7/10 h-8/10 flex flex-col justify-between items-center">
+              <OutroText />
+              <SaveQuit id={state.data.lesson.id}/>
+            </div>
           }
-          <SaveQuit/>
-        </div>
+          
         {/* ///
         <div className="w-5/10 h-full mt-4 md:mt-0 md:ml-2">
                     <MoreArtist />
