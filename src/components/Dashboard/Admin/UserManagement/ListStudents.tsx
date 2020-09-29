@@ -68,7 +68,7 @@ const List = (props: ListProps) => {
                 </div>
                 <div className="w-3.5/10 flex justify-center px-8 py-4 whitespace-no-wrap">
                     <div className="flex flex-col justify-center items-center">
-                        <div id={item.id} className="w-auto text-sm leading-5 text-gray-900">{item.institution ? item.institution : 'High School'}</div>
+                        <div id={item.id} className="w-auto text-sm leading-5 text-gray-900">{item.institution ? item.institution : 'Rose M. Avalos P-TECH Early College'}</div>
                         <div id={item.id} className="w-auto text-sm leading-5 text-gray-500">{item.grade ? item.grade : 'Grade'}</div>
                     </div>
                 </div>

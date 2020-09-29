@@ -110,7 +110,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                             Institution
                             </dt>
                             <dd className="mt-1 text-sm leading-5 text-gray-900">
-                            {`${ user.institution ? user.institution : 'not set' }`}
+                            {`${ user.institution ? user.institution : 'Rose M. Avalos P-TECH Early College' }`}
                             </dd>
                         </div>
                         <div className="sm:col-span-1 p-2">
