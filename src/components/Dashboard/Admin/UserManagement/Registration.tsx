@@ -143,7 +143,7 @@ const Registration = () => {
     }
 
     async function signUp() {
-        let username = newUserInputs.email
+        let username = newUserInputs.email;
         let password = newUserInputs.password
         try {
             const user = await Auth.signUp({
@@ -268,16 +268,22 @@ const Registration = () => {
     //     })
     // }
 
-    const handleChange = (e: any) => {
-        let id = e.target.id
-        let value = e.target.value
-        setNewUserInputs(() => {
-            return {
-                ...newUserInputs,
-                [id]: value
-            }
-        })
-    }
+    const handleChange = (e: { target: { id: any; value: any } }) => {
+      const { id, value } = e.target;
+      setNewUserInputs(() => {
+        if (id === 'email') {
+          return {
+            ...newUserInputs,
+            [id]: value.toLowerCase(),
+          };
+        } else {
+          return {
+            ...newUserInputs,
+            [id]: value,
+          };
+        }
+      });
+    };
 
     const handleChangeRole = (item: {name: string, code: string}) => {
         setNewUserInputs(() => {
@@ -291,7 +297,6 @@ const Registration = () => {
 
     const handleSubmit = (e: any) => {
         validation();
-
     }
 
     return (

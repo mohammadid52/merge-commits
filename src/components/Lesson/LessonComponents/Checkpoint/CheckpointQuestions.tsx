@@ -224,6 +224,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
           <SelectOneQuestions
             keyProp={key}
             question={question}
+            value={input[question.label]}
             handleInputChange={handleInputChange}
             checkpointID={checkpoint.checkpoint.id}
           />
