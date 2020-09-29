@@ -52,9 +52,9 @@ const SaveQuit = (props: SaveQuitProps) => {
     console.log('update', data);
     
     try {
-        // const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }))
-        // console.log(dataObject)
-        // dispatch({ type: 'SAVED_CHANGES' })
+        const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }))
+        console.log(dataObject)
+        dispatch({ type: 'SAVED_CHANGES' })
         // console.log('state', state)
     } catch (error) {
         console.error(error);   
@@ -93,7 +93,7 @@ const SaveQuit = (props: SaveQuitProps) => {
           })
         })
 
-        await updateStudentProfile()
+        if ( id === 'on-boarding-survey-1' ) { await updateStudentProfile() } 
 
         await updateStudentData()
 
@@ -110,8 +110,8 @@ const SaveQuit = (props: SaveQuitProps) => {
             response: state.questionData[key][questionID]
         }
         try { 
-            // const questionData = await API.graphql(graphqlOperation(customMutations.createQuestionData, {input: questiondDataObject}))
-            // console.log(questionData, 'questionData');
+            const questionData = await API.graphql(graphqlOperation(customMutations.createQuestionData, {input: questiondDataObject}))
+            console.log(questionData, 'questionData');
         } catch (err) {
             console.error(err);
             

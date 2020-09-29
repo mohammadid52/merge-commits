@@ -31,20 +31,20 @@ const Classroom: React.FC = () => {
     const { state, theme } = useContext(GlobalContext);
     const [ curriculum, setCurriculum ] = useState<CurriculumInfo>();
     const [ survey, setSurvey ] = useState<any>({
-        display: true,
-        survey: null,
+        display: false,
+        data: null,
     });
     const [ listCurriculum, setListCurriculum ] = useState<Array<CurriculumInfo>>();
     const [status, setStatus] = useState('');
 
-    async function getCourse(id: string, survey?: boolean) {
+    async function getCourse( id: string ) {
         try {
             const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: id }))
             const nextLesson = courses.data.getCourse.curriculum.lessons.items[0].lesson;
             const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
-            setStatus('done');
             setCurriculum(nextLesson);
             setListCurriculum(lessonsInfo);
+            if ( state.user.onBoardSurvey ) setStatus('done');
             // console.log(lessonsInfo, 'list');
         } catch (error) {
             console.error(error);  
@@ -55,36 +55,57 @@ const Classroom: React.FC = () => {
         try {
             const surveyData: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: 'on-boarding-survey-1' }))
             console.log('survey', surveyData)
-            setSurvey(() => {
+            await setSurvey(() => {
+                // let surveyStatus: boolean = state.user.onBoardSurvey ? !state.user.onBoardSurvey : true;,
+                // console.log(surveyStatus, 'status', state);
+                
                 return {
-                    display: true,
-                    survey: surveyData.data.getClassroom,
+                    ...survey,
+                    // display: surveyStatus,
+                    data: surveyData.data.getClassroom,
                 }
             })
+            setStatus('done');
         } catch (error) {
             console.error(error);  
         }
     }
 
     useEffect(() => {
+
         getCourse('1')
+
     }, [])
 
     useEffect(() => {
-        if ( state.user && !state.user.onBoardSurvey ) {
-            console.log( 'state', state );
+
+        if ( !state.user.onBoardSurvey && !survey.data ) {
             getSurvey()
         }
 
-        if ( state.user && state.user.onBoardSurvey ) {
+        if ( state.user.onBoardSurvey ) {
+            // console.log('user', state.user);
             setSurvey(() => {
+                console.log('setFalse');
                 return {
                     ...survey,
                     display: false,
                 }
             })
         }
-    }, [state.user])
+
+        if ( !state.user.onBoardSurvey ) {
+            // console.log('user', state.user);
+            setSurvey(() => {
+                console.log('setTrue');
+                return {
+                    ...survey,
+                    display: true,
+                }
+            })
+        }
+
+    }, [state])
 
     const handleLink = () => {
         history.push('/lesson');
@@ -116,14 +137,14 @@ const Classroom: React.FC = () => {
                         </p>
                     </div>
                 </div>
-                {   survey.display ? 
-                    <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum}/>
+                {   
+                    survey.display ? 
+                    <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum} />
                     : null
                 }
-                <Today link={'/lesson?id=1'} curriculum={curriculum}/>
+                <Today display={ survey.display } link={'/lesson?id=1'} curriculum={curriculum}/>
                 <Upcoming curriculum={listCurriculum}/>
                 <Dashboard />
-                
             </div>
         )
     }
