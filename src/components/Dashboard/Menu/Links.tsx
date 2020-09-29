@@ -94,7 +94,7 @@ const Links: React.FC = () => {
   };
 
   return (
-    <div className='link w-full h-12 py-4'>
+    <div className='link w-full h-12 py-4 z-40'>
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
             <div
@@ -106,8 +106,7 @@ const Links: React.FC = () => {
             </div>
           ))
         : null}
-      <div id='testTooltip' className={`w-full text-center text-lg mb-4`}>
-        testTooltip
+      <div id='testTooltip' className={`w-full relative text-center text-lg mb-4`}>
         {/* <ToolTip position='right' header='test' content='hello' /> */}
         <ToolTip position='bottom-right' header='test' content='hello' />
       </div>

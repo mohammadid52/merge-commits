@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
+import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 const StoryForm = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
@@ -73,12 +74,13 @@ const StoryForm = () => {
           (Fill in the form below!)
         </span>
       </h3>
-      <div className='h-full flex flex-col mb-5 mt-2'>
+      <div className='relative h-full flex flex-col mb-5 mt-2'>
         <label
-          className='text-lg font-light text-base text-blue-100 text-opacity-70 mb-2'
+          className='w-auto text-lg font-light text-base text-blue-100 text-opacity-70 mb-2'
           htmlFor='title'>
-          Title
+          Title <ToolTip position='right' header='Story form' content='better instructions'/>
         </label>
+        
         <input
           id='title'
           className='md:w-88 px-4 py-1 mb-4 rounded-lg text-lg text-gray-700 bg-gray-300'
