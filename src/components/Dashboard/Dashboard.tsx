@@ -6,6 +6,7 @@ import {
     useRouteMatch,
     Switch, 
     Route,
+    Redirect
  } from 'react-router-dom';
 // import PageHeaderBar from '../Header/PageHeaderBar';
 import SideMenu from './Menu/SideMenu';
@@ -61,6 +62,10 @@ const Dashboard: React.FC = () => {
         }
     }
 
+    if (state.user.role === 'FLW') {
+        
+    }
+
     useEffect(() => {
         if( !state.user.firstName ) {
             getUser()
@@ -83,14 +88,17 @@ const Dashboard: React.FC = () => {
                     <ComponentLoading/>
                 </div>
                 }> 
-                    <Switch>
+                    <Switch> 
                         {/* <Route 
                             exact
                             path={`${match.url}`}
-                            render={() => (
-                                <DashboardHome />
-                            )}
-                            
+                            render={({ location }) => (
+                                <Redirect 
+                                    to={{
+                                    pathname: '/dashboard',
+                                    state: { from: location }
+                                }}/>
+                            )} 
                         /> */}
                         <Route 
                             exact
