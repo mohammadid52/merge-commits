@@ -7,9 +7,16 @@ import { LessonContext } from '../../../../contexts/LessonContext';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../../customGraphql/customMutations';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
-const SaveQuit = () => {
+interface SaveQuitProps {
+  id: string
+}
+
+const SaveQuit = (props: SaveQuitProps) => {
   const { state, dispatch, theme } = useContext(LessonContext);
+  const { globalStateAccess } = useContext(GlobalContext);
+  const { id } = props;
   const history = useHistory();
   // the bottom is from 'LessonHeaderBar.tsx'
   // const { theme, state, dispatch } = useContext(LessonContext);
@@ -24,6 +31,7 @@ const SaveQuit = () => {
   //         }
   //     }
   // }
+
   const updateStudentData = async () => {
     let lessonProgress = state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
 
@@ -53,6 +61,26 @@ const SaveQuit = () => {
     }
   }
 
+  const updateStudentProfile = async () => {
+    let updatedStudent = {
+      id: globalStateAccess.user.id,
+      authId: globalStateAccess.user.authId,
+      email: globalStateAccess.user.email,
+      onBoardSurvey: true,
+    }
+
+    console.log(updatedStudent, 'updatedSurvey');
+    
+    try {
+      const updatedStudentData: any = await API.graphql(graphqlOperation(customMutations.updateSurveyStatus, { input: updatedStudent }))
+      console.log(updatedStudentData);
+      
+    } catch ( err ) {
+      console.error(err);
+    
+    }
+  }
+
 
   const handleSave = async () => {       
     if (typeof state.questionData === "object") {
@@ -64,6 +92,8 @@ const SaveQuit = () => {
               await saveQuestionData(key, questionID)
           })
         })
+
+        if ( id === 'on-boarding-survey-1' ) { await updateStudentProfile() } 
 
         await updateStudentData()
 

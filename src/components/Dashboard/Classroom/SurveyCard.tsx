@@ -31,12 +31,12 @@ const SurveyCard: React.FC<ClassProps> = (props: ClassProps) => {
                     </div>
                     <div className="h-1/10 pl-6">
                         <div className="tracking-widest border-b text-gray-300 border-ketchup">
-                            SURVEY
+                            BEFORE WE BEGIN
                         </div>
                     </div>
                     <div className="h-3/10 flex flex-row-reverse">
-                        <h2 className={`first w-6/10 text-3xl font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
-                            <p> Before we begin </p>
+                        <h2 className={`first w-6/10 text-4xl font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
+                            <p> Survey </p>
                         </h2>
                     </div>
                 </div>
@@ -49,7 +49,7 @@ const SurveyCard: React.FC<ClassProps> = (props: ClassProps) => {
                             On-boarding Survey
                         </h1>
                         <p className="text-md text-center py-4">
-                            This is a quick survey that you'll take just to see where you're at in terms of a few of the topics we'll cover over this course. Please take the next to finish this survey as thoughtfully as you can. We appreciate your participation, and we're excited to get excited on this Iconoclast journey with you!
+                            This is a quick survey to see where you're at in terms of some of the topics we'll cover this semester. Please click the button below and answer each of the questions to the best of your ability. We appreciate your time in completing this survey, and we're excited to get started on this Iconoclast journey with you!
                         </p>
                         <div className="flex w-3/10">
                             <span className="mt-4 inline-flex rounded-full shadow-md">
