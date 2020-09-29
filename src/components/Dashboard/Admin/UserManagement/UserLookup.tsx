@@ -15,7 +15,6 @@ import ListStudents from './ListStudents'
 const UserLookup = () => {
     const [ data, setData ] = useState([]);
     const {state, theme} = useContext(GlobalContext);
-    console.log(state.user.role, 'state in userlookup')
     const match = useRouteMatch();
     const history = useHistory();
     const [status, setStatus] = useState('');
