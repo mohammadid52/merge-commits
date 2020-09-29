@@ -15,7 +15,6 @@ interface UserInfoProps {
 }
 
 const ProfileEdit = (props: UserInfoProps) => {
-    console.log(props.user, 'user')
     const history = useHistory();
     const {user, getUser, status, setStatus} = props;
     const [editUser, setEditUser] = useState(user);

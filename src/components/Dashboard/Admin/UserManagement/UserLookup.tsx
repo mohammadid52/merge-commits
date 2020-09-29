@@ -1,17 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 import * as queries from '../../../../graphql/queries';
 import UserSearch from './UserSearch';
 import UserStatus from './UserStatus';
 import UserRole from './UserRole';
 import Pagination from '../../../../standard/List/Pagination';
+import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
+import List from './List';
+import ListStudents from './ListStudents'
 
 const UserLookup = () => {
     const [ data, setData ] = useState([]);
+    const {state, theme} = useContext(GlobalContext);
+    console.log(state.user.role, 'state in userlookup')
     const match = useRouteMatch();
     const history = useHistory();
+    const [status, setStatus] = useState('');
 
     async function listUsers() {
         // let limit = 20;
@@ -20,6 +27,7 @@ const UserLookup = () => {
                 // { limit: limit }
                 ))
             setData(users.data.listPersons.items)
+            setStatus('done');
            
         } catch (error) {
             console.error(error);  
@@ -28,7 +36,7 @@ const UserLookup = () => {
 
     useEffect(() => {
         listUsers();
-    })
+    }, [])
 
     // const handleSubmit = () => {
     //     listUsers()
@@ -57,6 +65,13 @@ const UserLookup = () => {
         let h = hash % 360;
         return 'hsl('+h+', 70%, 72%)';
     }
+
+    if ( status !== 'done') {
+            return (
+                <LessonLoading />
+            )
+        }
+    { 
     
     return (
         <div className={`w-full h-full`}>
@@ -100,7 +115,7 @@ const UserLookup = () => {
                     <div className="w-32 cursor-pointer inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700" onClick={handleSubmit}>Submit</div>
                 </div>
             </div> */}
-                <div className="flex flex-col">
+                <div className="flex flex-col"> 
                     <div className="-my-2 py-2">
                         <div className="white_back py-4 px-8 mt-2 align-middle rounded-lg border-b border-gray-200">
                         <div className="h-8/10 px-4">
@@ -121,54 +136,14 @@ const UserLookup = () => {
                             </div>
                         { 
                     data.length > 0 ? data.map((item: any, key: number) => (
-                            <>
-                       
-                            <div id={item.id} key={key} className="flex justify-between bg-white w-full border-b border-gray-200">
-                            
-                                <div className="w-3.5/10 px-8 py-4 whitespace-no-wrap">
-                                    <div className="flex items-center">
-                                        <div className="flex-shrink-0 h-10 w-10">
-                                            <div className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold" style={{background: `${stringToHslColor(item.firstName + ' ' + item.lastName)}`, textShadow: '0.1rem 0.1rem 2px #423939b3'}} >
-                                                {initials(item.preferredName ? item.preferredName : item.firstName, item.lastName)}
-                                            </div>
-                                        </div>
-                                        <div className="ml-2">
-                                            <div id={item.id} className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900" onClick={handleLink} >
-                                                {`${item.lastName}, ${ item.preferredName ? item.preferredName : item.firstName }`}
-                                            </div>
-                                            <div id={item.id} className="text-sm leading-5 text-gray-500">
-                                                { item.email }
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-no-wrap">
-                                        <span id={item.id} className="w-auto text-sm leading-5 text-gray-500">
-                                        <UserRole 
-                                            role = {item.role} />
-                                        </span>
-                                </div>
-                                <div className="w-3.5/10 flex justify-center px-8 py-4 whitespace-no-wrap">
-                                    <div className="flex flex-col justify-center items-center">
-                                        <div id={item.id} className="w-auto text-sm leading-5 text-gray-900">{item.institution ? item.institution : 'High School'}</div>
-                                        <div id={item.id} className="w-auto text-sm leading-5 text-gray-500">{item.grade ? item.grade : 'Grade'}</div>
-                                    </div>
-                                </div>
-                                <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-no-wrap">
-                                    <div className="w-16 flex justify-center">
-                                        <UserStatus 
-                                        status= {item.status}/>
-                                    </div>
-                                </div>
-                                <div className="w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleLink} >
-                                    <div id={item.id} key={key} className="text-indigo-600 hover:text-indigo-900">View</div>
-                                </div>
-                
-
-                            </div>
-
-                            
-                            </>
+                        <div>
+                            { state.user.role === 'FLW' ? 
+                                <ListStudents item = {item} key = {key} listUsers = {listUsers}/>
+                                : 
+                                <List item = {item} key = {key} listUsers = {listUsers}/>
+                            }
+                        </div>
+                     
                             )): null
                             
                             }
@@ -186,6 +161,6 @@ const UserLookup = () => {
             
         </div>
     )
-}
+}}
 
 export default UserLookup;
