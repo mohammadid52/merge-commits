@@ -135,7 +135,6 @@ const Registration = () => {
                     externalId: '',
                 }
             })
-            console.log(newUserInputs, 'in register user');
         } catch (error) {
             console.error('error registering user:', error)
             handleMessage('error', error.message)
@@ -144,7 +143,7 @@ const Registration = () => {
     }
 
     async function signUp() {
-        let username = newUserInputs.email
+        let username = newUserInputs.email;
         let password = newUserInputs.password
         try {
             const user = await Auth.signUp({
@@ -158,7 +157,6 @@ const Registration = () => {
                 }
             })
             registerUser(user.userSub)
-            console.log(newUserInputs, 'in signup');
         } catch (error) {
             console.log('error signing up:', error);
             setMessage(() => { 
@@ -270,16 +268,22 @@ const Registration = () => {
     //     })
     // }
 
-    const handleChange = (e: any) => {
-        let id = e.target.id
-        let value = e.target.value
-        setNewUserInputs(() => {
-            return {
-                ...newUserInputs,
-                [id]: value
-            }
-        })
-    }
+    const handleChange = (e: { target: { id: any; value: any } }) => {
+      const { id, value } = e.target;
+      setNewUserInputs(() => {
+        if (id === 'email') {
+          return {
+            ...newUserInputs,
+            [id]: value.toLowerCase(),
+          };
+        } else {
+          return {
+            ...newUserInputs,
+            [id]: value,
+          };
+        }
+      });
+    };
 
     const handleChangeRole = (item: {name: string, code: string}) => {
         setNewUserInputs(() => {
@@ -290,18 +294,9 @@ const Registration = () => {
         })
     }
 
-    // const submitNewUsers = () => {
-    //     signUp();
-    //     if (registerUser) {
-    //         console.log('success')
-    //         setNewUserInputs(initialState)
-    //     }
-        
-    // }
 
     const handleSubmit = (e: any) => {
         validation();
-
     }
 
     return (

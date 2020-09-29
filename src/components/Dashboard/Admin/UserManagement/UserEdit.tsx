@@ -85,8 +85,6 @@ const UserEdit = (props: UserInfoProps) => {
     });
   };
 
-  console.log(editUser, 'edit user');
-
   const Status = [
     {
       code: 'ACTIVE',

@@ -25,14 +25,13 @@ const UserLookup = () => {
             console.error(error);  
         }
     }
-console.log(data, 'data')
+
     const handleSubmit = () => {
         listUsers()
     }
 
     const handleLink = (e: any) => {
         const { id } = e.target
-        // console.log(`/user?id=${id}`);
         history.push(`${match.url}/user?id=${id}`)
     }
 
@@ -119,7 +118,7 @@ console.log(data, 'data')
                         { 
                     data.length > 0 ? data.map((item: any, key: number) => (
                             <>
-                        {console.log(item, 'item')}
+                       
                             <div id={item.id} key={key} className="flex justify-between bg-white w-full border-b border-gray-200">
                             
                                 <div className="w-3.5/10 px-8 py-4 whitespace-no-wrap">
@@ -147,7 +146,7 @@ console.log(data, 'data')
                                 </div>
                                 <div className="w-3.5/10 flex justify-center px-8 py-4 whitespace-no-wrap">
                                     <div className="flex flex-col justify-center items-center">
-                                        <div id={item.id} className="w-auto text-sm leading-5 text-gray-900">{item.institution ? item.institution : 'Some really long Institution Name'}</div>
+                                        <div id={item.id} className="w-auto text-sm leading-5 text-gray-900">{item.institution ? item.institution : 'High School'}</div>
                                         <div id={item.id} className="w-auto text-sm leading-5 text-gray-500">{item.grade ? item.grade : 'Grade'}</div>
                                     </div>
                                 </div>

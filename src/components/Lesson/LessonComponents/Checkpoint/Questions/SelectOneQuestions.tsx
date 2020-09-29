@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 
 export interface CPQuestionProps {
-  checkpointID: string
+  checkpointID: string;
   question: {
     id: string;
     label: string;
@@ -16,54 +16,64 @@ export interface CPQuestionProps {
 }
 
 interface SelectOneRowState {
-  name: string;
+  id: string;
   value: string;
 }
 
-const SelectOneQuestions = (selPrps: CPQuestionProps) => {
+const SelectOneQuestions = (selectOneProps: CPQuestionProps) => {
   const { state, dispatch } = useContext(LessonContext);
-  const [ input, setInput ] = useState('');
+  const [input, setInput] = useState<SelectOneRowState>({ id: '', value: '' });
 
   useEffect(() => {
-    if ( state.questionData[selPrps.checkpointID] && state.questionData[selPrps.checkpointID][selPrps.question.id] && state.questionData[selPrps.checkpointID][selPrps.question.id] !== '' ) {
-      setInput(state.questionData[selPrps.checkpointID][selPrps.question.id])
-    }
+    // if (
+    //   state.questionData[selectOneProps.checkpointID] &&
+    //   state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] &&
+    //   state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] !== ''
+    // ) {
+    //   setInput(state.questionData[selectOneProps.checkpointID][selectOneProps.question.id]);
+    // }
 
-    if( state.questionData[selPrps.checkpointID] === undefined || state.questionData[selPrps.checkpointID][selPrps.question.id] === undefined ){
-      setInput('');
-    }
-  }, [])
+    // if (
+    //   state.questionData[selectOneProps.checkpointID] === undefined ||
+    //   state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] === undefined
+    // ) {
+    //   setInput('');
+    // }
+  }, []);
 
-  const handleRadioSelect = (e: { target: { value: string, id: string }}) => {
-    const { value } = e.target;
-    setInput(value)
-    selPrps.handleInputChange(e)
-  }
+  const handleRadioSelect = (e: { target: { value: string; id: string } }) => {
+    const { value, id } = e.target;
+    setInput({ id: id, value: value });
+    selectOneProps.handleInputChange(e);
+  };
 
   return (
     <>
-      <div key={selPrps.keyProp} className={'w-4.8/10 flex flex-col mb-4 mx-2'}>
-        <p className='mb-2 text-md'>{selPrps.question.question}</p>
+      <div key={selectOneProps.keyProp} className={'w-4.8/10 flex flex-col mb-3 mx-2'}>
+        <p className='mb-2 text-md'>{selectOneProps.question.question}</p>
         <div className={`flex justify-around`}>
-          {selPrps.question.options.map(
+          {selectOneProps.question.options.map(
             (
               option: { label: string; icon: string; color: string; text: string },
               key2: number
-            ) => (
-              <div key={key2} className={`flex justify-center items-center text-xs`}>
-                <input
-                  id={selPrps.question.id}
-                  className='w-4 mx-4 cursor-pointer'
-                  type='radio'
-                  name={selPrps.question.label}
-                  value={option.label}
-                  onChange={handleRadioSelect}
-                  checked={input === option.label}
-                  // checked={state.questionData[selPrps.checkpointID][parseInt(selPrps.question.id)] === option.label}
-                />
-                <label htmlFor={`${option.text}`}>{option.text}</label>
-              </div>
-            )
+            ) => {
+              return (
+                <div key={key2} className={`flex justify-center items-center text-xs`}>
+                  <input
+                    id={selectOneProps.question.id}
+                    className='w-4 mx-4 cursor-pointer'
+                    type='radio'
+                    name={selectOneProps.question.label}
+                    value={option.label}
+                    onChange={handleRadioSelect}
+                    checked={
+                      input.id === selectOneProps.question.id && input.value === option.label
+                    }
+                  />
+                  <label htmlFor={`${option.text}`}>{option.text}</label>
+                </div>
+              );
+            }
           )}
         </div>
       </div>
