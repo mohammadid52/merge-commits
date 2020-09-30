@@ -755,45 +755,6 @@ export const deleteCurriculumLessons = /* GraphQL */ `
     }
   }
 `;
-export const createCourseType = /* GraphQL */ `
-  mutation CreateCourseType(
-    $input: CreateCourseTypeInput!
-    $condition: ModelCourseTypeConditionInput
-  ) {
-    createCourseType(input: $input, condition: $condition) {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateCourseType = /* GraphQL */ `
-  mutation UpdateCourseType(
-    $input: UpdateCourseTypeInput!
-    $condition: ModelCourseTypeConditionInput
-  ) {
-    updateCourseType(input: $input, condition: $condition) {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteCourseType = /* GraphQL */ `
-  mutation DeleteCourseType(
-    $input: DeleteCourseTypeInput!
-    $condition: ModelCourseTypeConditionInput
-  ) {
-    deleteCourseType(input: $input, condition: $condition) {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createCourse = /* GraphQL */ `
   mutation CreateCourse(
     $input: CreateCourseInput!
@@ -803,12 +764,6 @@ export const createCourse = /* GraphQL */ `
       id
       name
       courseTypeID
-      courseType {
-        id
-        name
-        createdAt
-        updatedAt
-      }
       institution {
         id
         name
@@ -884,12 +839,6 @@ export const updateCourse = /* GraphQL */ `
       id
       name
       courseTypeID
-      courseType {
-        id
-        name
-        createdAt
-        updatedAt
-      }
       institution {
         id
         name
@@ -965,12 +914,6 @@ export const deleteCourse = /* GraphQL */ `
       id
       name
       courseTypeID
-      courseType {
-        id
-        name
-        createdAt
-        updatedAt
-      }
       institution {
         id
         name
@@ -1822,12 +1765,6 @@ export const createClassroom = /* GraphQL */ `
         id
         name
         courseTypeID
-        courseType {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         institution {
           id
           name
@@ -2025,12 +1962,6 @@ export const updateClassroom = /* GraphQL */ `
         id
         name
         courseTypeID
-        courseType {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         institution {
           id
           name
@@ -2228,12 +2159,6 @@ export const deleteClassroom = /* GraphQL */ `
         id
         name
         courseTypeID
-        courseType {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         institution {
           id
           name

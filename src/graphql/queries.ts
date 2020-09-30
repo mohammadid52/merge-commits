@@ -277,45 +277,12 @@ export const listCurriculums = /* GraphQL */ `
     }
   }
 `;
-export const getCourseType = /* GraphQL */ `
-  query GetCourseType($id: ID!) {
-    getCourseType(id: $id) {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listCourseTypes = /* GraphQL */ `
-  query ListCourseTypes(
-    $filter: ModelCourseTypeFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listCourseTypes(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getCourse = /* GraphQL */ `
   query GetCourse($id: ID!) {
     getCourse(id: $id) {
       id
       name
       courseTypeID
-      courseType {
-        id
-        name
-        createdAt
-        updatedAt
-      }
       institution {
         id
         name
@@ -393,12 +360,6 @@ export const listCourses = /* GraphQL */ `
         id
         name
         courseTypeID
-        courseType {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         institution {
           id
           name
@@ -791,12 +752,6 @@ export const getClassroom = /* GraphQL */ `
         id
         name
         courseTypeID
-        courseType {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         institution {
           id
           name
