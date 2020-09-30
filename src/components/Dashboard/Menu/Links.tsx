@@ -14,79 +14,6 @@ const Links: React.FC = () => {
   const { state } = useContext(GlobalContext);
   const [links, setLinks] = useState<Array<LinkObject>>([]);
 
-<<<<<<< HEAD
-    const userLinks = (role: string): void => {
-        switch(role) {
-            case 'SUP':
-                return setLinks(links => {
-                    return [
-                        ...links,
-                        {
-                            name: 'User Management',
-                            path: 'manage-users'
-                        },
-                        {
-                            name: 'Registration',
-                            path: 'registration'
-                        },
-                        {
-                            name: 'Classroom',
-                            path: 'classroom'
-                        },
-                        {
-                            name: 'Lesson Planner',
-                            path: 'lesson-planner'
-                        },
-                        {
-                            name: 'Institutions',
-                            path: 'manage-institutions'
-                        }
-                    ]
-                })
-            case 'ADM':
-                return setLinks(links => {
-                    return [
-                        ...links,
-                        {
-                            name: 'User Management',
-                            path: 'manage-users'
-                        },
-                        {
-                            name: 'Registration',
-                            path: 'registration'
-                        },
-                        {
-                            name: 'Classroom',
-                            path: 'classroom'
-                        },
-                        {
-                            name: 'Lesson Planner',
-                            path: 'lesson-planner'
-                        },
-                    ]
-                })
-            case 'FLW':
-                return setLinks(links => {
-                    return [
-                        ...links,
-                        {
-                            name: 'User Management',
-                            path: 'manage-users'
-                        },
-                        {
-                            name: 'Lesson Planner',
-                            path: 'lesson-planner'
-                        },
-                        {
-                            name: 'Registration',
-                            path: 'registration'
-                        },
-                    ]
-                })
-            default:
-                return 
-        }
-=======
   const userLinks = (role: string): void => {
     switch (role) {
       case 'SUP':
@@ -142,6 +69,10 @@ const Links: React.FC = () => {
           return [
             ...links,
             {
+              name: 'User Management',
+              path: 'manage-users',
+            },
+            {
               name: 'Lesson Planner',
               path: 'lesson-planner',
             },
@@ -153,7 +84,6 @@ const Links: React.FC = () => {
         });
       default:
         return;
->>>>>>> jaspertooltips
     }
   };
 
@@ -181,12 +111,16 @@ const Links: React.FC = () => {
           ))
         : null}
       <div id='testTooltip' className={`w-full relative text-center text-lg mb-4`}>
-        <ToolTip position='bottom-right' header='test' content={
-          <>
-          <h1>Example html</h1>
-          <p>Example paragraph</p>
-          </>
-        }/>
+        <ToolTip
+          position='bottom-right'
+          header='test'
+          content={
+            <>
+              <h1>Example html</h1>
+              <p>Example paragraph</p>
+            </>
+          }
+        />
       </div>
     </div>
   );
