@@ -32,15 +32,14 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   const { color, selected, setSelected, fullscreen, setFullscreen } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
   const rawText = state.data.lesson.coreLesson.content.text;
-  // const buttons = state.data.lesson.coreLesson.tools;
-  // JASPER'S CODE
+  //  mouse
   const [mouseIsClicked, setMouseIsClicked] = useState<boolean>();
   const [mouseIsHeld, setMouseIsHeld] = useState<boolean>();
+  //  text
   const [selectGroup, setSelectGroup] = useState<number>(0);
   const [initialSelectedText, setIntialSelectedText] = useState<SelectedTextGroup>({});
   const [fullSelectedText, setFullSelectedText] = useState<SelectedTextGroup>({});
   const [finalText, setFinalText] = useState<FinalText>({});
-  // const [currentColor, setCurrentColor] = useState<string>('');
 
   const colorPicker = (colorName: string): string => {
     switch (colorName) {
@@ -58,17 +57,12 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   };
 
   /**
-   * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
-   * JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE JASPER'S CODE
-   */
-
-  /**
    * Function to check if selected textID is already somewhere in the initialSelectedText state
    * @param mappedWordID - string to check for
    */
   const checkIfHighlighted = (mappedWordID: string) => {
     return (
-      Object.values(fullSelectedText).filter((group) => group['selected'].includes(mappedWordID))
+      Object.values(initialSelectedText).filter((group) => group['selected'].includes(mappedWordID))
         .length > 0
     );
   };
@@ -104,11 +98,16 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   };
 
   const getHighlightColor = (mappedWordID: string) => {
-    return Object.values(fullSelectedText).filter((group) => {
+    const groupWithMappedWord = Object.values(initialSelectedText).filter((group) => {
       if (group['selected'].includes(mappedWordID)) {
         return group['color'];
       }
-    })[0]['color'];
+    })
+
+    if(typeof groupWithMappedWord[0] !== 'undefined'){
+      console.log(' get highlight color: ', groupWithMappedWord[0]['color']);
+      return groupWithMappedWord[0]['color'];
+    }
   };
 
   const eraseMappedWord = (filterAbleArray: string[]) => (mappedWordID: string) => {
@@ -248,16 +247,16 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    */
   const expandMultilineSelection = () => {
     const groups = Object.keys(initialSelectedText).map((grpName: string, i: number) => {
-      const minMax = minMaxOfArrays(initialSelectedText[grpName]['selected']);
+      const [minWordID, maxWordID] = minMaxOfArrays(initialSelectedText[grpName]['selected']);
       return {
         [`${grpName}`]: {
           color: initialSelectedText[grpName]['color'],
-          selected: combineMappedWords.slice(minMax[0], minMax[1]),
+          selected: combineMappedWords.slice(minWordID, maxWordID),
         },
       };
     });
     if (Object.keys(initialSelectedText).length > 0) {
-      setFullSelectedText(
+      setIntialSelectedText(
         groups.reduce((acc, grp) => {
           return { ...acc, ...grp };
         })
@@ -301,44 +300,21 @@ const LyricsBlock = (props: LyricsBlockProps) => {
 
   const adaptExpandedTextGroupsForDispatch = (input: any) => {
     return Object.keys(input).map((grpName: any, i: number) => {
-      const firstGroupNumber = minMaxOfArrays(fullSelectedText[grpName]['selected'])[0];
-      const lastGroupNumber = minMaxOfArrays(fullSelectedText[grpName]['selected'])[1];
-      const currentText = adaptGroupedWordsForDispatch(fullSelectedText[grpName]['selected']);
+      const firstGroupNumber = minMaxOfArrays(initialSelectedText[grpName]['selected'])[0];
+      const lastGroupNumber = minMaxOfArrays(initialSelectedText[grpName]['selected'])[1];
+      const currentText = adaptGroupedWordsForDispatch(initialSelectedText[grpName]['selected']);
       // console.log('adaptExpanded: ', currentText);
       return {
         id: i + 1,
         anchor: firstGroupNumber,
         focus: lastGroupNumber,
-        color: fullSelectedText[grpName]['color'],
+        color: initialSelectedText[grpName]['color'],
         content: currentText,
       };
     });
   };
 
-  /**
-   * Lifecycle
-   * 1. expand multi line text group when initial selected group is updated
-   * 2. merge generate color-grouped array
-   */
-
-  useEffect(() => {
-    expandMultilineSelection();
-  }, [initialSelectedText]);
-
-  useEffect(() => {
-    if (Object.keys(fullSelectedText).length > 0) {
-      setFinalText(groupWordsByColor(Object.values(fullSelectedText)));
-    }
-  }, [fullSelectedText]);
-
-  /**
-   * ANDREW'S DISPATCH
-   */
-  useEffect(() => {
-    setSelected(adaptExpandedTextGroupsForDispatch(fullSelectedText));
-  }, [fullSelectedText]);
-
-  /**
+    /**
    * html functionality
    */
 
@@ -380,6 +356,42 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       }
     });
   };
+
+  /**
+   * Lifecycle
+   * 1. expand multi line text group when initial selected group is updated
+   * 2. merge generate color-grouped array
+   */
+
+  // useEffect(() => {
+  //   expandMultilineSelection();
+  // }, [initialSelectedText]);
+
+  useEffect(() => {
+    expandMultilineSelection();
+  }, [selectGroup]);
+
+  // useEffect(() => {
+  //   if (Object.keys(fullSelectedText).length > 0) {
+  //     setFinalText(groupWordsByColor(Object.values(fullSelectedText)));
+  //   }
+  // }, [fullSelectedText]);
+  useEffect(() => {
+    if (Object.keys(initialSelectedText).length > 0) {
+      setFinalText(groupWordsByColor(Object.values(initialSelectedText)));
+    }
+  }, [initialSelectedText]);
+
+  /**
+   * ANDREW'S DISPATCH
+   */
+
+   // this was fullSelectedText first
+  useEffect(() => {
+    setSelected(adaptExpandedTextGroupsForDispatch(finalText));
+  }, [finalText]);
+
+
 
   return (
     <>

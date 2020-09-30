@@ -1,4 +1,4 @@
-import React, { useContext, ReactNode, useState } from 'react';
+import React, { useContext, ReactNode, useState, ReactElement } from 'react';
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { IconContext } from "react-icons";
 import {
@@ -15,6 +15,7 @@ import {
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 
 interface StageIconProps {
+    iconID: string | number;
     stage: string,
     type: string,
     active: boolean,
@@ -26,7 +27,7 @@ interface StageIconProps {
 }
 
 const StageIcon = (props: StageIconProps) => {
-    const { stage, type, active, breakdown, open, menuOpen, handleOpenMenu, disabled } = props;
+    const { iconID, stage, type, active, breakdown, open, menuOpen, handleOpenMenu, disabled } = props;
     const { state, dispatch } = useContext(LessonControlContext);
     const match = useRouteMatch();
     const history = useHistory();
@@ -56,6 +57,18 @@ const StageIcon = (props: StageIconProps) => {
         }
     }
 
+    const iconLabel = (): ReactElement => {
+        return (
+          <p
+            className={`absolute w-auto transform translate-y-8 mt-2 text-center font-light text-dark z-0`}>
+            {
+                /* Capitalize the first letter */
+                props.type.charAt(0).toUpperCase()+props.type.slice(1)
+            }
+          </p>
+        );
+      };
+
     const handleView = () => {
         if (stage === '') {
             handleOpenMenu(null)
@@ -81,13 +94,14 @@ const StageIcon = (props: StageIconProps) => {
                     <div className={`${ coinColor } h-10 w-10 flex justify-center items-center rounded-full z-30`}>
                         { iconSwitch(type) }
                     </div>
+                    {iconLabel()}
                 </IconContext.Provider>
                 {
                     menuOpen ? 
                     <div className={`absolute flex flex-col items-center transform translate-y-16`}>
                         <div className={`arrow-up`}></div>
-                        <div className={`flex w-48 h-16 bg-gray-200 p-1 rounded-lg shadow-elem-light`}>
-                            <div className={`flex w-full h-full bg-gray-400 rounded-lg`}>
+                        <div className={`flex w-48 h-16 bg-gray-200 p-1 rounded-lg shadow-elem-light z-50`}>
+                            <div className={`flex w-full h-full bg-gray-400 rounded-lg z-50`}>
                                 <div className={`flex justify-center items-center w-3/10 h-8/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={handleView}>
                                     View
                                 </div>
@@ -98,7 +112,7 @@ const StageIcon = (props: StageIconProps) => {
                                     Close
                                 </div> */}
                                 <div className={`flex justify-center items-center w-3/10 h-8/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none active:shadow-none cursor-pointer`} onClick={() => handleStateChange('DISABLE_LESSON')}>
-                                    Disable
+                                    { !disabled ? 'Disable' : 'Enable' }
                                 </div>
                             </div>
                         </div>
@@ -116,6 +130,7 @@ const StageIcon = (props: StageIconProps) => {
                     <div className={`h-14 w-14 rounded-full flex flex-col justify-center items-center ${ coinColor } z-30`}>
                         { iconSwitch(type) }
                     </div>
+                    {iconLabel()}
                 </IconContext.Provider>
             </div>
             {
@@ -134,7 +149,7 @@ const StageIcon = (props: StageIconProps) => {
                                 Close
                             </div> */}
                             <div className={`flex justify-center items-center w-3/10 h-8/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none active:shadow-none cursor-pointer`} onClick={() => handleStateChange('DISABLE_LESSON')}>
-                                Disable
+                                { !disabled ? 'Disable' : 'Enable' }
                             </div>
                         </div>
                     </div>

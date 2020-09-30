@@ -9,7 +9,7 @@ interface props {
 
 const SelfDisplay = (props: props) => {
     const { fullscreen } = props;
-    const { dispatch, state } = useContext(LessonControlContext)
+    const { dispatch, state, theme } = useContext(LessonControlContext)
     const [ modules, setModules ] = useState<Array<any>>()
     const dataProps = state.studentViewing.studentInfo && state.studentViewing.studentInfo.corelessonData && state.studentViewing.studentInfo.corelessonData.selected ?  state.studentViewing.studentInfo.corelessonData.selected : []
     const { artist, title } = state.data.lesson.coreLesson.content
@@ -74,18 +74,18 @@ const SelfDisplay = (props: props) => {
             <div className={`h-7/10 w-full flex flex-col md:flex-row justify-between items-center`}>
                 {   modules && modules.length >= 1 ?
                     modules.map((module: any, key: number) => (
-                        <div key={key} className={`bg-dark-blue h-64 md:h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-4 shadow-2 rounded-lg`}>
-                            <div className={`w-full flex flex-row justify-between items-center pb-2 border-b border-white`}>
+                        <div key={key} className={`${theme.gradient.cardBase} h-64 md:h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-4 shadow-2 rounded-lg shadow-2xlr`}>
+                            <div className={`w-full flex flex-row justify-between items-center pb-2 border-b border-white border-opacity-10`}>
                                 <div className={`${fullscreen ? 'text-3xl w-12 h-12' : 'text-base w-4 h-4'} p-2 rounded-lg bg-${module.color} flex justify-center items-center shadow-2`}>
                                     { module.label }
                                 </div>
-                                <div className={`${fullscreen ? 'text-lg' : 'text-sm'} w-full pl-4 text-gray-200 font-open font-bold`}> 
+                                <div className={`${fullscreen ? 'text-lg' : 'text-sm'} w-full pl-4 text-gray-200 font-open font-light`}> 
                                     { module.name } 
                                 </div>
                             </div>
-                            <div className={`w-full md:my-4 flex flex-col overflow-scroll px-6`}>
+                            <div className={`w-full md:my-4 flex flex-col overflow-y-auto overflow-x-hidden px-6 font-light`}>
                                 { module.content.map((line: string, key: number)=> (
-                                    <p key={key} className={`${fullscreen ? 'text-sm md:text-lg' : 'text-xs'} text-gray-200 font-bold mb-4`}>{line}</p>
+                                    <p key={key} className={`${fullscreen ? 'text-sm md:text-lg' : 'text-xs'} text-gray-200 font-light mb-4`}>{line}</p>
                                 ))}
                             </div>
                         </div>

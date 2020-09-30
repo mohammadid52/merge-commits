@@ -1,26 +1,41 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
-import { IconContext } from "react-icons";
+import { IconContext } from 'react-icons';
 import { FaClock, FaUserAlt } from 'react-icons/fa';
 import ProgressRing from './ProgressRing';
 import { CurriculumInfo } from './Classroom';
+import ToolTip from '../../General/ToolTip/ToolTip';
 
 interface ClassProps {
         link: string,
+        display?: boolean,
         curriculum: CurriculumInfo
     }
 
 
 const Today: React.FC<ClassProps> = (props: ClassProps) => {
-    const {link, curriculum} = props
+    const { link, curriculum, display } = props
+    const [ accessible, setAccessible ] = useState<boolean>(true);
     const history = useHistory();
     const { theme } = useContext(GlobalContext);
 
+
     const handleLink = () => {
         // come back to this later
-        history.push(link);
+        if ( accessible ) { history.push(link); }
     }
+
+    useEffect(() => {
+        if ( display ) {
+            setAccessible(false)
+        }
+
+        if ( !display ) {
+            setAccessible(true)
+        }
+
+    }, [props])
 
     return (
             <div className={`relative bg-white rounded-xl shadow-container ${theme.elem.text}  w-full h-auto flex mb-16`}>
@@ -53,9 +68,9 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                         </p>
                         <div className="flex w-3/10">
                             <span className="mt-4 inline-flex rounded-full shadow-md">
-                                <button type="submit" onClick={handleLink} className="
-                                tracking-wider text-white bg-ketchup hover:bg-red-300 focus:border-red-700 focus:shadow-outline-red active:bg-red-500
-                                inline-flex justify-center py-2 px-2 border border-transparent leading-5 font-medium rounded-full focus:outline-none transition duration-150 ease-in-out">
+                                <button type="submit" onClick={handleLink} className={`${ accessible ? 'bg-ketchup hover:bg-red-300 focus:border-red-700 focus:shadow-outline-red active:bg-red-500 text-white' : 'bg-gray-500 text-gray-700 cursor-default' }
+                                tracking-wider 
+                                inline-flex justify-center py-2 px-2 border border-transparent leading-5 font-medium rounded-full focus:outline-none transition duration-150 ease-in-out`}>
                                     START LESSON
                                 </button>
                             </span>
@@ -152,11 +167,8 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                         </div>
                     </div>
                 </div> */}
-
-
-
-            </div>
-    )
-}
+    </div>
+  );
+};
 
 export default Today;

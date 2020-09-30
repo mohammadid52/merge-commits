@@ -24,15 +24,21 @@ const BioBlock = (props: props) => {
 
     return (
 
-    <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col justify-center ${theme.block.text} text-base rounded-sm shadow-inner`}>
-        <div className={`md:w-full md:h-full ${theme.block.bg} flex flex-col ${theme.block.text} rounded-sm shadow-inner`}>
-            <h1 className={`${fullscreen ? 'text-2xl font-extrabold mb-4 underline' : 'text-base font-extrabold mb-3'}`}>Biography of the artist:</h1>
-            <div className={`${fullscreen ? 'text-base h-9/10' : 'text-xs h-full'} w-full flex-grow overflow-y-scroll`}>
-                {artistBio}
-            </div>
-        </div> 
+    <div className={`flex flex-col md:w-full md:h-full ${theme.block.bg} justify-center ${theme.block.text} text-base rounded-r-lg `}>
+        <div className={`md:w-full md:h-full p-4 flex flex-col ${theme.block.text} text-lx rounded-r-lg`}>
+          <h1 className={`${fullscreen ? 'text-2xl' : 'text-base'} font-medium ${theme.underline}`}>Biography of the artist:</h1>
+          <div className={`${fullscreen ? 'text-base h-7/10' : 'text-xs h-full'} overflow-y-auto overflow-x-hidden font-light`}>
+            {typeof artistBio !== 'undefined'
+              ? artistBio.map((paragraph: string, i: number) => (
+                  <p key={`paraBio${i}`} className='mb-2 text-blue-100 text-opacity-75'>
+                    {paragraph}
+                  </p> 
+                ))
+              : ''}
+          </div>
+        </div>
+      </div>
 
-    </div>
     )
 }
 

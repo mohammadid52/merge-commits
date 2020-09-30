@@ -11,7 +11,8 @@ import { FaRegSave, FaHome, FaBook } from 'react-icons/fa';
 import { AiOutlineSave, AiOutlineHome } from 'react-icons/ai';
 import { FiClock } from 'react-icons/fi'
 import { LessonContext } from '../../contexts/LessonContext';
-import { API, graphqlOperation } from 'aws-amplify';
+// import { API, graphqlOperation } from 'aws-amplify';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../customGraphql/customMutations';
 // import useDictionary from '../../customHooks/dictionary';
 import useStudentTimer from '../../customHooks/timer';

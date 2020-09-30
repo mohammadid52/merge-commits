@@ -1,14 +1,14 @@
 module.exports = {
-  // purge: {
-  //   enabled: true,
-  //   content: [
-  //     './src/**/*.html',
-  //     './src/**/*.tsx',
-  //     './src/**/*.ts',
-  //     './src/**/*.js',
-  //     './src/**/*.jsx',
-  //   ],
-  // },
+  purge: {
+    enabled: false,
+    content: [
+      './src/**/*.html',
+      './src/**/*.tsx',
+      './src/**/*.ts',
+      './src/**/*.js',
+      './src/**/*.jsx',
+    ],
+  },
   future: {
     removeDeprecatedGapUtilities: true,
     purgeLayersByDefault: true,
@@ -17,7 +17,9 @@ module.exports = {
     translate: true,
   },
   theme: {
+    textColor: theme => theme('colors'),
     fontSize: {
+      'xxs': '.5rem',
       'xs': '.75rem',
       'sm': '.875rem',
       'tiny': '.875rem',
@@ -257,6 +259,7 @@ module.exports = {
         '7.2/10': '72%',
         '7.5/10': '75%',
         '7.8/10': '78%',
+        '7.83/10': '78.3%',
         '7.85/10': '78.5%',
         '7.9/10': '79%',
         '8/10': '80%',

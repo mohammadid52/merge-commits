@@ -4,7 +4,8 @@ import { useCookies } from 'react-cookie';
 import { IconContext } from "react-icons";
 import { MdEmail } from 'react-icons/md';
 import { useHistory, NavLink } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
+// import { Auth } from 'aws-amplify';
+import Auth from '@aws-amplify/auth';
 
 const Forgot = () => {
     const [ cookies, setCookie ] = useCookies(['auth']);
@@ -67,15 +68,22 @@ const Forgot = () => {
         }
     }
 
-    const handleChange = (e: { target: { id: any; value: any; }; }) => {
-        const { id, value } = e.target;
-        setInput(input => {
-            return {
-                ...input,
-                [id]: value,
-            }
-        })
-    }
+    const handleChange = (e: { target: { id: any; value: any } }) => {
+      const { id, value } = e.target;
+      setInput((input) => {
+        if (id === 'email') {
+          return {
+            ...input,
+            [id]: value.toLowerCase(),
+          };
+        } else {
+          return {
+            ...input,
+            [id]: value,
+          };
+        }
+      });
+    };
 
     const handleEnter = (e: any) => {
         if (e.key === 'Enter') {

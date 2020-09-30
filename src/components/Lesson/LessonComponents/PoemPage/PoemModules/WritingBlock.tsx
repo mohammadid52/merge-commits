@@ -295,8 +295,8 @@ const WritingBlock = (props: WritingBlockProps) => {
                     )}) : null
                 }
             </div>
-            <button className="self-start w-24 h-8 text-xl font-open font-light bg-green-500 text-gray-200 rounded-lg mt-2" onClick={handleSubmit}>
-                Submit
+            <button className="self-start w-auto px-3 h-8 text-xl font-open font-light bg-yellow-500 text-gray-900 flex justify-center items-center rounded-lg mt-2" onClick={handleSubmit}>
+                Save and Edit
             </button>
         </div>
     )

@@ -5,6 +5,7 @@ import { FaCheckSquare } from 'react-icons/fa'
 import SampleProfileQuestions from './SampleProfileQuestion';
 import CheckpointQuestions from './CheckpointQuestions';
 
+
 const Checkpoint = () => {
     const { state, dispatch, theme } = useContext(LessonContext)
     const [ title, setTitle ] = useState('')

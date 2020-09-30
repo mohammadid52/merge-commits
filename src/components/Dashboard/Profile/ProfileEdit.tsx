@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
+// import { API, graphqlOperation } from 'aws-amplify';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../customGraphql/customMutations';
 import { NavLink, useHistory } from 'react-router-dom';
 import DropdownForm from './DropdownForm';
@@ -14,7 +15,6 @@ interface UserInfoProps {
 }
 
 const ProfileEdit = (props: UserInfoProps) => {
-    console.log(props.user, 'user')
     const history = useHistory();
     const {user, getUser, status, setStatus} = props;
     const [editUser, setEditUser] = useState(user);
@@ -157,6 +157,17 @@ const ProfileEdit = (props: UserInfoProps) => {
                             <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                 <input id="phone" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
                                 defaultValue = {user.phone}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="sm:col-span-3 px-2">
+                            <label htmlFor="birthdate" className="block text-sm font-medium leading-5 text-gray-700">
+                                Birthday
+                            </label>
+                            <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                                <input id="birthdate" type="date" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" 
+                                defaultValue = {user.birthdate}
                                 />
                             </div>
                         </div>

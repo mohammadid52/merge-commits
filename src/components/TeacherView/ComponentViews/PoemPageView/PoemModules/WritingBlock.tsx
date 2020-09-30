@@ -235,9 +235,9 @@ const WritingBlock = (props: WritingBlockProps) => {
     }
 
     return (
-        <div className={`${fullscreen ? 'p-4 md:px-8 md:py-6 ' : 'text-2xl p-4'} bg-dark-blue w-full h-80 md:h-full flex flex-col items-center rounded-lg shadow-2 mb-4 md:mb-0`}>
-            <div className="w-full flex flex-row justify-between mb-4">
-                <h3 className="w-full flex-grow text-xl text-gray-200 font-open font-bold border-b border-white mr-2">
+        <div className={`${fullscreen ? 'px-4 md:px-8 py-4 ' : 'px-3 md:px-4 py-3'} bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600`} >
+            <div className="w-full flex flex-row justify-between mb-2">
+                <h3 className="w-full flex-grow text-xl text-gray-200 font-open font-light border-b border-white border-opacity-10 mr-2 pb-1 mb-1">
                     Line Prompts
                 </h3>
                 <IconContext.Provider value={{ color: '#E2E8F0', size: '1.5rem', style: { opacity: `${lineState.lines.length < (lineNo * 2) ? '100%' : '10%'}`}}}>
@@ -246,36 +246,37 @@ const WritingBlock = (props: WritingBlockProps) => {
                     </div>
                 </IconContext.Provider>
             </div>
-            <div className="w-full h-full overflow-y-scroll flex flex-col ml-2">
+            <div className="w-full h-full overflow-y-auto overflow-x-hidden flex flex-col ml-2">
                 {   lineState.lines.length > 1 ? 
                     lineState.lines.map((line: { id: string, text: string, example: string, menuOpen: boolean }, key: number) => {
                         let id = line.id.toString()
                         return (
-                        <div key={key} className="relative bg-transparent flex flex-col items-center">
+                        <div key={key} className="relative bg-transparent flex flex-col items-center animate-fadeIn">
                             <div key={key} id={id} className={`${fullscreen ? 'h-12' : 'h-8'} w-full flex flex-row items-center rounded-lg`} onDragOver={handleDragOver} onDrop={handleDrop}>
-                                <input id={id} className={`${fullscreen ? 'h-10' : 'h-8 text-base'} w-full px-4 py-2 rounded-l-lg text-gray-700 bg-gray-300 shadow-2`} name={id} type="text" value={line.text} onChange={handleInputChange} onDoubleClick={handleMenuToggle}/>
-                                <div id={id} className={`${fullscreen ? 'w-10 h-10' : 'w-8 h-8'}  bg-gray-300 rounded-r-lg  flex justify-center items-center shadow-2`} onClick={handleMenuToggle}>
+                                <input id={id} className={`${fullscreen ? 'h-10 px-4 py-2' : 'h-8 text-base px-2 py-1'} w-full rounded-l-lg text-gray-700 bg-gray-300 overflow-x-scroll`} name={id} type="text" value={line.text} onChange={handleInputChange} onDoubleClick={handleMenuToggle}/>
+                                <div id={id} className={`${fullscreen ? 'w-10 h-10' : 'w-8 h-8'} bg-gray-300 rounded-r-lg  flex justify-center items-center cursor-pointer`} onClick={handleMenuToggle}>
                                     <div id={id} className="w-4 h-4 border-dark-blue border-b-8 border-r-8 transform rotate-45 mb-1"></div>
                                 </div>
-                                <div id={id} className="cursor-pointer w-8 h-8 ml-2 flex justify-center items-center" onClick={handleDeleteInput}>
+                                <div id={id} className={`w-8 h-8 ml-2 flex justify-center items-center ${lineState.lines.length > lineNo ? 'cursor-pointer' : ''}`} onClick={handleDeleteInput}>
                                     <IconContext.Provider value={{color: '#E2E8F0', size: '1.5rem', style: { transform: 'rotate(45deg)', opacity: `${lineState.lines.length > lineNo ? '100%' : '10%'}` }}}>
                                         <FaPlus/>
                                     </IconContext.Provider>
                                 </div>
                             </div>
-                            <label className={`${line.example ? 'visible' : 'invisible'} ${fullscreen ? 'text-sm mr-12' : 'text-xs'} self-end flex justify-end text-gray-400`} htmlFor={id}>
+                            <label className={`${line.example ? 'visible' : 'invisible'} ${fullscreen ? 'text-sm mr-12' : 'text-xs'} font-light self-end flex justify-end text-gray-400 mr-12`} htmlFor={id}>
                                 ( ex. {line.example} )
                             </label>
                             {   line.menuOpen ?
-                                    <div className="absolute w-full shadow-3 h-32 bg-gray-300 rounded-lg p-4 transform translate-y-12 overflow-y-scroll z-20 shadow-2">
-                                        { 
+                                    <div className="absolute left-0 w-9.5/10 shadow-3 h-32 bg-gray-300 rounded-lg p-4 transform translate-y-12 overflow-y-auto overflow-x-hidden z-20">
+                                         { 
                                             lineState.prompts.map((prompt: any, key: number) => (
-                                                <div key={key} id={id} className={`${fullscreen ? '' : 'text-xs'} w-full mb-2`} onClick={handleSelectPrompt}>
+                                                <div key={key} id={id} className={`${fullscreen ? '' : 'text-xs'} w-full mb-2 font-light cursor-pointer`} onClick={handleSelectPrompt}>
                                                     <span id={prompt.id}>{ prompt.prompt }</span>
                                                 </div>
                                             ))
                                             
                                         }
+                                       
                                     </div>
                                 :
                                 null
@@ -284,10 +285,12 @@ const WritingBlock = (props: WritingBlockProps) => {
                     )}) : null
                 }
             </div>
-            <button className="self-start w-24 h-8 text-xl font-open font-bold bg-green-500 text-gray-200 shadow-2 rounded-lg mt-2" onClick={handleSubmit}>
-                Submit
+            <button className="self-start w-auto px-3 h-8 text-xl font-open font-light bg-yellow-500 text-gray-900 flex justify-center items-center rounded-lg mt-2" onClick={handleSubmit}>
+                Save and Edit
             </button>
         </div>
+
+
     )
 }
 
