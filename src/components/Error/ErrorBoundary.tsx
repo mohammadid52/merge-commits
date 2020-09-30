@@ -7,6 +7,7 @@ import React from 'react';
  *
  * Non-typescript explanation can be found here:
  * https://reactjs.org/docs/error-boundaries.html
+ * 
  */
 interface PropsInterface {
   test?: 'test';
