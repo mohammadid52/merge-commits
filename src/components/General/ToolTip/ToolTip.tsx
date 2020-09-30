@@ -11,11 +11,15 @@ interface ToolTipProps {
     | 'bottom'
     | 'top-left'
     | 'top-right'
+    | 'hidden-bottom'
     | 'bottom-left'
     | 'bottom-right';
   color?: string;
   header: string;
   content?: React.ReactNode;
+  display?: string;
+  fontSize?: string;
+  width?: string
 }
 
 const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
@@ -35,6 +39,9 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
         break;
       case 'bottom':
         return 'transform translate-y-0';
+        break;
+      case 'hidden-bottom':
+        return 'transform translate-y-6';
         break;
       case 'top-left':
         return 'transform -translate-y-4 right-1/2';
@@ -65,12 +72,12 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
   }, []);
 
   return (
-    <>
+    <div className={`${toolTipProps.display === 'none' ? 'absolute z-100 w-full h-full' : 'w-8 h-8'} `}>
       <div
-        className='w-8 h-8 relative inline-block z-50'
+        className={`${toolTipProps.display === 'none' ? 'w-full h-full' : 'w-8 h-8'} relative inline-block z-50 cursor-help`}
         onMouseOver={handleToolTipHover}
         onMouseOut={handleToolTipHover}>
-        <IconContext.Provider value={{ size: '2rem', color: toolTipProps.color || 'white'  }}>
+        <IconContext.Provider value={{ size: '1.2rem', color: toolTipProps.color || 'white', style: {display: toolTipProps.display}  }}>
           <div className='animate-pulse'>
             <AiOutlineInfoCircle />
           </div>
@@ -78,14 +85,14 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
         <span
           className={`absolute ${
             visible ? 'block' : 'hidden'
-          } ${positionString()}  text-dark p-2 w-48 bg-white rounded-lg animate-fadeIn shadow-elem-semi-dark z-50 border border-blueberry `}>
-          <p className='text-left text-sm font-bold font-blue-300'>{toolTipProps.header}</p>
-          <div className='text-justify text-sm font-light font-blue-300'>
+          } ${positionString()} text-dark p-1 ${toolTipProps.width ? toolTipProps.width : 'w-auto'} bg-white rounded-lg shadow-elem-semi-dark z-50 border border-blueberry flex flex-col justify-center items-center`}>
+          <p className={`${toolTipProps.fontSize ? toolTipProps.fontSize : 'text-sm'} text-left font-bold font-blue-300`}>{toolTipProps.header}</p>
+          <div className={`${toolTipProps.fontSize ? toolTipProps.fontSize : 'text-sm'} text-center font-light font-blue-300`}>
             {toolTipProps.content}
           </div>
         </span>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -78,7 +78,7 @@ const StoryForm = () => {
         <label
           className='w-auto text-lg font-light text-base text-blue-100 text-opacity-70 mb-2'
           htmlFor='title'>
-          Title <ToolTip position='right' header='Story form' content='better instructions'/>
+          Title 
         </label>
         
         <input
