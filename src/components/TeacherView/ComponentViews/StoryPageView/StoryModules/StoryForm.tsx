@@ -19,7 +19,6 @@ const StoryForm = (props: props) => {
     })
 
     useEffect(() => {
-        console.log('lookhere', dataProps, );
         
         setInput({
             title: dataProps && dataProps.title ? dataProps.title : '',

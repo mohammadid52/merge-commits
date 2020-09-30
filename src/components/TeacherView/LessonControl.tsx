@@ -61,7 +61,6 @@ const LessonControl = () => {
         
         try {
             const updatedClassroom = await API.graphql(graphqlOperation(customMutations.updateClassroom, {input: updatedClassroomData}))
-            console.log(updatedClassroom)
             dispatch({ type: 'SAVED_CHANGES' })
         } catch (err) {
             console.error(err);   
@@ -95,7 +94,6 @@ const LessonControl = () => {
 
     useEffect(() => {
 
-        console.log('changes', state)
         if (state.pages.length > 0) {handleUpdateClassroom()}
 
     }, [state.unsavedChanges])
@@ -187,7 +185,7 @@ const LessonControl = () => {
                             </div>
                             <div className="h-1/10 p-2 flex justify-around items-center">
                                 <div className="w-1.5/10 flex flex-col justify-center items-center relative">
-                                    <ToolTip position='bottom' header='' content='students in class' display='none' fontSize= 'text-xs'/>
+                                    <ToolTip position='hidden-bottom' header='' content='students in class' display='none' fontSize= 'text-xs'/>
                                     <div className="w-auto">
                                         <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                             <BsPersonFill />
@@ -199,7 +197,7 @@ const LessonControl = () => {
                                 </div>
 
                                 <div className="w-1.5/10 flex flex-col justify-center items-center relative">
-                                    <ToolTip position='bottom' header='' content='students who are ready' display='none' fontSize= 'text-xs'/>
+                                    <ToolTip position='hidden-bottom' header='' content='students who are ready' display='none' fontSize= 'text-xs'/>
                                     <div className="w-auto">
                                         <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                             <FaRegThumbsUp />
@@ -345,6 +343,7 @@ const LessonControl = () => {
                         </div>
 
                         <div className={`${fullscreen ? 'hidden' : 'display'} flex justify-center items-center`}>
+                            <ToolTip position='top-right' header='' content='students who are ready' fontSize= 'text-xs'/>
                             <LessonControlBar setComponentView={setComponentView} />
                         </div>
                     </div>

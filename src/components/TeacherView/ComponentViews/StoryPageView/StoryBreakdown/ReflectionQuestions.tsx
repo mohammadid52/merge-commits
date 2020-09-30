@@ -9,7 +9,6 @@ const ReflectionQuestions = (props: props) => {
     const {  fullscreen } = props;
     const [ question, setQuestion ] = useState(0);
     const { state } = useContext(LessonControlContext);
-    console.log(state)
     const questArr = state.data.lesson.warmUp.breakdown.reflectionQuestions;
 
     const nextQuestion = () => {
