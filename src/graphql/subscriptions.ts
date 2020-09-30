@@ -34,12 +34,6 @@ export const onUpdateClassroom = /* GraphQL */ `
         id
         name
         courseTypeID
-        courseType {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         institution {
           id
           name
@@ -1056,48 +1050,12 @@ export const onDeleteCurriculumLessons = /* GraphQL */ `
     }
   }
 `;
-export const onCreateCourseType = /* GraphQL */ `
-  subscription OnCreateCourseType {
-    onCreateCourseType {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateCourseType = /* GraphQL */ `
-  subscription OnUpdateCourseType {
-    onUpdateCourseType {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteCourseType = /* GraphQL */ `
-  subscription OnDeleteCourseType {
-    onDeleteCourseType {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateCourse = /* GraphQL */ `
   subscription OnCreateCourse {
     onCreateCourse {
       id
       name
       courseTypeID
-      courseType {
-        id
-        name
-        createdAt
-        updatedAt
-      }
       institution {
         id
         name
@@ -1170,12 +1128,6 @@ export const onUpdateCourse = /* GraphQL */ `
       id
       name
       courseTypeID
-      courseType {
-        id
-        name
-        createdAt
-        updatedAt
-      }
       institution {
         id
         name
@@ -1248,12 +1200,6 @@ export const onDeleteCourse = /* GraphQL */ `
       id
       name
       courseTypeID
-      courseType {
-        id
-        name
-        createdAt
-        updatedAt
-      }
       institution {
         id
         name
