@@ -4,41 +4,43 @@ import { IconContext } from 'react-icons';
 import { FaHighlighter, FaExpand } from 'react-icons/fa';
 // import { isMainThread } from 'worker_threads';
 import { LessonContext } from '../../../../../contexts/LessonContext';
+import { SelectedTextGroup, FinalText } from './LyricsActivity';
 
 interface LyricsBlockProps {
   color: string;
   selected: any;
-  setSelected: React.Dispatch<React.SetStateAction<any[]>>;
   fullscreen: boolean;
+  setSelected: React.Dispatch<React.SetStateAction<any[]>>;
   setFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-/**
- * interfaces
- */
-
-interface SelectedTextGroup {
-  [key: string]: {
-    color: string;
-    selected: string[];
-  };
-}
-
-export interface FinalText {
-  [key: string]: string[];
+  initialSelectedText: SelectedTextGroup;
+  setInitialSelectedText: React.Dispatch<React.SetStateAction<SelectedTextGroup>>;
+  finalText: FinalText;
+  setFinalText: React.Dispatch<React.SetStateAction<FinalText>>;
+  selectGroup: number;
+  setSelectGroup: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const LyricsBlock = (props: LyricsBlockProps) => {
-  const { color, selected, setSelected, fullscreen, setFullscreen } = props;
+  const {
+    color,
+    selected,
+    setSelected,
+    fullscreen,
+    setFullscreen,
+    initialSelectedText,
+    setInitialSelectedText,
+    finalText,
+    setFinalText,
+    selectGroup,
+    setSelectGroup
+  } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
   const rawText = state.data.lesson.coreLesson.content.text;
   //  mouse
   const [mouseIsClicked, setMouseIsClicked] = useState<boolean>();
   const [mouseIsHeld, setMouseIsHeld] = useState<boolean>();
-  //  text
-  const [selectGroup, setSelectGroup] = useState<number>(0);
-  const [initialSelectedText, setIntialSelectedText] = useState<SelectedTextGroup>({});
-  const [finalText, setFinalText] = useState<FinalText>({});
+  const [mouseTarget, setMouseTarget] = useState<string>('');
+
 
   const colorPicker = (colorName: string): string => {
     switch (colorName) {
@@ -104,7 +106,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     });
 
     if (typeof groupWithMappedWord[0] !== 'undefined') {
-      console.log(' get highlight color: ', groupWithMappedWord[0]['color']);
+      // console.log(' get highlight color: ', groupWithMappedWord[0]['color']);
       return groupWithMappedWord[0]['color'];
     }
   };
@@ -130,6 +132,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     const targetWordID = t.id || '';
 
     e.preventDefault();
+    setMouseTarget(targetWordID);
 
     if ((mouseIsClicked || mouseIsHeld) && color !== '') {
       console.log('handleSelectText: ', targetWordID);
@@ -140,7 +143,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
            * 2. If there is, append to it
            */
           if (checkIfSelectGroupExists(`group${selectGroup}`)) {
-            setIntialSelectedText({
+            setInitialSelectedText({
               ...initialSelectedText,
               [`group${selectGroup}`]: {
                 color: color,
@@ -148,7 +151,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
               },
             });
           } else {
-            setIntialSelectedText({
+            setInitialSelectedText({
               ...initialSelectedText,
               [`group${selectGroup}`]: {
                 color: color,
@@ -164,7 +167,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
            * 4. set the selectedText group to that without the text from 'selected', and keep the 'color' as it already is
            */
           if (getArrayWithMappedWord(targetWordID).length > 0) {
-            setIntialSelectedText({
+            setInitialSelectedText({
               ...initialSelectedText,
               [getSelectGroupName(targetWordID)[0]]: {
                 color: initialSelectedText[getSelectGroupName(targetWordID)[0]]['color'],
@@ -235,10 +238,14 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * Find min,max indexes of selectedText
    */
   const minMaxOfArrays = (strArray: string[]) => {
-    const parsedNumbers = strArray.map((str: string) => {
-      return str.match(/\d+/).sort();
-    });
-    return [parseInt(parsedNumbers[0][0]), +parsedNumbers[parsedNumbers.length - 1] + 1];
+    const parsedNumbers = strArray
+      .map((str: string) => {
+        return str.match(/\d+/);
+      })
+      .map((arr: string[]) => parseInt(arr[0]))
+      .sort();
+
+    return [parsedNumbers[0], +parsedNumbers[parsedNumbers.length - 1] + 1];
   };
 
   /**
@@ -255,7 +262,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       };
     });
     if (Object.keys(initialSelectedText).length > 0) {
-      setIntialSelectedText(
+      setInitialSelectedText(
         groups.reduce((acc, grp) => {
           return { ...acc, ...grp };
         })
@@ -328,7 +335,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    *
    * @param strArray - any string []
    */
-
   const mapStrToSpan = (strArray: string[]) => {
     return strArray?.map((mappedWord: string, i: number) => {
       if (mappedWord !== '\n') {
@@ -362,13 +368,9 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * 2. merge generate color-grouped array
    */
 
-  // useEffect(() => {
-  //   expandMultilineSelection();
-  // }, [initialSelectedText]);
-
   useEffect(() => {
     expandMultilineSelection();
-  }, [selectGroup]);
+  }, [mouseTarget]);
 
   useEffect(() => {
     if (Object.keys(initialSelectedText).length > 0) {
@@ -394,7 +396,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         <div className='w-full flex flex-row justify-between mb-1 pb-1'>
           <div className='w-9/10 flex flex-row justify-between border-b border-white border-opacity-10 mr-4 md:mr-0'>
             <h3 className='w-auto font-open font-light'>Lyrics</h3>
-            <p className='text-gray-600 text-sm text-center'>(drag your mouse over the words!)</p>
+            <p className='text-gray-600 text-sm text-center'>(click and drag your mouse over the words!)</p>
           </div>
           <div className='w-auto'>
             <IconContext.Provider
