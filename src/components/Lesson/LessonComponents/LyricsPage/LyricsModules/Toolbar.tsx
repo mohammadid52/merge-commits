@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { IconContext } from 'react-icons';
 import { FaEraser } from 'react-icons/fa';
 import { LessonContext } from '../../../../../contexts/LessonContext';
+import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 interface ToolbarProps {
   setColor: React.Dispatch<React.SetStateAction<string>>;
@@ -43,10 +44,10 @@ const ToolBar = (props: ToolbarProps) => {
     <div className='bg-medium-blue h-2.5/10 w-full p-4 rounded-lg flex flex-col items-center justify-around'>
       <div className='relative flex flex-row justify-center items-center border-b border-white border-opacity-10 pb-1 mb-1'>
         <h3 className='absolute text-xl text-gray-200 font-open font-light pb-1' style={{left: '0'}}>
-          Highlighters
+          Highlighters <ToolTip position='bottom' header='Highlighters' content='You really gotta click & drag those highlighters across the words!'/>
         </h3>
         <p className='text-gray-600 text-sm text-center'>
-          (click a color and drag over words!)
+          (click a color and drag over words!) 
         </p>
       </div>
       <div className='w-auto cursor-pointer flex flex-row justify-center items-center pt-2'>

@@ -9,8 +9,8 @@ import {
 } from 'react-router-dom';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import { IconContext } from "react-icons";
-import { FaExpand, FaCompress } from 'react-icons/fa';
-import { FaHome } from 'react-icons/fa';
+import { FaExpand, FaCompress, FaHome, FaRegThumbsUp } from 'react-icons/fa';
+import { BsPersonFill } from 'react-icons/bs';
 import { NavLink } from 'react-router-dom';
 import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
 import * as customMutations from '../../customGraphql/customMutations';
@@ -39,6 +39,13 @@ const LessonControl = () => {
         setFullscreen(fullscreen => {
             return !fullscreen
         });
+    }
+
+    const firstInitialFunc = (str: string) => {
+        if (typeof str !== 'string' || str === '') { return 'Profile' }
+        let firstInitial = str.charAt(0)
+        firstInitial = firstInitial.toUpperCase() + '.';
+        return firstInitial;
     }
 
     const handleUpdateClassroom = async () => {
@@ -148,7 +155,7 @@ const LessonControl = () => {
     }
 
     return (
-        <div className={`w-full h-screen bg-gray-400 p-8`}>
+        <div className={`w-full h-screen bg-gray-400 p-4`}>
             <div className={`w-full h-full flex flex-col`}>
                 <div className={`relative w-full px-8 h-0.5/10 bg-gray-200 mb-2 shadow-elem-light rounded-lg px-4 flex flex-row items-center`}>
                     <h1 className={`w-4/10 text-3xl font-extrabold font-open my-2`}>
@@ -176,10 +183,45 @@ const LessonControl = () => {
                                     P.Tech Class A
                                 </h2>
                             </div>
-                            <div className="h-1/10">
-                                {/* you are viewing: { state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === item.id ? state.studentViewing.studentInfo.student.firstName : '' } */}
+                            <div className="h-1/10 p-2 flex justify-around items-center">
+                                <div className="w-1.5/10 flex flex-col justify-center items-center">
+                                    <div className="w-auto">
+                                        <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
+                                            <BsPersonFill />
+                                        </IconContext.Provider>
+                                    </div>
+                                    <div className="w-auto">
+                                        20
+                                    </div>
+                                </div>
+
+                                <div className="w-1.5/10 flex flex-col justify-center items-center">
+                                    <div className="w-auto">
+                                        <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
+                                            <FaRegThumbsUp />
+                                        </IconContext.Provider>
+                                    </div>
+                                    <div className="w-auto">
+                                        20
+                                    </div>
+                                </div>
+
+                                <div className="w-4/10 px-2 flex flex-col justify-center items-center">
+                                    <div className="w-full flex justify-center items-center ">
+                                        you are viewing:
+                                    </div>
+                                    <div className={`w-full flex justify-center items-center ${state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? 'text-indigo-500 text-xl font-bold': 'text-black text-xs'}`}>
+                                        { state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.student.firstName + ' ' + firstInitialFunc(state.studentViewing.studentInfo.student.lastName): '(click on the student)' }
+                                    </div>
+                                </div>
+
+                                <div className="w-2/10 flex justify-center">
+                                    <div className="cursor-pointer text-sm bg-indigo-500 w-6/10 shadow-elem-semi-dark rounded-xl text-gray-300 hover:text-white focus:border-none flex justify-center items-center">
+                                        QUIT
+                                    </div>
+                                </div>
                             </div>
-                            <div className={`h-8.2/10 `}>
+                            <div className={`h-8.2/10 mb-2`}>
                                 <ClassRoster 
                                     handleUpdateClassroom={handleUpdateClassroom}
                                 />
