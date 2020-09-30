@@ -94,7 +94,7 @@ const LessonControl = () => {
     useEffect(() => {
 
         console.log('changes', state)
-        if (state.pages.length > 0) {handleUpdateClassroom()}
+        if (state.pages.length > 0 && state.unsavedChanges) {handleUpdateClassroom()}
 
     }, [state.unsavedChanges])
 

@@ -317,27 +317,6 @@ export type DeleteCurriculumLessonsInput = {
   id?: string | null,
 };
 
-export type CreateCourseTypeInput = {
-  id?: string | null,
-  name: string,
-};
-
-export type ModelCourseTypeConditionInput = {
-  name?: ModelStringInput | null,
-  and?: Array< ModelCourseTypeConditionInput | null > | null,
-  or?: Array< ModelCourseTypeConditionInput | null > | null,
-  not?: ModelCourseTypeConditionInput | null,
-};
-
-export type UpdateCourseTypeInput = {
-  id: string,
-  name?: string | null,
-};
-
-export type DeleteCourseTypeInput = {
-  id?: string | null,
-};
-
 export type CreateCourseInput = {
   id?: string | null,
   name: string,
@@ -352,7 +331,7 @@ export type CreateCourseInput = {
 
 export type ModelCourseConditionInput = {
   name?: ModelStringInput | null,
-  courseTypeID?: ModelIDInput | null,
+  courseTypeID?: ModelStringInput | null,
   classID?: ModelIDInput | null,
   curriculumID?: ModelIDInput | null,
   location?: ModelStringInput | null,
@@ -1284,18 +1263,10 @@ export type ModelCurriculumFilterInput = {
   not?: ModelCurriculumFilterInput | null,
 };
 
-export type ModelCourseTypeFilterInput = {
-  id?: ModelIDInput | null,
-  name?: ModelStringInput | null,
-  and?: Array< ModelCourseTypeFilterInput | null > | null,
-  or?: Array< ModelCourseTypeFilterInput | null > | null,
-  not?: ModelCourseTypeFilterInput | null,
-};
-
 export type ModelCourseFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
-  courseTypeID?: ModelIDInput | null,
+  courseTypeID?: ModelStringInput | null,
   classID?: ModelIDInput | null,
   curriculumID?: ModelIDInput | null,
   location?: ModelStringInput | null,
@@ -2417,51 +2388,6 @@ export type DeleteCurriculumLessonsMutation = {
   } | null,
 };
 
-export type CreateCourseTypeMutationVariables = {
-  input: CreateCourseTypeInput,
-  condition?: ModelCourseTypeConditionInput | null,
-};
-
-export type CreateCourseTypeMutation = {
-  createCourseType:  {
-    __typename: "CourseType",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateCourseTypeMutationVariables = {
-  input: UpdateCourseTypeInput,
-  condition?: ModelCourseTypeConditionInput | null,
-};
-
-export type UpdateCourseTypeMutation = {
-  updateCourseType:  {
-    __typename: "CourseType",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteCourseTypeMutationVariables = {
-  input: DeleteCourseTypeInput,
-  condition?: ModelCourseTypeConditionInput | null,
-};
-
-export type DeleteCourseTypeMutation = {
-  deleteCourseType:  {
-    __typename: "CourseType",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type CreateCourseMutationVariables = {
   input: CreateCourseInput,
   condition?: ModelCourseConditionInput | null,
@@ -2473,13 +2399,6 @@ export type CreateCourseMutation = {
     id: string,
     name: string,
     courseTypeID: string,
-    courseType:  {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -2566,13 +2485,6 @@ export type UpdateCourseMutation = {
     id: string,
     name: string,
     courseTypeID: string,
-    courseType:  {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -2659,13 +2571,6 @@ export type DeleteCourseMutation = {
     id: string,
     name: string,
     courseTypeID: string,
-    courseType:  {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -3641,13 +3546,6 @@ export type CreateClassroomMutation = {
       id: string,
       name: string,
       courseTypeID: string,
-      courseType:  {
-        __typename: "CourseType",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -3870,13 +3768,6 @@ export type UpdateClassroomMutation = {
       id: string,
       name: string,
       courseTypeID: string,
-      courseType:  {
-        __typename: "CourseType",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -4099,13 +3990,6 @@ export type DeleteClassroomMutation = {
       id: string,
       name: string,
       courseTypeID: string,
-      courseType:  {
-        __typename: "CourseType",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -8155,40 +8039,6 @@ export type ListCurriculumsQuery = {
   } | null,
 };
 
-export type GetCourseTypeQueryVariables = {
-  id: string,
-};
-
-export type GetCourseTypeQuery = {
-  getCourseType:  {
-    __typename: "CourseType",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListCourseTypesQueryVariables = {
-  filter?: ModelCourseTypeFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListCourseTypesQuery = {
-  listCourseTypes:  {
-    __typename: "ModelCourseTypeConnection",
-    items:  Array< {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken: string | null,
-  } | null,
-};
-
 export type GetCourseQueryVariables = {
   id: string,
 };
@@ -8199,13 +8049,6 @@ export type GetCourseQuery = {
     id: string,
     name: string,
     courseTypeID: string,
-    courseType:  {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -8295,13 +8138,6 @@ export type ListCoursesQuery = {
       id: string,
       name: string,
       courseTypeID: string,
-      courseType:  {
-        __typename: "CourseType",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -8754,13 +8590,6 @@ export type GetClassroomQuery = {
       id: string,
       name: string,
       courseTypeID: string,
-      courseType:  {
-        __typename: "CourseType",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -10335,13 +10164,6 @@ export type OnUpdateClassroomSubscription = {
       id: string,
       name: string,
       courseTypeID: string,
-      courseType:  {
-        __typename: "CourseType",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -11465,49 +11287,12 @@ export type OnDeleteCurriculumLessonsSubscription = {
   } | null,
 };
 
-export type OnCreateCourseTypeSubscription = {
-  onCreateCourseType:  {
-    __typename: "CourseType",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateCourseTypeSubscription = {
-  onUpdateCourseType:  {
-    __typename: "CourseType",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteCourseTypeSubscription = {
-  onDeleteCourseType:  {
-    __typename: "CourseType",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type OnCreateCourseSubscription = {
   onCreateCourse:  {
     __typename: "Course",
     id: string,
     name: string,
     courseTypeID: string,
-    courseType:  {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -11589,13 +11374,6 @@ export type OnUpdateCourseSubscription = {
     id: string,
     name: string,
     courseTypeID: string,
-    courseType:  {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -11677,13 +11455,6 @@ export type OnDeleteCourseSubscription = {
     id: string,
     name: string,
     courseTypeID: string,
-    courseType:  {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     institution:  {
       __typename: "Institution",
       id: string,
