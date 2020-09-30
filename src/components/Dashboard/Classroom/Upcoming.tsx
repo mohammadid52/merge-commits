@@ -26,7 +26,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
             },
             instructor: 'Marlon',
             lessonTime: '45',
-            lessonDate: 'Sept 22nd',
+            lessonDate: '',
             summary: "In this lesson we will be exploring self awareness and the beautiful things about us that others might miss or consider imperfections using Tupac Shakur's poem to explore this idea about how to recognize our emotions and thoughts and how they influence our behavior."
         },
         {
@@ -39,7 +39,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
             },
             instructor: 'Marlon',
             lessonTime: '45',
-            lessonDate: 'Sept 29th',
+            lessonDate: '',
             summary: '',
         },
         {
@@ -52,7 +52,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
             },
             instructor: 'Marlon',
             lessonTime: '45',
-            lessonDate: 'Oct 6th',
+            lessonDate: '',
             summary: '',
         }
     ]);
