@@ -107,8 +107,12 @@ const Links: React.FC = () => {
           ))
         : null}
       <div id='testTooltip' className={`w-full relative text-center text-lg mb-4`}>
-        {/* <ToolTip position='right' header='test' content='hello' /> */}
-        <ToolTip position='bottom-right' header='test' content='hello' />
+        <ToolTip position='bottom-right' header='test' content={
+          <>
+          <h1>Example html</h1>
+          <p>Example paragraph</p>
+          </>
+        }/>
       </div>
     </div>
   );

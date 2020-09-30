@@ -13,8 +13,9 @@ interface ToolTipProps {
     | 'top-right'
     | 'bottom-left'
     | 'bottom-right';
+  color?: string;
   header: string;
-  content: string;
+  content?: React.ReactNode;
 }
 
 const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
@@ -69,7 +70,7 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
         className='w-8 h-8 relative inline-block z-50'
         onMouseOver={handleToolTipHover}
         onMouseOut={handleToolTipHover}>
-        <IconContext.Provider value={{ size: '2rem', color: 'white' }}>
+        <IconContext.Provider value={{ size: '2rem', color: toolTipProps.color || 'white'  }}>
           <div className='animate-pulse'>
             <AiOutlineInfoCircle />
           </div>
@@ -79,7 +80,9 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
             visible ? 'block' : 'hidden'
           } ${positionString()}  text-dark p-2 w-48 bg-white rounded-lg animate-fadeIn shadow-elem-semi-dark z-50 border border-blueberry `}>
           <p className='text-left text-sm font-bold font-blue-300'>{toolTipProps.header}</p>
-          <p className='text-justify text-sm font-light font-blue-300'>{toolTipProps.content}</p>
+          <div className='text-justify text-sm font-light font-blue-300'>
+            {toolTipProps.content}
+          </div>
         </span>
       </div>
     </>
