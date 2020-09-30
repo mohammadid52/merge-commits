@@ -62,7 +62,7 @@ const ClassRoster = (props: classRosterProps) => {
     }
 
     return (
-        <div className={`w-full h-full bg-gray-500 shadow-inner-dark rounded-lg pt-4 px-4 overflow-scroll`}>
+        <div className={`w-full h-full bg-gray-500 shadow-inner-dark rounded-lg pt-4 px-4 overflow-y-scroll overflow-x-auto`}>
             <div className={`w-full flex justify-center font-bold`}>
                 <div className={`w-.5/10 mx-2 text-center`}>
                     
@@ -81,7 +81,10 @@ const ClassRoster = (props: classRosterProps) => {
                 {
                     state.roster && state.roster.length > 0 ? 
                     state.roster.map((item: any, key: number) => (
-                        <div key={key} className={`w-full flex my-2`}>
+                        <div key={key} className={`w-full flex py-2 px-1 ${ state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === item.id ? 'bg-yellow-200' : '' }`}>
+                            
+                            {console.log(state.studentViewing.studentInfo, 'studentinfo')}
+                            {/* {console.log(state.studentViewing.studentInfo.id, 'studentinfo.id')} */}
                             <div className={`w-.5/10 text-center mx-2 text-xs flex`}>
                                 {studentStatus(item.status)}
                             </div>
@@ -92,7 +95,7 @@ const ClassRoster = (props: classRosterProps) => {
                                 {item.lessonProgress}
                             </div>
                             <div id={`${item.id}`} className="w-1.3/10 flex justify-center items-center cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium">
-                                <button id={`${item.id}`} key={key} className="text-xs bg-indigo-500 w-9/10 shadow-elem-semi-dark rounded-xl text-gray-200 hover:text-white" onClick={handleSelect}>
+                                <button id={`${item.id}`} key={key} className="text-xs bg-indigo-500 w-9/10 shadow-elem-semi-dark rounded-xl text-gray-200 hover:text-white focus:border-none" onClick={handleSelect}>
                                     { state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === item.id ? 'Quit' : 'View' }
                                 </button>
                             </div>

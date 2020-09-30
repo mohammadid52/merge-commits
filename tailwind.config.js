@@ -1,14 +1,14 @@
 module.exports = {
-  purge: {
-    enabled: true,
-    content: [
-      './src/**/*.html',
-      './src/**/*.tsx',
-      './src/**/*.ts',
-      './src/**/*.js',
-      './src/**/*.jsx',
-    ],
-  },
+  // purge: {
+  //   enabled: true,
+  //   content: [
+  //     './src/**/*.html',
+  //     './src/**/*.tsx',
+  //     './src/**/*.ts',
+  //     './src/**/*.js',
+  //     './src/**/*.jsx',
+  //   ],
+  // },
   future: {
     removeDeprecatedGapUtilities: true,
     purgeLayersByDefault: true,
@@ -263,6 +263,7 @@ module.exports = {
         '7.85/10': '78.5%',
         '7.9/10': '79%',
         '8/10': '80%',
+        '8.2/10': '82%',
         '8.3/10': '83%',
         '8.5/10': '85%',
         '8.7/10': '87%',

@@ -147,7 +147,7 @@ const UserEdit = (props: UserInfoProps) => {
 
             <div className='h-full px-4 py-5 sm:px-6'>
               <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6'>
-                <div className='sm:col-span-3 px-2'>
+                <div className='sm:col-span-3 p-2'>
                   <label
                     htmlFor='firstName'
                     className='block text-m font-medium leading-5 text-gray-700'>
@@ -164,7 +164,7 @@ const UserEdit = (props: UserInfoProps) => {
                   </div>
                 </div>
 
-                <div className='sm:col-span-3 px-2'>
+                <div className='sm:col-span-3 p-2'>
                   <label
                     htmlFor='lastName'
                     className='block text-m font-medium leading-5 text-gray-700'>
@@ -199,7 +199,7 @@ const UserEdit = (props: UserInfoProps) => {
                             </div>
                         </div> */}
 
-                <div className='sm:col-span-3 px-2'>
+                <div className='sm:col-span-3 p-2'>
                   <label
                     htmlFor='preferredName'
                     className='block text-sm font-medium leading-5 text-gray-700'>
@@ -216,7 +216,7 @@ const UserEdit = (props: UserInfoProps) => {
                   </div>
                 </div>
 
-                <div className='sm:col-span-3 px-2'>
+                <div className='sm:col-span-3 p-2'>
                   <DropdownForm
                     value=''
                     style={false}
@@ -228,7 +228,7 @@ const UserEdit = (props: UserInfoProps) => {
                   />
                 </div>
 
-                <div className='sm:col-span-3 px-2'>
+                <div className='sm:col-span-3 p-2'>
                   <DropdownForm
                     value=''
                     style={false}
@@ -240,7 +240,7 @@ const UserEdit = (props: UserInfoProps) => {
                   />
                 </div>
 
-                <div className='sm:col-span-3 px-2'>
+                <div className='sm:col-span-3 p-2'>
                   <label
                     htmlFor='phone'
                     className='block text-m font-medium leading-5 text-gray-700'>
@@ -268,7 +268,7 @@ const UserEdit = (props: UserInfoProps) => {
 
             <div className='h-full px-4 py-5 sm:px-6'>
               <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6'>
-                <div className='sm:col-span-3 px-2'>
+                <div className='sm:col-span-3 p-2'>
                   <label
                     htmlFor='institution'
                     className='block text-m font-medium leading-5 text-gray-700'>
@@ -285,7 +285,7 @@ const UserEdit = (props: UserInfoProps) => {
                   </div>
                 </div>
 
-                <div className='sm:col-span-3 px-2'>
+                <div className='sm:col-span-3 p-2'>
                   <label
                     htmlFor='grade'
                     className='block text-m font-medium leading-5 text-gray-700'>

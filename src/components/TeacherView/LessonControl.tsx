@@ -167,8 +167,8 @@ const LessonControl = () => {
                 {/*  */}
                 <div className={`w-full h-9/10 flex bg-gray-200 shadow-elem-light p-4 rounded-lg`}>
                     <div className={`${fullscreen ? 'hidden' : 'display'} w-4/10 h-full px-4 flex flex-col items-center`}>
-                        <div className={`h-full w-full mb-2`}>
-                            <div className={`w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between text-xl text-gray-200 font-extrabold font-open`}>
+                        <div className={`h-full w-full mb-2 flex flex-col justify-between items-center`}>
+                            <div className={`h-.5/10 w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between items-center text-xl text-gray-200 font-extrabold font-open`}>
                                 <h2 className={`w-auto`}>
                                     Class Roster 
                                 </h2>
@@ -176,19 +176,22 @@ const LessonControl = () => {
                                     P.Tech Class A
                                 </h2>
                             </div>
-                            <div className={`h-4/10 my-4`}>
+                            <div className="h-1/10">
+                                {/* you are viewing: { state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === item.id ? state.studentViewing.studentInfo.student.firstName : '' } */}
+                            </div>
+                            <div className={`h-8.2/10 `}>
                                 <ClassRoster 
                                     handleUpdateClassroom={handleUpdateClassroom}
                                 />
                             </div>
-                            <div className={`w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between text-xl text-gray-200 font-extrabold font-open`}>
+                            {/* <div className={`w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between text-xl text-gray-200 font-extrabold font-open`}>
                                 <h2 className={`w-auto`}>
                                     Teacher Notes 
                                 </h2>
                             </div>
                             <textarea id="text" className="bg-gray-300 w-full h-4/10 p-8 my-4 text-sm md:text-2xl text-gray-800 rounded-lg shadow-inner-dark" 
                             // value={input}
-                            />
+                            /> */}
                         </div>
                     </div>
                     <div className={`${fullscreen ? 'w-full' : 'w-6/10'} h-full flex flex-col items-center`}>
