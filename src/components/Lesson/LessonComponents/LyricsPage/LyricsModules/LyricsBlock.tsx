@@ -38,7 +38,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   //  text
   const [selectGroup, setSelectGroup] = useState<number>(0);
   const [initialSelectedText, setIntialSelectedText] = useState<SelectedTextGroup>({});
-  const [fullSelectedText, setFullSelectedText] = useState<SelectedTextGroup>({});
   const [finalText, setFinalText] = useState<FinalText>({});
 
   const colorPicker = (colorName: string): string => {
@@ -102,9 +101,9 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       if (group['selected'].includes(mappedWordID)) {
         return group['color'];
       }
-    })
+    });
 
-    if(typeof groupWithMappedWord[0] !== 'undefined'){
+    if (typeof groupWithMappedWord[0] !== 'undefined') {
       console.log(' get highlight color: ', groupWithMappedWord[0]['color']);
       return groupWithMappedWord[0]['color'];
     }
@@ -291,19 +290,19 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * Function to adapt FinalText state word-groups to work with dispatch
    * @param input - Object of color grouped words
    */
-  const adaptGroupedWordsForDispatch = (input: string[]) => {
+  const adaptWordGroupsForDispatch = (input: string[]) => {
     return trimWordsInArray(input, /^mappedWord__([0-9]+)__/).map((word: any, i: number) => ({
       id: i,
       text: word,
     }));
   };
 
-  const adaptExpandedTextGroupsForDispatch = (input: any) => {
+  const adaptTextGroupsForDispatch = (input: any) => {
     return Object.keys(input).map((grpName: any, i: number) => {
       const firstGroupNumber = minMaxOfArrays(initialSelectedText[grpName]['selected'])[0];
       const lastGroupNumber = minMaxOfArrays(initialSelectedText[grpName]['selected'])[1];
-      const currentText = adaptGroupedWordsForDispatch(initialSelectedText[grpName]['selected']);
-      // console.log('adaptExpanded: ', currentText);
+      const currentText = adaptWordGroupsForDispatch(initialSelectedText[grpName]['selected']);
+
       return {
         id: i + 1,
         anchor: firstGroupNumber,
@@ -314,7 +313,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     });
   };
 
-    /**
+  /**
    * html functionality
    */
 
@@ -371,11 +370,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     expandMultilineSelection();
   }, [selectGroup]);
 
-  // useEffect(() => {
-  //   if (Object.keys(fullSelectedText).length > 0) {
-  //     setFinalText(groupWordsByColor(Object.values(fullSelectedText)));
-  //   }
-  // }, [fullSelectedText]);
   useEffect(() => {
     if (Object.keys(initialSelectedText).length > 0) {
       setFinalText(groupWordsByColor(Object.values(initialSelectedText)));
@@ -386,12 +380,10 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * ANDREW'S DISPATCH
    */
 
-   // this was fullSelectedText first
+  // this was fullSelectedText first
   useEffect(() => {
-    setSelected(adaptExpandedTextGroupsForDispatch(finalText));
+    setSelected(adaptTextGroupsForDispatch(initialSelectedText));
   }, [finalText]);
-
-
 
   return (
     <>
