@@ -19,11 +19,13 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import ClassRoster from './ClassRoster';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
+import ToolTip from '../General/ToolTip/ToolTip';
 const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
 const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
 const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
 const OutroView = lazy(() => import('./ComponentViews/OutroView/OutroView'));
-const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'))
+const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'));
+
 
 const LessonControl = () => {
     const { state, dispatch } = useContext(LessonControlContext);
@@ -184,7 +186,8 @@ const LessonControl = () => {
                                 </h2>
                             </div>
                             <div className="h-1/10 p-2 flex justify-around items-center">
-                                <div className="w-1.5/10 flex flex-col justify-center items-center">
+                                <div className="w-1.5/10 flex flex-col justify-center items-center relative">
+                                    <ToolTip position='bottom' header='' content='students in class' display='none' fontSize= 'text-xs'/>
                                     <div className="w-auto">
                                         <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                             <BsPersonFill />
@@ -195,7 +198,8 @@ const LessonControl = () => {
                                     </div>
                                 </div>
 
-                                <div className="w-1.5/10 flex flex-col justify-center items-center">
+                                <div className="w-1.5/10 flex flex-col justify-center items-center relative">
+                                    <ToolTip position='bottom' header='' content='students who are ready' display='none' fontSize= 'text-xs'/>
                                     <div className="w-auto">
                                         <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                             <FaRegThumbsUp />
