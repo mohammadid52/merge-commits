@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
-import { IconContext } from "react-icons";
+import { IconContext } from 'react-icons';
 import { FaClock, FaUserAlt } from 'react-icons/fa';
 import ProgressRing from './ProgressRing';
 import { CurriculumInfo } from './Classroom';
+import ToolTip from '../../General/ToolTip/ToolTip';
 
 interface ClassProps {
         link: string,
@@ -166,11 +167,8 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                         </div>
                     </div>
                 </div> */}
-
-
-
-            </div>
-    )
-}
+    </div>
+  );
+};
 
 export default Today;

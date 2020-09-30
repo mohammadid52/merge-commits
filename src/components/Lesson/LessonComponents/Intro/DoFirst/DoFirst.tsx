@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import TextQuestions from './Questions/TextQuestions';
 import SelectOneQuestions from './Questions/SelectOneQuestions';
+import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 const setInitialState = (array: Array<any>) => {
   let tempObj: any = {};
@@ -203,8 +204,8 @@ const DoFirst = () => {
   return (
     // <div className='bg-dark-blue w-full h-full rounded-lg  text-gray-200 px-4 md:px-8 py-6'>
     <div className='bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full rounded-lg text-gray-200 py-4 pr-4 pl-4 border-l-4 border-ketchup'>
-      <h3 className='w-full text-4xl text-gray-200 font-open font-light border-b border-white border-opacity-10 mr-4'>
-        Do First
+      <h3 className='relative w-full text-4xl text-gray-200 font-open font-light border-b border-white border-opacity-10 mr-4'>
+        Do First <ToolTip position='bottom-right' header='test' content='hello' />
       </h3>
       <div className='w-full h-8.5/10 flex flex-col text-gray-200'>
         {questionArray.map((item: { question: any }, key: number) => (
