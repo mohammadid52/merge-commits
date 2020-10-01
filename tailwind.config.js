@@ -20,6 +20,18 @@ module.exports = {
     translate: true,
   },
   theme: {
+    cursor: {
+      auto: 'auto',
+      default: 'default',
+      pointer: 'pointer',
+      wait: 'wait',
+      text: 'text',
+      move: 'move',
+      'not-allowed': 'not-allowed',
+      crosshair: 'crosshair',
+      'zoom-in': 'zoom-in',
+      'help': 'help'
+    },
     textColor: theme => theme('colors'),
     fontSize: {
       'xxs': '.5rem',
@@ -252,6 +264,7 @@ module.exports = {
         '4.9/10': '49%',
         '5/10': '50%',
         '5.1/10': '51%',
+        '5.3/10': '53%',
         '5.5/10': '55%',
         '5.8/10': '58%',
         '5.9/10': '59%',
@@ -266,6 +279,7 @@ module.exports = {
         '7.85/10': '78.5%',
         '7.9/10': '79%',
         '8/10': '80%',
+        '8.2/10': '82%',
         '8.3/10': '83%',
         '8.5/10': '85%',
         '8.7/10': '87%',

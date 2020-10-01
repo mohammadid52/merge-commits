@@ -35,7 +35,6 @@ const Body = (props: props) => {
 
     useEffect(() => {
         if (displayStudentData) {
-            console.log(state.studentViewing.studentInfo);
             if ( state.studentViewing.studentInfo.corelessonData && state.studentViewing.studentInfo.corelessonData.selected ) {
                 return setSelected(state.studentViewing.studentInfo.corelessonData.selected)
             } return setSelected([])
@@ -43,10 +42,10 @@ const Body = (props: props) => {
     }, [state.studentViewing]);
 
 
-    useEffect(() => {
-       console.log(selected);
+    // useEffect(() => {
+    //    console.log(selected);
        
-    }, [selected])
+    // }, [selected])
 
     return (
         <>
