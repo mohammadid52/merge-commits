@@ -108,11 +108,6 @@ type CurriculumLessons @model(queries: null)
   lesson: Lesson @connection(fields: ["lessonID"])
 }
 
-type CourseType @model {
-  id: ID!
-  name: String!
-}
-
 # enum CourseType {
 #   CLASS
 #   EXCURR
@@ -122,8 +117,7 @@ type CourseType @model {
 type Course @model {
   id: ID!
   name: String!
-  courseTypeID: ID!
-  courseType: CourseType! @connection(fields: ["courseTypeID"])
+  courseTypeID: String!
   institution: Institution
   # classroomTeachers: [Person]!
   # fellows: [Person]!
