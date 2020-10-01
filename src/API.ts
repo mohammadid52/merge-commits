@@ -611,13 +611,13 @@ export type DeleteClassroomInput = {
 export type CreateFeedbackInput = {
   id?: string | null,
   classroomID: string,
-  liked?: boolean | null,
+  liked?: string | null,
   comment?: string | null,
 };
 
 export type ModelFeedbackConditionInput = {
   classroomID?: ModelIDInput | null,
-  liked?: ModelBooleanInput | null,
+  liked?: ModelStringInput | null,
   comment?: ModelStringInput | null,
   and?: Array< ModelFeedbackConditionInput | null > | null,
   or?: Array< ModelFeedbackConditionInput | null > | null,
@@ -627,7 +627,7 @@ export type ModelFeedbackConditionInput = {
 export type UpdateFeedbackInput = {
   id: string,
   classroomID?: string | null,
-  liked?: boolean | null,
+  liked?: string | null,
   comment?: string | null,
 };
 
@@ -815,6 +815,7 @@ export type InstructionsInput = {
 
 export type InputsInput = {
   title: boolean,
+  example?: string | null,
   additionalInputs?: Array< WritingPromptsInput > | null,
 };
 
@@ -1326,7 +1327,7 @@ export type ModelClassroomFilterInput = {
 export type ModelFeedbackFilterInput = {
   id?: ModelIDInput | null,
   classroomID?: ModelIDInput | null,
-  liked?: ModelBooleanInput | null,
+  liked?: ModelStringInput | null,
   comment?: ModelStringInput | null,
   and?: Array< ModelFeedbackFilterInput | null > | null,
   or?: Array< ModelFeedbackFilterInput | null > | null,
@@ -3714,7 +3715,7 @@ export type CreateClassroomMutation = {
         __typename: "Feedback",
         id: string,
         classroomID: string,
-        liked: boolean | null,
+        liked: string | null,
         comment: string | null,
         createdAt: string,
         updatedAt: string,
@@ -3936,7 +3937,7 @@ export type UpdateClassroomMutation = {
         __typename: "Feedback",
         id: string,
         classroomID: string,
-        liked: boolean | null,
+        liked: string | null,
         comment: string | null,
         createdAt: string,
         updatedAt: string,
@@ -4158,7 +4159,7 @@ export type DeleteClassroomMutation = {
         __typename: "Feedback",
         id: string,
         classroomID: string,
-        liked: boolean | null,
+        liked: string | null,
         comment: string | null,
         createdAt: string,
         updatedAt: string,
@@ -4180,7 +4181,7 @@ export type CreateFeedbackMutation = {
     __typename: "Feedback",
     id: string,
     classroomID: string,
-    liked: boolean | null,
+    liked: string | null,
     comment: string | null,
     classroom:  {
       __typename: "Classroom",
@@ -4266,7 +4267,7 @@ export type UpdateFeedbackMutation = {
     __typename: "Feedback",
     id: string,
     classroomID: string,
-    liked: boolean | null,
+    liked: string | null,
     comment: string | null,
     classroom:  {
       __typename: "Classroom",
@@ -4352,7 +4353,7 @@ export type DeleteFeedbackMutation = {
     __typename: "Feedback",
     id: string,
     classroomID: string,
-    liked: boolean | null,
+    liked: string | null,
     comment: string | null,
     classroom:  {
       __typename: "Classroom",
@@ -4604,6 +4605,7 @@ export type CreateLessonMutation = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -4816,6 +4818,7 @@ export type UpdateLessonMutation = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -5028,6 +5031,7 @@ export type DeleteLessonMutation = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -5733,6 +5737,7 @@ export type CreateWarmUpMutation = {
     inputs:  {
       __typename: "Inputs",
       title: boolean,
+      example: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -5775,6 +5780,7 @@ export type UpdateWarmUpMutation = {
     inputs:  {
       __typename: "Inputs",
       title: boolean,
+      example: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -5817,6 +5823,7 @@ export type DeleteWarmUpMutation = {
     inputs:  {
       __typename: "Inputs",
       title: boolean,
+      example: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -8758,7 +8765,7 @@ export type GetClassroomQuery = {
         __typename: "Feedback",
         id: string,
         classroomID: string,
-        liked: boolean | null,
+        liked: string | null,
         comment: string | null,
         createdAt: string,
         updatedAt: string,
@@ -8861,7 +8868,7 @@ export type GetFeedbackQuery = {
     __typename: "Feedback",
     id: string,
     classroomID: string,
-    liked: boolean | null,
+    liked: string | null,
     comment: string | null,
     classroom:  {
       __typename: "Classroom",
@@ -8950,7 +8957,7 @@ export type ListFeedbacksQuery = {
       __typename: "Feedback",
       id: string,
       classroomID: string,
-      liked: boolean | null,
+      liked: string | null,
       comment: string | null,
       classroom:  {
         __typename: "Classroom",
@@ -9135,6 +9142,7 @@ export type GetLessonQuery = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -9404,6 +9412,7 @@ export type GetWarmUpQuery = {
     inputs:  {
       __typename: "Inputs",
       title: boolean,
+      example: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -9449,6 +9458,7 @@ export type ListWarmUpsQuery = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -10332,7 +10342,7 @@ export type OnUpdateClassroomSubscription = {
         __typename: "Feedback",
         id: string,
         classroomID: string,
-        liked: boolean | null,
+        liked: string | null,
         comment: string | null,
         createdAt: string,
         updatedAt: string,
@@ -11838,7 +11848,7 @@ export type OnCreateFeedbackSubscription = {
     __typename: "Feedback",
     id: string,
     classroomID: string,
-    liked: boolean | null,
+    liked: string | null,
     comment: string | null,
     classroom:  {
       __typename: "Classroom",
@@ -11919,7 +11929,7 @@ export type OnUpdateFeedbackSubscription = {
     __typename: "Feedback",
     id: string,
     classroomID: string,
-    liked: boolean | null,
+    liked: string | null,
     comment: string | null,
     classroom:  {
       __typename: "Classroom",
@@ -12000,7 +12010,7 @@ export type OnDeleteFeedbackSubscription = {
     __typename: "Feedback",
     id: string,
     classroomID: string,
-    liked: boolean | null,
+    liked: string | null,
     comment: string | null,
     classroom:  {
       __typename: "Classroom",
@@ -12232,6 +12242,7 @@ export type OnCreateLessonSubscription = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -12439,6 +12450,7 @@ export type OnUpdateLessonSubscription = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -12646,6 +12658,7 @@ export type OnDeleteLessonSubscription = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -13301,6 +13314,7 @@ export type OnCreateWarmUpSubscription = {
     inputs:  {
       __typename: "Inputs",
       title: boolean,
+      example: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -13338,6 +13352,7 @@ export type OnUpdateWarmUpSubscription = {
     inputs:  {
       __typename: "Inputs",
       title: boolean,
+      example: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -13375,6 +13390,7 @@ export type OnDeleteWarmUpSubscription = {
     inputs:  {
       __typename: "Inputs",
       title: boolean,
+      example: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,

@@ -254,3 +254,19 @@ export const updateSurveyStatus = /* GraphQL */ `
     }
   }
 `;
+
+export const createFeedback = /* GraphQL */ `
+  mutation CreateFeedback(
+    $input: CreateFeedbackInput!
+    $condition: ModelFeedbackConditionInput
+  ) {
+    createFeedback(input: $input, condition: $condition) {
+      id
+      classroomID
+      liked
+      comment
+      createdAt
+      updatedAt
+    }
+  }
+`;
