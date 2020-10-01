@@ -1,16 +1,43 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
-const Feedback = () => {
+interface FeedbackProps {
+  setFeedback: React.Dispatch<React.SetStateAction<{
+    like: string;
+    text: string;
+  }>>
+}
+
+const Feedback = (props: FeedbackProps) => {
   const { theme, state } = useContext(LessonContext);
-  console.log(state.data, 'state')
-  const [thumb, setThumb] = useState('');
+  const { setFeedback } = props;
+  const [ thumb, setThumb ] = useState('');
+  const [ feedbackText, setFeedbackText ] = useState('');
 
   const handleThumb = (item: string) => {
-    setThumb(item)
+    setThumb(() => {
+      if ( item === thumb ) { return '' }
+      
+      return item
+    })
   }
+
+  const handleTextChange = (e: { target: { value: string }}) => {
+    const { value } = e.target;
+
+    setFeedbackText(value)
+  }
+
+  useEffect(() => {
+    setFeedback(() => {
+      return {
+        like: thumb,
+        text: feedbackText,
+      }
+    })
+  }, [thumb, feedbackText])
   
   return (
     <div className={`${theme.gradient.cardBase} bg-dark-blue w-full h-4/10 flex flex-col items-start rounded-lg text-gray-200 p-4 border-l-8 border-green-light`}>
@@ -48,8 +75,8 @@ const Feedback = () => {
         </div> */}
         <textarea
           id='text'
-          className='bg-gray-300 w-full h-full p-2 text-md text-gray-800 rounded-lg '
-          // value={editInput.text} onChange={handleChange}
+          className='bg-gray-300 w-full h-full p-2 text-md text-gray-800 rounded-lg'
+          value={feedbackText} onChange={handleTextChange}
           placeholder='Do you have any comments?'
         />
       </div>

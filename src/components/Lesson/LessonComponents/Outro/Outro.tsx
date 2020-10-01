@@ -15,37 +15,17 @@ import OutroText from './OutroText';
 
 const Outro = () => {
   const { state, dispatch, theme } = useContext(LessonContext);
-  const [fullscreen, setFullscreen] = useState(false);
+  const [ fullscreen, setFullscreen ] = useState(false);
+  const [ feedback, setFeedback ] = useState({
+    like: '',
+    text: '',
+  });
 
   useEffect(() => {
     dispatch({ type: 'ACTIVATE_LESSON', payload: 'outro' });
     dispatch({ type: 'FINISH' });
   }, []);
 
-//   if ( state.data.lesson.type !== 'lesson' ) {
-//     return (
-//         <div className={`z-50 w-full h-full flex flex-col justify-between items-center`}>
-//             <div className={`w-full h-1/10  text-xl md:text-5xl ${theme.banner}`}>
-//                 <IconContext.Provider value={{ color: '#EDF2F7', size: '2.75rem'}}>
-//                     <div className={`red bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg shadow-2 ${theme.block.shadow}`}>
-//                         <FaCheckSquare />
-//                     </div>
-//                 </IconContext.Provider>
-//                 <div className={`h-full w-full flex flex-row justify-center items-center text-5xl text-center font-open font-medium ${theme.block.text} z-10`}>
-//                     Title
-//                 </div>
-//             </div>
-
-//             <div className={`w-5/10 h-8.8/10 flex justify-center items-center`}>
-//               <div className="h-6/10 w-full flex flex-col justify-around items-center">
-//                 <Feedback/>
-//                 <SaveQuit/>
-//               </div>
-//             </div>
-            
-//         </div>
-//     )
-// }
 
   return (
     <div className='w-full md:h-full flex flex-col justify-between items-center'>
@@ -58,9 +38,9 @@ const Outro = () => {
           {
             state.data.lesson.type !== 'survey' ?
             <div className="w-5/10 h-8/10 flex flex-col justify-between items-center">
-              <Feedback/>
+              <Feedback setFeedback={setFeedback} />
               <MoreArtist/>
-              <SaveQuit id={state.data.lesson.id}/>
+              <SaveQuit id={state.data.lesson.id} feedback={feedback}/>
             </div>
             :
             <div className="w-7/10 h-8/10 flex flex-col justify-between items-center">
