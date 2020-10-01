@@ -32,7 +32,6 @@ const Keyword = (props: props) => {
             { typeof keywords !== 'undefined' ?
               keywords.map((item: {word: {word: string, definition: string}, wordID: number}, i: number) => {
                return( <div key={i}>
-                  {console.log(item.word.word, 'item')}
                   <p className={`${fullscreen ? 'text-base mb-3' : 'text-xs mb-1'} text-blue-100 text-opacity-75`}>
                     <span className={`${fullscreen ? 'text-lg' : 'text-sm'} font-semibold`}>{item.word.word}:</span> <span className='font-light'>{item.word.definition}</span>
                   </p>

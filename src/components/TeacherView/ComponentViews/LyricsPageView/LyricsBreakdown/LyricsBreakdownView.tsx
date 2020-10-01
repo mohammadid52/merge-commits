@@ -29,7 +29,6 @@ const SelfDisplay = (props: props) => {
     }
 
     useEffect(() => {
-        console.log('this one here', displayStudentData, dataProps, state);
         
         if ( displayStudentData && dataProps ) {
             let modulesArray = moduleTypes.map((item: {[key: string]: any}) => {
@@ -39,8 +38,6 @@ const SelfDisplay = (props: props) => {
                 .map((selection: { content: any }) => {
                     return selection.content
                 });
-
-                console.log(contentArray)
 
                 return {
                     name: item.name,

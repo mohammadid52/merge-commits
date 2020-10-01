@@ -11,12 +11,16 @@ import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 interface SaveQuitProps {
   id: string
+  feedback?: {
+    like: string;
+    text: string;
+  }
 }
 
 const SaveQuit = (props: SaveQuitProps) => {
   const { state, dispatch, theme } = useContext(LessonContext);
   const { globalStateAccess } = useContext(GlobalContext);
-  const { id } = props;
+  const { id, feedback } = props;
   const history = useHistory();
   // the bottom is from 'LessonHeaderBar.tsx'
   // const { theme, state, dispatch } = useContext(LessonContext);
@@ -41,7 +45,7 @@ const SaveQuit = (props: SaveQuitProps) => {
         id: state.studentDataID,
         lessonProgress: lessonProgress,
         status: state.studentStatus,
-        classroomID: 1,
+        classroomID: '1',
         studentID: state.studentUsername,
         studentAuthID: state.studentAuthID,
         warmupData: state.componentState.story ? state.componentState.story : null,
@@ -49,13 +53,13 @@ const SaveQuit = (props: SaveQuitProps) => {
         activityData: state.componentState.poem ? state.componentState.poem : null
     }
 
-    console.log('update', data);
+    // console.log('update', data);
     
     try {
         const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }))
         console.log(dataObject)
         dispatch({ type: 'SAVED_CHANGES' })
-        // console.log('state', state)
+        console.log('state', state)
     } catch (error) {
         console.error(error);   
     }
@@ -80,8 +84,44 @@ const SaveQuit = (props: SaveQuitProps) => {
     
     }
   }
+  
+  const saveQuestionData = async (key: string, questionID: string) => {
+    let questiondDataObject = {
+      questionID: key,
+      classroomID: '1',
+      authID: state.studentAuthID,
+      email: state.studentUsername,
+      response: state.questionData[key][questionID]
+    }
 
+    try { 
+      const questionData = await API.graphql(graphqlOperation(customMutations.createQuestionData, {input: questiondDataObject}))
+      console.log(questionData, 'questionData');
 
+    } catch (err) {
+      console.error(err);
+      
+    }
+  }  
+  
+  const saveLessonFeedback = async () => {
+    let feedbackInput = {
+      classroomID: '1',
+      liked: feedback.like,
+      comment: feedback.text,
+    }
+
+    try {
+      const feedbackData = await API.graphql(graphqlOperation( customMutations.createFeedback, { input: feedbackInput }))
+      console.log(feedbackData);
+
+    } catch (error) {
+      console.error(error);
+    
+    }
+    
+  }
+  
   const handleSave = async () => {       
     if (typeof state.questionData === "object") {
         let keys = Object.keys(state.questionData)
@@ -93,30 +133,18 @@ const SaveQuit = (props: SaveQuitProps) => {
           })
         })
 
-        if ( id === 'on-boarding-survey-1' ) { await updateStudentProfile() } 
+        if ( feedback.like !== '' || feedback.text !== '' ) {
+          await saveLessonFeedback()
+        }
+
+        if ( id === 'on-boarding-survey-1' ) { await updateStudentProfile() }
 
         await updateStudentData()
 
         history.push('/dashboard')
     }
   } 
-    
-    const saveQuestionData = async (key: string, questionID: string) => {
-        let questiondDataObject = {
-            questionID: key,
-            classroomID: "1",
-            authID: state.studentAuthID,
-            email: state.studentUsername,
-            response: state.questionData[key][questionID]
-        }
-        try { 
-            const questionData = await API.graphql(graphqlOperation(customMutations.createQuestionData, {input: questiondDataObject}))
-            console.log(questionData, 'questionData');
-        } catch (err) {
-            console.error(err);
-            
-        }
-    }   
+
 
   return (
     <span className="w-7/10 ml-3 flex inline-flex rounded-md shadow-sm">

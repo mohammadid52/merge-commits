@@ -9,8 +9,8 @@ import {
 } from 'react-router-dom';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import { IconContext } from "react-icons";
-import { FaExpand, FaCompress } from 'react-icons/fa';
-import { FaHome } from 'react-icons/fa';
+import { FaExpand, FaCompress, FaHome, FaRegThumbsUp } from 'react-icons/fa';
+import { BsPersonFill } from 'react-icons/bs';
 import { NavLink } from 'react-router-dom';
 import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
 import * as customMutations from '../../customGraphql/customMutations';
@@ -19,11 +19,13 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import ClassRoster from './ClassRoster';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
+import ToolTip from '../General/ToolTip/ToolTip';
 const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
 const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
 const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
 const OutroView = lazy(() => import('./ComponentViews/OutroView/OutroView'));
-const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'))
+const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'));
+
 
 const LessonControl = () => {
     const { state, dispatch } = useContext(LessonControlContext);
@@ -41,6 +43,13 @@ const LessonControl = () => {
         });
     }
 
+    const firstInitialFunc = (str: string) => {
+        if (typeof str !== 'string' || str === '') { return 'Profile' }
+        let firstInitial = str.charAt(0)
+        firstInitial = firstInitial.toUpperCase() + '.';
+        return firstInitial;
+    }
+
     const handleUpdateClassroom = async () => {
         let updatedClassroomData: any = {
             id: '1',
@@ -52,7 +61,6 @@ const LessonControl = () => {
         
         try {
             const updatedClassroom = await API.graphql(graphqlOperation(customMutations.updateClassroom, {input: updatedClassroomData}))
-            console.log(updatedClassroom)
             dispatch({ type: 'SAVED_CHANGES' })
         } catch (err) {
             console.error(err);   
@@ -148,7 +156,7 @@ const LessonControl = () => {
     }
 
     return (
-        <div className={`w-full h-screen bg-gray-400 p-8`}>
+        <div className={`w-full h-screen bg-gray-400 p-4`}>
             <div className={`w-full h-full flex flex-col`}>
                 <div className={`relative w-full px-8 h-0.5/10 bg-gray-200 mb-2 shadow-elem-light rounded-lg px-4 flex flex-row items-center`}>
                     <h1 className={`w-4/10 text-3xl font-extrabold font-open my-2`}>
@@ -167,8 +175,8 @@ const LessonControl = () => {
                 {/*  */}
                 <div className={`w-full h-9/10 flex bg-gray-200 shadow-elem-light p-4 rounded-lg`}>
                     <div className={`${fullscreen ? 'hidden' : 'display'} w-4/10 h-full px-4 flex flex-col items-center`}>
-                        <div className={`h-full w-full mb-2`}>
-                            <div className={`w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between text-xl text-gray-200 font-extrabold font-open`}>
+                        <div className={`h-full w-full mb-2 flex flex-col justify-between items-center`}>
+                            <div className={`h-.5/10 w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between items-center text-xl text-gray-200 font-extrabold font-open`}>
                                 <h2 className={`w-auto`}>
                                     Class Roster 
                                 </h2>
@@ -176,19 +184,59 @@ const LessonControl = () => {
                                     P.Tech Class A
                                 </h2>
                             </div>
-                            <div className={`h-4/10 my-4`}>
+                            <div className="h-1/10 p-2 flex justify-around items-center">
+                                <div className="w-1.5/10 flex flex-col justify-center items-center relative">
+                                    <ToolTip position='hidden-bottom' header='' content='students in class' display='none' fontSize= 'text-xs'/>
+                                    <div className="w-auto">
+                                        <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
+                                            <BsPersonFill />
+                                        </IconContext.Provider>
+                                    </div>
+                                    <div className="w-auto">
+                                        20
+                                    </div>
+                                </div>
+
+                                <div className="w-1.5/10 flex flex-col justify-center items-center relative">
+                                    <ToolTip position='hidden-bottom' header='' content='students who are ready' display='none' fontSize= 'text-xs'/>
+                                    <div className="w-auto">
+                                        <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
+                                            <FaRegThumbsUp />
+                                        </IconContext.Provider>
+                                    </div>
+                                    <div className="w-auto">
+                                        20
+                                    </div>
+                                </div>
+
+                                <div className="w-4/10 px-2 flex flex-col justify-center items-center">
+                                    <div className="w-full flex justify-center items-center ">
+                                        you are viewing:
+                                    </div>
+                                    <div className={`w-full flex justify-center items-center ${state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? 'text-indigo-500 text-xl font-bold': 'text-black text-xs'}`}>
+                                        { state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.student.firstName + ' ' + firstInitialFunc(state.studentViewing.studentInfo.student.lastName): '(click on the student)' }
+                                    </div>
+                                </div>
+
+                                <div className="w-2/10 flex justify-center">
+                                    <div className="cursor-pointer text-sm bg-indigo-500 w-6/10 shadow-elem-semi-dark rounded-xl text-gray-300 hover:text-white focus:border-none flex justify-center items-center">
+                                        QUIT
+                                    </div>
+                                </div>
+                            </div>
+                            <div className={`h-8.2/10 mb-2`}>
                                 <ClassRoster 
                                     handleUpdateClassroom={handleUpdateClassroom}
                                 />
                             </div>
-                            <div className={`w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between text-xl text-gray-200 font-extrabold font-open`}>
+                            {/* <div className={`w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between text-xl text-gray-200 font-extrabold font-open`}>
                                 <h2 className={`w-auto`}>
                                     Teacher Notes 
                                 </h2>
                             </div>
                             <textarea id="text" className="bg-gray-300 w-full h-4/10 p-8 my-4 text-sm md:text-2xl text-gray-800 rounded-lg shadow-inner-dark" 
                             // value={input}
-                            />
+                            /> */}
                         </div>
                     </div>
                     <div className={`${fullscreen ? 'w-full' : 'w-6/10'} h-full flex flex-col items-center`}>
@@ -295,7 +343,31 @@ const LessonControl = () => {
 
                         </div>
 
-                        <div className={`${fullscreen ? 'hidden' : 'display'} flex justify-center items-center`}>
+                        <div className={`${fullscreen ? 'hidden' : 'display'} relative flex justify-center items-center`}>
+                            <div className="absolute w-full h-full" style={{top: 0, left: 0}}>
+                                <ToolTip
+                                    color= 'black'
+                                    width= 'w-96'
+                                    position='bottom-right'
+                                    header=''
+                                    content={
+                                        <div className="flex">
+                                            <div className="flex flex-col">
+                                                <h1 className="font-bold">View:</h1>
+                                                <p>view the page</p>
+                                            </div>
+                                            <div className="flex flex-col px-1">
+                                                <h1 className="font-bold">Close/Open:</h1>
+                                                <p>the students can progress to this component</p>
+                                            </div>
+                                            <div className="flex flex-col px-1">
+                                                <h1 className="font-bold">Enable/Disable:</h1>
+                                                <p>the students will be able to see/unsee this component on their footer</p>
+                                            </div>
+                                        </div>
+                                    }
+                                    />
+                                </div>
                             <LessonControlBar setComponentView={setComponentView} />
                         </div>
                     </div>

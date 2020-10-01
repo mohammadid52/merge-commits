@@ -2705,6 +2705,7 @@ export const createLesson = /* GraphQL */ `
         }
         inputs {
           title
+          example
         }
         breakdown {
           included
@@ -2890,6 +2891,7 @@ export const updateLesson = /* GraphQL */ `
         }
         inputs {
           title
+          example
         }
         breakdown {
           included
@@ -3075,6 +3077,7 @@ export const deleteLesson = /* GraphQL */ `
         }
         inputs {
           title
+          example
         }
         breakdown {
           included
@@ -3694,6 +3697,7 @@ export const createWarmUp = /* GraphQL */ `
       }
       inputs {
         title
+        example
         additionalInputs {
           id
           name
@@ -3730,6 +3734,7 @@ export const updateWarmUp = /* GraphQL */ `
       }
       inputs {
         title
+        example
         additionalInputs {
           id
           name
@@ -3766,6 +3771,7 @@ export const deleteWarmUp = /* GraphQL */ `
       }
       inputs {
         title
+        example
         additionalInputs {
           id
           name
