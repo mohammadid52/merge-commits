@@ -1,14 +1,15 @@
-import React from 'react';
+// import React from 'react';
 import { globalStateType, globalState } from '../state/GlobalState';
 
 type globalActions = 
 |   {
         type: 'SET_USER';
         payload: {
-            userId: string,
+            id: string,
             firstName: string,
             lastName: string,
             language: string,
+            onBoardSurvey: boolean,
             role: string,
         }
     }
@@ -38,10 +39,12 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
                 status: 'done',
                 user: {
                     ...state.user,
+                    id: action.payload.id,
                     firstName: action.payload.firstName,
                     lastName: action.payload.lastName,
                     language: action.payload.language,
                     role: action.payload.role,
+                    onBoardSurvey: action.payload.onBoardSurvey,
                 }
             }
         case 'LOG_IN': 

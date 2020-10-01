@@ -82,6 +82,8 @@ type Person @model
   grade: String
   # courses: [StudentCourse] @connection(keyName: "byStudent", field: ["id"]
   wordbank: [StudentWord] @connection(keyName: "wordsByStudent", fields: ["email"])
+  onBoardSurvey: Boolean
+  offBoardSurvey: Boolean
   phone: String
   birthdate: AWSDate
   image: String
@@ -106,11 +108,6 @@ type CurriculumLessons @model(queries: null)
   lesson: Lesson @connection(fields: ["lessonID"])
 }
 
-type CourseType @model {
-  id: ID!
-  name: String!
-}
-
 # enum CourseType {
 #   CLASS
 #   EXCURR
@@ -120,8 +117,7 @@ type CourseType @model {
 type Course @model {
   id: ID!
   name: String!
-  courseTypeID: ID!
-  courseType: CourseType! @connection(fields: ["courseTypeID"])
+  courseTypeID: String!
   institution: Institution
   # classroomTeachers: [Person]!
   # fellows: [Person]!
@@ -316,6 +312,8 @@ type SELStructure @model {
 type Lesson @model @key(fields: ["id"]) {
   id: ID!
   title: String! 
+  type: String
+  instructions: [String]
   contributors: [Person]! @connection(keyName: "byContributor", fields: ["id"])
   grades: [Int]
   artistID: ID!

@@ -146,6 +146,8 @@ export type CreatePersonInput = {
   lastName: string,
   externalId?: string | null,
   grade?: string | null,
+  onBoardSurvey?: boolean | null,
+  offBoardSurvey?: boolean | null,
   phone?: string | null,
   birthdate?: string | null,
   image?: string | null,
@@ -176,6 +178,7 @@ export enum Language {
   ES = "ES",
   VT = "VT",
   TR = "TR",
+  CZ = "CZ",
 }
 
 
@@ -187,6 +190,8 @@ export type ModelPersonConditionInput = {
   lastName?: ModelStringInput | null,
   externalId?: ModelStringInput | null,
   grade?: ModelStringInput | null,
+  onBoardSurvey?: ModelBooleanInput | null,
+  offBoardSurvey?: ModelBooleanInput | null,
   phone?: ModelStringInput | null,
   birthdate?: ModelStringInput | null,
   image?: ModelStringInput | null,
@@ -206,6 +211,13 @@ export type ModelRoleInput = {
   ne?: Role | null,
 };
 
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
 export type ModelLanguageInput = {
   eq?: Language | null,
   ne?: Language | null,
@@ -222,6 +234,8 @@ export type UpdatePersonInput = {
   lastName?: string | null,
   externalId?: string | null,
   grade?: string | null,
+  onBoardSurvey?: boolean | null,
+  offBoardSurvey?: boolean | null,
   phone?: string | null,
   birthdate?: string | null,
   image?: string | null,
@@ -303,27 +317,6 @@ export type DeleteCurriculumLessonsInput = {
   id?: string | null,
 };
 
-export type CreateCourseTypeInput = {
-  id?: string | null,
-  name: string,
-};
-
-export type ModelCourseTypeConditionInput = {
-  name?: ModelStringInput | null,
-  and?: Array< ModelCourseTypeConditionInput | null > | null,
-  or?: Array< ModelCourseTypeConditionInput | null > | null,
-  not?: ModelCourseTypeConditionInput | null,
-};
-
-export type UpdateCourseTypeInput = {
-  id: string,
-  name?: string | null,
-};
-
-export type DeleteCourseTypeInput = {
-  id?: string | null,
-};
-
 export type CreateCourseInput = {
   id?: string | null,
   name: string,
@@ -338,7 +331,7 @@ export type CreateCourseInput = {
 
 export type ModelCourseConditionInput = {
   name?: ModelStringInput | null,
-  courseTypeID?: ModelIDInput | null,
+  courseTypeID?: ModelStringInput | null,
   classID?: ModelIDInput | null,
   curriculumID?: ModelIDInput | null,
   location?: ModelStringInput | null,
@@ -508,7 +501,7 @@ export type CreateArtistInput = {
 };
 
 export type QuoteInput = {
-  source: string,
+  source?: string | null,
   text: string,
 };
 
@@ -598,13 +591,6 @@ export type ModelClassroomConditionInput = {
   not?: ModelClassroomConditionInput | null,
 };
 
-export type ModelBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-};
-
 export type UpdateClassroomInput = {
   id: string,
   open?: boolean | null,
@@ -676,6 +662,8 @@ export type DeleteSELStructureInput = {
 export type CreateLessonInput = {
   id?: string | null,
   title: string,
+  type?: string | null,
+  instructions?: Array< string | null > | null,
   grades?: Array< number | null > | null,
   artistID: string,
   language: Language,
@@ -691,6 +679,8 @@ export type CreateLessonInput = {
 
 export type ModelLessonConditionInput = {
   title?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  instructions?: ModelStringInput | null,
   grades?: ModelIntInput | null,
   artistID?: ModelIDInput | null,
   language?: ModelLanguageInput | null,
@@ -710,6 +700,8 @@ export type ModelLessonConditionInput = {
 export type UpdateLessonInput = {
   id: string,
   title?: string | null,
+  type?: string | null,
+  instructions?: Array< string | null > | null,
   grades?: Array< number | null > | null,
   artistID?: string | null,
   language?: Language | null,
@@ -1250,6 +1242,8 @@ export type ModelPersonFilterInput = {
   lastName?: ModelStringInput | null,
   externalId?: ModelStringInput | null,
   grade?: ModelStringInput | null,
+  onBoardSurvey?: ModelBooleanInput | null,
+  offBoardSurvey?: ModelBooleanInput | null,
   phone?: ModelStringInput | null,
   birthdate?: ModelStringInput | null,
   image?: ModelStringInput | null,
@@ -1269,18 +1263,10 @@ export type ModelCurriculumFilterInput = {
   not?: ModelCurriculumFilterInput | null,
 };
 
-export type ModelCourseTypeFilterInput = {
-  id?: ModelIDInput | null,
-  name?: ModelStringInput | null,
-  and?: Array< ModelCourseTypeFilterInput | null > | null,
-  or?: Array< ModelCourseTypeFilterInput | null > | null,
-  not?: ModelCourseTypeFilterInput | null,
-};
-
 export type ModelCourseFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
-  courseTypeID?: ModelIDInput | null,
+  courseTypeID?: ModelStringInput | null,
   classID?: ModelIDInput | null,
   curriculumID?: ModelIDInput | null,
   location?: ModelStringInput | null,
@@ -1359,6 +1345,8 @@ export type ModelSELStructureFilterInput = {
 export type ModelLessonFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  instructions?: ModelStringInput | null,
   grades?: ModelIntInput | null,
   artistID?: ModelIDInput | null,
   language?: ModelLanguageInput | null,
@@ -1476,6 +1464,8 @@ export type SearchablePersonFilterInput = {
   lastName?: SearchableStringFilterInput | null,
   externalId?: SearchableStringFilterInput | null,
   grade?: SearchableStringFilterInput | null,
+  onBoardSurvey?: SearchableBooleanFilterInput | null,
+  offBoardSurvey?: SearchableBooleanFilterInput | null,
   phone?: SearchableStringFilterInput | null,
   birthdate?: SearchableStringFilterInput | null,
   image?: SearchableStringFilterInput | null,
@@ -1516,6 +1506,11 @@ export type SearchableStringFilterInput = {
   regexp?: string | null,
 };
 
+export type SearchableBooleanFilterInput = {
+  eq?: boolean | null,
+  ne?: boolean | null,
+};
+
 export type SearchablePersonSortInput = {
   field?: SearchablePersonSortableFields | null,
   direction?: SearchableSortDirection | null,
@@ -1530,6 +1525,8 @@ export enum SearchablePersonSortableFields {
   lastName = "lastName",
   externalId = "externalId",
   grade = "grade",
+  onBoardSurvey = "onBoardSurvey",
+  offBoardSurvey = "offBoardSurvey",
   phone = "phone",
   birthdate = "birthdate",
   image = "image",
@@ -1750,6 +1747,8 @@ export type CreatePersonMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    onBoardSurvey: boolean | null,
+    offBoardSurvey: boolean | null,
     phone: string | null,
     birthdate: string | null,
     image: string | null,
@@ -1790,6 +1789,8 @@ export type UpdatePersonMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    onBoardSurvey: boolean | null,
+    offBoardSurvey: boolean | null,
     phone: string | null,
     birthdate: string | null,
     image: string | null,
@@ -1830,6 +1831,8 @@ export type DeletePersonMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    onBoardSurvey: boolean | null,
+    offBoardSurvey: boolean | null,
     phone: string | null,
     birthdate: string | null,
     image: string | null,
@@ -1863,6 +1866,8 @@ export type CreateCurriculumMutation = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -1915,6 +1920,8 @@ export type UpdateCurriculumMutation = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -1967,6 +1974,8 @@ export type DeleteCurriculumMutation = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -2027,6 +2036,8 @@ export type CreateCurriculumLessonsMutation = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -2153,6 +2164,8 @@ export type UpdateCurriculumLessonsMutation = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -2279,6 +2292,8 @@ export type DeleteCurriculumLessonsMutation = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -2373,51 +2388,6 @@ export type DeleteCurriculumLessonsMutation = {
   } | null,
 };
 
-export type CreateCourseTypeMutationVariables = {
-  input: CreateCourseTypeInput,
-  condition?: ModelCourseTypeConditionInput | null,
-};
-
-export type CreateCourseTypeMutation = {
-  createCourseType:  {
-    __typename: "CourseType",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateCourseTypeMutationVariables = {
-  input: UpdateCourseTypeInput,
-  condition?: ModelCourseTypeConditionInput | null,
-};
-
-export type UpdateCourseTypeMutation = {
-  updateCourseType:  {
-    __typename: "CourseType",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteCourseTypeMutationVariables = {
-  input: DeleteCourseTypeInput,
-  condition?: ModelCourseTypeConditionInput | null,
-};
-
-export type DeleteCourseTypeMutation = {
-  deleteCourseType:  {
-    __typename: "CourseType",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type CreateCourseMutationVariables = {
   input: CreateCourseInput,
   condition?: ModelCourseConditionInput | null,
@@ -2429,13 +2399,6 @@ export type CreateCourseMutation = {
     id: string,
     name: string,
     courseTypeID: string,
-    courseType:  {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -2522,13 +2485,6 @@ export type UpdateCourseMutation = {
     id: string,
     name: string,
     courseTypeID: string,
-    courseType:  {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -2615,13 +2571,6 @@ export type DeleteCourseMutation = {
     id: string,
     name: string,
     courseTypeID: string,
-    courseType:  {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -2824,6 +2773,8 @@ export type CreateClassStudentMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -2876,6 +2827,8 @@ export type UpdateClassStudentMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -2928,6 +2881,8 @@ export type DeleteClassStudentMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -2984,6 +2939,8 @@ export type CreateStudentDataMutation = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -3037,6 +2994,8 @@ export type CreateStudentDataMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -3150,6 +3109,8 @@ export type UpdateStudentDataMutation = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -3203,6 +3164,8 @@ export type UpdateStudentDataMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -3316,6 +3279,8 @@ export type DeleteStudentDataMutation = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -3369,6 +3334,8 @@ export type DeleteStudentDataMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -3453,7 +3420,7 @@ export type CreateArtistMutation = {
     bio: Array< string >,
     quotes:  Array< {
       __typename: "Quote",
-      source: string,
+      source: string | null,
       text: string,
     } >,
     additionalContent:  {
@@ -3486,7 +3453,7 @@ export type UpdateArtistMutation = {
     bio: Array< string >,
     quotes:  Array< {
       __typename: "Quote",
-      source: string,
+      source: string | null,
       text: string,
     } >,
     additionalContent:  {
@@ -3519,7 +3486,7 @@ export type DeleteArtistMutation = {
     bio: Array< string >,
     quotes:  Array< {
       __typename: "Quote",
-      source: string,
+      source: string | null,
       text: string,
     } >,
     additionalContent:  {
@@ -3579,13 +3546,6 @@ export type CreateClassroomMutation = {
       id: string,
       name: string,
       courseTypeID: string,
-      courseType:  {
-        __typename: "CourseType",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -3632,6 +3592,8 @@ export type CreateClassroomMutation = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -3806,13 +3768,6 @@ export type UpdateClassroomMutation = {
       id: string,
       name: string,
       courseTypeID: string,
-      courseType:  {
-        __typename: "CourseType",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -3859,6 +3814,8 @@ export type UpdateClassroomMutation = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -4033,13 +3990,6 @@ export type DeleteClassroomMutation = {
       id: string,
       name: string,
       courseTypeID: string,
-      courseType:  {
-        __typename: "CourseType",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -4086,6 +4036,8 @@ export type DeleteClassroomMutation = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -4262,6 +4214,8 @@ export type CreateFeedbackMutation = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -4346,6 +4300,8 @@ export type UpdateFeedbackMutation = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -4430,6 +4386,8 @@ export type DeleteFeedbackMutation = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -4528,6 +4486,8 @@ export type CreateLessonMutation = {
     __typename: "Lesson",
     id: string,
     title: string,
+    type: string | null,
+    instructions: Array< string | null > | null,
     contributors:  {
       __typename: "ModelPersonConnection",
       items:  Array< {
@@ -4542,6 +4502,8 @@ export type CreateLessonMutation = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -4562,7 +4524,7 @@ export type CreateLessonMutation = {
       bio: Array< string >,
       quotes:  Array< {
         __typename: "Quote",
-        source: string,
+        source: string | null,
         text: string,
       } >,
       additionalContent:  {
@@ -4736,6 +4698,8 @@ export type UpdateLessonMutation = {
     __typename: "Lesson",
     id: string,
     title: string,
+    type: string | null,
+    instructions: Array< string | null > | null,
     contributors:  {
       __typename: "ModelPersonConnection",
       items:  Array< {
@@ -4750,6 +4714,8 @@ export type UpdateLessonMutation = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -4770,7 +4736,7 @@ export type UpdateLessonMutation = {
       bio: Array< string >,
       quotes:  Array< {
         __typename: "Quote",
-        source: string,
+        source: string | null,
         text: string,
       } >,
       additionalContent:  {
@@ -4944,6 +4910,8 @@ export type DeleteLessonMutation = {
     __typename: "Lesson",
     id: string,
     title: string,
+    type: string | null,
+    instructions: Array< string | null > | null,
     contributors:  {
       __typename: "ModelPersonConnection",
       items:  Array< {
@@ -4958,6 +4926,8 @@ export type DeleteLessonMutation = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -4978,7 +4948,7 @@ export type DeleteLessonMutation = {
       bio: Array< string >,
       quotes:  Array< {
         __typename: "Quote",
-        source: string,
+        source: string | null,
         text: string,
       } >,
       additionalContent:  {
@@ -5158,6 +5128,8 @@ export type CreateLessonCheckpointMutation = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -5283,6 +5255,8 @@ export type UpdateLessonCheckpointMutation = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -5408,6 +5382,8 @@ export type DeleteLessonCheckpointMutation = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -6468,6 +6444,8 @@ export type CreateQuestionDataMutation = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -6535,6 +6513,8 @@ export type CreateQuestionDataMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -6593,6 +6573,8 @@ export type UpdateQuestionDataMutation = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -6660,6 +6642,8 @@ export type UpdateQuestionDataMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -6718,6 +6702,8 @@ export type DeleteQuestionDataMutation = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -6785,6 +6771,8 @@ export type DeleteQuestionDataMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -6841,6 +6829,8 @@ export type CreateQuestionDataStudentDataMutation = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -6912,6 +6902,8 @@ export type CreateQuestionDataStudentDataMutation = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -6971,6 +6963,8 @@ export type UpdateQuestionDataStudentDataMutation = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -7042,6 +7036,8 @@ export type UpdateQuestionDataStudentDataMutation = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -7101,6 +7097,8 @@ export type DeleteQuestionDataStudentDataMutation = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -7172,6 +7170,8 @@ export type DeleteQuestionDataStudentDataMutation = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -7259,6 +7259,8 @@ export type CreateLessonKeyWordMutation = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -7376,6 +7378,8 @@ export type UpdateLessonKeyWordMutation = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -7493,6 +7497,8 @@ export type DeleteLessonKeyWordMutation = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -7623,6 +7629,8 @@ export type CreateStudentWordMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -7671,6 +7679,8 @@ export type UpdateStudentWordMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -7719,6 +7729,8 @@ export type DeleteStudentWordMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -7890,6 +7902,8 @@ export type GetPersonQuery = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    onBoardSurvey: boolean | null,
+    offBoardSurvey: boolean | null,
     phone: string | null,
     birthdate: string | null,
     image: string | null,
@@ -7927,6 +7941,8 @@ export type ListPersonsQuery = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -7961,6 +7977,8 @@ export type GetCurriculumQuery = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -8021,40 +8039,6 @@ export type ListCurriculumsQuery = {
   } | null,
 };
 
-export type GetCourseTypeQueryVariables = {
-  id: string,
-};
-
-export type GetCourseTypeQuery = {
-  getCourseType:  {
-    __typename: "CourseType",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListCourseTypesQueryVariables = {
-  filter?: ModelCourseTypeFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListCourseTypesQuery = {
-  listCourseTypes:  {
-    __typename: "ModelCourseTypeConnection",
-    items:  Array< {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken: string | null,
-  } | null,
-};
-
 export type GetCourseQueryVariables = {
   id: string,
 };
@@ -8065,13 +8049,6 @@ export type GetCourseQuery = {
     id: string,
     name: string,
     courseTypeID: string,
-    courseType:  {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -8161,13 +8138,6 @@ export type ListCoursesQuery = {
       id: string,
       name: string,
       courseTypeID: string,
-      courseType:  {
-        __typename: "CourseType",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -8309,6 +8279,8 @@ export type GetStudentDataQuery = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -8362,6 +8334,8 @@ export type GetStudentDataQuery = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -8476,6 +8450,8 @@ export type ListStudentDatasQuery = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -8523,7 +8499,7 @@ export type GetArtistQuery = {
     bio: Array< string >,
     quotes:  Array< {
       __typename: "Quote",
-      source: string,
+      source: string | null,
       text: string,
     } >,
     additionalContent:  {
@@ -8559,7 +8535,7 @@ export type ListArtistsQuery = {
       bio: Array< string >,
       quotes:  Array< {
         __typename: "Quote",
-        source: string,
+        source: string | null,
         text: string,
       } >,
       additionalContent:  {
@@ -8614,13 +8590,6 @@ export type GetClassroomQuery = {
       id: string,
       name: string,
       courseTypeID: string,
-      courseType:  {
-        __typename: "CourseType",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -8667,6 +8636,8 @@ export type GetClassroomQuery = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -8840,6 +8811,8 @@ export type ListClassroomsQuery = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -8922,6 +8895,8 @@ export type GetFeedbackQuery = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -9042,6 +9017,8 @@ export type GetLessonQuery = {
     __typename: "Lesson",
     id: string,
     title: string,
+    type: string | null,
+    instructions: Array< string | null > | null,
     contributors:  {
       __typename: "ModelPersonConnection",
       items:  Array< {
@@ -9056,6 +9033,8 @@ export type GetLessonQuery = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -9076,7 +9055,7 @@ export type GetLessonQuery = {
       bio: Array< string >,
       quotes:  Array< {
         __typename: "Quote",
-        source: string,
+        source: string | null,
         text: string,
       } >,
       additionalContent:  {
@@ -9255,6 +9234,8 @@ export type ListLessonsQuery = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -9812,6 +9793,8 @@ export type GetQuestionDataQuery = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -9879,6 +9862,8 @@ export type GetQuestionDataQuery = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -9942,6 +9927,8 @@ export type ListQuestionDatasQuery = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -10020,6 +10007,8 @@ export type UserByIdQuery = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -10058,6 +10047,8 @@ export type UsersByRoleQuery = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -10118,6 +10109,8 @@ export type SearchPersonsQuery = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -10171,13 +10164,6 @@ export type OnUpdateClassroomSubscription = {
       id: string,
       name: string,
       courseTypeID: string,
-      courseType:  {
-        __typename: "CourseType",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      },
       institution:  {
         __typename: "Institution",
         id: string,
@@ -10224,6 +10210,8 @@ export type OnUpdateClassroomSubscription = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -10399,6 +10387,8 @@ export type OnChangeStudentDataSubscription = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -10452,6 +10442,8 @@ export type OnChangeStudentDataSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -10694,6 +10686,8 @@ export type OnCreatePersonSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    onBoardSurvey: boolean | null,
+    offBoardSurvey: boolean | null,
     phone: string | null,
     birthdate: string | null,
     image: string | null,
@@ -10729,6 +10723,8 @@ export type OnUpdatePersonSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    onBoardSurvey: boolean | null,
+    offBoardSurvey: boolean | null,
     phone: string | null,
     birthdate: string | null,
     image: string | null,
@@ -10764,6 +10760,8 @@ export type OnDeletePersonSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    onBoardSurvey: boolean | null,
+    offBoardSurvey: boolean | null,
     phone: string | null,
     birthdate: string | null,
     image: string | null,
@@ -10792,6 +10790,8 @@ export type OnCreateCurriculumSubscription = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -10839,6 +10839,8 @@ export type OnUpdateCurriculumSubscription = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -10886,6 +10888,8 @@ export type OnDeleteCurriculumSubscription = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -10941,6 +10945,8 @@ export type OnCreateCurriculumLessonsSubscription = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -11062,6 +11068,8 @@ export type OnUpdateCurriculumLessonsSubscription = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -11183,6 +11191,8 @@ export type OnDeleteCurriculumLessonsSubscription = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -11277,49 +11287,12 @@ export type OnDeleteCurriculumLessonsSubscription = {
   } | null,
 };
 
-export type OnCreateCourseTypeSubscription = {
-  onCreateCourseType:  {
-    __typename: "CourseType",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateCourseTypeSubscription = {
-  onUpdateCourseType:  {
-    __typename: "CourseType",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteCourseTypeSubscription = {
-  onDeleteCourseType:  {
-    __typename: "CourseType",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type OnCreateCourseSubscription = {
   onCreateCourse:  {
     __typename: "Course",
     id: string,
     name: string,
     courseTypeID: string,
-    courseType:  {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -11401,13 +11374,6 @@ export type OnUpdateCourseSubscription = {
     id: string,
     name: string,
     courseTypeID: string,
-    courseType:  {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -11489,13 +11455,6 @@ export type OnDeleteCourseSubscription = {
     id: string,
     name: string,
     courseTypeID: string,
-    courseType:  {
-      __typename: "CourseType",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    },
     institution:  {
       __typename: "Institution",
       id: string,
@@ -11678,6 +11637,8 @@ export type OnCreateClassStudentSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -11725,6 +11686,8 @@ export type OnUpdateClassStudentSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -11772,6 +11735,8 @@ export type OnDeleteClassStudentSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -11794,7 +11759,7 @@ export type OnCreateArtistSubscription = {
     bio: Array< string >,
     quotes:  Array< {
       __typename: "Quote",
-      source: string,
+      source: string | null,
       text: string,
     } >,
     additionalContent:  {
@@ -11822,7 +11787,7 @@ export type OnUpdateArtistSubscription = {
     bio: Array< string >,
     quotes:  Array< {
       __typename: "Quote",
-      source: string,
+      source: string | null,
       text: string,
     } >,
     additionalContent:  {
@@ -11850,7 +11815,7 @@ export type OnDeleteArtistSubscription = {
     bio: Array< string >,
     quotes:  Array< {
       __typename: "Quote",
-      source: string,
+      source: string | null,
       text: string,
     } >,
     additionalContent:  {
@@ -11907,6 +11872,8 @@ export type OnCreateFeedbackSubscription = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -11986,6 +11953,8 @@ export type OnUpdateFeedbackSubscription = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -12065,6 +12034,8 @@ export type OnDeleteFeedbackSubscription = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -12143,6 +12114,8 @@ export type OnCreateLessonSubscription = {
     __typename: "Lesson",
     id: string,
     title: string,
+    type: string | null,
+    instructions: Array< string | null > | null,
     contributors:  {
       __typename: "ModelPersonConnection",
       items:  Array< {
@@ -12157,6 +12130,8 @@ export type OnCreateLessonSubscription = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -12177,7 +12152,7 @@ export type OnCreateLessonSubscription = {
       bio: Array< string >,
       quotes:  Array< {
         __typename: "Quote",
-        source: string,
+        source: string | null,
         text: string,
       } >,
       additionalContent:  {
@@ -12346,6 +12321,8 @@ export type OnUpdateLessonSubscription = {
     __typename: "Lesson",
     id: string,
     title: string,
+    type: string | null,
+    instructions: Array< string | null > | null,
     contributors:  {
       __typename: "ModelPersonConnection",
       items:  Array< {
@@ -12360,6 +12337,8 @@ export type OnUpdateLessonSubscription = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -12380,7 +12359,7 @@ export type OnUpdateLessonSubscription = {
       bio: Array< string >,
       quotes:  Array< {
         __typename: "Quote",
-        source: string,
+        source: string | null,
         text: string,
       } >,
       additionalContent:  {
@@ -12549,6 +12528,8 @@ export type OnDeleteLessonSubscription = {
     __typename: "Lesson",
     id: string,
     title: string,
+    type: string | null,
+    instructions: Array< string | null > | null,
     contributors:  {
       __typename: "ModelPersonConnection",
       items:  Array< {
@@ -12563,6 +12544,8 @@ export type OnDeleteLessonSubscription = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -12583,7 +12566,7 @@ export type OnDeleteLessonSubscription = {
       bio: Array< string >,
       quotes:  Array< {
         __typename: "Quote",
-        source: string,
+        source: string | null,
         text: string,
       } >,
       additionalContent:  {
@@ -12758,6 +12741,8 @@ export type OnCreateLessonCheckpointSubscription = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -12878,6 +12863,8 @@ export type OnUpdateLessonCheckpointSubscription = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -12998,6 +12985,8 @@ export type OnDeleteLessonCheckpointSubscription = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -13933,6 +13922,8 @@ export type OnCreateQuestionDataSubscription = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -14000,6 +13991,8 @@ export type OnCreateQuestionDataSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -14053,6 +14046,8 @@ export type OnUpdateQuestionDataSubscription = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -14120,6 +14115,8 @@ export type OnUpdateQuestionDataSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -14173,6 +14170,8 @@ export type OnDeleteQuestionDataSubscription = {
         __typename: "Lesson",
         id: string,
         title: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
         artistID: string,
         language: Language,
@@ -14240,6 +14239,8 @@ export type OnDeleteQuestionDataSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -14291,6 +14292,8 @@ export type OnCreateQuestionDataStudentDataSubscription = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -14362,6 +14365,8 @@ export type OnCreateQuestionDataStudentDataSubscription = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -14416,6 +14421,8 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -14487,6 +14494,8 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -14541,6 +14550,8 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -14612,6 +14623,8 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         lastName: string,
         externalId: string | null,
         grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
         phone: string | null,
         birthdate: string | null,
         image: string | null,
@@ -14679,6 +14692,8 @@ export type OnCreateLessonKeyWordSubscription = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -14791,6 +14806,8 @@ export type OnUpdateLessonKeyWordSubscription = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -14903,6 +14920,8 @@ export type OnDeleteLessonKeyWordSubscription = {
       __typename: "Lesson",
       id: string,
       title: string,
+      type: string | null,
+      instructions: Array< string | null > | null,
       contributors:  {
         __typename: "ModelPersonConnection",
         nextToken: string | null,
@@ -15028,6 +15047,8 @@ export type OnCreateStudentWordSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -15071,6 +15092,8 @@ export type OnUpdateStudentWordSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,
@@ -15114,6 +15137,8 @@ export type OnDeleteStudentWordSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
       phone: string | null,
       birthdate: string | null,
       image: string | null,

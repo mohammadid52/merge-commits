@@ -4,7 +4,9 @@ import {
     useHistory,
     Link
 } from 'react-router-dom';
-import { Auth, API, graphqlOperation } from 'aws-amplify';
+// import { API, graphqlOperation } from 'aws-amplify';
+import {Auth} from '@aws-amplify/auth';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
 
 
@@ -50,7 +52,7 @@ const Registration = () => {
     }
 
     async function signUp() {
-        let username = input.email
+        let username = input.email;
         let password = input.password
         try {
             const user = await Auth.signUp({
@@ -72,15 +74,22 @@ const Registration = () => {
         }
     }
 
-    const handleChange = (e: { target: { id: any; value: any; }; }) => {
-        const { id, value } = e.target;
-        setInput(input => {
-            return {
-                ...input,
-                [id]: value,
-            }
-        })
-    }
+    const handleChange = (e: { target: { id: any; value: any } }) => {
+      const { id, value } = e.target;
+      setInput((input) => {
+        if (id === 'email') {
+          return {
+            ...input,
+            [id]: value.toLowerCase(),
+          };
+        } else {
+          return {
+            ...input,
+            [id]: value,
+          };
+        }
+      });
+    };
 
     const handleSubmit = (e: any) => {
         console.log(input);

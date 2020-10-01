@@ -1,4 +1,6 @@
 const path = require('path');
+const webpack = require('webpack');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   entry: './src/index.tsx',
@@ -14,6 +16,26 @@ module.exports = {
       path.resolve('./node_modules'),
     ],
   },
+  plugins: [
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    }),
+    new UglifyJSPlugin({
+      uglifyOptions: {
+        output: {
+          comments: false
+        },
+        compress: {
+          drop_debugger: true,
+          drop_console: true
+        }
+      }
+    }),
+    // new BundleAnalyzerPlugin(),
+  ],
   module: {
     rules: [
       {
@@ -77,7 +99,7 @@ module.exports = {
               plugins: [
                 require('tailwindcss'),
                 require('autoprefixer'),
-                require('@tailwindcss/ui'),
+                // require('@tailwindcss/ui'),
               ],
             }
           }

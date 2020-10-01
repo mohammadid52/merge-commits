@@ -57,15 +57,10 @@ const StageIcon = (props: StageIconProps) => {
         }
     }
 
-    const iconLabel = (centerFix: 'center' | 'noCenter'): ReactElement => {
+    const iconLabel = (): ReactElement => {
         return (
           <p
-            className={`absolute transform translate-y-8 text-center z-50 font-light text-blue-100
-            ${centerFix === 'center' && 'left-1/2 -translate-x-1/2'} 
-            ${centerFix === 'noCenter' && '-translate-x-1/2'} 
-            ${state.currentPage === iconID ? 'text-opacity-75' : ''}
-            ${state.currentPage !== iconID ? 'text-opacity-20' : ''}
-            `}>
+            className={`absolute w-auto transform translate-y-8 mt-5 text-center font-light text-dark`}>
             {
                 /* Capitalize the first letter */
                 props.type.charAt(0).toUpperCase()+props.type.slice(1)
@@ -94,19 +89,19 @@ const StageIcon = (props: StageIconProps) => {
 
     if ( type === 'breakdown' ) {
         return (
-            <div className={`relative h-12 w-12 flex flex-col justify-center items-center rounded-full z-20 shadow-elem-light`} onClick={() => {handleOpenMenu(stage)}}>
+            <div className={`relative h-12 w-12 flex flex-col justify-center items-center rounded-full shadow-elem-light`} onClick={() => {handleOpenMenu(stage)}}>
                 <IconContext.Provider value={{ color: iconColor, size: '1.5rem' }}>
-                    <div className={`${ coinColor } h-10 w-10 flex justify-center items-center rounded-full z-30`}>
+                    <div className={`${ coinColor } h-10 w-10 flex justify-center items-center rounded-full `}>
                         { iconSwitch(type) }
                     </div>
-                    {iconLabel('noCenter')}
+                    {iconLabel()}
                 </IconContext.Provider>
                 {
                     menuOpen ? 
-                    <div className={`absolute flex flex-col items-center transform translate-y-16`}>
+                    <div className={`absolute flex flex-col items-center transform translate-y-16 z-100`}>
                         <div className={`arrow-up`}></div>
-                        <div className={`flex w-48 h-16 bg-gray-200 p-1 rounded-lg shadow-elem-light`}>
-                            <div className={`flex w-full h-full bg-gray-400 rounded-lg`}>
+                        <div className={`flex w-48 h-16 bg-gray-200 p-1 rounded-lg shadow-elem-light z-100`}>
+                            <div className={`flex w-full h-full bg-gray-400 rounded-lg z-100`}>
                                 <div className={`flex justify-center items-center w-3/10 h-8/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={handleView}>
                                     View
                                 </div>
@@ -129,21 +124,21 @@ const StageIcon = (props: StageIconProps) => {
     }
 
     return (
-        <div className={`relative ${ breakdown ? 'flex-grow' : 'flex-grow-0'} w-auto flex flex-col justify-around items-center z-20`}>
+        <div className={`relative ${ breakdown ? 'flex-grow' : 'flex-grow-0'} w-auto flex flex-col justify-around items-center`}>
             <div className={`bg-gray-200 h-16 w-16 rounded-full flex items-center justify-center shadow-elem-light`} onClick={() => {handleOpenMenu(stage)}}>
                  <IconContext.Provider value={{ color: iconColor, size: '2rem' }}>
-                    <div className={`h-14 w-14 rounded-full flex flex-col justify-center items-center ${ coinColor } z-30`}>
+                    <div className={`h-14 w-14 rounded-full flex flex-col justify-center items-center ${ coinColor }`}>
                         { iconSwitch(type) }
                     </div>
-                    {iconLabel('noCenter')}
+                    {iconLabel()}
                 </IconContext.Provider>
             </div>
             {
                 menuOpen ? 
                 <div className={`absolute flex flex-col items-center transform translate-y-16 z-100`}>
                     <div className={`arrow-up`}></div>
-                    <div className={`flex w-48 h-16 bg-gray-200 p-1 rounded-lg shadow-elem-light`}>
-                            <div className={`flex w-full h-full bg-gray-400 rounded-lg`}>
+                    <div className={`flex w-48 h-16 bg-gray-200 p-1 rounded-lg shadow-elem-light z-100`}>
+                            <div className={`flex w-full h-full bg-gray-400 rounded-lg z-100`}>
                             <div className={`flex justify-center items-center w-3/10 h-8/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={handleView}>
                                 View
                             </div>
