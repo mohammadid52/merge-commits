@@ -52,7 +52,6 @@ const WritingBlock = (props: WritingBlockProps) => {
 
     useEffect(() => {
         if ( displayStudentData && state.studentViewing.studentInfo.activityData ) {
-            console.log( state.studentViewing.studentInfo.activityData.lines );
             setLineState(lineState => {
                 return {
                     ...lineState,

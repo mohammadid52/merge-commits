@@ -22,7 +22,6 @@ const SelfDisplay = (props: props) => {
 
     useEffect(() => {
         if (displayStudentData) {
-            console.log(state.studentViewing.studentInfo);
             if ( state.studentViewing.studentInfo.warmupData ) {
                 return setDataProps(state.studentViewing.studentInfo.warmupData)
             }

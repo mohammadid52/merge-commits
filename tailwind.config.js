@@ -17,6 +17,18 @@ module.exports = {
     translate: true,
   },
   theme: {
+    cursor: {
+      auto: 'auto',
+      default: 'default',
+      pointer: 'pointer',
+      wait: 'wait',
+      text: 'text',
+      move: 'move',
+      'not-allowed': 'not-allowed',
+      crosshair: 'crosshair',
+      'zoom-in': 'zoom-in',
+      'help': 'help'
+    },
     textColor: theme => theme('colors'),
     fontSize: {
       'xxs': '.5rem',
