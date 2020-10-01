@@ -1,9 +1,8 @@
 const path = require('path');
-const webpack = require('webpack');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+// const webpack = require('webpack');
 
 module.exports = {
-  entry: './src/index.tsx',
+  entry: path.resolve(__dirname, 'src', 'index.tsx'),
   output: {
     path: path.join(__dirname, '/public'),
     filename: 'bundle.js',
@@ -12,30 +11,11 @@ module.exports = {
   resolve: {
     extensions: ['.mjs', '.ts', '.tsx', '.js', '.json'],
     modules: [
+      path.resolve('./src'),
       path.resolve('./frontend'),
       path.resolve('./node_modules'),
     ],
   },
-  plugins: [
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
-    }),
-    new UglifyJSPlugin({
-      uglifyOptions: {
-        output: {
-          comments: false
-        },
-        compress: {
-          drop_debugger: true,
-          drop_console: true
-        }
-      }
-    }),
-    // new BundleAnalyzerPlugin(),
-  ],
   module: {
     rules: [
       {
