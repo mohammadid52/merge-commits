@@ -1,6 +1,6 @@
 module.exports = {
   purge: {
-    enabled: false,
+    enabled: true,
     content: [
       './src/**/*.html',
       './src/**/*.tsx',
@@ -8,6 +8,9 @@ module.exports = {
       './src/**/*.js',
       './src/**/*.jsx',
     ],
+    options: {
+      whitelist: ['fire-orange', 'sea-green', 'dark-red'],
+    }
   },
   future: {
     removeDeprecatedGapUtilities: true,

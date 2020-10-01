@@ -32,7 +32,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     finalText,
     setFinalText,
     selectGroup,
-    setSelectGroup
+    setSelectGroup,
   } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
   const rawText = state.data.lesson.coreLesson.content.text;
@@ -40,7 +40,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   const [mouseIsClicked, setMouseIsClicked] = useState<boolean>();
   const [mouseIsHeld, setMouseIsHeld] = useState<boolean>();
   const [mouseTarget, setMouseTarget] = useState<string>('');
-
 
   const colorPicker = (colorName: string): string => {
     switch (colorName) {
@@ -67,7 +66,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         .length > 0
     );
   };
-
+  
   /**
    * Function that returns true | false if select-group for current
    * text selection exists in the state
@@ -132,7 +131,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     const targetWordID = t.id || '';
 
     e.preventDefault();
-    setMouseTarget(targetWordID);
 
     if ((mouseIsClicked || mouseIsHeld) && color !== '') {
       console.log('handleSelectText: ', targetWordID);
@@ -202,6 +200,15 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       setMouseIsHeld(true);
       setMouseIsClicked(true);
     }
+    handleSelectText(e);
+  };
+
+  const handleMouseOver = (e: React.MouseEvent) => {
+    const t = e.currentTarget as HTMLElement;
+    const targetWordID = t.id || '';
+
+    //  Updates mouse target state
+    setMouseTarget(targetWordID);
     handleSelectText(e);
   };
 
@@ -343,6 +350,9 @@ const LyricsBlock = (props: LyricsBlockProps) => {
             key={`mappedWord__${i}__${mappedWord}`}
             className={`p-1 relative
                 ${
+                  //  Check if current mapped word is highlighted
+                  //  or
+                  //  if the word is the current target
                   checkIfHighlighted(`mappedWord__${i}__${mappedWord}`)
                     ? `text-${getHighlightColor(`mappedWord__${i}__${mappedWord}`)}`
                     : ''
@@ -350,7 +360,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
             &nbsp;{`${mappedWord}`}&nbsp;
             <span
               id={`mappedWord__${i}__${mappedWord}`}
-              onMouseOver={handleSelectText}
+              onMouseOver={handleMouseOver}
               onMouseDown={handleMouseDown}
               onMouseUp={handleMouseUp}
               className='w-1/2 h-full absolute right-0 transform -translate-x-1/2'></span>
@@ -396,7 +406,9 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         <div className='w-full flex flex-row justify-between mb-1 pb-1'>
           <div className='w-9/10 flex flex-row justify-between border-b border-white border-opacity-10 mr-4 md:mr-0'>
             <h3 className='w-auto font-open font-light'>Lyrics</h3>
-            <p className='text-gray-600 text-sm text-center'>(click and drag your mouse over the words!)</p>
+            <p className='text-gray-600 text-sm text-center'>
+              (click and drag your mouse over the words!)
+            </p>
           </div>
           <div className='w-auto'>
             <IconContext.Provider
