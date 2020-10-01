@@ -297,7 +297,7 @@ type Classroom @model(subscriptions: null)
 type Feedback @model {
   id: ID!
   classroomID: ID!
-  liked: Boolean
+  liked: String
   comment: String
   classroom: Classroom @connection(fields: ["classroomID"])
 }
@@ -378,6 +378,7 @@ type Breakdown {
 
 type Inputs {
   title: Boolean!
+  example: String
   additionalInputs: [WritingPrompts!]
 }
 

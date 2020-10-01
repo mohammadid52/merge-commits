@@ -1229,6 +1229,7 @@ export const getLesson = /* GraphQL */ `
         }
         inputs {
           title
+          example
         }
         breakdown {
           included
@@ -1466,6 +1467,7 @@ export const getWarmUp = /* GraphQL */ `
       }
       inputs {
         title
+        example
         additionalInputs {
           id
           name
@@ -1504,6 +1506,7 @@ export const listWarmUps = /* GraphQL */ `
         }
         inputs {
           title
+          example
         }
         breakdown {
           included
