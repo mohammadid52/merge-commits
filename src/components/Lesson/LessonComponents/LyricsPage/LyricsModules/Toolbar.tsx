@@ -60,20 +60,21 @@ const ToolBar = (props: ToolbarProps) => {
             onClick={handleClick }>
               
             <ToolTip position='hidden-bottom' 
-            header=''
             id={button.color}
-            children={handleClick}
+            cursor
+            header=''
             width='w-24 px-1 flex justify-center items-center'
             content= {<div className="font-bold flex text-center justify-center w-24">{button.name}</div>}
             display='none' fontSize= 'text-xs'/>
             {button.icon}
+
           </div>
         ))}
         <div
           id=''
           className={`relative bg-gray-200 h-12 w-12 text-3xl rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center`}
           onClick={handleClick}>
-          <ToolTip position='hidden-bottom' header='eraser' display='none' fontSize= 'text-xs px-2' children={handleClick}/>
+          <ToolTip position='hidden-bottom' header='eraser' display='none' fontSize= 'text-xs px-2' cursor/>
           <IconContext.Provider value={{ color: 'darkgray', size: '2rem' }}>
             <FaEraser />
           </IconContext.Provider>
