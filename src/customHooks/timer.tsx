@@ -56,11 +56,11 @@ const useStudentTimer = (inputs?: inputs) => {
     useEffect(() => {
         if ( params.state.viewing ) {
             console.log(params.state.saveCount);
-            updateStudentData()
+            updateStudentData('autosave')
         }
     }, [params.state.saveCount])
 
-    const updateStudentData = async () => {
+    const updateStudentData = async (saveType?: string) => {
         let lessonProgress = params.state.pages[params.state.lessonProgress].stage === '' ? 'intro' : params.state.pages[params.state.lessonProgress].stage;
 
         // console.log('thisone', params.state )
@@ -68,6 +68,7 @@ const useStudentTimer = (inputs?: inputs) => {
         let data = {
             id: state.studentDataID,
             lessonProgress: lessonProgress,
+            saveType: saveType,
             status: params.state.studentStatus,
             classroomID: 1,
             studentID: params.state.studentUsername,

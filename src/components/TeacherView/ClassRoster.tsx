@@ -18,7 +18,7 @@ const ClassRoster = (props: classRosterProps) => {
             return item.id === id
         });
 
-        // console.log('selected student', id, selected[0]);
+        // console.log('selected', id, selected[0]);
 
         dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] })
     } 
@@ -83,10 +83,10 @@ const ClassRoster = (props: classRosterProps) => {
                     state.roster.map((item: any, key: number) => (
                         <div key={key} id={`${item.id}`} className={`w-full flex py-2 pl-4 pr-1 hover:underline cursor-pointer ${ state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === item.id ? 'bg-indigo-500' : '' }`} onClick={handleSelect}>
                             
-                            <div className={`w-.5/10 text-center mx-2 text-xs flex`}>
+                            <div id={`${item.id}`} className={`w-.5/10 text-center mx-2 text-xs flex`}>
                                 {studentStatus(item.status)}
                             </div>
-                            <div className={`w-5.3/10 mx-2`}>
+                            <div id={`${item.id}`} className={`w-5.3/10 mx-2`}>
                                 {item.student.lastName}, {item.student.preferredName ? item.student.preferredName : item.student.firstName }
                             </div>
                             <div id={`${item.id}`} className={`w-4/10 mx-2`}>
