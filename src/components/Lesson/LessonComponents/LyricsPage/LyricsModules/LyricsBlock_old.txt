@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from 'react';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaHighlighter, FaExpand } from 'react-icons/fa';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 

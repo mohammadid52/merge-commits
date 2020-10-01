@@ -6,7 +6,7 @@ import {
     // useLocation, 
     // useRouteMatch 
 } from 'react-router-dom';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaRegSave, FaHome, FaBook } from 'react-icons/fa';
 import { AiOutlineSave, AiOutlineHome } from 'react-icons/ai';
 import { FiClock } from 'react-icons/fi'

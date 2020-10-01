@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
 
 interface ToolTipProps {

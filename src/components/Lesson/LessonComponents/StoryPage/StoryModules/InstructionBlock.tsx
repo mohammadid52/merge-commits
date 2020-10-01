@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaVideo } from 'react-icons/fa';
 
 const InstructionsBlock = () => {

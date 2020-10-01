@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaUserCircle } from 'react-icons/fa'
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';

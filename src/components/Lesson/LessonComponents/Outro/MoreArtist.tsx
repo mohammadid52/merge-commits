@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import VideoBlock from './VideoBlock';
 import PhotoBlock from './PhotoBlock';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoLogoYoutube } from 'react-icons/io';
 import { AiOutlineYoutube } from 'react-icons/ai';
 import { AiFillPlusCircle } from 'react-icons/ai';

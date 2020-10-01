@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaPlus } from 'react-icons/fa';
 import { useCookies } from 'react-cookie';
 

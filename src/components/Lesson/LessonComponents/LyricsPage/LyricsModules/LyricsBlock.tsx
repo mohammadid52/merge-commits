@@ -1,6 +1,6 @@
 // import { access } from 'fs';
 import React, { useState, useEffect, useContext } from 'react';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaHighlighter, FaExpand } from 'react-icons/fa';
 // import { isMainThread } from 'worker_threads';
 import { LessonContext } from '../../../../../contexts/LessonContext';

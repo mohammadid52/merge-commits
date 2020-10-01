@@ -3,7 +3,7 @@ import { LessonContext } from '../../../../../contexts/LessonContext';
 import ReflectionQuestions from './ReflectionQuestions';
 import Modules from './Modules';
 import Banner from './Banner';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaExpand, FaCompress } from 'react-icons/fa';
 
 interface teacherData {
