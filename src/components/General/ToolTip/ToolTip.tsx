@@ -86,7 +86,7 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
           className={`absolute ${
             visible ? 'block' : 'hidden'
           } ${positionString()} text-dark p-1 ${toolTipProps.width ? toolTipProps.width : 'w-auto'} bg-white rounded-lg shadow-elem-semi-dark z-50 border border-blueberry flex flex-col justify-center items-center`}>
-          <p className={`${toolTipProps.fontSize ? toolTipProps.fontSize : 'text-sm'} text-left font-bold font-blue-300`}>{toolTipProps.header}</p>
+          <p className={`${toolTipProps.fontSize ? toolTipProps.fontSize : 'text-sm'} ${toolTipProps.header === '' ? 'hidden' : '' } text-left font-bold font-blue-300`}>{toolTipProps.header}</p>
           <div className={`${toolTipProps.fontSize ? toolTipProps.fontSize : 'text-sm'} text-center font-light font-blue-300`}>
             {toolTipProps.content}
           </div>
