@@ -75,15 +75,18 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
   return (
     <div className={`${toolTipProps.display === 'none' ? 'absolute z-100 w-full h-full' : 'w-8 h-8'} `} id={toolTipProps.id ? toolTipProps.id : null}>
       <div
+      onClick={() => console.log(toolTipProps.id)}
         className={`${toolTipProps.display === 'none' ? 'w-full h-full' : 'w-8 h-8'} ${toolTipProps.children ? 'cursor-pointer' : 'cursor-help' } relative flex justify-center z-10 `}
         onMouseOver={handleToolTipHover}
-        onMouseOut={handleToolTipHover}>
+        onMouseOut={handleToolTipHover}
+        id={toolTipProps.id ? toolTipProps.id : null}>
         <IconContext.Provider value={{ size: '1.2rem', color: toolTipProps.color || 'white', style: {display: toolTipProps.display}  }}>
           <div className='animate-pulse'>
             <AiOutlineInfoCircle />
           </div>
         </IconContext.Provider>
         <span
+          id={toolTipProps.id ? toolTipProps.id : null}
           className={`absolute ${
             visible ? 'block' : 'hidden'
           } ${positionString()} text-dark p-1 ${toolTipProps.width ? toolTipProps.width : 'w-auto'} bg-white rounded-lg shadow-elem-semi-dark z-50 border border-blueberry flex flex-col justify-center items-center`}>
