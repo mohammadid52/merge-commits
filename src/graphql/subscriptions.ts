@@ -172,6 +172,7 @@ export const onUpdateClassroom = /* GraphQL */ `
           id
           lessonProgress
           status
+          saveType
           classroomID
           studentID
           studentAuthID
@@ -202,6 +203,7 @@ export const onChangeStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
+      saveType
       classroomID
       classroom {
         id
@@ -3741,6 +3743,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
+        saveType
         classroomID
         classroom {
           id
@@ -3859,6 +3862,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
+        saveType
         classroomID
         classroom {
           id
@@ -3977,6 +3981,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
+        saveType
         classroomID
         classroom {
           id

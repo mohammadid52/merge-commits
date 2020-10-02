@@ -550,6 +550,7 @@ export const getStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
+      saveType
       classroomID
       studentID
       studentAuthID
