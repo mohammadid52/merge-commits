@@ -84,11 +84,12 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * Simple get functions to get arrays/values based on 'mappedWordID'
    */
   const getSelectGroupName = (mappedWordID: string) => {
-    return Object.keys(initialSelectedText).filter((groupKey) => {
+    const filteredGroupName = Object.keys(initialSelectedText).filter((groupKey) => {
       if (initialSelectedText[groupKey]['selected'].includes(mappedWordID)) {
-        return initialSelectedText[groupKey];
+        return groupKey;  // returns ['group0']
       }
     });
+    if(filteredGroupName.length === 1) return filteredGroupName[0]; // returns 'group0'
   };
 
   const getArrayWithMappedWord = (mappedWordID: string) => {
@@ -105,15 +106,16 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     });
 
     if (typeof groupWithMappedWord[0] !== 'undefined') {
-      // console.log(' get highlight color: ', groupWithMappedWord[0]['color']);
       return groupWithMappedWord[0]['color'];
     }
   };
 
-  const eraseMappedWord = (filterAbleArray: string[]) => (mappedWordID: string) => {
-    // return filterAbleArray.filter((word) => word !== mappedWordID);
-    return filterAbleArray.filter((word) => word === '');
-  };
+  const eraseSelectGroup = (selectGroupName: string) => {
+    const remainingGroups = Object.keys(initialSelectedText).filter((obj:any)=> obj !== selectGroupName); // group0, group1,... array
+    return remainingGroups.reduce((acc:any, groupName: string)=>{
+      return {...acc, ...{[groupName]: initialSelectedText[groupName]}}
+    },{})
+  }
 
   /**
    * Function that handles the text selection
@@ -134,7 +136,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     e.preventDefault();
 
     if ((mouseIsClicked || mouseIsHeld) && color !== '') {
-      console.log('handleSelectText: ', targetWordID);
       if (targetWordID.match(/mappedWord/) !== null) {
         if (color !== 'erase') {
           /**
@@ -166,15 +167,9 @@ const LyricsBlock = (props: LyricsBlockProps) => {
            * 4. set the selectedText group to that without the text from 'selected', and keep the 'color' as it already is
            */
           if (getArrayWithMappedWord(targetWordID).length > 0) {
-            setInitialSelectedText({
-              ...initialSelectedText,
-              [getSelectGroupName(targetWordID)[0]]: {
-                color: initialSelectedText[getSelectGroupName(targetWordID)[0]]['color'],
-                selected: eraseMappedWord([
-                  ...initialSelectedText[getSelectGroupName(targetWordID)[0]]['selected'],
-                ])(targetWordID),
-              },
-            });
+            const groupNameToErase = getSelectGroupName(targetWordID);
+            const groupAfterErase = eraseSelectGroup(groupNameToErase);
+            setInitialSelectedText(groupAfterErase);
           }
         }
       }
@@ -355,7 +350,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
                   //  or
                   //  if the word is the current target
                   checkIfHighlighted(`mappedWord__${i}__${mappedWord}`)
-                    ? `text-${getHighlightColor(`mappedWord__${i}__${mappedWord}`)}`
+                    ? `text-${getHighlightColor(`mappedWord__${i}__${mappedWord}`)} bg-dark`
                     : ''
                 }`}>
             &nbsp;{`${mappedWord}`}&nbsp;
