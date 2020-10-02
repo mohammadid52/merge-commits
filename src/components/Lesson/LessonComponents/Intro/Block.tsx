@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import Keyword from './Keyword';
 import BioBlock from './BioBlock';
 import Connect from './Connect';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaLink } from 'react-icons/fa';
 import { MdVpnKey } from 'react-icons/md';
 import { BsPersonSquare } from 'react-icons/bs';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaPlus } from 'react-icons/fa';
 
 interface InstructionsPopupProps {

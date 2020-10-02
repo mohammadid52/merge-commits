@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { GoQuote } from 'react-icons/go';
 import { FaQuoteLeft, FaPenFancy } from 'react-icons/fa';
 import PhotoBlock from './PhotoBlock';

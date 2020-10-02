@@ -8,7 +8,7 @@ import {
    useLocation
 } from 'react-router-dom';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaExpand, FaCompress, FaHome, FaRegThumbsUp } from 'react-icons/fa';
 import { BsPersonFill } from 'react-icons/bs';
 import { NavLink } from 'react-router-dom';
@@ -367,31 +367,8 @@ const LessonControl = () => {
 
                         </div>
 
-                        <div className={`${fullscreen ? 'hidden' : 'display'} relative flex justify-center items-center`}>
-                            <div className="absolute w-full h-full" style={{top: 0, left: 0}}>
-                                <ToolTip
-                                    color= 'black'
-                                    width= 'w-96'
-                                    position='bottom-right'
-                                    header=''
-                                    content={
-                                        <div className="flex">
-                                            <div className="flex flex-col">
-                                                <h1 className="font-bold">View:</h1>
-                                                <p>view the page</p>
-                                            </div>
-                                            <div className="flex flex-col px-1">
-                                                <h1 className="font-bold">Close/Open:</h1>
-                                                <p>the students can progress to this component</p>
-                                            </div>
-                                            <div className="flex flex-col px-1">
-                                                <h1 className="font-bold">Enable/Disable:</h1>
-                                                <p>the students will be able to see/unsee this component on their footer</p>
-                                            </div>
-                                        </div>
-                                    }
-                                    />
-                                </div>
+                        <div className={`${fullscreen ? 'hidden' : 'display'} flex justify-center items-center`}>
+                            <ToolTip position='top-right' header='' content='students who are ready' fontSize= 'text-xs'/>
                             <LessonControlBar setComponentView={setComponentView} />
                         </div>
                     </div>

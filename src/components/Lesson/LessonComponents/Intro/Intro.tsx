@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaPenFancy, FaCheckSquare } from 'react-icons/fa';
 import PhotoBlock from './PhotoBlock';
 import QuoteBlock from './QuoteBlock';
