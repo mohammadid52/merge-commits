@@ -6,7 +6,7 @@ type lessonControlActions =
         payload: any
     }
 |   {
-        type: 'OPEN_LESSON' | 'DISABLE_LESSON' | 'CLOSE_LESSON' | 'DELETE_DISPLAY_DATA' | 'SET_DISPLAY_DATA' | 'SET_STUDENT_VIEWING' | 'SET_SHARE_MODE' | 'QUIT_SHARE_MODE' | 'SAVED_CHANGES' | 'UPDATE_STUDENT_DATA' | 'QUIT_STUDENT_VIEWING';
+        type: 'OPEN_LESSON' | 'DISABLE_LESSON' | 'CLOSE_LESSON' | 'DELETE_DISPLAY_DATA' | 'SET_DISPLAY_DATA' | 'SET_STUDENT_VIEWING' | 'SET_SHARE_MODE' | 'QUIT_SHARE_MODE' | 'SAVED_CHANGES' | 'UPDATE_STUDENT_DATA' | 'QUIT_STUDENT_VIEWING' | 'RESET_DONE';
         payload: any
     }
 |   {
@@ -89,8 +89,20 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 return student.id === action.payload.id
             })
 
+            let doneArray = state.done;
+
             let saveType = action.payload.saveType;
-            console.log('saveType', saveType);
+            
+            if ( saveType === 'done' ) {
+                let found = doneArray.some((item: string) => {
+                    return item === action.payload.student.email
+                })
+
+                if ( !found ) {
+                    doneArray.push(action.payload.student.email)
+                    console.log('added', doneArray);
+                }
+            }
 
             let viewing = state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.id === action.payload.id : null;
 
@@ -99,6 +111,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 if ( viewing ) {
                     return {
                         ...state,
+                        done: doneArray,
                         roster: state.roster.map((student: any) => {
                             if ( student.id === action.payload.id ) {
                                 return action.payload
@@ -113,6 +126,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
 
                 return {
                     ...state,
+                    done: doneArray,
                     roster: state.roster.map((student: any) => {
                         if ( student.id === action.payload.id ) {
                             return action.payload
@@ -126,7 +140,13 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
 
             return {
                 ...state,
+                done: doneArray,
                 roster: updatedArray,
+            }
+        case 'RESET_DONE':
+            return {
+                ...state,
+                done: [],
             }
         case 'QUIT_SHARE_MODE':
                 return {
