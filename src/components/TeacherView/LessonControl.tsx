@@ -8,7 +8,7 @@ import {
    useLocation
 } from 'react-router-dom';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaExpand, FaCompress, FaHome, FaRegThumbsUp } from 'react-icons/fa';
 import { BsPersonFill } from 'react-icons/bs';
 import { NavLink } from 'react-router-dom';

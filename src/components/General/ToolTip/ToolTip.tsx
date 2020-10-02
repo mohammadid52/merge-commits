@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { IconContext } from 'react-icons';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
-
 interface ToolTipProps {
   children?: React.ReactNode;
   position:
@@ -23,11 +22,9 @@ interface ToolTipProps {
   cursor?: boolean;
   id?: string;
 }
-
 const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [position, setPosition] = useState<string>('');
-
   const positionString = () => {
     switch (position) {
       case 'left':
@@ -62,17 +59,14 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
         break;
     }
   };
-
   const handleToolTipHover = (e: React.MouseEvent) => {
     setVisible((prevState) => !prevState);
   };
-
   useEffect(() => {
     if (typeof toolTipProps.position !== 'undefined') {
       setPosition(toolTipProps.position);
     }
   }, []);
-
   return (
     <div className={`${toolTipProps.display === 'none' ? 'absolute w-full h-full' : 'w-8 h-8'} `} style={{
       MozUserSelect: 'none',
@@ -103,5 +97,4 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
     </div>
   );
 };
-
 export default ToolTip;

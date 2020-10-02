@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 

@@ -3,7 +3,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as queries from '../../../graphql/queries';
 import { GlobalContext } from '../../../contexts/GlobalContext';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaUserCircle } from 'react-icons/fa';
 import ProfileInfo from './ProfileInfo';
 import AboutMe from './AboutMe';

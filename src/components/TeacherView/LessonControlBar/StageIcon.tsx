@@ -1,6 +1,6 @@
 import React, { useContext, ReactNode, useState, ReactElement } from 'react';
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import {
     FaHourglassStart,
     FaPencilRuler,

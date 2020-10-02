@@ -7,7 +7,7 @@ import * as mutations from '../../../../graphql/mutations';
 import SuccessNote from '../../../../standard/Alert/SuccessNote';
 import ErrorNote from './ErrorNote';
 import DropdownForm from './DropdownForm';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaPlus } from 'react-icons/fa'; 
 
 interface newUserInput {

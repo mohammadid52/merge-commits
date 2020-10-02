@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useHistory, NavLink, useRouteMatch } from 'react-router-dom';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaUserCircle } from 'react-icons/fa';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 

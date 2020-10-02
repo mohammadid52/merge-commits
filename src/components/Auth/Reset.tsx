@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaKey } from 'react-icons/fa';
 import { FaUnlockAlt } from 'react-icons/fa';
 import { AiOutlineEye } from 'react-icons/ai';

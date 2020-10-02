@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaVideo } from 'react-icons/fa';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 

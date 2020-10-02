@@ -1,7 +1,7 @@
 import React from 'react';
 import ActionButton from '../Actions/ActionButton';
 import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaGraduationCap } from 'react-icons/fa';
 import { InstitutionInfo } from './Institution';
 

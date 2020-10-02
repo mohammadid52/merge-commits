@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaGraduationCap } from 'react-icons/fa';
 
 interface InfoSide {

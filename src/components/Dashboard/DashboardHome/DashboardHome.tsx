@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { NavLink, useHistory, useLocation } from 'react-router-dom';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaPencilRuler } from 'react-icons/fa';
 import { BsFillChatFill, BsCalendarFill, BsFillGrid1X2Fill } from 'react-icons/bs'
 import { MdClass } from 'react-icons/md'
