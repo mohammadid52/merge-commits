@@ -427,11 +427,11 @@ const LyricsBlock = (props: LyricsBlockProps) => {
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
-          style={{
+          /* style={{
             MozUserSelect: 'none',
             WebkitUserSelect: 'none',
             msUserSelect: 'none',
-          }}>
+          }} */>
           {mapStrToSpan(combineLyrics)}
         </div>
       </div>
