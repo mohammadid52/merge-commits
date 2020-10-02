@@ -60,7 +60,7 @@ const LessonPlanHome = () => {
             {/* <Link to="/lesson-control?id=1">
                 Teacher View 
             </Link> */}
-            <Upcoming curriculum={listCurriculum}/>
+            {/* <Upcoming curriculum={listCurriculum}/> */}
             <Dashboard /> 
         </div>
     )

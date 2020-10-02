@@ -24,12 +24,22 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
             
     //     })
 
+    // const slice = curriculum.slice(1, 2);
     const curriculumLesson = 
     curriculum ? curriculum.map((  value: any, index: number, array: CurriculumInfo[] ) => {
         return (
             value.lesson
         )  
     }) : []
+
+    useEffect(() => {
+        setLessons(curriculumLesson);
+        // curriculum;
+    }, [props])
+
+    console.log(curriculum, 'curr')
+
+    
     
 
     // make sure to limit (max 5?) when fetching from data
