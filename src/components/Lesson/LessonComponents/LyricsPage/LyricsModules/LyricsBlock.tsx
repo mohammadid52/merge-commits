@@ -111,7 +111,8 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   };
 
   const eraseMappedWord = (filterAbleArray: string[]) => (mappedWordID: string) => {
-    return filterAbleArray.filter((word) => word !== mappedWordID);
+    // return filterAbleArray.filter((word) => word !== mappedWordID);
+    return filterAbleArray.filter((word) => word === '');
   };
 
   /**
