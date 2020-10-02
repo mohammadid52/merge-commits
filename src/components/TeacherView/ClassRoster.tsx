@@ -62,7 +62,7 @@ const ClassRoster = (props: classRosterProps) => {
     }
 
     return (
-        <div className={`w-full h-full bg-gray-500 shadow-inner-dark rounded-lg pt-2 overflow-y-scroll overflow-x-auto`}>
+        <div className={`w-full h-full bg-gray-500 shadow-inner-dark rounded-lg pt-4 overflow-y-scroll overflow-x-auto`}>
             <div className={`w-full flex justify-center font-bold py-2 pl-4 pr-1 `}>
                 <div className={`w-.5/10 mx-2 text-center`}>
                     
