@@ -217,7 +217,7 @@ const LessonControl = () => {
                                 </div>
 
                                 <div className="w-1.5/10 flex flex-col justify-center items-center relative">
-                                    <ToolTip position='hidden-bottom' header='' content='students who are ready' display='none' fontSize= 'text-xs'/>
+                                    <ToolTip position='hidden-bottom' header='' content='students who are ready (click to reset)' width='w-20' cursor display='none' fontSize= 'text-xs'/>
                                     <div className="w-auto" onClick={handleResetDoneCounter}>
                                         <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                             <FaRegThumbsUp style={{ pointerEvents: 'none' }}/>
@@ -368,7 +368,7 @@ const LessonControl = () => {
                         </div>
 
                         <div className={`${fullscreen ? 'hidden' : 'display'} relative flex justify-center items-center`}>
-                            <div className="absolute w-full h-full" style={{top: 0, left: 0}}>
+                            <div className="absolute w-full h-full" style={{top: 0, right: 0}}>
                                 <ToolTip
                                     color= 'black'
                                     width= 'w-96'
