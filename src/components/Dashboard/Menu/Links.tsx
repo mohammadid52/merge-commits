@@ -110,18 +110,7 @@ const Links: React.FC = () => {
             </div>
           ))
         : null}
-      <div id='testTooltip' className={`w-full relative text-center text-lg mb-4`}>
-        <ToolTip
-          position='bottom-right'
-          header='test'
-          content={
-            <>
-              <h1>Example html</h1>
-              <p>Example paragraph</p>
-            </>
-          }
-        />
-      </div>
+      
     </div>
   );
 };

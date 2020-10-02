@@ -74,7 +74,7 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
       msUserSelect: 'none',
     }} id={toolTipProps.id ? toolTipProps.id : null}>
       <div
-        className={`${toolTipProps.display === 'none' ? 'w-full h-full' : 'w-8 h-8'} ${toolTipProps.cursor ? 'cursor-pointer' : 'cursor-help' } relative flex justify-center z-100 `}
+        className={`${toolTipProps.display === 'none' ? 'w-full h-full' : 'w-8 h-8'} ${toolTipProps.cursor ? 'cursor-pointer' : 'cursor-help' } relative flex justify-center z-10 `}
         onMouseOver={handleToolTipHover}
         onMouseOut={handleToolTipHover}
         id={toolTipProps.id ? toolTipProps.id : null}>
