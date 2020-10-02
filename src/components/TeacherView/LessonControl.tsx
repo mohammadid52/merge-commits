@@ -96,6 +96,10 @@ const LessonControl = () => {
         dispatch({ type: 'QUIT_STUDENT_VIEWING'})
     }
 
+    const handleResetDoneCounter = () => {
+        dispatch({ type: 'RESET_DONE' })
+    }
+
     // const handleQuitAll = () => {
     //     dispatch({ type: 'QUIT_STUDENT_VIEWING'})
     // }
@@ -214,13 +218,13 @@ const LessonControl = () => {
 
                                 <div className="w-1.5/10 flex flex-col justify-center items-center relative">
                                     <ToolTip position='hidden-bottom' header='' content='students who are ready' display='none' fontSize= 'text-xs'/>
-                                    <div className="w-auto">
+                                    <div className="w-auto" onClick={handleResetDoneCounter}>
                                         <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
-                                            <FaRegThumbsUp />
+                                            <FaRegThumbsUp style={{ pointerEvents: 'none' }}/>
                                         </IconContext.Provider>
                                     </div>
                                     <div className="w-auto">
-                                        20
+                                       { state.done.length }
                                     </div>
                                 </div>
 
