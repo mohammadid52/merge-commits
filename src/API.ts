@@ -414,6 +414,7 @@ export type CreateStudentDataInput = {
   id?: string | null,
   lessonProgress: string,
   status: string,
+  saveType?: string | null,
   classroomID: string,
   studentID: string,
   studentAuthID: string,
@@ -467,6 +468,7 @@ export type LineInputInput = {
 export type ModelStudentDataConditionInput = {
   lessonProgress?: ModelStringInput | null,
   status?: ModelStringInput | null,
+  saveType?: ModelStringInput | null,
   studentAuthID?: ModelStringInput | null,
   and?: Array< ModelStudentDataConditionInput | null > | null,
   or?: Array< ModelStudentDataConditionInput | null > | null,
@@ -477,6 +479,7 @@ export type UpdateStudentDataInput = {
   id: string,
   lessonProgress?: string | null,
   status?: string | null,
+  saveType?: string | null,
   classroomID: string,
   studentID: string,
   studentAuthID?: string | null,
@@ -1291,6 +1294,7 @@ export type ModelStudentDataFilterInput = {
   id?: ModelIDInput | null,
   lessonProgress?: ModelStringInput | null,
   status?: ModelStringInput | null,
+  saveType?: ModelStringInput | null,
   classroomID?: ModelIDInput | null,
   studentID?: ModelStringInput | null,
   studentAuthID?: ModelStringInput | null,
@@ -2907,6 +2911,7 @@ export type CreateStudentDataMutation = {
     id: string,
     lessonProgress: string,
     status: string,
+    saveType: string | null,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -3077,6 +3082,7 @@ export type UpdateStudentDataMutation = {
     id: string,
     lessonProgress: string,
     status: string,
+    saveType: string | null,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -3247,6 +3253,7 @@ export type DeleteStudentDataMutation = {
     id: string,
     lessonProgress: string,
     status: string,
+    saveType: string | null,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -3701,6 +3708,7 @@ export type CreateClassroomMutation = {
         id: string,
         lessonProgress: string,
         status: string,
+        saveType: string | null,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -3923,6 +3931,7 @@ export type UpdateClassroomMutation = {
         id: string,
         lessonProgress: string,
         status: string,
+        saveType: string | null,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -4145,6 +4154,7 @@ export type DeleteClassroomMutation = {
         id: string,
         lessonProgress: string,
         status: string,
+        saveType: string | null,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -6808,6 +6818,7 @@ export type CreateQuestionDataStudentDataMutation = {
       id: string,
       lessonProgress: string,
       status: string,
+      saveType: string | null,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -6942,6 +6953,7 @@ export type UpdateQuestionDataStudentDataMutation = {
       id: string,
       lessonProgress: string,
       status: string,
+      saveType: string | null,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -7076,6 +7088,7 @@ export type DeleteQuestionDataStudentDataMutation = {
       id: string,
       lessonProgress: string,
       status: string,
+      saveType: string | null,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -8253,6 +8266,7 @@ export type GetStudentDataQuery = {
     id: string,
     lessonProgress: string,
     status: string,
+    saveType: string | null,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -8429,6 +8443,7 @@ export type ListStudentDatasQuery = {
       id: string,
       lessonProgress: string,
       status: string,
+      saveType: string | null,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -8751,6 +8766,7 @@ export type GetClassroomQuery = {
         id: string,
         lessonProgress: string,
         status: string,
+        saveType: string | null,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -10328,6 +10344,7 @@ export type OnUpdateClassroomSubscription = {
         id: string,
         lessonProgress: string,
         status: string,
+        saveType: string | null,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -10364,6 +10381,7 @@ export type OnChangeStudentDataSubscription = {
     id: string,
     lessonProgress: string,
     status: string,
+    saveType: string | null,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -14280,6 +14298,7 @@ export type OnCreateQuestionDataStudentDataSubscription = {
       id: string,
       lessonProgress: string,
       status: string,
+      saveType: string | null,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -14409,6 +14428,7 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
       id: string,
       lessonProgress: string,
       status: string,
+      saveType: string | null,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -14538,6 +14558,7 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
       id: string,
       lessonProgress: string,
       status: string,
+      saveType: string | null,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",

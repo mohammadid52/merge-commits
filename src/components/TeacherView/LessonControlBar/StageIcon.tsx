@@ -75,6 +75,7 @@ const StageIcon = (props: StageIconProps) => {
             return history.push(`${match.url}`)
         }
         handleOpenMenu(null)
+        dispatch({ type: 'QUIT_STUDENT_VIEWING' })
         return history.push(`${match.url}/${stage}`)
     }
 

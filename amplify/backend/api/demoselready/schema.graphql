@@ -209,6 +209,7 @@ type StudentData @model(subscriptions: null)
   id: ID!
   lessonProgress: String!
   status: String!
+  saveType: String
   classroomID: ID!
   classroom: Classroom @connection(fields: ["classroomID"])
   # studentDataClassroomId: String

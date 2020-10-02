@@ -51,7 +51,7 @@ const LessonHeaderBar = () => {
         
     // }, [state.studentStatus])
 
-    const updateStudentData = async () => {
+    const updateStudentData = async ( saveType?: string) => {
         let lessonProgress = state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
 
         // console.log('thisone', state )
@@ -60,6 +60,7 @@ const LessonHeaderBar = () => {
             id: state.studentDataID,
             lessonProgress: lessonProgress,
             status: state.studentStatus,
+            saveType: saveType,
             classroomID: 1,
             studentID: state.studentUsername,
             studentAuthID: state.studentAuthID,
@@ -80,9 +81,9 @@ const LessonHeaderBar = () => {
         }
     }
 
-    const handleSave = () => {
+    const handleDone = () => {
         if ( state.unsavedChanges ) {
-            updateStudentData()
+            updateStudentData('done')
         }
     }
 
@@ -172,14 +173,14 @@ const LessonHeaderBar = () => {
                 </div> */}
                 {
                     !state.viewing ?
-                    <div className={`w-4.5/10 ${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center`} onClick={handleSave}>
+                    <div className={`w-4.5/10 ${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={handleDone}>
                         <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
                             <FaRegThumbsUp />
                         </IconContext.Provider>
                         <p className={`text-xs text-gray-200 text-center`} style={{color: state.unsavedChanges ? '#EDF2F7' : '#4A5568'}}>Thumbs up!</p>
                     </div>
                     :
-                    <div className={`w-4.5/10 cursor-default flex flex-col justify-center items-center px-2`} onClick={handleSave}>
+                    <div className={`w-4.5/10 cursor-default flex flex-col justify-center items-center px-2`}>
                         <div className="relative flex items-center justify-center h-4 w-4 m-1">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-4 w-4 bg-green-600"></span>
