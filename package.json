@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
-    "watch": "webpack-dev-server --hot --open --config webpack.dev.js"
+    "watch": "npm run build && webpack-dev-server --hot --open --config webpack.dev.js"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
