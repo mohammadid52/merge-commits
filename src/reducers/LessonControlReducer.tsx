@@ -6,7 +6,7 @@ type lessonControlActions =
         payload: any
     }
 |   {
-        type: 'OPEN_LESSON' | 'DISABLE_LESSON' | 'CLOSE_LESSON' | 'DELETE_DISPLAY_DATA' | 'SET_DISPLAY_DATA' | 'SET_STUDENT_VIEWING' | 'SET_SHARE_MODE' | 'QUIT_SHARE_MODE' | 'SAVED_CHANGES' | 'UPDATE_STUDENT_DATA';
+        type: 'OPEN_LESSON' | 'DISABLE_LESSON' | 'CLOSE_LESSON' | 'DELETE_DISPLAY_DATA' | 'SET_DISPLAY_DATA' | 'SET_STUDENT_VIEWING' | 'SET_SHARE_MODE' | 'QUIT_SHARE_MODE' | 'SAVED_CHANGES' | 'UPDATE_STUDENT_DATA' | 'QUIT_STUDENT_VIEWING';
         payload: any
     }
 |   {
@@ -89,6 +89,9 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 return student.id === action.payload.id
             })
 
+            let saveType = action.payload.saveType;
+            console.log('saveType', saveType);
+
             let viewing = state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.id === action.payload.id : null;
 
             if ( found ) {
@@ -125,8 +128,6 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 ...state,
                 roster: updatedArray,
             }
-
-
         case 'QUIT_SHARE_MODE':
                 return {
                     ...state,
@@ -179,7 +180,15 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                     studentInfo: action.payload
                 }
             };
-        
+        case 'QUIT_STUDENT_VIEWING':
+            return { 
+                ...state,
+                unsavedChanges: true,
+                studentViewing: {
+                    live: false,
+                    studentInfo: {}
+                }
+            }
         case 'CLEANUP': 
             return lessonControlState
         default:
