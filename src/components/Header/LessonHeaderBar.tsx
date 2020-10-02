@@ -7,7 +7,7 @@ import {
     // useRouteMatch 
 } from 'react-router-dom';
 import { IconContext } from "react-icons/lib/esm/iconContext";
-import { FaRegSave, FaHome, FaBook } from 'react-icons/fa';
+import { FaRegSave, FaRegThumbsUp,FaHome, FaBook } from 'react-icons/fa';
 import { AiOutlineSave, AiOutlineHome } from 'react-icons/ai';
 import { FiClock } from 'react-icons/fi'
 import { LessonContext } from '../../contexts/LessonContext';
@@ -172,11 +172,11 @@ const LessonHeaderBar = () => {
                 </div> */}
                 {
                     !state.viewing ?
-                    <div className={`w-4.5/10 ${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={handleSave}>
+                    <div className={`w-4.5/10 ${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center`} onClick={handleSave}>
                         <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
-                            <AiOutlineSave />
+                            <FaRegThumbsUp />
                         </IconContext.Provider>
-                        <p className={`text-xs text-gray-200 text-center`} style={{color: state.unsavedChanges ? '#EDF2F7' : '#4A5568'}}>Save</p>
+                        <p className={`text-xs text-gray-200 text-center`} style={{color: state.unsavedChanges ? '#EDF2F7' : '#4A5568'}}>Thumbs up!</p>
                     </div>
                     :
                     <div className={`w-4.5/10 cursor-default flex flex-col justify-center items-center px-2`} onClick={handleSave}>

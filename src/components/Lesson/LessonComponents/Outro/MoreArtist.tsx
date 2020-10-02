@@ -5,7 +5,6 @@ import PhotoBlock from './PhotoBlock';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoLogoYoutube } from 'react-icons/io';
 import { AiOutlineYoutube } from 'react-icons/ai';
-import { AiFillPlusCircle } from 'react-icons/ai';
 import { IoIosGlobe } from 'react-icons/io';
 import { AiOutlineInstagram } from 'react-icons/ai';
 import { FaSpotify } from 'react-icons/fa';
@@ -13,36 +12,7 @@ import { FaSpotify } from 'react-icons/fa';
 const MoreArtist = () => {
   const { state, dispatch, theme } = useContext(LessonContext);
   const [fullscreen, setFullscreen] = useState(false);
-  const [artistLink, setArtistLinks] = useState([
-    {
-      type: 'etc',
-      link: 'https://iconoclastartists.org/',
-      label: 'Iconoclast Artists Website',
-    },
-    {
-      type: 'instagram',
-      link: 'https://www.instagram.com/iconoclastartists/',
-      label: 'Iconoclast Artists Instagram',
-    },
-    {
-      type: 'youtube',
-      link: 'https://youtu.be/bp10ZOtv_zY',
-      label: 'MARLON HAVIKORO',
-    },
-    {
-      type: 'youtube',
-      link: 'https://youtu.be/pguAGyNHVAo',
-      label: 'Red Bull BC One Houston Camp',
-    },
-    {
-      type: 'youtube',
-      link: 'https://youtu.be/gNtJewsy-3w',
-      label: 'CreativeMornings Houston',
-    },
-    
-  ]);
-
-  const img = '../../../../../public/instagram.svg';
+  const [artistLink, setArtistLinks] = useState(state.data.lesson.artist.additionalContent.links);
 
   return (
     // <div className="w-full h-full bg-dark-blue text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
@@ -57,7 +27,7 @@ const MoreArtist = () => {
           <div className='h-full w-full flex flex-row'>
             {artistLink.map(
               (
-                item: { type: string; link: string; label: string },
+                item: { type: string; link: string; text: string },
                 key: number
               ) => (
                 <div
@@ -112,7 +82,7 @@ const MoreArtist = () => {
                     )}
 
                     <p className='flex-grow text-sm text-center text-blue-100 text-opacity-75'>
-                      {item.label}
+                      {item.text}
                     </p>
                   </a>
                 </div>
@@ -121,9 +91,6 @@ const MoreArtist = () => {
           </div>
         </div>
       </div>
-      {/* <div className="h-5/10 rounded-lg">
-                <VideoBlock link='https://www.youtube.com/embed/bp10ZOtv_zY' fullscreen={fullscreen}/>
-            </div> */}
     </div>
   );
 };
