@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { IconContext } from 'react-icons';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
-
 interface ToolTipProps {
   children?: React.ReactNode;
   position:
@@ -19,13 +18,13 @@ interface ToolTipProps {
   content?: React.ReactNode;
   display?: string;
   fontSize?: string;
-  width?: string
+  width?: string;
+  cursor?: boolean;
+  id?: string;
 }
-
 const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [position, setPosition] = useState<string>('');
-
   const positionString = () => {
     switch (position) {
       case 'left':
@@ -38,10 +37,10 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
         return 'transform -translate-y-4';
         break;
       case 'bottom':
-        return 'transform translate-y-0';
+        return 'transform translate-y-6';
         break;
       case 'hidden-bottom':
-        return 'transform translate-y-6';
+        return 'transform translate-y-14';
         break;
       case 'top-left':
         return 'transform -translate-y-4 right-1/2';
@@ -60,34 +59,37 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
         break;
     }
   };
-
   const handleToolTipHover = (e: React.MouseEvent) => {
     setVisible((prevState) => !prevState);
   };
-
   useEffect(() => {
     if (typeof toolTipProps.position !== 'undefined') {
       setPosition(toolTipProps.position);
     }
   }, []);
-
   return (
-    <div className={`${toolTipProps.display === 'none' ? 'absolute z-100 w-full h-full' : 'w-8 h-8'} `}>
+    <div className={`${toolTipProps.display === 'none' ? 'absolute w-full h-full' : 'w-8 h-8'} `} style={{
+      MozUserSelect: 'none',
+      WebkitUserSelect: 'none',
+      msUserSelect: 'none',
+    }} id={toolTipProps.id ? toolTipProps.id : null}>
       <div
-        className={`${toolTipProps.display === 'none' ? 'w-full h-full' : 'w-8 h-8'} relative inline-block z-50 cursor-help`}
+        className={`${toolTipProps.display === 'none' ? 'w-full h-full' : 'w-8 h-8'} ${toolTipProps.cursor ? 'cursor-pointer' : 'cursor-help' } relative flex justify-center z-10 `}
         onMouseOver={handleToolTipHover}
-        onMouseOut={handleToolTipHover}>
+        onMouseOut={handleToolTipHover}
+        id={toolTipProps.id ? toolTipProps.id : null}>
         <IconContext.Provider value={{ size: '1.2rem', color: toolTipProps.color || 'white', style: {display: toolTipProps.display}  }}>
-          <div className='animate-pulse'>
+          <div className='animate-pulse' id={toolTipProps.id ? toolTipProps.id : null}>
             <AiOutlineInfoCircle />
           </div>
         </IconContext.Provider>
         <span
+          id={toolTipProps.id ? toolTipProps.id : null}
           className={`absolute ${
             visible ? 'block' : 'hidden'
           } ${positionString()} text-dark p-1 ${toolTipProps.width ? toolTipProps.width : 'w-auto'} bg-white rounded-lg shadow-elem-semi-dark z-50 border border-blueberry flex flex-col justify-center items-center`}>
-          <p className={`${toolTipProps.fontSize ? toolTipProps.fontSize : 'text-sm'} text-left font-bold font-blue-300`}>{toolTipProps.header}</p>
-          <div className={`${toolTipProps.fontSize ? toolTipProps.fontSize : 'text-sm'} text-center font-light font-blue-300`}>
+          <p id={toolTipProps.id ? toolTipProps.id : null} className={`${toolTipProps.fontSize ? toolTipProps.fontSize : 'text-sm'} ${toolTipProps.header === '' ? 'hidden' : '' } text-left font-bold font-blue-300`}>{toolTipProps.header}</p>
+          <div id={toolTipProps.id ? toolTipProps.id : null} className={`${toolTipProps.fontSize ? toolTipProps.fontSize : 'text-sm'} flex text-center font-light font-blue-300`}>
             {toolTipProps.content}
           </div>
         </span>
@@ -95,5 +97,4 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
     </div>
   );
 };
-
 export default ToolTip;

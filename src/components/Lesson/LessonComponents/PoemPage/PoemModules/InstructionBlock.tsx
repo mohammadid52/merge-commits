@@ -19,13 +19,13 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
 
   if (editMode) {
     return (
-      <div className='md:h-2.8/10 bg-dark-blue border-l-4 border-green-light w-full flex flex-col p-4 rounded-lg text-gray-200 shadow-2xlr'>
+      <div className='md:h-2/10 bg-dark-blue border-l-4 border-green-light w-full flex flex-col p-4 rounded-lg text-gray-200 shadow-2xlr'>
         <div className='w-auto flex flex-row mb-1 pb-1 border-b border-white border-opacity-10 mr-4'>
           <h3 className='w-auto mr-2 flex-grow text-xl font-open font-light animate-bounce'>
             Instructions
           </h3>
         </div>
-        <div className='overflow-y-auto overflow-x-hidden font-light text-base mt-4 mb-4 md:mb-0'>
+        <div className='overflow-y-auto overflow-x-hidden font-light text-base mt-2 mb-4 md:mb-0'>
           Make the final edits to your poem, and get ready to present.
         </div>
       </div>
