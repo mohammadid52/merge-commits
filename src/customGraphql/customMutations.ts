@@ -30,6 +30,7 @@ export const createStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
+      saveType
       classroomID
       studentID
       studentAuthID
@@ -108,6 +109,7 @@ export const updateStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
+      saveType
       classroomID
       studentID
       studentAuthID

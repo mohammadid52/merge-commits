@@ -42,6 +42,7 @@ export interface lessonControlStateType  {
     error: string
     pages: Array<pageObject>
     roster: Array<studentObject>
+    done: Array<string>
     data?: {
         [key: string]: any;
     }
@@ -71,6 +72,7 @@ export const lessonControlState: lessonControlStateType = {
     error: '',
     pages: [],
     roster: [],
+    done: [],
     data: {},
     sharing: false,
     unsavedChanges: false,
