@@ -12,6 +12,8 @@ interface LyricsBlockProps {
   fullscreen: boolean;
   setSelected: React.Dispatch<React.SetStateAction<any[]>>;
   setFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
+  firstLastSelected: string[];
+  setFirstLastSelected: React.Dispatch<React.SetStateAction<string[]>>;
   initialSelectedText: SelectedTextGroup;
   setInitialSelectedText: React.Dispatch<React.SetStateAction<SelectedTextGroup>>;
   finalText: FinalText;
@@ -27,6 +29,8 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     setSelected,
     fullscreen,
     setFullscreen,
+    firstLastSelected,
+    setFirstLastSelected,
     initialSelectedText,
     setInitialSelectedText,
     finalText,
@@ -206,6 +210,17 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     //  Updates mouse target state
     setMouseTarget(targetWordID);
     handleSelectText(e);
+
+    /**
+     * EXPERIMENTAL NEW SELECTION PART
+     */
+    if(mouseIsHeld){
+      if(firstLastSelected.length===0){
+        setFirstLastSelected([targetWordID])
+      } else if(firstLastSelected.length >= 1){
+        setFirstLastSelected([firstLastSelected[0], targetWordID])
+      }
+    }
   };
 
   /**
@@ -357,8 +372,8 @@ const LyricsBlock = (props: LyricsBlockProps) => {
             <span
               id={`mappedWord__${i}__${mappedWord}`}
               onMouseOver={handleMouseOver}
-              onMouseDown={handleMouseDown}
-              onMouseUp={handleMouseUp}
+              // onMouseDown={handleMouseDown}
+              // onMouseUp={handleMouseUp}
               className='w-1/2 h-full absolute right-0 transform -translate-x-1/2'></span>
           </span>
         );
