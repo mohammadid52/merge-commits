@@ -13,4 +13,7 @@ module.exports = merge(common, {
     }),
     // new BundleAnalyzerPlugin(),
   ],
+  devServer: {
+    watchContentBase: true
+  }
 });
