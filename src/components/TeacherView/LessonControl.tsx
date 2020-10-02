@@ -92,9 +92,17 @@ const LessonControl = () => {
         dispatch({ type: 'QUIT_SHARE_MODE' })
     }
 
+    const handleQuitViewing = () => {
+        dispatch({ type: 'QUIT_STUDENT_VIEWING'})
+    }
+
+    // const handleQuitAll = () => {
+    //     dispatch({ type: 'QUIT_STUDENT_VIEWING'})
+    // }
+
     useEffect(() => {
 
-        console.log('changes', state)
+        // console.log('changes', state)
         if (state.pages.length > 0 && state.unsavedChanges) {handleUpdateClassroom()}
 
     }, [state.unsavedChanges])
@@ -149,6 +157,11 @@ const LessonControl = () => {
         
     }, [state.displayData, state.studentViewing])
 
+    useEffect(() => {
+        console.log(state);
+        
+    }, [state.studentViewing])
+
     if ( state.status !== 'loaded') {
         return (
             <ComponentLoading />
@@ -158,7 +171,9 @@ const LessonControl = () => {
     return (
         <div className={`w-full h-screen bg-gray-400 p-4`}>
             <div className={`w-full h-full flex flex-col`}>
-                <div className={`relative w-full px-8 h-0.5/10 bg-gray-200 mb-2 shadow-elem-light rounded-lg px-4 flex flex-row items-center`}>
+                <div className={`relative w-full px-8 h-0.5/10 bg-gray-200 mb-2 shadow-elem-light rounded-lg px-4 flex flex-row items-center`} 
+                // onClick={handleQuitAll}
+                >
                     <h1 className={`w-4/10 text-3xl font-extrabold font-open my-2`}>
                         Where I'm From
                     </h1>
@@ -193,7 +208,7 @@ const LessonControl = () => {
                                         </IconContext.Provider>
                                     </div>
                                     <div className="w-auto">
-                                        20
+                                        { state.roster.length }
                                     </div>
                                 </div>
 
@@ -211,17 +226,22 @@ const LessonControl = () => {
 
                                 <div className="w-4/10 px-2 flex flex-col justify-center items-center">
                                     <div className="w-full flex justify-center items-center ">
-                                        you are viewing:
+                                        currently viewing:
                                     </div>
                                     <div className={`w-full flex justify-center items-center ${state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? 'text-indigo-500 text-xl font-bold': 'text-black text-xs'}`}>
-                                        { state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.student.firstName + ' ' + firstInitialFunc(state.studentViewing.studentInfo.student.lastName): '(click on the student)' }
+                                        { state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.student.firstName + ' ' + firstInitialFunc(state.studentViewing.studentInfo.student.lastName): '(click on a student)' }
                                     </div>
                                 </div>
 
                                 <div className="w-2/10 flex justify-center">
-                                    <div className="cursor-pointer text-sm bg-indigo-500 w-6/10 shadow-elem-semi-dark rounded-xl text-gray-300 hover:text-white focus:border-none flex justify-center items-center">
-                                        QUIT
-                                    </div>
+                                    { 
+                                        state.studentViewing.live ?
+                                        <div className="cursor-pointer text-sm bg-indigo-500 w-6/10 shadow-elem-semi-dark rounded-xl text-gray-300 hover:text-white focus:border-none flex justify-center items-center" onClick={handleQuitViewing}>
+                                            QUIT
+                                        </div>
+                                        :
+                                        null
+                                    }
                                 </div>
                             </div>
                             <div className={`h-8.2/10 mb-2`}>

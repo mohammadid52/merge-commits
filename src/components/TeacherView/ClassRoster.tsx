@@ -18,7 +18,7 @@ const ClassRoster = (props: classRosterProps) => {
             return item.id === id
         });
 
-        // console.log('selected student', id, selected[0]);
+        // console.log('selected', id, selected[0]);
 
         dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] })
     } 
