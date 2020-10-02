@@ -1,7 +1,7 @@
 import React, { useContext, ReactNode, ReactElement, useEffect } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import {
   FaHourglassStart,
   FaPencilRuler,

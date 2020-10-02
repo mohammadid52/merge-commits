@@ -3,43 +3,34 @@ import { IconContext } from 'react-icons';
 import { FaEraser } from 'react-icons/fa';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
-
 interface ToolbarProps {
   setColor: React.Dispatch<React.SetStateAction<string>>;
 }
-
 const ToolBar = (props: ToolbarProps) => {
   const { setColor } = props;
   const { state, dispatch } = useContext(LessonContext);
   const [search, setSearch] = useState('');
   const buttons = state.data.lesson.coreLesson.tools;
-
   const handleClick = (e: any) => {
     setColor(e.target.id);
   };
-
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => {
     setSearch(e.target.value);
   };
-
   const handleDrop = (e: {
     preventDefault: () => void;
     dataTransfer: { getData: (arg0: string) => string };
   }) => {
     e.preventDefault();
-
     const wordId = e.dataTransfer.getData('wordId');
     const word = document.getElementById(wordId).innerText;
-
     if (state.word_bank.indexOf(word) < 0) {
       dispatch({ type: 'ADD_WORD', payload: word });
     }
   };
-
   const handleDragOver = (e: { preventDefault: () => void }) => {
     e.preventDefault();
   };
-
   return (
     <div className='bg-medium-blue h-2.5/10 w-full p-4 rounded-lg flex flex-col items-center justify-around'>
       <div className='relative flex flex-row justify-center items-center border-b border-white border-opacity-10 pb-1 mb-1'>
@@ -52,13 +43,11 @@ const ToolBar = (props: ToolbarProps) => {
       </div>
       <div className='w-auto cursor-pointer flex flex-row justify-center items-center pt-2'>
         {buttons.map((button: { color: string; icon: string, name: string }, key: number) => (
-          
           <div
             key={key}
             id={button.color}
             className={`relative bg-${button.color} h-12 w-12 text-3xl rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center animate-fadeIn`}
             onClick={handleClick }>
-              
             <ToolTip position='hidden-bottom' 
             id={button.color}
             cursor
@@ -67,7 +56,6 @@ const ToolBar = (props: ToolbarProps) => {
             content= {<div className="font-bold flex text-center justify-center w-24">{button.name}</div>}
             display='none' fontSize= 'text-xs'/>
             {button.icon}
-
           </div>
         ))}
         <div
@@ -80,9 +68,7 @@ const ToolBar = (props: ToolbarProps) => {
           </IconContext.Provider>
         </div>
       </div>
-
     </div>
   );
 };
-
 export default ToolBar;

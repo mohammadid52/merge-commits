@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 // import { Auth } from 'aws-amplify'; 
 import Auth from '@aws-amplify/auth';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaUnlockAlt } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
 import {

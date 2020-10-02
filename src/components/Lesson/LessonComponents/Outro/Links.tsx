@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaRegSave, FaHome } from 'react-icons/fa';
 import { AiOutlineSave, AiOutlineHome } from 'react-icons/ai';
 import { NavLink } from 'react-router-dom';

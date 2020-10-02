@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { GoQuote } from 'react-icons/go';
 import { FaQuoteLeft, FaPenFancy } from 'react-icons/fa';
 import PhotoBlock from './PhotoBlock';
@@ -31,7 +31,7 @@ const QuoteBlock = () => {
           </div>
 
           <div className="h-4.8/10 my-auto flex flex-col justify-end items-center">
-            <div className='h-auto quote flex flex-col justify-around items-center py-2 px-4 bg-gradient-to-l from-transparent to-black80'>
+            <div className='h-full quote flex flex-col justify-around items-center py-2 px-4 bg-gradient-to-l from-transparent to-black80'>
               <div className='relative'>
                 <div className='absolute w-16' style={{ top: '-30px', left: '-5px' }}>
                   <IconContext.Provider value={{ size: '7rem', style: { opacity: '40%' } }}>

@@ -11,15 +11,14 @@ const SelfDisplay = () => {
   const moduleTypes = state.data.lesson.coreLesson.tools;
 
   const arrayParseToString = (arr: Array<Array<{ [key: string]: any }>>) => {
-    let resultArray = arr.map(
-      (item: Array<{ text: string; [key: string]: any }>) => {
-        let parsedString = '';
-        item.forEach((item: { text: string; [key: string]: any }) => {
-          parsedString = parsedString + item.text;
-        });
-        return parsedString;
-      }
-    );
+    let resultArray = arr.map((item: Array<{ text: string; [key: string]: any }>) => {
+      let parsedString = '';
+      item.forEach((item: { text: string; [key: string]: any }) => {
+        // console.log('arrayParseToString: ', item);
+        parsedString = parsedString + ' ' + item.text;
+      });
+      return parsedString;
+    });
     return resultArray;
   };
 
@@ -69,13 +68,17 @@ const SelfDisplay = () => {
                   </div>
                 </div>
                 <div className='w-full md:my-4 flex flex-col overflow-y-auto overflow-x-hidden px-6 font-light'>
-                  {module.content.map((line: string, key: number) => (
-                    <p
-                      key={key}
-                      className={`text-sm md:text-lg text-gray-200 font-light mb-4`}>
-                      {line}
-                    </p>
-                  ))}
+                  {console.log('module content: ', module.content)}
+                  {module.content.map((line: string, i: number) => {
+                    return line.split('\n').map((subStr: string, key: number, arr: any) => (
+                      <>
+                        <p key={key} className={`text-sm text-gray-200 font-light mb`}>
+                          {subStr}
+                        </p>
+                        {key === arr.length - 1 && <br className='mb-3' />}
+                      </>
+                    ));
+                  })}
                 </div>
               </div>
             ))

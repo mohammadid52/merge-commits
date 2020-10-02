@@ -1,6 +1,6 @@
 import React, { useContext, ReactNode, useState, ReactElement } from 'react';
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import {
     FaHourglassStart,
     FaPencilRuler,
@@ -60,7 +60,7 @@ const StageIcon = (props: StageIconProps) => {
     const iconLabel = (): ReactElement => {
         return (
           <p
-            className={`absolute w-auto transform translate-y-8 mt-5 text-center font-light text-dark`}>
+            className={`absolute w-auto transform translate-y-8 mt-5 text-center font-light text-dark text-sm`}>
             {
                 /* Capitalize the first letter */
                 props.type.charAt(0).toUpperCase()+props.type.slice(1)

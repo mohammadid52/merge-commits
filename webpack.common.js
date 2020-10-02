@@ -8,8 +8,13 @@ module.exports = {
     filename: 'bundle.js',
     publicPath: '/',
   },
+  mode: 'production',
+  optimization: {
+    usedExports: true,
+  },
   resolve: {
     extensions: ['.mjs', '.ts', '.tsx', '.js', '.json'],
+    mainFields: ['module', 'main'],
     modules: [
       path.resolve('./src'),
       path.resolve('./frontend'),

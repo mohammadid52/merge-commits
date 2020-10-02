@@ -1,14 +1,17 @@
 module.exports = {
-  // purge: {
-  //   enabled: true,
-  //   content: [
-  //     './src/**/*.html',
-  //     './src/**/*.tsx',
-  //     './src/**/*.ts',
-  //     './src/**/*.js',
-  //     './src/**/*.jsx',
-  //   ],
-  // },
+  purge: {
+    enabled: true,
+    content: [
+      './src/**/*.html',
+      './src/**/*.tsx',
+      './src/**/*.ts',
+      './src/**/*.js',
+      './src/**/*.jsx',
+    ],
+    options: {
+      whitelist: ['fire-orange', 'sea-green', 'dark-red'],
+    }
+  },
   future: {
     removeDeprecatedGapUtilities: true,
     purgeLayersByDefault: true,
@@ -48,7 +51,6 @@ module.exports = {
       '4.5xl': '2.75rem',
     },
     zIndex: {
-      '-1': -1,
       '0': 0,
       '10': 10,
       '20': 20,

@@ -11,14 +11,15 @@ interface ButtonProps {
 
 const ActionButton: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
   return (
-    <>
+    <p>
+      <br />
       <button
         type={btnPrps.type}
         onClick={btnPrps.func}
         className={btnPrps.compClass}>
         {btnPrps.label}
       </button>
-    </>
+    </p>
   );
 };
 

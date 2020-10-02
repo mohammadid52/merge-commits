@@ -8,7 +8,7 @@ import {
    useLocation
 } from 'react-router-dom';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaExpand, FaCompress, FaHome, FaRegThumbsUp } from 'react-icons/fa';
 import { BsPersonFill } from 'react-icons/bs';
 import { NavLink } from 'react-router-dom';
@@ -216,9 +216,15 @@ const LessonControl = () => {
                                     </div>
                                 </div>
 
-                                <div className="w-1.5/10 flex flex-col justify-center items-center relative">
-                                    <ToolTip position='hidden-bottom' header='' content='students who are ready' display='none' fontSize= 'text-xs'/>
-                                    <div className="w-auto" onClick={handleResetDoneCounter}>
+                                <div className="w-1.5/10 flex flex-col justify-center items-center">
+                                    {/* <ToolTip position='hidden-bottom' header='' content='students who are ready (click to reset)' width='w-20' cursor display='none' fontSize= 'text-xs'/> */}
+                                    <div className="w-auto relative" onClick={handleResetDoneCounter}>
+                                    <ToolTip position='hidden-bottom' 
+                                        cursor
+                                        header=''
+                                        width='w-24'
+                                        content= {<div className="flex flex-col"><div>students who are ready</div> <p className="font-bold"> (click to reset)</p></div>}
+                                        display='none' fontSize= 'text-xs'/>
                                         <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                             <FaRegThumbsUp style={{ pointerEvents: 'none' }}/>
                                         </IconContext.Provider>
@@ -368,11 +374,11 @@ const LessonControl = () => {
                         </div>
 
                         <div className={`${fullscreen ? 'hidden' : 'display'} relative flex justify-center items-center`}>
-                            <div className="absolute w-full h-full" style={{top: 0, left: 0}}>
+                            <div className="absolute w-8 h-8" style={{top: '-10px', right: 0}}>
                                 <ToolTip
                                     color= 'black'
                                     width= 'w-96'
-                                    position='bottom-right'
+                                    position='bottom-left'
                                     header=''
                                     content={
                                         <div className="flex">

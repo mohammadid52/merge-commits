@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { FaMusic } from 'react-icons/fa';
 
