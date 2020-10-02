@@ -19,11 +19,13 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import ClassRoster from './ClassRoster';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
+import ToolTip from '../General/ToolTip/ToolTip';
 const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
 const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
 const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
 const OutroView = lazy(() => import('./ComponentViews/OutroView/OutroView'));
-const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'))
+const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'));
+
 
 const LessonControl = () => {
     const { state, dispatch } = useContext(LessonControlContext);
@@ -59,7 +61,6 @@ const LessonControl = () => {
         
         try {
             const updatedClassroom = await API.graphql(graphqlOperation(customMutations.updateClassroom, {input: updatedClassroomData}))
-            console.log(updatedClassroom)
             dispatch({ type: 'SAVED_CHANGES' })
         } catch (err) {
             console.error(err);   
@@ -199,7 +200,8 @@ const LessonControl = () => {
                                 </h2>
                             </div>
                             <div className="h-1/10 p-2 flex justify-around items-center">
-                                <div className="w-1.5/10 flex flex-col justify-center items-center">
+                                <div className="w-1.5/10 flex flex-col justify-center items-center relative">
+                                    <ToolTip position='hidden-bottom' header='' content='students in class' display='none' fontSize= 'text-xs'/>
                                     <div className="w-auto">
                                         <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                             <BsPersonFill />
@@ -210,7 +212,8 @@ const LessonControl = () => {
                                     </div>
                                 </div>
 
-                                <div className="w-1.5/10 flex flex-col justify-center items-center">
+                                <div className="w-1.5/10 flex flex-col justify-center items-center relative">
+                                    <ToolTip position='hidden-bottom' header='' content='students who are ready' display='none' fontSize= 'text-xs'/>
                                     <div className="w-auto">
                                         <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                             <FaRegThumbsUp />
@@ -360,7 +363,31 @@ const LessonControl = () => {
 
                         </div>
 
-                        <div className={`${fullscreen ? 'hidden' : 'display'} flex justify-center items-center`}>
+                        <div className={`${fullscreen ? 'hidden' : 'display'} relative flex justify-center items-center`}>
+                            <div className="absolute w-full h-full" style={{top: 0, left: 0}}>
+                                <ToolTip
+                                    color= 'black'
+                                    width= 'w-96'
+                                    position='bottom-right'
+                                    header=''
+                                    content={
+                                        <div className="flex">
+                                            <div className="flex flex-col">
+                                                <h1 className="font-bold">View:</h1>
+                                                <p>view the page</p>
+                                            </div>
+                                            <div className="flex flex-col px-1">
+                                                <h1 className="font-bold">Close/Open:</h1>
+                                                <p>the students can progress to this component</p>
+                                            </div>
+                                            <div className="flex flex-col px-1">
+                                                <h1 className="font-bold">Enable/Disable:</h1>
+                                                <p>the students will be able to see/unsee this component on their footer</p>
+                                            </div>
+                                        </div>
+                                    }
+                                    />
+                                </div>
                             <LessonControlBar setComponentView={setComponentView} />
                         </div>
                     </div>

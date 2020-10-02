@@ -78,7 +78,7 @@ const StoryForm = () => {
         <label
           className='w-auto text-lg font-light text-base text-blue-100 text-opacity-70 mb-2'
           htmlFor='title'>
-          Title <ToolTip position='right' header='Story form' content='better instructions'/>
+          Title 
         </label>
         
         <input
@@ -86,7 +86,7 @@ const StoryForm = () => {
           className='md:w-88 px-4 py-1 mb-4 rounded-lg text-lg text-gray-700 bg-gray-300'
           name='title'
           type='text'
-          placeholder='La Llorona'
+          placeholder={state.data.lesson.warmUp.inputs.example}
           value={input.title}
           onChange={handleInputChange}
         />
