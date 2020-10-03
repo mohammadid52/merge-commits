@@ -315,6 +315,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * @param strArray - any string []
    */
   const mapStrToSpan = (strArray: string[]) => {
+    
     return strArray?.map((mappedWord: string, i: number) => {
       if (mappedWord !== '\n') {
         return (

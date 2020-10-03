@@ -60,7 +60,7 @@ const StageIcon = (props: StageIconProps) => {
     const iconLabel = (): ReactElement => {
         return (
           <p
-            className={`absolute w-auto transform translate-y-8 mt-5 text-center font-light text-dark`}>
+            className={`absolute w-auto transform translate-y-8 mt-5 text-center font-light text-dark text-sm`}>
             {
                 /* Capitalize the first letter */
                 props.type.charAt(0).toUpperCase()+props.type.slice(1)
