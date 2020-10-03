@@ -65,12 +65,12 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * @param mappedWordID - string to check for
    */
   const checkIfHighlighted = (mappedWordID: string) => {
-    return (
+    const trueOrFalse =
       Object.values(initialSelectedText).filter((group) => group['selected'].includes(mappedWordID))
-        .length > 0
-    );
+        .length > 0;
+    return trueOrFalse;
   };
-  
+
   /**
    * Function that returns true | false if select-group for current
    * text selection exists in the state
@@ -90,10 +90,10 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   const getSelectGroupName = (mappedWordID: string) => {
     const filteredGroupName = Object.keys(initialSelectedText).filter((groupKey) => {
       if (initialSelectedText[groupKey]['selected'].includes(mappedWordID)) {
-        return groupKey;  // returns ['group0']
+        return groupKey; // returns ['group0']
       }
     });
-    if(filteredGroupName.length === 1) return filteredGroupName[0]; // returns 'group0'
+    if (filteredGroupName.length === 1) return filteredGroupName[0]; // returns 'group0'
   };
 
   const getArrayWithMappedWord = (mappedWordID: string) => {
@@ -115,11 +115,13 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   };
 
   const eraseSelectGroup = (selectGroupName: string) => {
-    const remainingGroups = Object.keys(initialSelectedText).filter((obj:any)=> obj !== selectGroupName); // group0, group1,... array
-    return remainingGroups.reduce((acc:any, groupName: string)=>{
-      return {...acc, ...{[groupName]: initialSelectedText[groupName]}}
-    },{})
-  }
+    const remainingGroups = Object.keys(initialSelectedText).filter(
+      (obj: any) => obj !== selectGroupName
+    ); // group0, group1,... array
+    return remainingGroups.reduce((acc: any, groupName: string) => {
+      return { ...acc, ...{ [groupName]: initialSelectedText[groupName] } };
+    }, {});
+  };
 
   /**
    * Function that handles the text selection
@@ -180,12 +182,60 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     }
   };
 
+  const handleSelectText2 = (/* e: React.MouseEvent */) => {
+    // const t = e.currentTarget as HTMLElement;
+    // const targetWordID = t.id || '';
+
+    // e.preventDefault();
+
+    if (color !== '') {
+
+        if (color !== 'erase') {
+          /**
+           * 1. Below a check should be done to see if there is an empty group by the same name
+           * 2. If there is, append to it
+           */
+          // if (checkIfSelectGroupExists(`group${selectGroup}`)) {
+          //   setInitialSelectedText({
+          //     ...initialSelectedText,
+          //     [`group${selectGroup}`]: {
+          //       color: color,
+          //       selected: [...initialSelectedText[`group${selectGroup}`]['selected'], targetWordID],
+          //     },
+          //   });
+          // } else {
+          //   setInitialSelectedText({
+          //     ...initialSelectedText,
+          //     [`group${selectGroup}`]: {
+          //       color: color,
+          //       selected: [targetWordID],
+          //     },
+          //   });
+          // }
+
+          const [minWordID, maxWordID] = minMaxOfArrays(firstLastSelected);
+          // console.log('min   max   :', minWordID, ' ', maxWordID);
+          const currentSelectedWords = combineMappedWords.slice(minWordID, maxWordID);
+          // console.log('current selected: ', currentSelectedWords);
+
+          setInitialSelectedText({
+            ...initialSelectedText,
+            [`group${selectGroup}`]: {
+              color: color,
+              selected: currentSelectedWords,
+            },
+          });
+        }
+    }
+  };
+
   /**
    * Mouse functionality
    */
 
   const handleMouseUp = (e: React.MouseEvent) => {
     if (mouseIsHeld || mouseIsClicked) {
+      setFirstLastSelected([]);
       setMouseIsHeld(false);
       setMouseIsClicked(false);
     }
@@ -200,7 +250,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       setMouseIsHeld(true);
       setMouseIsClicked(true);
     }
-    handleSelectText(e);
+    // handleSelectText2(e);
   };
 
   const handleMouseOver = (e: React.MouseEvent) => {
@@ -208,17 +258,16 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     const targetWordID = t.id || '';
 
     //  Updates mouse target state
-    setMouseTarget(targetWordID);
-    handleSelectText(e);
+    // setMouseTarget(targetWordID);
 
     /**
      * EXPERIMENTAL NEW SELECTION PART
      */
-    if(mouseIsHeld){
-      if(firstLastSelected.length===0){
-        setFirstLastSelected([targetWordID])
-      } else if(firstLastSelected.length >= 1){
-        setFirstLastSelected([firstLastSelected[0], targetWordID])
+    if (mouseIsHeld || mouseIsClicked) {
+      if (firstLastSelected.length === 0) {
+        setFirstLastSelected([targetWordID]);
+      } else if (firstLastSelected.length >= 1) {
+        setFirstLastSelected([firstLastSelected[0], targetWordID]);
       }
     }
   };
@@ -390,23 +439,23 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    */
 
   useEffect(() => {
-    expandMultilineSelection();
-  }, [mouseTarget]);
+    handleSelectText2();
+  }, [firstLastSelected]);
 
-  useEffect(() => {
-    if (Object.keys(initialSelectedText).length > 0) {
-      setFinalText(groupWordsByColor(Object.values(initialSelectedText)));
-    }
-  }, [initialSelectedText]);
+  // useEffect(() => {
+    // if (Object.keys(initialSelectedText).length > 0) {
+    //   setFinalText(groupWordsByColor(Object.values(initialSelectedText)));
+    // }
+  // }, [firstLastSelected]);
 
   /**
    * ANDREW'S DISPATCH
    */
 
   // this was fullSelectedText first
-  useEffect(() => {
-    setSelected(adaptTextGroupsForDispatch(initialSelectedText));
-  }, [finalText]);
+  // useEffect(() => {
+  //   setSelected(adaptTextGroupsForDispatch(initialSelectedText));
+  // }, [finalText]);
 
   return (
     <>
@@ -437,11 +486,12 @@ const LyricsBlock = (props: LyricsBlockProps) => {
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
-          /* style={{
+          style={{
             MozUserSelect: 'none',
             WebkitUserSelect: 'none',
             msUserSelect: 'none',
-          }} */>
+          }}
+        >
           {mapStrToSpan(combineLyrics)}
         </div>
       </div>
