@@ -173,7 +173,12 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       setMouseIsClicked(false);
     }
 
-    if (checkIfSelectGroupExists(`group${selectGroup}`)) {
+    const currentGroupExists = checkIfSelectGroupExists(`group${selectGroup}`);
+    const currentGroupEmpty = initialSelectedText[`group${selectGroup}`]['selected'].length > 0;
+
+    if (!currentGroupEmpty) {
+      setSelectGroup(selectGroup);
+    } else {
       setSelectGroup(selectGroup + 1);
     }
   };
@@ -183,7 +188,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       setMouseIsHeld(true);
       setMouseIsClicked(true);
     }
-    // handleSelectText2(e);
   };
 
   const handleMouseOver = (e: React.MouseEvent) => {
