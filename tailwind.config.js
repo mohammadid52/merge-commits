@@ -9,7 +9,7 @@ module.exports = {
       './src/**/*.jsx',
     ],
     options: {
-      whitelist: ['fire-orange', 'sea-green', 'dark-red'],
+      whitelist: ['bg-fire-orange', 'bg-sea-green', 'bg-dark-red', 'translate-y-1/2'],
     }
   },
   future: {
@@ -19,7 +19,14 @@ module.exports = {
   corePlugins: {
     translate: true,
   },
-  theme: {
+  theme: {flexGrow: {
+    '0': 0,
+    default: 1,
+    default: 2,
+    '1': 1,
+    '2': 2,
+    '3': 3,
+  },
     cursor: {
       auto: 'auto',
       default: 'default',
@@ -80,6 +87,7 @@ module.exports = {
     },
     borderWidth: {
       default: '1px',
+      'neg1': '-1px',
       '0': '0',
       '2': '2px',
       '3': '3px',
@@ -126,9 +134,15 @@ module.exports = {
       // 'open': ['Open Sans Condensed', 'sans-serif'],
     },
     extend: {
+      backgroundOpacity: {
+        '10': '0.1',
+        '25': '0.25',
+        '75': '0.75',
+        '95': '0.95',
+      },
       lineHeight: {
-               'extra-tight': '.8',
-                },
+        'extra-tight': '.8',
+      },
       animation: {
         'bounce': 'bounce 2.5s linear 2',
         'ping': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',

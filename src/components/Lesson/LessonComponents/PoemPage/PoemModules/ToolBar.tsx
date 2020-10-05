@@ -17,7 +17,7 @@ const ToolBar = (props: ToolBarProps) => {
     const { editMode, setEditMode } = props;
     const { state, dispatch } = useContext(LessonContext);
     const prompts = state.data.lesson.activity.writingPrompts
-    console.log(prompts, 'state');
+    // console.log(prompts, 'state');
     const [ search, setSearch ] = useState('');
 
     const handleDragOver = (e: { stopPropagation: () => void; }) => {

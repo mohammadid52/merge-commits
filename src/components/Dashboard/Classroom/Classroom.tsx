@@ -38,12 +38,13 @@ const Classroom: React.FC = () => {
     const [status, setStatus] = useState('');
 
     async function getCourse( id: string ) {
+        let limit = 2; 
         try {
-            const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: id }))
+            const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: id, limit: limit } ))
             const nextLesson = courses.data.getCourse.curriculum.lessons.items[0].lesson;
             const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
             setCurriculum(nextLesson);
-            setListCurriculum(lessonsInfo);
+            setListCurriculum(lessonsInfo.slice(1,2));
             if ( state.user.onBoardSurvey ) setStatus('done');
             // console.log(lessonsInfo, 'list');
         } catch (error) {
@@ -54,7 +55,7 @@ const Classroom: React.FC = () => {
     const getSurvey = async () => {
         try {
             const surveyData: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: 'on-boarding-survey-1' }))
-            console.log('survey', surveyData)
+            // console.log('survey', surveyData)
             await setSurvey(() => {
                 // let surveyStatus: boolean = state.user.onBoardSurvey ? !state.user.onBoardSurvey : true;,
                 // console.log(surveyStatus, 'status', state);

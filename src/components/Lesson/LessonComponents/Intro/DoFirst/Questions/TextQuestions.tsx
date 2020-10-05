@@ -36,13 +36,13 @@ const TextQuestions = (txtPrps: CPQuestionProps) => {
   })
 
   return (
-    <div key={txtPrps.keyProp} className={`w-9.5/10 h-full flex flex-col my-2`}>
+    <div key={txtPrps.keyProp} className={`w-9.5/10 h-full flex flex-col py-4 px-2 flex-grow-3 border-b border-white border-opacity-10 pb-8`}>
       <label className='mb-2 text-sm md:text-base w-full' htmlFor={txtPrps.question.id}>
         {txtPrps.question.question}
       </label>
       <textarea
         id={txtPrps.question.id}
-        className='h-9/10 w-9/10 px-4 py-2 bg-gray-300 text-gray-800 w-full text-sm md:text-xl text-gray-800 rounded-lg shadow-2'
+        className='h-40 w-9/10 px-4 py-2 bg-gray-300 text-gray-800 w-full text-sm md:text-xl text-gray-800 rounded-lg shadow-2'
         defaultValue={contents}
         onChange={handleTextInputChange}
       />

@@ -81,13 +81,13 @@ const CoopDisplay = () => {
 
     useEffect(() => {
         if ( state.displayData && state.displayData.breakdownComponent && state.displayData.breakdownComponent === 'corelesson/breakdown' ) {
-            console.log( 'got it', state.displayData );
+            // console.log( 'got it', state.displayData );
             setTeacherData(state.displayData)
         }
     }, [state.displayData])
 
     useEffect(() => {
-        console.log(teacherData);
+        // console.log(teacherData);
         if (teacherData && teacherData.corelessonData && teacherData.corelessonData.selected ) {
             let modulesArray = moduleTypes.map((item: {[key: string]: any}) => {
                 let contentArray = teacherData.corelessonData.selected.filter((selection: { color: string, content: any }) => {
@@ -105,7 +105,7 @@ const CoopDisplay = () => {
                 }
             })
 
-            console.log(modulesArray);
+            // console.log(modulesArray);
             
 
             setTeacherModules(modulesArray)
@@ -135,7 +135,7 @@ const CoopDisplay = () => {
                                 </div>
                                 <div className="w-full md:my-2 flex flex-col overflow-y-auto overflow-x-hidden px-2">
                                     { module.content.map((line: string, key: number)=> (
-                                        <p key={key} className={`text-sm text-gray-200 font-light`}>{line}</p>
+                                        line.length > 0 && <p key={key} className={`text-sm text-gray-200 font-light`}>{line}</p>
                                     ))}
                                 </div>
                             </div>

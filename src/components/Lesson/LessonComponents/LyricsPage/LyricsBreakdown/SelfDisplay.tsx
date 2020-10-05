@@ -68,9 +68,10 @@ const SelfDisplay = () => {
                   </div>
                 </div>
                 <div className='w-full md:my-4 flex flex-col overflow-y-auto overflow-x-hidden px-6 font-light'>
-                  {console.log('module content: ', module.content)}
+                  {/* {console.log('module content: ', module.content)} */}
                   {module.content.map((line: string, i: number) => {
                     return line.split('\n').map((subStr: string, key: number, arr: any) => (
+                      subStr.length > 0 &&
                       <>
                         <p key={key} className={`text-sm text-gray-200 font-light mb`}>
                           {subStr}
