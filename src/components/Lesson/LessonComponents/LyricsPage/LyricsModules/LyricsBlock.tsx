@@ -162,6 +162,23 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     }
   };
 
+  const handleClickSelectText = (e: React.MouseEvent) => {
+    const t = e.currentTarget as HTMLElement;
+    const targetWordID = t.id || '';
+
+    if(typeof targetWordID !== 'undefined'){
+      if(targetWordID.includes('mapped')){
+        setInitialSelectedText({
+          ...initialSelectedText,
+          [`group${selectGroup}`]: {
+            color: color,
+            selected: [targetWordID],
+          },
+        });
+      }
+    }
+  }
+
   /**
    * Mouse functionality
    */
@@ -173,13 +190,14 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       setMouseIsClicked(false);
     }
 
-    const currentGroupExists = checkIfSelectGroupExists(`group${selectGroup}`);
-    const currentGroupEmpty = initialSelectedText[`group${selectGroup}`]['selected'].length > 0;
+    if(typeof initialSelectedText[`group${selectGroup}`] !== 'undefined'){  //  check if first selectGroup has been initiated
+      const currentGroupEmpty = initialSelectedText[`group${selectGroup}`]['selected'].length > 0;  // returns true or false if current selectGroup is initiated and empty or not
 
-    if (!currentGroupEmpty) {
-      setSelectGroup(selectGroup);
-    } else {
-      setSelectGroup(selectGroup + 1);
+      if (!currentGroupEmpty) {
+        setSelectGroup(selectGroup);
+      } else {
+        setSelectGroup(selectGroup + 1);
+      }
     }
   };
 
@@ -208,6 +226,8 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       }
     }
   };
+
+
 
   /**
    * Lyric/state organization
@@ -393,6 +413,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         <div
           className='h-9/10 text-gray-200 text-sm overflow-y-auto overflow-x-hidden p-4'
           onMouseDown={handleMouseDown}
+          // onClick={handleClickSelectText}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
           style={{

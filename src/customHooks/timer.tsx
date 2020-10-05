@@ -131,6 +131,7 @@ const useStudentTimer = (inputs?: inputs) => {
         clearTimeout(params.activeTimer)
         clearTimeout(params.idleTimer)
         params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' })
+        params.dispatch({ type: 'INCREMENT_SAVE_COUNT' })
         // callback()
         console.log('save');
         
@@ -138,7 +139,7 @@ const useStudentTimer = (inputs?: inputs) => {
             console.log('save');
             params.dispatch({ type: 'INCREMENT_SAVE_COUNT' })
             // callback() 
-        }, 5000)
+        }, 3000)
     }
 
     const clearAutoSave = () => {
