@@ -335,7 +335,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
                     ? `text-${getHighlightColor(`mappedWord__${i}__${mappedWord}`)} bg-dark`
                     : ''
                 }
-                ${checkIfHovered(`mappedWord__${i}__${mappedWord}`) ? `border` : ''}
+                ${checkIfHovered(`mappedWord__${i}__${mappedWord}`) ? `border border-neg1` : ''}
                 `}>
             &nbsp;{`${mappedWord}`}&nbsp;
             <span
