@@ -19,7 +19,14 @@ module.exports = {
   corePlugins: {
     translate: true,
   },
-  theme: {
+  theme: {flexGrow: {
+    '0': 0,
+    default: 1,
+    default: 2,
+    '1': 1,
+    '2': 2,
+    '3': 3,
+  },
     cursor: {
       auto: 'auto',
       default: 'default',
