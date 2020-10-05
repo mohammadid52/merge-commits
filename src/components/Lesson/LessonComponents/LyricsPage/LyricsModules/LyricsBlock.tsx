@@ -71,6 +71,11 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     return trueOrFalse;
   };
 
+  const checkIfHovered = (mappedWordID: string) => {
+    const trueOrFalse = mappedWordID === mouseTarget;
+    return trueOrFalse;
+  };
+
   /**
    * Function that returns true | false if select-group for current
    * text selection exists in the state
@@ -166,8 +171,8 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     const t = e.currentTarget as HTMLElement;
     const targetWordID = t.id || '';
 
-    if(typeof targetWordID !== 'undefined'){
-      if(targetWordID.includes('mapped')){
+    if (typeof targetWordID !== 'undefined') {
+      if (targetWordID.includes('mapped')) {
         setInitialSelectedText({
           ...initialSelectedText,
           [`group${selectGroup}`]: {
@@ -177,21 +182,24 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         });
       }
     }
-  }
+  };
 
   /**
    * Mouse functionality
    */
 
   const handleMouseUp = (e: React.MouseEvent) => {
+    setMouseTarget(''); // Clear mouse target
+
     if (mouseIsHeld || mouseIsClicked) {
-      setFirstLastSelected([]);
+      setFirstLastSelected([]); // Reset first last selected if mouse is clicked
       setMouseIsHeld(false);
       setMouseIsClicked(false);
     }
 
-    if(typeof initialSelectedText[`group${selectGroup}`] !== 'undefined'){  //  check if first selectGroup has been initiated
-      const currentGroupEmpty = initialSelectedText[`group${selectGroup}`]['selected'].length > 0;  // returns true or false if current selectGroup is initiated and empty or not
+    if (typeof initialSelectedText[`group${selectGroup}`] !== 'undefined') {
+      //  check if first selectGroup has been initiated
+      const currentGroupEmpty = initialSelectedText[`group${selectGroup}`]['selected'].length > 0; // returns true or false if current selectGroup is initiated and empty or not
 
       if (!currentGroupEmpty) {
         setSelectGroup(selectGroup);
@@ -213,7 +221,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     const targetWordID = t.id || '';
 
     //  Updates mouse target state
-    // setMouseTarget(targetWordID);
+    setMouseTarget(targetWordID);
 
     /**
      * EXPERIMENTAL NEW SELECTION PART
@@ -226,8 +234,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       }
     }
   };
-
-
 
   /**
    * Lyric/state organization
@@ -270,30 +276,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       .sort();
 
     return [parsedNumbers[0], +parsedNumbers[parsedNumbers.length - 1] + 1];
-  };
-
-
-  /**
-   * Group final words together and trim strings
-   * @param input - Array of objects with [key: string]:string[]
-   */
-  const groupWordsByColor = (input: any) => {
-    return input.reduce((acc: any, val: any) => {
-      if (Object.keys(acc).includes(val.color)) {
-        return {
-          ...acc,
-          [val.color]: [
-            [...trimWordsInArray(val.selected, /^mappedWord__([0-9]+)__/)],
-            ...acc[val.color],
-          ],
-        };
-      } else {
-        return {
-          ...acc,
-          [val.color]: [[...trimWordsInArray(val.selected, /^mappedWord__([0-9]+)__/)]],
-        };
-      }
-    }, {});
   };
 
   /**
@@ -339,7 +321,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * @param strArray - any string []
    */
   const mapStrToSpan = (strArray: string[]) => {
-    
     return strArray?.map((mappedWord: string, i: number) => {
       if (mappedWord !== '\n') {
         return (
@@ -353,11 +334,14 @@ const LyricsBlock = (props: LyricsBlockProps) => {
                   checkIfHighlighted(`mappedWord__${i}__${mappedWord}`)
                     ? `text-${getHighlightColor(`mappedWord__${i}__${mappedWord}`)} bg-dark`
                     : ''
-                }`}>
+                }
+                ${checkIfHovered(`mappedWord__${i}__${mappedWord}`) ? `border` : ''}
+                `}>
             &nbsp;{`${mappedWord}`}&nbsp;
             <span
               id={`mappedWord__${i}__${mappedWord}`}
               onMouseOver={handleMouseOver}
+              onClick={handleClickSelectText}
               className='w-1/2 h-8 absolute right-0 transform -translate-x-1/2'></span>
           </span>
         );
@@ -413,7 +397,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         <div
           className='h-9/10 leading-8 text-gray-200 text-sm overflow-y-auto overflow-x-hidden p-4'
           onMouseDown={handleMouseDown}
-          // onClick={handleClickSelectText}
+          onClick={handleClickSelectText}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
           style={{
