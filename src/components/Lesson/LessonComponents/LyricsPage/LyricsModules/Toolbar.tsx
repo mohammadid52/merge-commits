@@ -13,6 +13,7 @@ const ToolBar = (props: ToolbarProps) => {
   const buttons = state.data.lesson.coreLesson.tools;
   const handleClick = (e: any) => {
     setColor(e.target.id);
+    console.log(e.target.id, 'e')
   };
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => {
     setSearch(e.target.value);
@@ -62,7 +63,7 @@ const ToolBar = (props: ToolbarProps) => {
           id='erase'
           className={`relative bg-gray-200 h-12 w-12 text-3xl rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center`}
           onClick={handleClick}>
-          <ToolTip position='hidden-bottom' header='eraser' display='none' fontSize= 'text-xs px-2' cursor/>
+          {/* <ToolTip position='hidden-bottom' header='eraser' display='none' fontSize= 'text-xs px-2' cursor/> */}
           <IconContext.Provider value={{ color: 'darkgray', size: '2rem' }}>
             <FaEraser style={{pointerEvents: 'none'}}/>
           </IconContext.Provider>
