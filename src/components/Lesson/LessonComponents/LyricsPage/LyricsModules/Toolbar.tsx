@@ -46,7 +46,7 @@ const ToolBar = (props: ToolbarProps) => {
           <div
             key={key}
             id={button.color}
-            className={`relative bg-${button.color} h-12 w-12 text-3xl rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center animate-fadeIn`}
+            className={`relative ${`bg-${button.color}`} h-12 w-12 text-3xl rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center animate-fadeIn`}
             onClick={handleClick }>
             <ToolTip position='hidden-bottom' 
             id={button.color}
