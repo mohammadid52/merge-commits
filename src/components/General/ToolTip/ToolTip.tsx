@@ -40,7 +40,7 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
         return 'transform translate-y-6';
         break;
       case 'hidden-bottom':
-        return 'transform translate-y-14';
+        return 'transform translate-y-16';
         break;
       case 'top-left':
         return 'transform -translate-y-4 right-1/2';
@@ -72,6 +72,7 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
       MozUserSelect: 'none',
       WebkitUserSelect: 'none',
       msUserSelect: 'none',
+      pointerEvents: 'none'
     }} id={toolTipProps.id ? toolTipProps.id : null}>
       <div
         className={`${toolTipProps.display === 'none' ? 'w-full h-full' : 'w-8 h-8'} ${toolTipProps.cursor ? 'cursor-pointer' : 'cursor-help' } relative flex justify-center z-10 `}
