@@ -44,7 +44,7 @@ const CoopDisplay = () => {
 
     useEffect(() => {
         if ( state.displayData && state.displayData.breakdownComponent && state.displayData.breakdownComponent === 'activity/breakdown' ) {
-            console.log( 'got it', state.displayData );
+            // console.log( 'got it', state.displayData );
             setTeacherData(state.displayData)
         }
     }, [state.displayData])

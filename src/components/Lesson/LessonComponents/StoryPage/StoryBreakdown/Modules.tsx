@@ -35,7 +35,7 @@ const Modules = (props: any) => {
     return null;
   }
 
-  console.log(additional);
+  // console.log(additional);
 
   return (
     <div

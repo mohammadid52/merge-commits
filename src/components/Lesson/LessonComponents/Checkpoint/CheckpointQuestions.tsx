@@ -124,8 +124,8 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   }, [checkpoint]);
 
   useEffect(() => {
-    console.log('input', input);
-    console.log('qData', state.questionData);
+    // console.log('input', input);
+    // console.log('qData', state.questionData);
 
   }, [input])
 

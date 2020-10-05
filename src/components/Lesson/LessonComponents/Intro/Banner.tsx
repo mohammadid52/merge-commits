@@ -8,7 +8,7 @@ const Banner = () => {
   const title = state.data.lesson.title;
 
   useEffect(() => {
-    console.log('TEST  :: ', theme.block.text);
+    // console.log('TEST  :: ', theme.block.text);
   }, []);
 
   {/* <div className="w-full h-1/10 flex flex-row justify-center items-center">

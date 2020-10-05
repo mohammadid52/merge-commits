@@ -231,7 +231,7 @@ const LessonControl = () => {
                                 <div className="w-1.5/10 flex flex-col justify-center items-center">
                                     {/* <ToolTip position='hidden-bottom' header='' content='students who are ready (click to reset)' width='w-20' cursor display='none' fontSize= 'text-xs'/> */}
                                     <div className="w-auto relative" onClick={handleResetDoneCounter}>
-                                    <ToolTip position='hidden-bottom' 
+                                    <ToolTip position='hidden-bottom'  
                                         cursor
                                         header=''
                                         width='w-24'

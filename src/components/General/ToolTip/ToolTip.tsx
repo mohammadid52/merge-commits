@@ -72,7 +72,7 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
       MozUserSelect: 'none',
       WebkitUserSelect: 'none',
       msUserSelect: 'none',
-      pointerEvents: 'none'
+      /* pointerEvents: 'none' */
     }} id={toolTipProps.id ? toolTipProps.id : null}>
       <div
         className={`${toolTipProps.display === 'none' ? 'w-full h-full' : 'w-8 h-8'} ${toolTipProps.cursor ? 'cursor-pointer' : 'cursor-help' } relative flex justify-center z-10 `}
@@ -96,6 +96,6 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
         </span>
       </div>
     </div>
-  );
-};
+    );
+  };
 export default ToolTip;

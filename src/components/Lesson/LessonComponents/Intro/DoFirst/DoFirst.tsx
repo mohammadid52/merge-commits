@@ -30,12 +30,12 @@ const DoFirst = () => {
   const [ status, setStatus ] = useState('');
 
   useEffect(() => {
-    console.log(state.questionData);
+    // console.log(state.questionData);
     
   }, [state.questionData])
 
   useEffect(() => {
-    console.log(doFirstID);
+    // console.log(doFirstID);
     
     let questionDataKeys = []; 
 
@@ -149,7 +149,6 @@ const DoFirst = () => {
   };
 
   useEffect(() => {
-    console.log('input', input);
 
     if (input && state.questionData.doFirst !== input) {
       dispatch({

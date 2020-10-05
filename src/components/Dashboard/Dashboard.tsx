@@ -55,7 +55,7 @@ const Dashboard: React.FC = () => {
         try {
             // this any needs to be changed once a solution is found!!!
             const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: state.user.email, authId: state.user.authId }))
-            console.log(user)
+            // console.log(user)
             setUser(user.data.getPerson);
         } catch (error) {
             console.error(error)
