@@ -71,6 +71,7 @@ const SelfDisplay = () => {
                   {/* {console.log('module content: ', module.content)} */}
                   {module.content.map((line: string, i: number) => {
                     return line.split('\n').map((subStr: string, key: number, arr: any) => (
+                      subStr.length > 0 &&
                       <>
                         <p key={key} className={`text-sm text-gray-200 font-light mb`}>
                           {subStr}
