@@ -56,7 +56,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       case 'fire-orange':
         return '#FF5733';
       case 'erase':
-        return 'erase';
+        return '#cbd5e0';
     }
   };
 

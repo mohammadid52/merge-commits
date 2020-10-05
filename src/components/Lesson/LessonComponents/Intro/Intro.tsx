@@ -14,7 +14,7 @@ const Intro = () => {
     const { dispatch, state, theme } = useContext(LessonContext)
 
     useEffect(() => {
-        console.log('andrew', state.data.lesson);
+        // console.log('andrew', state.data.lesson);
         
         dispatch({type: 'ACTIVATE_LESSON', payload: ''})
     }, [])

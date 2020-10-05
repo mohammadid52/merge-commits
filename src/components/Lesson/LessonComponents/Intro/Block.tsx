@@ -18,7 +18,6 @@ const Block = () => {
 
   const handleClick = () => {
     setBio(!bio);
-    console.log(bio, 'bio');
   };
 
   const firstLetterFunction = (str: string) => {
