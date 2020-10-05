@@ -7,7 +7,7 @@ import {
     // useRouteMatch 
 } from 'react-router-dom';
 import { IconContext } from "react-icons/lib/esm/iconContext";
-import { FaRegSave, FaHome, FaBook } from 'react-icons/fa';
+import { FaRegSave, FaHome, FaBook, FaRegThumbsUp } from 'react-icons/fa';
 import { AiOutlineSave, AiOutlineHome } from 'react-icons/ai';
 import { FiClock } from 'react-icons/fi'
 import { LessonContext } from '../../contexts/LessonContext';
@@ -124,7 +124,7 @@ const LessonHeaderBar = () => {
                     <img className="h-6 px-4" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg" alt="Iconoclast Artists"/>
                 </NavLink>
             </div>
-            <div className={`relative w-56 h-full flex flex-row justify-end items-center px-8`}>
+            <div className={`relative w-56 h-full flex flex-row justify-end items-center px-8 pt-1`}>
                 {/* <div className={`flex flex-col justify-center items-center px-2`}>
                     <div className={`flex flex-col justify-center items-center px-2 cursor-pointer`} onClick={toggleDictionary}>
                         <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
@@ -175,9 +175,9 @@ const LessonHeaderBar = () => {
                     !state.viewing ?
                     <div className={`w-4.5/10 ${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={handleDone}>
                         <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
-                            <AiOutlineSave />
+                            <FaRegThumbsUp />
                         </IconContext.Provider>
-                        <p className={`text-xs text-gray-200 text-center`} style={{color: state.unsavedChanges ? '#EDF2F7' : '#4A5568'}}>Save</p>
+                        <p className={`text-xs text-gray-200 text-center`} style={{color: state.unsavedChanges ? '#EDF2F7' : '#4A5568'}}>Done</p>
                     </div>
                     :
                     <div className={`w-4.5/10 cursor-default flex flex-col justify-center items-center px-2`}>

@@ -45,6 +45,7 @@ const Body = () => {
   const { video, link } = state.data.lesson.coreLesson.instructions;
   const [openPopup, setOpenPopup] = useState(false);
   //  text
+  const [firstLastSelected, setFirstLastSelected] = useState<string[]>([]);
   const [initialSelectedText, setInitialSelectedText] = useState<SelectedTextGroup>({});
   const [finalText, setFinalText] = useState<FinalText>({});
   const [selectGroup, setSelectGroup] = useState<number>(0);
@@ -130,6 +131,8 @@ const Body = () => {
               setSelected={setSelected}
               fullscreen={fullscreen}
               setFullscreen={setFullscreen}
+              firstLastSelected={firstLastSelected}
+              setFirstLastSelected={setFirstLastSelected}
               initialSelectedText={initialSelectedText}
               setInitialSelectedText={setInitialSelectedText}
               finalText={finalText}

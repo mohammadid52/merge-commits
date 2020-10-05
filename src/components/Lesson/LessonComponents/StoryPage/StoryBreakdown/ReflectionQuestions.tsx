@@ -4,7 +4,6 @@ import { LessonContext } from '../../../../../contexts/LessonContext';
 const ReflectionQuestions = () => {
     const [ question, setQuestion ] = useState(0);
     const { state } = useContext(LessonContext);
-    console.log(state)
     const questArr = state.data.lesson.warmUp.breakdown.reflectionQuestions;
 
     const nextQuestion = () => {
