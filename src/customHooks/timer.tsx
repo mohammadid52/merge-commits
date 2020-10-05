@@ -48,7 +48,7 @@ const useStudentTimer = (inputs?: inputs) => {
             // clearAllTimers()
             startTimer()
 
-            updateStudentData('status')
+            // updateStudentData('status')
         }
 
         if (params.state.studentStatus === 'ACTIVE' && params.state.subscription._state === 'closed' ) {
