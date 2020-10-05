@@ -134,7 +134,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     e.preventDefault();
 
     if ((mouseIsClicked || mouseIsHeld) && color !== '') {
-      console.log('handleSelectText: ', targetWordID);
+      // console.log('handleSelectText: ', targetWordID);
       if (targetWordID.match(/mappedWord/) !== null) {
         if (color !== 'erase') {
           /**

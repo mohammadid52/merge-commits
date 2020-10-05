@@ -12,7 +12,6 @@ const StoryBreakdown = () => {
     const displayProps = state.componentState.story;
     const [displayMode, setDisplayMode] = useState(state.data.lessonPlan[state.currentPage].displayMode);
 
-    console.log(state.currentPage)
 
     useEffect(() => {
         dispatch({type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown'})
