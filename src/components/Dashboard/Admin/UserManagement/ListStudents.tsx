@@ -5,12 +5,11 @@ import UserStatus from './UserStatus';
 
 interface ListProps {
     item: any
-    key: number
     listUsers: () => void
 }
 
 const List = (props: ListProps) => {
-    const {item, key, listUsers} = props;
+    const {item, listUsers} = props;
     const match = useRouteMatch();
     const history = useHistory();
     const initials = (firstName: string, lastName: string) => {
@@ -41,7 +40,7 @@ const List = (props: ListProps) => {
         ///change INFO, MARGIN and WIDTH if needed
         <>
         { item.role === 'ST' && 'TR' ? 
-        <div id={item.id} key={key} className="flex justify-between bg-white w-full border-b border-gray-200">
+        <div id={item.id} className="flex justify-between bg-white w-full border-b border-gray-200">
                             
                 <div className="w-3.5/10 px-8 py-4 whitespace-no-wrap">
                     <div className="flex items-center">
@@ -79,7 +78,7 @@ const List = (props: ListProps) => {
                     </div>
                 </div>
                 <div className="w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleLink} >
-                    <div id={item.id} key={key} className="text-indigo-600 hover:text-indigo-900">View</div>
+                    <div id={item.id} className="text-indigo-600 hover:text-indigo-900">View</div>
                 </div>
 
 

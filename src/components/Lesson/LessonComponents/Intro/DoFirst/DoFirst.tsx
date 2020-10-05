@@ -74,13 +74,13 @@ const DoFirst = () => {
     switch (question.type) {
       case 'input':
         return (
-          <div key={key} className={'w-full h-full flex flex-col my-4 mx-2'}>
+          <div key={key} className={'w-9.5/10 h-full flex flex-col py-4 px-2 flex-grow-1 border-b border-white border-opacity-10 pb-8'}>
             <label className='mb-2' htmlFor={question.id}>
               {question.question}
             </label>
             <input
               id={question.id}
-              className='w-9/10 py-2 px-4 text-gray-800 rounded-lg bg-gray-300'
+              className='w-full py-2 px-4 text-lg text-gray-800 rounded-lg bg-gray-300'
               type='text'
               name={question.id}
               defaultValue={input[question.id]}
@@ -208,7 +208,7 @@ const DoFirst = () => {
       </h3>
       <div className='w-full h-8.5/10 flex flex-col text-gray-200'>
         {questionArray.map((item: { question: any }, key: number) => (
-          <div key={key} className='h-4.5/10 border-b border-white border-opacity-10 pb-8'>
+          <div key={key} className='flex flex-col'>
             {/* <p className='font-light text-base text-blue-100 text-opacity-70 my-4 mb-4'>{item.question.question}</p> */}
             {inputSwitch(item.question, key)}
           </div>
