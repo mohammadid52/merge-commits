@@ -58,7 +58,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
         await Auth.currentAuthenticatedUser()
         .then(user => {
-            console.log(user);
+            // console.log(user);
             studentID = user.attributes.email
             studentAuthID = user.attributes.sub
         })
@@ -69,7 +69,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                 studentID: studentID,
             }))
 
-            console.log(studentData)
+            // console.log(studentData)
 
             if ( !studentData.data.getStudentData ) {
                 const newStudentData: any = await API.graphql(graphqlOperation(customMutations.createStudentData, { input: {
@@ -79,7 +79,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                     studentID: studentID,
                     studentAuthID: studentAuthID,
                 }}))
-                console.log(newStudentData)
+                // console.log(newStudentData)
                 dispatch({ type: 'SET_STUDENT_INFO', payload: {
                     studentDataID: newStudentData.data.createStudentData.id,
                     studentUsername: newStudentData.data.createStudentData.studentID,
@@ -108,7 +108,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         try {
             // this any needs to be changed once a solution is found!!!
             const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroomStudent, { id: queryParams.id }))
-            console.log('classroom data', classroom);
+            // console.log('classroom data', classroom);
             setLesson(classroom.data.getClassroom)
             getOrCreateStudentData()
             subscription = subscribeToClassroom()
@@ -125,7 +125,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             next: (classroomData: any) => {
                 const updatedLessonPlan = classroomData.value.data.onUpdateClassroom
 
-                console.log('updated', updatedLessonPlan)
+                // console.log('updated', updatedLessonPlan)
                 // dispatch({ type: 'SET_LOADING' })
                 // console.log('state,', state)
 
@@ -140,7 +140,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             }
         });
   
-        console.log('sub', classroomSubscription)
+        // console.log('sub', classroomSubscription)
 
         return classroomSubscription;
     }
@@ -156,7 +156,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
     useEffect(() => {
         if (lesson) {
-            console.log('lesson', lesson);
+            // console.log('lesson', lesson);
             const wordBank: Array<string> = ['Mimo provoz'];
 
             
@@ -174,7 +174,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
     useEffect(() => {
         if ( data ) {
-            console.log('data', data)
+            // console.log('data', data)
             let initialComponentState: any = {};
             lesson.lessonPlan.forEach((item: { type: string, stage: string}) => {
                 initialComponentState[item.type] = data[item.stage]

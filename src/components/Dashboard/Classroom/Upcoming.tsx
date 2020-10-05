@@ -37,8 +37,6 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
         // curriculum;
     }, [props])
 
-    console.log(curriculum, 'curr')
-
     
     
 

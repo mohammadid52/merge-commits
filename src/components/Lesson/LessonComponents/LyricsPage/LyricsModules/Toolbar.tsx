@@ -13,6 +13,7 @@ const ToolBar = (props: ToolbarProps) => {
   const buttons = state.data.lesson.coreLesson.tools;
   const handleClick = (e: any) => {
     setColor(e.target.id);
+    console.log(e.target.id, 'e')
   };
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => {
     setSearch(e.target.value);

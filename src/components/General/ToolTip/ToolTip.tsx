@@ -96,6 +96,6 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
         </span>
       </div>
     </div>
-  );
-};
+    );
+  };
 export default ToolTip;
