@@ -19,7 +19,7 @@ const UserLookup = () => {
     const history = useHistory();
     const [status, setStatus] = useState('');
 
-    async function listUsers() {
+    async function listUsers() { 
         // let limit = 20;
         try {
             const users: any = await API.graphql(graphqlOperation(queries.listPersons, 
