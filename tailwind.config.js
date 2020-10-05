@@ -9,7 +9,7 @@ module.exports = {
       './src/**/*.jsx',
     ],
     options: {
-      whitelist: ['fire-orange', 'sea-green', 'dark-red'],
+      whitelist: ['fire-orange', 'sea-green', 'dark-red', 'translate-y-1/2'],
     }
   },
   future: {
