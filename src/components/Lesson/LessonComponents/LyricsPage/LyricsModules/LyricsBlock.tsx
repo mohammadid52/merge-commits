@@ -345,7 +345,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         return (
           <span
             key={`mappedWord__${i}__${mappedWord}`}
-            className={`p-1 relative
+            className={`relative py-2
                 ${
                   //  Check if current mapped word is highlighted
                   //  or
@@ -358,7 +358,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
             <span
               id={`mappedWord__${i}__${mappedWord}`}
               onMouseOver={handleMouseOver}
-              className='w-1/2 h-full absolute right-0 transform -translate-x-1/2'></span>
+              className='w-1/2 h-8 absolute right-0 transform -translate-x-1/2'></span>
           </span>
         );
       } else {
@@ -411,7 +411,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
           </div>
         </div>
         <div
-          className='h-9/10 text-gray-200 text-sm overflow-y-auto overflow-x-hidden p-4'
+          className='h-9/10 leading-8 text-gray-200 text-sm overflow-y-auto overflow-x-hidden p-4'
           onMouseDown={handleMouseDown}
           // onClick={handleClickSelectText}
           onMouseUp={handleMouseUp}
