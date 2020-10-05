@@ -98,7 +98,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         return groupKey; // returns ['group0']
       }
     });
-    if (filteredGroupName.length === 1) return filteredGroupName[0]; // returns 'group0'
+    if (filteredGroupName.length > 0) return filteredGroupName; // returns ['group0'] -OR- ['group1', 'group2']
   };
 
   const getArrayWithMappedWord = (mappedWordID: string) => {
@@ -119,14 +119,23 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     }
   };
 
-  const eraseSelectGroup = (selectGroupName: string) => {
+  const eraseSelectGroup = (selectGroupName: string[]) => { // here you pass in ['group0'] -OR- ['group1', 'group2']
     const remainingGroups = Object.keys(initialSelectedText).filter(
-      (obj: any) => obj !== selectGroupName
+      (obj: any) => selectGroupName.includes(obj) === false
     ); // group0, group1,... array
     return remainingGroups.reduce((acc: any, groupName: string) => {
       return { ...acc, ...{ [groupName]: initialSelectedText[groupName] } };
     }, {});
   };
+
+  const cleanupEmptyGroups = () => {
+    const nonEmptyGroups = Object.keys(initialSelectedText).filter(
+      (obj: any) => initialSelectedText[obj]['selected'].length > 0
+    );
+    return nonEmptyGroups.reduce((acc: any, groupName: string) => {
+      return { ...acc, ...{ [groupName]: initialSelectedText[groupName] } };
+    },{})
+  }
 
   /**
    * Function that handles the text selection
@@ -140,7 +149,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    *
    */
 
-  const handleSelectText2 = () => {
+  const handleDragSelectText = () => {
     if (color !== '') {
       if (color !== 'erase') {
         /**
@@ -163,6 +172,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
           const groupAfterErase = eraseSelectGroup(groupNameToErase);
           setInitialSelectedText(groupAfterErase);
         }
+        
       }
     }
   };
@@ -172,15 +182,26 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     const targetWordID = t.id || '';
 
     if (typeof targetWordID !== 'undefined') {
-      if (targetWordID.includes('mapped')) {
-        setInitialSelectedText({
-          ...initialSelectedText,
-          [`group${selectGroup}`]: {
-            color: color,
-            selected: [targetWordID],
-          },
-        });
+      if (color !== 'erase') {
+        if (targetWordID.includes('mapped')) {
+          setInitialSelectedText({
+            ...initialSelectedText,
+            [`group${selectGroup}`]: {
+              color: color,
+              selected: [targetWordID],
+            },
+          });
+        }
+      } else {
+        if (targetWordID.includes('mapped')) {
+          //
+          //
+          //
+          //
+          
+        }
       }
+      setSelectGroup(selectGroup + 1);
     }
   };
 
@@ -358,7 +379,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    */
 
   useEffect(() => {
-    handleSelectText2();
+    handleDragSelectText();
   }, [firstLastSelected]);
 
   /**
@@ -386,7 +407,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
           <div className='w-auto'>
             <IconContext.Provider
               value={{
-                color: `${colorPicker(color) === '' ? 'white': colorPicker(color)}`,
+                color: `${colorPicker(color) === '' ? 'white' : colorPicker(color)}`,
                 size: '2rem',
                 style: { width: 'auto' },
               }}>
