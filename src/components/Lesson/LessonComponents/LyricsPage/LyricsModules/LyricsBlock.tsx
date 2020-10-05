@@ -56,7 +56,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       case 'fire-orange':
         return '#FF5733';
       case 'erase':
-        return '#cbd5e0';
+        return '';
     }
   };
 
@@ -386,7 +386,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
           <div className='w-auto'>
             <IconContext.Provider
               value={{
-                color: colorPicker(color),
+                color: `${colorPicker(color) === '' ? 'white': colorPicker(color)}`,
                 size: '2rem',
                 style: { width: 'auto' },
               }}>
