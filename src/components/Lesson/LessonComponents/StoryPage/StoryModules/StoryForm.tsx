@@ -70,9 +70,6 @@ const StoryForm = () => {
       <h3
         className={`text-xl text-gray-200 font-open font-light ${theme.underline}`}>
         Story{' '}
-        <span className='text-gray-600 font-light text-sm ml-4'>
-          (Fill in the form below!)
-        </span>
       </h3>
       <div className='relative h-full flex flex-col mb-5 mt-2'>
         <label

@@ -135,7 +135,7 @@ const CoopDisplay = () => {
                                 </div>
                                 <div className="w-full md:my-2 flex flex-col overflow-y-auto overflow-x-hidden px-2">
                                     { module.content.map((line: string, key: number)=> (
-                                        <p key={key} className={`text-sm text-gray-200 font-light`}>{line}</p>
+                                        line.length > 0 && <p key={key} className={`text-sm text-gray-200 font-light`}>{line}</p>
                                     ))}
                                 </div>
                             </div>
