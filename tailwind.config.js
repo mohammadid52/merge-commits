@@ -9,7 +9,7 @@ module.exports = {
       './src/**/*.jsx',
     ],
     options: {
-      whitelist: ['bg-fire-orange', 'bg-sea-green', 'bg-dark-red', 'translate-y-1/2', 'text-purple-400'],
+      whitelist: ['bg-fire-orange', 'bg-sea-green', 'bg-dark-red', 'translate-y-1/2', 'animate-wiggle', 'text-purple-400'],
     }
   },
   future: {
@@ -145,6 +145,7 @@ module.exports = {
       },
       animation: {
         'bounce': 'bounce 2.5s linear 2',
+        'jiggle': 'jiggle 0.2s linear infinite',
         'ping': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
         'fadeIn': 'fadeIn 1s ease-in-out'
       },
@@ -168,6 +169,17 @@ module.exports = {
           '100%': {
             transform: 'translateY(0)'
           },
+        },
+        jiggle: {
+          '0%': {
+            transform: 'rotate(10deg)'
+          },
+          '50%': {
+            transform: 'rotate(-10deg)'
+          },
+          '100%': {
+            transform: 'rotate(10deg)'
+          }
         },
         ping: {
           '0%': {

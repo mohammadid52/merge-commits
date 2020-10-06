@@ -21,25 +21,41 @@ interface SelectOneRowState {
 }
 
 const SelectOneQuestions = (selectOneProps: CPQuestionProps) => {
+  const { question, checkpointID } = selectOneProps;
   const { state, dispatch } = useContext(LessonContext);
   const [input, setInput] = useState<SelectOneRowState>({ id: '', value: '' });
 
   useEffect(() => {
-    // if (
-    //   state.questionData[selectOneProps.checkpointID] &&
-    //   state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] &&
-    //   state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] !== ''
-    // ) {
-    //   setInput(state.questionData[selectOneProps.checkpointID][selectOneProps.question.id]);
-    // }
+    console.log('czech this', question, checkpointID );
+    
+    if (
+      state.questionData[selectOneProps.checkpointID] &&
+      state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] &&
+      state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] !== ''
+    ) {
+      console.log('match', state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] );
+      setInput((prev: any) => {
+        return {
+          ...prev,
+          value: state.questionData[selectOneProps.checkpointID][selectOneProps.question.id],
+        }
+      });
+    }
 
-    // if (
-    //   state.questionData[selectOneProps.checkpointID] === undefined ||
-    //   state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] === undefined
-    // ) {
-    //   setInput('');
-    // }
-  }, []);
+    if (
+      state.questionData[selectOneProps.checkpointID] === undefined ||
+      state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] === undefined
+    ) {
+      console.log('nomatch');
+      
+      setInput((prev: any) => {
+        return {
+          ...prev,
+          value: '',
+        }
+      });
+    }
+  }, [checkpointID]);
 
   const handleRadioSelect = (e: { target: { value: string; id: string } }) => {
     const { value, id } = e.target;
@@ -69,8 +85,9 @@ console.log(selectOneProps)
                     value={option.label}
                     onChange={handleRadioSelect}
                     checked={
-                      input.id === selectOneProps.question.id && input.value === option.label
-                    } />
+                      input.value === option.label
+                    }
+                    />
                     {option.text}
                   </label>
                 </div>

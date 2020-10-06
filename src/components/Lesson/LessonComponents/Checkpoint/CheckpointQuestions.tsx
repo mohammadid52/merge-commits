@@ -57,7 +57,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     if ( state.questionData[checkpoint.checkpoint.id] ) { questionDataKeys = Object.keys(state.questionData[checkpoint.checkpoint.id]) }
 
 
-    if (!input && questionDataKeys.length > 0) {
+    if (!input && questionDataKeys.length > 0 ) {
       // console.log('oldu', state.questionData);
       
       setInput(() => {
@@ -73,6 +73,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       });
     }
 
+    setStatus('loaded')
     // if ( cookies.questionData ) {
     //     dispatch({
       //         type: 'SET_QUESTION_DATA',
@@ -85,7 +86,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
           //     return setInitialState(checkpoint.checkpoint.questions.items);
           //   });
           // }
-    setStatus('loaded')
   }, []);
 
   useEffect(() => {
@@ -158,7 +158,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   };
 
   useEffect(() => {
-    // console.log(state.questionData);
+    // console.log('input', input);
 
     if (input && state.questionData[checkpoint.checkpoint.id] !== input) {
       let dispatchInput: any = {}; 
@@ -221,7 +221,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
           <TextQuestions
             keyProp={key}
             question={question}
-            value={input[question.label]}
+            value={input[question.id]}
             handleInputChange={handleInputChange}
             checkpointID={checkpoint.checkpoint.id}
           />
@@ -231,7 +231,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
           <SelectOneQuestions
             keyProp={key}
             question={question}
-            value={input[question.label]}
+            value={input[question.id]}
             handleInputChange={handleInputChange}
             checkpointID={checkpoint.checkpoint.id}
           />
