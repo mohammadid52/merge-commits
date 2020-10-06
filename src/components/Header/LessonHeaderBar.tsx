@@ -82,9 +82,7 @@ const LessonHeaderBar = () => {
     }
 
     const handleDone = () => {
-        if ( state.unsavedChanges ) {
-            updateStudentData('done')
-        }
+        updateStudentData('done')
     }
 
     // const toggleDictionary = () => {
@@ -177,7 +175,7 @@ const LessonHeaderBar = () => {
                         <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                             <FaRegThumbsUp />
                         </IconContext.Provider>
-                        <p className={`text-xs text-gray-200 text-center`} style={{color: state.unsavedChanges ? '#EDF2F7' : '#4A5568'}}>
+                        <p className={`text-xs text-gray-200 text-center`}>
                             Done
                         </p>
                     </div>
