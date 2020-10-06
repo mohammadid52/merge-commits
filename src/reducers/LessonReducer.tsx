@@ -294,12 +294,12 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             let updatedQuestionDataObject = updatedQuestionData[action.payload.key]
 
             payloadKeys.forEach((key: string) => {
-                if ( action.payload.data[key] !== '' ) {
+                if ( action.payload.data[key] !== '' && action.payload.data[key] !== null && action.payload.data[key] !== undefined ) {
                     updatedQuestionDataObject[key] = action.payload.data[key]
                 }
             })
 
-            // console.log(newObject);
+            // console.log('here', updatedQuestionDataObject);
             
             return {
                 ...state,

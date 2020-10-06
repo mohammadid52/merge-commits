@@ -46,7 +46,7 @@ const useStudentTimer = (inputs?: inputs) => {
     useEffect(() => {
          if (params.state.studentStatus === 'ACTIVE' && params.state.subscription._state === 'ready' ) {
             // clearAllTimers()
-            startTimer()
+            // startTimer()
 
             // updateStudentData('status')
         }
@@ -54,7 +54,7 @@ const useStudentTimer = (inputs?: inputs) => {
         if (params.state.studentStatus === 'ACTIVE' && params.state.subscription._state === 'closed' ) {
             params.subscribeFunc()
 
-            startTimer()
+            // startTimer()
 
             updateStudentData('status')
         }
