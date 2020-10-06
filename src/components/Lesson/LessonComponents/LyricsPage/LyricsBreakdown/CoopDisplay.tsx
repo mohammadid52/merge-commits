@@ -50,7 +50,7 @@ const CoopDisplay = () => {
     let resultArray = arr.map((item: Array<{ text: string; [key: string]: any }>) => {
       let parsedString = '';
       item.forEach((item: { text: string; [key: string]: any }) => {
-        parsedString = parsedString + item.text;
+        parsedString = parsedString + ' ' + item.text;
       });
       return parsedString;
     });

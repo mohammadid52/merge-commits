@@ -11,6 +11,7 @@ const SelfDisplay = () => {
   const moduleTypes = state.data.lesson.coreLesson.tools;
 
   const arrayParseToString = (arr: Array<Array<{ [key: string]: any }>>) => {
+    console.log('selfdisplay arr: ', arr)
     let resultArray = arr.map((item: Array<{ text: string; [key: string]: any }>) => {
       let parsedString = '';
       item.forEach((item: { text: string; [key: string]: any }) => {
