@@ -96,6 +96,8 @@ const StageIcon = (props: StageIconProps) => {
   const iconBorder =  open || active ? '#cbd5e0' : '#54575c';
   
 
+
+  
   if (disabled) return null;
 
   if (type === 'breakdown') {
