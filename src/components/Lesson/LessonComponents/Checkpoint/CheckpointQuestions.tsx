@@ -163,7 +163,9 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     if (input && state.questionData[checkpoint.checkpoint.id] !== input) {
       let dispatchInput: any = {}; 
       checkpoint.checkpoint.questions.items.forEach((item: { question: { id: string; type: string; label: string } }) => {
-        dispatchInput[item.question.id] = input[item.question.id]
+        if ( input[item.question.id] !== null && input[item.question.id] !== undefined && input[item.question.id] !== '' ) {
+          dispatchInput[item.question.id] = input[item.question.id]
+        }
       })
 
       dispatch({

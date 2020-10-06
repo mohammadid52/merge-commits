@@ -11,6 +11,7 @@ export type LessonActions =
             pages: PagesType
             word_bank?: any;
             displayData?: any;
+            subscribeFunc: () => any,
         }
     }
 |   {
@@ -91,6 +92,12 @@ export type LessonActions =
         payload: number;
     } 
 |   {
+        type: 'SET_SUBSCRIPTION';
+        payload: {
+            subscription: any,
+        }
+    } 
+|   {
         type: 'SET_STUDENT_INFO';
         payload: {
             studentDataID: string
@@ -112,7 +119,7 @@ export type LessonActions =
 export const lessonReducer = (state: LessonStateType, action: LessonActions) => {
     switch(action.type) {
         case 'TEST':
-            console.log('done')
+            // console.log('done')
             break
         case 'SET_INITIAL_STATE': 
             return {
@@ -122,6 +129,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 pages: action.payload.pages,
                 word_bank: action.payload.word_bank,
                 displayData: action.payload.displayData,
+                subscribeFunc: action.payload.subscribeFunc
                 // timer: action.payload.timer
             }
         case 'SET_CURRENT_PAGE':
@@ -154,13 +162,19 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                     }
                 })
             }
+        case 'SET_SUBSCRIPTION':
+            return {
+                ...state,
+                subscription: action.payload.subscription,
+                
+            }
         case 'ERROR':
             return {
                 ...state, 
                 error: action.payload
             } 
         case 'UPDATE_STUDENT_STATUS':
-            console.log('status', action.payload);
+            // console.log('status', action.payload);
             return {
                 ...state,
                 studentStatus: action.payload
@@ -207,6 +221,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             return {
                 ...state,
                 unsavedChanges: true,
+                studentStatus: 'ACTIVE',
                 componentState: {
                     ...state.componentState,
                     [action.payload.componentName]: {
@@ -216,7 +231,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 },
             };
         case 'UPDATE_LESSON_PLAN':
-            console.log('this', action.payload, state.studentAuthID, action.payload.viewing === state.studentAuthID);
+            // console.log('this', action.payload, state.studentAuthID, action.payload.viewing === state.studentAuthID);
             
             return {
                 ...state,
@@ -279,15 +294,16 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             let updatedQuestionDataObject = updatedQuestionData[action.payload.key]
 
             payloadKeys.forEach((key: string) => {
-                if ( action.payload.data[key] !== '' ) {
+                if ( action.payload.data[key] !== '' && action.payload.data[key] !== null && action.payload.data[key] !== undefined ) {
                     updatedQuestionDataObject[key] = action.payload.data[key]
                 }
             })
 
-            // console.log(newObject);
+            // console.log('here', updatedQuestionDataObject);
             
             return {
                 ...state,
+                studentStatus: 'ACTIVE',
                 questionData: {
                     ...state.questionData,
                     [action.payload.key]: updatedQuestionDataObject
@@ -333,12 +349,14 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
         case 'PAGE_FORWARD':
             return {
                 ...state,
+                studentStatus: 'ACTIVE',
                 lessonProgress: state.lessonProgress === state.currentPage ? state.currentPage + 1 : state.lessonProgress,
                 currentPage: state.currentPage + 1,
             };
         case 'PAGE_BACK':
             return {
                 ...state,
+                studentStatus: 'ACTIVE',
                 currentPage: state.currentPage - 1,
             };
         case 'CLEANUP':
