@@ -27,7 +27,9 @@ const SurveyCard: React.FC<ClassProps> = (props: ClassProps) => {
                 
                 <div className={`w-2.5/10 bg-dark rounded-tl-xl rounded-bl-xl`}>
                     <div className="h-6/10 flex justify-center items-center">
-                        {/* <img className=" w-32 rounded-full " src={`${curriculum && curriculum.artist.images ? curriculum.artist.images : null}`} alt={`${curriculum && curriculum.artist.name ? curriculum.artist.name : ''}`} /> */}
+                        <div className="h-28 w-28 rounded-full bg-white flex justify-center items-center" style={{height: '7rem'}}>
+                        <img className="w-28  " src={'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Symbol.png'} alt={`${curriculum && curriculum.artist.name ? curriculum.artist.name : 'Iconoclast Artists'}`} />
+                        </div>
                     </div>
                     <div className="h-1/10 pl-6">
                         <div className="tracking-widest border-b text-gray-300 border-ketchup">
@@ -46,7 +48,7 @@ const SurveyCard: React.FC<ClassProps> = (props: ClassProps) => {
                             <p className="w-auto text-black border-b border-ketchup font-light">Welcome to Iconoclast Artists</p>
                         </h1>
                         <h1 className={`text-4xl text-black font-open px-8 text-center`}>
-                            On-boarding Survey
+                            Onboarding Survey
                         </h1>
                         <p className="text-md text-center py-4">
                             This is a quick survey to see where you're at in terms of some of the topics we'll cover this semester. Please click the button below and answer each of the questions to the best of your ability. We appreciate your time in completing this survey, and we're excited to get started on this Iconoclast journey with you!

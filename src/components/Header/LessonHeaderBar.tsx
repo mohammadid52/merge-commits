@@ -188,7 +188,7 @@ const LessonHeaderBar = () => {
                 </div> */}
                 {
                     !state.viewing ?
-                    <div className={`w-4.5/10 cursor-pointer flex flex-col justify-center items-center px-2`} onClick={handleDone}>
+                    <div id='lesson-done' className={`w-4.5/10 cursor-pointer flex flex-col justify-center items-center px-2`} onClick={handleDone}>
                         <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                             <FaRegThumbsUp className={`${isToggled.includes('lesson-done') && 'animate-jiggle'}`}/>
                         </IconContext.Provider>
