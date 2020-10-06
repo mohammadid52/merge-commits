@@ -44,7 +44,7 @@ const Checkpoint = () => {
                         { title }
                     </div>
                 </div>
-                <div className={`h-8.5/10 w-full scrolling-touch overflow-x-scroll overflow-y-scroll md:overflow-auto bg-dark-blue shadow-elem-dark rounded-lg p-4 md:p-8`}>
+                <div className={`h-8.5/10 w-full scrolling-touch overflow-x-scroll overflow-y-scroll md:overflow-auto bg-dark-blue shadow-elem-dark rounded-lg p-4 md:py-4 md:px-6`}>
                     { tempCheckPtSwitch(state.pages[state.currentPage].type) }
                 </div>
             </div>
