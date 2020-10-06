@@ -77,7 +77,7 @@ const ClassRoster = (props: classRosterProps) => {
                     
                 </div> */}
             </div>
-            <div className={`w-full h-full flex flex-col items-center`}>
+            <div className={`w-full flex flex-col items-center`}>
                 {
                     state.roster && state.roster.length > 0 ? 
                     state.roster.map((item: any, key: number) => (
