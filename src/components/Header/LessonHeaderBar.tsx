@@ -27,6 +27,7 @@ const LessonHeaderBar = () => {
     // const [ dictOpen, setDictOpen ] = useState(false);
     // const { lookUp } = useDictionary('EN');
     // const [ searchTerm, setSearchTerm ] = useState('');
+    const [isToggled, setIsToggled] = useState<string[]>(['']);
 
     useEffect(() => {
         if ( !state.pages[0].active ) {
@@ -81,9 +82,21 @@ const LessonHeaderBar = () => {
         }
     }
 
-    const handleDone = () => {
-        updateStudentData('done')
-    }
+    const handleDone = (e: React.MouseEvent) => {
+        const t = e.currentTarget as HTMLElement;
+        const targetWordID = t.id || '';
+    
+        updateStudentData('done');
+    
+        /**
+         * Animation
+         */
+        setIsToggled([...isToggled, targetWordID]);
+    
+        setTimeout(() => {
+          setIsToggled(isToggled.filter((targetString: string) => targetString !== targetWordID));
+        }, 300);
+      };
 
     // const toggleDictionary = () => {
     //     setDictOpen(() => {
@@ -177,7 +190,7 @@ const LessonHeaderBar = () => {
                     !state.viewing ?
                     <div className={`w-4.5/10 cursor-pointer flex flex-col justify-center items-center px-2`} onClick={handleDone}>
                         <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
-                            <FaRegThumbsUp />
+                            <FaRegThumbsUp className={`${isToggled.includes('lesson-done') && 'animate-jiggle'}`}/>
                         </IconContext.Provider>
                         <p className={`text-xs text-gray-200 text-center`}>
                             Done
