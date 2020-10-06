@@ -23,10 +23,11 @@ const LessonHeaderBar = () => {
     // const match = useRouteMatch();
     // const location = useLocation();
     // const history = useHistory();
-    const { theme, state, dispatch, subscription } = useContext(LessonContext);
+    const { theme, state, dispatch } = useContext(LessonContext);
     // const [ dictOpen, setDictOpen ] = useState(false);
     // const { lookUp } = useDictionary('EN');
     // const [ searchTerm, setSearchTerm ] = useState('');
+    const [isToggled, setIsToggled] = useState<string[]>(['']);
 
     useEffect(() => {
         if ( !state.pages[0].active ) {
@@ -81,9 +82,21 @@ const LessonHeaderBar = () => {
         }
     }
 
-    const handleDone = () => {
-        updateStudentData('done')
-    }
+    const handleDone = (e: React.MouseEvent) => {
+        const t = e.currentTarget as HTMLElement;
+        const targetWordID = t.id || '';
+    
+        updateStudentData('done');
+    
+        /**
+         * Animation
+         */
+        setIsToggled([...isToggled, targetWordID]);
+    
+        setTimeout(() => {
+          setIsToggled(isToggled.filter((targetString: string) => targetString !== targetWordID));
+        }, 300);
+      };
 
     // const toggleDictionary = () => {
     //     setDictOpen(() => {
@@ -104,7 +117,8 @@ const LessonHeaderBar = () => {
 
     const { startTimer, changeParams } = useStudentTimer({
         dispatch: dispatch,
-        subscription: subscription,
+        subscription: state.subscription,
+        subscribeFunc: state.subscribeFunc,
         callback: updateStudentData,
         state: state,
     });
@@ -112,8 +126,11 @@ const LessonHeaderBar = () => {
     useEffect(() => {
         changeParams('state', state)
         // console.log('state', state);
+        // console.log('subInfo', subscription, subscribeFunc );
+        
+        
         // startTimer()
-    }, [state.studentStatus, state.viewing, state.saveCount])
+    }, [state.studentStatus, state.viewing, state.saveCount, state.subscription])
 
     return (
         <div className={`z-40 center w-full h-.7/10 ${theme.toolbar.bg} text-gray-200 shadow-2xl flex justify-between`}>
@@ -150,14 +167,14 @@ const LessonHeaderBar = () => {
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">SetIdle</p>
-                </div>
-                <div className={`flex flex-col justify-center items-center px-2`} onClick={() => { dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' }) }}>
+                </div> */}
+                {/* <div className={`flex flex-col justify-center items-center px-2`} onClick={() => { dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' }) }}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">SetActive</p>
-                </div>
-                <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onPointerDown={startAutoSave} onPointerUp={clearAutoSave}>
+                </div> */}
+                {/* <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onPointerDown={startAutoSave} onPointerUp={clearAutoSave}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>
@@ -171,9 +188,9 @@ const LessonHeaderBar = () => {
                 </div> */}
                 {
                     !state.viewing ?
-                    <div className={`w-4.5/10 cursor-pointer flex flex-col justify-center items-center px-2`} onClick={handleDone}>
+                    <div id='lesson-done' className={`w-4.5/10 cursor-pointer flex flex-col justify-center items-center px-2`} onClick={handleDone}>
                         <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
-                            <FaRegThumbsUp />
+                            <FaRegThumbsUp className={`${isToggled.includes('lesson-done') && 'animate-jiggle'}`}/>
                         </IconContext.Provider>
                         <p className={`text-xs text-gray-200 text-center`}>
                             Done

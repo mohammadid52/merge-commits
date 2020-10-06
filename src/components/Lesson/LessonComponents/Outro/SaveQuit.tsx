@@ -63,6 +63,7 @@ const SaveQuit = (props: SaveQuitProps) => {
     } catch (error) {
         console.error(error);   
     }
+
   }
 
   const updateStudentProfile = async () => {
@@ -96,7 +97,7 @@ const SaveQuit = (props: SaveQuitProps) => {
 
     try { 
       const questionData = await API.graphql(graphqlOperation(customMutations.createQuestionData, {input: questiondDataObject}))
-      console.log(questionData, 'questionData');
+      // console.log(questionData, 'questionData');
 
     } catch (err) {
       console.error(err);
@@ -113,7 +114,7 @@ const SaveQuit = (props: SaveQuitProps) => {
 
     try {
       const feedbackData = await API.graphql(graphqlOperation( customMutations.createFeedback, { input: feedbackInput }))
-      console.log(feedbackData);
+      // console.log(feedbackData);
 
     } catch (error) {
       console.error(error);

@@ -11,6 +11,7 @@ import {Auth} from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
+import { displayPartsToString } from 'typescript';
 
 const removeDisabled = (array: PagesType) => {
     let updatedArray = array.filter((item: { disabled: boolean, [key: string]: any}) => {
@@ -139,6 +140,13 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
             }
         });
+
+        dispatch({
+            type: 'SET_SUBSCRIPTION',
+            payload: {
+                subscription: classroomSubscription,
+            }
+        })
   
         // console.log('sub', classroomSubscription)
 
@@ -168,6 +176,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                     displayData: lesson.displayData,
                     word_bank: wordBank, 
                     data: lesson,
+                    subscribeFunc: subscribeToClassroom,
             }})
         }
     }, [lesson])
@@ -192,7 +201,13 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     }, [data])
 
     return (
-        <LessonContext.Provider value={{state, dispatch, theme, subscription }}>
+        <LessonContext.Provider value={{
+            state,
+            dispatch,
+            theme,
+            subscription, 
+            subscribeToClassroom,
+        }}>
             { children }
         </LessonContext.Provider>
     )
