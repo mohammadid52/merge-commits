@@ -33,7 +33,7 @@ const SelectOneQuestions = (selectOneProps: CPQuestionProps) => {
       state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] &&
       state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] !== ''
     ) {
-      console.log('match', state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] );
+      // console.log('match', state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] );
       setInput((prev: any) => {
         return {
           ...prev,
@@ -46,7 +46,7 @@ const SelectOneQuestions = (selectOneProps: CPQuestionProps) => {
       state.questionData[selectOneProps.checkpointID] === undefined ||
       state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] === undefined
     ) {
-      console.log('nomatch');
+      // console.log('nomatch');
       
       setInput((prev: any) => {
         return {
@@ -62,7 +62,7 @@ const SelectOneQuestions = (selectOneProps: CPQuestionProps) => {
     setInput({ id: id, value: value });
     selectOneProps.handleInputChange(e);
   };
-console.log(selectOneProps)
+// console.log(selectOneProps)
   return (
     <>
       <div key={selectOneProps.keyProp} className={'w-8.5/10 flex flex-col mb-3 mx-2'}>
