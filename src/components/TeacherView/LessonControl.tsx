@@ -231,7 +231,7 @@ const LessonControl = () => {
                         </div>
                         <div className={`w-5/10 ${state.displayData && state.displayData.studentInfo ? '': 'hidden'}`}>
                             <div className="w-4/10 px-2 flex flex-col justify-center items-center">
-                                <div className="w-full flex justify-center items-center text-purple-400 font-semibold ">
+                                <div className="w-full flex justify-center items-center text-purple-400 font-semibold "> 
                                     <span className="font-normal text-black">currently </span> sharing:
                                 </div>
                                 <div className={`w-full flex justify-center items-center text-purple-400 text-xl font-bold`}>
