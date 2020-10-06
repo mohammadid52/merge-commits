@@ -62,20 +62,22 @@ const SelectOneQuestions = (selectOneProps: CPQuestionProps) => {
     setInput({ id: id, value: value });
     selectOneProps.handleInputChange(e);
   };
-
+console.log(selectOneProps)
   return (
     <>
-      <div key={selectOneProps.keyProp} className={'w-4.8/10 flex flex-col mb-3 mx-2'}>
-        <p className='mb-2 text-md'>{selectOneProps.question.question}</p>
-        <div className={`flex justify-around`}>
+      <div key={selectOneProps.keyProp} className={'w-8.5/10 flex flex-col mb-3 mx-2'}>
+        <p className='mb-2 text-lg'>{selectOneProps.question.question}</p>
+        <div className={`flex justify-around ml-6`}>
           {selectOneProps.question.options.map(
             (
               option: { label: string; icon: string; color: string; text: string },
               key2: number
             ) => {
               return (
-                <div key={key2} className={`flex justify-center items-center text-xs`}>
-                  <input
+                <div key={key2} className={`flex justify-center items-center text-base`}>
+                  
+                  <label className="w-auto cursor-pointer">
+                    <input
                     id={selectOneProps.question.id}
                     className='w-4 mx-4 cursor-pointer'
                     type='radio'
@@ -85,8 +87,9 @@ const SelectOneQuestions = (selectOneProps: CPQuestionProps) => {
                     checked={
                       input.value === option.label
                     }
-                  />
-                  <label htmlFor={`${option.text}`}>{option.text}</label>
+                    />
+                    {option.text}
+                  </label>
                 </div>
               );
             }
