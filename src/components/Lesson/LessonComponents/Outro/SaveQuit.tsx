@@ -96,7 +96,7 @@ const SaveQuit = (props: SaveQuitProps) => {
 
     try { 
       const questionData = await API.graphql(graphqlOperation(customMutations.createQuestionData, {input: questiondDataObject}))
-      // console.log(questionData, 'questionData');
+      console.log(questionData, 'questionData');
 
     } catch (err) {
       console.error(err);
@@ -113,7 +113,7 @@ const SaveQuit = (props: SaveQuitProps) => {
 
     try {
       const feedbackData = await API.graphql(graphqlOperation( customMutations.createFeedback, { input: feedbackInput }))
-      // console.log(feedbackData);
+      console.log(feedbackData);
 
     } catch (error) {
       console.error(error);
@@ -133,8 +133,10 @@ const SaveQuit = (props: SaveQuitProps) => {
           })
         })
 
-        if ( feedback.like !== '' || feedback.text !== '' ) {
-          await saveLessonFeedback()
+        if ( typeof feedback !== 'undefined' ) {
+          if ( feedback?.like !== '' || feedback?.text !== '' ) {
+            await saveLessonFeedback()
+          }
         }
 
         if ( id === 'on-boarding-survey-1' ) { await updateStudentProfile() }

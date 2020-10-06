@@ -125,9 +125,9 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
 
   useEffect(() => {
     // console.log('input', input);
-    // console.log('qData', state.questionData);
+    console.log('qData', state.questionData);
 
-  }, [input])
+  }, [state.questionData])
 
   const handleSelect = (e: any) => {
     const questionID = e.target.getAttribute('data-key')
