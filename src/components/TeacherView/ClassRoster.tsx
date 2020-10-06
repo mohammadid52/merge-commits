@@ -7,7 +7,7 @@ interface classRosterProps {
 }
 
 const ClassRoster = (props: classRosterProps) => {
-    const { handleUpdateClassroom } = props;
+    const { handleUpdateClassroom, } = props;
     const { state, dispatch } = useContext(LessonControlContext);
 
     // console.log(state.roster)
@@ -18,8 +18,7 @@ const ClassRoster = (props: classRosterProps) => {
             return item.id === id
         });
 
-        // console.log('selected student', id, selected[0]);
-
+        // console.log('selected', id, selected[0]);
         dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] })
     } 
 
@@ -62,40 +61,41 @@ const ClassRoster = (props: classRosterProps) => {
     }
 
     return (
-        <div className={`w-full h-full bg-gray-500 shadow-inner-dark rounded-lg pt-4 px-4 overflow-scroll`}>
-            <div className={`w-full flex justify-center font-bold`}>
+        <div className={`w-full h-full bg-gray-500 shadow-inner-dark rounded-lg pt-4 overflow-y-scroll overflow-x-auto`}>
+            <div className={`w-full flex justify-center font-bold py-2 pl-4 pr-1 `}>
                 <div className={`w-.5/10 mx-2 text-center`}>
                     
                 </div>
-                <div className={`w-4/10 mx-2`}>
+                <div className={`w-5.3/10 mx-2`}>
                     Name
                 </div>
                 <div className={`w-4/10 mx-2`}>
                     Page
                 </div>
-                <div className={`w-1.3/10 mx-2`}>
+                {/* <div className={` mx-2`}>
                     
-                </div>
+                </div> */}
             </div>
             <div className={`w-full h-full flex flex-col items-center`}>
                 {
                     state.roster && state.roster.length > 0 ? 
                     state.roster.map((item: any, key: number) => (
-                        <div key={key} className={`w-full flex my-2`}>
-                            <div className={`w-.5/10 text-center mx-2 text-xs flex`}>
+                        <div key={key} id={`${item.id}`} className={`w-full flex py-2 pl-4 pr-1 hover:underline cursor-pointer ${ state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === item.id ? 'bg-indigo-500' : '' }`} onClick={handleSelect}>
+                            
+                            <div id={`${item.id}`} className={`w-.5/10 text-center mx-2 text-xs flex`}>
                                 {studentStatus(item.status)}
                             </div>
-                            <div className={`w-4/10 mx-2`}>
+                            <div id={`${item.id}`} className={`w-5.3/10 mx-2`}>
                                 {item.student.lastName}, {item.student.preferredName ? item.student.preferredName : item.student.firstName }
                             </div>
-                            <div className={`w-4/10 mx-2`}>
+                            <div id={`${item.id}`} className={`w-4/10 mx-2`}>
                                 {item.lessonProgress}
                             </div>
-                            <div id={`${item.id}`} className="w-1.3/10 flex justify-center items-center cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium">
-                                <button id={`${item.id}`} key={key} className="text-xs bg-indigo-500 w-9/10 shadow-elem-semi-dark rounded-xl text-gray-200 hover:text-white" onClick={handleSelect}>
+                            {/* <div id={`${item.id}`} className="w-1.3/10 flex justify-center items-center cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium">
+                                <button id={`${item.id}`} key={key} className="text-xs bg-indigo-500 w-9/10 shadow-elem-semi-dark rounded-xl text-gray-200 hover:text-white focus:border-none" onClick={handleSelect}>
                                     { state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === item.id ? 'Quit' : 'View' }
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
                     )) : null
                 }  

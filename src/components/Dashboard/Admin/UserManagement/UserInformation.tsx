@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaUserCircle } from 'react-icons/fa'
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
@@ -62,7 +62,7 @@ const UserInformation = (props: UserInfoProps) => {
 
                     <div className="px-4 py-5 sm:px-6">
                         <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
-                            <div className="sm:col-span-1">
+                            <div className="sm:col-span-1 p-2">
                                 <dt className="text-base leading-5 font-medium text-gray-500">
                                 Full Name 
                                 </dt>
@@ -70,7 +70,7 @@ const UserInformation = (props: UserInfoProps) => {
                                 {`${ user.firstName } ${ user.lastName }`} 
                                 </dd>
                             </div>
-                            <div className="sm:col-span-1">
+                            <div className="sm:col-span-1 p-2">
                                 <dt className="text-base leading-5 font-medium text-gray-500">
                                 Nickname
                                 </dt>
@@ -78,7 +78,7 @@ const UserInformation = (props: UserInfoProps) => {
                                 {`${ user.preferredName ? user.preferredName : 'not set' }`} 
                                 </dd>
                             </div>
-                            <div className="sm:col-span-1">
+                            <div className="sm:col-span-1 p-2">
                                 <dt className="text-base leading-5 font-medium text-gray-500">
                                 Role
                                 </dt>
@@ -87,7 +87,7 @@ const UserInformation = (props: UserInfoProps) => {
                                         role= {user.role}/> 
                                 </dd>
                             </div>
-                            <div className="sm:col-span-1">
+                            <div className="sm:col-span-1 p-2">
                                 <dt className="text-base leading-5 font-medium text-gray-500">
                                 Status
                                 </dt>
@@ -96,7 +96,7 @@ const UserInformation = (props: UserInfoProps) => {
                                         status= {user.status}/>
                                 </dd>
                             </div>
-                            <div className="sm:col-span-1">
+                            <div className="sm:col-span-1 p-2">
                                 <dt className="text-base leading-5 font-medium text-gray-500">
                                 Birthday
                                 </dt>
@@ -104,7 +104,7 @@ const UserInformation = (props: UserInfoProps) => {
                                 {`${ user.birthdate ? user.birthdate : 'not set' }`}
                                 </dd>
                             </div>
-                            <div className="sm:col-span-1">
+                            <div className="sm:col-span-1 p-2">
                                 <dt className="text-base leading-5 font-medium text-gray-500">
                                 Email Address
                                 </dt>
@@ -112,7 +112,7 @@ const UserInformation = (props: UserInfoProps) => {
                                 {`${ user.email }`} 
                                 </dd>
                             </div>
-                            <div className="sm:col-span-1">
+                            <div className="sm:col-span-1 p-2">
                                 <dt className="text-base leading-5 font-medium text-gray-500">
                                 Contact Number 
                                 </dt>
@@ -120,7 +120,7 @@ const UserInformation = (props: UserInfoProps) => {
                                 {`${ user.phone }`}
                                 </dd>
                             </div>
-                            <div className="sm:col-span-1">
+                            <div className="sm:col-span-1 p-2">
                                 <dt className="text-base leading-5 font-medium text-gray-500">
                                 Account Created
                                 </dt>
@@ -141,7 +141,7 @@ const UserInformation = (props: UserInfoProps) => {
                     </div>
                     <div className="px-4 py-5 sm:px-6">
                         <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
-                            <div className="sm:col-span-1">
+                            <div className="sm:col-span-1 p-2">
                                 <dt className="text-base leading-5 font-medium text-gray-500">
                                 Institution
                                 </dt>
@@ -149,7 +149,7 @@ const UserInformation = (props: UserInfoProps) => {
                                 {`${ user.institution ? user.institution : 'not set'}`}
                                 </dd>
                             </div>
-                            <div className="sm:col-span-1">
+                            <div className="sm:col-span-1 p-2">
                                 <dt className="text-base leading-5 font-medium text-gray-500">
                                 Grade 
                                 </dt>

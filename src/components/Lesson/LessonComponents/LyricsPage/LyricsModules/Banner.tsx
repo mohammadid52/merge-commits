@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaMusic } from 'react-icons/fa';
 
 const Banner = () => {

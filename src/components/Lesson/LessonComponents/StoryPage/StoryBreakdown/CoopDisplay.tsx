@@ -3,7 +3,7 @@ import { LessonContext } from '../../../../../contexts/LessonContext';
 import ReflectionQuestions from './ReflectionQuestions';
 import Modules from './Modules';
 import Banner from './Banner';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaExpand, FaCompress } from 'react-icons/fa';
 
 interface teacherData {
@@ -47,12 +47,12 @@ const CoopDisplay = () => {
 
     useEffect(() => {
         if ( state.displayData && state.displayData.breakdownComponent && state.displayData.breakdownComponent === 'warmup/breakdown' ) {
-            console.log( 'got it', state.displayData );
+            // console.log( 'got it', state.displayData );
             setTeacherData(state.displayData)
         }
     }, [state.displayData])
 
-    {console.log(state.displayData.breakdownComponent, 'state and find name')}
+    // {console.log(state.displayData.breakdownComponent, 'state and find name')}
 
     return (
             <div className="w-full h-full flex flex-col justify-between items-center">

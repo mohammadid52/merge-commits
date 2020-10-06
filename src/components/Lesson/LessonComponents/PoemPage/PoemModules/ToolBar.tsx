@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
+import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 interface ToolBarProps {
     editMode: {
@@ -16,7 +17,7 @@ const ToolBar = (props: ToolBarProps) => {
     const { editMode, setEditMode } = props;
     const { state, dispatch } = useContext(LessonContext);
     const prompts = state.data.lesson.activity.writingPrompts
-    console.log(prompts, 'state');
+    // console.log(prompts, 'state');
     const [ search, setSearch ] = useState('');
 
     const handleDragOver = (e: { stopPropagation: () => void; }) => {
@@ -33,18 +34,32 @@ const ToolBar = (props: ToolBarProps) => {
         setSearch(e.target.value)
     }
 
-    // if (editMode) {
-    //     return (
-    //         <div className="text-gray-200">
-    //             {prompts.map((line: {example: string, id: number, name: string, prompt: string }, key: number) => {
-    //                 return(
-    //                     line.prompt
-    //                 )
-                     
-    //             })}
-    //         </div>
-    //     )
-    // } 
+    if (editMode.open) {
+        return (
+            <div className="text-gray-200 w-full md:h-7.8/10 bg-gradient-to-tl from-dark-blue to-med-dark-blue flex flex-col items-center px-4 py-4 rounded-lg">
+                <div className='w-full flex flex-row mb-1 pb-1 border-b border-white border-opacity-10'>
+                    <h3 className='text-xl text-gray-200 font-open font-light flex'>
+                        Line Prompts <ToolTip width='w-40' position='bottom' header='' content='In case you want to look back at the line prompts'/>
+                    </h3>
+                </div>
+                <div className="overflow-y-scroll px-2">
+                    {prompts.map((line: {example: string, id: number, name: string, prompt: string }, key: number) => {
+                        return(
+                            <div className="my-1">
+                                <div key={key} className="text-base font-bold">
+                                    {line.prompt}
+                                </div>
+                                <label className={`${line.example ? 'visible' : 'invisible'} font-light self-end flex justify-end text-gray-400 text-sm`}>
+                                ( ex. {line.example} )
+                                </label>
+                            </div>
+                        )
+                        
+                    })}
+                </div>
+            </div>
+        )
+    } 
 
     return (
         // <div className="w-full md:h-7/10 bg-gray-700 flex flex-col items-center text-gray-200 shadow-2 px-4 py-4 rounded-lg">
@@ -87,7 +102,6 @@ const ToolBar = (props: ToolBarProps) => {
         //     </div>
         // </div>
         
-
         <div className="w-full md:h-7/10 bg-grayscale-light flex flex-col items-center text-grayscale-lighter px-4 py-4 rounded-lg">
             <div className="w-full h-full flex flex-col justify-between">
                 <h3 className="w-full text-xl text-grayscale-lighter font-open font-light border-b border-grayscale-lighter pb-1 mb-1">Toolbox</h3>

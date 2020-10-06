@@ -450,6 +450,7 @@ export const getStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
+      saveType
       classroomID
       classroom {
         id
@@ -611,6 +612,7 @@ export const listStudentDatas = /* GraphQL */ `
         id
         lessonProgress
         status
+        saveType
         classroomID
         classroom {
           id
@@ -890,6 +892,7 @@ export const getClassroom = /* GraphQL */ `
           id
           lessonProgress
           status
+          saveType
           classroomID
           studentID
           studentAuthID
@@ -1229,6 +1232,7 @@ export const getLesson = /* GraphQL */ `
         }
         inputs {
           title
+          example
         }
         breakdown {
           included
@@ -1466,6 +1470,7 @@ export const getWarmUp = /* GraphQL */ `
       }
       inputs {
         title
+        example
         additionalInputs {
           id
           name
@@ -1504,6 +1509,7 @@ export const listWarmUps = /* GraphQL */ `
         }
         inputs {
           title
+          example
         }
         breakdown {
           included

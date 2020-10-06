@@ -77,6 +77,14 @@ export const getClassroom = /* GraphQL */ `
             source
             text
           }
+          additionalContent {
+            video
+            links {
+              type
+              text
+              link
+            }
+          }
         }
         language
         summary
@@ -159,6 +167,7 @@ export const getClassroom = /* GraphQL */ `
           }
           inputs {
             title
+            example
             additionalInputs {
               id
               name
@@ -364,6 +373,14 @@ export const getClassroomStudent = /* GraphQL */ `
             source
             text
           }
+          additionalContent {
+            video
+            links {
+              type
+              text
+              link
+            }
+          }
         }
         language
         connection
@@ -447,6 +464,7 @@ export const getClassroomStudent = /* GraphQL */ `
           }
           inputs {
             title
+            example
             additionalInputs {
               id
               name
@@ -532,6 +550,7 @@ export const getStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
+      saveType
       classroomID
       studentID
       studentAuthID

@@ -37,14 +37,12 @@ const PoemActivity = (props: props) => {
     const { video, link, text } = state.data.lesson.activity.instructions
     const [ openPopup, setOpenPopup ] = useState(false);
 
-    console.log(state);
 
     let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'activity' : false;
     
 
     useEffect(() => {
         if ( displayStudentData && state.studentViewing.studentInfo.activityData ) {
-            console.log('activityData', state.studentViewing.studentInfo.activityData );
             if ( state.studentViewing.studentInfo.activityData.editMode ) {
                 setEditMode(() => {
                     return {

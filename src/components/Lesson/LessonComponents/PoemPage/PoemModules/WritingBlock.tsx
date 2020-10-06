@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaPlus } from 'react-icons/fa';
 import { useCookies } from 'react-cookie';
+import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 interface WritingBlockProps {
     editMode: {
@@ -248,8 +249,8 @@ const WritingBlock = (props: WritingBlockProps) => {
     return (
         <div className="bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600" >
             <div className="w-full flex flex-row justify-between mb-2">
-                <h3 className="w-full flex-grow text-xl text-gray-200 font-open font-light border-b border-white border-opacity-10 mr-2 pb-1 mb-1">
-                    Line Prompts
+                <h3 className='w-3/10 mr-2 flex text-xl text-gray-200 font-open font-light animate-bounce z-100'>
+                    Line Prompts <ToolTip width='w-40' position='bottom' header='Instructions' content='Make sure you are finished with the line prompts before you click "Save and Edit"' />
                 </h3>
                 <IconContext.Provider value={{ color: '#E2E8F0', size: '1.5rem', style: { opacity: `${lineState.lines.length < (lineNo * 2) ? '100%' : '10%'}`}}}>
                     <div className="w-8 cursor-pointer" onClick={handleAddInput}>

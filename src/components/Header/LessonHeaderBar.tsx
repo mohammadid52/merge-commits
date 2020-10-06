@@ -6,8 +6,8 @@ import {
     // useLocation, 
     // useRouteMatch 
 } from 'react-router-dom';
-import { IconContext } from "react-icons";
-import { FaRegSave, FaHome, FaBook } from 'react-icons/fa';
+import { IconContext } from "react-icons/lib/esm/iconContext";
+import { FaRegSave, FaHome, FaBook, FaRegThumbsUp } from 'react-icons/fa';
 import { AiOutlineSave, AiOutlineHome } from 'react-icons/ai';
 import { FiClock } from 'react-icons/fi'
 import { LessonContext } from '../../contexts/LessonContext';
@@ -23,10 +23,11 @@ const LessonHeaderBar = () => {
     // const match = useRouteMatch();
     // const location = useLocation();
     // const history = useHistory();
-    const { theme, state, dispatch, subscription } = useContext(LessonContext);
+    const { theme, state, dispatch } = useContext(LessonContext);
     // const [ dictOpen, setDictOpen ] = useState(false);
     // const { lookUp } = useDictionary('EN');
     // const [ searchTerm, setSearchTerm ] = useState('');
+    const [isToggled, setIsToggled] = useState<string[]>(['']);
 
     useEffect(() => {
         if ( !state.pages[0].active ) {
@@ -51,7 +52,7 @@ const LessonHeaderBar = () => {
         
     // }, [state.studentStatus])
 
-    const updateStudentData = async () => {
+    const updateStudentData = async ( saveType?: string) => {
         let lessonProgress = state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
 
         // console.log('thisone', state )
@@ -60,6 +61,7 @@ const LessonHeaderBar = () => {
             id: state.studentDataID,
             lessonProgress: lessonProgress,
             status: state.studentStatus,
+            saveType: saveType,
             classroomID: 1,
             studentID: state.studentUsername,
             studentAuthID: state.studentAuthID,
@@ -80,11 +82,21 @@ const LessonHeaderBar = () => {
         }
     }
 
-    const handleSave = () => {
-        if ( state.unsavedChanges ) {
-            updateStudentData()
-        }
-    }
+    const handleDone = (e: React.MouseEvent) => {
+        const t = e.currentTarget as HTMLElement;
+        const targetWordID = t.id || '';
+    
+        updateStudentData('done');
+    
+        /**
+         * Animation
+         */
+        setIsToggled([...isToggled, targetWordID]);
+    
+        setTimeout(() => {
+          setIsToggled(isToggled.filter((targetString: string) => targetString !== targetWordID));
+        }, 300);
+      };
 
     // const toggleDictionary = () => {
     //     setDictOpen(() => {
@@ -105,7 +117,8 @@ const LessonHeaderBar = () => {
 
     const { startTimer, changeParams } = useStudentTimer({
         dispatch: dispatch,
-        subscription: subscription,
+        subscription: state.subscription,
+        subscribeFunc: state.subscribeFunc,
         callback: updateStudentData,
         state: state,
     });
@@ -113,8 +126,11 @@ const LessonHeaderBar = () => {
     useEffect(() => {
         changeParams('state', state)
         // console.log('state', state);
+        // console.log('subInfo', subscription, subscribeFunc );
+        
+        
         // startTimer()
-    }, [state.studentStatus, state.viewing, state.saveCount])
+    }, [state.studentStatus, state.viewing, state.saveCount, state.subscription])
 
     return (
         <div className={`z-40 center w-full h-.7/10 ${theme.toolbar.bg} text-gray-200 shadow-2xl flex justify-between`}>
@@ -123,7 +139,7 @@ const LessonHeaderBar = () => {
                     <img className="h-6 px-4" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg" alt="Iconoclast Artists"/>
                 </NavLink>
             </div>
-            <div className={`relative w-56 h-full flex flex-row justify-end items-center px-8`}>
+            <div className={`relative w-56 h-full flex flex-row justify-end items-center px-8 pt-1`}>
                 {/* <div className={`flex flex-col justify-center items-center px-2`}>
                     <div className={`flex flex-col justify-center items-center px-2 cursor-pointer`} onClick={toggleDictionary}>
                         <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
@@ -151,14 +167,14 @@ const LessonHeaderBar = () => {
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">SetIdle</p>
-                </div>
-                <div className={`flex flex-col justify-center items-center px-2`} onClick={() => { dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' }) }}>
+                </div> */}
+                {/* <div className={`flex flex-col justify-center items-center px-2`} onClick={() => { dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' }) }}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">SetActive</p>
-                </div>
-                <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onPointerDown={startAutoSave} onPointerUp={clearAutoSave}>
+                </div> */}
+                {/* <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onPointerDown={startAutoSave} onPointerUp={clearAutoSave}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>
@@ -172,19 +188,23 @@ const LessonHeaderBar = () => {
                 </div> */}
                 {
                     !state.viewing ?
-                    <div className={`w-4.5/10 ${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={handleSave}>
-                        <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
-                            <AiOutlineSave />
+                    <div id='lesson-done' className={`w-4.5/10 cursor-pointer flex flex-col justify-center items-center px-2`} onClick={handleDone}>
+                        <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
+                            <FaRegThumbsUp className={`${isToggled.includes('lesson-done') && 'animate-jiggle'}`}/>
                         </IconContext.Provider>
-                        <p className={`text-xs text-gray-200 text-center`} style={{color: state.unsavedChanges ? '#EDF2F7' : '#4A5568'}}>Save</p>
+                        <p className={`text-xs text-gray-200 text-center`}>
+                            Done
+                        </p>
                     </div>
                     :
-                    <div className={`w-4.5/10 cursor-default flex flex-col justify-center items-center px-2`} onClick={handleSave}>
+                    <div className={`w-4.5/10 cursor-default flex flex-col justify-center items-center px-2`}>
                         <div className="relative flex items-center justify-center h-4 w-4 m-1">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-4 w-4 bg-green-600"></span>
                         </div>
-                        <p className={`self-end text-xs text-gray-200 text-center`}>AutoSave</p>
+                        <p className={`self-end text-xs text-gray-200 text-center`}>
+                            AutoSave
+                        </p>
                     </div>
                 }
                 <div className={`w-4.5/10 flex flex-col justify-center items-center px-2 cursor-pointer`}>

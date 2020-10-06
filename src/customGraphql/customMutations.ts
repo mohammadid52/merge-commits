@@ -30,6 +30,7 @@ export const createStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
+      saveType
       classroomID
       studentID
       studentAuthID
@@ -108,6 +109,7 @@ export const updateStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
+      saveType
       classroomID
       studentID
       studentAuthID
@@ -251,6 +253,22 @@ export const updateSurveyStatus = /* GraphQL */ `
       authId
       email
       onBoardSurvey
+    }
+  }
+`;
+
+export const createFeedback = /* GraphQL */ `
+  mutation CreateFeedback(
+    $input: CreateFeedbackInput!
+    $condition: ModelFeedbackConditionInput
+  ) {
+    createFeedback(input: $input, condition: $condition) {
+      id
+      classroomID
+      liked
+      comment
+      createdAt
+      updatedAt
     }
   }
 `;

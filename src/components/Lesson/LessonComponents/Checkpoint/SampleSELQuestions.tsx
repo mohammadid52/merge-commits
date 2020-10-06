@@ -21,7 +21,7 @@ const setInitialState = (array: Array<any>) => {
 const SampleSELQuestions = () => {
   const { state } = useContext(LessonContext);
   const checkpoint = state.data.lesson.checkpoints.items[0].checkpoint;
-  console.log(checkpoint.questions.items, 'check point');
+  // console.log(checkpoint.questions.items, 'check point');
   const [selected, setSelected] = useState<Array<string>>([]);
   const [input, setInput] = useState<any>(
     setInitialState(checkpoint.questions.items)
@@ -72,7 +72,7 @@ const SampleSELQuestions = () => {
   // };
 
   useEffect(() => {
-    console.log(input, 'input');
+    // console.log(input, 'input');
   }, [input]);
 
   const handleInputChange = (e: any) => {
@@ -80,8 +80,6 @@ const SampleSELQuestions = () => {
       ...input,
       [e.target.id]: e.target.value,
     });
-    console.log(e, 'e.target');
-    console.log(input, 'input');
   };
 
   const inputSwitch = (question: {

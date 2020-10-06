@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaEraser } from 'react-icons/fa';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
@@ -14,7 +14,6 @@ const ToolBar = (props: ToolbarProps) => {
     const { state, dispatch } = useContext(LessonControlContext);
     const [ search, setSearch ] = useState('');
     const buttons = state.data.lesson.coreLesson.tools;
-    console.log(buttons, 'buttons');
 
     const handleClick = (e: any) => {
         setColor(e.target.id);

@@ -172,6 +172,7 @@ export const onUpdateClassroom = /* GraphQL */ `
           id
           lessonProgress
           status
+          saveType
           classroomID
           studentID
           studentAuthID
@@ -202,6 +203,7 @@ export const onChangeStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
+      saveType
       classroomID
       classroom {
         id
@@ -1905,6 +1907,7 @@ export const onCreateLesson = /* GraphQL */ `
         }
         inputs {
           title
+          example
         }
         breakdown {
           included
@@ -2087,6 +2090,7 @@ export const onUpdateLesson = /* GraphQL */ `
         }
         inputs {
           title
+          example
         }
         breakdown {
           included
@@ -2269,6 +2273,7 @@ export const onDeleteLesson = /* GraphQL */ `
         }
         inputs {
           title
+          example
         }
         breakdown {
           included
@@ -2858,6 +2863,7 @@ export const onCreateWarmUp = /* GraphQL */ `
       }
       inputs {
         title
+        example
         additionalInputs {
           id
           name
@@ -2891,6 +2897,7 @@ export const onUpdateWarmUp = /* GraphQL */ `
       }
       inputs {
         title
+        example
         additionalInputs {
           id
           name
@@ -2924,6 +2931,7 @@ export const onDeleteWarmUp = /* GraphQL */ `
       }
       inputs {
         title
+        example
         additionalInputs {
           id
           name
@@ -3735,6 +3743,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
+        saveType
         classroomID
         classroom {
           id
@@ -3853,6 +3862,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
+        saveType
         classroomID
         classroom {
           id
@@ -3971,6 +3981,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
+        saveType
         classroomID
         classroom {
           id

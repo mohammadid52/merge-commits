@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import ErrorNote from '../Admin/UserManagement/ErrorNote';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaKey } from 'react-icons/fa';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useHistory, NavLink } from 'react-router-dom';

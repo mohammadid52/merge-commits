@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaPlus } from 'react-icons/fa';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
@@ -52,7 +52,6 @@ const WritingBlock = (props: WritingBlockProps) => {
 
     useEffect(() => {
         if ( displayStudentData && state.studentViewing.studentInfo.activityData ) {
-            console.log( state.studentViewing.studentInfo.activityData.lines );
             setLineState(lineState => {
                 return {
                     ...lineState,

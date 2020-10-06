@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { NavLink, useRouteMatch } from 'react-router-dom';
 import { useState } from "react";
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoMdSettings } from "react-icons/io";
 import { FaRegLightbulb } from "react-icons/fa";
 import { GlobalContext } from '../../../contexts/GlobalContext';

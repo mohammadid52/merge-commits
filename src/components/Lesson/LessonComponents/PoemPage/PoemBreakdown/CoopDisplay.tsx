@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import Banner from './Banner';
 import ReflectionQuestions from './ReflectionQuestions';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaExpand, FaCompress } from 'react-icons/fa';
 
 
@@ -44,7 +44,7 @@ const CoopDisplay = () => {
 
     useEffect(() => {
         if ( state.displayData && state.displayData.breakdownComponent && state.displayData.breakdownComponent === 'activity/breakdown' ) {
-            console.log( 'got it', state.displayData );
+            // console.log( 'got it', state.displayData );
             setTeacherData(state.displayData)
         }
     }, [state.displayData])

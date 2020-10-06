@@ -414,6 +414,7 @@ export type CreateStudentDataInput = {
   id?: string | null,
   lessonProgress: string,
   status: string,
+  saveType?: string | null,
   classroomID: string,
   studentID: string,
   studentAuthID: string,
@@ -467,6 +468,7 @@ export type LineInputInput = {
 export type ModelStudentDataConditionInput = {
   lessonProgress?: ModelStringInput | null,
   status?: ModelStringInput | null,
+  saveType?: ModelStringInput | null,
   studentAuthID?: ModelStringInput | null,
   and?: Array< ModelStudentDataConditionInput | null > | null,
   or?: Array< ModelStudentDataConditionInput | null > | null,
@@ -477,6 +479,7 @@ export type UpdateStudentDataInput = {
   id: string,
   lessonProgress?: string | null,
   status?: string | null,
+  saveType?: string | null,
   classroomID: string,
   studentID: string,
   studentAuthID?: string | null,
@@ -611,13 +614,13 @@ export type DeleteClassroomInput = {
 export type CreateFeedbackInput = {
   id?: string | null,
   classroomID: string,
-  liked?: boolean | null,
+  liked?: string | null,
   comment?: string | null,
 };
 
 export type ModelFeedbackConditionInput = {
   classroomID?: ModelIDInput | null,
-  liked?: ModelBooleanInput | null,
+  liked?: ModelStringInput | null,
   comment?: ModelStringInput | null,
   and?: Array< ModelFeedbackConditionInput | null > | null,
   or?: Array< ModelFeedbackConditionInput | null > | null,
@@ -627,7 +630,7 @@ export type ModelFeedbackConditionInput = {
 export type UpdateFeedbackInput = {
   id: string,
   classroomID?: string | null,
-  liked?: boolean | null,
+  liked?: string | null,
   comment?: string | null,
 };
 
@@ -815,6 +818,7 @@ export type InstructionsInput = {
 
 export type InputsInput = {
   title: boolean,
+  example?: string | null,
   additionalInputs?: Array< WritingPromptsInput > | null,
 };
 
@@ -1290,6 +1294,7 @@ export type ModelStudentDataFilterInput = {
   id?: ModelIDInput | null,
   lessonProgress?: ModelStringInput | null,
   status?: ModelStringInput | null,
+  saveType?: ModelStringInput | null,
   classroomID?: ModelIDInput | null,
   studentID?: ModelStringInput | null,
   studentAuthID?: ModelStringInput | null,
@@ -1326,7 +1331,7 @@ export type ModelClassroomFilterInput = {
 export type ModelFeedbackFilterInput = {
   id?: ModelIDInput | null,
   classroomID?: ModelIDInput | null,
-  liked?: ModelBooleanInput | null,
+  liked?: ModelStringInput | null,
   comment?: ModelStringInput | null,
   and?: Array< ModelFeedbackFilterInput | null > | null,
   or?: Array< ModelFeedbackFilterInput | null > | null,
@@ -2906,6 +2911,7 @@ export type CreateStudentDataMutation = {
     id: string,
     lessonProgress: string,
     status: string,
+    saveType: string | null,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -3076,6 +3082,7 @@ export type UpdateStudentDataMutation = {
     id: string,
     lessonProgress: string,
     status: string,
+    saveType: string | null,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -3246,6 +3253,7 @@ export type DeleteStudentDataMutation = {
     id: string,
     lessonProgress: string,
     status: string,
+    saveType: string | null,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -3700,6 +3708,7 @@ export type CreateClassroomMutation = {
         id: string,
         lessonProgress: string,
         status: string,
+        saveType: string | null,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -3714,7 +3723,7 @@ export type CreateClassroomMutation = {
         __typename: "Feedback",
         id: string,
         classroomID: string,
-        liked: boolean | null,
+        liked: string | null,
         comment: string | null,
         createdAt: string,
         updatedAt: string,
@@ -3922,6 +3931,7 @@ export type UpdateClassroomMutation = {
         id: string,
         lessonProgress: string,
         status: string,
+        saveType: string | null,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -3936,7 +3946,7 @@ export type UpdateClassroomMutation = {
         __typename: "Feedback",
         id: string,
         classroomID: string,
-        liked: boolean | null,
+        liked: string | null,
         comment: string | null,
         createdAt: string,
         updatedAt: string,
@@ -4144,6 +4154,7 @@ export type DeleteClassroomMutation = {
         id: string,
         lessonProgress: string,
         status: string,
+        saveType: string | null,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -4158,7 +4169,7 @@ export type DeleteClassroomMutation = {
         __typename: "Feedback",
         id: string,
         classroomID: string,
-        liked: boolean | null,
+        liked: string | null,
         comment: string | null,
         createdAt: string,
         updatedAt: string,
@@ -4180,7 +4191,7 @@ export type CreateFeedbackMutation = {
     __typename: "Feedback",
     id: string,
     classroomID: string,
-    liked: boolean | null,
+    liked: string | null,
     comment: string | null,
     classroom:  {
       __typename: "Classroom",
@@ -4266,7 +4277,7 @@ export type UpdateFeedbackMutation = {
     __typename: "Feedback",
     id: string,
     classroomID: string,
-    liked: boolean | null,
+    liked: string | null,
     comment: string | null,
     classroom:  {
       __typename: "Classroom",
@@ -4352,7 +4363,7 @@ export type DeleteFeedbackMutation = {
     __typename: "Feedback",
     id: string,
     classroomID: string,
-    liked: boolean | null,
+    liked: string | null,
     comment: string | null,
     classroom:  {
       __typename: "Classroom",
@@ -4604,6 +4615,7 @@ export type CreateLessonMutation = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -4816,6 +4828,7 @@ export type UpdateLessonMutation = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -5028,6 +5041,7 @@ export type DeleteLessonMutation = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -5733,6 +5747,7 @@ export type CreateWarmUpMutation = {
     inputs:  {
       __typename: "Inputs",
       title: boolean,
+      example: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -5775,6 +5790,7 @@ export type UpdateWarmUpMutation = {
     inputs:  {
       __typename: "Inputs",
       title: boolean,
+      example: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -5817,6 +5833,7 @@ export type DeleteWarmUpMutation = {
     inputs:  {
       __typename: "Inputs",
       title: boolean,
+      example: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -6801,6 +6818,7 @@ export type CreateQuestionDataStudentDataMutation = {
       id: string,
       lessonProgress: string,
       status: string,
+      saveType: string | null,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -6935,6 +6953,7 @@ export type UpdateQuestionDataStudentDataMutation = {
       id: string,
       lessonProgress: string,
       status: string,
+      saveType: string | null,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -7069,6 +7088,7 @@ export type DeleteQuestionDataStudentDataMutation = {
       id: string,
       lessonProgress: string,
       status: string,
+      saveType: string | null,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -8246,6 +8266,7 @@ export type GetStudentDataQuery = {
     id: string,
     lessonProgress: string,
     status: string,
+    saveType: string | null,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -8422,6 +8443,7 @@ export type ListStudentDatasQuery = {
       id: string,
       lessonProgress: string,
       status: string,
+      saveType: string | null,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -8744,6 +8766,7 @@ export type GetClassroomQuery = {
         id: string,
         lessonProgress: string,
         status: string,
+        saveType: string | null,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -8758,7 +8781,7 @@ export type GetClassroomQuery = {
         __typename: "Feedback",
         id: string,
         classroomID: string,
-        liked: boolean | null,
+        liked: string | null,
         comment: string | null,
         createdAt: string,
         updatedAt: string,
@@ -8861,7 +8884,7 @@ export type GetFeedbackQuery = {
     __typename: "Feedback",
     id: string,
     classroomID: string,
-    liked: boolean | null,
+    liked: string | null,
     comment: string | null,
     classroom:  {
       __typename: "Classroom",
@@ -8950,7 +8973,7 @@ export type ListFeedbacksQuery = {
       __typename: "Feedback",
       id: string,
       classroomID: string,
-      liked: boolean | null,
+      liked: string | null,
       comment: string | null,
       classroom:  {
         __typename: "Classroom",
@@ -9135,6 +9158,7 @@ export type GetLessonQuery = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -9404,6 +9428,7 @@ export type GetWarmUpQuery = {
     inputs:  {
       __typename: "Inputs",
       title: boolean,
+      example: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -9449,6 +9474,7 @@ export type ListWarmUpsQuery = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -10318,6 +10344,7 @@ export type OnUpdateClassroomSubscription = {
         id: string,
         lessonProgress: string,
         status: string,
+        saveType: string | null,
         classroomID: string,
         studentID: string,
         studentAuthID: string,
@@ -10332,7 +10359,7 @@ export type OnUpdateClassroomSubscription = {
         __typename: "Feedback",
         id: string,
         classroomID: string,
-        liked: boolean | null,
+        liked: string | null,
         comment: string | null,
         createdAt: string,
         updatedAt: string,
@@ -10354,6 +10381,7 @@ export type OnChangeStudentDataSubscription = {
     id: string,
     lessonProgress: string,
     status: string,
+    saveType: string | null,
     classroomID: string,
     classroom:  {
       __typename: "Classroom",
@@ -11838,7 +11866,7 @@ export type OnCreateFeedbackSubscription = {
     __typename: "Feedback",
     id: string,
     classroomID: string,
-    liked: boolean | null,
+    liked: string | null,
     comment: string | null,
     classroom:  {
       __typename: "Classroom",
@@ -11919,7 +11947,7 @@ export type OnUpdateFeedbackSubscription = {
     __typename: "Feedback",
     id: string,
     classroomID: string,
-    liked: boolean | null,
+    liked: string | null,
     comment: string | null,
     classroom:  {
       __typename: "Classroom",
@@ -12000,7 +12028,7 @@ export type OnDeleteFeedbackSubscription = {
     __typename: "Feedback",
     id: string,
     classroomID: string,
-    liked: boolean | null,
+    liked: string | null,
     comment: string | null,
     classroom:  {
       __typename: "Classroom",
@@ -12232,6 +12260,7 @@ export type OnCreateLessonSubscription = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -12439,6 +12468,7 @@ export type OnUpdateLessonSubscription = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -12646,6 +12676,7 @@ export type OnDeleteLessonSubscription = {
       inputs:  {
         __typename: "Inputs",
         title: boolean,
+        example: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -13301,6 +13332,7 @@ export type OnCreateWarmUpSubscription = {
     inputs:  {
       __typename: "Inputs",
       title: boolean,
+      example: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -13338,6 +13370,7 @@ export type OnUpdateWarmUpSubscription = {
     inputs:  {
       __typename: "Inputs",
       title: boolean,
+      example: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -13375,6 +13408,7 @@ export type OnDeleteWarmUpSubscription = {
     inputs:  {
       __typename: "Inputs",
       title: boolean,
+      example: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -14264,6 +14298,7 @@ export type OnCreateQuestionDataStudentDataSubscription = {
       id: string,
       lessonProgress: string,
       status: string,
+      saveType: string | null,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -14393,6 +14428,7 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
       id: string,
       lessonProgress: string,
       status: string,
+      saveType: string | null,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",
@@ -14522,6 +14558,7 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
       id: string,
       lessonProgress: string,
       status: string,
+      saveType: string | null,
       classroomID: string,
       classroom:  {
         __typename: "Classroom",

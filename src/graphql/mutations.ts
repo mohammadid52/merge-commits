@@ -1208,6 +1208,7 @@ export const createStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
+      saveType
       classroomID
       classroom {
         id
@@ -1357,6 +1358,7 @@ export const updateStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
+      saveType
       classroomID
       classroom {
         id
@@ -1506,6 +1508,7 @@ export const deleteStudentData = /* GraphQL */ `
       id
       lessonProgress
       status
+      saveType
       classroomID
       classroom {
         id
@@ -1903,6 +1906,7 @@ export const createClassroom = /* GraphQL */ `
           id
           lessonProgress
           status
+          saveType
           classroomID
           studentID
           studentAuthID
@@ -2100,6 +2104,7 @@ export const updateClassroom = /* GraphQL */ `
           id
           lessonProgress
           status
+          saveType
           classroomID
           studentID
           studentAuthID
@@ -2297,6 +2302,7 @@ export const deleteClassroom = /* GraphQL */ `
           id
           lessonProgress
           status
+          saveType
           classroomID
           studentID
           studentAuthID
@@ -2705,6 +2711,7 @@ export const createLesson = /* GraphQL */ `
         }
         inputs {
           title
+          example
         }
         breakdown {
           included
@@ -2890,6 +2897,7 @@ export const updateLesson = /* GraphQL */ `
         }
         inputs {
           title
+          example
         }
         breakdown {
           included
@@ -3075,6 +3083,7 @@ export const deleteLesson = /* GraphQL */ `
         }
         inputs {
           title
+          example
         }
         breakdown {
           included
@@ -3694,6 +3703,7 @@ export const createWarmUp = /* GraphQL */ `
       }
       inputs {
         title
+        example
         additionalInputs {
           id
           name
@@ -3730,6 +3740,7 @@ export const updateWarmUp = /* GraphQL */ `
       }
       inputs {
         title
+        example
         additionalInputs {
           id
           name
@@ -3766,6 +3777,7 @@ export const deleteWarmUp = /* GraphQL */ `
       }
       inputs {
         title
+        example
         additionalInputs {
           id
           name
@@ -4634,6 +4646,7 @@ export const createQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
+        saveType
         classroomID
         classroom {
           id
@@ -4755,6 +4768,7 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
+        saveType
         classroomID
         classroom {
           id
@@ -4876,6 +4890,7 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
         id
         lessonProgress
         status
+        saveType
         classroomID
         classroom {
           id

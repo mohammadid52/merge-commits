@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaClock, FaUserAlt } from 'react-icons/fa';
 import ProgressRing from './ProgressRing';
 import { CurriculumInfo } from './Classroom';

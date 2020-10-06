@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { IconContext } from 'react-icons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaGraduationCap } from 'react-icons/fa';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 // import { API, graphqlOperation } from 'aws-amplify';

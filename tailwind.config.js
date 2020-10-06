@@ -8,6 +8,9 @@ module.exports = {
       './src/**/*.js',
       './src/**/*.jsx',
     ],
+    options: {
+      whitelist: ['bg-fire-orange', 'bg-sea-green', 'bg-dark-red', 'translate-y-1/2', 'animate-jiggle'],
+    }
   },
   future: {
     removeDeprecatedGapUtilities: true,
@@ -16,7 +19,26 @@ module.exports = {
   corePlugins: {
     translate: true,
   },
-  theme: {
+  theme: {flexGrow: {
+    '0': 0,
+    default: 1,
+    default: 2,
+    '1': 1,
+    '2': 2,
+    '3': 3,
+  },
+    cursor: {
+      auto: 'auto',
+      default: 'default',
+      pointer: 'pointer',
+      wait: 'wait',
+      text: 'text',
+      move: 'move',
+      'not-allowed': 'not-allowed',
+      crosshair: 'crosshair',
+      'zoom-in': 'zoom-in',
+      'help': 'help'
+    },
     textColor: theme => theme('colors'),
     fontSize: {
       'xxs': '.5rem',
@@ -65,6 +87,7 @@ module.exports = {
     },
     borderWidth: {
       default: '1px',
+      'neg1': '-1px',
       '0': '0',
       '2': '2px',
       '3': '3px',
@@ -111,11 +134,18 @@ module.exports = {
       // 'open': ['Open Sans Condensed', 'sans-serif'],
     },
     extend: {
+      backgroundOpacity: {
+        '10': '0.1',
+        '25': '0.25',
+        '75': '0.75',
+        '95': '0.95',
+      },
       lineHeight: {
-               'extra-tight': '.8',
-                },
+        'extra-tight': '.8',
+      },
       animation: {
         'bounce': 'bounce 2.5s linear 2',
+        'jiggle': 'jiggle 0.2s linear infinite',
         'ping': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
         'fadeIn': 'fadeIn 1s ease-in-out'
       },
@@ -139,6 +169,17 @@ module.exports = {
           '100%': {
             transform: 'translateY(0)'
           },
+        },
+        jiggle: {
+          '0%': {
+            transform: 'rotate(10deg)'
+          },
+          '50%': {
+            transform: 'rotate(-10deg)'
+          },
+          '100%': {
+            transform: 'rotate(10deg)'
+          }
         },
         ping: {
           '0%': {
@@ -249,6 +290,7 @@ module.exports = {
         '4.9/10': '49%',
         '5/10': '50%',
         '5.1/10': '51%',
+        '5.3/10': '53%',
         '5.5/10': '55%',
         '5.8/10': '58%',
         '5.9/10': '59%',
@@ -263,6 +305,7 @@ module.exports = {
         '7.85/10': '78.5%',
         '7.9/10': '79%',
         '8/10': '80%',
+        '8.2/10': '82%',
         '8.3/10': '83%',
         '8.5/10': '85%',
         '8.7/10': '87%',

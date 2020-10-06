@@ -41,7 +41,7 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
       try {
           // this any needs to be changed once a solution is found!!!
           const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: queryParams.id }))
-          console.log('classroom data', classroom);
+          // console.log('classroom data', classroom);
           setLesson(classroom.data.getClassroom)
           dispatch({
             type: 'INITIAL_LESSON_SETUP', 
@@ -63,14 +63,14 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
       const studentDataSubscription = API.graphql(graphqlOperation(customSubscriptions.onChangeStudentData, { classroomID: queryParams.id })).subscribe({
           next: (studentData: any) => {
             let updatedData = studentData.value.data.onChangeStudentData
-            console.log(updatedData)
+            // console.log(updatedData)
 
             dispatch({ type: 'UPDATE_STUDENT_DATA', payload: updatedData })
             // console.log(found)
           }
       });
 
-      console.log('sub', studentDataSubscription)
+      // console.log('sub', studentDataSubscription)
 
       return studentDataSubscription
     }
@@ -86,7 +86,7 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
 
 
     useEffect(() => {
-      console.log(lesson);
+      // console.log(lesson);
       
       
     }, [lesson])

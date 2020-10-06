@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import VideoBlock from './VideoBlock';
 import PhotoBlock from './PhotoBlock';
-import { IconContext } from "react-icons";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 import { IoLogoYoutube, } from 'react-icons/io';
 import { AiFillPlusCircle } from 'react-icons/ai';
 import { IoIosGlobe } from 'react-icons/io';
@@ -19,33 +19,35 @@ const MoreArtist = (props: props) => {
     const {  fullscreen } = props;
     const { state, dispatch, theme } = useContext(LessonControlContext)
     const [ fullscreenOutro, setFullscreenOutro ] = useState(false);
-    const [artistLink, setArtistLinks] = useState([
-       {
-        type: 'etc',
-        link: 'https://iconoclastartists.org/',
-        label: 'Iconoclast Artists Website',
-      },
-      {
-        type: 'instagram',
-        link: 'https://www.instagram.com/iconoclastartists/',
-        label: 'Iconoclast Artists Instagram',
-      },
-      {
-        type: 'youtube',
-        link: 'https://youtu.be/bp10ZOtv_zY',
-        label: 'MARLON HAVIKORO',
-      },
-      {
-        type: 'youtube',
-        link: 'https://youtu.be/pguAGyNHVAo',
-        label: 'Red Bull BC One Houston Camp',
-      },
-      {
-        type: 'youtube',
-        link: 'https://youtu.be/gNtJewsy-3w',
-        label: 'CreativeMornings Houston',
-      },
-    ])
+    const [artistLink, setArtistLinks] = useState(state.data.lesson.artist.additionalContent.links
+        // [
+    //    {
+    //     type: 'etc',
+    //     link: 'https://iconoclastartists.org/',
+    //     label: 'Iconoclast Artists Website',
+    //   },
+    //   {
+    //     type: 'instagram',
+    //     link: 'https://www.instagram.com/iconoclastartists/',
+    //     label: 'Iconoclast Artists Instagram',
+    //   },
+    //   {
+    //     type: 'youtube',
+    //     link: 'https://youtu.be/bp10ZOtv_zY',
+    //     label: 'MARLON HAVIKORO',
+    //   },
+    //   {
+    //     type: 'youtube',
+    //     link: 'https://youtu.be/pguAGyNHVAo',
+    //     label: 'Red Bull BC One Houston Camp',
+    //   },
+    //   {
+    //     type: 'youtube',
+    //     link: 'https://youtu.be/gNtJewsy-3w',
+    //     label: 'CreativeMornings Houston',
+    //   },
+    // ]
+    )
 
     return(
         // <div className="w-full h-full bg-dark-blue text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
@@ -59,7 +61,7 @@ const MoreArtist = (props: props) => {
             <div className='h-full w-full flex flex-row'>
                 {artistLink.map(
                 (
-                    item: { type: string; link: string; label: string },
+                    item: { type: string; link: string; text: string },
                     key: number
                 ) => (
                     <div
@@ -114,7 +116,7 @@ const MoreArtist = (props: props) => {
                         )}
 
                         <p className={`${fullscreen ? 'text-sm' : 'text-xxs'} flex-grow text-center text-blue-100 text-opacity-75`}>
-                        {item.label}
+                        {item.text}
                         </p>
                     </a>
                     </div>
