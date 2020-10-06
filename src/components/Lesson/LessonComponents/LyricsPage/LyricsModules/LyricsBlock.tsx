@@ -98,7 +98,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         return groupKey; // returns ['group0']
       }
     });
-    if (filteredGroupName.length === 1) return filteredGroupName[0]; // returns 'group0'
+    if (filteredGroupName.length > 0) return filteredGroupName; // returns ['group0'] -OR- ['group1', 'group2']
   };
 
   const getArrayWithMappedWord = (mappedWordID: string) => {
@@ -119,14 +119,16 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     }
   };
 
-  const eraseSelectGroup = (selectGroupName: string) => {
+  const eraseSelectGroup = (selectGroupName: string[]) => {
+    // here you pass in ['group0'] -OR- ['group1', 'group2']
     const remainingGroups = Object.keys(initialSelectedText).filter(
-      (obj: any) => obj !== selectGroupName
+      (obj: any) => selectGroupName.includes(obj) === false
     ); // group0, group1,... array
     return remainingGroups.reduce((acc: any, groupName: string) => {
       return { ...acc, ...{ [groupName]: initialSelectedText[groupName] } };
     }, {});
   };
+
 
   /**
    * Function that handles the text selection
@@ -140,7 +142,13 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    *
    */
 
-  const handleSelectText2 = () => {
+  const handleSelectGroupIncrement = () => {
+    if(color !== 'erase'){
+      console.log('handle increment: ', initialSelectedText[`group${selectGroup}`]['selected'].length);
+    }
+  }
+
+  const handleDragSelectText = () => {
     if (color !== '') {
       if (color !== 'erase') {
         /**
@@ -172,22 +180,30 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     const targetWordID = t.id || '';
 
     if (typeof targetWordID !== 'undefined') {
-      if (targetWordID.includes('mapped')) {
-        setInitialSelectedText({
-          ...initialSelectedText,
-          [`group${selectGroup}`]: {
-            color: color,
-            selected: [targetWordID],
-          },
-        });
+      if (color !== 'erase') {
+        if (targetWordID.includes('mapped')) {
+          setInitialSelectedText({
+            ...initialSelectedText,
+            [`group${selectGroup}`]: {
+              color: color,
+              selected: [targetWordID],
+            },
+          });
+        }
+      } else {
+        if (targetWordID.includes('mapped')) {
+          //
+          //
+          //
+          //
+        }
       }
     }
   };
 
   /**
-   * Mouse functionality
+   * Mouse/grouping functionality
    */
-
   const handleMouseUp = (e: React.MouseEvent) => {
     setMouseTarget(''); // Clear mouse target
 
@@ -197,17 +213,20 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       setMouseIsClicked(false);
     }
 
-    if (typeof initialSelectedText[`group${selectGroup}`] !== 'undefined') {
-      //  check if first selectGroup has been initiated
-      const currentGroupEmpty = initialSelectedText[`group${selectGroup}`]['selected'].length > 0; // returns true or false if current selectGroup is initiated and empty or not
-
-      if (!currentGroupEmpty) {
-        setSelectGroup(selectGroup);
-      } else {
-        setSelectGroup(selectGroup + 1);
-      }
+    if(color !== 'erase'){
+      setSelectGroup(selectGroup + 1);
     }
   };
+
+  const handleMouseLeave = () => {
+    setMouseTarget('');
+
+    if (mouseIsHeld || mouseIsClicked) {
+      setFirstLastSelected([]); // Reset first last selected if mouse is clicked
+      setMouseIsHeld(false);
+      setMouseIsClicked(false);
+    }
+  }
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!mouseIsHeld || !mouseIsClicked) {
@@ -326,6 +345,8 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         return (
           <span
             key={`mappedWord__${i}__${mappedWord}`}
+            id={`mappedWord__${i}__${mappedWord}`}
+            onMouseOver={handleMouseOver}
             className={`relative py-2
                 ${
                   //  Check if current mapped word is highlighted
@@ -358,15 +379,21 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    */
 
   useEffect(() => {
-    handleSelectText2();
+    handleDragSelectText();
   }, [firstLastSelected]);
 
   /**
    * ANDREW'S DISPATCH
    */
-
-  // this was fullSelectedText first
   useEffect(() => {
+    //  EMPTY GROUP CLEANUP ***temporary***
+    // const nonEmptySelectGroupKeys = Object.keys(initialSelectedText).filter(
+    //   (objKey) => initialSelectedText[objKey]['selected'].length > 0
+    // );
+    // const nonEmptySelectGroups = nonEmptySelectGroupKeys.reduce((acc: any, groupName: string) => {
+    //   return { ...acc, ...{ [groupName]: initialSelectedText[groupName] } };
+    // }, {});
+    //  EMPTY GROUP CLEANUP ***temporary***
     setSelected(adaptTextGroupsForDispatch(initialSelectedText));
   }, [initialSelectedText]);
 
@@ -386,7 +413,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
           <div className='w-auto'>
             <IconContext.Provider
               value={{
-                color: `${colorPicker(color) === '' ? 'white': colorPicker(color)}`,
+                color: `${colorPicker(color) === '' ? 'white' : colorPicker(color)}`,
                 size: '2rem',
                 style: { width: 'auto' },
               }}>
@@ -399,7 +426,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
           onMouseDown={handleMouseDown}
           onClick={handleClickSelectText}
           onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
           style={{
             MozUserSelect: 'none',
             WebkitUserSelect: 'none',

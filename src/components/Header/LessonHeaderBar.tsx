@@ -23,7 +23,7 @@ const LessonHeaderBar = () => {
     // const match = useRouteMatch();
     // const location = useLocation();
     // const history = useHistory();
-    const { theme, state, dispatch, subscription } = useContext(LessonContext);
+    const { theme, state, dispatch } = useContext(LessonContext);
     // const [ dictOpen, setDictOpen ] = useState(false);
     // const { lookUp } = useDictionary('EN');
     // const [ searchTerm, setSearchTerm ] = useState('');
@@ -82,9 +82,7 @@ const LessonHeaderBar = () => {
     }
 
     const handleDone = () => {
-        if ( state.unsavedChanges ) {
-            updateStudentData('done')
-        }
+        updateStudentData('done')
     }
 
     // const toggleDictionary = () => {
@@ -106,7 +104,8 @@ const LessonHeaderBar = () => {
 
     const { startTimer, changeParams } = useStudentTimer({
         dispatch: dispatch,
-        subscription: subscription,
+        subscription: state.subscription,
+        subscribeFunc: state.subscribeFunc,
         callback: updateStudentData,
         state: state,
     });
@@ -114,8 +113,11 @@ const LessonHeaderBar = () => {
     useEffect(() => {
         changeParams('state', state)
         // console.log('state', state);
+        // console.log('subInfo', subscription, subscribeFunc );
+        
+        
         // startTimer()
-    }, [state.studentStatus, state.viewing, state.saveCount])
+    }, [state.studentStatus, state.viewing, state.saveCount, state.subscription])
 
     return (
         <div className={`z-40 center w-full h-.7/10 ${theme.toolbar.bg} text-gray-200 shadow-2xl flex justify-between`}>
@@ -152,32 +154,34 @@ const LessonHeaderBar = () => {
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">SetIdle</p>
-                </div>
+                </div> */}
                 <div className={`flex flex-col justify-center items-center px-2`} onClick={() => { dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' }) }}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">SetActive</p>
                 </div>
-                <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onPointerDown={startAutoSave} onPointerUp={clearAutoSave}>
+                {/* <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onPointerDown={startAutoSave} onPointerUp={clearAutoSave}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">AutoSave</p>
                 </div> */}
-                {/* <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={startTimer}>
+                <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={startTimer}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">Timer</p>
-                </div> */}
+                </div>
                 {
                     !state.viewing ?
-                    <div className={`w-4.5/10 ${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={handleDone}>
-                        <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
+                    <div className={`w-4.5/10 cursor-pointer flex flex-col justify-center items-center px-2`} onClick={handleDone}>
+                        <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                             <FaRegThumbsUp />
                         </IconContext.Provider>
-                        <p className={`text-xs text-gray-200 text-center`} style={{color: state.unsavedChanges ? '#EDF2F7' : '#4A5568'}}>Done</p>
+                        <p className={`text-xs text-gray-200 text-center`}>
+                            Done
+                        </p>
                     </div>
                     :
                     <div className={`w-4.5/10 cursor-default flex flex-col justify-center items-center px-2`}>
@@ -185,7 +189,9 @@ const LessonHeaderBar = () => {
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-4 w-4 bg-green-600"></span>
                         </div>
-                        <p className={`self-end text-xs text-gray-200 text-center`}>AutoSave</p>
+                        <p className={`self-end text-xs text-gray-200 text-center`}>
+                            AutoSave
+                        </p>
                     </div>
                 }
                 <div className={`w-4.5/10 flex flex-col justify-center items-center px-2 cursor-pointer`}>

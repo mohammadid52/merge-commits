@@ -26,7 +26,6 @@ const Outro = () => {
     dispatch({ type: 'FINISH' });
   }, []);
 
-
   return (
     <div className='w-full md:h-full flex flex-col justify-between items-center'>
       { state.data.lesson.type !== 'survey' ?

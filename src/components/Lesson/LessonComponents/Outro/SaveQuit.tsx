@@ -63,6 +63,7 @@ const SaveQuit = (props: SaveQuitProps) => {
     } catch (error) {
         console.error(error);   
     }
+
   }
 
   const updateStudentProfile = async () => {
@@ -133,8 +134,10 @@ const SaveQuit = (props: SaveQuitProps) => {
           })
         })
 
-        if ( feedback.like !== '' || feedback.text !== '' ) {
-          await saveLessonFeedback()
+        if ( typeof feedback !== 'undefined' ) {
+          if ( feedback?.like !== '' || feedback?.text !== '' ) {
+            await saveLessonFeedback()
+          }
         }
 
         if ( id === 'on-boarding-survey-1' ) { await updateStudentProfile() }

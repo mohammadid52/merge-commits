@@ -36,32 +36,33 @@ const InstructionsBlock = () => {
             <div className="w-full flex flex-col">
                 <div className={`w-auto flex flex-row ${theme.underline} mr-4 pb-1 mb-1`}>
                     <h3 className='w-3/10 mr-2 flex text-xl font-open font-light animate-bounce'>
-                        Instructions <ToolTip width='w-40' position='bottom' header='Instructions' content='click the red icon for video instructions'/>
+                        Instructions 
+                        {/* <ToolTip width='w-40' position='bottom' header='Instructions' content='click the red icon for video instructions'/> */}
                     </h3>
                     {/* <p className="w-auto text-gray-600 text-sm flex mr-4 items-center">(click the red icon for video instructions)</p> */}
                 </div>
                 <div className={`w-full h-8/10 flex justify-center items-center text-sm px-2`}>
-                    {   !videoMode ?
+                    {/* {   !videoMode ? */}
                         <div className="h-full overflow-y-auto overflow-x-hidden">
                             { instructionsArr.map((inst: any, key: number) => (
                                 <div className="text-sm font-light mb-2" key={key}>{inst}</div>
                                 ))}
                         </div>
-                        :
+                        {/* :
                         <div className="h-full flex justify-center items-center" style={{ width: '250px'}}>
                             <video controls width="250">
                                 <source src={link} type="video/mp4" />
                                 <p>Your browser does not support embedded video playback!</p>
                             </video>
                         </div>
-                    }
+                    } */}
                 </div>
             </div>
-            <IconContext.Provider value={{ color: '#EDF2F7', size: '1rem'}}>
+            {/* <IconContext.Provider value={{ color: '#EDF2F7', size: '1rem'}}>
                 <div className="cursor-pointer flex-grow-0 bg-dark-red h-8 w-8 flex flex-col items-center justify-center z-20 rounded-lg shadow-2" onClick={toggleVideoMode}>
                     <FaVideo />
                 </div>
-            </IconContext.Provider>
+            </IconContext.Provider> */}
         </div>
     )
 }

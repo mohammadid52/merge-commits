@@ -11,6 +11,7 @@ const SelfDisplay = () => {
   const moduleTypes = state.data.lesson.coreLesson.tools;
 
   const arrayParseToString = (arr: Array<Array<{ [key: string]: any }>>) => {
+    console.log('selfdisplay arr: ', arr)
     let resultArray = arr.map((item: Array<{ text: string; [key: string]: any }>) => {
       let parsedString = '';
       item.forEach((item: { text: string; [key: string]: any }) => {
@@ -71,6 +72,7 @@ const SelfDisplay = () => {
                   {/* {console.log('module content: ', module.content)} */}
                   {module.content.map((line: string, i: number) => {
                     return line.split('\n').map((subStr: string, key: number, arr: any) => (
+                      subStr.length > 0 &&
                       <>
                         <p key={key} className={`text-sm text-gray-200 font-light mb`}>
                           {subStr}
