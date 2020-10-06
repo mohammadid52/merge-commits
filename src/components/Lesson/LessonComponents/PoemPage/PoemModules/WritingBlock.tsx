@@ -4,6 +4,7 @@ import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaPlus } from 'react-icons/fa';
 import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
+import PositiveAlert from '../../../../../standard/Alert/PositiveAlertLinePrompt';
 
 interface WritingBlockProps {
     editMode: {
@@ -193,6 +194,12 @@ const WritingBlock = (props: WritingBlockProps) => {
     }
 
 
+    const [alert, setAlert] = useState(false);
+
+    const handleCancel = () => {
+        setAlert(!alert);
+    }
+
     const handleSubmit = () => {
         setEditMode(editMode => {
             return {
@@ -200,6 +207,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                 open: true,
             }
         })
+        setAlert(!alert);
     }
 
     const handleInputChange = (e: any) => {
@@ -247,7 +255,8 @@ const WritingBlock = (props: WritingBlockProps) => {
     }
 
     return (
-        <div className="bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600" >
+        <div className="relative bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600" >
+            <div className={`${alert ? 'absolute z-100' : 'hidden'}`} style={{top: '0', right: '-40%'}}><PositiveAlert handleCancel={handleCancel} handleEdit={handleSubmit}/></div>
             <div className="w-full flex flex-row justify-between mb-2">
                 <h3 className='w-3/10 mr-2 flex text-xl text-gray-200 font-open font-light animate-bounce z-100'>
                     Line Prompts <ToolTip width='w-40' position='bottom' header='Instructions' content='Make sure you are finished with the line prompts before you click "Save and Edit"' />
@@ -296,7 +305,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                     )}) : null
                 }
             </div>
-            <button className="self-start w-auto px-3 h-8 text-xl font-open font-light bg-yellow-500 text-gray-900 flex justify-center items-center rounded-lg mt-2" onClick={handleSubmit}>
+            <button className="self-start w-auto px-3 h-8 text-xl font-open font-light bg-yellow-500 text-gray-900 flex justify-center items-center rounded-lg mt-2" onClick={() => setAlert(!alert)}>
                 Save and Edit
             </button>
         </div>
