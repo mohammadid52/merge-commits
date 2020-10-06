@@ -155,24 +155,24 @@ const LessonHeaderBar = () => {
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">SetIdle</p>
                 </div> */}
-                <div className={`flex flex-col justify-center items-center px-2`} onClick={() => { dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' }) }}>
+                {/* <div className={`flex flex-col justify-center items-center px-2`} onClick={() => { dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' }) }}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">SetActive</p>
-                </div>
+                </div> */}
                 {/* <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onPointerDown={startAutoSave} onPointerUp={clearAutoSave}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">AutoSave</p>
                 </div> */}
-                <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={startTimer}>
+                {/* <div className={`${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={startTimer}>
                     <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                         <FiClock />
                     </IconContext.Provider>
                     <p className="text-xs text-gray-200 text-center">Timer</p>
-                </div>
+                </div> */}
                 {
                     !state.viewing ?
                     <div className={`w-4.5/10 cursor-pointer flex flex-col justify-center items-center px-2`} onClick={handleDone}>
