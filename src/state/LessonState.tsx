@@ -38,7 +38,9 @@ export interface LessonStateType  {
     word_bank?: Array<string>;
     lessonComplete: boolean;
     unsavedChanges: boolean;
-    saveCount: number
+    saveCount: number;
+    subscription?: any;
+    subcribeFunction?: () => any;
 }
 
 export const lessonState: LessonStateType = {
