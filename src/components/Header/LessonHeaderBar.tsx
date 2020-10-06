@@ -173,11 +173,13 @@ const LessonHeaderBar = () => {
                 </div> */}
                 {
                     !state.viewing ?
-                    <div className={`w-4.5/10 ${state.unsavedChanges ? 'cursor-pointer' : 'cursor-default'} flex flex-col justify-center items-center px-2`} onClick={handleDone}>
-                        <IconContext.Provider value={{ color: state.unsavedChanges ? '#EDF2F7' : '#4A5568', size: '1.5rem'}}>
+                    <div className={`w-4.5/10 cursor-pointer flex flex-col justify-center items-center px-2`} onClick={handleDone}>
+                        <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem'}}>
                             <FaRegThumbsUp />
                         </IconContext.Provider>
-                        <p className={`text-xs text-gray-200 text-center`} style={{color: state.unsavedChanges ? '#EDF2F7' : '#4A5568'}}>Done</p>
+                        <p className={`text-xs text-gray-200 text-center`} style={{color: state.unsavedChanges ? '#EDF2F7' : '#4A5568'}}>
+                            Done
+                        </p>
                     </div>
                     :
                     <div className={`w-4.5/10 cursor-default flex flex-col justify-center items-center px-2`}>
@@ -185,7 +187,9 @@ const LessonHeaderBar = () => {
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-4 w-4 bg-green-600"></span>
                         </div>
-                        <p className={`self-end text-xs text-gray-200 text-center`}>AutoSave</p>
+                        <p className={`self-end text-xs text-gray-200 text-center`}>
+                            AutoSave
+                        </p>
                     </div>
                 }
                 <div className={`w-4.5/10 flex flex-col justify-center items-center px-2 cursor-pointer`}>

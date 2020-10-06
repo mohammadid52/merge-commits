@@ -133,10 +133,10 @@ const useStudentTimer = (inputs?: inputs) => {
         params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' })
         params.dispatch({ type: 'INCREMENT_SAVE_COUNT' })
         // callback()
-        console.log('save');
+        // console.log('save');
         
         params.autoSaveInterval = setInterval(() => {
-            console.log('save');
+            // console.log('save');
             params.dispatch({ type: 'INCREMENT_SAVE_COUNT' })
             // callback() 
         }, 3000)

@@ -34,6 +34,7 @@ const LessonControl = () => {
     const location = useLocation();
     const [ componentView, setComponentView ] = useState('');
     const [ fullscreen, setFullscreen ] = useState(false);
+    const [ studentDataLoading, setStudentDataLoading ] = useState('');
     const [ shareable, setShareable ] = useState(false);
     const [ isSameStudentShared, setIsSameStudentShared ] = useState(false);
 
@@ -110,6 +111,17 @@ const LessonControl = () => {
         if (state.pages.length > 0 && state.unsavedChanges) {handleUpdateClassroom()}
 
     }, [state.unsavedChanges])
+
+    useEffect(() => {
+        if ( !state.studentDataUpdated ) {
+            setStudentDataLoading('loading')
+        }
+        
+        if ( state.studentDataUpdated ) {
+            setStudentDataLoading('')
+        }
+
+    }, [state.studentDataUpdated])
 
     useEffect(() => {
 
@@ -269,69 +281,79 @@ const LessonControl = () => {
                             /> */}
                         </div>
                     </div>
-                    <div className={`${fullscreen ? 'w-full' : 'w-6/10'} h-full flex flex-col items-center`}>
+                    <div className={`relative ${fullscreen ? 'w-full' : 'w-6/10'} h-full flex flex-col items-center`}>
+                        {
+                            studentDataLoading === 'loading' ? 
+                            <div className={`absolute h-8/10 bg-dark bg-opacity-75 flex flex-col justify-center items-center rounded-lg z-50`}>
+                                <div className={`text-center text-3xl text-gray-200 `}>
+                                    Loading student data...
+                                </div>
+                            </div>
+                            : null
+                        }
                         <div className={`${fullscreen ? 'h-full' : 'h-8/10'} relative w-full bg-dark shadow-elem-light rounded-lg mb-4 p-4`}>
                             {/*  */}
                             {/* <LyricsActivityView
                                 student={selectedStudent}
                                 fullscreen={fullscreen}/> */}
                             {/*  */}
+                                    
                             <Suspense fallback={
-                            <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                                {/* <div className="min-h-full w-full flex flex-col justify-center items-center">
-                                    Give us one second! It is loading... 
-                                </div> */}
-                                <ComponentLoading />
-                            </div>
+                                <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                                    {/* <div className="min-h-full w-full flex flex-col justify-center items-center">
+                                        Give us one second! It is loading... 
+                                    </div> */}
+                                    <ComponentLoading />
+                                </div>
                             }>  
                                 <Switch>
                                     <Route 
                                         path={`${match.url}/intro`}
                                         render={() => (
                                             <IntroView fullscreen={fullscreen} />
-                                        )}
-                                    />
+                                            )}
+                                            />
                                     <Route 
                                         path={`${match.url}/warmup`}
                                         render={() => (
                                             <StoryView fullscreen={fullscreen} />
-                                        )}
-                                    />
+                                            )}
+                                            />
                                     <Route 
                                         path={`${match.url}/corelesson`}
                                         render={() => (
                                             <LyricsView fullscreen={fullscreen} />
-                                        )}
-                                    />
+                                            )}
+                                            />
                                     <Route 
                                         path={`${match.url}/activity`}
                                         render={() => (
                                             <PoemView fullscreen={fullscreen} />
-                                        )}
-                                    />
+                                            )}
+                                            />
                                     <Route 
                                         path={`${match.url}/checkpoint`}
                                         render={() => (
                                             <Checkpoint fullscreen={fullscreen}/>
-                                        )}
-                                    />
+                                            )}
+                                            />
                                     <Route 
                                         path={`${match.url}/outro`}
                                         render={() => (
                                             <OutroView fullscreen={fullscreen} />
-                                        )}
-                                    />
+                                            )}
+                                            />
                                     <Route 
                                         exact
                                         path={`${match.url}/`}
                                         render={({location}) => (
                                             <Redirect 
-                                                to={{
+                                            to={{
                                                 pathname: `${match.url}/intro`,
                                                 state: { from: location }
                                             }}/>
-                                        )}
-                                    />
+                                            )}
+                                            />
                                 </Switch>
                             </Suspense>
 
@@ -343,7 +365,7 @@ const LessonControl = () => {
 
                             {   
                                 shareable && state.studentViewing.live &&!isSameStudentShared ? 
-                                    <div className={`absolute cursor-pointer w-auto text-xl m-2 z-50`} style={{bottom: 0, left: 0}}>
+                                <div className={`absolute cursor-pointer w-auto text-xl m-2 z-50`} style={{bottom: 0, left: 0}}>
                                         <button className="bg-purple-400 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleShareStudentData}>
                                             share data
                                         </button>
@@ -353,7 +375,7 @@ const LessonControl = () => {
 
                             {   
                                 state.sharing ?
-                                    <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
+                                <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
                                         <button className="bg-gold text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleQuitShare}>
                                             stop sharing
                                         </button>
@@ -364,9 +386,9 @@ const LessonControl = () => {
                             {/* {   
                                 state.unsavedChanges ?
                                 <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
-                                    <button className="bg-teal-500 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleUpdateClassroom}>
-                                        apply changes
-                                    </button>
+                                <button className="bg-teal-500 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleUpdateClassroom}>
+                                apply changes
+                                </button>
                                 </div>
                                 : null
                             } */}
