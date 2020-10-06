@@ -347,6 +347,8 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         return (
           <span
             key={`mappedWord__${i}__${mappedWord}`}
+            id={`mappedWord__${i}__${mappedWord}`}
+            onMouseOver={handleMouseOver}
             className={`relative py-2
                 ${
                   //  Check if current mapped word is highlighted
