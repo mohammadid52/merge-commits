@@ -75,6 +75,7 @@ const StageIcon = (props: StageIconProps) => {
     );
   };
 
+
   const handleLink = () => {
     if (active) {
       let pageNumber = null;
