@@ -6,7 +6,7 @@ type lessonControlActions =
         payload: any
     }
 |   {
-        type: 'OPEN_LESSON' | 'DISABLE_LESSON' | 'CLOSE_LESSON' | 'DELETE_DISPLAY_DATA' | 'SET_DISPLAY_DATA' | 'SET_STUDENT_VIEWING' | 'SET_SHARE_MODE' | 'QUIT_SHARE_MODE' | 'SAVED_CHANGES' | 'UPDATE_STUDENT_DATA' | 'QUIT_STUDENT_VIEWING' | 'RESET_DONE';
+        type: 'OPEN_LESSON' | 'DISABLE_LESSON' | 'CLOSE_LESSON' | 'DELETE_DISPLAY_DATA' | 'SET_DISPLAY_DATA' | 'SET_STUDENT_VIEWING' | 'SET_SHARE_MODE' | 'QUIT_SHARE_MODE' | 'SAVED_CHANGES' | 'UPDATE_STUDENT_DATA' | 'QUIT_STUDENT_VIEWING' | 'RESET_DONE' ;
         payload: any
     }
 |   {
@@ -111,6 +111,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 if ( viewing ) {
                     return {
                         ...state,
+                        studentDataUpdated: true,
                         done: doneArray,
                         roster: state.roster.map((student: any) => {
                             if ( student.id === action.payload.id ) {
@@ -127,6 +128,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 return {
                     ...state,
                     done: doneArray,
+                    studentDataUpdated: true,
                     roster: state.roster.map((student: any) => {
                         if ( student.id === action.payload.id ) {
                             return action.payload
@@ -140,9 +142,11 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
 
             return {
                 ...state,
+                studentDataUpdated: true,
                 done: doneArray,
                 roster: updatedArray,
             }
+
         case 'RESET_DONE':
             return {
                 ...state,
@@ -184,6 +188,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
             if ( state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === action.payload.id ) {
                 return { 
                     ...state,
+                    studentDataUpdated: true,
                     unsavedChanges: true,
                     studentViewing: {
                         live: false,
@@ -194,6 +199,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
             
             return {
                 ...state,
+                studentDataUpdated: false,
                 unsavedChanges: true,
                 studentViewing: {
                     live: true,
@@ -204,6 +210,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
             return { 
                 ...state,
                 unsavedChanges: true,
+                studentDataUpdated: true,
                 studentViewing: {
                     live: false,
                     studentInfo: {}
