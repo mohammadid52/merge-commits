@@ -27,7 +27,9 @@ const SurveyCard: React.FC<ClassProps> = (props: ClassProps) => {
                 
                 <div className={`w-2.5/10 bg-dark rounded-tl-xl rounded-bl-xl`}>
                     <div className="h-6/10 flex justify-center items-center">
-                        {/* <img className=" w-32 rounded-full " src={`${curriculum && curriculum.artist.images ? curriculum.artist.images : null}`} alt={`${curriculum && curriculum.artist.name ? curriculum.artist.name : ''}`} /> */}
+                        <div className="h-28 w-28 rounded-full bg-white flex justify-center items-center" style={{height: '7rem'}}>
+                        <img className="w-28  " src={'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Symbol.png'} alt={`${curriculum && curriculum.artist.name ? curriculum.artist.name : 'Iconoclast Artists'}`} />
+                        </div>
                     </div>
                     <div className="h-1/10 pl-6">
                         <div className="tracking-widest border-b text-gray-300 border-ketchup">

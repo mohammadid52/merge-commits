@@ -13,6 +13,7 @@ import {
     FaCheck,
 } from 'react-icons/fa';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
+import FooterLabels from '../../General/LabelSwitch';
 
 interface StageIconProps {
     iconID: string | number;
@@ -59,13 +60,15 @@ const StageIcon = (props: StageIconProps) => {
 
     const iconLabel = (): ReactElement => {
         return (
-          <p
-            className={`absolute w-auto transform translate-y-8 mt-5 text-center font-light text-dark text-sm`}>
+          <div
+            className={`absolute w-20 transform translate-y-8 mt-3 text-center font-light text-dark text-sm`}>
             {
+                <FooterLabels label=
+                {props.type.charAt(0).toUpperCase()+props.type.slice(1)} />
                 /* Capitalize the first letter */
-                props.type.charAt(0).toUpperCase()+props.type.slice(1)
+                
             }
-          </p>
+          </div>
         );
       };
 
@@ -131,7 +134,9 @@ const StageIcon = (props: StageIconProps) => {
                     <div className={`h-14 w-14 rounded-full flex flex-col justify-center items-center ${ coinColor }`}>
                         { iconSwitch(type) }
                     </div>
+                    <div className="w-20 mt-1 absolute">
                     {iconLabel()}
+                    </div>
                 </IconContext.Provider>
             </div>
             {
