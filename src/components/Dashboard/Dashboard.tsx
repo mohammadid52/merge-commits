@@ -10,8 +10,9 @@ import {
  } from 'react-router-dom';
 // import PageHeaderBar from '../Header/PageHeaderBar';
 import SideMenu from './Menu/SideMenu';
+// import Classroom from './Classroom/Classroom';
 import { useCookies } from 'react-cookie';
-const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
+// const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'))
 const Profile = lazy(() => import('./Profile/Profile'))
 const Links = lazy(() => import('./Menu/Links'))

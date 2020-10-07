@@ -6,9 +6,10 @@ import {Auth} from '@aws-amplify/auth';
 import PageHeaderBar from './Header/PageHeaderBar';
 import Login from './Auth/Login';
 import Forgot from './Auth/Forgot';
+import Dashboard from './Dashboard/Dashboard';
 const Confirmation = lazy(() => import('./Auth/Confirmation'));
 const PrivacyPolicy = lazy(() => import('./Auth/PrivacyPolicy'));
-const Dashboard = lazy(() => import('./Dashboard/Dashboard'));
+// const Dashboard = lazy(() => import('./Dashboard/Dashboard'));
 const Registration = lazy(() => import('./Auth/Register'));
 const Lesson = lazy(() => import('./Lesson/Lesson'));
 const TeacherView = lazy(() => import('./TeacherView/TeacherView'))
