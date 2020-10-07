@@ -1,6 +1,6 @@
 module.exports = {
   purge: {
-    enabled: true,
+    enabled: false,
     content: [
       './src/**/*.html',
       './src/**/*.tsx',
@@ -9,7 +9,7 @@ module.exports = {
       './src/**/*.jsx',
     ],
     options: {
-      whitelist: ['bg-fire-orange', 'bg-sea-green', 'bg-dark-red', 'translate-y-1/2', 'animate-jiggle', 'animate-spin'],
+      whitelist: ['bg-fire-orange', 'bg-sea-green', 'bg-dark-red', 'border-white20','translate-y-1/2', 'animate-jiggle', 'animate-spin'],
     }
   },
   future: {
@@ -348,7 +348,6 @@ module.exports = {
       },
       colors: {
         'black10': 'rgba(0,0,0,.1)',
-        'black20': 'rgba(0,0,0,.2)',
         'black30': 'rgba(0,0,0,.3)',
         'black40': 'rgba(0,0,0,.4)',
         'black50': 'rgba(0,0,0,.5)',
