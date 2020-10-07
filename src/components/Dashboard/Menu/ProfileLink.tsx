@@ -35,7 +35,7 @@ const ProfileLink: React.FC = () => {
 
     return (
         <NavLink to={`${match.url}/profile`}>
-            <div className="size h-14 flex justify-center items-center md:border-t md:border-b md:border-gray-200 py-4 md:px-4">
+            <div className="size h-14 flex justify-center items-center md:border-t md:border-b md:border-gray-200 py-4">
             <div className="h-8 w-8 rounded-full flex justify-center items-center text-sm font-bold text-white font-sans"
                 style={{background: `${state.user.firstName ? stringToHslColor(state.user.firstName + ' ' + state.user.lastName) : '#051429'}`, textShadow: '0.1rem 0.1rem 2px #423939b3'}}>
                     {`${initials(state.user.firstName, state.user.lastName)}`}
