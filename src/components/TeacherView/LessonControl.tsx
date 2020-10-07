@@ -196,62 +196,71 @@ const LessonControl = () => {
                     </h1>
 
                     <div className="w-6/10 flex justify-around items-center">
-                        <div className="w-5/10 flex justify-around items-center">
-                            <div className="w-4/10 px-2 flex flex-col justify-center items-center">
-                                <div className="w-full flex justify-center items-center font-semibold text-indigo-500">
+
+                        <div className="w-1/3 flex justify-center items-center">
+                            <div className="w-full flex flex-col justify-center items-center">
+                                <div className="w-6/10 font-semibold text-indigo-500">
                                     <span className="font-normal text-black">currently </span> viewing:
                                 </div>
-                                <div className={`w-full flex justify-center items-center ${state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? 'text-indigo-500 text-xl font-bold': 'text-black text-xs'}`}>
-                                    { state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.student.firstName + ' ' + firstInitialFunc(state.studentViewing.studentInfo.student.lastName): '(click on a student)' }
+                                <div className="w-full flex justify-center items-center">
+                                    <div className={`w-auto px-2 flex justify-center items-center ${state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? 'bg-indigo-500 hover:bg-indigo-400 text-gray-200 rounded-xl text-xl font-semibold overflow-x-auto shadow-elem-dark cursor-pointer': 'text-black text-xs'}`} onClick={handleQuitViewing}>
+                                        { state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.student.firstName + ' ' + firstInitialFunc(state.studentViewing.studentInfo.student.lastName): '(click on a student)' }
+                                    </div>
+                                    <div className={`w-auto ml-2 ${state.studentViewing.live ? '' : 'hidden'}`}>
+                                        { 
+                                            state.studentViewing.live ?
+                                            <div className="font-bold cursor-pointer text-xl text-red-700 hover:text-red-400 flex justify-center items-center" onClick={handleQuitViewing}>
+                                                X
+                                            </div>
+                                            :
+                                            null
+                                        }
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="w-6/10 flex justify-between items-center">
-                                <div className="w-2/10">
-                                    { 
-                                        state.studentViewing.live ?
-                                        <div className="cursor-pointer text-sm bg-indigo-500 w-full h-6 shadow-elem-semi-dark rounded-xl text-gray-300 hover:text-white focus:border-none flex justify-center items-center" onClick={handleQuitViewing}>
-                                            QUIT
-                                        </div>
-                                        :
-                                        null
-                                    }
-                                </div>
-                                <div className="w-8/10">
-                                    {   
-                                        shareable && state.studentViewing.live &&!isSameStudentShared ? 
-                                            <div className={` cursor-pointer w-auto text-xl m-2 z-50`} style={{bottom: 0, left: 0}}>
-                                                <button className="bg-purple-400 text-gray-200 h-8 w-36 rounded-xl shadow-elem-dark" onClick={handleShareStudentData}>
-                                                    share { state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.student.firstName : null }
-                                                </button>
-                                            </div>
-                                        : null
-                                    }
-                                </div>
-                            </div>
                         </div>
-                        <div className={`w-5/10 ${state.displayData && state.displayData.studentInfo ? '': 'hidden'}`}>
-                            <div className="w-4/10 px-2 flex flex-col justify-center items-center">
-                                <div className="w-full flex justify-center items-center text-purple-400 font-semibold "> 
-                                    <span className="font-normal text-black">currently </span> sharing:
-                                </div>
-                                <div className={`w-full flex justify-center items-center text-purple-400 text-xl font-bold`}>
-                                    { state.displayDate && state.displayData.studentInfo ? state.displayData.studentInfo.firstName + ' ' + firstInitialFunc(state.displayData.studentInfo.lastName): null }
-                                </div>
-                            </div>
-                            
-                            <div className="w-5/10">
+
+                        <div className="w-2/10 flex justify-center items-center mr-8">
+                                
+                            <div className="w-full">
                                 {   
-                                    state.sharing ?
-                                        <div className=" cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
-                                            <button className="bg-gold text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleQuitShare}>
-                                                stop sharing
+                                    shareable && state.studentViewing.live &&!isSameStudentShared ? 
+                                        <div className={` cursor-pointer w-auto text-xl z-50`} style={{bottom: 0, left: 0}}>
+                                            <button className="bg-purple-400 hover:bg-purple-300 text-gray-200 h-8 w-36 rounded-xl shadow-elem-dark" onClick={handleShareStudentData}>
+                                                share student
                                             </button>
                                         </div>
                                     : null
-                                } 
+                                }
                             </div>
                         </div>
+
+                        <div className={`w-1/3 h-18 ${state.sharing ? 'border-dotted border-4 border-red-700 ' : ''} flex justify-around items-center `}>
+                            <div className={`${state.sharing ? '' : 'hidden'} w-full h-full flex flex-col justify-center items-center`}>
+                                <div className="w-6/10 h-4/10 text-purple-400 font-semibold"> 
+                                    <span className="font-normal text-black">currently </span> sharing:
+                                </div>
+                                <div className="w-full h-full flex justify-center items-center">
+                                    <div className={`w-auto px-2 flex justify-center items-center ${state.sharing ? 'bg-purple-400 hover:bg-purple-300 shadow-elem-dark rounded-xl text-gray-200 text-xl font-semibold cursor-pointer' : 'text-black text-xs' }`} onClick={handleQuitShare}>
+                                        { state.sharing ? state.displayData.studentInfo.firstName + ' ' + firstInitialFunc(state.displayData.studentInfo.lastName): '(share student info)'  }
+                                    </div>
+                                    <div className={`w-auto ml-2 ${state.sharing ? '' : 'hidden'}`}>
+                                        {   
+                                            state.sharing ?
+                                            <div className="font-bold cursor-pointer text-xl text-red-700 hover:text-red-400 flex justify-center items-center" onClick={handleQuitShare}>
+                                                X
+                                            </div>
+                                            :
+                                            null
+                                        } 
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+
                     </div>
                 
                     <div className={`w-1/10 pr-4 flex flex-col justify-center items-center px-2 cursor-pointer`} style={{right: 0}}>
@@ -264,15 +273,13 @@ const LessonControl = () => {
                     </div>
                 </div>
                 {/*  */}
-                <div className={`w-full h-9/10 flex p-2 rounded-lg`}>
+                <div className={`w-full h-9/10 flex p-3 rounded-lg`}>
                     <div className={`${fullscreen ? 'hidden' : ''} w-4/10 h-full pr-4 flex flex-col items-center`}>
                         <div className={`h-full w-full flex flex-col justify-between items-center`}>
                             <div className={`h-.8/10 w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between items-center text-2xl text-gray-200 font-extrabold font-open`}>
                                 <h2 className={`w-auto`}>
                                     Class Roster 
                                 </h2>
-
-                                
 
                                 <h2 className={`w-3/10 flex justify-between`}>
                                 <div className="w-4/10 flex justify-around items-center relative">

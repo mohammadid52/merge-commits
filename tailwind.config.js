@@ -9,7 +9,7 @@ module.exports = {
       './src/**/*.jsx',
     ],
     options: {
-      whitelist: ['bg-fire-orange', 'bg-sea-green', 'bg-dark-red', 'translate-y-1/2', 'animate-wiggle', 'text-purple-400'],
+      whitelist: ['bg-fire-orange', 'bg-sea-green', 'bg-dark-red', 'translate-y-1/2', 'animate-wiggle', 'text-purple-400', 'border-red-700', 'text-red-400', 'text-red-700', 'bg-purple-300'],
     }
   },
   future: {
@@ -219,6 +219,7 @@ module.exports = {
         '2.5': '.625rem',
         '11': '2.75rem',
         '14': '3.5rem',
+        '18': '4.5rem',
         '28': '7rem',
         '30': '7.5rem',
         '32': '8rem',
