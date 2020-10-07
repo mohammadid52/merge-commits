@@ -4,7 +4,7 @@ import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaPlus } from 'react-icons/fa';
 import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
-import PositiveAlert from '../../../../../standard/Alert/PositiveAlertLinePrompt';
+import PositiveAlert from '../../../../General/Popup';
 
 interface WritingBlockProps {
     editMode: {
@@ -251,12 +251,24 @@ const WritingBlock = (props: WritingBlockProps) => {
                 })
             }
         })
-
+ 
     }
 
     return (
         <div className="relative bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600" >
-            <div className={`${alert ? 'absolute z-100' : 'hidden'}`} style={{top: '0', right: '-40%'}}><PositiveAlert handleCancel={handleCancel} handleEdit={handleSubmit}/></div>
+            <div className={`${alert ? 'absolute z-100' : 'hidden'}`} style={{top: '0', right: '-37.5%'}}>
+                <PositiveAlert 
+                    alert={alert}
+                    setAlert={setAlert}
+                    header='Are you ready to edit your poem?' 
+                    content="Once you go to 'Final Edits' you will not be able to come back to these line prompts, but you will be able to see the line prompts on the side of the page" 
+                    button1='Go to Final Edits' 
+                    button2='Cancel' 
+                    svg='question'
+                    handleButton1={handleSubmit} 
+                    handleButton2={handleCancel}
+                    />
+            </div>
             <div className="w-full flex flex-row justify-between mb-2">
                 <h3 className='w-3/10 mr-2 flex text-xl text-gray-200 font-open font-light animate-bounce z-100'>
                     Line Prompts <ToolTip width='w-40' position='bottom' header='Instructions' content='Make sure you are finished with the line prompts before you click "Save and Edit"' />
