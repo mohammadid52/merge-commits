@@ -33,8 +33,8 @@ const TextQuestions = (txtPrps: CPQuestionProps) => {
   }, [])
 
   return (
-    <div key={txtPrps.keyProp} className={`w-4.5/10 h-5/10 flex flex-col my-2`}>
-      <label className='mb-2 text-sm' htmlFor={txtPrps.question.label}>
+    <div key={txtPrps.keyProp} className={`w-4.5/10 h-5/10 flex flex-col my-2 mb-3`}>
+      <label className='mb-2 text-lg' htmlFor={txtPrps.question.label}>
         {txtPrps.question.question}
       </label>
       <textarea

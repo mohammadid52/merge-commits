@@ -258,6 +258,8 @@ const WritingBlock = (props: WritingBlockProps) => {
         <div className="relative bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600" >
             <div className={`${alert ? 'absolute z-100' : 'hidden'}`} style={{top: '0', right: '-37.5%'}}>
                 <PositiveAlert 
+                    alert={alert}
+                    setAlert={setAlert}
                     header='Are you ready to edit your poem?' 
                     content="Once you go to 'Final Edits' you will not be able to come back to these line prompts, but you will be able to see the line prompts on the side of the page" 
                     button1='Go to Final Edits' 

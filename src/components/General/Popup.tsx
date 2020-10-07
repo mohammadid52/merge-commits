@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { string } from 'prop-types';
 
 interface WritingAlertProps {
+    alert: boolean,
+    setAlert: React.Dispatch<React.SetStateAction<boolean>>,
     handleButton1?: () => void,
     handleButton2?: () => void,
     header?: string,
@@ -14,7 +16,12 @@ interface WritingAlertProps {
 }
 
 const PosAlert = (props: WritingAlertProps) => {
-    const {handleButton1, handleButton2, header, content, button1, button2, svg, button1Color, button2Color} = props
+    const {alert, setAlert, handleButton1, handleButton2, header, content, button1, button2, svg, button1Color, button2Color} = props
+    const [open, setOpen] = useState(false);
+
+    const handleClick = () => {
+        setOpen(!open)
+    }
 
     const switchSVG = () => {
         switch (svg) {
@@ -51,8 +58,14 @@ const PosAlert = (props: WritingAlertProps) => {
  
     return (
         ///change the POSITION if needed
-        <div className="z-50 w-full flex justify-center items-center">
+        <div className={`${open ? 'hidden' : 'display'} relative z-50 w-full flex justify-center items-center`}>
             <div className="bg-white rounded-lg px-4 pt-5 pb-4 overflow-hidden shadow-xl transform transition-all sm:max-w-sm sm:w-full sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+                <div className="absolute w-auto cursor-pointer p-2 hover:text-gray-300" style={{top: 0, right: 0, color: '#828282'}} onClick={() => setAlert(!alert)}>
+                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                </div>
+
                 <div>
                 <div className="mx-auto flex items-center justify-center h-14 w-20 rounded-full">
                     {/* <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">

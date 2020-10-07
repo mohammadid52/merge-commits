@@ -156,8 +156,10 @@ const SaveQuit = (props: SaveQuitProps) => {
 
   return (
     <span className="relative w-7/10 ml-3 flex inline-flex rounded-md shadow-sm">
-        <div className={`${alert ? 'absolute z-100' : 'hidden'}`} style={{top: '-300px'}}>
+        <div className={`${alert ? 'absolute z-100' : 'hidden'}`} style={{top: '-450px'}}>
             <Popup 
+                alert={alert}
+                setAlert={setAlert}
                 header='You have completed a lesson!' 
                 // content="Once you go to 'Final Edits' you will not be able to come back to these line prompts, but you will be able to see the line prompts on the side of the page" 
                 button1='Save your lesson'
