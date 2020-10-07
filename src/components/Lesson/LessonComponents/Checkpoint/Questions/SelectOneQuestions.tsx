@@ -65,9 +65,9 @@ const SelectOneQuestions = (selectOneProps: CPQuestionProps) => {
 // console.log(selectOneProps)
   return (
     <>
-      <div key={selectOneProps.keyProp} className={'w-8.5/10 flex flex-col mb-3 mx-2'}>
+      <div key={selectOneProps.keyProp} className={'w-4.8/10 flex flex-col mb-3 mx-2'}>
         <p className='mb-2 text-lg'>{selectOneProps.question.question}</p>
-        <div className={`flex justify-around ml-6`}>
+        <div className={`flex justify-around`}>
           {selectOneProps.question.options.map(
             (
               option: { label: string; icon: string; color: string; text: string },
