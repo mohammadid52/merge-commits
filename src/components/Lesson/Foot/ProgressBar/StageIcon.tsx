@@ -61,7 +61,7 @@ const StageIcon = (props: StageIconProps) => {
    */
   const iconLabel = (centerFix: 'center' | 'noCenter'): ReactElement => {
     return (
-      <p
+      <div
         className={`absolute transform translate-y-8 text-center z-50 font-light text-blue-100 w-24 mt-1
         ${centerFix === 'center' && 'left-1/2 -translate-x-1/2'} 
         ${centerFix === 'noCenter' && '-translate-x-1/2'} 
@@ -73,7 +73,7 @@ const StageIcon = (props: StageIconProps) => {
             <FooterLabels label=
             {props.type.charAt(0).toUpperCase()+props.type.slice(1)} />
         }
-      </p>
+      </div>
     );
   };
 
