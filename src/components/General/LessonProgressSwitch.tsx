@@ -4,30 +4,31 @@ import React from 'react';
 
 type LabelProps = {
     label: any
+    id: any
 }
 
-const ProgressLabels = ({label}: LabelProps) => {
+const ProgressLabels = ({label, id}: LabelProps) => {
     switch (label) {
         case 'intro':
-            return <div>Intro</div>;
-        case 'warmup':
-            return <div>WarmUp</div>;
+            return <div id={id}>Intro</div>;
+        case 'warmup': 
+            return <div id={id}>WarmUp</div>;
         case 'warmup/breakdown':
-            return <div>WarmUp/Breakdown</div>;
+            return <div id={id}>WarmUp/Breakdown</div>;
         case 'corelesson':
-            return <div>CoreLesson</div>;
+            return <div id={id}>CoreLesson</div>;
         case 'corelesson/breakdown':
-            return <div>CoreLesson/Breakdown</div>;
+            return <div id={id}>CoreLesson/Breakdown</div>;
         case 'activity':
-            return <div>Activity</div>;
+            return <div id={id}>Activity</div>;
         case 'activity/breakdown':
-            return <div>Activity/Breakdown</div>;
+            return <div id={id}>Activity/Breakdown</div>;
         case 'checkpoint?id=1':
-            return <div>Checkpoint</div>;
+            return <div id={id}>Checkpoint</div>;
         case 'breakdown':
-            return <div>Breakdown</div>;
+            return <div id={id}>Breakdown</div>;
         case 'outro':
-            return <div>Outro</div>;
+            return <div id={id}>Outro</div>;
         default: 
         return null;  
     }
