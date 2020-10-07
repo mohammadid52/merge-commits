@@ -98,7 +98,7 @@ const ClassRoster = (props: classRosterProps) => {
                                 {item.student.preferredName ? item.student.preferredName : item.student.firstName } {item.student.lastName}
                             </div>
                             <div id={`${item.id}`} className={`w-4.5/10 mx-2`}>
-                                {/* <ProgressSwitch label={item.lessonProgress} /> */}
+                                <ProgressSwitch label={item.lessonProgress} id={item.id}/>
                             </div>
                             {/* <div id={`${item.id}`} className="w-1.3/10 flex justify-center items-center cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium">
                                 <button id={`${item.id}`} key={key} className="text-xs bg-indigo-500 w-9/10 shadow-elem-semi-dark rounded-xl text-gray-200 hover:text-white focus:border-none" onClick={handleSelect}>
