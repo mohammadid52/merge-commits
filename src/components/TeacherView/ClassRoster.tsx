@@ -1,6 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import { studentObject } from '../../state/LessonControlState'
+import ProgressSwitch from '../General/LessonProgressSwitch';
+import ToolTip from '../General/ToolTip/ToolTip';
 
 interface classRosterProps {
     handleUpdateClassroom: () => Promise<void>
@@ -21,6 +23,11 @@ const ClassRoster = (props: classRosterProps) => {
         // console.log('selected', id, selected[0]);
         dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] })
     } 
+
+    const initials = (lastName: string) => {
+        let lastInitial = lastName.charAt(0).toUpperCase()
+        return  lastInitial+'.';
+    }
 
     useEffect(() => {
         // console.log(state.studentViewing) 
@@ -53,7 +60,7 @@ const ClassRoster = (props: classRosterProps) => {
                 )
             default:
                 return (
-                    <div className="flex justify-center items-center ">
+                    <div className="flex justify-center items-center">
                         <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-gray-400"></span>
                     </div>
                 )
@@ -66,10 +73,10 @@ const ClassRoster = (props: classRosterProps) => {
                 <div className={`w-.5/10 mx-2 text-center`}>
                     
                 </div>
-                <div className={`w-5.3/10 mx-2`}>
+                <div className={`w-4.8/10 mx-2`}>
                     Name
                 </div>
-                <div className={`w-4/10 mx-2`}>
+                <div className={`w-4.5/10 mx-2`}>
                     Page
                 </div>
                 {/* <div className={` mx-2`}>
@@ -85,11 +92,13 @@ const ClassRoster = (props: classRosterProps) => {
                             <div id={`${item.id}`} className={`w-.5/10 text-center mx-2 text-xs flex`}>
                                 {studentStatus(item.status)}
                             </div>
-                            <div id={`${item.id}`} className={`w-5.3/10 mx-2`}>
-                                {item.student.lastName}, {item.student.preferredName ? item.student.preferredName : item.student.firstName }
+                            <div id={`${item.id}`} className={`w-4.8/10 mx-2`}>
+                                {/* <ToolTip header='' position='hidden-bottom' display='none'
+                                /> */}
+                                {item.student.preferredName ? item.student.preferredName : item.student.firstName } {item.student.lastName}
                             </div>
-                            <div id={`${item.id}`} className={`w-4/10 mx-2`}>
-                                {item.lessonProgress}
+                            <div id={`${item.id}`} className={`w-4.5/10 mx-2`}>
+                                <ProgressSwitch label={item.lessonProgress} />
                             </div>
                             {/* <div id={`${item.id}`} className="w-1.3/10 flex justify-center items-center cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium">
                                 <button id={`${item.id}`} key={key} className="text-xs bg-indigo-500 w-9/10 shadow-elem-semi-dark rounded-xl text-gray-200 hover:text-white focus:border-none" onClick={handleSelect}>
