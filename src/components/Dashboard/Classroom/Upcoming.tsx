@@ -88,7 +88,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
   // }
 
   return (
-    <div className={`relative w-64rem h-auto flex justify-between`}>
+    <div className={`relative w-64rem h-auto flex justify-start`}>
       {lessons
         ? lessons.map(
             (
@@ -103,53 +103,61 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
             ) => (
               <div
                 key={i}
-                className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} w-3/10 h-auto flex flex-col mb-8`}>
-                <div className={`w-full bg-dark rounded-t-xl`}>
-                  <div className='h-6/10 justify-center items-center align-center'>
-                    <div
-                      className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full'
-                      style={{
+                className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
+                <div className='rounded-xl shadow-container bg-white h-auto flex flex-col mb-8'>
+                  <div
+                    className={`w-full bg-white shadow-container bg-dark rounded-t-xl`}
+                    style={{
+                      backgroundImage: `url(${lesson.artist.images})`,
+                      backgroundSize: 'cover',
+                    }}>
+                    <div className='h-6/10 justify-center items-center align-center'>
+                      <div
+                        className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full'
+                        /* style={{
                         backgroundImage: `url(${lesson.artist.images})`,
-                      }}
-                    />
-                  </div>
-                  <div className='h-1/10 pl-6'>
-                    <div className='tracking-widest border-b text-gray-300 border-ketchup'>
-                      FEATURED ARTIST
+                      }} */
+                      />
+                    </div>
+                    <div className='h-1/10 pl-6'>
+                      <div className='tracking-widest border-b text-gray-300 border-ketchup'>
+                        FEATURED ARTIST
+                      </div>
+                    </div>
+                    <div className='h-3/10 flex flex-row-reverse'>
+                      <h2
+                        className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
+                        <p> {lesson.artist.name} </p>
+                      </h2>
                     </div>
                   </div>
-                  <div className='h-3/10 flex flex-row-reverse'>
-                    <h2
-                      className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
-                      <p> {lesson.artist.name} </p>
-                    </h2>
-                  </div>
-                </div>
-                <div className='w-full flex flex-col rounded-b-xl'>
-                  <div className='h-8.7/10 p-4 flex flex-col justify-center items-center'>
-                    <h1 className={`text-lg text-black font-open text-left`}>{lesson.title}</h1>
-                    <p className='text-md text-left'>
-                      {lesson.summary ? lesson.summary : 'No Information Available'}
-                    </p>
-                  </div>
-                  <div className={`h-10 bg-dark flex justify-between rounded-b-xl`}>
-                    <div
-                      className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
-                      <div className='w-auto text-gray-300'>
-                        <IconContext.Provider
-                          value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
-                          <FaClock />
-                        </IconContext.Provider>
-                      </div>
-                      <div className={`w-auto mx-4 text-gray-300`}>15 min.</div>
+                  <div className='w-full flex flex-col rounded-b-xl'>
+                    <div className='h-8.7/10 min-h-8.7/10 p-4 flex flex-col justify-start'>
+                      <h1 className={`text-lg text-black font-open text-left`}>{lesson.title}</h1>
+                      <p className='text-sm text-left'>
+                        {lesson.summary ? lesson.summary : 'No Information Available'}
+                      </p>
                     </div>
-                    <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
-                      <div className='w-auto text-gray-300'>
-                        <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
-                          <FaUserAlt />
-                        </IconContext.Provider>
+                    <div className={`h-10 bg-dark flex justify-between rounded-b-xl`}>
+                      <div
+                        className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
+                        <div className='w-auto text-gray-300'>
+                          <IconContext.Provider
+                            value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
+                            <FaClock />
+                          </IconContext.Provider>
+                        </div>
+                        <div className={`w-auto ml-4 text-sm text-gray-300`}>15 min.</div>
                       </div>
-                      <div className={`w-auto mx-4 text-gray-200`}>Self</div>
+                      <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
+                        <div className='w-auto text-gray-300'>
+                          <IconContext.Provider
+                            value={{ size: '1.5rem', style: { width: 'auto' } }}>
+                            <FaUserAlt />
+                          </IconContext.Provider>
+                        </div>
+                        <div className={`w-auto ml-4 text-sm text-gray-200`}>Self</div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -159,99 +167,106 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
         : null}
       {/* DUMMY CARDS */}
       <div
-        className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} w-3/10 h-auto flex flex-col mb-8`}>
-        <div className={`w-full bg-dark rounded-t-xl`}>
-          <div className='h-6/10 justify-center items-center align-center'>
-            <div
-              className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full'
-              style={{
-                backgroundImage: ``,
-              }}
-            />
-          </div>
-          <div className='h-1/10 pl-6'>
-            <div className='tracking-widest border-b text-gray-300 border-ketchup'>
-              FEATURED ARTIST
+        className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
+        <div className=' rounded-xl shadow-container bg-white h-auto flex flex-col mb-8'>
+          <div
+            className={`w-full bg-white shadow-container bg-dark rounded-t-xl`}
+            style={{
+              backgroundImage: ``,
+            }}>
+            <div className='h-6/10 justify-center items-center align-center'>
+              <div className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full' />
+            </div>
+            <div className='h-1/10 pl-6'>
+              <div className='tracking-widest border-b text-gray-300 border-ketchup'>
+                FEATURED ARTIST
+              </div>
+            </div>
+            <div className='h-3/10 flex flex-row-reverse'>
+              <h2
+                className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
+                <p>Artist name</p>
+              </h2>
             </div>
           </div>
-          <div className='h-3/10 flex flex-row-reverse'>
-            <h2
-              className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
-              <p>Artist name</p>
-            </h2>
-          </div>
-        </div>
-        <div className='w-full h-full flex flex-col rounded-b-xl'>
-          <div className='h-8.7/10 min-h-8.7/10 p-4 flex flex-col justify-center items-center'>
-            <h1 className={`text-lg text-black font-open text-left`}>Title</h1>
-            <p className='text-md text-left'>Summary coming soon...</p>
-          </div>
-          <div className={`h-10 bg-dark flex justify-between rounded-b-xl`}>
-            <div className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
-              <div className='w-auto text-gray-300'>
-                <IconContext.Provider
-                  value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
-                  <FaClock />
-                </IconContext.Provider>
-              </div>
-              <div className={`w-auto mx-4 text-gray-300`}>15 min.</div>
+          <div className='w-full h-full flex flex-col rounded-b-xl'>
+            <div className='h-8.7/10 min-h-8.7/10 p-4 flex flex-col justify-start'>
+              <h1 className={`text-lg text-black font-open text-left`}>Title</h1>
+              <p className='text-sm text-left'>Summary coming soon...</p>
             </div>
-            <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
-              <div className='w-auto text-gray-300'>
-                <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
-                  <FaUserAlt />
-                </IconContext.Provider>
+            <div className={`h-10 bg-dark flex justify-between rounded-b-xl`}>
+              <div className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
+                <div className='w-auto text-gray-300'>
+                  <IconContext.Provider
+                    value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
+                    <FaClock />
+                  </IconContext.Provider>
+                </div>
+                <div className={`w-auto ml-4 text-sm text-gray-300`}>15 min.</div>
               </div>
-              <div className={`w-auto mx-4 text-gray-200`}>Self</div>
+              <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
+                <div className='w-auto text-gray-300'>
+                  <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
+                    <FaUserAlt />
+                  </IconContext.Provider>
+                </div>
+                <div className={`w-auto ml-4 text-sm text-gray-200`}>Self</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div
-        className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} w-3/10 h-auto flex flex-col mb-8`}>
-        <div className={`w-full bg-dark rounded-t-xl`}>
-          <div className='h-6/10 justify-center items-center align-center'>
-            <div
-              className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full'
-              style={{
+        className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10`}>
+        <div className=' rounded-xl shadow-container bg-white h-auto flex flex-col mb-8'>
+          <div
+            className={`w-full bg-white shadow-container bg-dark rounded-t-xl`}
+            style={{
+              backgroundImage: ``,
+            }}>
+            <div className='h-6/10 justify-center items-center align-center'>
+              <div
+                className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full'
+                /* style={{
                 backgroundImage: ``,
-              }}
-            />
-          </div>
-          <div className='h-1/10 pl-6'>
-            <div className='tracking-widest border-b text-gray-300 border-ketchup'>
-              FEATURED ARTIST
+              }} */
+              />
+            </div>
+            <div className='h-1/10 pl-6'>
+              <div className='tracking-widest border-b text-gray-300 border-ketchup'>
+                FEATURED ARTIST
+              </div>
+            </div>
+            <div className='h-3/10 flex flex-row-reverse'>
+              <h2
+                className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
+                <p>Artist name</p>
+              </h2>
             </div>
           </div>
-          <div className='h-3/10 flex flex-row-reverse'>
-            <h2
-              className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
-              <p>Artist name</p>
-            </h2>
-          </div>
-        </div>
-        <div className='w-full h-full flex flex-col rounded-b-xl'>
-          <div className='h-8.7/10 min-h-8.7/10 p-4 flex flex-col justify-center items-center'>
-            <h1 className={`text-lg text-black font-open text-left`}>Title</h1>
-            <p className='text-md text-left'>Summary coming soon...</p>
-          </div>
-          <div className={`h-10 bg-dark flex justify-between rounded-b-xl`}>
-            <div className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
-              <div className='w-auto text-gray-300'>
-                <IconContext.Provider
-                  value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
-                  <FaClock />
-                </IconContext.Provider>
-              </div>
-              <div className={`w-auto mx-4 text-gray-300`}>15 min.</div>
+          <div className='w-full h-full flex flex-col rounded-b-xl'>
+            <div className='h-8.7/10 min-h-8.7/10 p-4 flex flex-col justify-start'>
+              <h1 className={`text-lg text-black font-open text-left`}>Title</h1>
+              <p className='text-sm text-left'>Summary coming soon...</p>
             </div>
-            <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
-              <div className='w-auto text-gray-300'>
-                <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
-                  <FaUserAlt />
-                </IconContext.Provider>
+            <div className={`h-10 bg-dark flex justify-between rounded-b-xl`}>
+              <div className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
+                <div className='w-auto text-gray-300'>
+                  <IconContext.Provider
+                    value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
+                    <FaClock />
+                  </IconContext.Provider>
+                </div>
+                <div className={`w-auto ml-4 text-sm text-gray-300`}>15 min.</div>
               </div>
-              <div className={`w-auto mx-4 text-gray-200`}>Self</div>
+              <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
+                <div className='w-auto text-gray-300'>
+                  <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
+                    <FaUserAlt />
+                  </IconContext.Provider>
+                </div>
+                <div className={`w-auto ml-4 text-sm text-gray-200`}>Self</div>
+              </div>
             </div>
           </div>
         </div>

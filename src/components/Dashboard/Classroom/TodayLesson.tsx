@@ -40,9 +40,13 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
     return (
             <div className={`relative bg-white rounded-xl shadow-container ${theme.elem.text}  w-64rem h-auto flex mb-8`}>
                 
-                <div className={`w-2.5/10 bg-dark rounded-tl-xl rounded-bl-xl`}>
+                <div className={`w-2.5/10 bg-dark rounded-tl-xl rounded-bl-xl`}
+                style={{
+                    backgroundImage: `url(${curriculum && curriculum.artist.images ? curriculum.artist.images : null})`,
+                    backgroundSize: 'cover'
+                  }}>
                     <div className="h-6/10 flex justify-center items-center">
-                        <img className=" w-32 rounded-full " src={`${curriculum && curriculum.artist.images ? curriculum.artist.images : null}`} alt={`${curriculum && curriculum.artist.name ? curriculum.artist.name : ''}`} />
+                        {/* <img className=" w-32 rounded-full " src={`${curriculum && curriculum.artist.images ? curriculum.artist.images : null}`} alt={`${curriculum && curriculum.artist.name ? curriculum.artist.name : ''}`} /> */}
                     </div>
                     <div className="h-1/10 pl-6">
                         <div className="tracking-widest border-b text-gray-300 border-ketchup">
@@ -60,7 +64,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                         <h1 className={`text-2xl text-black font-open text-left`}>
                             { curriculum && curriculum.title ? curriculum.title : null }
                         </h1>
-                        <p className="text-md text-left">
+                        <p className="text-sm text-left">
                             { curriculum && curriculum.summary ? curriculum.summary : null }
                         </p>
                         {/* <div className="flex w-3/10">
@@ -75,7 +79,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
 
                     </div>
                     <div className={`h-2/10 bg-dark flex justify-between rounded-br-xl`}>
-                        <div className={`flex justify-center items-center my-2 w-3/10 text-gray-300`} >
+                        <div className={`flex justify-center items-center my-2 w-3.3/10 text-gray-300`} >
                             <div className="w-auto text-gray-300">
                                 <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'}}}>
                                     <FaClock />
@@ -85,7 +89,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                                 45 min.
                             </div>
                         </div>
-                        <div className={`flex justify-center items-center my-2 w-3/10`} >
+                        <div className={`flex justify-center items-center my-2 w-3.3/10`} >
                             <div className="w-auto text-gray-300">
                                 <IconContext.Provider value={{ size: '1.5rem', style: {width: 'auto'} }}>
                                     <FaUserAlt />
@@ -95,7 +99,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                                 Marlon
                             </div>
                         </div>
-                        <div className="flex w-3/10">
+                        <div className="flex w-3.3/10">
                             
                                 <button type="submit" onClick={handleLink} className={`${ accessible ? 'bg-ketchup hover:bg-red-300 focus:border-red-700 focus:shadow-outline-red active:bg-red-500 text-white' : 'bg-gray-500 text-gray-700 cursor-default' }
                                 w-full text-white rounded-br-xl focus:outline-none transition duration-150 ease-in-out`}>
