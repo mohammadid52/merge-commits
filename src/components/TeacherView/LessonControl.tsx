@@ -273,7 +273,7 @@ const LessonControl = () => {
                     </div>
                 </div>
                 {/*  */}
-                <div className={`w-full h-9/10 flex p-3 rounded-lg`}>
+                <div className={`w-full h-9/10 flex p-3 pb-5 rounded-lg`}>
                     <div className={`${fullscreen ? 'hidden' : ''} w-4/10 h-full pr-4 flex flex-col items-center`}>
                         <div className={`h-full w-full flex flex-col justify-between items-center`}>
                             <div className={`h-.8/10 w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between items-center text-2xl text-gray-200 font-extrabold font-open`}>
