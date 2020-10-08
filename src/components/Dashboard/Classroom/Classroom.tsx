@@ -118,34 +118,44 @@ const Classroom: React.FC = () => {
   {
     return (
       <div
-        className={`h-9.28/10 md:h-auto flex flex-col justify-center items-center p-8 overflow-scroll md:overflow-auto `}>
+        className={`h-9.28/10 md:h-auto flex flex-col justify-center items-center overflow-scroll md:overflow-auto `}>
         <p className='md:hidden text-xl text-center flex justify-center mb-4' style={{ top: '0' }}>
           * lessons are available on PC or laptop *
         </p>
-        {survey.display ? (
-          <h2 className='w-64rem text-xl'>
-            <p className='w-auto text-black pb-2 font-light'>Welcome to Iconoclast Artists</p>
-          </h2>
-        ) : (
-          ''
-        )}
+        <div className='w-full bg-opacity-10'>
+          {survey.display ? (
+            <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
+              Welcome to Iconoclast Artists
+            </h2>
+          ) : (
+            ''
+          )}
+        </div>
 
         {survey.display ? (
           <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum} />
         ) : null}
 
-        <h2 className='w-64rem text-xl'>
-          <p className='w-auto text-black pb-2 font-light'>Today's Lesson</p>
-        </h2>
+        <div className='w-full bg-opacity-10'>
+          <div className='w-64rem text-xl m-auto'>
+            <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
+              Today's Lesson
+            </h2>
 
-        <Today display={survey.display} link={'/lesson?id=1'} curriculum={curriculum} />
+            <Today display={survey.display} link={'/lesson?id=1'} curriculum={curriculum} />
+          </div>
+        </div>
 
-        <h2 className='w-64rem text-xl'>
-          <p className='w-auto text-black pb-2 font-light'>Upcoming Lessons</p>
-        </h2>
+        <div className='w-full bg-grayscale bg-opacity-10'>
+          <div className='w-64rem text-xl m-auto'>
+            <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
+              Upcoming Lessons
+            </h2>
 
-        <Upcoming curriculum={listCurriculum} />
-        {/* <Dashboard /> */}
+            <Upcoming curriculum={listCurriculum} />
+            {/* <Dashboard /> */}
+          </div>
+        </div>
       </div>
     );
   }

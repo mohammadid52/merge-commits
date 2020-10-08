@@ -366,6 +366,7 @@ module.exports = {
         'dark-blue': '#1C2C42',
         'darker-blue': '#384f68',
         'dark-gray': '#32323e',
+        'darker-gray': '#272730',
         'dark': '#051429',
         'denim': '#153057',
         'fire-orange': '#FF5733',

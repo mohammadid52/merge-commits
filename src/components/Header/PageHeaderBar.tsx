@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
 import { NavLink, useHistory, useLocation } from 'react-router-dom';
@@ -31,9 +31,9 @@ const PageHeaderBar = () => {
 
   return (
     <div
-      className={`w-full h-.72/10 md:h-12 ${theme.toolbar.bg} text-gray-200 flex justify-center md:justify-end`}>
+      className={`w-full h-.72/10 md:h-12 ${theme.dashboard.bg} text-gray-200 flex justify-center md:justify-end`}>
       <div
-        className={`w-full md:hidden h-full md:h-12 ${theme.toolbar.bg} flex justify-center items-center text-2xl font-bold z-50 ml-4`}>
+        className={`w-full md:hidden h-full md:h-12 ${theme.dashboard.bg} flex justify-center items-center text-2xl font-bold z-50 ml-4`}>
         <NavLink to='/dashboard'>
           <img
             className='h-6'
@@ -50,13 +50,13 @@ const PageHeaderBar = () => {
                     Lights
                 </button> */}
         {state.isAuthenticated ? (
-          <div className={`h-full flex align-center justify-center`} onClick={handleSignOut}>
+          <div className={`h-full flex align-center justify-center ${theme.sidemenu.bg}`} onClick={handleSignOut}>
             <span className='relative mr-1 w-auto h-full flex items-center justify-center'>
               <IconContext.Provider value={{ size: '1.5rem', className: 'self-center' }}>
                 <AiOutlineLogout />
               </IconContext.Provider>
             </span>
-            <span className='relative mr-1 w-auto h-full flex items-center justify-center'>
+            <span className={`relative mr-1 w-auto h-full flex items-center justify-center`}>
               <button className="align-middle self-center mb-1">Log Out</button>
             </span>
           </div>

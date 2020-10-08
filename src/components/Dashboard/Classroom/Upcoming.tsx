@@ -2,7 +2,8 @@ import React, { useContext, useState, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaClock, FaUserAlt } from 'react-icons/fa';
+/* import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/fa'; */
+import {AiOutlineClockCircle, AiOutlineUser} from 'react-icons/ai';
 import { CurriculumInfo } from './Classroom';
 
 interface UpcomingProps {
@@ -88,7 +89,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
   // }
 
   return (
-    <div className={`relative w-64rem h-auto flex justify-start`}>
+    <div className={`relative h-auto flex justify-start`}>
       {lessons
         ? lessons.map(
             (
@@ -106,7 +107,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                 className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
                 <div className='rounded-xl shadow-container bg-white h-auto flex flex-col mb-8'>
                   <div
-                    className={`w-full bg-white shadow-container bg-dark rounded-t-xl`}
+                    className={`w-full bg-white shadow-container ${theme.dashboard.bg} rounded-t-xl`}
                     style={{
                       backgroundImage: `url(${lesson.artist.images})`,
                       backgroundSize: 'cover',
@@ -138,13 +139,13 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                         {lesson.summary ? lesson.summary : 'No Information Available'}
                       </p>
                     </div>
-                    <div className={`h-10 bg-dark flex justify-between rounded-b-xl`}>
+                    <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
                       <div
                         className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
                         <div className='w-auto text-gray-300'>
                           <IconContext.Provider
                             value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
-                            <FaClock />
+                            <AiOutlineClockCircle />
                           </IconContext.Provider>
                         </div>
                         <div className={`w-auto ml-4 text-sm text-gray-300`}>15 min.</div>
@@ -153,7 +154,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                         <div className='w-auto text-gray-300'>
                           <IconContext.Provider
                             value={{ size: '1.5rem', style: { width: 'auto' } }}>
-                            <FaUserAlt />
+                            <AiOutlineUser />
                           </IconContext.Provider>
                         </div>
                         <div className={`w-auto ml-4 text-sm text-gray-200`}>Self</div>
@@ -170,7 +171,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
         className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
         <div className=' rounded-xl shadow-container bg-white h-auto flex flex-col mb-8'>
           <div
-            className={`w-full bg-white shadow-container bg-dark rounded-t-xl`}
+            className={`w-full bg-white shadow-container ${theme.dashboard.bg} rounded-t-xl`}
             style={{
               backgroundImage: ``,
             }}>
@@ -194,12 +195,12 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
               <h1 className={`text-lg text-black font-open text-left`}>Title</h1>
               <p className='text-sm text-left'>Summary coming soon...</p>
             </div>
-            <div className={`h-10 bg-dark flex justify-between rounded-b-xl`}>
+            <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
               <div className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
                 <div className='w-auto text-gray-300'>
                   <IconContext.Provider
                     value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
-                    <FaClock />
+                    <AiOutlineClockCircle />
                   </IconContext.Provider>
                 </div>
                 <div className={`w-auto ml-4 text-sm text-gray-300`}>15 min.</div>
@@ -207,7 +208,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
               <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
                 <div className='w-auto text-gray-300'>
                   <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
-                    <FaUserAlt />
+                    <AiOutlineUser />
                   </IconContext.Provider>
                 </div>
                 <div className={`w-auto ml-4 text-sm text-gray-200`}>Self</div>
@@ -220,7 +221,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
         className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10`}>
         <div className=' rounded-xl shadow-container bg-white h-auto flex flex-col mb-8'>
           <div
-            className={`w-full bg-white shadow-container bg-dark rounded-t-xl`}
+            className={`w-full bg-white shadow-container ${theme.dashboard.bg} rounded-t-xl`}
             style={{
               backgroundImage: ``,
             }}>
@@ -249,12 +250,12 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
               <h1 className={`text-lg text-black font-open text-left`}>Title</h1>
               <p className='text-sm text-left'>Summary coming soon...</p>
             </div>
-            <div className={`h-10 bg-dark flex justify-between rounded-b-xl`}>
+            <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
               <div className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
                 <div className='w-auto text-gray-300'>
                   <IconContext.Provider
                     value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
-                    <FaClock />
+                    <AiOutlineClockCircle />
                   </IconContext.Provider>
                 </div>
                 <div className={`w-auto ml-4 text-sm text-gray-300`}>15 min.</div>
@@ -262,7 +263,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
               <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
                 <div className='w-auto text-gray-300'>
                   <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
-                    <FaUserAlt />
+                    <AiOutlineUser />
                   </IconContext.Provider>
                 </div>
                 <div className={`w-auto ml-4 text-sm text-gray-200`}>Self</div>
