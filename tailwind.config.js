@@ -9,7 +9,7 @@ module.exports = {
       './src/**/*.jsx',
     ],
     options: {
-      whitelist: ['bg-fire-orange', 'bg-sea-green', 'bg-dark-red', 'border-white20','translate-y-1/2', 'animate-jiggle', 'animate-spin'],
+      whitelist: ['bg-fire-orange', 'bg-sea-green', 'bg-dark-red', 'border-white20','translate-y-1/2', 'animate-jiggle', 'animate-spin', 'text-purple-400', 'border-red-700', 'text-red-400', 'text-red-700', 'bg-purple-300'],
     }
   },
   future: {
@@ -229,7 +229,9 @@ module.exports = {
         '2.5': '.625rem',
         '11': '2.75rem',
         '14': '3.5rem',
+        '18': '4.5rem',
         '28': '7rem',
+        '30': '7.5rem',
         '32': '8rem',
         '36': '9rem',
         '40': '10rem',
@@ -315,6 +317,7 @@ module.exports = {
         '7.85/10': '78.5%',
         '7.9/10': '79%',
         '8/10': '80%',
+        '8.1/10': '81%',
         '8.2/10': '82%',
         '8.3/10': '83%',
         '8.5/10': '85%',
