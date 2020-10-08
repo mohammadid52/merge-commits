@@ -2,6 +2,10 @@ import React, { useContext, useState, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import ToolTip from '../../General/ToolTip/ToolTip';
+// Iconz
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { FiUsers } from 'react-icons/fi';
+import {AiOutlineSchedule, AiOutlineAudit, AiOutlineUsergroupAdd} from 'react-icons/ai';
 
 type LinkObject = {
   name: string;
@@ -97,20 +101,45 @@ const Links: React.FC = () => {
     history.push(`${match.url}/${id}`);
   };
 
+  const getMenuIcon = (label: string, url: string) => {
+    switch(label){
+      case 'User Management':
+        return <FiUsers id={url}/>;
+        break;
+      case 'Registration':
+        return <AiOutlineUsergroupAdd id={url}/>
+        break;
+      case 'Classroom':
+        return <AiOutlineAudit id={url}/>
+        break;
+      case 'Lesson Planner':
+        return <AiOutlineSchedule id={url}/>
+        break;
+      default:
+        return '';
+    }
+  }
+
   return (
-    <div className='link w-full h-12 py-4 z-40'>
+    <div className='link  w-full h-12 py-4 z-40'>
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
             <div
               id={link.path}
               key={key}
-              className={`w-full text-center text-lg mb-4`}
+              className={`w-full text-center text-sm mx-auto mb-4`}
               onClick={handleLink}>
+              <div className='w-full text-center'>
+                <IconContext.Provider value={{ size: '1.5rem' }}>
+                  {
+                    getMenuIcon(link.name, link.path)
+                  }
+                </IconContext.Provider>
+              </div>
               {link.name}
             </div>
           ))
         : null}
-      
     </div>
   );
 };

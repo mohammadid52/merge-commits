@@ -1,6 +1,6 @@
 module.exports = {
   purge: {
-    enabled: true,
+    enabled: false,
     content: [
       './src/**/*.html',
       './src/**/*.tsx',
@@ -9,7 +9,7 @@ module.exports = {
       './src/**/*.jsx',
     ],
     options: {
-      whitelist: ['bg-fire-orange', 'bg-sea-green', 'bg-dark-red', 'translate-y-1/2', 'animate-wiggle', 'text-purple-400', 'border-red-700', 'text-red-400', 'text-red-700', 'bg-purple-300'],
+      whitelist: ['bg-fire-orange', 'bg-sea-green', 'bg-dark-red', 'border-white20','translate-y-1/2', 'animate-jiggle', 'animate-spin', 'text-purple-400', 'border-red-700', 'text-red-400', 'text-red-700', 'bg-purple-300'],
     }
   },
   future: {
@@ -147,7 +147,8 @@ module.exports = {
         'bounce': 'bounce 2.5s linear 2',
         'jiggle': 'jiggle 0.2s linear infinite',
         'ping': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
-        'fadeIn': 'fadeIn 1s ease-in-out'
+        'fadeIn': 'fadeIn 1s ease-in-out',
+        'spin': 'spin 1s linear infinite'
       },
       keyframes: {
         bounce: {
@@ -199,6 +200,14 @@ module.exports = {
             opacity: '1'
           }
         },
+        spin: {
+          '0%': {
+            transform: 'rotate(0deg)'
+          },
+          '100%': {
+            transform: 'rotate(360deg)'
+          }
+        }
       },
       width: {
         '1/2': '48%',
@@ -213,6 +222,7 @@ module.exports = {
         '8/10': '80%',
         '9/10': '90%',
         '19/20': '95%',
+        '64rem': '64rem',
       },
       spacing: {
         '0.5': '.125rem',
@@ -341,54 +351,49 @@ module.exports = {
         'container': '1px 1px 10px 1px #e0e0e0',
       },
       colors: {
-        'transparent': '#ffffff00',
-        'background': '#f2f2f2',
-        'off-white': '#ffffffe6',
-        'dark-red-faded': 'rgba(202, 34, 34, 0.2)',
-        'dark-red': '#CA2222',
-        'ketchup': '#CA2222',
-        'blueberry': '#488AC7',
-        'sea-green': '#17A589',
-        'green-light': '#38a169',
-        'fire-orange': '#FF5733',
-        // 'dark-blue': '#04111A',
-        'lighter-blue': '#1a202c',
-        'medium-blue': '#30445e',
-        'med-dark-blue': '#273548',
-        'dark-blue': '#1C2C42',
-        'darker-blue': '#384f68',
-        'denim': '#153057',
-        'dark': '#051429',
-        // 'dark': '#010710',
-        'gold': '#F1C40F',
-        'mustard-yellow': '#C7A748',
-        'grayscale': '#666666',
-        'grayscale-light': '#d2cbcb',
-        'grayscale-lighter': '#f7f7f7',
-        'orange-light': '#e4a04f',
-        'orange-medium': '#e4714f',
-        'pink-light': '#c64575',
-        'grayscale': '#66666673',
-        // 'grayscale' : '#666666',
-        // 'grayscale-light' : '#d2cbcb96',
-        'grayscale-light': '#959aa3',
-        'grayscale-lighter': '#f9f9f947',
-        'grayscale-lightest': '#fffbfb',
-        // 'grayscale-lighter' : '#f7f7f7',
-        'white5': 'rgba(255,255,255,.05)',
-        'white10': 'rgba(255,255,255,.1)',
-        'white20': 'rgba(255,255,255,.2)',
-        'white30': 'rgba(255,255,255,.3)',
-        'white40': 'rgba(255,255,255,.4)',
-        'white50': 'rgba(255,255,255,.5)',
         'black10': 'rgba(0,0,0,.1)',
-        'black20': 'rgba(0,0,0,.2)',
         'black30': 'rgba(0,0,0,.3)',
         'black40': 'rgba(0,0,0,.4)',
         'black50': 'rgba(0,0,0,.5)',
         'black60': 'rgba(0,0,0,.6)',
         'black70': 'rgba(0,0,0,.7)',
         'black80': 'rgba(0,0,0,.8)',
+        'background': '#f2f2f2',
+        'blueberry': '#488AC7',
+        'dark-red-faded': 'rgba(202, 34, 34, 0.2)',
+        'dark-red': '#CA2222',
+        'dark-blue': '#1C2C42',
+        'darker-blue': '#384f68',
+        'dark-gray': '#32323e',
+        'dark': '#051429',
+        'denim': '#153057',
+        'fire-orange': '#FF5733',
+        'green-light': '#38a169',
+        'gold': '#F1C40F',
+        'grayscale': '#66666673',
+        'grayscale-light': '#959aa3',
+        'grayscale-lighter': '#f9f9f947',
+        'grayscale-lightest': '#fffbfb',
+        'grayscale': '#666666',
+        'grayscale-light': '#d2cbcb',
+        'grayscale-lighter': '#f7f7f7',
+        'ketchup': '#CA2222',
+        'sea-green': '#17A589',
+        'transparent': '#ffffff00',
+        'lighter-blue': '#1a202c',
+        'medium-blue': '#30445e',
+        'med-dark-blue': '#273548',
+        'off-white': '#ffffffe6',
+        'mustard-yellow': '#C7A748',
+        'orange-light': '#e4a04f',
+        'orange-medium': '#e4714f',
+        'pink-light': '#c64575',
+        'white5': 'rgba(255,255,255,.05)',
+        'white10': 'rgba(255,255,255,.1)',
+        'white20': 'rgba(255,255,255,.2)',
+        'white30': 'rgba(255,255,255,.3)',
+        'white40': 'rgba(255,255,255,.4)',
+        'white50': 'rgba(255,255,255,.5)',
       },
     },
   },
