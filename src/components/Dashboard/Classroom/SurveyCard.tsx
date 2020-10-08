@@ -43,18 +43,12 @@ const SurveyCard: React.FC<ClassProps> = (props: ClassProps) => {
                     </div>
                 </div>
                 <div className="w-7.5/10 flex flex-col ">
-<<<<<<< HEAD
-                    <div className="h-8.7/10 p-4 flex flex-col justify-center items-center">
-                        <h1 className={`text-2xl text-black font-open text-left`}>
-                            On-boarding Survey
-=======
                     <div className="h-8.7/10 px-12 py-4 flex flex-col justify-center items-center">
                         <h1 className="text-xl flex justify-center">
                             <p className="w-auto text-black border-b border-ketchup font-light">Welcome to Iconoclast Artists</p>
                         </h1>
                         <h1 className={`text-4xl text-black font-open px-8 text-center`}>
                             Onboarding Survey
->>>>>>> a26487d34dba88c0ceeb4c1c24df9ae41e888cee
                         </h1>
                         <p className="text-md text-left">
                             This is a quick survey to see where you're at in terms of some of the topics we'll cover this semester. Please click the button below and answer each of the questions to the best of your ability. We appreciate your time in completing this survey, and we're excited to get started on this Iconoclast journey with you!
