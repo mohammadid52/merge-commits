@@ -130,7 +130,7 @@ const Links: React.FC = () => {
               className={`w-full text-center text-sm mx-auto mb-4`}
               onClick={handleLink}>
               <div className='w-full text-center'>
-                <IconContext.Provider value={{ size: '1rem' }}>
+                <IconContext.Provider value={{ size: '1.5rem' }}>
                   {
                     getMenuIcon(link.name, link.path)
                   }
