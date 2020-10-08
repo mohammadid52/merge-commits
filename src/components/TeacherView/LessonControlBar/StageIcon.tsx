@@ -102,7 +102,7 @@ const StageIcon = (props: StageIconProps) => {
                 </IconContext.Provider>
                 {
                     menuOpen ? 
-                    <div className={`absolute flex flex-col items-center transform translate-y-16 z-100`}>
+                    <div className={`absolute flex flex-col items-center transform translate-y-8 z-100`}>
                         <div className={`arrow-up`}></div>
                         <div className={`flex w-48 h-16 bg-gray-200 p-1 rounded-lg shadow-elem-light z-100`}>
                             <div className={`flex w-full h-full bg-gray-400 rounded-lg z-100`}>
