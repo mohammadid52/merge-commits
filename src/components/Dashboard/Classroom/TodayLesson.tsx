@@ -43,7 +43,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
       <div
         className={`w-2.5/10 ${theme.dashboard.bg} rounded-tl-xl rounded-bl-xl`}
         style={{
-          backgroundImage: `url(${
+          backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${
             curriculum && curriculum.artist.images ? curriculum.artist.images : null
           })`,
           backgroundSize: 'cover',
@@ -52,14 +52,16 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
           {/* <img className=" w-32 rounded-full " src={`${curriculum && curriculum.artist.images ? curriculum.artist.images : null}`} alt={`${curriculum && curriculum.artist.name ? curriculum.artist.name : ''}`} /> */}
         </div>
         <div className='h-1/10 pl-6'>
-          <div className='tracking-widest border-b text-gray-300 border-ketchup'>
+          <div className='tracking-widest border-b text-gray-300 border-ketchup'
+          style={{textShadow:'1px 1px black'}}>
             FEATURED ARTIST
           </div>
         </div>
         <div className='h-3/10 flex flex-row-reverse'>
           <h2
-            className={`first w-6/10 text-2xl font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
-            <p>{curriculum && curriculum.artist.name ? curriculum.artist.name : null}</p>
+            className={`first w-full text-2xl text-right font-open font-medium tracking-widest mt-2 text-gray-200`}
+            style={{textShadow:'1px 1px black'}}>
+            {curriculum && curriculum.artist.name ? curriculum.artist.name : null}
           </h2>
         </div>
       </div>

@@ -144,20 +144,20 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                   <div
                     className={`w-full bg-white shadow-container ${theme.dashboard.bg} rounded-t-xl`}
                     style={{
-                      backgroundImage: `url(${lesson.artist.images})`,
+                      background: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url(${lesson.artist.images})`,
                       backgroundSize: 'cover',
                     }}>
                     <div className='h-6/10 justify-center items-center align-center'>
                       <div className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full' />
                     </div>
                     <div className='h-1/10 pl-6'>
-                      <div className='tracking-widest border-b text-gray-300 border-ketchup'>
+                      <div className='tracking-widest border-b text-gray-300 border-ketchup' style={{textShadow:'1px 1px black'}}>
                         FEATURED ARTIST
                       </div>
                     </div>
                     <div className='h-3/10 flex flex-row-reverse'>
                       <h2
-                        className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
+                        className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`} style={{textShadow:'1px 1px black'}}>
                         <p> {lesson.artist.name} </p>
                       </h2>
                     </div>
@@ -214,13 +214,13 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
               <div className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full' />
             </div>
             <div className='h-1/10 pl-6'>
-              <div className='tracking-widest border-b text-gray-300 border-ketchup'>
+              <div className='tracking-widest border-b text-gray-300 border-ketchup' style={{textShadow:'1px 1px black'}}>
                 FEATURED ARTIST
               </div>
             </div>
             <div className='h-3/10 flex flex-row-reverse'>
               <h2
-                className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
+                className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`} style={{textShadow:'1px 1px black'}}>
                 <p>Artist name</p>
               </h2>
             </div>
@@ -275,13 +275,13 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
               />
             </div>
             <div className='h-1/10 pl-6'>
-              <div className='tracking-widest border-b text-gray-300 border-ketchup'>
+              <div className='tracking-widest border-b text-gray-300 border-ketchup' style={{textShadow:'1px 1px black'}}>
                 FEATURED ARTIST
               </div>
             </div>
             <div className='h-3/10 flex flex-row-reverse'>
               <h2
-                className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
+                className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`} style={{textShadow:'1px 1px black'}}>
                 <p>Artist name</p>
               </h2>
             </div>

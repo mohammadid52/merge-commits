@@ -103,10 +103,17 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   }, [state.user.role]);
 
   const handleLink = (e: any) => {
-    let id = e.target.id.toLowerCase();
-    history.push(`${match.url}/${id}`);
+    const id = e.target.id.toLowerCase();
+    const lastCharacter = match.url.charAt(match.url.length - 1);
+
+    if (lastCharacter === '/') {
+      const sliced = match.url.slice(0, match.url.length - 1);
+      history.push(`${sliced}/${id}`);
+    } else {
+      history.push(`${match.url}/${id}`);
+    }
+
     linkProps.setCurrentPage(id);
-    console.log('handleLink: ', linkProps.currentPage);
   };
 
   const getMenuIcon = (label: string, url: string) => {
@@ -161,9 +168,11 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
             <div
               id={link.path}
               key={key}
-              className={`w-full h-16 text-center text-sm mx-auto py-4 flex flex-col items-center justify-center ${getClassStyle(link.name)}`}
+              className={`w-full h-16 text-center text-sm mx-auto py-4 flex flex-col items-center justify-center ${getClassStyle(
+                link.name
+              )}`}
               onClick={handleLink}>
-              <div className='w-full text-center'>
+              <div id={link.path} className='w-full text-center'>
                 <IconContext.Provider value={{ size: '1.5rem' }}>
                   {getMenuIcon(link.name, link.path)}
                 </IconContext.Provider>
