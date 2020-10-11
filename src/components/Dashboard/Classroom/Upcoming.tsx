@@ -2,7 +2,8 @@ import React, { useContext, useState, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaClock, FaUserAlt } from 'react-icons/fa';
+/* import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/fa'; */
+import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/ai';
 import { CurriculumInfo } from './Classroom';
 
 interface UpcomingProps {
@@ -13,6 +14,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
   const { curriculum } = props;
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
+  const [openCards, setOpenCards] = useState<string[]>(['']);
 
   // const curriculumLessonTest =
   //     curriculum.map(( lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, summary: string} ) => {
@@ -83,12 +85,45 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
     );
   };
 
+  /**
+   * Function to toggle card opening
+   * @param cardID - self explanatory
+   */
+  const toggleOpenCard = (cardID: string /* e: React.MouseEvent */) => {
+    if (openCards.includes(cardID)) {
+      setOpenCards(openCards.filter((stringID: string) => stringID !== cardID));
+    } else {
+      setOpenCards([...openCards, cardID]);
+    }
+  };
+
+  /**
+   * Functional 'component' to toggle on/off covering too much text
+   * @param toggleID - Id of the card being covered
+   */
+  const gradientCover = (toggleID: string) => {
+    return (
+      <div
+        className={`w-full h-32 absolute flex items-end bottom-0 transform -translate-y-10 transition ${
+          !openCards.includes(toggleID) ? 'bg-gradient-to-t from-white h-8' : ''
+        }`}>
+        <p
+          className='text-center text-sm text-bold text-blueberry cursor-pointer'
+          onClick={() => {
+            toggleOpenCard(toggleID);
+          }}>
+          {openCards.includes(toggleID) ? 'Less' : 'More'}
+        </p>
+      </div>
+    );
+  };
+
   // const handleLink = () => {
   //     history.push('/lesson');
   // }
 
   return (
-    <div className={`relative w-64rem h-auto flex justify-between`}>
+    <div className={`relative h-auto flex justify-start`}>
       {lessons
         ? lessons.map(
             (
@@ -102,54 +137,64 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
               i: number
             ) => (
               <div
+                id='upcoming-1'
                 key={i}
-                className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} w-3/10 h-auto flex flex-col mb-8`}>
-                <div className={`w-full bg-dark rounded-t-xl`}>
-                  <div className='h-6/10 justify-center items-center align-center'>
-                    <div
-                      className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full'
-                      style={{
-                        backgroundImage: `url(${lesson.artist.images})`,
-                      }}
-                    />
-                  </div>
-                  <div className='h-1/10 pl-6'>
-                    <div className='tracking-widest border-b text-gray-300 border-ketchup'>
-                      FEATURED ARTIST
+                className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
+                <div className='rounded-xl shadow-container bg-white h-auto flex flex-col mb-8'>
+                  <div
+                    className={`w-full bg-white shadow-container ${theme.dashboard.bg} rounded-t-xl`}
+                    style={{
+                      background: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url(${lesson.artist.images})`,
+                      backgroundSize: 'cover',
+                    }}>
+                    <div className='h-6/10 justify-center items-center align-center'>
+                      <div className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full' />
+                    </div>
+                    <div className='h-1/10 pl-6'>
+                      <div className='tracking-widest border-b text-gray-300 border-ketchup' style={{textShadow:'1px 1px black'}}>
+                        FEATURED ARTIST
+                      </div>
+                    </div>
+                    <div className='h-3/10 flex flex-row-reverse'>
+                      <h2
+                        className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`} style={{textShadow:'1px 1px black'}}>
+                        <p> {lesson.artist.name} </p>
+                      </h2>
                     </div>
                   </div>
-                  <div className='h-3/10 flex flex-row-reverse'>
-                    <h2
-                      className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
-                      <p> {lesson.artist.name} </p>
-                    </h2>
-                  </div>
-                </div>
-                <div className='w-full flex flex-col rounded-b-xl'>
-                  <div className='h-8.7/10 p-4 flex flex-col justify-center items-center'>
-                    <h1 className={`text-lg text-black font-open text-left`}>{lesson.title}</h1>
-                    <p className='text-md text-left'>
-                      {lesson.summary ? lesson.summary : 'No Information Available'}
-                    </p>
-                  </div>
-                  <div className={`h-10 bg-dark flex justify-between rounded-b-xl`}>
+                  <div className='w-full relative flex flex-col rounded-b-xl'>
                     <div
-                      className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
-                      <div className='w-auto text-gray-300'>
-                        <IconContext.Provider
-                          value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
-                          <FaClock />
-                        </IconContext.Provider>
-                      </div>
-                      <div className={`w-auto mx-4 text-gray-300`}>15 min.</div>
+                      className={`${
+                        openCards.includes('upcoming-1') ? 'h-72' : 'h-32 '
+                      } p-4 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
+                      <h1 className={`text-lg text-black font-open text-left`}>{lesson.title}</h1>
+                      <p className={`text-sm text-left`}>
+                        {lesson.summary ? lesson.summary : 'No Information Available'}
+                      </p>
                     </div>
-                    <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
-                      <div className='w-auto text-gray-300'>
-                        <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
-                          <FaUserAlt />
-                        </IconContext.Provider>
+                    {/* Gradient - start*/}
+                    {gradientCover('upcoming-1')}
+                    {/* Gradient - end */}
+                    <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
+                      <div
+                        className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
+                        <div className='w-auto text-gray-300'>
+                          <IconContext.Provider
+                            value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
+                            <AiOutlineClockCircle />
+                          </IconContext.Provider>
+                        </div>
+                        <div className={`w-auto ml-4 text-sm text-gray-300`}>15 min.</div>
                       </div>
-                      <div className={`w-auto mx-4 text-gray-200`}>Self</div>
+                      <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
+                        <div className='w-auto text-gray-300'>
+                          <IconContext.Provider
+                            value={{ size: '1.5rem', style: { width: 'auto' } }}>
+                            <AiOutlineUser />
+                          </IconContext.Provider>
+                        </div>
+                        <div className={`w-auto ml-4 text-sm text-gray-200`}>Self</div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -157,101 +202,118 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
             )
           )
         : null}
-      {/* DUMMY CARDS */}
-      <div
-        className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} w-3/10 h-auto flex flex-col mb-8`}>
-        <div className={`w-full bg-dark rounded-t-xl`}>
-          <div className='h-6/10 justify-center items-center align-center'>
+      {/* DUMMY CARD 2 */}
+      <div id='upcoming-2' className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
+        <div className=' rounded-xl shadow-container bg-white h-auto flex flex-col mb-8'>
+          <div
+            className={`w-full bg-white shadow-container ${theme.dashboard.bg} rounded-t-xl`}
+            style={{
+              backgroundImage: ``,
+            }}>
+            <div className='h-6/10 justify-center items-center align-center'>
+              <div className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full' />
+            </div>
+            <div className='h-1/10 pl-6'>
+              <div className='tracking-widest border-b text-gray-300 border-ketchup' style={{textShadow:'1px 1px black'}}>
+                FEATURED ARTIST
+              </div>
+            </div>
+            <div className='h-3/10 flex flex-row-reverse'>
+              <h2
+                className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`} style={{textShadow:'1px 1px black'}}>
+                <p>Artist name</p>
+              </h2>
+            </div>
+          </div>
+          <div className='relative w-full h-full flex flex-col rounded-b-xl'>
             <div
-              className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full'
-              style={{
-                backgroundImage: ``,
-              }}
-            />
-          </div>
-          <div className='h-1/10 pl-6'>
-            <div className='tracking-widest border-b text-gray-300 border-ketchup'>
-              FEATURED ARTIST
+              className={`${
+                openCards.includes('upcoming-2') ? 'h-72' : 'h-32 '
+              } p-4 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
+              <h1 className={`text-lg text-black font-open text-left`}>Title</h1>
+              <p className={`text-sm text-left `}>Summary coming soon...</p>
             </div>
-          </div>
-          <div className='h-3/10 flex flex-row-reverse'>
-            <h2
-              className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
-              <p>Artist name</p>
-            </h2>
-          </div>
-        </div>
-        <div className='w-full h-full flex flex-col rounded-b-xl'>
-          <div className='h-8.7/10 min-h-8.7/10 p-4 flex flex-col justify-center items-center'>
-            <h1 className={`text-lg text-black font-open text-left`}>Title</h1>
-            <p className='text-md text-left'>Summary coming soon...</p>
-          </div>
-          <div className={`h-10 bg-dark flex justify-between rounded-b-xl`}>
-            <div className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
-              <div className='w-auto text-gray-300'>
-                <IconContext.Provider
-                  value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
-                  <FaClock />
-                </IconContext.Provider>
+            {/* Gradient - start*/}
+            {gradientCover('upcoming-2')}
+            {/* Gradient - end */}
+            <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
+              <div className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
+                <div className='w-auto text-gray-300'>
+                  <IconContext.Provider
+                    value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
+                    <AiOutlineClockCircle />
+                  </IconContext.Provider>
+                </div>
+                <div className={`w-auto ml-4 text-sm text-gray-300`}>15 min.</div>
               </div>
-              <div className={`w-auto mx-4 text-gray-300`}>15 min.</div>
-            </div>
-            <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
-              <div className='w-auto text-gray-300'>
-                <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
-                  <FaUserAlt />
-                </IconContext.Provider>
+              <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
+                <div className='w-auto text-gray-300'>
+                  <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
+                    <AiOutlineUser />
+                  </IconContext.Provider>
+                </div>
+                <div className={`w-auto ml-4 text-sm text-gray-200`}>Self</div>
               </div>
-              <div className={`w-auto mx-4 text-gray-200`}>Self</div>
             </div>
           </div>
         </div>
       </div>
-      <div
-        className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} w-3/10 h-auto flex flex-col mb-8`}>
-        <div className={`w-full bg-dark rounded-t-xl`}>
-          <div className='h-6/10 justify-center items-center align-center'>
-            <div
-              className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full'
-              style={{
+      {/* DUMMY CARD 3 */}
+      <div id='upcoming-3' className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10`}>
+        <div className=' rounded-xl shadow-container bg-white h-auto flex flex-col mb-8'>
+          <div
+            className={`w-full bg-white shadow-container ${theme.dashboard.bg} rounded-t-xl`}
+            style={{
+              backgroundImage: ``,
+            }}>
+            <div className='h-6/10 justify-center items-center align-center'>
+              <div
+                className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full'
+                /* style={{
                 backgroundImage: ``,
-              }}
-            />
-          </div>
-          <div className='h-1/10 pl-6'>
-            <div className='tracking-widest border-b text-gray-300 border-ketchup'>
-              FEATURED ARTIST
+              }} */
+              />
+            </div>
+            <div className='h-1/10 pl-6'>
+              <div className='tracking-widest border-b text-gray-300 border-ketchup' style={{textShadow:'1px 1px black'}}>
+                FEATURED ARTIST
+              </div>
+            </div>
+            <div className='h-3/10 flex flex-row-reverse'>
+              <h2
+                className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`} style={{textShadow:'1px 1px black'}}>
+                <p>Artist name</p>
+              </h2>
             </div>
           </div>
-          <div className='h-3/10 flex flex-row-reverse'>
-            <h2
-              className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`}>
-              <p>Artist name</p>
-            </h2>
-          </div>
-        </div>
-        <div className='w-full h-full flex flex-col rounded-b-xl'>
-          <div className='h-8.7/10 min-h-8.7/10 p-4 flex flex-col justify-center items-center'>
-            <h1 className={`text-lg text-black font-open text-left`}>Title</h1>
-            <p className='text-md text-left'>Summary coming soon...</p>
-          </div>
-          <div className={`h-10 bg-dark flex justify-between rounded-b-xl`}>
-            <div className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
-              <div className='w-auto text-gray-300'>
-                <IconContext.Provider
-                  value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
-                  <FaClock />
-                </IconContext.Provider>
-              </div>
-              <div className={`w-auto mx-4 text-gray-300`}>15 min.</div>
+          <div className='relative w-full h-full flex flex-col rounded-b-xl'>
+            <div
+              className={`${
+                openCards.includes('upcoming-3') ? 'h-72' : 'h-32 '
+              } p-4 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
+              <h1 className={`text-lg text-black font-open text-left`}>Title</h1>
+              <p className={`text-sm text-left`}>Summary coming soon...</p>
             </div>
-            <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
-              <div className='w-auto text-gray-300'>
-                <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
-                  <FaUserAlt />
-                </IconContext.Provider>
+            {/* Gradient - start*/}
+            {gradientCover('upcoming-3')}
+            {/* Gradient - end */}
+            <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
+              <div className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
+                <div className='w-auto text-gray-300'>
+                  <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
+                    <AiOutlineClockCircle />
+                  </IconContext.Provider>
+                </div>
+                <div className={`w-auto ml-4 text-sm text-gray-300`}>15 min.</div>
               </div>
-              <div className={`w-auto mx-4 text-gray-200`}>Self</div>
+              <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
+                <div className='w-auto text-gray-300'>
+                  <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
+                    <AiOutlineUser />
+                  </IconContext.Provider>
+                </div>
+                <div className={`w-auto ml-4 text-sm text-gray-200`}>Self</div>
+              </div>
             </div>
           </div>
         </div>

@@ -37,7 +37,7 @@ const ProfileLink: React.FC = () => {
 
   return (
     <NavLink to={`${match.url}/profile`}>
-      <div className='size flex flex-col text-center justify-center items-center py-4 bg-dark-gray'>
+      <div className='size flex flex-col text-center justify-center items-center py-4 border-b border-t border-white20'>
         <div className='w-8 h-8'>
           <div
             className='w-8 h-8 rounded-full flex justify-center items-center text-sm font-bold text-white font-sans'

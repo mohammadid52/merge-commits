@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, Suspense, lazy } from 'react';
+import React, { useContext, useEffect,useState, Suspense, lazy } from 'react';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { GlobalContext } from '../../contexts/GlobalContext';
@@ -34,6 +34,7 @@ const Dashboard: React.FC = () => {
     const match = useRouteMatch();
     const [cookies, setCookie] = useCookies(['auth']);
     const { state, dispatch } = useContext(GlobalContext);
+    const [currentPage, setCurrentPage] = useState<string>('');
 
     const setUser = (user: userObject) => {
         let firstName = user.preferredName ? user.preferredName : user.firstName
@@ -77,7 +78,7 @@ const Dashboard: React.FC = () => {
             <div className={`w-screen md:w-full h-screen md:h-auto flex`}>
                 <SideMenu>
                     <ProfileLink />
-                    <Links /> 
+                    <Links setCurrentPage={setCurrentPage} currentPage={currentPage}/> 
                 </SideMenu>
                 <div className={`height h-full flex flex-col`}>
                 <PageHeaderBar />

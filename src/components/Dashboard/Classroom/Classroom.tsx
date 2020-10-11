@@ -118,55 +118,44 @@ const Classroom: React.FC = () => {
   {
     return (
       <div
-        className={`h-9.28/10 md:h-auto flex flex-col justify-center items-center p-8 overflow-scroll md:overflow-auto `}>
+        className={`h-9.28/10 md:h-auto flex flex-col justify-center items-center overflow-scroll md:overflow-auto `}>
         <p className='md:hidden text-xl text-center flex justify-center mb-4' style={{ top: '0' }}>
           * lessons are available on PC or laptop *
         </p>
-        {/* <div className="w-full p-4 flex justify-center items-center">
-                    <div className={`w-auto h-auto border-4 border-dark p-2 px-8 bg-white shadow-container rounded-xl text-4xl text-center flex justify-center items-center font-bold`}>
-                        <img style={{height: '3rem', width: 'auto', marginRight: '1rem'}} src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg" alt="Iconoclast Artists"/>
-                        <p style={{color: '#2c2f40'}}>Online Classroom</p>
-                    </div>
-                </div> */}
-        {/* <div className="relative w-full mb-4 pb-4 flex flex-col justify-center items-center">
-                    <div className={`w-64 h-32 p-2 text-xl text-center flex flex-col justify-center items-center font-bold`}>
-                        
-                        <img src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color_notext.svg" alt="Iconoclast Artists Logo"/>
-                        <p className="font-light">ARTISTS</p>
-                        <p className="absolute z-50" style={{color: '#2c2f40', bottom: '24px'}}>
-                            Classroom
-                        </p>
-
-
-                    </div>
-                </div> */}
-
-        <h2 className='w-64rem text-xl'>
-          <p className='w-auto text-black pb-2 font-light'>
-            Welcome to Iconoclast Artists
-          </p>
-        </h2>
+        <div className='w-full bg-opacity-10'>
+          {survey.display ? (
+            <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
+              Welcome to Iconoclast Artists
+            </h2>
+          ) : (
+            ''
+          )}
+        </div>
 
         {survey.display ? (
-            <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum} />
+          <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum} />
         ) : null}
 
-        <h2 className='w-64rem text-xl'>
-          <p className='w-auto text-black pb-2 font-light'>
+        <div className='w-full bg-opacity-10'>
+          <div className='w-64rem text-xl m-auto'>
+            <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
               Today's Lesson
-        </p>
-        </h2>
+            </h2>
 
             <Today display={survey.display} link={'/lesson?id=1'} curriculum={curriculum} />
+          </div>
+        </div>
 
-        <h2 className='w-64rem text-xl'>
-          <p className='w-auto text-black pb-2 font-light'>
-            Upcoming Lessons
-          </p>
-        </h2>
+        <div className='w-full bg-grayscale bg-opacity-10'>
+          <div className='w-64rem text-xl m-auto'>
+            <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
+              Upcoming Lessons
+            </h2>
 
             <Upcoming curriculum={listCurriculum} />
-        {/* <Dashboard /> */}
+            {/* <Dashboard /> */}
+          </div>
+        </div>
       </div>
     );
   }

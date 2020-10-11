@@ -134,6 +134,9 @@ module.exports = {
       // 'open': ['Open Sans Condensed', 'sans-serif'],
     },
     extend: {
+      backgroundImage: theme => ({
+               'login-bg': "url('https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/iconoclast_frontpage_bg.jpg')"
+                }),
       backgroundOpacity: {
         '10': '0.1',
         '25': '0.25',
@@ -215,6 +218,7 @@ module.exports = {
         '1/10': '10%',
         '2/10': '20%',
         '3/10': '30%',
+        '3.3/10': '33.33%',
         '4/10': '40%',
         '5/10': '50%',
         '6/10': '60%',
@@ -365,6 +369,7 @@ module.exports = {
         'dark-blue': '#1C2C42',
         'darker-blue': '#384f68',
         'dark-gray': '#32323e',
+        'darker-gray': '#272730',
         'dark': '#051429',
         'denim': '#153057',
         'fire-orange': '#FF5733',
@@ -377,6 +382,7 @@ module.exports = {
         'grayscale-lighter': '#f9f9f947',
         'grayscale-lightest': '#fffbfb',
         // 'grayscale-lighter' : '#f7f7f7',
+        // 'grayscale-light': '#d2cbcb',
         'ketchup': '#CA2222',
         'sea-green': '#17A589',
         'transparent': '#ffffff00',
