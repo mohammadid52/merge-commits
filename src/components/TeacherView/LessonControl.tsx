@@ -199,7 +199,7 @@ const LessonControl = () => {
 
                         <div className="w-1/3 flex justify-center items-center">
                             <div className="w-full flex flex-col justify-center items-center">
-                                <div className="w-6/10 font-semibold text-indigo-500">
+                                <div className="w-6/10 font-semibold text-indigo-500 text-center">
                                     <span className="font-normal text-black">currently </span> viewing:
                                 </div>
                                 <div className="w-full flex justify-center items-center">
@@ -238,7 +238,7 @@ const LessonControl = () => {
 
                         <div className={`w-1/3 h-18 ${state.sharing ? 'border-dotted border-4 border-red-700 ' : ''} flex justify-around items-center `}>
                             <div className={`${state.sharing ? '' : 'hidden'} w-full h-full flex flex-col justify-center items-center`}>
-                                <div className="w-6/10 h-4/10 text-purple-400 font-semibold"> 
+                                <div className="w-6/10 h-4/10 text-purple-400 font-semibold text-center"> 
                                     <span className="font-normal text-black">currently </span> sharing:
                                 </div>
                                 <div className="w-full h-full flex justify-center items-center">
@@ -257,8 +257,6 @@ const LessonControl = () => {
                                     </div>
                                 </div>
                             </div>
-                            
-                            
                         </div>
 
                     </div>
@@ -272,7 +270,6 @@ const LessonControl = () => {
                         <p className="text-xs text-center">Home</p>
                     </div>
                 </div>
-                {/*  */}
                 <div className={`w-full h-9/10 flex p-3 pb-5 rounded-lg`}>
                     <div className={`${fullscreen ? 'hidden' : ''} w-4/10 h-full pr-4 flex flex-col items-center`}>
                         <div className={`h-full w-full flex flex-col justify-between items-center`}>
@@ -351,9 +348,6 @@ const LessonControl = () => {
                                     
                             <Suspense fallback={
                                 <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                                    {/* <div className="min-h-full w-full flex flex-col justify-center items-center">
-                                        Give us one second! It is loading... 
-                                    </div> */}
                                     <ComponentLoading />
                                 </div>
                             }>  
@@ -413,37 +407,6 @@ const LessonControl = () => {
                                     {fullscreen ? < FaCompress /> :< FaExpand />}
                                 </IconContext.Provider>
                             </div>
-
-                            {/* {   
-                                shareable && state.studentViewing.live &&!isSameStudentShared ? 
-                                <div className={`absolute cursor-pointer w-auto text-xl m-2 z-50`} style={{bottom: 0, left: 0}}>
-                                        <button className="bg-purple-400 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleShareStudentData}>
-                                            share data
-                                        </button>
-                                    </div>
-                                : null
-                            }
-
-                            {   
-                                state.sharing ?
-                                <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
-                                        <button className="bg-gold text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleQuitShare}>
-                                            stop sharing
-                                        </button>
-                                    </div>
-                                : null
-                            }    */}
-
-                            {/* {   
-                                state.unsavedChanges ?
-                                <div className="absolute cursor-pointer w-auto text-xl m-2 z-50" style={{bottom: 0, right: 0}}>
-                                <button className="bg-teal-500 text-gray-200 h-8 w-44 rounded-xl shadow-elem-dark" onClick={handleUpdateClassroom}>
-                                apply changes
-                                </button>
-                                </div>
-                                : null
-                            } */}
-
                         </div>
 
                         <div className={`${fullscreen ? 'hidden' : ''} relative flex justify-center items-center`}>
