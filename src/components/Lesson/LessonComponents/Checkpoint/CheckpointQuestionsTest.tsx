@@ -34,8 +34,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const { handleSetTitle } = props;
   const { state, dispatch } = useContext(LessonContext);
   const [cookies, setCookie] = useCookies(["questionData"]);
-  const queryParams = queryString.parse(location.search);
-//   console.log("params", queryParams);
 
   const testCheck = [
     {
