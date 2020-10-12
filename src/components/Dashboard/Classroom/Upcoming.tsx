@@ -167,7 +167,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                     <div
                       className={`${
                         openCards.includes('upcoming-1') ? 'h-72' : 'h-32 '
-                      } p-4 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
+                      } p-4 mb-2 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
                       <h1 className={`text-lg text-black font-open text-left`}>{lesson.title}</h1>
                       <p className={`text-sm text-left`}>
                         {lesson.summary ? lesson.summary : 'No Information Available'}
