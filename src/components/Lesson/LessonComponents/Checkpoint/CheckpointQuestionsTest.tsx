@@ -30,436 +30,8 @@ interface CheckpointQuestionsProps {
 }
 
 const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
-
   const { handleSetTitle } = props;
   const { state, dispatch } = useContext(LessonContext);
-  const [cookies, setCookie] = useCookies(["questionData"]);
-
-  const testCheck = [
-    {
-      position: 1,
-      checkpoint: {
-        id: "2",
-        title: "Checkpoint",
-        instructions:
-          "Please tell us how easy or difficult each of the following are for you",
-        label: "sel-short-form-assessment-1",
-        type: "sel",
-        questions: {
-          items: [
-            {
-              required: true,
-              question: {
-                id: "10",
-                label: "sel-short-form-assessment-3",
-                type: "selectOne",
-                question: "Knowing the emotions I feel.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: null,
-                    label: "1",
-                    color: null
-                  },
-                  { text: "Difficult", icon: null, label: "2", color: null },
-                  { text: "Easy", icon: null, label: "3", color: null },
-                  { text: "Very Easy", icon: null, label: "4", color: null }
-                ]
-              }
-            },
-            {
-              required: true,
-              question: {
-                id: "11",
-                label: "sel-short-form-assessment-4",
-                type: "selectOne",
-                question: "Knowing ways I calm myself down.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: null,
-                    label: "1",
-                    color: null
-                  },
-                  { text: "Difficult", icon: null, label: "2", color: null },
-                  { text: "Easy", icon: null, label: "3", color: null },
-                  { text: "Very Easy", icon: null, label: "4", color: null }
-                ]
-              }
-            },
-            {
-              required: true,
-              question: {
-                id: "8",
-                label: "sel-short-form-assessment-1",
-                type: "selectOne",
-                question: "Knowing what my strengths are.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: '',
-                    label: "1",
-                    color: ''
-                  },
-                  { text: "Difficult", icon: '', label: "2", color: '' },
-                  { text: "Easy", icon: '', label: "3", color: '' },
-                  { text: "Very Easy", icon: '', label: "4", color: '' }
-                ]
-              }
-            },
-            {
-              required: true,
-              question: {
-                id: "9",
-                label: "sel-short-form-assessment-2",
-                type: "selectOne",
-                question:
-                  "Knowing when my feelings are making it hard for me to focus.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: '',
-                    label: "1",
-                    color: ''
-                  },
-                  { text: "Difficult", icon: '', label: "2", color: '' },
-                  { text: "Easy", icon: '', label: "3", color: '' },
-                  { text: "Very Easy", icon: '', label: "4", color: '' }
-                ]
-              }
-            }
-          ],
-        }
-      }
-    },
-    {
-      position: 2,
-      checkpoint: {
-        id: "3",
-        title: "Checkpoint",
-        instructions:
-          "Please tell us how easy or difficult each of the following are for you",
-        label: "sel-short-form-assessment-2",
-        type: "sel",
-        questions: {
-          items: [
-            {
-              required: true,
-              question: {
-                id: "12",
-                label: "sel-short-form-assessment-5",
-                type: "selectOne",
-                question:
-                  "Learning from people with different opinions than me.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: '',
-                    label: "1",
-                    color: ''
-                  },
-                  { text: "Difficult", icon: '', label: "2", color: '' },
-                  { text: "Easy", icon: '', label: "3", color: '' },
-                  { text: "Very Easy", icon: '', label: "4", color: '' }
-                ]
-              }
-            },
-            {
-              required: true,
-              question: {
-                id: "13",
-                label: "sel-short-form-assessment-6",
-                type: "selectOne",
-                question:
-                  "Knowing what people may be feeling by the look on their face.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: '',
-                    label: "1",
-                    color: ''
-                  },
-                  { text: "Difficult", icon: '', label: "2", color: '' },
-                  { text: "Easy", icon: '', label: "3", color: '' },
-                  { text: "Very Easy", icon: '', label: "4", color: '' }
-                ]
-              }
-            },
-            {
-              required: true,
-              question: {
-                id: "14",
-                label: "sel-short-form-assessment-7",
-                type: "selectOne",
-                question: "Knowing when someone needs help.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: '',
-                    label: "1",
-                    color: ''
-                  },
-                  { text: "Difficult", icon: '', label: "2", color: '' },
-                  { text: "Easy", icon: '', label: "3", color: '' },
-                  { text: "Very Easy", icon: '', label: "4", color: '' }
-                ]
-              }
-            }
-          ],
-        }
-      }
-    },
-    {
-      position: 3,
-      checkpoint: {
-        id: "4",
-        title: "Checkpoint",
-        instructions:
-          "Please tell us how easy or difficult each of the following are for you",
-        label: "sel-short-form-assessment-3",
-        type: "sel",
-        questions: {
-          items: [
-            {
-              required: true,
-              question: {
-                id: "15",
-                label: "sel-short-form-assessment-8",
-                type: "selectOne",
-                question:
-                  "Getting through something even when I feel frustrated.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: '',
-                    label: "1",
-                    color: ''
-                  },
-                  { text: "Difficult", icon: '', label: "2", color: '' },
-                  { text: "Easy", icon: '', label: "3", color: '' },
-                  { text: "Very Easy", icon: '', label: "4", color: '' }
-                ]
-              }
-            },
-            {
-              required: true,
-              question: {
-                id: "16",
-                label: "sel-short-form-assessment-9",
-                type: "selectOne",
-                question: "Being patient even when I am really excited.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: '',
-                    label: "1",
-                    color: ''
-                  },
-                  { text: "Difficult", icon: '', label: "2", color: '' },
-                  { text: "Easy", icon: '', label: "3", color: '' },
-                  { text: "Very Easy", icon: '', label: "4", color: '' }
-                ]
-              }
-            },
-            {
-              required: true,
-              question: {
-                id: "17",
-                label: "sel-short-form-assessment-10",
-                type: "selectOne",
-                question: "Finishing tasks even if they are hard for me.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: '',
-                    label: "1",
-                    color: ''
-                  },
-                  { text: "Difficult", icon: '', label: "2", color: '' },
-                  { text: "Easy", icon: '', label: "3", color: '' },
-                  { text: "Very Easy", icon: '', label: "4", color: '' }
-                ]
-              }
-            }
-          ],
-        }
-      }
-    },
-    {
-      position: 4,
-      checkpoint: {
-        id: "5",
-        title: "Checkpoint",
-        instructions:
-          "Please tell us how easy or difficult each of the following are for you",
-        label: "sel-short-form-assessment-4",
-        type: "sel",
-        questions: {
-          items: [
-            {
-              required: true,
-              question: {
-                id: "18",
-                label: "sel-short-form-assessment-11",
-                type: "selectOne",
-                question: "Setting goals for myself.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: '',
-                    label: "1",
-                    color: ''
-                  },
-                  { text: "Difficult", icon: '', label: "2", color: '' },
-                  { text: "Easy", icon: '', label: "3", color: '' },
-                  { text: "Very Easy", icon: '', label: "4", color: '' }
-                ]
-              }
-            },
-            {
-              required: true,
-              question: {
-                id: "19",
-                label: "sel-short-form-assessment-12",
-                type: "selectOne",
-                question:
-                  "Doing my schoolwork even when I do not feel like it.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: '',
-                    label: "1",
-                    color: ''
-                  },
-                  { text: "Difficult", icon: '', label: "2", color: '' },
-                  { text: "Easy", icon: '', label: "3", color: '' },
-                  { text: "Very Easy", icon: '', label: "4", color: '' }
-                ]
-              }
-            },
-            {
-              required: true,
-              question: {
-                id: "20",
-                label: "sel-short-form-assessment-13",
-                type: "selectOne",
-                question: "Being prepared for tests.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: '',
-                    label: "1",
-                    color: ''
-                  },
-                  { text: "Difficult", icon: '', label: "2", color: '' },
-                  { text: "Easy", icon: '', label: "3", color: '' },
-                  { text: "Very Easy", icon: '', label: "4", color: '' }
-                ]
-              }
-            }
-          ],
-        }
-      }
-    },
-    {
-      position: 5,
-      checkpoint: {
-        id: "6",
-        title: "Checkpoint",
-        instructions:
-          "Please tell us how easy or difficult each of the following are for you",
-        label: "sel-short-form-assessment-5",
-        type: "sel",
-        questions: {
-          items: [
-            {
-              required: true,
-              question: {
-                id: "21",
-                label: "sel-short-form-assessment-14",
-                type: "selectOne",
-                question:
-                  "Respecting a classmate's opinions during a disagreement.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: '',
-                    label: "1",
-                    color: ''
-                  },
-                  { text: "Difficult", icon: '', label: "2", color: '' },
-                  { text: "Easy", icon: '', label: "3", color: '' },
-                  { text: "Very Easy", icon: '', label: "4", color: '' }
-                ]
-              }
-            },
-            {
-              required: true,
-              question: {
-                id: "22",
-                label: "sel-short-form-assessment-15",
-                type: "selectOne",
-                question: "Getting along with my classmates.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: '',
-                    label: "1",
-                    color: ''
-                  },
-                  { text: "Difficult", icon: '', label: "2", color: '' },
-                  { text: "Easy", icon: '', label: "3", color: '' },
-                  { text: "Very Easy", icon: '', label: "4", color: '' }
-                ]
-              }
-            },
-            {
-              required: true,
-              question: {
-                id: "23",
-                label: "sel-short-form-assessment-16",
-                type: "selectOne",
-                question:
-                  "Thinking about what might happen before making a decision.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: '',
-                    label: "1",
-                    color: ''
-                  },
-                  { text: "Difficult", icon: '', label: "2", color: '' },
-                  { text: "Easy", icon: '', label: "3", color: '' },
-                  { text: "Very Easy", icon: '', label: "4", color: '' }
-                ]
-              }
-            },
-            {
-              required: true,
-              question: {
-                id: "24",
-                label: "sel-short-form-assessment-17",
-                type: "selectOne",
-                question: "Knowing what is right or wrong.",
-                options: [
-                  {
-                    text: "Very Difficult",
-                    icon: '',
-                    label: "1",
-                    color: ''
-                  },
-                  { text: "Difficult", icon: '', label: "2", color: '' },
-                  { text: "Easy", icon: '', label: "3", color: '' },
-                  { text: "Very Easy", icon: '', label: "4", color: '' }
-                ]
-              }
-            }
-          ],
-        }
-      }
-    }
-  ];
-
   const checkpoints = state.data.lesson.checkpoints.items;
 
   console.log(state, "state");
@@ -483,13 +55,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const checkpoint = currentId.pop();
 
   useEffect(() => {
-    // if ( cookies.questionData ) {
-    //     dispatch({
-    //         type: 'SET_QUESTION_DATA',
-    //         payload: cookies.questionData
-    //     })
-    // }
-
     let questionDataKeys = [];
 
     if (state.questionData[checkpoint.checkpoint.id]) {
@@ -511,18 +76,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     }
 
     setStatus("loaded");
-    // if ( cookies.questionData ) {
-    //     dispatch({
-    //         type: 'SET_QUESTION_DATA',
-    //         payload: cookies.questionData
-    //     })
-    // }
-
-    // if (!input && !state.questionData) {
-    //   setInput(() => {
-    //     return setInitialState(checkpoint.checkpoint.questions.items);
-    //   });
-    // }
   }, []);
 
   useEffect(() => {
@@ -530,34 +83,34 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       handleSetTitle(checkpoint.checkpoint.title);
     }
 
-    // if (input && checkpoint.checkpoint.questions.items) {
-    //   checkpoint.checkpoint.questions.items.forEach(
-    //     (item: { question: { id: string; type: string; label: string } }) => {
-    //       let inputKeys = Object.keys(input);
-    //       let found = inputKeys.some((key: string) => {
-    //         item.question.id === key;
-    //       });
+    if (input && checkpoint.checkpoint.questions.items) {
+      checkpoint.checkpoint.questions.items.forEach(
+        (item: { question: { id: string; type: string; label: string } }) => {
+          let inputKeys = Object.keys(input);
+          let found = inputKeys.some((key: string) => {
+            item.question.id === key;
+          });
 
-    //       if (!found) {
-    //         setInput((prev: any) => {
-    //           return {
-    //             ...prev,
-    //             [item.question.id]:
-    //               item.question.type === "text"
-    //                 ? ""
-    //                 : item.question.type === "input"
-    //                 ? ""
-    //                 : item.question.type === "selectOne"
-    //                 ? null
-    //                 : item.question.type === "selectMany"
-    //                 ? []
-    //                 : null
-    //           };
-    //         });
-    //       }
-    //     }
-    //   );
-    // }
+          if (!found) {
+            setInput((prev: any) => {
+              return {
+                ...prev,
+                [item.question.id]:
+                  item.question.type === "text"
+                    ? ""
+                    : item.question.type === "input"
+                    ? ""
+                    : item.question.type === "selectOne"
+                    ? null
+                    : item.question.type === "selectMany"
+                    ? []
+                    : null
+              };
+            });
+          }
+        }
+      );
+    }
   }, [checkpoint]);
 
   const handleSelect = (e: any) => {
@@ -587,8 +140,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   };
 
   useEffect(() => {
-    console.log('input', input);
-
     if (input && state.questionData[checkpoint.checkpoint.id] !== input) {
       let dispatchInput: any = {};
       checkpoint.checkpoint.questions.items.forEach(
@@ -612,9 +163,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       });
     }
 
-    // if (input && cookies.questionData !== input) {
-    //   setCookie('questionData', input);
-    // }
   }, [input]);
 
   const handleInputChange = (e: any) => {

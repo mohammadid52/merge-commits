@@ -42,11 +42,13 @@ const Pagination = (props: props) => {
         pageNumbers.push(i)
     }
 
+    console.log(pageNumbers.length, 'page numbers')
+
 
     return (
         //change the NUMBERs
-      
-        <div className="absolute w-full flex items-center justify-between sm:px-6" style={{bottom: 0}}>
+      <>
+       { pageNumbers.length > 1 ? <div className="absolute w-full flex items-center justify-between sm:px-6" style={{bottom: 0}}>
             <div className="flex-1 flex items-center justify-end">
                 {/* <div>
                 <p className="text-sm leading-5 text-gray-700">
@@ -80,8 +82,8 @@ const Pagination = (props: props) => {
                     </nav>
                 </div>
             </div>
-        </div>
-
+        </div> : null }
+</>
     )
 
 }

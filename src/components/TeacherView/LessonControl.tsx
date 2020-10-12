@@ -92,10 +92,12 @@ const LessonControl = () => {
 
     const handleQuitShare = () => {
         dispatch({ type: 'QUIT_SHARE_MODE' })
+        setIsSameStudentShared(false)
     }
 
     const handleQuitViewing = () => {
         dispatch({ type: 'QUIT_STUDENT_VIEWING'})
+        setIsSameStudentShared(false)
     }
 
     const handleResetDoneCounter = () => {
@@ -150,27 +152,52 @@ const LessonControl = () => {
 
     useEffect(() => {
         // console.log('change', state);
+
+        if ( !state.displayData || !state.displayData.studentInfo || !state.studentViewing.studentInfo || !state.studentViewing.studentInfo.student ) {
+            console.log('same student false outer');
+            
+            setIsSameStudentShared(false)
+        }
         
         if ( state.displayData && state.displayData.studentInfo && state.studentViewing.studentInfo && state.studentViewing.studentInfo.student ) {
             
             if ( state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id ) {
-                // console.log('same student true');
+                console.log('same student true');
                 
                 setIsSameStudentShared(true)
             }
 
             if ( state.displayData.studentInfo.id !== state.studentViewing.studentInfo.student.id ) {
-                // console.log('same student false inner');
+                console.log('same student false inner');
                 
                 setIsSameStudentShared(false)
             }
+
+            if ( state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id && !state.studentViewing.live ) {
+                console.log('live false');
+                
+                setIsSameStudentShared(false)
+            }
+
+            // if (handleQuitShare) {
+            //     console.log('not being displayed')
+                
+            //     setIsSameStudentShared(false)
+            // }
         }
 
-        if ( !state.displayData || !state.displayData.studentInfo || !state.studentViewing.studentInfo || !state.studentViewing.studentInfo.student ) {
-            // console.log('same student false outer');
+        // if ( state.displayData && state.displayData.studentInfo ) {
             
-            setIsSameStudentShared(false)
-        }
+            
+            
+
+        //     // if ( state.displayData.studentInfo.id !== state.studentViewing.studentInfo.student.id ) {
+                
+        //     //     setIsSameStudentShared(false)
+        //     // }
+        // }
+
+        
         
     }, [state.displayData, state.studentViewing])
 
@@ -184,6 +211,8 @@ const LessonControl = () => {
             <ComponentLoading />
         )
     }
+
+    console.log(isSameStudentShared, 'isSameStudent');
 
     return (
         <div className={`w-full h-screen bg-gray-200`}>
@@ -314,7 +343,7 @@ const LessonControl = () => {
                             
                             <div className={`h-9/10`}>
                                 <ClassRoster 
-                                    handleUpdateClassroom={handleUpdateClassroom}
+                                    handleUpdateClassroom={handleUpdateClassroom} setIsSameStudentShared={setIsSameStudentShared}
                                 />
                             </div>
                             {/* <div className={`w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between text-xl text-gray-200 font-extrabold font-open`}>

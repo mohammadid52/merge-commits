@@ -34,6 +34,7 @@ const Classroom: React.FC = () => {
     display: false,
     data: null,
   });
+  
   const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
   const [status, setStatus] = useState('');
 
