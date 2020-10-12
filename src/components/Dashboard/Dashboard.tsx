@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, Suspense, lazy } from 'react';
+import React, { useContext, useEffect,useState, Suspense, lazy } from 'react';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { GlobalContext } from '../../contexts/GlobalContext';
@@ -10,8 +10,9 @@ import {
  } from 'react-router-dom';
 // import PageHeaderBar from '../Header/PageHeaderBar';
 import SideMenu from './Menu/SideMenu';
+// import Classroom from './Classroom/Classroom';
 import { useCookies } from 'react-cookie';
-const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
+// const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'))
 const Profile = lazy(() => import('./Profile/Profile'))
 const Links = lazy(() => import('./Menu/Links'))
@@ -33,6 +34,7 @@ const Dashboard: React.FC = () => {
     const match = useRouteMatch();
     const [cookies, setCookie] = useCookies(['auth']);
     const { state, dispatch } = useContext(GlobalContext);
+    const [currentPage, setCurrentPage] = useState<string>('');
 
     const setUser = (user: userObject) => {
         let firstName = user.preferredName ? user.preferredName : user.firstName
@@ -74,12 +76,12 @@ const Dashboard: React.FC = () => {
 
     return ( 
             <div className={`w-screen md:w-full h-screen md:h-auto flex`}>
-                <SideMenu>
-                    <ProfileLink />
-                    <Links /> 
+                <SideMenu setCurrentPage={setCurrentPage} currentPage={currentPage}>
+                    <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage}/>
+                    <Links setCurrentPage={setCurrentPage} currentPage={currentPage}/> 
                 </SideMenu>
                 <div className={`height h-full flex flex-col`}>
-                <PageHeaderBar />
+                <PageHeaderBar setCurrentPage={setCurrentPage} currentPage={currentPage}/>
                 <Suspense fallback={
                 <div className="min-h-screen w-full flex flex-col justify-center items-center">
                     {/* <div className="min-h-full w-full flex flex-col justify-center items-center">

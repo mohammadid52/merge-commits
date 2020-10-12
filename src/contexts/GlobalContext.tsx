@@ -20,6 +20,14 @@ export const pageThemes = {
       bg: 'bg-dark',
       text: 'text-gray-200',
     },
+    dashboard: {
+      sectionTitle: 'w-auto text-black pb-2 font-light mt-4 mb-1',
+      bg: 'bg-dark-gray'
+    }
+    ,
+    sidemenu: {
+      bg: 'bg-darker-gray',
+    },
     block: {
       bg: 'bg-gray-200',
       text: 'text-dark',
@@ -46,6 +54,14 @@ export const pageThemes = {
     toolbar: {
       bg: 'bg-dark-blue',
       text: 'text-gray-200',
+    },
+    dashboard: {
+      sectionTitle: 'w-auto text-black pb-2 font-light mt-4 mb-1',
+      bg: 'bg-dark-gray'
+    }
+    ,
+    sidemenu: {
+      bg: 'bg-darker-gray',
     },
     block: {
       bg: 'bg-dark-blue',
