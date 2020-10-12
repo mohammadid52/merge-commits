@@ -4,7 +4,9 @@ import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaUserCircle } from 'react-icons/fa';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 
-const ProfileLink: React.FC = () => {
+import {LinkProps} from './Links';
+
+const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const { state } = useContext(GlobalContext);
   const match = useRouteMatch();
   const history = useHistory();
@@ -35,8 +37,13 @@ const ProfileLink: React.FC = () => {
     return firstInitial;
   };
 
+  const handleLink = (e: any) => {
+    const id = e.target.id.toLowerCase();
+    linkProps.setCurrentPage(id);
+  };
+
   return (
-    <NavLink to={`${match.url}/profile`}>
+    <NavLink id='profile' to={`${match.url}/profile`} onClick={handleLink}>
       <div className='size flex flex-col text-center justify-center items-center py-4 border-b border-t border-white20'>
         <div className='w-8 h-8'>
           <div
@@ -45,7 +52,7 @@ const ProfileLink: React.FC = () => {
               background: `${
                 state.user.firstName
                   ? stringToHslColor(state.user.firstName + ' ' + state.user.lastName)
-                  : '#051429'
+                  : '#272730'
               }`,
               textShadow: '0.1rem 0.1rem 2px #423939b3',
             }}>

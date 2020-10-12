@@ -370,6 +370,7 @@ module.exports = {
         'darker-blue': '#384f68',
         'dark-gray': '#32323e',
         'darker-gray': '#272730',
+        // Official iconoclast blue
         'dark': '#051429',
         'denim': '#153057',
         'fire-orange': '#FF5733',

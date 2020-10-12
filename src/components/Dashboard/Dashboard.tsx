@@ -76,12 +76,12 @@ const Dashboard: React.FC = () => {
 
     return ( 
             <div className={`w-screen md:w-full h-screen md:h-auto flex`}>
-                <SideMenu>
-                    <ProfileLink />
+                <SideMenu setCurrentPage={setCurrentPage} currentPage={currentPage}>
+                    <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage}/>
                     <Links setCurrentPage={setCurrentPage} currentPage={currentPage}/> 
                 </SideMenu>
                 <div className={`height h-full flex flex-col`}>
-                <PageHeaderBar />
+                <PageHeaderBar setCurrentPage={setCurrentPage} currentPage={currentPage}/>
                 <Suspense fallback={
                 <div className="min-h-screen w-full flex flex-col justify-center items-center">
                     {/* <div className="min-h-full w-full flex flex-col justify-center items-center">

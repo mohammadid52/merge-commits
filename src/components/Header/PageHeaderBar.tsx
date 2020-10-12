@@ -3,12 +3,14 @@ import { GlobalContext } from '../../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
 import { NavLink, useHistory, useLocation } from 'react-router-dom';
 
+import {LinkProps} from '../Dashboard/Menu/Links';
+
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineLogout } from 'react-icons/ai';
 
 import { Auth } from '@aws-amplify/auth';
 
-const PageHeaderBar = () => {
+const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const [, , removeCookie] = useCookies(['auth']);
   const location = useLocation();
   const history = useHistory();
@@ -29,14 +31,22 @@ const PageHeaderBar = () => {
     SignOut();
   };
 
+  const handleLink = (e: any) => {
+    const id = e.target.id.toLowerCase();
+
+    linkProps.setCurrentPage(id);
+  };
+
   return (
     <div
       className={`w-full h-.72/10 md:h-12 ${theme.dashboard.bg} text-gray-200 flex justify-center md:justify-end`}>
       <div
         className={`w-full md:hidden h-full md:h-12 ${theme.dashboard.bg} flex justify-center items-center text-2xl font-bold z-50 ml-4`}>
-        <NavLink to='/dashboard'>
+        <NavLink to='/dashboard' id='dashboard' onClick={handleLink}>
           <img
+            id='dashboard'
             className='h-6'
+            onClick={handleLink}
             src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg'
             alt='Iconoclast Artists'
           />

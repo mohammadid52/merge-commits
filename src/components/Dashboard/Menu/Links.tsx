@@ -12,7 +12,7 @@ type LinkObject = {
   path: string;
 };
 
-type LinkProps = {
+export interface LinkProps {
   children?: React.ReactNode;
   setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
   currentPage: string;
