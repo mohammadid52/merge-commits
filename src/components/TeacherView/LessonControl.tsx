@@ -343,7 +343,7 @@ const LessonControl = () => {
                             
                             <div className={`h-9/10`}>
                                 <ClassRoster 
-                                    handleUpdateClassroom={handleUpdateClassroom} setIsSameStudentShared={setIsSameStudentShared}
+                                    handleUpdateClassroom={handleUpdateClassroom}
                                 />
                             </div>
                             {/* <div className={`w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between text-xl text-gray-200 font-extrabold font-open`}>

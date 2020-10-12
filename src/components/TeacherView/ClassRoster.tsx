@@ -6,11 +6,10 @@ import ToolTip from '../General/ToolTip/ToolTip';
 
 interface classRosterProps {
     handleUpdateClassroom: () => Promise<void>
-    setIsSameStudentShared:  React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ClassRoster = (props: classRosterProps) => {
-    const { handleUpdateClassroom, setIsSameStudentShared} = props;
+    const { handleUpdateClassroom } = props;
     const { state, dispatch } = useContext(LessonControlContext);
 
     // console.log(state.roster)
@@ -23,7 +22,6 @@ const ClassRoster = (props: classRosterProps) => {
 
         // console.log('selected', id, selected[0]);
         dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] })
-        setIsSameStudentShared(false);
     } 
 
     const initials = (lastName: string) => {
