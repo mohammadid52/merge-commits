@@ -26,7 +26,7 @@ const SelectOneQuestions = (selectOneProps: CPQuestionProps) => {
   const [input, setInput] = useState<SelectOneRowState>({ id: '', value: '' });
 
   useEffect(() => {
-    console.log('czech this', question, checkpointID );
+    // console.log('czech this', question, checkpointID );
     
     if (
       state.questionData[selectOneProps.checkpointID] &&

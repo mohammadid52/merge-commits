@@ -26,6 +26,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
   //     })
 
   // const slice = curriculum.slice(1, 2);
+
   const curriculumLesson = curriculum
     ? curriculum.map((value: any, index: number, array: CurriculumInfo[]) => {
         return value.lesson;
@@ -244,7 +245,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                     <AiOutlineClockCircle />
                   </IconContext.Provider>
                 </div>
-                <div className={`w-auto ml-4 text-sm text-gray-300`}>15 min.</div>
+                <div className={`w-auto ml-4 text-sm text-gray-300`}>45 min.</div>
               </div>
               <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
                 <div className='w-auto text-gray-300'>
@@ -252,7 +253,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                     <AiOutlineUser />
                   </IconContext.Provider>
                 </div>
-                <div className={`w-auto ml-4 text-sm text-gray-200`}>Self</div>
+                <div className={`w-auto ml-4 text-sm text-gray-200`}>Marlon</div>
               </div>
             </div>
           </div>
@@ -304,7 +305,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                     <AiOutlineClockCircle />
                   </IconContext.Provider>
                 </div>
-                <div className={`w-auto ml-4 text-sm text-gray-300`}>15 min.</div>
+                <div className={`w-auto ml-4 text-sm text-gray-300`}>45 min.</div>
               </div>
               <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
                 <div className='w-auto text-gray-300'>
@@ -312,7 +313,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                     <AiOutlineUser />
                   </IconContext.Provider>
                 </div>
-                <div className={`w-auto ml-4 text-sm text-gray-200`}>Self</div>
+                <div className={`w-auto ml-4 text-sm text-gray-200`}>Marlon</div>
               </div>
             </div>
           </div>
