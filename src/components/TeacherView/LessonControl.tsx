@@ -154,7 +154,7 @@ const LessonControl = () => {
         // console.log('change', state);
 
         if ( !state.displayData || !state.displayData.studentInfo || !state.studentViewing.studentInfo || !state.studentViewing.studentInfo.student ) {
-            console.log('same student false outer');
+            // console.log('same student false outer');
             
             setIsSameStudentShared(false)
         }
@@ -162,19 +162,19 @@ const LessonControl = () => {
         if ( state.displayData && state.displayData.studentInfo && state.studentViewing.studentInfo && state.studentViewing.studentInfo.student ) {
             
             if ( state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id ) {
-                console.log('same student true');
+                // console.log('same student true');
                 
                 setIsSameStudentShared(true)
             }
 
             if ( state.displayData.studentInfo.id !== state.studentViewing.studentInfo.student.id ) {
-                console.log('same student false inner');
+                // console.log('same student false inner');
                 
                 setIsSameStudentShared(false)
             }
 
             if ( state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id && !state.studentViewing.live ) {
-                console.log('live false');
+                // console.log('live false');
                 
                 setIsSameStudentShared(false)
             }
@@ -185,20 +185,7 @@ const LessonControl = () => {
             //     setIsSameStudentShared(false)
             // }
         }
-
-        // if ( state.displayData && state.displayData.studentInfo ) {
-            
-            
-            
-
-        //     // if ( state.displayData.studentInfo.id !== state.studentViewing.studentInfo.student.id ) {
-                
-        //     //     setIsSameStudentShared(false)
-        //     // }
-        // }
-
-        
-        
+ 
     }, [state.displayData, state.studentViewing])
 
     useEffect(() => {
@@ -211,8 +198,6 @@ const LessonControl = () => {
             <ComponentLoading />
         )
     }
-
-    console.log(isSameStudentShared, 'isSameStudent');
 
     return (
         <div className={`w-full h-screen bg-gray-200`}>
