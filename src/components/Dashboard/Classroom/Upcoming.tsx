@@ -105,7 +105,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
   const gradientCover = (toggleID: string) => {
     return (
       <div
-        className={`w-full h-32 absolute flex items-end bottom-0 transform -translate-y-10 transition ${
+        className={`w-full h-20 absolute flex items-end bottom-0 transform -translate-y-10 transition ${
           !openCards.includes(toggleID) ? 'bg-gradient-to-t from-white h-8' : ''
         }`}>
         <p
@@ -178,23 +178,23 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                     {/* Gradient - end */}
                     <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
                       <div
-                        className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
+                        className={`flex mx-2 justify-center items-center my-2 w-5/10 text-gray-300`}>
                         <div className='w-auto text-gray-300'>
                           <IconContext.Provider
                             value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
                             <AiOutlineClockCircle />
                           </IconContext.Provider>
                         </div>
-                        <div className={`w-auto ml-4 text-sm text-gray-300`}>15 min.</div>
+                        <div className={`w-auto ml-2 text-sm text-gray-300`}>45 min.</div>
                       </div>
-                      <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
+                      <div className={`flex mx-2 justify-center items-center my-2 w-5/10`}>
                         <div className='w-auto text-gray-300'>
                           <IconContext.Provider
                             value={{ size: '1.5rem', style: { width: 'auto' } }}>
                             <AiOutlineUser />
                           </IconContext.Provider>
                         </div>
-                        <div className={`w-auto ml-4 text-sm text-gray-200`}>Self</div>
+                        <div className={`w-auto ml-2 text-sm text-gray-200`}>Marlon</div>
                       </div>
                     </div>
                   </div>
@@ -222,38 +222,38 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
             <div className='h-3/10 flex flex-row-reverse'>
               <h2
                 className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`} style={{textShadow:'1px 1px black'}}>
-                <p>Artist name</p>
+                <p>Elizabeth Acevedo</p>
               </h2>
             </div>
           </div>
           <div className='relative w-full h-full flex flex-col rounded-b-xl'>
             <div
               className={`${
-                openCards.includes('upcoming-2') ? 'h-72' : 'h-32 '
+                openCards.includes('upcoming-2') ? 'h-20' : 'h-20 '
               } p-4 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
-              <h1 className={`text-lg text-black font-open text-left`}>Title</h1>
+              <h1 className={`text-lg text-black font-open text-left`}>Ode to the rat</h1>
               <p className={`text-sm text-left `}>Summary coming soon...</p>
             </div>
             {/* Gradient - start*/}
-            {gradientCover('upcoming-2')}
+            {/* {gradientCover('upcoming-2')} */}
             {/* Gradient - end */}
             <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
-              <div className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
+              <div className={`flex mx-2 justify-center items-center my-2 w-5/10 text-gray-300`}>
                 <div className='w-auto text-gray-300'>
                   <IconContext.Provider
                     value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
                     <AiOutlineClockCircle />
                   </IconContext.Provider>
                 </div>
-                <div className={`w-auto ml-4 text-sm text-gray-300`}>45 min.</div>
+                <div className={`w-auto ml-2 text-sm text-gray-300`}>45 min.</div>
               </div>
-              <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
+              <div className={`flex mx-2 justify-center items-center my-2 w-5/10`}>
                 <div className='w-auto text-gray-300'>
                   <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
                     <AiOutlineUser />
                   </IconContext.Provider>
                 </div>
-                <div className={`w-auto ml-4 text-sm text-gray-200`}>Marlon</div>
+                <div className={`w-auto ml-2 text-sm text-gray-200`}>Marlon</div>
               </div>
             </div>
           </div>
@@ -283,37 +283,37 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
             <div className='h-3/10 flex flex-row-reverse'>
               <h2
                 className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`} style={{textShadow:'1px 1px black'}}>
-                <p>Artist name</p>
+                <p>Rudy Francisco</p>
               </h2>
             </div>
           </div>
           <div className='relative w-full h-full flex flex-col rounded-b-xl'>
             <div
               className={`${
-                openCards.includes('upcoming-3') ? 'h-72' : 'h-32 '
+                openCards.includes('upcoming-3') ? 'h-20' : 'h-20 '
               } p-4 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
-              <h1 className={`text-lg text-black font-open text-left`}>Title</h1>
+              <h1 className={`text-lg text-black font-open text-left`}>My Honest Poem</h1>
               <p className={`text-sm text-left`}>Summary coming soon...</p>
             </div>
             {/* Gradient - start*/}
-            {gradientCover('upcoming-3')}
+            {/* {gradientCover('upcoming-3')} */}
             {/* Gradient - end */}
             <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
-              <div className={`flex mx-4 justify-center items-center my-2 w-5/10 text-gray-300`}>
+              <div className={`flex mx-2 justify-center items-center my-2 w-5/10 text-gray-300`}>
                 <div className='w-auto text-gray-300'>
                   <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
                     <AiOutlineClockCircle />
                   </IconContext.Provider>
                 </div>
-                <div className={`w-auto ml-4 text-sm text-gray-300`}>45 min.</div>
+                <div className={`w-auto ml-2 text-sm text-gray-300`}>45 min.</div>
               </div>
-              <div className={`flex mx-4 justify-center items-center my-2 w-5/10`}>
+              <div className={`flex mx-2 justify-center items-center my-2 w-5/10`}>
                 <div className='w-auto text-gray-300'>
                   <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
                     <AiOutlineUser />
                   </IconContext.Provider>
                 </div>
-                <div className={`w-auto ml-4 text-sm text-gray-200`}>Marlon</div>
+                <div className={`w-auto ml-2 text-sm text-gray-200`}>Marlon</div>
               </div>
             </div>
           </div>
