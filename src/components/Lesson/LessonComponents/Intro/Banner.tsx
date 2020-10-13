@@ -28,7 +28,7 @@ const Banner = () => {
   return (
     <div className={`w-full h-1/10 text-xl ${theme.banner}`}>
         <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
-          <div className="w-auto h-auto">
+          <div className="w-auto h-auto mr-2">
           <BsPen />
           </div>
         </IconContext.Provider>

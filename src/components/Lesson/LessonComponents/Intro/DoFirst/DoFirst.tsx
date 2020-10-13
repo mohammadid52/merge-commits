@@ -81,7 +81,7 @@ const DoFirst = () => {
             </label>
             <input
               id={question.id}
-              className={`w-full py-2 px-4 text-lg text-gray-800 rounded-lg ${theme.elem.textInput}`}
+              className={`w-full py-2 px-4 text-lg text-gray-800 rounded-xl ${theme.elem.textInput}`}
               type='text'
               name={question.id}
               defaultValue={input[question.id]}
