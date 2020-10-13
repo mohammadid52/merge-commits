@@ -64,7 +64,7 @@ const TopMenu = () => {
           </div>
         </div>
       </div>
-      <div className='w-full h-4 bg-white opacity-10'></div>
+      <div className='w-full h-4 bg-black opacity-10'></div>
     </>
   );
 };

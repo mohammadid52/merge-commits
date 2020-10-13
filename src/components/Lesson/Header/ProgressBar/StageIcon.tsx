@@ -62,7 +62,7 @@ const StageIcon = (props: StageIconProps) => {
   const iconLabel = (centerFix: 'center' | 'noCenter'): ReactElement => {
     return (
       <div
-        className={`absolute transform translate-y-8 text-center z-50 ${theme.elem.text} w-24 mt-1
+        className={`absolute transform translate-y-10 text-center z-50 ${theme.elem.text} w-24 mt-1
         ${centerFix === 'center' && 'left-1/2 -translate-x-1/2'} 
         ${centerFix === 'noCenter' && '-translate-x-1/2'} 
         ${state.currentPage === iconID ? 'text-opacity-75' : ''}
