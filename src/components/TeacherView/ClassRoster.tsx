@@ -9,7 +9,7 @@ interface classRosterProps {
 }
 
 const ClassRoster = (props: classRosterProps) => {
-    const { handleUpdateClassroom, } = props;
+    const { handleUpdateClassroom } = props;
     const { state, dispatch } = useContext(LessonControlContext);
 
     // console.log(state.roster)
