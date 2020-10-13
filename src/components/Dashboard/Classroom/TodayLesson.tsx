@@ -21,13 +21,12 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
   const { theme } = useContext(GlobalContext);
 
   const handleLink = () => {
-    // come back to this later
-    // if (accessible) {
-    //   history.push(link);
-    // }
+    if (accessible) {
+      history.push(link);
+    }
 
-    // For testing
-    history.push(link);
+    // For testing: enables clickthrough survey
+    // history.push(link);
   };
 
   useEffect(() => {
