@@ -147,7 +147,7 @@ const Classroom: React.FC = () => {
           </div>
         </div>
 
-        <div className='w-full bg-grayscale bg-opacity-10'>
+        <div className='w-full bg-grayscale-light bg-opacity-10'>
           <div className='w-64rem text-xl m-auto'>
             <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
               Upcoming Lessons
