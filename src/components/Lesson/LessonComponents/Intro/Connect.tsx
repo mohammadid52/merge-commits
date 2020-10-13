@@ -10,10 +10,10 @@ const Connect = () => {
 
 
     return (
-        <div className={`flex flex-col md:w-full md:h-full ${theme.block.text} text-lx rounded-r-lg`}>
-            <div className={`md:w-full md:h-full p-4 flex flex-col ${theme.block.text} text-lx rounded-r-lg`}>
-                <h1 className={`text-2xl font-medium ${theme.underline}`}>SEL Connection:</h1>
-                <p className="font-light text-base text-blue-100 text-opacity-75">{ connection }</p>
+        <div className={`flex flex-col md:w-full md:h-full text-sm rounded-r-lg`}>
+            <div className={`md:w-full md:h-full flex flex-col text-lx rounded-r-lg`}>
+                <h1 className={`w-full h-1/10 text-xl ${theme.banner} ${theme.underline}`}>SEL Connection:</h1>
+                <p className={`${theme.elem.text}`}>{ connection }</p>
             </div>
         </div>
     )

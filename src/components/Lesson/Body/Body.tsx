@@ -15,7 +15,7 @@ const LessonError = lazy(() => import('../../Error/LessonError'));
 const Checkpoint = lazy(() => import('../LessonComponents/Checkpoint/Checkpoint'))
 
 const Body = () => {
-    const { state, dispatch } = useContext(LessonContext);
+    const { state, theme, dispatch } = useContext(LessonContext);
     const location = useLocation();
     const match = useRouteMatch();
 
@@ -84,7 +84,7 @@ const Body = () => {
 
     return (
         // <div className="p-4 md:px-8 md:h-8.3/10"> 
-        <div className="z-0 p-4 md:h-8.2/10 bg-dark"> 
+        <div className={`z-0 p-4 ${theme.bg}`}> 
             <Switch>
                 <Route exact path={`${match.url}/`}>
                     <Intro />

@@ -4,7 +4,7 @@ import { globalState } from '../state/GlobalState';
 
 export const pageThemes = {
   light: {
-    bg: 'bg-gray-200',
+    bg: 'bg-opacity-10',
     underline: 'border-b border-white border-opacity-10 pb-1 mb-1',
     gradient: {
       cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue',
@@ -14,6 +14,7 @@ export const pageThemes = {
     elem: {
       bg: 'bg-gray-200',
       text: 'text-dark',
+      textInput: 'bg-gray-300 py-2 px-4',
       shadow: 'shadow-elem-light',
     },
     toolbar: {
@@ -39,20 +40,22 @@ export const pageThemes = {
     },
   },
   dark: {
-    bg: 'bg-dark',
+    bg: 'bg-dark-gray',
     underline: 'border-b border-white border-opacity-10 pb-1 mb-1',
     gradient: {
       cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue',
     },
     banner:
-      'relative flex flex-row justify-center items-center text-center font-open font-light text-base text-gray-200',
+      'w-auto pb-2 mt-4 mb-1 relative font-open font-light text-left flex flex-row items-center text-gray-200',
     elem: {
-      bg: 'bg-dark-blue',
-      text: 'text-gray-200',
+      bg: 'bg-dark-block',
+      title: 'text-lg text-blue-100',
+      text: 'text-sm text-blue-100 mb-2',
+      textInput: 'bg-darker-gray text-blue-100 py-2 px-4',
       shadow: 'shadow-elem-dark',
     },
     toolbar: {
-      bg: 'bg-dark-blue',
+      bg: 'bg-dark',
       text: 'text-gray-200',
     },
     dashboard: {
