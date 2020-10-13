@@ -13,6 +13,7 @@ import {
   FaMap,
   FaCheck,
 } from 'react-icons/fa';
+import FooterLabels from '../../../General/LabelSwitch';
 
 interface StageIconProps {
   iconID: string | number;
@@ -60,8 +61,8 @@ const StageIcon = (props: StageIconProps) => {
    */
   const iconLabel = (centerFix: 'center' | 'noCenter'): ReactElement => {
     return (
-      <p
-        className={`absolute transform translate-y-8 text-center z-50 font-light text-blue-100
+      <div
+        className={`absolute transform translate-y-8 text-center z-50 font-light text-blue-100 w-24 mt-1
         ${centerFix === 'center' && 'left-1/2 -translate-x-1/2'} 
         ${centerFix === 'noCenter' && '-translate-x-1/2'} 
         ${state.currentPage === iconID ? 'text-opacity-75' : ''}
@@ -69,9 +70,10 @@ const StageIcon = (props: StageIconProps) => {
         `}>
         {
             /* Capitalize the first letter */
-            props.type.charAt(0).toUpperCase()+props.type.slice(1)
+            <FooterLabels label=
+            {props.type.charAt(0).toUpperCase()+props.type.slice(1)} />
         }
-      </p>
+      </div>
     );
   };
 
@@ -114,7 +116,7 @@ const StageIcon = (props: StageIconProps) => {
               {iconSwitch(type)}
             </div>
             {/* ICON LABEL */}
-            {iconLabel('noCenter')}
+            {iconLabel('center')}
             {/* ICON LABEL - END */}
           </IconContext.Provider>
         </div>

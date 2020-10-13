@@ -157,6 +157,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                     ...state,
                     sharing: false,
                     unsavedChanges: true,
+                    displayData: {},
                     pages: state.pages.map(page => {
                         return { 
                             ...page,
