@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaPlus } from 'react-icons/fa';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
+import PositiveAlert from '../../../../General/Popup';
 
 interface WritingBlockProps {
     fullscreen: boolean,
@@ -48,6 +49,12 @@ const WritingBlock = (props: WritingBlockProps) => {
     });
 
     let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'activity' : false;
+
+    const [alert, setAlert] = useState(false);
+
+    const handleCancel = () => {
+        setAlert(!alert);
+    }
     
 
     useEffect(() => {
@@ -235,6 +242,20 @@ const WritingBlock = (props: WritingBlockProps) => {
 
     return (
         <div className={`${fullscreen ? 'px-4 md:px-8 py-4 ' : 'px-3 md:px-4 py-3'} bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600`} >
+            <div className={`${alert ? 'absolute z-100' : 'hidden'}`} style={{top: '', right: '0'}}>
+                <PositiveAlert 
+                    alert={alert}
+                    setAlert={setAlert}
+                    header='Are you ready to edit your poem?' 
+                    content="Once you go to 'Final Edits' you will not be able to come back to these line prompts" 
+                    button1='Go to Final Edits' 
+                    button2='Cancel' 
+                    svg='question' 
+                    handleButton1={handleSubmit} 
+                    handleButton2={handleCancel}
+                    />
+            </div>
+            
             <div className="w-full flex flex-row justify-between mb-2">
                 <h3 className="w-full flex-grow text-xl text-gray-200 font-open font-light border-b border-white border-opacity-10 mr-2 pb-1 mb-1">
                     Line Prompts
@@ -284,7 +305,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                     )}) : null
                 }
             </div>
-            <button className="self-start w-auto px-3 h-8 text-xl font-open font-light bg-yellow-500 text-gray-900 flex justify-center items-center rounded-lg mt-2" onClick={handleSubmit}>
+            <button className="self-start w-auto px-3 h-8 text-xl font-open font-light bg-yellow-500 text-gray-900 flex justify-center items-center rounded-lg mt-2" onClick={() => setAlert(!alert)}>
                 Save and Edit
             </button>
         </div>

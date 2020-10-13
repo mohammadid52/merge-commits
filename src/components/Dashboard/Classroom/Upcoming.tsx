@@ -141,9 +141,9 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                 id='upcoming-1'
                 key={i}
                 className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
-                <div className='rounded-xl shadow-container bg-white h-auto flex flex-col mb-8'>
+                <div className='rounded-xl  bg-white h-auto flex flex-col mb-8'>
                   <div
-                    className={`w-full bg-white shadow-container ${theme.dashboard.bg} rounded-t-xl`}
+                    className={`w-full bg-white  ${theme.dashboard.bg} rounded-t-xl`}
                     style={{
                       background: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url(${lesson.artist.images})`,
                       backgroundSize: 'cover',
@@ -158,7 +158,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                     </div>
                     <div className='h-3/10 flex flex-row-reverse'>
                       <h2
-                        className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`} style={{textShadow:'1px 1px black'}}>
+                        className={`first w-full text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200 text-center`} style={{textShadow:'1px 1px black'}}>
                         <p> {lesson.artist.name} </p>
                       </h2>
                     </div>
@@ -205,9 +205,9 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
         : null}
       {/* DUMMY CARD 2 */}
       <div id='upcoming-2' className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
-        <div className=' rounded-xl shadow-container bg-white h-auto flex flex-col mb-8'>
+        <div className=' rounded-xl  bg-white h-auto flex flex-col mb-8'>
           <div
-            className={`w-full bg-white shadow-container ${theme.dashboard.bg} rounded-t-xl`}
+            className={`w-full bg-white  ${theme.dashboard.bg} rounded-t-xl`}
             style={{
               backgroundImage: ``,
             }}>
@@ -221,7 +221,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
             </div>
             <div className='h-3/10 flex flex-row-reverse'>
               <h2
-                className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`} style={{textShadow:'1px 1px black'}}>
+                className={`first w-full text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200 text-center`} style={{textShadow:'1px 1px black'}}>
                 <p>Elizabeth Acevedo</p>
               </h2>
             </div>
@@ -261,9 +261,9 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
       </div>
       {/* DUMMY CARD 3 */}
       <div id='upcoming-3' className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10`}>
-        <div className=' rounded-xl shadow-container bg-white h-auto flex flex-col mb-8'>
+        <div className=' rounded-xl  bg-white h-auto flex flex-col mb-8'>
           <div
-            className={`w-full bg-white shadow-container ${theme.dashboard.bg} rounded-t-xl`}
+            className={`w-full bg-white  ${theme.dashboard.bg} rounded-t-xl`}
             style={{
               backgroundImage: ``,
             }}>
@@ -282,7 +282,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
             </div>
             <div className='h-3/10 flex flex-row-reverse'>
               <h2
-                className={`first w-6/10 text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200`} style={{textShadow:'1px 1px black'}}>
+                className={`first w-full text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200 text-center`} style={{textShadow:'1px 1px black'}}>
                 <p>Rudy Francisco</p>
               </h2>
             </div>

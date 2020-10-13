@@ -264,7 +264,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                     content="Once you go to 'Final Edits' you will not be able to come back to these line prompts" 
                     button1='Go to Final Edits' 
                     button2='Cancel' 
-                    svg='question'
+                    svg='question' 
                     handleButton1={handleSubmit} 
                     handleButton2={handleCancel}
                     />
