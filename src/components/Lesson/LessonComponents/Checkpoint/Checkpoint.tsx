@@ -4,6 +4,7 @@ import { IconContext } from 'react-icons'
 import { FaCheckSquare } from 'react-icons/fa'
 import SampleProfileQuestions from './SampleProfileQuestion';
 import CheckpointQuestions from './CheckpointQuestions';
+import Assessments from './Assessments';
 
 
 const Checkpoint = () => {
@@ -20,6 +21,8 @@ const Checkpoint = () => {
                 return <SampleProfileQuestions  />
             case 'survey':
                 return <CheckpointQuestions handleSetTitle={handleSetTitle} />
+            case 'assessment':
+                return <Assessments handleSetTitle={handleSetTitle} />
             default:
                 return
         }
