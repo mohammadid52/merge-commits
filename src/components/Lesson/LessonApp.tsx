@@ -4,6 +4,7 @@ import Body from './Body/Body';
 import Foot from './Foot/Foot';
 import LessonLoading from './Loading/LessonLoading';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
+import Branding from '../General/Branding';
 
 
 const LessonApp = () => {
@@ -22,6 +23,7 @@ const LessonApp = () => {
         <LessonHeaderBar />
         <Body />
         {/* <Foot /> */}
+        <Branding />
     </div>
     )
 }

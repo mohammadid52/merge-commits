@@ -35,7 +35,7 @@ const QuoteBlock = () => {
 
   return (
     <div
-      className={`relative w-full md:h-96 flex flex-grow items-center ${theme.block.text} p-4 rounded-xl`}>
+      className={`relative w-full md:h-96 flex flex-grow items-center p-4 rounded-xl ${theme.block.text} ${heroIsActive ? 'bg-black50' : ''}`}>
       {/* READ ICON */}
       <div
         className='absolute top-1 right-1 w-auto h-auto transition-all duration-500 ease-in-out text-gray-700 hover:text-white'
@@ -56,7 +56,7 @@ const QuoteBlock = () => {
         <div
           className={`${
             heroIsActive ? 'visible' : 'hidden'
-          } h-full w-9/10 flex flex-col justify-start transition-all duration-500 ease-in-out animate-fadeIn`}>
+          } h-96 w-9/10 bg-black50 flex flex-col justify-start transition-all duration-500 ease-in-out animate-fadeIn overflow-hidden`}>
           {typeof artistBio !== 'undefined'
             ? artistBio.map((paragraph: string, i: number) => (
                 <p key={`paraBio${i}`} className='mb-2 text-blue-100 text-opacity-75'>
@@ -81,7 +81,7 @@ const QuoteBlock = () => {
               <div className='relative'>
                 <div className='header-font text-lg font-open font-light'>"{quote.text}"</div>
               </div>
-              <div className='text-gray-500 text-sm pl-8 mt-2'>- {quote.source}</div>
+              <div className='text-sm pl-8 mt-2'>- {quote.source}</div>
             </div>
           </div>
         </div>

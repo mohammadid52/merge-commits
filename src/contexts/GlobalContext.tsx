@@ -49,13 +49,13 @@ export const pageThemes = {
       'w-auto pb-2 mt-4 mb-1 relative font-open font-light text-left flex flex-row items-center text-gray-200',
     elem: {
       bg: 'bg-dark-block',
-      title: 'text-lg text-blue-100',
-      text: 'text-sm text-blue-100 mb-2',
+      title: 'text-lg text-gray-200',
+      text: 'text-sm text-gray-200 mb-2',
       textInput: 'bg-darker-gray text-blue-100 py-2 px-4',
       shadow: 'shadow-elem-dark',
     },
     toolbar: {
-      bg: 'bg-dark',
+      bg: 'bg-black',
       text: 'text-gray-200',
     },
     dashboard: {
