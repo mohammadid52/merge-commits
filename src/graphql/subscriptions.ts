@@ -155,6 +155,16 @@ export const onUpdateClassroom = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -246,6 +256,7 @@ export const onChangeStudentData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
+          assessmentID
           createdAt
           updatedAt
         }
@@ -824,6 +835,16 @@ export const onCreateCurriculumLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -934,6 +955,16 @@ export const onUpdateCurriculumLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -1041,6 +1072,16 @@ export const onDeleteCurriculumLessons = /* GraphQL */ `
           language
           SELTypes
           lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
           createdAt
           updatedAt
         }
@@ -1592,6 +1633,7 @@ export const onCreateFeedback = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
+          assessmentID
           createdAt
           updatedAt
         }
@@ -1666,6 +1708,7 @@ export const onUpdateFeedback = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
+          assessmentID
           createdAt
           updatedAt
         }
@@ -1740,6 +1783,7 @@ export const onDeleteFeedback = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
+          assessmentID
           createdAt
           updatedAt
         }
@@ -1977,6 +2021,19 @@ export const onCreateLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      assessmentID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -2156,6 +2213,19 @@ export const onUpdateLesson = /* GraphQL */ `
         breakdown {
           included
           reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      assessmentID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        checkpoints {
+          nextToken
         }
         createdAt
         updatedAt
@@ -2343,6 +2413,19 @@ export const onDeleteLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      assessmentID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -2434,6 +2517,16 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
           language
           SELTypes
           lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
           createdAt
           updatedAt
         }
@@ -2547,6 +2640,16 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -2654,6 +2757,16 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
           language
           SELTypes
           lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
           createdAt
           updatedAt
         }
@@ -3341,6 +3454,183 @@ export const onDeleteCheckpointQuestions = /* GraphQL */ `
     }
   }
 `;
+export const onCreateAssessment = /* GraphQL */ `
+  subscription OnCreateAssessment {
+    onCreateAssessment {
+      id
+      title
+      type
+      openingMessage
+      closingMessage
+      checkpoints {
+        items {
+          id
+          assessmentID
+          checkpointID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAssessment = /* GraphQL */ `
+  subscription OnUpdateAssessment {
+    onUpdateAssessment {
+      id
+      title
+      type
+      openingMessage
+      closingMessage
+      checkpoints {
+        items {
+          id
+          assessmentID
+          checkpointID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAssessment = /* GraphQL */ `
+  subscription OnDeleteAssessment {
+    onDeleteAssessment {
+      id
+      title
+      type
+      openingMessage
+      closingMessage
+      checkpoints {
+        items {
+          id
+          assessmentID
+          checkpointID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAssessmentCheckpoint = /* GraphQL */ `
+  subscription OnCreateAssessmentCheckpoint {
+    onCreateAssessmentCheckpoint {
+      id
+      assessmentID
+      checkpointID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      checkpoint {
+        id
+        label
+        title
+        subtitle
+        type
+        instructions
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAssessmentCheckpoint = /* GraphQL */ `
+  subscription OnUpdateAssessmentCheckpoint {
+    onUpdateAssessmentCheckpoint {
+      id
+      assessmentID
+      checkpointID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      checkpoint {
+        id
+        label
+        title
+        subtitle
+        type
+        instructions
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAssessmentCheckpoint = /* GraphQL */ `
+  subscription OnDeleteAssessmentCheckpoint {
+    onDeleteAssessmentCheckpoint {
+      id
+      assessmentID
+      checkpointID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      checkpoint {
+        id
+        label
+        title
+        subtitle
+        type
+        instructions
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateQuestion = /* GraphQL */ `
   subscription OnCreateQuestion {
     onCreateQuestion {
@@ -3444,6 +3734,7 @@ export const onCreateQuestionData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
+          assessmentID
           createdAt
           updatedAt
         }
@@ -3557,6 +3848,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
+          assessmentID
           createdAt
           updatedAt
         }
@@ -3670,6 +3962,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
+          assessmentID
           createdAt
           updatedAt
         }
@@ -4219,6 +4512,16 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -4322,6 +4625,16 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -4422,6 +4735,16 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
           language
           SELTypes
           lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
           createdAt
           updatedAt
         }
