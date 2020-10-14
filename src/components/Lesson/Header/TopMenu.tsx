@@ -3,6 +3,9 @@ import { LessonContext } from '../../../contexts/LessonContext';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import ProgressBar from './ProgressBar/ProgressBar';
 
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
+
 const TopMenu = () => {
   const { state, dispatch, theme } = useContext(LessonContext);
   const history = useHistory();
@@ -41,26 +44,44 @@ const TopMenu = () => {
   return (
     <>
       <div
-        className={`flex-grow-0 ${theme.toolbar.bg} shadow-1 h-1.1/10 w-full flex justify-center items-center content-center py-4 px-6`}>
-        <div className='w-full flex flex-row items-center justify-around md:mx-8'>
+        className={` ${theme.toolbar.bg} shadow-1 h-1.1/10 w-full flex justify-center items-center content-center py-4 px-6`}>
+        <div className='w-full flex flex-row items-center justify-between'>
+          {/* BACK BUTTON */}
           <div
-            className={`flex-grow-0 ${
-              state.currentPage > 0
-                ? 'bg-dark-red text-gray-300 cursor-pointer'
-                : 'bg-gray-500 text-gray-600 cursor-default'
-            } text-sm text-gray-200 flex justify-center items-center w-32 h-8 rounded-lg z-30 `}
+            className={`text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
+              state.currentPage > 0 ? 'cursor-pointer bg-dark-red' : 'cursor-default bg-darker-gray'
+            } }`}
             onClick={handleBack}>
-            Back
+            <IconContext.Provider
+              value={{
+                size: '1.5rem',
+                style: { width: '32px' },
+                className: `text-white`,
+              }}>
+              <AiOutlineArrowLeft />
+            </IconContext.Provider>
+
+            {/* <p className='mr-3 text-right'>Back</p> */}
           </div>
+
           <ProgressBar />
+
+          {/* FORWARD BUTTON */}
           <div
-            className={`flex-grow-0 ${
-              state.canContinue
-                ? 'bg-sea-green text-gray-300 cursor-pointer'
-                : 'bg-gray-500 text-gray-600 cursor-default'
-            } text-sm text-gray-200 flex justify-center items-center w-32 h-8 rounded-lg z-30 `}
+            className={`text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
+              state.canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark-gray cursor-default'
+            } `}
             onClick={handleForward}>
-            Continue
+            {/* <p className='ml-3'>Continue</p> */}
+
+            <IconContext.Provider
+              value={{
+                size: '1.5rem',
+                style: { width: '32px' },
+                className: `text-white`,
+              }}>
+              <AiOutlineArrowRight />
+            </IconContext.Provider>
           </div>
         </div>
       </div>

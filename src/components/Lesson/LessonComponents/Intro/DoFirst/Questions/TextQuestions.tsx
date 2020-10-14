@@ -42,7 +42,7 @@ const TextQuestions = (txtPrps: CPQuestionProps) => {
       </label>
       <textarea
         id={txtPrps.question.id}
-        className={`h-40 ${theme.elem.textInput} w-full text-sm rounded-xl`}
+        className={`h-40 ${theme.elem.textInput} w-full rounded-xl`}
         defaultValue={contents}
         onChange={handleTextInputChange}
       />

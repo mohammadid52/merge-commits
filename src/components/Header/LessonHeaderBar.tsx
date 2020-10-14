@@ -7,6 +7,7 @@ import { AiOutlineSave, AiOutlineHome } from 'react-icons/ai';
 import { LessonContext } from '../../contexts/LessonContext';
 import TopMenu from '../Lesson/Header/TopMenu';
 
+
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../customGraphql/customMutations';
 
@@ -103,53 +104,8 @@ const LessonHeaderBar = () => {
   return (
     <div
       className={`z-40 center w-full h-.7/10 ${theme.toolbar.bg} text-gray-200 shadow-2xl`}>
-      {/* <div className={`w-56 h-full flex justify-center items-center text-2xl font-bold`}>
-                <NavLink to="/dashboard">
-                    <img className="h-6 px-4" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg" alt="Iconoclast Artists"/>
-                </NavLink>
-            </div> */}
-
-      {/* FOOT AS HEADER PROGRESS */}
 
       <TopMenu />
-
-      {/* FOOT AS HEADER PROGRESS */}
-
-
-    {/* COPY AND PASTE BELOW TO SIDE MENU */}
-
-      {/* <div className={`relative w-56 h-full flex flex-row justify-end items-center px-8 pt-1`}>
-        {!state.viewing ? (
-          <div
-            id='lesson-done'
-            className={`w-4.5/10 cursor-pointer flex flex-col justify-center items-center px-2`}
-            onClick={handleDone}>
-            <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
-              <FaRegThumbsUp
-                className={`${isToggled.includes('lesson-done') && 'animate-jiggle'}`}
-              />
-            </IconContext.Provider>
-            <p className={`text-xs text-gray-200 text-center`}>Done</p>
-          </div>
-        ) : (
-          <div className={`w-4.5/10 cursor-default flex flex-col justify-center items-center px-2`}>
-            <div className='relative flex items-center justify-center h-4 w-4 m-1'>
-              <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75'></span>
-              <span className='relative inline-flex rounded-full h-4 w-4 bg-green-600'></span>
-            </div>
-            <p className={`self-end text-xs text-gray-200 text-center`}>AutoSave</p>
-          </div>
-        )}
-        <div className={`w-4.5/10 flex flex-col justify-center items-center px-2 cursor-pointer`}>
-          <NavLink to='/dashboard'>
-            <IconContext.Provider value={{ size: '1.5rem' }}>
-              <AiOutlineHome />
-            </IconContext.Provider>
-          </NavLink>
-          <p className='text-xs text-gray-200 text-center'>Home</p>
-        </div>
-      </div> */}
-
 
     </div>
   );

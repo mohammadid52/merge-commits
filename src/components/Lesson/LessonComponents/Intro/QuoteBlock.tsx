@@ -38,7 +38,7 @@ const QuoteBlock = () => {
       className={`relative w-full md:h-96 flex flex-grow items-center p-4 rounded-xl ${theme.block.text} ${heroIsActive ? 'bg-black50' : ''}`}>
       {/* READ ICON */}
       <div
-        className='absolute top-1 right-1 w-auto h-auto transition-all duration-500 ease-in-out text-gray-700 hover:text-white'
+        className='absolute top-1 right-1 w-auto h-auto transition-all duration-500 ease-in-out text-gray-200 hover:text-white'
         onClick={toggleHeroDescription}>
         <IconContext.Provider value={{ size: '2rem', style: { width: 'auto', cursor: 'pointer' } }}>
           <AiOutlineRead

@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-/* import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/fa'; */
 import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/ai';
 import { CurriculumInfo } from './Classroom';
 
@@ -229,8 +228,8 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
           <div className='relative w-full h-full flex flex-col rounded-b-xl'>
             <div
               className={`${
-                openCards.includes('upcoming-2') ? 'h-20' : 'h-20 '
-              } p-4 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
+                openCards.includes('upcoming-2') ? 'h-72' : 'h-32 '
+              } p-4 mb-2 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
               <h1 className={`text-lg text-black font-open text-left`}>Ode to the rat</h1>
               <p className={`text-sm text-left `}>Summary coming soon...</p>
             </div>
@@ -290,8 +289,8 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
           <div className='relative w-full h-full flex flex-col rounded-b-xl'>
             <div
               className={`${
-                openCards.includes('upcoming-3') ? 'h-20' : 'h-20 '
-              } p-4 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
+                openCards.includes('upcoming-3') ? 'h-72' : 'h-32 '
+              } p-4 mb-2 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
               <h1 className={`text-lg text-black font-open text-left`}>My Honest Poem</h1>
               <p className={`text-sm text-left`}>Summary coming soon...</p>
             </div>

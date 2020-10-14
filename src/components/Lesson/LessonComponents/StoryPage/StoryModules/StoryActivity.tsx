@@ -77,25 +77,23 @@ const Story = () => {
     return (
        <>
             <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/>
-            <div className="w-full h-full flex flex-col justify-between items-center">
+            <div className="z-50 w-64rem mx-auto h-full flex flex-col justify-between items-center">
                 <Banner />
-                <div className="w-full h-8.8/10 flex flex-col items-center md:flex-row md:justify-between">
-                    <div className="md:w-4/10 h-full flex flex-col justify-between items-center">
-                        <InstructionsBlock />
-                        { inputs.additionalInputs.length > 0 ?
+
+                <div className='flex flex-col justify-between items-center'>
+                <InstructionsBlock />             
+                
+                {/* FOCUS QUESTIONS */}
+                { inputs.additionalInputs.length > 0 ?
                             <Modules 
-                                // breakdownProps={breakdownProps}
-                                // setBreakdownProps={setBreakdownProps}
                                 inputs={inputs.additionalInputs}
                             />
                             :
                             null
-                        }
-                    </div>
-                    <div className="md:w-5.9/10 h-full flex flex-col items-center">
-                        <StoryForm />
-                    </div>
+                        }       
                 </div>
+
+                <StoryForm />
             </div>
        </>
     )

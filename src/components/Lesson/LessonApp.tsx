@@ -19,7 +19,7 @@ const LessonApp = () => {
     // console.log(state)
 
     return (
-    <div className={`${theme.bg} w-screen md:h-screen flex flex-col items-start`} >
+    <div className={`${theme.bg} w-full md:h-screen flex flex-col items-start`} >
         <LessonHeaderBar />
         <Body />
         {/* <Foot /> */}
