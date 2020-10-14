@@ -1,160 +1,326 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
-import { IconContext } from "react-icons/lib/esm/iconContext";
-import { FaClock, FaUserAlt } from 'react-icons/fa';
-import {CurriculumInfo} from './Classroom';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+/* import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/fa'; */
+import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/ai';
+import { CurriculumInfo } from './Classroom';
 
-interface UpcomingProps{
-    curriculum: Array<CurriculumInfo>
+interface UpcomingProps {
+  curriculum: Array<CurriculumInfo>;
 }
 
 const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
-    const {curriculum} = props;
-    const history = useHistory();
-    const { theme } = useContext(GlobalContext);
+  const { curriculum } = props;
+  const history = useHistory();
+  const { theme } = useContext(GlobalContext);
+  const [openCards, setOpenCards] = useState<string[]>(['']);
 
-    // const curriculumLessonTest = 
-    //     curriculum.map(( lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, summary: string} ) => {
-    //         return (
-    //             value.lesson
-    //             // console.log(value.lesson.artist, 'lesson')
-    //     )
+  // const curriculumLessonTest =
+  //     curriculum.map(( lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, summary: string} ) => {
+  //         return (
+  //             value.lesson
+  //             // console.log(value.lesson.artist, 'lesson')
+  //     )
 
-            
-    //     })
+  //     })
 
-    // const slice = curriculum.slice(1, 2);
-    const curriculumLesson = 
-    curriculum ? curriculum.map((  value: any, index: number, array: CurriculumInfo[] ) => {
-        return (
-            value.lesson
-        )  
-    }) : []
+  // const slice = curriculum.slice(1, 2);
 
-    useEffect(() => {
-        setLessons(curriculumLesson);
-        // curriculum;
-    }, [props])
+  const curriculumLesson = curriculum
+    ? curriculum.map((value: any, index: number, array: CurriculumInfo[]) => {
+        return value.lesson;
+      })
+    : [];
 
-    
-    
+  useEffect(() => {
+    setLessons(curriculumLesson);
+    // curriculum;
+  }, [props]);
 
-    // make sure to limit (max 5?) when fetching from data
-    const [lessons, setLessons] = useState(curriculumLesson.slice(1,2));
+  // make sure to limit (max 5?) when fetching from data
+  const [lessons, setLessons] = useState(curriculumLesson.slice(1, 2));
 
-    const setOpen = () => {
-        setLessons( lessons.map( (lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, language: string, summary: string}, i: number) => {
-            return {
-                ...lesson,
-                open: false
-            }
-        }));
+  const setOpen = () => {
+    setLessons(
+      lessons.map(
+        (
+          lesson: {
+            title: string;
+            artist: { id: string; images: any; name: string; type: string };
+            language: string;
+            summary: string;
+          },
+          i: number
+        ) => {
+          return {
+            ...lesson,
+            open: false,
+          };
+        }
+      )
+    );
+  };
 
+  const toggle = (key: number) => {
+    setOpen();
+
+    setLessons(
+      lessons.map(
+        (
+          lesson: {
+            title: string;
+            artist: { id: string; images: any; name: string; type: string };
+            language: string;
+            summary: string;
+            open: boolean;
+          },
+          i: number
+        ) => {
+          if (i === key) {
+            lesson.open = !lesson.open;
+          }
+          return lesson;
+        }
+      )
+    );
+  };
+
+  /**
+   * Function to toggle card opening
+   * @param cardID - self explanatory
+   */
+  const toggleOpenCard = (cardID: string /* e: React.MouseEvent */) => {
+    if (openCards.includes(cardID)) {
+      setOpenCards(openCards.filter((stringID: string) => stringID !== cardID));
+    } else {
+      setOpenCards([...openCards, cardID]);
     }
+  };
 
-    const toggle = (key: number) => {
-        setOpen();
-        
-        setLessons( lessons.map( (lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, language: string, summary: string, open: boolean}, i: number) => {
-            if (i === key) {
-                lesson.open = !lesson.open
-            } 
-            return lesson;
-        }));
-    }
-
-    // const handleLink = () => {
-    //     history.push('/lesson');
-    // }
-
+  /**
+   * Functional 'component' to toggle on/off covering too much text
+   * @param toggleID - Id of the card being covered
+   */
+  const gradientCover = (toggleID: string) => {
     return (
-            <div className={`relative test ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} w-full h-auto flex flex-col mb-8 p-2 pt-4`}>        
-                <span style={{left: '50%', top: -20, transform: 'translateX(-50%)', textShadow:'1px 1px 2px #000000'}}
-                className="absolute p-5 sm:h-8 w-64 flex justify-center items-center text-center rounded-md text-sm sm:text-2xl font-bold leading-5 bg-ketchup text-white bg-opacity-90">
-                Upcoming Lessons
-                </span>
-                  
-                
-                { lessons ? lessons.map( (lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, language: string, summary: string, open: boolean}, i: number) => 
-                (
-                    <div key={i} className="py-2 px-4">
-                    <button 
-                        key={i}
-                        onClick={() => toggle(i)} 
-                        className={`relative cursor-pointer focus:outline-none flex justify-between items-center bg-dark text-xl text-gray-200 font-medium font-open px-8 shadow-elem-light`}>
-                        <div className="w-8.5/10 flex justify-between my-1">
-                            <div className="w-auto">
-                                {lesson.title} 
-                            </div>
-                            {/* <div className="w-auto">
-                                {lesson.lessonDate}
-                            </div> */}
-                        </div>
-                        <div className="absolute w-8 flex items-center mr-8" style={{right: 0}}>
-                            <span key={i} className={`${lesson.open === true ? 'display opacity-100 ease-in duration-100' : 'hidden opacity-0 ease-out duration-100' } w-auto h-auto opacity-100 ease-in duration-200 absolute inset-0 flex items-center justify-center transition-opacity`}>
-                            <svg className="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 12 12">
-                                <path d="M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2" stroke="currentColor" />
-                            </svg>
-                            </span>
-                            <span className={`${lesson.open === true ? 'hidden opacity-0 ease-out duration-100' : 'display opacity-100 ease-in duration-100'} w-auto h-auto opacity-0 ease-out duration-100 absolute inset-0 flex items-center justify-center transition-opacity`}>
-                            <svg className="h-8 w-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"  />
-                            </svg>
-                            </span>
-                        </div>
-                    </button>
-                    { lesson.open ? 
+      <div
+        className={`w-full h-20 absolute flex items-end bottom-0 transform -translate-y-10 transition ${
+          !openCards.includes(toggleID) ? 'bg-gradient-to-t from-white h-8' : ''
+        }`}>
+        <p
+          className='text-center text-sm text-bold text-blueberry cursor-pointer'
+          onClick={() => {
+            toggleOpenCard(toggleID);
+          }}>
+          {openCards.includes(toggleID) ? 'Less' : 'More'}
+        </p>
+      </div>
+    );
+  };
 
-                    <div className={`flex flex-col pt-2 md:flex-row justify-around items-center`}>
-                        <div className={`block1 w-1/5 h-full flex flex-col items-center text-center`}>
-                            <h2 className={`text-xl font-open font-bold mb-2`}>
-                                {lesson.artist.name}
-                            </h2>
-                            <img className="h-24 w-24 shadow-elem-light" src={`${lesson.artist.images}`} alt={`${lesson.artist.name}`} style={{backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}/>
-                        </div>
-                        <div className={`block2 w-1/2 h-full flex flex-col`}>
-                            <h2 className={`text-lg font-bold font-open md:mb-2`}>
-                                Lesson Description
-                            </h2>
-                            <p className="text-sm">
-                                {lesson.summary ? lesson.summary : 'No Information Available'}
-                            </p>
-                        </div>
-                        
-                        <div className={`block3 w-2/10 h-full flex flex-col-reverse justify-end items-center my-4`}>
+  // const handleLink = () => {
+  //     history.push('/lesson');
+  // }
 
-                            <div className={`w-full`}>
-                                <div className={`flex my-1`} >
-                                    {/* <div className="w-1/2">
-                                        <IconContext.Provider value={{ size: '1rem' }}>
-                                            <FaClock />
-                                        </IconContext.Provider>
-                                    </div> */}
-                                    {/* <div className={`w-1/2 mx-2 text-sm`}>
-                                        {lesson.lessonTime} min.
-                                    </div> */}
-                                </div>
-                                <div className={`flex my-1`} >
-                                    {/* <div className="w-1/2">
-                                        <IconContext.Provider value={{ size: '1rem' }}>
-                                            <FaUserAlt />
-                                        </IconContext.Provider>
-                                    </div> */}
-                                    {/* <div className={`w-1/2 mx-2 text-sm`}>
-                                        {lesson.instructor}
-                                    </div> */}
-                                </div>
-                            </div>
+  return (
+    <div className={`relative h-auto flex justify-start`}>
+      {lessons
+        ? lessons.map(
+            (
+              lesson: {
+                title: string;
+                artist: { id: string; images: any; name: string; type: string };
+                language: string;
+                summary: string;
+                open: boolean;
+              },
+              i: number
+            ) => (
+              <div
+                id='upcoming-1'
+                key={i}
+                className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
+                <div className='rounded-xl  bg-white h-auto flex flex-col mb-8'>
+                  <div
+                    className={`w-full bg-white  ${theme.dashboard.bg} rounded-t-xl`}
+                    style={{
+                      background: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url(${lesson.artist.images})`,
+                      backgroundSize: 'cover',
+                    }}>
+                    <div className='h-6/10 justify-center items-center align-center'>
+                      <div className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full' />
+                    </div>
+                    <div className='h-1/10 pl-6'>
+                      <div className='tracking-widest border-b text-gray-300 border-ketchup' style={{textShadow:'1px 1px black'}}>
+                        FEATURED ARTIST
+                      </div>
+                    </div>
+                    <div className='h-3/10 flex flex-row-reverse'>
+                      <h2
+                        className={`first w-full text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200 text-center`} style={{textShadow:'1px 1px black'}}>
+                        <p> {lesson.artist.name} </p>
+                      </h2>
+                    </div>
+                  </div>
+                  <div className='w-full relative flex flex-col rounded-b-xl'>
+                    <div
+                      className={`${
+                        openCards.includes('upcoming-1') ? 'h-72' : 'h-32'
+                      } p-4 mb-2 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
+                      <h1 className={`text-lg text-black font-open text-left`}>{lesson.title}</h1>
+                      <p className={`text-sm text-left`}>
+                        {lesson.summary ? lesson.summary : 'No Information Available'}
+                      </p>
+                    </div>
+                    {/* Gradient - start*/}
+                    {gradientCover('upcoming-1')}
+                    {/* Gradient - end */}
+                    <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
+                      <div
+                        className={`flex mx-2 justify-center items-center my-2 w-5/10 text-gray-300`}>
+                        <div className='w-auto text-gray-300'>
+                          <IconContext.Provider
+                            value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
+                            <AiOutlineClockCircle />
+                          </IconContext.Provider>
                         </div>
+                        <div className={`w-auto ml-2 text-sm text-gray-300`}>45 min.</div>
+                      </div>
+                      <div className={`flex mx-2 justify-center items-center my-2 w-5/10`}>
+                        <div className='w-auto text-gray-300'>
+                          <IconContext.Provider
+                            value={{ size: '1.5rem', style: { width: 'auto' } }}>
+                            <AiOutlineUser />
+                          </IconContext.Provider>
+                        </div>
+                        <div className={`w-auto ml-2 text-sm text-gray-200`}>Marlon</div>
+                      </div>
                     </div>
-                        : null}
-                    </div>
-                )
-                ) : null }
-                
+                  </div>
+                </div>
+              </div>
+            )
+          )
+        : null}
+      {/* DUMMY CARD 2 */}
+      <div id='upcoming-2' className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
+        <div className=' rounded-xl  bg-white h-auto flex flex-col mb-8'>
+          <div
+            className={`w-full bg-white  ${theme.dashboard.bg} rounded-t-xl`}
+            style={{
+              backgroundImage: ``,
+            }}>
+            <div className='h-6/10 justify-center items-center align-center'>
+              <div className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full' />
             </div>
-    )
-}
+            <div className='h-1/10 pl-6'>
+              <div className='tracking-widest border-b text-gray-300 border-ketchup' style={{textShadow:'1px 1px black'}}>
+                FEATURED ARTIST
+              </div>
+            </div>
+            <div className='h-3/10 flex flex-row-reverse'>
+              <h2
+                className={`first w-full text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200 text-center`} style={{textShadow:'1px 1px black'}}>
+                <p>Elizabeth Acevedo</p>
+              </h2>
+            </div>
+          </div>
+          <div className='relative w-full h-full flex flex-col rounded-b-xl'>
+            <div
+              className={`${
+                openCards.includes('upcoming-2') ? 'h-72' : 'h-32'
+              } mb-2 p-4 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
+              <h1 className={`text-lg text-black font-open text-left`}>Ode to the rat</h1>
+              <p className={`text-sm text-left `}>Summary coming soon...</p>
+            </div>
+            {/* Gradient - start*/}
+            {/* {gradientCover('upcoming-2')} */}
+            {/* Gradient - end */}
+            <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
+              <div className={`flex mx-2 justify-center items-center my-2 w-5/10 text-gray-300`}>
+                <div className='w-auto text-gray-300'>
+                  <IconContext.Provider
+                    value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
+                    <AiOutlineClockCircle />
+                  </IconContext.Provider>
+                </div>
+                <div className={`w-auto ml-2 text-sm text-gray-300`}>45 min.</div>
+              </div>
+              <div className={`flex mx-2 justify-center items-center my-2 w-5/10`}>
+                <div className='w-auto text-gray-300'>
+                  <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
+                    <AiOutlineUser />
+                  </IconContext.Provider>
+                </div>
+                <div className={`w-auto ml-2 text-sm text-gray-200`}>Marlon</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* DUMMY CARD 3 */}
+      <div id='upcoming-3' className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10`}>
+        <div className=' rounded-xl  bg-white h-auto flex flex-col mb-8'>
+          <div
+            className={`w-full bg-white  ${theme.dashboard.bg} rounded-t-xl`}
+            style={{
+              backgroundImage: ``,
+            }}>
+            <div className='h-6/10 justify-center items-center align-center'>
+              <div
+                className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full'
+                /* style={{
+                backgroundImage: ``,
+              }} */
+              />
+            </div>
+            <div className='h-1/10 pl-6'>
+              <div className='tracking-widest border-b text-gray-300 border-ketchup' style={{textShadow:'1px 1px black'}}>
+                FEATURED ARTIST
+              </div>
+            </div>
+            <div className='h-3/10 flex flex-row-reverse'>
+              <h2
+                className={`first w-full text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200 text-center`} style={{textShadow:'1px 1px black'}}>
+                <p>Rudy Francisco</p>
+              </h2>
+            </div>
+          </div>
+          <div className='relative w-full h-full flex flex-col rounded-b-xl'>
+            <div
+              className={`${
+                openCards.includes('upcoming-3') ? 'h-72' : 'h-32'
+              } mb-2 p-4 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
+              <h1 className={`text-lg text-black font-open text-left`}>My Honest Poem</h1>
+              <p className={`text-sm text-left`}>Summary coming soon...</p>
+            </div>
+            {/* Gradient - start*/}
+            {/* {gradientCover('upcoming-3')} */}
+            {/* Gradient - end */}
+            <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
+              <div className={`flex mx-2 justify-center items-center my-2 w-5/10 text-gray-300`}>
+                <div className='w-auto text-gray-300'>
+                  <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
+                    <AiOutlineClockCircle />
+                  </IconContext.Provider>
+                </div>
+                <div className={`w-auto ml-2 text-sm text-gray-300`}>45 min.</div>
+              </div>
+              <div className={`flex mx-2 justify-center items-center my-2 w-5/10`}>
+                <div className='w-auto text-gray-300'>
+                  <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
+                    <AiOutlineUser />
+                  </IconContext.Provider>
+                </div>
+                <div className={`w-auto ml-2 text-sm text-gray-200`}>Marlon</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default UpcomingClass;

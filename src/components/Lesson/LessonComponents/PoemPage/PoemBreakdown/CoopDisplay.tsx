@@ -65,7 +65,7 @@ const CoopDisplay = () => {
                 <div className="w-full h-8.8/10 flex flex-col text-light justify-between items-center">
                     <div className={`${theme.gradient.cardBase} w-full h-full p-6 flex flex-col items-center text-xl text-gray-200 rounded-lg whitespace-pre-wrap overflow-y-auto overflow-x-hidden`}>
                         {/* bg-lighter-blue shadow-inner-box  */}
-                        <div className="p-4 h-full rounded-lg font-light">
+                        <div className="p-4 h-full text-center rounded-lg font-light">
                         { displayProps ? displayProps.editInput : null}
                         </div>
                     </div>
@@ -96,7 +96,7 @@ const CoopDisplay = () => {
                     <div className="w-full h-8.8/10 flex flex-col justify-between items-center">
                         <div className={`${fullscreen ? 'text-3xl' : 'text-xl'} font-light bg-dark-blue w-full h-full p-6 flex flex-col items-center text-gray-200 rounded-lg whitespace-pre-wrap overflow-y-auto overflow-x-hidden`}>
                             {/* bg-lighter-blue  shadow-inner-box */}
-                            <div className="p-4 h-full rounded-lg">
+                            <div className="p-4 h-full text-center rounded-lg">
                             { teacherData && teacherData.activityData && teacherData.activityData.editInput ? teacherData.activityData.editInput : null}
                             </div>
                         </div>
