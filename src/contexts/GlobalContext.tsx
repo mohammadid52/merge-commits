@@ -46,7 +46,7 @@ export const pageThemes = {
       cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue',
     },
     banner:
-      'w-auto pb-2 mt-4 mb-1 relative font-open font-light text-left flex flex-row items-center text-gray-200',
+      'w-auto pb-2 mt-4 mb-2 relative font-open font-light text-left flex flex-row items-center text-gray-200',
     elem: {
       bg: 'bg-dark-block',
       title: 'text-lg text-gray-200',

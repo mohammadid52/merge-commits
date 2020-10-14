@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { AiOutlineInfoCircle } from 'react-icons/ai';
 
 const Keyword = () => {
   const { state, theme } = useContext(LessonContext);
@@ -7,9 +9,20 @@ const Keyword = () => {
 
   return (
     <div className={`flex flex-col md:w-full ${theme.block.text} rounded-r-lg`}>
-      <h1 className={`w-full h-1/10 ${theme.banner} ${theme.underline}`}>
-        Keywords we will cover in this lesson:
-      </h1>
+      <div className={`w-full h-1/10 text-xl ${theme.banner} ${theme.underline}`}>
+        <h3>Keywords we will cover in this lesson:</h3>
+        <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
+          <div className='absolute w-auto h-auto mr-2 right-0'>
+            <AiOutlineInfoCircle
+              style={{
+                MozUserSelect: 'none',
+                WebkitUserSelect: 'none',
+                msUserSelect: 'none',
+              }}
+            />
+          </div>
+        </IconContext.Provider>
+      </div>
 
       <div className='flex flex-row'>
         {typeof keywords !== 'undefined'
