@@ -678,6 +678,7 @@ export type CreateLessonInput = {
   warmUpId: string,
   coreLessonId: string,
   activityId: string,
+  assessmentID: string,
 };
 
 export type ModelLessonConditionInput = {
@@ -695,6 +696,7 @@ export type ModelLessonConditionInput = {
   warmUpId?: ModelIDInput | null,
   coreLessonId?: ModelIDInput | null,
   activityId?: ModelIDInput | null,
+  assessmentID?: ModelIDInput | null,
   and?: Array< ModelLessonConditionInput | null > | null,
   or?: Array< ModelLessonConditionInput | null > | null,
   not?: ModelLessonConditionInput | null,
@@ -716,6 +718,7 @@ export type UpdateLessonInput = {
   warmUpId?: string | null,
   coreLessonId?: string | null,
   activityId?: string | null,
+  assessmentID?: string | null,
 };
 
 export type DeleteLessonInput = {
@@ -1023,6 +1026,60 @@ export type UpdateCheckpointQuestionsInput = {
 };
 
 export type DeleteCheckpointQuestionsInput = {
+  id?: string | null,
+};
+
+export type CreateAssessmentInput = {
+  id?: string | null,
+  title: string,
+  type: string,
+  openingMessage?: Array< string | null > | null,
+  closingMessage?: Array< string | null > | null,
+};
+
+export type ModelAssessmentConditionInput = {
+  title?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  openingMessage?: ModelStringInput | null,
+  closingMessage?: ModelStringInput | null,
+  and?: Array< ModelAssessmentConditionInput | null > | null,
+  or?: Array< ModelAssessmentConditionInput | null > | null,
+  not?: ModelAssessmentConditionInput | null,
+};
+
+export type UpdateAssessmentInput = {
+  id: string,
+  title?: string | null,
+  type?: string | null,
+  openingMessage?: Array< string | null > | null,
+  closingMessage?: Array< string | null > | null,
+};
+
+export type DeleteAssessmentInput = {
+  id?: string | null,
+};
+
+export type CreateAssessmentCheckpointInput = {
+  id?: string | null,
+  assessmentID: string,
+  checkpointID: string,
+};
+
+export type ModelAssessmentCheckpointConditionInput = {
+  assessmentID?: ModelIDInput | null,
+  checkpointID?: ModelIDInput | null,
+  and?: Array< ModelAssessmentCheckpointConditionInput | null > | null,
+  or?: Array< ModelAssessmentCheckpointConditionInput | null > | null,
+  not?: ModelAssessmentCheckpointConditionInput | null,
+};
+
+export type UpdateAssessmentCheckpointInput = {
+  id: string,
+  assessmentID?: string | null,
+  checkpointID?: string | null,
+};
+
+export type DeleteAssessmentCheckpointInput = {
   id?: string | null,
 };
 
@@ -1363,6 +1420,7 @@ export type ModelLessonFilterInput = {
   warmUpId?: ModelIDInput | null,
   coreLessonId?: ModelIDInput | null,
   activityId?: ModelIDInput | null,
+  assessmentID?: ModelIDInput | null,
   and?: Array< ModelLessonFilterInput | null > | null,
   or?: Array< ModelLessonFilterInput | null > | null,
   not?: ModelLessonFilterInput | null,
@@ -1427,6 +1485,26 @@ export type ModelCheckpointFilterInput = {
   and?: Array< ModelCheckpointFilterInput | null > | null,
   or?: Array< ModelCheckpointFilterInput | null > | null,
   not?: ModelCheckpointFilterInput | null,
+};
+
+export type ModelAssessmentFilterInput = {
+  id?: ModelIDInput | null,
+  title?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  openingMessage?: ModelStringInput | null,
+  closingMessage?: ModelStringInput | null,
+  and?: Array< ModelAssessmentFilterInput | null > | null,
+  or?: Array< ModelAssessmentFilterInput | null > | null,
+  not?: ModelAssessmentFilterInput | null,
+};
+
+export type ModelAssessmentCheckpointFilterInput = {
+  id?: ModelIDInput | null,
+  assessmentID?: ModelIDInput | null,
+  checkpointID?: ModelIDInput | null,
+  and?: Array< ModelAssessmentCheckpointFilterInput | null > | null,
+  or?: Array< ModelAssessmentCheckpointFilterInput | null > | null,
+  not?: ModelAssessmentCheckpointFilterInput | null,
 };
 
 export type ModelQuestionFilterInput = {
@@ -2129,6 +2207,17 @@ export type CreateCurriculumLessonsMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -2257,6 +2346,17 @@ export type UpdateCurriculumLessonsMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -2382,6 +2482,17 @@ export type DeleteCurriculumLessonsMutation = {
         language: Language,
         SELTypes: Array< string > | null,
         lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -2958,6 +3069,7 @@ export type CreateStudentDataMutation = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -3129,6 +3241,7 @@ export type UpdateStudentDataMutation = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -3300,6 +3413,7 @@ export type DeleteStudentDataMutation = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -3688,6 +3802,17 @@ export type CreateClassroomMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3908,6 +4033,17 @@ export type UpdateClassroomMutation = {
         language: Language,
         SELTypes: Array< string > | null,
         lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -4134,6 +4270,17 @@ export type DeleteClassroomMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4238,6 +4385,7 @@ export type CreateFeedbackMutation = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -4324,6 +4472,7 @@ export type UpdateFeedbackMutation = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -4410,6 +4559,7 @@ export type DeleteFeedbackMutation = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -4695,6 +4845,21 @@ export type CreateLessonMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    assessmentID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4905,6 +5070,21 @@ export type UpdateLessonMutation = {
         included: boolean,
         reflectionQuestions: Array< string | null > | null,
       },
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    assessmentID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5121,6 +5301,21 @@ export type DeleteLessonMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    assessmentID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5227,6 +5422,17 @@ export type CreateLessonCheckpointMutation = {
         language: Language,
         SELTypes: Array< string > | null,
         lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -5357,6 +5563,17 @@ export type UpdateLessonCheckpointMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5481,6 +5698,17 @@ export type DeleteLessonCheckpointMutation = {
         language: Language,
         SELTypes: Array< string > | null,
         lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -6344,6 +6572,231 @@ export type DeleteCheckpointQuestionsMutation = {
   } | null,
 };
 
+export type CreateAssessmentMutationVariables = {
+  input: CreateAssessmentInput,
+  condition?: ModelAssessmentConditionInput | null,
+};
+
+export type CreateAssessmentMutation = {
+  createAssessment:  {
+    __typename: "Assessment",
+    id: string,
+    title: string,
+    type: string,
+    openingMessage: Array< string | null > | null,
+    closingMessage: Array< string | null > | null,
+    checkpoints:  {
+      __typename: "ModelAssessmentCheckpointConnection",
+      items:  Array< {
+        __typename: "AssessmentCheckpoint",
+        id: string,
+        assessmentID: string,
+        checkpointID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateAssessmentMutationVariables = {
+  input: UpdateAssessmentInput,
+  condition?: ModelAssessmentConditionInput | null,
+};
+
+export type UpdateAssessmentMutation = {
+  updateAssessment:  {
+    __typename: "Assessment",
+    id: string,
+    title: string,
+    type: string,
+    openingMessage: Array< string | null > | null,
+    closingMessage: Array< string | null > | null,
+    checkpoints:  {
+      __typename: "ModelAssessmentCheckpointConnection",
+      items:  Array< {
+        __typename: "AssessmentCheckpoint",
+        id: string,
+        assessmentID: string,
+        checkpointID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteAssessmentMutationVariables = {
+  input: DeleteAssessmentInput,
+  condition?: ModelAssessmentConditionInput | null,
+};
+
+export type DeleteAssessmentMutation = {
+  deleteAssessment:  {
+    __typename: "Assessment",
+    id: string,
+    title: string,
+    type: string,
+    openingMessage: Array< string | null > | null,
+    closingMessage: Array< string | null > | null,
+    checkpoints:  {
+      __typename: "ModelAssessmentCheckpointConnection",
+      items:  Array< {
+        __typename: "AssessmentCheckpoint",
+        id: string,
+        assessmentID: string,
+        checkpointID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateAssessmentCheckpointMutationVariables = {
+  input: CreateAssessmentCheckpointInput,
+  condition?: ModelAssessmentCheckpointConditionInput | null,
+};
+
+export type CreateAssessmentCheckpointMutation = {
+  createAssessmentCheckpoint:  {
+    __typename: "AssessmentCheckpoint",
+    id: string,
+    assessmentID: string,
+    checkpointID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    checkpoint:  {
+      __typename: "Checkpoint",
+      id: string,
+      label: string,
+      title: string | null,
+      subtitle: string | null,
+      type: string,
+      instructions: string,
+      questions:  {
+        __typename: "ModelCheckpointQuestionsConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateAssessmentCheckpointMutationVariables = {
+  input: UpdateAssessmentCheckpointInput,
+  condition?: ModelAssessmentCheckpointConditionInput | null,
+};
+
+export type UpdateAssessmentCheckpointMutation = {
+  updateAssessmentCheckpoint:  {
+    __typename: "AssessmentCheckpoint",
+    id: string,
+    assessmentID: string,
+    checkpointID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    checkpoint:  {
+      __typename: "Checkpoint",
+      id: string,
+      label: string,
+      title: string | null,
+      subtitle: string | null,
+      type: string,
+      instructions: string,
+      questions:  {
+        __typename: "ModelCheckpointQuestionsConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteAssessmentCheckpointMutationVariables = {
+  input: DeleteAssessmentCheckpointInput,
+  condition?: ModelAssessmentCheckpointConditionInput | null,
+};
+
+export type DeleteAssessmentCheckpointMutation = {
+  deleteAssessmentCheckpoint:  {
+    __typename: "AssessmentCheckpoint",
+    id: string,
+    assessmentID: string,
+    checkpointID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    checkpoint:  {
+      __typename: "Checkpoint",
+      id: string,
+      label: string,
+      title: string | null,
+      subtitle: string | null,
+      type: string,
+      instructions: string,
+      questions:  {
+        __typename: "ModelCheckpointQuestionsConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateQuestionMutationVariables = {
   input: CreateQuestionInput,
   condition?: ModelQuestionConditionInput | null,
@@ -6474,6 +6927,7 @@ export type CreateQuestionDataMutation = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -6603,6 +7057,7 @@ export type UpdateQuestionDataMutation = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -6732,6 +7187,7 @@ export type DeleteQuestionDataMutation = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -7367,6 +7823,17 @@ export type CreateLessonKeyWordMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -7486,6 +7953,17 @@ export type UpdateLessonKeyWordMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -7602,6 +8080,17 @@ export type DeleteLessonKeyWordMutation = {
         language: Language,
         SELTypes: Array< string > | null,
         lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -8313,6 +8802,7 @@ export type GetStudentDataQuery = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -8746,6 +9236,17 @@ export type GetClassroomQuery = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -8847,6 +9348,7 @@ export type ListClassroomsQuery = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -8931,6 +9433,7 @@ export type GetFeedbackQuery = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -9238,6 +9741,21 @@ export type GetLessonQuery = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    assessmentID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -9343,6 +9861,17 @@ export type ListLessonsQuery = {
         language: Language,
         SELTypes: Array< string > | null,
         lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -9723,6 +10252,148 @@ export type ListCheckpointsQuery = {
   } | null,
 };
 
+export type GetAssessmentQueryVariables = {
+  id: string,
+};
+
+export type GetAssessmentQuery = {
+  getAssessment:  {
+    __typename: "Assessment",
+    id: string,
+    title: string,
+    type: string,
+    openingMessage: Array< string | null > | null,
+    closingMessage: Array< string | null > | null,
+    checkpoints:  {
+      __typename: "ModelAssessmentCheckpointConnection",
+      items:  Array< {
+        __typename: "AssessmentCheckpoint",
+        id: string,
+        assessmentID: string,
+        checkpointID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListAssessmentsQueryVariables = {
+  filter?: ModelAssessmentFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListAssessmentsQuery = {
+  listAssessments:  {
+    __typename: "ModelAssessmentConnection",
+    items:  Array< {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetAssessmentCheckpointQueryVariables = {
+  id: string,
+};
+
+export type GetAssessmentCheckpointQuery = {
+  getAssessmentCheckpoint:  {
+    __typename: "AssessmentCheckpoint",
+    id: string,
+    assessmentID: string,
+    checkpointID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    checkpoint:  {
+      __typename: "Checkpoint",
+      id: string,
+      label: string,
+      title: string | null,
+      subtitle: string | null,
+      type: string,
+      instructions: string,
+      questions:  {
+        __typename: "ModelCheckpointQuestionsConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListAssessmentCheckpointsQueryVariables = {
+  filter?: ModelAssessmentCheckpointFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListAssessmentCheckpointsQuery = {
+  listAssessmentCheckpoints:  {
+    __typename: "ModelAssessmentCheckpointConnection",
+    items:  Array< {
+      __typename: "AssessmentCheckpoint",
+      id: string,
+      assessmentID: string,
+      checkpointID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      checkpoint:  {
+        __typename: "Checkpoint",
+        id: string,
+        label: string,
+        title: string | null,
+        subtitle: string | null,
+        type: string,
+        instructions: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
 export type GetQuestionQueryVariables = {
   id: string,
 };
@@ -9832,6 +10503,7 @@ export type GetQuestionDataQuery = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -10324,6 +10996,17 @@ export type OnUpdateClassroomSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -10428,6 +11111,7 @@ export type OnChangeStudentDataSubscription = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -11061,6 +11745,17 @@ export type OnCreateCurriculumLessonsSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11184,6 +11879,17 @@ export type OnUpdateCurriculumLessonsSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11304,6 +12010,17 @@ export type OnDeleteCurriculumLessonsSubscription = {
         language: Language,
         SELTypes: Array< string > | null,
         lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -11913,6 +12630,7 @@ export type OnCreateFeedbackSubscription = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -11994,6 +12712,7 @@ export type OnUpdateFeedbackSubscription = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -12075,6 +12794,7 @@ export type OnDeleteFeedbackSubscription = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -12340,6 +13060,21 @@ export type OnCreateLessonSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    assessmentID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -12545,6 +13280,21 @@ export type OnUpdateLessonSubscription = {
         included: boolean,
         reflectionQuestions: Array< string | null > | null,
       },
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    assessmentID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -12756,6 +13506,21 @@ export type OnDeleteLessonSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    assessmentID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -12857,6 +13622,17 @@ export type OnCreateLessonCheckpointSubscription = {
         language: Language,
         SELTypes: Array< string > | null,
         lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -12982,6 +13758,17 @@ export type OnUpdateLessonCheckpointSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -13101,6 +13888,17 @@ export type OnDeleteLessonCheckpointSubscription = {
         language: Language,
         SELTypes: Array< string > | null,
         lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -13859,6 +14657,201 @@ export type OnDeleteCheckpointQuestionsSubscription = {
   } | null,
 };
 
+export type OnCreateAssessmentSubscription = {
+  onCreateAssessment:  {
+    __typename: "Assessment",
+    id: string,
+    title: string,
+    type: string,
+    openingMessage: Array< string | null > | null,
+    closingMessage: Array< string | null > | null,
+    checkpoints:  {
+      __typename: "ModelAssessmentCheckpointConnection",
+      items:  Array< {
+        __typename: "AssessmentCheckpoint",
+        id: string,
+        assessmentID: string,
+        checkpointID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateAssessmentSubscription = {
+  onUpdateAssessment:  {
+    __typename: "Assessment",
+    id: string,
+    title: string,
+    type: string,
+    openingMessage: Array< string | null > | null,
+    closingMessage: Array< string | null > | null,
+    checkpoints:  {
+      __typename: "ModelAssessmentCheckpointConnection",
+      items:  Array< {
+        __typename: "AssessmentCheckpoint",
+        id: string,
+        assessmentID: string,
+        checkpointID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteAssessmentSubscription = {
+  onDeleteAssessment:  {
+    __typename: "Assessment",
+    id: string,
+    title: string,
+    type: string,
+    openingMessage: Array< string | null > | null,
+    closingMessage: Array< string | null > | null,
+    checkpoints:  {
+      __typename: "ModelAssessmentCheckpointConnection",
+      items:  Array< {
+        __typename: "AssessmentCheckpoint",
+        id: string,
+        assessmentID: string,
+        checkpointID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateAssessmentCheckpointSubscription = {
+  onCreateAssessmentCheckpoint:  {
+    __typename: "AssessmentCheckpoint",
+    id: string,
+    assessmentID: string,
+    checkpointID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    checkpoint:  {
+      __typename: "Checkpoint",
+      id: string,
+      label: string,
+      title: string | null,
+      subtitle: string | null,
+      type: string,
+      instructions: string,
+      questions:  {
+        __typename: "ModelCheckpointQuestionsConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateAssessmentCheckpointSubscription = {
+  onUpdateAssessmentCheckpoint:  {
+    __typename: "AssessmentCheckpoint",
+    id: string,
+    assessmentID: string,
+    checkpointID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    checkpoint:  {
+      __typename: "Checkpoint",
+      id: string,
+      label: string,
+      title: string | null,
+      subtitle: string | null,
+      type: string,
+      instructions: string,
+      questions:  {
+        __typename: "ModelCheckpointQuestionsConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteAssessmentCheckpointSubscription = {
+  onDeleteAssessmentCheckpoint:  {
+    __typename: "AssessmentCheckpoint",
+    id: string,
+    assessmentID: string,
+    checkpointID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    checkpoint:  {
+      __typename: "Checkpoint",
+      id: string,
+      label: string,
+      title: string | null,
+      subtitle: string | null,
+      type: string,
+      instructions: string,
+      questions:  {
+        __typename: "ModelCheckpointQuestionsConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreateQuestionSubscription = {
   onCreateQuestion:  {
     __typename: "Question",
@@ -13969,6 +14962,7 @@ export type OnCreateQuestionDataSubscription = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -14093,6 +15087,7 @@ export type OnUpdateQuestionDataSubscription = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -14217,6 +15212,7 @@ export type OnDeleteQuestionDataSubscription = {
         warmUpId: string,
         coreLessonId: string,
         activityId: string,
+        assessmentID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -14817,6 +15813,17 @@ export type OnCreateLessonKeyWordSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -14931,6 +15938,17 @@ export type OnUpdateLessonKeyWordSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -15042,6 +16060,17 @@ export type OnDeleteLessonKeyWordSubscription = {
         language: Language,
         SELTypes: Array< string > | null,
         lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
