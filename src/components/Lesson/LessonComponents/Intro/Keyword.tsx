@@ -34,7 +34,7 @@ const Keyword = () => {
                       <div className={`w-full`}>
                         <div className='h-6/10 justify-center items-center align-center'>
                           <p className={`${theme.elem.title}`}>{item.word.word}:</p>{' '}
-                          <p className={`${theme.elem.text}`}>{item.word.definition}</p>
+                          <p className={theme.elem.text}>{item.word.definition}</p>
                         </div>
                       </div>
                     </div>

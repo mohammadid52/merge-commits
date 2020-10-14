@@ -23,9 +23,8 @@ export const pageThemes = {
     },
     dashboard: {
       sectionTitle: 'w-auto text-black pb-2 font-light mt-4 mb-1',
-      bg: 'bg-dark-gray'
-    }
-    ,
+      bg: 'bg-dark-gray',
+    },
     sidemenu: {
       bg: 'bg-darker-gray',
     },
@@ -47,6 +46,7 @@ export const pageThemes = {
     },
     banner:
       'w-auto pb-2 mt-4 mb-2 relative font-open font-light text-left flex flex-row items-center text-gray-200',
+    section: 'z-50 w-64rem mx-auto h-full flex flex-col justify-between items-center',
     elem: {
       bg: 'bg-dark-block',
       title: 'text-lg text-gray-200',
@@ -60,9 +60,8 @@ export const pageThemes = {
     },
     dashboard: {
       sectionTitle: 'w-auto text-black pb-2 font-light mt-4 mb-1',
-      bg: 'bg-dark-gray'
-    }
-    ,
+      bg: 'bg-dark-gray',
+    },
     sidemenu: {
       bg: 'bg-darker-gray',
     },

@@ -18,7 +18,7 @@ export interface StoryState {
 }
 
 const Story = () => {
-    const { state, dispatch } = useContext(LessonContext);
+    const { state, theme, dispatch } = useContext(LessonContext);
     const [ cookies, setCookie ] = useCookies(['story']);
     const inputs = state.data.lesson.warmUp.inputs;
     const video = state.data.lesson.warmUp.instructions.link
@@ -76,8 +76,8 @@ const Story = () => {
 
     return (
        <>
-            <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/>
-            <div className="z-50 w-64rem mx-auto h-full flex flex-col justify-between items-center">
+            {/* <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/> */}
+            <div className={theme.section}>
                 <Banner />
 
                 <div className='flex flex-col justify-between items-center'>

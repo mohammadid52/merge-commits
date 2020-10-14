@@ -24,11 +24,6 @@ const Intro = () => {
     return (
       <div className={`z-50 w-full h-full flex flex-col justify-center items-center`}>
         <div className={`w-8/10 h-1/10 text-xl md:text-5xl ${theme.banner}`}>
-          {/*  <IconContext.Provider value={{ color: '#EDF2F7', size: '2.75rem'}}>
-                        <div className={`red bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-xl ${theme.block.shadow}`}>
-                            <FaCheckSquare />
-                        </div>
-                    </IconContext.Provider> */}
           <div
             className={`h-full w-full flex flex-row justify-center items-center text-5xl text-center font-open font-medium ${theme.block.text} z-10 my-4`}>
             {state.data.lesson.title ? state.data.lesson.title : null}
@@ -48,7 +43,7 @@ const Intro = () => {
   }
 
   return (
-    <div className='z-50 w-64rem mx-auto h-full flex flex-col justify-between items-center'>
+    <div className={theme.section}>
       <Banner />
       <div
         className='h-96 flex flex-col mb-4 justify-between items-center bg-cover bg-right-top rounded-xl'
