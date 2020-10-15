@@ -10,6 +10,7 @@ import {
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaExpand, FaCompress, FaHome, FaRegThumbsUp } from 'react-icons/fa';
+import { FiUsers } from 'react-icons/fi';
 import { BsPersonFill } from 'react-icons/bs';
 import { NavLink } from 'react-router-dom';
 import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
@@ -205,7 +206,7 @@ const LessonControl = () => {
                 <div className={`relative w-full h-1/10 border-b border-gray-400 flex flex-row items-center`} 
                 // onClick={handleQuitAll}
                 >
-                    <h1 className={`w-3/10 text-3xl pl-4 font-extrabold font-open`}>
+                    <h1 className={`w-2.5/10 text-3xl pl-4 font-extrabold font-open`}>
                         Where I'm From
                     </h1>
 
@@ -277,12 +278,12 @@ const LessonControl = () => {
                 
                     <div className={`w-1/10 pr-4 flex justify-between items-center px-2`} style={{right: 0}}>
                         <div className="flex flex-col justify-center items-center cursor-pointer px-2">
-                            <NavLink to="/dashboard">
+                            <NavLink to="/dashboard/manage-users">
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
-                                    <FaHome />
+                                    <FiUsers />
                                 </IconContext.Provider>
                             </NavLink>
-                            <p className="text-xs text-center">Home</p>
+                            <p className="text-xs text-center">Students</p>
                         </div>
                         <div className="flex flex-col justify-center items-center cursor-pointer px-2">
                             <NavLink to="/dashboard">
