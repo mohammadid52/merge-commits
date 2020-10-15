@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { 
     NavLink,
@@ -19,6 +20,7 @@ import useStudentTimer from '../../customHooks/timer';
 
 
 const LessonHeaderBar = () => {
+    const history = useHistory();
     const [ cookies, setCookie ] = useCookies(['lesson']);
     // const match = useRouteMatch();
     // const location = useLocation();
@@ -51,6 +53,10 @@ const LessonHeaderBar = () => {
     //     console.log(state.studentStatus);
         
     // }, [state.studentStatus])
+
+    useEffect(()=>{
+        // history.push('/lesson/corelesson');
+    },[])
 
     const updateStudentData = async ( saveType?: string) => {
         let lessonProgress = state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
