@@ -11,10 +11,11 @@ const VideoBlock = (props: VideoBlockProps) => {
   return (
     <>
       {!fullscreen ? (
-        <div className='w-full h-480 rounded-xl'>
+        <div className='w-full rounded-xl'>
           <iframe
+            className='rounded-xl'
             width='w-auto'
-            height='480'
+            height='320'
             src={link}
             frameBorder='0'
             allow='accelerometer; encrypted-media; gyroscope; picture-in-picture'

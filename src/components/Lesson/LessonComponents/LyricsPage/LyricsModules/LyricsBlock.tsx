@@ -401,7 +401,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
 
   return (
     <>
-      <div className={`relative w-full text-xl ${theme.banner} ${theme.underline}`}>
+      <div className={`relative w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
         <h3 className='w-auto'>Lyrics</h3>
         <p className='w-auto text-gray-600 text-sm text-center'>
           (click and drag your mouse over the words!)
