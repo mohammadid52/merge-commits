@@ -29,7 +29,7 @@ const PosAlert = (props: WritingAlertProps) => {
 
     }
 
-    console.log(alert, 'alert')
+    // console.log(alert, 'alert')
 
     const switchSVG = () => {
         switch (svg) {
