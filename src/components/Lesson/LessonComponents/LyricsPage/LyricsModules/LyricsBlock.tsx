@@ -77,19 +77,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   };
 
   /**
-   * Function that returns true | false if select-group for current
-   * text selection exists in the state
-   * @param groupName - name of select group to check
-   */
-  const checkIfSelectGroupExists = (groupName: string) => {
-    if (typeof initialSelectedText[groupName] === 'undefined') {
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  /**
    * Simple get functions to get arrays/values based on 'mappedWordID'
    */
   const getSelectGroupName = (mappedWordID: string) => {
@@ -142,12 +129,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    *
    */
 
-  const handleSelectGroupIncrement = () => {
-    if(color !== 'erase'){
-      console.log('handle increment: ', initialSelectedText[`group${selectGroup}`]['selected'].length);
-    }
-  }
-
   const handleDragSelectText = () => {
     if (color !== '') {
       if (color !== 'erase') {
@@ -193,8 +174,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       } else {
         if (targetWordID.includes('mapped')) {
           //
-          //
-          //
+          //  Some functionality might need to go here
           //
         }
       }
@@ -256,6 +236,8 @@ const LyricsBlock = (props: LyricsBlockProps) => {
 
   /**
    * Lyric/state organization
+   * - Combinelyrics adds a linebreak character \n to the string where there are spaces
+   * - Makes it easier to parse on the breakdown page
    */
 
   const combineLyrics = rawText
@@ -278,10 +260,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     });
   };
 
-  /**
-   * Function(s) specifically for expanding multiline selection
-   * in selectedTextGroup arrays
-   */
 
   /**
    * Find min,max indexes of selectedText
@@ -361,8 +339,14 @@ const LyricsBlock = (props: LyricsBlockProps) => {
             &nbsp;{`${mappedWord}`}&nbsp;
             <span
               id={`mappedWord__${i}__${mappedWord}`}
-              onMouseOver={handleMouseOver}
-              onClick={handleClickSelectText}
+              /* Mouse events */
+
+              // onMouseOver={handleMouseOver}
+              // onClick={handleClickSelectText}
+
+              /* Touch events */
+              // pointer events is more suitable?
+
               className='w-1/2 h-8 absolute right-0 transform -translate-x-1/2'></span>
           </span>
         );
@@ -386,14 +370,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * ANDREW'S DISPATCH
    */
   useEffect(() => {
-    //  EMPTY GROUP CLEANUP ***temporary***
-    // const nonEmptySelectGroupKeys = Object.keys(initialSelectedText).filter(
-    //   (objKey) => initialSelectedText[objKey]['selected'].length > 0
-    // );
-    // const nonEmptySelectGroups = nonEmptySelectGroupKeys.reduce((acc: any, groupName: string) => {
-    //   return { ...acc, ...{ [groupName]: initialSelectedText[groupName] } };
-    // }, {});
-    //  EMPTY GROUP CLEANUP ***temporary***
     setSelected(adaptTextGroupsForDispatch(initialSelectedText));
   }, [initialSelectedText]);
 
@@ -423,10 +399,20 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         </div>
         <div
           className='h-9/10 leading-8 text-gray-200 text-sm overflow-y-auto overflow-x-hidden p-4'
-          onMouseDown={handleMouseDown}
-          onClick={handleClickSelectText}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
+          /* Mouse events */
+
+          // onMouseDown={handleMouseDown}
+          // onClick={handleClickSelectText}
+          // onMouseUp={handleMouseUp}
+          // onMouseLeave={handleMouseLeave}
+
+          /* Touch events */
+
+          onPointerDown={handleMouseDown}
+          onPointerLeave={handleMouseLeave}
+          onPointerUp={handleMouseUp}
+          // onPointerDown={handleMouseOver}
+
           style={{
             MozUserSelect: 'none',
             WebkitUserSelect: 'none',

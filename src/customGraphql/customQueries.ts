@@ -232,6 +232,45 @@ export const getClassroom = /* GraphQL */ `
             reflectionQuestions
           }
         }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          checkpoints {
+            items {
+              checkpoint {
+                id
+                instructions
+                label
+                type
+                questions {
+                  items {
+                    required
+                    question {
+                      id
+                      label
+                      type
+                      question
+                      options {
+                        text
+                        icon
+                        label
+                        color
+                      }
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+        createdAt
+        updatedAt
       }
       lessonPlan {
         disabled
@@ -529,6 +568,45 @@ export const getClassroomStudent = /* GraphQL */ `
             reflectionQuestions
           }
         }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          checkpoints {
+            items {
+              checkpoint {
+                id
+                instructions
+                label
+                type
+                questions {
+                  items {
+                    required
+                    question {
+                      id
+                      label
+                      type
+                      question
+                      options {
+                        text
+                        icon
+                        label
+                        color
+                      }
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+        createdAt
+        updatedAt
       }
       lessonPlan {
         disabled
