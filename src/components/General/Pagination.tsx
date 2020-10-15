@@ -42,8 +42,6 @@ const Pagination = (props: props) => {
         pageNumbers.push(i)
     }
 
-    console.log(pageNumbers.length, 'page numbers')
-
 
     return (
         //change the NUMBERs

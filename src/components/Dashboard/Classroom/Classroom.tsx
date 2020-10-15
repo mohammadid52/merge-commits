@@ -46,6 +46,7 @@ const Classroom: React.FC = () => {
       );
       const nextLesson = courses.data.getCourse.curriculum.lessons.items[0].lesson;
       const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
+      console.log(lessonsInfo, 'lesson INgo')
       setCurriculum(nextLesson);
       setListCurriculum(lessonsInfo.slice(1, 2));
       if (state.user.onBoardSurvey) setStatus('done');

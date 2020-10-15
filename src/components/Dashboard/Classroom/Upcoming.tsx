@@ -15,6 +15,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
   const [openCards, setOpenCards] = useState<string[]>(['']);
+  console.log(curriculum, 'curr')
 
   // const curriculumLessonTest =
   //     curriculum.map(( lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, summary: string} ) => {

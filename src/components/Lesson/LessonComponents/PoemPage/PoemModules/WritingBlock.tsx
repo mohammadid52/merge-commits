@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import {useOutsideAlerter} from '../../../../General/hooks/outsideAlerter';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaPlus } from 'react-icons/fa';
@@ -195,9 +196,16 @@ const WritingBlock = (props: WritingBlockProps) => {
 
 
     const [alert, setAlert] = useState(false);
+    const {visible, setVisible, ref} = useOutsideAlerter(false);
+
+    const handleClick = () => {
+        setVisible((prevState: any) => !prevState)
+    }
 
     const handleCancel = () => {
-        setAlert(!alert);
+        // setAlert(!alert);
+        handleClick
+        // setVisible(!visible)
     }
 
     const handleSubmit = () => {
@@ -207,7 +215,9 @@ const WritingBlock = (props: WritingBlockProps) => {
                 open: true,
             }
         })
-        setAlert(!alert);
+        // setAlert(!alert);
+        handleClick
+        // setVisible(!visible)
     }
 
     const handleInputChange = (e: any) => {
@@ -255,11 +265,12 @@ const WritingBlock = (props: WritingBlockProps) => {
     }
 
     return (
-        <div className="relative bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600" >
-            <div className={`${alert ? 'absolute z-100' : 'hidden'}`} style={{top: '0', right: '-37.5%'}}>
+        <div ref={ref} className="relative bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600" >
+            {/* { visible &&  */}
+            <div className={`${visible ? 'absolute z-100' : 'hidden'} max-w-sm`} style={{top: '0', right: '-100px'}} onClick={handleClick}>
                 <PositiveAlert 
-                    alert={alert}
-                    setAlert={setAlert}
+                    alert={visible}
+                    setAlert={setVisible}
                     header='Are you ready to edit your poem?' 
                     content="Once you go to 'Final Edits' you will not be able to come back to these line prompts" 
                     button1='Go to Final Edits' 
@@ -269,6 +280,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                     handleButton2={handleCancel}
                     />
             </div>
+            
             <div className="w-full flex flex-row justify-between mb-2">
                 <h3 className='w-3/10 mr-2 flex text-xl text-gray-200 font-open font-light animate-bounce z-100'>
                     Line Prompts <ToolTip width='w-40' position='bottom' header='Instructions' content='Make sure you are finished with the line prompts before you click "Save and Edit"' />
@@ -317,9 +329,10 @@ const WritingBlock = (props: WritingBlockProps) => {
                     )}) : null
                 }
             </div>
-            <button className="self-start w-auto px-3 h-8 text-xl font-open font-light bg-yellow-500 text-gray-900 flex justify-center items-center rounded-lg mt-2" onClick={() => setAlert(!alert)}>
+            <button className="self-start w-auto px-3 h-8 text-xl font-open font-light bg-yellow-500 text-gray-900 flex justify-center items-center rounded-lg mt-2" onClick={handleClick}>
                 Save and Edit
             </button>
+            
         </div>
     )
 }
