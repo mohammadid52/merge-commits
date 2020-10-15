@@ -336,6 +336,8 @@ type Lesson @model @key(fields: ["id"]) {
   coreLesson: CoreLesson @connection(fields: ["coreLessonId"])
   activityId: ID!
   activity: Activity @connection(fields: ["activityId"])
+  assessmentID: ID!
+  assessment: Assessment @connection(fields: ["assessmentID"])
 }
 
 type LessonCheckpoint @model(queries: null)
@@ -465,6 +467,25 @@ type CheckpointQuestions @model(queries: null)
   required: Boolean!
   checkpoint: Checkpoint @connection(fields: ["checkpointID"])
   question: Question @connection(fields: ["questionID"])
+}
+
+type Assessment @model {
+  id: ID!
+  title: String!
+  type: String!
+  openingMessage: [String]
+  closingMessage: [String]
+  checkpoints: [AssessmentCheckpoint] @connection(keyName: "checkpointByAssessment", fields: ["id"])
+}
+
+type AssessmentCheckpoint @model 
+@key(name: "checkpointByAssessment", fields: ["assessmentID", "checkpointID"])
+{
+  id: ID!
+  assessmentID: ID!
+  checkpointID: ID!
+  assessment: Assessment @connection(fields: ["assessmentID"])
+  checkpoint: Checkpoint @connection(fields: ["checkpointID"])
 }
 
 type Option {

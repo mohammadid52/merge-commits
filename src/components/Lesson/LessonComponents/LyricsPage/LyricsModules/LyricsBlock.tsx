@@ -129,7 +129,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     }, {});
   };
 
-
   /**
    * Function that handles the text selection
    * 1. drag mouse over text
@@ -143,10 +142,13 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    */
 
   const handleSelectGroupIncrement = () => {
-    if(color !== 'erase'){
-      console.log('handle increment: ', initialSelectedText[`group${selectGroup}`]['selected'].length);
+    if (color !== 'erase') {
+      console.log(
+        'handle increment: ',
+        initialSelectedText[`group${selectGroup}`]['selected'].length
+      );
     }
-  }
+  };
 
   const handleDragSelectText = () => {
     if (color !== '') {
@@ -213,7 +215,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       setMouseIsClicked(false);
     }
 
-    if(color !== 'erase'){
+    if (color !== 'erase') {
       setSelectGroup(selectGroup + 1);
     }
   };
@@ -226,7 +228,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       setMouseIsHeld(false);
       setMouseIsClicked(false);
     }
-  }
+  };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!mouseIsHeld || !mouseIsClicked) {
@@ -399,41 +401,34 @@ const LyricsBlock = (props: LyricsBlockProps) => {
 
   return (
     <>
+      <div className={`relative w-full text-xl ${theme.banner} ${theme.underline}`}>
+        <h3 className='w-auto'>Lyrics</h3>
+        <p className='w-auto text-gray-600 text-sm text-center'>
+          (click and drag your mouse over the words!)
+        </p>
+        <div className='absolute w-auto right-0 top-0'>
+          <IconContext.Provider
+            value={{
+              color: `${colorPicker(color) === '' ? 'white' : colorPicker(color)}`,
+              size: '2rem',
+              style: { width: 'auto' },
+            }}>
+            <FaHighlighter />
+          </IconContext.Provider>
+        </div>
+      </div>
       <div
-        className={`md:h-7.2/10 relative ${theme.gradient.cardBase} ${
-          fullscreen ? 'md:h-120' : 'h-68'
-        } mt-4 md:mb-0 w-full px-6 py-4 flex flex-col justify-between rounded-lg text-gray-400 text-lg border-l-4 border-orange-600`}>
-        <div className='w-full flex flex-row justify-between mb-1 pb-1'>
-          <div className='w-9/10 flex flex-row justify-between border-b border-white border-opacity-10 mr-4 md:mr-0'>
-            <h3 className='w-auto font-open font-light'>Lyrics</h3>
-            <p className='text-gray-600 text-sm text-center'>
-              (click and drag your mouse over the words!)
-            </p>
-          </div>
-          <div className='w-auto'>
-            <IconContext.Provider
-              value={{
-                color: `${colorPicker(color) === '' ? 'white' : colorPicker(color)}`,
-                size: '2rem',
-                style: { width: 'auto' },
-              }}>
-              <FaHighlighter />
-            </IconContext.Provider>
-          </div>
-        </div>
-        <div
-          className='h-9/10 leading-8 text-gray-200 text-sm overflow-y-auto overflow-x-hidden p-4'
-          onMouseDown={handleMouseDown}
-          onClick={handleClickSelectText}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
-          style={{
-            MozUserSelect: 'none',
-            WebkitUserSelect: 'none',
-            msUserSelect: 'none',
-          }}>
-          {mapStrToSpan(combineLyrics)}
-        </div>
+        className={`h-192 leading-8  text-sm overflow-y-scroll overflow-x-hidden px-1/10 rounded-xl bg-darker-gray text-gray-200`}
+        onMouseDown={handleMouseDown}
+        onClick={handleClickSelectText}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          MozUserSelect: 'none',
+          WebkitUserSelect: 'none',
+          msUserSelect: 'none',
+        }}>
+        {mapStrToSpan(combineLyrics)}
       </div>
     </>
   );

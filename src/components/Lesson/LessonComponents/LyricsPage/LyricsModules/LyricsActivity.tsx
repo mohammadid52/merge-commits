@@ -31,7 +31,7 @@ export interface FinalText {
 }
 
 const Body = () => {
-  const { state, dispatch } = useContext(LessonContext);
+  const { state, theme, dispatch } = useContext(LessonContext);
   const [color, setColor] = useState('');
   const [selected, setSelected] = useState<Array<SelectObject>>(
     state.componentState.lyrics && state.componentState.lyrics.selected
@@ -115,15 +115,15 @@ const Body = () => {
 
   return (
     <>
-      <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup} />
-      <div className='w-full h-full flex flex-col justify-between items-center'>
+      {/* <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup} /> */}
+      <div className={theme.section}>
         <Banner />
-        <div className='w-full md:h-8.8/10 flex flex-col-reverse md:flex-row justify-between items-center content-center'>
-          <div className='h-full flex flex-col justify-between md:w-4.8/10 text-gray-200'>
+        
+          <div className='flex flex-col justify-between items-center'>
             <InstructionBlock />
             <VideoBlock link={state.data.lesson.coreLesson.content.link} fullscreen={fullscreen} />
-          </div>
-          <div className='h-full md:w-5.1/10 flex flex-col justify-between items-center'>
+         
+        </div>
             <Toolbar setColor={setColor} />
             <LyricsBlock
               color={color}
@@ -140,8 +140,6 @@ const Body = () => {
               selectGroup={selectGroup}
               setSelectGroup={setSelectGroup}
             />
-          </div>
-        </div>
       </div>
     </>
   );

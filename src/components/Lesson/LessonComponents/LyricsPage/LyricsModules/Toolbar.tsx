@@ -8,7 +8,7 @@ interface ToolbarProps {
 }
 const ToolBar = (props: ToolbarProps) => {
   const { setColor } = props;
-  const { state, dispatch } = useContext(LessonContext);
+  const { state, theme, dispatch } = useContext(LessonContext);
   const [search, setSearch] = useState('');
   const buttons = state.data.lesson.coreLesson.tools;
   const handleClick = (e: any) => {
@@ -33,14 +33,11 @@ const ToolBar = (props: ToolbarProps) => {
     e.preventDefault();
   };
   return (
-    <div className='bg-medium-blue h-2.5/10 w-full p-4 rounded-lg flex flex-col items-center justify-around'>
-      <div className='relative flex flex-row justify-center items-center border-b border-white border-opacity-10 pb-1 mb-1'>
-        <h3 className='text-xl text-gray-200 font-open font-light flex'>
+<>
+      <div className={`w-full rounded-xl`}>
+        <h3 className={`w-auto text-xl ${theme.banner} ${theme.underline} flex flex-row`}>
           Highlighters <ToolTip width='w-40' position='bottom' header='Highlighters' content='You really gotta click & drag those highlighters across the words!'/>
         </h3>
-        {/* <p className='text-gray-600 text-sm text-center'>
-          (click a color and drag over words!) 
-        </p> */}
       </div>
       <div className='w-auto cursor-pointer flex flex-row justify-center items-center pt-2'>
         {buttons.map((button: { color: string; icon: string, name: string }, key: number) => (
@@ -69,7 +66,7 @@ const ToolBar = (props: ToolbarProps) => {
           </IconContext.Provider>
         </div>
       </div>
-    </div>
+</>
   );
 };
 export default ToolBar;

@@ -344,7 +344,7 @@ const LessonControl = () => {
                     {/* <div className={`${fullscreen ? 'w-full' : 'w-6/10'} h-full flex flex-col items-center`}>
                         <div className={`${fullscreen ? 'h-full' : 'h-8.3/10'} relative w-full bg-dark shadow-elem-light rounded-lg mb-4 p-4`}> */}
                     <div className={`relative ${fullscreen ? 'w-full' : 'w-6/10'} h-full flex flex-col items-center`}>
-                        {
+                        {/* {
                             studentDataLoading === 'loading' ? 
                             <div className={`absolute h-8/10 bg-dark bg-opacity-75 flex flex-col justify-center items-center rounded-lg z-50`}>
                                 <div className={`text-center text-3xl text-gray-200 `}>
@@ -352,7 +352,7 @@ const LessonControl = () => {
                                 </div>
                             </div>
                             : null
-                        }
+                        } */}
                         <div className={`${fullscreen ? 'h-full' : 'h-8.3/10'} relative w-full bg-dark shadow-elem-light rounded-lg mb-4 p-4`}>
                             {/*  */}
                             {/* <LyricsActivityView
