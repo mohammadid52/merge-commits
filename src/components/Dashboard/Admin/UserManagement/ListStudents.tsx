@@ -39,7 +39,7 @@ const List = (props: ListProps) => {
     return (
         ///change INFO, MARGIN and WIDTH if needed
         <>
-        { item.role === 'ST' && 'TR' ? 
+        { item.role === 'ST' || item.role === 'TR' ? 
         <div id={item.id} className="flex justify-between bg-white w-full border-b border-gray-200">
                             
                 <div className="w-3.5/10 px-8 py-4 whitespace-no-wrap">
