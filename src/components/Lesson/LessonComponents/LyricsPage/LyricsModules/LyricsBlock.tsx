@@ -116,7 +116,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     }, {});
   };
 
-
   /**
    * Function that handles the text selection
    * 1. drag mouse over text
@@ -157,8 +156,10 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   };
 
   const handleClickSelectText = (e: React.MouseEvent) => {
-    const t = e.currentTarget as HTMLElement;
+    const t = e.target as HTMLElement;
     const targetWordID = t.id || '';
+
+
 
     if (typeof targetWordID !== 'undefined') {
       if (color !== 'erase') {
@@ -193,7 +194,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       setMouseIsClicked(false);
     }
 
-    if(color !== 'erase'){
+    if (color !== 'erase') {
       setSelectGroup(selectGroup + 1);
     }
   };
@@ -206,7 +207,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       setMouseIsHeld(false);
       setMouseIsClicked(false);
     }
-  }
+  };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!mouseIsHeld || !mouseIsClicked) {
@@ -259,7 +260,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       return word.replace(trimReg, '');
     });
   };
-
 
   /**
    * Find min,max indexes of selectedText
@@ -324,7 +324,11 @@ const LyricsBlock = (props: LyricsBlockProps) => {
           <span
             key={`mappedWord__${i}__${mappedWord}`}
             id={`mappedWord__${i}__${mappedWord}`}
-            onMouseOver={handleMouseOver}
+            /* Mouse events */
+            // onClick={handleClickSelectText} // A little laggy
+            // onMouseOver={handleMouseOver}
+
+            onPointerOver={handleMouseOver}
             className={`relative py-2
                 ${
                   //  Check if current mapped word is highlighted
@@ -344,14 +348,14 @@ const LyricsBlock = (props: LyricsBlockProps) => {
               // onMouseOver={handleMouseOver}
               // onClick={handleClickSelectText}
 
-              /* Touch events */
-              // pointer events is more suitable?
+              /* Pointer events */
 
+              onPointerOver={handleMouseOver}
               className='w-1/2 h-8 absolute right-0 transform -translate-x-1/2'></span>
           </span>
         );
       } else {
-        return <br />;
+        return <br key={`key${i}`}/>;
       }
     });
   };
@@ -400,19 +404,16 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         <div
           className='h-9/10 leading-8 text-gray-200 text-sm overflow-y-auto overflow-x-hidden p-4'
           /* Mouse events */
-
+          onClick={handleClickSelectText} // Clickhandler on the parent...nice!
           // onMouseDown={handleMouseDown}
-          // onClick={handleClickSelectText}
           // onMouseUp={handleMouseUp}
           // onMouseLeave={handleMouseLeave}
 
-          /* Touch events */
+          /* Pointer events */
 
           onPointerDown={handleMouseDown}
-          onPointerLeave={handleMouseLeave}
           onPointerUp={handleMouseUp}
-          // onPointerDown={handleMouseOver}
-
+          onPointerLeave={handleMouseLeave}
           style={{
             MozUserSelect: 'none',
             WebkitUserSelect: 'none',
