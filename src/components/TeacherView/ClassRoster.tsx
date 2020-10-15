@@ -73,9 +73,9 @@ const ClassRoster = (props: classRosterProps) => {
                 <div className={`w-.5/10 mx-2 text-center`}>
                     
                 </div>
-                <div className={`w-.7/10 mx-2`}>
+                {/* <div className={`w-.7/10 mx-2`}>
                     
-                </div>
+                </div> */}
                 <div className={`w-4.6/10 mx-2`}>
                     Name
                 </div>
@@ -94,13 +94,13 @@ const ClassRoster = (props: classRosterProps) => {
                             <div id={`${item.id}`} className={`w-.5/10 text-center mx-2 text-xs flex`}>
                                 {studentStatus(item.status)}
                             </div>
-                            <ToolTip position='bottom-right'  
+                            {/* <ToolTip position='bottom-right'  
                                         style='w-.7/10 px-2 z-100'
                                         id={`${item.id}`}
                                         header=''
                                         width='w-auto z-100'
                                         content= {item.student.email}
-                                        fontSize= 'text-xs'/>
+                                        fontSize= 'text-xs'/> */}
                             <div id={`${item.id}`} className={`w-4.6/10 mx-2 flex items-center`}>
                                 {/* <ToolTip header='' position='hidden-bottom' display='none'
                                 /> */}

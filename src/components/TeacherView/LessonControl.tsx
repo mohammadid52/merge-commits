@@ -275,13 +275,23 @@ const LessonControl = () => {
 
                     </div>
                 
-                    <div className={`w-1/10 pr-4 flex flex-col justify-center items-center px-2 cursor-pointer`} style={{right: 0}}>
-                        <NavLink to="/dashboard">
-                            <IconContext.Provider value={{ size: '1.5rem'}}>
-                                <FaHome />
-                            </IconContext.Provider>
-                        </NavLink>
-                        <p className="text-xs text-center">Home</p>
+                    <div className={`w-1/10 pr-4 flex justify-between items-center px-2`} style={{right: 0}}>
+                        <div className="flex flex-col justify-center items-center cursor-pointer px-2">
+                            <NavLink to="/dashboard">
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <FaHome />
+                                </IconContext.Provider>
+                            </NavLink>
+                            <p className="text-xs text-center">Home</p>
+                        </div>
+                        <div className="flex flex-col justify-center items-center cursor-pointer px-2">
+                            <NavLink to="/dashboard">
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <FaHome />
+                                </IconContext.Provider>
+                            </NavLink>
+                            <p className="text-xs text-center">Home</p>
+                        </div>
                     </div>
                 </div>
                 <div className={`w-full h-9/10 flex p-3 pb-5 rounded-lg`}>
