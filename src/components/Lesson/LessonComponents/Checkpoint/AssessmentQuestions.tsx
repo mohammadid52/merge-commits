@@ -34,8 +34,8 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const { state, dispatch } = useContext(LessonContext);
   const checkpoints = state.data.lesson.assessment.checkpoints.items;
 
-  console.log(state, "state");
-  console.log(checkpoints, "checkpoints");
+  // console.log(state, "state");
+  // console.log(checkpoints, "checkpoints");
 
   const [status, setStatus] = useState("");
   const [input, setInput] = useState<any>();
@@ -54,7 +54,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const currentId = data.slice(indexOfFirstPost, indexOfLastPost)
 
   const checkpoint = currentId.pop();
-  console.log(checkpoint, 'checkpoint')
+  // console.log(checkpoint, 'checkpoint')
   useEffect(() => {
     let questionDataKeys = [];
 
