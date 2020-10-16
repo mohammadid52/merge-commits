@@ -306,7 +306,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
               {value.checkpoint.questions.items.map(
                 (item: any, key: number) => {
                   return (
-                    <div className="w-5/10 " key={key}> {inputSwitch(item.question, key)} </div>
+                    <div className="w-7/10 " key={key}> {inputSwitch(item.question, key)} </div>
                   );
                 }
               )}
