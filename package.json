@@ -6,8 +6,8 @@
   "scripts": {
     "build": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
-    "watch2": "npm run build && webpack-dev-server --port 8089 --hot --inline --config webpack.dev.js",
-    "watch": "npm run build && webpack --watch --config webpack.dev.js"
+    "watch2": "webpack-dev-server --config webpack.dev.js --hot",
+    "watch": "npm run build && webpack --watch --config webpack.dev.js --progress"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
