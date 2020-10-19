@@ -15,6 +15,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
   const [openCards, setOpenCards] = useState<string[]>(['']);
+  // console.log(curriculum, 'curr')
 
   // const curriculumLessonTest =
   //     curriculum.map(( lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, summary: string} ) => {
@@ -204,7 +205,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
           )
         : null}
       {/* DUMMY CARD 2 */}
-      <div id='upcoming-2' className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
+      {/* <div id='upcoming-2' className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
         <div className=' rounded-xl  bg-white h-auto flex flex-col mb-8'>
           <div
             className={`w-full bg-white  ${theme.dashboard.bg} rounded-t-xl`}
@@ -234,9 +235,9 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
               <h1 className={`text-lg text-black font-open text-left`}>Ode to the rat</h1>
               <p className={`text-sm text-left `}>Summary coming soon...</p>
             </div>
-            {/* Gradient - start*/}
-            {/* {gradientCover('upcoming-2')} */}
-            {/* Gradient - end */}
+            Gradient - start
+            {gradientCover('upcoming-2')}
+            Gradient - end
             <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
               <div className={`flex mx-2 justify-center items-center my-2 w-5/10 text-gray-300`}>
                 <div className='w-auto text-gray-300'>
@@ -258,9 +259,9 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* DUMMY CARD 3 */}
-      <div id='upcoming-3' className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10`}>
+      {/* <div id='upcoming-3' className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10`}>
         <div className=' rounded-xl  bg-white h-auto flex flex-col mb-8'>
           <div
             className={`w-full bg-white  ${theme.dashboard.bg} rounded-t-xl`}
@@ -270,9 +271,9 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
             <div className='h-6/10 justify-center items-center align-center'>
               <div
                 className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full'
-                /* style={{
+                style={{
                 backgroundImage: ``,
-              }} */
+              }} 
               />
             </div>
             <div className='h-1/10 pl-6'>
@@ -295,9 +296,9 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
               <h1 className={`text-lg text-black font-open text-left`}>My Honest Poem</h1>
               <p className={`text-sm text-left`}>Summary coming soon...</p>
             </div>
-            {/* Gradient - start*/}
-            {/* {gradientCover('upcoming-3')} */}
-            {/* Gradient - end */}
+            Gradient - start
+            {gradientCover('upcoming-3')}
+            Gradient - end
             <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
               <div className={`flex mx-2 justify-center items-center my-2 w-5/10 text-gray-300`}>
                 <div className='w-auto text-gray-300'>
@@ -318,7 +319,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

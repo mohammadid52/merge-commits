@@ -202,7 +202,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     switch (question.type) {
       case 'input':
         return (
-          <div key={key} className={'w-4.8/10 flex flex-col mb-4 mx-2 mb-3'}>
+          <div key={key} className={'w-full flex flex-col mb-4 mx-2 mb-3'}>
             <label className='mb-2 text-lg' htmlFor={question.label}>
               {question.question}
             </label>
@@ -238,7 +238,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
         );
       case 'selectMany':
         return (
-          <div className={`w-4.8/10 flex flex-col mx-2 mb-3`}>
+          <div className={`w-full flex flex-col mx-2 mb-3`}>
             <p className='mb-3 text-lg'>{question.question}</p>
             <div id={question.label} className={'w-9.5/10 flex flex-col'}>
               {question.options.map(
@@ -292,10 +292,12 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       <h4 className={`w-full text-xl font-open font-bold`}>{checkpoint.checkpoint.instructions}</h4>
       <div
         className={`w-full h-full flex justify-center items-center divide-x-2 divide-dark divide-opacity-50`}>
-        <div className='w-full h-full flex flex-col flex-wrap justify-around items-center py-4 px-2'>
+        <div className='w-full h-full flex flex-col justify-around py-4 px-2'>
+          <div className="w-4.8/10 h-full flex flex-col flex-wrap justify-around ">
           {checkpoint.checkpoint.questions.items.map((item: { question: any }, key: number) => {
             return <>{inputSwitch(item.question, key)}</>;
           })}
+          </div>
         </div>
       </div>
     </div>
