@@ -15,5 +15,10 @@ module.exports = merge(common, {
   ],
   devServer: {
     watchContentBase: true
+  },
+  watchOptions: {
+    ignored: /node_modules/,
+    aggregateTimeout: 200,
+    poll: 1000
   }
 });

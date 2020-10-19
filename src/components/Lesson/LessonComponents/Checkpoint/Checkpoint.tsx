@@ -21,8 +21,6 @@ const Checkpoint = () => {
                 return <SampleProfileQuestions  />
             case 'survey':
                 return <CheckpointQuestions handleSetTitle={handleSetTitle} />
-            case 'assessment':
-                return <Assessments handleSetTitle={handleSetTitle} />
             default:
                 return
         }

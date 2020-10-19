@@ -31,12 +31,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
-              name: 'User Management',
-              path: 'manage-users',
-            },
-            {
               name: 'Registration',
               path: 'registration',
+            },
+            {
+              name: 'User Management',
+              path: 'manage-users',
             },
             {
               name: 'Classroom',
@@ -57,12 +57,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
-              name: 'User Management',
-              path: 'manage-users',
-            },
-            {
               name: 'Registration',
               path: 'registration',
+            },
+            {
+              name: 'User Management',
+              path: 'manage-users',
             },
             {
               name: 'Classroom',
@@ -79,16 +79,16 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
+              name: 'Registration',
+              path: 'registration',
+            },
+            {
               name: 'User Management',
               path: 'manage-users',
             },
             {
               name: 'Lesson Planner',
               path: 'lesson-planner',
-            },
-            {
-              name: 'Registration',
-              path: 'registration',
             },
           ];
         });
