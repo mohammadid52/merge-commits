@@ -15,5 +15,8 @@ module.exports = merge(common, {
   ],
   devServer: {
     watchContentBase: true
+  },
+  watchOptions: {
+    ignored: /node_modules/
   }
 });
