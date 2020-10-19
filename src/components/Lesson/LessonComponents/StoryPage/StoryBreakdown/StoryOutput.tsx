@@ -18,7 +18,7 @@ const StoryOutput = (props: StoryOutputProps) => {
       <div className='w-full h-48 flex flex-col'>
         {
           props.story !== '' 
-          ? <div>{props.story}</div>
+          ? <div className={`${theme.elem.text} align-middle text-center`}>{props.story}</div>
           : <div className={`${theme.elem.text} align-middle text-center`}>You didn't write a story </div>
         }
       </div>

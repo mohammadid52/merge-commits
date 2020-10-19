@@ -79,6 +79,8 @@ const Classroom: React.FC = () => {
 
   useEffect(() => {
     getCourse('1');
+
+    history.push('/lesson?id=1')
   }, []);
 
   useEffect(() => {

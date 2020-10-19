@@ -1,7 +1,7 @@
 const path = require('path');
-// const webpack = require('webpack');
 
 module.exports = {
+  context: path.join(__dirname, './'),
   entry: path.resolve(__dirname, './src', 'index.tsx'),
   output: {
     path: path.join(__dirname, '/public'),
@@ -15,23 +15,19 @@ module.exports = {
   resolve: {
     extensions: ['.mjs', '.ts', '.tsx', '.js', '.json'],
     mainFields: ['module', 'main'],
-    modules: [
-      path.resolve('./src'),
-      path.resolve('./frontend'),
-      path.resolve('./node_modules'),
-    ],
+    modules: [path.resolve('./src'), path.resolve('./frontend'), path.resolve('./node_modules')],
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: 'ts-loader',
+        loaders: 'ts-loader',
       },
       {
         test: /\.mjs$/,
         include: /node_modules/,
-        type: "javascript/auto",
+        type: 'javascript/auto',
       },
       {
         test: /\.json$/,
@@ -41,12 +37,9 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
+        loaders: 'babel-loader',
         query: {
-          presets: [
-            '@babel/preset-env',
-            '@babel/preset-react',
-          ],
+          presets: ['@babel/preset-env', '@babel/preset-react'],
           plugins: [
             '@babel/plugin-proposal-class-properties',
             'babel-plugin-transform-async-to-promises',
@@ -75,7 +68,7 @@ module.exports = {
             loader: 'css-loader',
             options: {
               importLoaders: 1,
-            }
+            },
           },
           {
             loader: 'postcss-loader',
@@ -86,26 +79,27 @@ module.exports = {
                 require('autoprefixer'),
                 // require('@tailwindcss/ui'),
               ],
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       {
         test: /\.s[ac]ss$/i,
         use: [
           {
-            loader: 'style-loader'
+            loader: 'style-loader',
           },
+          'cache-loader',
           {
             loader: 'css-loader',
             options: {
               importLoaders: 1,
-            }
+            },
           },
           {
-            loader: 'sass-loader'
-          }
-        ]
+            loader: 'sass-loader',
+          },
+        ],
       },
       {
         test: /\.(png|jpe?g|svg|gif)$/,
@@ -115,11 +109,12 @@ module.exports = {
             options: {
               name: '[path][name].[ext]',
               outputPath: 'media',
-              publicPath: 'media'
+              publicPath: 'media',
             },
           },
         ],
       },
     ],
   },
+  
 };

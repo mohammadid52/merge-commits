@@ -1,9 +1,11 @@
 const common = require('./webpack.common.js');
 const {merge} = require('webpack-merge');
-// const path = require('path');
 const webpack = require('webpack');
 
-module.exports = merge(common, {
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const smp = new SpeedMeasurePlugin();
+
+module.exports = smp.wrap(merge(common, {
   mode: 'development',
   plugins: [
     new webpack.DefinePlugin({
@@ -19,4 +21,4 @@ module.exports = merge(common, {
   watchOptions: {
     ignored: /node_modules/
   }
-});
+}));
