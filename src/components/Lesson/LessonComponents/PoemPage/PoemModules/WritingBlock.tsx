@@ -1,327 +1,405 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import { IconContext } from "react-icons/lib/esm/iconContext";
-import { FaPlus } from 'react-icons/fa';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { AiOutlineArrowDown, AiOutlinePlus, AiOutlineClose } from 'react-icons/ai';
 import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 import PositiveAlert from '../../../../General/Popup';
 
 interface WritingBlockProps {
-    editMode: {
-        open: boolean;
-        input: string;
-    }
-    setEditMode: React.Dispatch<React.SetStateAction<{
-        open: boolean;
-        input: string;
-    }>>
+  editMode: {
+    open: boolean;
+    input: string;
+  };
+  setEditMode: React.Dispatch<
+    React.SetStateAction<{
+      open: boolean;
+      input: string;
+    }>
+  >;
 }
 
 const WritingBlock = (props: WritingBlockProps) => {
-    const { editMode, setEditMode } = props;
-    const [ cookies, setCookie ] = useCookies(['poem']);
-    const { state, dispatch } = useContext(LessonContext);
-    const lineNo = state.data.lesson.activity.lineNumber;
-    const promptArray = state.data.lesson.activity.writingPrompts;
-    const initialLines = [];
-    for(let i = 0; i < lineNo; i++) {
-        let tempObj = {
-            id: i,
-            text: '',
-            example: '',
-            menuOpen: false,
-        }
-        initialLines.push(tempObj)
+  const { editMode, setEditMode } = props;
+  const [cookies, setCookie] = useCookies(['poem']);
+  const { state, theme, dispatch } = useContext(LessonContext);
+  const lineNo = state.data.lesson.activity.lineNumber;
+  const promptArray = state.data.lesson.activity.writingPrompts;
+  const initialLines = [];
+  for (let i = 0; i < lineNo; i++) {
+    let tempObj = {
+      id: i,
+      text: '',
+      example: '',
+      menuOpen: false,
+    };
+    initialLines.push(tempObj);
+  }
+  const [lineState, setLineState] = useState({
+    focused: null,
+    prompts: promptArray,
+    lines:
+      state.componentState.poem && state.componentState.poem.lines
+        ? state.componentState.poem.lines
+        : initialLines,
+  });
+
+  useEffect(() => {
+    if (cookies.poem && cookies.poem.lines.length >= lineNo) {
+      setLineState((prev) => {
+        return {
+          ...prev,
+          lines: cookies.poem.lines,
+        };
+      });
     }
-    const [ lineState, setLineState ] = useState({
-        focused: null,
-        prompts: promptArray,
-        lines: state.componentState.poem && state.componentState.poem.lines ? state.componentState.poem.lines : initialLines,
+  }, []);
+
+  useEffect(() => {
+    let lineArray = lineState.lines.map((line: { text: string }) => {
+      return line.text;
     });
 
-    useEffect(() => {
-        if ( cookies.poem && cookies.poem.lines.length >= lineNo ) {
-            setLineState(prev => {
-                return {
-                    ...prev,
-                    lines: cookies.poem.lines
-                }
-            })
-        }
-    }, [])
+    let content = '';
+    lineArray.forEach((line: string) => {
+      return (content = content + line + '\n');
+    });
 
-    useEffect(() => {
-        let lineArray = lineState.lines.map((line: { text: string }) => {
-            return line.text
-        })
+    setEditMode((editInput) => {
+      return {
+        ...editInput,
+        input: content,
+      };
+    });
 
-        let content = '';
-        lineArray.forEach((line: string) => {
-            return content = content + line + '\n'
+    if (state.componentState.poem) {
+      dispatch({
+        type: 'UPDATE_COMPONENT_STATE',
+        payload: {
+          componentName: 'poem',
+          inputName: 'lines',
+          content: lineState.lines,
+        },
+      });
+
+      dispatch({
+        type: 'UPDATE_COMPONENT_STATE',
+        payload: {
+          componentName: 'poem',
+          inputName: 'editInput',
+          content: content,
+        },
+      });
+
+      setCookie('poem', {
+        ...cookies.poem,
+        lines: lineState.lines,
+        editInput: content,
+      });
+    }
+  }, [lineState]);
+
+  const closeMenus = () => {
+    setLineState((lineState) => {
+      return {
+        ...lineState,
+        lines: lineState.lines.map((line: { text: string }) => {
+          return {
+            ...line,
+            menuOpen: false,
+          };
+        }),
+      };
+    });
+  };
+
+  const handleAddInput = () => {
+    let length = lineState.lines.length;
+    if (length < lineNo * 2) {
+      setLineState((lineState) => {
+        return {
+          ...lineState,
+          lines: lineState.lines.concat({
+            id: length,
+            text: '',
+            menuOpen: false,
+            example: '',
+          }),
+        };
+      });
+    }
+  };
+
+  const handleDeleteInput = (e: any) => {
+    let { id } = e.currentTarget;
+    let length = lineState.lines.length;
+    if (length > lineNo) {
+      setLineState((lineState) => {
+        let newLines = lineState.lines.filter((line: { id: string }, key: number) => {
+          return id != line.id;
         });
-
-        
-        setEditMode(editInput => {
+        return {
+          ...lineState,
+          lines: newLines.map((line: { id: string }, key: number) => {
             return {
-                ...editInput, 
-                input: content,
-            }
-        })
+              ...line,
+              id: key,
+            };
+          }),
+        };
+      });
+    }
+  };
 
-        if ( state.componentState.poem ) {
-            dispatch({
-                type: 'UPDATE_COMPONENT_STATE',
-                payload: {
-                    componentName: 'poem',
-                    inputName: 'lines',
-                    content: lineState.lines
-                }
-            })
+  const handleSelectPrompt = (e: { currentTarget: any }) => {
+    const current = e.currentTarget;
+    let selectedId = current.querySelector('span').id;
+    let selectedPrompt = lineState.prompts
+      .filter((item: { id: number }) => {
+        return item.id == selectedId;
+      })
+      .pop();
 
-            dispatch({
-                type: 'UPDATE_COMPONENT_STATE',
-                payload: {
-                    componentName: 'poem',
-                    inputName: 'editInput',
-                    content: content
-                }
-            })
-
-            setCookie('poem', {
-                ...cookies.poem, 
-                lines: lineState.lines,
-                editInput: content
-            })
-        }
-    }, [lineState])
-
-    const closeMenus = () => {
-        setLineState(lineState => {
+    setLineState((lineState) => {
+      return {
+        ...lineState,
+        lines: lineState.lines.map((line: { id: string }, key: number) => {
+          if (line.id == current.id) {
             return {
-                ...lineState,
-                lines: lineState.lines.map((line: { text: string }) => {
-                    return {
-                        ...line,
-                        menuOpen: false,
-                    }
-                })
-            }
-        })
-    }
+              ...line,
+              text: selectedPrompt.prompt,
+              example: selectedPrompt.example,
+            };
+          }
+          return line;
+        }),
+      };
+    });
 
-    const handleAddInput = () => {
-        let length = lineState.lines.length;
-        if (length < (lineNo * 2)) {
-            setLineState(lineState => {
+    closeMenus();
+  };
+
+  const handleMenuToggle = (e: any) => {
+    const { id } = e.target;
+    setLineState((lineState) => {
+      return {
+        ...lineState,
+        lines: lineState.lines.map((line: { id: string; menuOpen: boolean }, key: number) => {
+          if (line.id == id) {
             return {
-                ...lineState,
-                lines: lineState.lines.concat({
-                    id: length,
-                    text: '',
-                    menuOpen: false,
-                    example: '',
-                })
-            }
-        })}
-    }
+              ...line,
+              menuOpen: !line.menuOpen,
+            };
+          }
+          return {
+            ...line,
+            menuOpen: false,
+          };
+        }),
+      };
+    });
+  };
 
-    const handleDeleteInput = (e: any) => {
-        let { id } = e.currentTarget;
-        let length = lineState.lines.length;
-        if (length > lineNo) {
-            setLineState(lineState => {
-                let newLines = lineState.lines.filter((line: { id: string }, key: number) => {
-                    return id != line.id;
-                })
-                return {
-                    ...lineState,
-                    lines: newLines.map((line: { id: string }, key: number) => {
-                        return {
-                            ...line,
-                            id: key
-                        }
-                    }),
-                }
-            })
-        }
-    }
+  const [alert, setAlert] = useState(false);
 
-    const handleSelectPrompt = (e: { currentTarget: any; }) => {
-        const current = e.currentTarget;
-        let selectedId = current.querySelector('span').id;
-        let selectedPrompt = lineState.prompts.filter((item: { id: number}) => {
-            return item.id == selectedId
-        }).pop();
+  const handleCancel = () => {
+    setAlert(!alert);
+  };
 
-        setLineState(lineState => {
+  const handleSubmit = () => {
+    setEditMode((editMode) => {
+      return {
+        ...editMode,
+        open: true,
+      };
+    });
+    setAlert(!alert);
+  };
+
+  const handleInputChange = (e: any) => {
+    const { id, value } = e.target;
+    setLineState((lineState) => {
+      return {
+        ...lineState,
+        lines: lineState.lines.map((line: { id: string }, key: number) => {
+          if (line.id == id) {
             return {
-                ...lineState, 
-                lines: lineState.lines.map((line: { id: string }, key: number) => {
-                    if (line.id == current.id) {
-                        return {
-                            ...line, 
-                            text: selectedPrompt.prompt,
-                            example: selectedPrompt.example,
-                        }
-                    }
-                    return line
-                })
-            }
-        });
+              ...line,
+              text: value,
+            };
+          }
+          return line;
+        }),
+      };
+    });
+  };
 
-        closeMenus();
-    }
+  const handleDragOver = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+  };
 
-    const handleMenuToggle = (e: any) => {
-        const { id } = e.target;
-        setLineState(lineState => {
+  const handleDrop = (e: any) => {
+    e.preventDefault();
+    const { id } = e.currentTarget;
+    const addWord = e.dataTransfer.getData('addWord');
+
+    setLineState((lineState) => {
+      return {
+        ...lineState,
+        lines: lineState.lines.map((line: { id: string; text: string }, key: number) => {
+          if (id == line.id) {
             return {
-                ...lineState,
-                lines: lineState.lines.map((line: { id: string, menuOpen: boolean }, key: number) => {
-                    if (line.id == id) {
-                        return {
-                            ...line,
-                            menuOpen: !line.menuOpen,
-                        }
-                    }
-                    return {
-                        ...line, 
-                        menuOpen: false,
-                    }
-                })
-            }
-        })
-    }
+              ...line,
+              text: line.text + ' ' + addWord,
+            };
+          }
+          return line;
+        }),
+      };
+    });
+  };
+
+  return (
+    <div className='w-full flex flex-col'>
+      <div
+        className={`${alert ? 'absolute z-100' : 'hidden'}`}
+        style={{ top: '50%'}}>
+        <PositiveAlert
+          alert={alert}
+          setAlert={setAlert}
+          header='Are you ready to edit your poem?'
+          content="Once you go to 'Final Edits' you will not be able to come back to these line prompts"
+          button1='Go to Final Edits'
+          button2='Cancel'
+          svg='question'
+          handleButton1={handleSubmit}
+          handleButton2={handleCancel}
+        />
+      </div>
+      <div className={`w-full h-full rounded-xl`}>
+        <h3 className={`w-full h-1/10 text-xl ${theme.banner} border-b-4 border-sea-green`}>
+          Line Prompts{' '}
+          <ToolTip
+            width='w-40'
+            position='bottom'
+            header='Instructions'
+            content='Make sure you are finished with the line prompts before you click "Save and Edit"'
+          />
+        </h3>
+        <IconContext.Provider
+          value={{
+            size: '1.5rem',
+            style: { width: '32px' },
+            className: `text-white`,
+          }}>
+          <div className='w-8 cursor-pointer' onClick={handleAddInput}>
+            <AiOutlinePlus />
+          </div>
+        </IconContext.Provider>
+      </div>
+      <div className='w-full flex flex-col'>
+
+        {/* MAP THE LINE PROMPTS */}
+        {lineState.lines.length > 1
+          ? lineState.lines.map(
+              (
+                line: { id: string; text: string; example: string; menuOpen: boolean },
+                key: number
+              ) => {
+                let id = line.id.toString();
+                return (
+                  <div key={key} className='relative flex flex-col'>
+                    <div className='relative'>
+                      <div
+                        key={key}
+                        id={id}
+                        className='relative w-full h-12 flex flex-row items-center rounded-xl'
+                        onDragOver={handleDragOver}
+                        onDrop={handleDrop}>
+                        <input
+                          id={id}
+                          className={`rounded-l-xl ${theme.elem.textInput}`}
+                          name={id}
+                          type='text'
+                          value={line.text}
+                          onChange={handleInputChange}
+                          onDoubleClick={handleMenuToggle}
+                        />
 
 
-    const [alert, setAlert] = useState(false);
-
-    const handleCancel = () => {
-        setAlert(!alert);
-    }
-
-    const handleSubmit = () => {
-        setEditMode(editMode => {
-            return {
-                ...editMode,
-                open: true,
-            }
-        })
-        setAlert(!alert);
-    }
-
-    const handleInputChange = (e: any) => {
-        const { id, value } = e.target;
-        setLineState(lineState => {
-            return {
-                ...lineState,
-                lines: lineState.lines.map((line: { id: string }, key: number) => {
-                    if (line.id == id) {
-                        return {
-                            ...line,
-                            text: value,
-                        }
-                    } 
-                    return line
-                })
-            }
-        })
-    }
-
-    const handleDragOver = (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
-    }
-
-    const handleDrop = (e: any) => {
-        e.preventDefault();
-        const { id } = e.currentTarget;
-        const addWord = e.dataTransfer.getData('addWord');
-        
-        setLineState(lineState => {
-            return {
-                ...lineState,
-                lines: lineState.lines.map((line: { id: string, text: string }, key: number) => {
-                    if (id == line.id) {
-                        return {
-                            ...line,
-                            text: line.text + ' ' + addWord
-                        };
-                    }
-                    return line;
-                })
-            }
-        })
- 
-    }
-
-    return (
-        <div className="relative bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600" >
-            <div className={`${alert ? 'absolute z-100' : 'hidden'}`} style={{top: '0', right: '-37.5%'}}>
-                <PositiveAlert 
-                    alert={alert}
-                    setAlert={setAlert}
-                    header='Are you ready to edit your poem?' 
-                    content="Once you go to 'Final Edits' you will not be able to come back to these line prompts" 
-                    button1='Go to Final Edits' 
-                    button2='Cancel' 
-                    svg='question' 
-                    handleButton1={handleSubmit} 
-                    handleButton2={handleCancel}
-                    />
-            </div>
-            <div className="w-full flex flex-row justify-between mb-2">
-                <h3 className='w-3/10 mr-2 flex text-xl text-gray-200 font-open font-light animate-bounce z-100'>
-                    Line Prompts <ToolTip width='w-40' position='bottom' header='Instructions' content='Make sure you are finished with the line prompts before you click "Save and Edit"' />
-                </h3>
-                <IconContext.Provider value={{ color: '#E2E8F0', size: '1.5rem', style: { opacity: `${lineState.lines.length < (lineNo * 2) ? '100%' : '10%'}`}}}>
-                    <div className="w-8 cursor-pointer" onClick={handleAddInput}>
-                        <FaPlus/>
-                    </div>
-                </IconContext.Provider>
-            </div>
-            <div className="w-full h-full overflow-y-auto overflow-x-hidden flex flex-col ml-2">
-                {   lineState.lines.length > 1 ? 
-                    lineState.lines.map((line: { id: string, text: string, example: string, menuOpen: boolean }, key: number) => {
-                        let id = line.id.toString()
-                        return (
-                        <div key={key} className="relative bg-transparent flex flex-col items-center animate-fadeIn">
-                            <div key={key} id={id} className="w-full h-12 flex flex-row items-center rounded-lg" onDragOver={handleDragOver} onDrop={handleDrop}>
-                                <input id={id} className="w-full h-10 px-4 py-2 rounded-l-lg text-gray-700 bg-gray-300 " name={id} type="text" value={line.text} onChange={handleInputChange} onDoubleClick={handleMenuToggle}/>
-                                <div id={id} className="w-10 h-10 bg-gray-300 rounded-r-lg  flex justify-center items-center cursor-pointer" onClick={handleMenuToggle}>
-                                    <div id={id} className="w-4 h-4 border-dark-blue border-b-8 border-r-8 transform rotate-45 mb-1"></div>
-                                </div>
-                                <div id={id} className={`w-8 h-8 ml-2 flex justify-center items-center ${lineState.lines.length > lineNo ? 'cursor-pointer' : ''}`} onClick={handleDeleteInput}>
-                                    <IconContext.Provider value={{color: '#E2E8F0', size: '1.5rem', style: { transform: 'rotate(45deg)', opacity: `${lineState.lines.length > lineNo ? '100%' : '10%'}` }}}>
-                                        <FaPlus/>
-                                    </IconContext.Provider>
-                                </div>
+                        {/* MENU TOGGLE BUTTON */}
+                        <div
+                          id={id}
+                          className='w-10 h-10 bg-dark-gray rounded-r-xl flex justify-center items-center cursor-pointer'
+                          onClick={handleMenuToggle}>
+                          <IconContext.Provider
+                            value={{
+                              size: '1.5rem',
+                              style: { width: '32px', pointerEvents:'none' },
+                              className: `text-white`,
+                            }}>
+                            <div id={id} className='w-8 cursor-pointer'>
+                              <AiOutlineArrowDown />
                             </div>
-                            <label className={`${line.example ? 'visible' : 'invisible'} font-light self-end flex justify-end text-gray-400 text-sm mr-12`} htmlFor={id}>
-                                ( ex. {line.example} )
-                            </label>
-                            {   line.menuOpen ?
-                                    <div className="absolute left-0 w-9.5/10 shadow-3 h-32 bg-gray-300 rounded-lg p-4 transform translate-y-12 overflow-y-auto overflow-x-hidden z-20">
-                                        { 
-                                            lineState.prompts.map((prompt: any, key: string) => (
-                                                <div key={key} id={id} className="w-full mb-2 font-light cursor-pointer" onClick={handleSelectPrompt}>
-                                                    <span id={prompt.id}>{ prompt.prompt }</span>
-                                                </div>
-                                            ))
-                                            
-                                        }
-                                    </div>
-                                :
-                                null
-                            }
+                          </IconContext.Provider>
                         </div>
-                    )}) : null
-                }
-            </div>
-            <button className="self-start w-auto px-3 h-8 text-xl font-open font-light bg-yellow-500 text-gray-900 flex justify-center items-center rounded-lg mt-2" onClick={() => setAlert(!alert)}>
-                Save and Edit
-            </button>
-        </div>
-    )
-}
+
+
+                        {/* REMOVE LINE PROMPT */}
+                        <div
+                          id={id}
+                          className={`w-8 h-8 ml-2 flex justify-center items-center ${
+                            lineState.lines.length > lineNo ? 'cursor-pointer' : ''
+                          }`}
+                          onClick={handleDeleteInput}>
+                          <IconContext.Provider
+                            value={{
+                              size: '1.5rem',
+                              style: {
+                                width: '32px',
+                                opacity: `${lineState.lines.length > lineNo ? '100%' : '50%'}`,
+                              },
+                              className: `text-white`,
+                            }}>
+                            <AiOutlineClose />
+                          </IconContext.Provider>
+                        </div>
+                      </div>
+
+                      <label
+                        className={`${
+                          line.example ? 'visible' : 'invisible'
+                        } font-light self-end flex justify-start text-gray-400 text-sm mr-12`}
+                        htmlFor={id}>
+                        ( ex. {line.example} )
+                      </label>
+                      {line.menuOpen ? (
+                        <div className={`absolute left-0 top-3 w-192 rounded-b-xl z-50 ${theme.elem.textInput}`}>
+                          {lineState.prompts.map((prompt: any, key: string) => (
+                            <div
+                              key={key}
+                              id={id}
+                              className='w-full mb-2 font-light cursor-pointer'
+                              onClick={handleSelectPrompt}>
+                              <span id={prompt.id}>{prompt.prompt}</span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              }
+            )
+          : null}
+      </div>
+      <button
+        className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 flex justify-center items-center rounded-xl mt-2 ${theme.elem.text}`}
+        onClick={() => setAlert(!alert)}>
+        Save and Edit
+      </button>
+    </div>
+  );
+};
 
 export default WritingBlock;

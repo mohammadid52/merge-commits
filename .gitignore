@@ -4,7 +4,9 @@ package-lock.json
 zjunk
 inspiration
 
-#breakdowns
+#components
+Classroom.tsx
+LessonHeaderBar.tsx
 
 #amplify
 amplify/\#current-cloud-backend

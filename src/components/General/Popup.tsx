@@ -58,7 +58,7 @@ const PosAlert = (props: WritingAlertProps) => {
  
     return (
         ///change the POSITION if needed
-        <div className={`${open ? 'hidden' : 'display'} relative z-50 w-full flex justify-center items-center`}>
+        <div className={`${open ? 'hidden' : 'display'} relative z-50 w-64rem flex justify-center items-center`}>
             <div className="bg-white rounded-lg px-4 pt-5 pb-4 overflow-hidden shadow-xl transform transition-all sm:max-w-sm sm:w-full sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
                 <div className="absolute w-auto cursor-pointer p-2 hover:text-gray-300" style={{top: 0, right: 0, color: '#828282'}} onClick={() => setAlert(!alert)}>
                     <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
