@@ -22,14 +22,14 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
   const { theme } = useContext(GlobalContext);
 
 
-  const handleLink = (key: number) => {
+  const handleLink = (key: any) => {
     if (accessible) {
-      history.push((`${link}`));
+        history.push((`${`/lesson-control?id=${key + 1}`}`));
     }
+
     // For testing: enables clickthrough survey
     // history.push(link);
   };
-
 
   useEffect(() => {
     if (display) {
