@@ -18,6 +18,8 @@ const StoryForm = (props: props) => {
         story: ''
     })
 
+    console.log(dataProps, 'dta props')
+
     useEffect(() => {
         
         setInput({
