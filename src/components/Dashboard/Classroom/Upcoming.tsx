@@ -15,18 +15,6 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
   const [openCards, setOpenCards] = useState<string[]>(['']);
-  // console.log(curriculum, 'curr')
-
-  // const curriculumLessonTest =
-  //     curriculum.map(( lesson: {title: string, artist: {id: string, images: any, name: string, type: string}, summary: string} ) => {
-  //         return (
-  //             value.lesson
-  //             // console.log(value.lesson.artist, 'lesson')
-  //     )
-
-  //     })
-
-  // const slice = curriculum.slice(1, 2);
 
   const curriculumLesson = curriculum
     ? curriculum.map((value: any, index: number, array: CurriculumInfo[]) => {
@@ -139,16 +127,18 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
               i: number
             ) => (
               <div
-                id='upcoming-1'
+                id={`upcoming-${i}`}
                 key={i}
                 className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
                 <div className='rounded-xl  bg-white h-auto flex flex-col mb-8'>
                   <div
-                    className={`w-full bg-white  ${theme.dashboard.bg} rounded-t-xl`}
+                    className={`w-full bg-white  ${theme.dashboard.bg} rounded-t-xl bg-cover`}
                     style={{
-                      background: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url(${lesson.artist.images})`,
+                      background: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))`,
+                      backgroundImage: `url(${lesson.artist.images})`,
                       backgroundSize: 'cover',
-                    }}>
+                    }}
+                   >
                     <div className='h-6/10 justify-center items-center align-center'>
                       <div className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full' />
                     </div>
@@ -167,7 +157,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                   <div className='w-full relative flex flex-col rounded-b-xl'>
                     <div
                       className={`${
-                        openCards.includes('upcoming-1') ? 'h-72' : 'h-32'
+                        openCards.includes(`upcoming-${i}`) ? 'h-72 h-auto' : 'h-32'
                       } p-4 mb-2 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
                       <h1 className={`text-lg text-black font-open text-left`}>{lesson.title}</h1>
                       <p className={`text-sm text-left`}>
@@ -175,7 +165,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                       </p>
                     </div>
                     {/* Gradient - start*/}
-                    {gradientCover('upcoming-1')}
+                    {gradientCover(`upcoming-${i}`)}
                     {/* Gradient - end */}
                     <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
                       <div
@@ -204,123 +194,6 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
             )
           )
         : null}
-      {/* DUMMY CARD 2 */}
-      {/* <div id='upcoming-2' className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
-        <div className=' rounded-xl  bg-white h-auto flex flex-col mb-8'>
-          <div
-            className={`w-full bg-white  ${theme.dashboard.bg} rounded-t-xl`}
-            style={{
-              backgroundImage: ``,
-            }}>
-            <div className='h-6/10 justify-center items-center align-center'>
-              <div className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full' />
-            </div>
-            <div className='h-1/10 pl-6'>
-              <div className='tracking-widest border-b text-gray-300 border-ketchup' style={{textShadow:'1px 1px black'}}>
-                FEATURED ARTIST
-              </div>
-            </div>
-            <div className='h-3/10 flex flex-row-reverse'>
-              <h2
-                className={`first w-full text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200 text-center`} style={{textShadow:'1px 1px black'}}>
-                <p>Elizabeth Acevedo</p>
-              </h2>
-            </div>
-          </div>
-          <div className='relative w-full h-full flex flex-col rounded-b-xl'>
-            <div
-              className={`${
-                openCards.includes('upcoming-2') ? 'h-72' : 'h-32'
-              } mb-2 p-4 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
-              <h1 className={`text-lg text-black font-open text-left`}>Ode to the rat</h1>
-              <p className={`text-sm text-left `}>Summary coming soon...</p>
-            </div>
-             Gradient - start
-            {gradientCover('upcoming-2')} 
-             Gradient - end 
-            <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
-              <div className={`flex mx-2 justify-center items-center my-2 w-5/10 text-gray-300`}>
-                <div className='w-auto text-gray-300'>
-                  <IconContext.Provider
-                    value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
-                    <AiOutlineClockCircle />
-                  </IconContext.Provider>
-                </div>
-                <div className={`w-auto ml-2 text-sm text-gray-300`}>45 min.</div>
-              </div>
-              <div className={`flex mx-2 justify-center items-center my-2 w-5/10`}>
-                <div className='w-auto text-gray-300'>
-                  <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
-                    <AiOutlineUser />
-                  </IconContext.Provider>
-                </div>
-                <div className={`w-auto ml-2 text-sm text-gray-200`}>Marlon</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
-      {/* DUMMY CARD 3 */}
-      {/* <div id='upcoming-3' className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10`}>
-        <div className=' rounded-xl  bg-white h-auto flex flex-col mb-8'>
-          <div
-            className={`w-full bg-white  ${theme.dashboard.bg} rounded-t-xl`}
-            style={{
-              backgroundImage: ``,
-            }}>
-            <div className='h-6/10 justify-center items-center align-center'>
-              <div
-                className='w-24 h-24 mt-2 mx-auto bg-cover rounded-full'
-                style={{
-                backgroundImage: ``,
-              }} 
-              />
-            </div>
-            <div className='h-1/10 pl-6'>
-              <div className='tracking-widest border-b text-gray-300 border-ketchup' style={{textShadow:'1px 1px black'}}>
-                FEATURED ARTIST
-              </div>
-            </div>
-            <div className='h-3/10 flex flex-row-reverse'>
-              <h2
-                className={`first w-full text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200 text-center`} style={{textShadow:'1px 1px black'}}>
-                <p>Rudy Francisco</p>
-              </h2>
-            </div>
-          </div>
-          <div className='relative w-full h-full flex flex-col rounded-b-xl'>
-            <div
-              className={`${
-                openCards.includes('upcoming-3') ? 'h-72' : 'h-32'
-              } mb-2 p-4 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
-              <h1 className={`text-lg text-black font-open text-left`}>My Honest Poem</h1>
-              <p className={`text-sm text-left`}>Summary coming soon...</p>
-            </div>
-             Gradient - start
-           {gradientCover('upcoming-3')} 
-           Gradient - end 
-            <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
-              <div className={`flex mx-2 justify-center items-center my-2 w-5/10 text-gray-300`}>
-                <div className='w-auto text-gray-300'>
-                  <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
-                    <AiOutlineClockCircle />
-                  </IconContext.Provider>
-                </div>
-                <div className={`w-auto ml-2 text-sm text-gray-300`}>45 min.</div>
-              </div>
-              <div className={`flex mx-2 justify-center items-center my-2 w-5/10`}>
-                <div className='w-auto text-gray-300'>
-                  <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
-                    <AiOutlineUser />
-                  </IconContext.Provider>
-                </div>
-                <div className={`w-auto ml-2 text-sm text-gray-200`}>Marlon</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
-    
     </div>
   );
 };
