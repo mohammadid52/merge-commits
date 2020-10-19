@@ -16,6 +16,8 @@ interface ClassProps {
 
 const Today: React.FC<ClassProps> = (props: ClassProps) => {
   const { link, curriculum, display } = props;
+  console.log(link, 'link')
+  console.log(curriculum, 'curr')
   const [accessible, setAccessible] = useState<boolean>(true);
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
@@ -61,7 +63,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
         </div>
         <div className='h-3/10 flex flex-row-reverse'>
           <h2
-            className={`first w-full text-2xl text-right font-open font-medium tracking-widest mt-2 text-gray-200`}
+            className={`first w-full text-2xl text-right font-open font-medium tracking-widest mt-2 text-gray-200 mr-1`}
             style={{textShadow:'1px 1px black'}}>
             {curriculum && curriculum.artist.name ? curriculum.artist.name : null}
           </h2>

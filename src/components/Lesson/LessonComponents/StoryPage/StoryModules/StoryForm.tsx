@@ -17,6 +17,8 @@ const StoryForm = () => {
         : '',
   });
 
+  console.log(state, 'state')
+
   useEffect(() => {
     if (cookies.story) {
       setInput(() => {
@@ -83,7 +85,7 @@ const StoryForm = () => {
           className='md:w-88 px-4 py-1 mb-4 rounded-lg text-lg text-gray-700 bg-gray-300'
           name='title'
           type='text'
-          placeholder='La Llorona'
+          placeholder={state.data.lesson.warmUp.inputs.example}
           value={input.title}
           onChange={handleInputChange}
         />
@@ -92,7 +94,7 @@ const StoryForm = () => {
           id='story'
           className='w-full h-9/10 px-4 py-2 rounded-lg text-xl text-gray-700 bg-gray-300'
           name='story'
-          placeholder='Write your story here!'
+          placeholder={state.data.lesson.warmUp.inputs.example2}
           value={input.story}
           onChange={handleInputChange}
         />

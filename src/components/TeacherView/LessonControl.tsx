@@ -31,6 +31,7 @@ const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'));
 
 const LessonControl = () => {
     const { state, dispatch } = useContext(LessonControlContext);
+    console.log(state, 'state')
     const match = useRouteMatch();
     const history = useHistory();
     const location = useLocation();
@@ -207,7 +208,7 @@ const LessonControl = () => {
                 // onClick={handleQuitAll}
                 >
                     <h1 className={`w-2.5/10 text-3xl pl-4 font-extrabold font-open`}>
-                        Where I'm From
+                       {state.data.lesson.title}
                     </h1>
 
                     <div className="w-6/10 flex justify-around items-center">
