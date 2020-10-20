@@ -46,9 +46,11 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
           dispatch({
             type: 'INITIAL_LESSON_SETUP', 
             payload: { 
+              classroomID: queryParams.id,
               pages: classroom.data.getClassroom.lessonPlan, 
               data: classroom.data.getClassroom,
-              students: classroom.data.getClassroom.data.items
+              students: classroom.data.getClassroom.data.items,
+              open: classroom.data.getClassroom.open,
           }})
           subscription = subscribeToStudentData()
       } catch (error) {

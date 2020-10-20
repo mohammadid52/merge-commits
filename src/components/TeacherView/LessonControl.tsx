@@ -40,6 +40,9 @@ const LessonControl = () => {
     const [ studentDataLoading, setStudentDataLoading ] = useState('');
     const [ shareable, setShareable ] = useState(false);
     const [ isSameStudentShared, setIsSameStudentShared ] = useState(false);
+    const [open, setOpen ] = useState(state.open);
+
+    console.log(open, 'open');
 
     const handleFullscreen = () => {
         setFullscreen(fullscreen => {
@@ -54,10 +57,14 @@ const LessonControl = () => {
         return firstInitial;
     }
 
+    useEffect(() => {
+        console.log(state, 'state')
+    }, [])
+
     const handleUpdateClassroom = async () => {
         let updatedClassroomData: any = {
-            id: '1',
-            open: true,
+            id: state.classroomID,
+            open: state.open ? state.open : false,
             viewing: state.studentViewing.studentInfo && state.studentViewing.studentInfo.studentAuthID ? state.studentViewing.studentInfo.studentAuthID : null,
             displayData: state.displayData,
             lessonPlan: state.pages
@@ -90,6 +97,12 @@ const LessonControl = () => {
             dispatch({ type: 'SET_SHARE_MODE', payload: state.studentViewing.studentInfo.lessonProgress })
             dispatch({ type: 'SET_DISPLAY_DATA', payload: displayData })
         }
+    }
+
+    const handleOpen = () => {
+        dispatch({ type: 'START_CLASSROOM' })
+        setOpen(true);
+        console.log(state)
     }
 
     const handleQuitShare = () => {
@@ -211,7 +224,12 @@ const LessonControl = () => {
                        {state.data.lesson.title}
                     </h1>
 
-                    <div className="w-6/10 flex justify-around items-center">
+                    <div className={`${!state.open ? 'bg-red-700 text-white cursor-pointer' : 'bg-gray-300 text-black'} w-1/10 h-7/10 shadow-elem-dark px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center text-center`} onClick={handleOpen}>
+                        {!state.open ? 'START LESSON' : 'LESSON STARTED'}
+                    </div>
+
+
+                    <div className="w-5/10 flex justify-around items-center">
 
                         <div className="w-1/3 flex justify-center items-center">
                             <div className="w-full flex flex-col justify-center items-center">
