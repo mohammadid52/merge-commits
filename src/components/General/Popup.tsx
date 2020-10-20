@@ -18,13 +18,9 @@ interface WritingAlertProps {
 
 const PosAlert = (props: WritingAlertProps) => {
     const {alert, setAlert, handleButton1, handleButton2, header, content, button1, button2, svg, button1Color, button2Color} = props
-    const [open, setOpen] = useState(false);
-
     const {visible, setVisible, ref } = useOutsideAlerter(false);
 
     const handleClick = () => {
-        // setVisible((prevState: any) => !prevState)
-        setAlert(!alert)
         setVisible((prevState: any) => !prevState)
 
     }
@@ -67,7 +63,7 @@ const PosAlert = (props: WritingAlertProps) => {
     return (
         ///change the POSITION if needed
 
-        <div className={`${open ? 'hidden' : 'display'} relative z-50 w-full flex justify-center items-center sm:max-w-sm`}>
+        <div className={`${alert ? 'display' : 'hidden'} relative z-50 w-full flex justify-center items-center sm:max-w-sm`}>
             {/* { !visible &&  */}
             <div ref={ref} className="bg-white rounded-lg px-4 pt-5 pb-4 overflow-hidden shadow-xl transform transition-all sm:max-w-sm sm:w-full sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
                 <div className="absolute w-auto cursor-pointer p-2 hover:text-gray-300" style={{top: 0, right: 0, color: '#828282'}} onClick={handleClick}>

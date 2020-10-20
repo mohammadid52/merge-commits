@@ -194,8 +194,6 @@ const WritingBlock = (props: WritingBlockProps) => {
         })
     }
 
-
-    const [alert, setAlert] = useState(false);
     const {visible, setVisible, ref} = useOutsideAlerter(false);
 
     const handleClick = () => {
@@ -203,9 +201,7 @@ const WritingBlock = (props: WritingBlockProps) => {
     }
 
     const handleCancel = () => {
-        // setAlert(!alert);
         handleClick
-        // setVisible(!visible)
     }
 
     const handleSubmit = () => {
@@ -215,9 +211,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                 open: true,
             }
         })
-        // setAlert(!alert);
         handleClick
-        // setVisible(!visible)
     }
 
     const handleInputChange = (e: any) => {
