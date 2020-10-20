@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import InstructionsBlock from './InstructionBlock';
 import StoryForm from './StoryForm';
 import Banner from './Banner';
@@ -19,7 +19,7 @@ export interface StoryState {
 
 const Story = () => {
     const { state, dispatch } = useContext(LessonContext);
-    const [ cookies, setCookie ] = useCookies(['story']);
+    // const [ cookies, setCookie ] = useCookies(['story']);
     const inputs = state.data.lesson.warmUp.inputs;
     const video = state.data.lesson.warmUp.instructions.link
     const [ openPopup, setOpenPopup ] = useState(false)
@@ -28,7 +28,9 @@ const Story = () => {
     
 
     useEffect(() => {
-        if ( !cookies.story && !state.componentState.story ) {
+        if ( 
+            // !cookies.story && 
+            !state.componentState.story ) {
            let tempObj: StoryState = {
                 story: '',
             }
@@ -58,18 +60,18 @@ const Story = () => {
                 }
             })
 
-            setCookie('story', tempObj)
+            // setCookie('story', tempObj)
         }
         
-        if ( cookies.story ) {
-            dispatch({
-                type: 'SET_INITIAL_COMPONENT_STATE',
-                payload: {
-                    name: 'story',
-                    content: cookies.story
-                }
-            })
-        }
+        // if ( cookies.story ) {
+        //     dispatch({
+        //         type: 'SET_INITIAL_COMPONENT_STATE',
+        //         payload: {
+        //             name: 'story',
+        //             content: cookies.story
+        //         }
+        //     })
+        // }
 
     }, []);
 

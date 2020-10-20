@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { LessonContext } from "../../../../contexts/LessonContext";
 import queryString from "query-string";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
 import SelectOneQuestions from "./Questions/SelectOneQuestions";
 import TextQuestions from "./Questions/TextQuestions";
 import Pagination from "../../../General/Pagination";
@@ -26,15 +26,16 @@ const setInitialState = (array: Array<any>) => {
 };
 
 interface CheckpointQuestionsProps {
-  handleSetTitle: React.Dispatch<React.SetStateAction<string>>;
+  handleSetTitle?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const { handleSetTitle } = props;
   const { state, dispatch } = useContext(LessonContext);
-  const checkpoints = state.data.lesson.checkpoints.items;
+  const checkpoints = state.data.lesson.assessment.checkpoints.items;
 
-  console.log(state, "state");
+  // console.log(state, "state");
+  // console.log(checkpoints, "checkpoints");
 
   const [status, setStatus] = useState("");
   const [input, setInput] = useState<any>();
@@ -53,7 +54,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const currentId = data.slice(indexOfFirstPost, indexOfLastPost)
 
   const checkpoint = currentId.pop();
-
+  // console.log(checkpoint, 'checkpoint')
   useEffect(() => {
     let questionDataKeys = [];
 
@@ -305,7 +306,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
               {value.checkpoint.questions.items.map(
                 (item: any, key: number) => {
                   return (
-                    <div className="w-5/10 " key={key}> {inputSwitch(item.question, key)} </div>
+                    <div className="w-7/10 " key={key}> {inputSwitch(item.question, key)} </div>
                   );
                 }
               )}

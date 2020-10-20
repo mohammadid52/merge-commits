@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import WritingBlock from './WritingBlock';
 import InstructionBlock from './InstructionBlock';
 import ToolBar from './ToolBar';
@@ -29,7 +29,7 @@ interface props {
 const PoemActivity = (props: props) => {
     const { fullscreen } = props;
     const { state, dispatch } = useContext(LessonControlContext);
-    const [ cookies, setCookie ] = useCookies(['poem']);
+    // const [ cookies, setCookie ] = useCookies(['poem']);
     const [ editMode, setEditMode ] = useState({
         open: false,
         input: ''

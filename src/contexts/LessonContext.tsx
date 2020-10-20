@@ -2,7 +2,7 @@ import React, { useReducer, useEffect, useState, } from 'react';
 import { lessonState, PagesType } from '../state/LessonState'
 import { lessonReducer } from '../reducers/LessonReducer'
 import { pageThemes } from './GlobalContext';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 import * as customMutations from '../customGraphql/customMutations';
 import * as customQueries from '../customGraphql/customQueries';
@@ -38,7 +38,7 @@ export const LessonContext = React.createContext(null);
 export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     const [ data, setData ] = useState<DataObject>();
     const [ lesson, setLesson ] = useState<DataObject>();
-    const [ cookies ] = useCookies(['auth']);
+    // const [ cookies ] = useCookies(['auth']);
     const [ state, dispatch ] = useReducer(lessonReducer, lessonState);
     const [ lightOn, setLightOn ] = useState(false);
     const location = useLocation();
@@ -109,7 +109,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         try {
             // this any needs to be changed once a solution is found!!!
             const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroomStudent, { id: queryParams.id }))
-            // console.log('classroom data', classroom);
+            console.log('classroom data', classroom);
             setLesson(classroom.data.getClassroom)
             getOrCreateStudentData()
             subscription = subscribeToClassroom()

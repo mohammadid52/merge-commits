@@ -7,28 +7,35 @@ import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/ai';
 import ProgressRing from './ProgressRing';
 import { CurriculumInfo } from './Classroom';
 import ToolTip from '../../General/ToolTip/ToolTip';
+import * as customQueries from '../../../customGraphql/customQueries';
+// import { API, graphqlOperation } from 'aws-amplify';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import { start } from 'repl';
+import Start from './Start'
 
 interface ClassProps {
   link: string;
   display?: boolean;
-  curriculum: CurriculumInfo;
+  curriculums: any;
+  // open: boolean
+  // getClassroom: any
 }
 
 const Today: React.FC<ClassProps> = (props: ClassProps) => {
-  const { link, curriculum, display } = props;
+  const { link, curriculums, display } = props;
   const [accessible, setAccessible] = useState<boolean>(true);
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
 
-  const handleLink = () => {
-    // come back to this later
-    // if (accessible) {
-    //   history.push(link);
-    // }
+  const handleLink = (key: number) => {
 
-    // For testing
-    history.push(link);
+    if (accessible  ) {
+      history.push((`${`/lesson?id=${key + 1}`}`));
+    }
+    // For testing: enables clickthrough survey
+    // history.push(link);
   };
+
 
   useEffect(() => {
     if (display) {
@@ -42,17 +49,20 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
 
   return (
     <div
-      className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} h-auto flex mb-8`}>
+      className={``}>
+      { curriculums ? curriculums.map((curriculum: any, key: number, i: string) => {
+        return (
+          <div key={key}>
+          <div className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} h-auto flex mb-8`}>
       <div
         className={`w-2.5/10 ${theme.dashboard.bg} rounded-tl-xl rounded-bl-xl`}
         style={{
           backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${
-            curriculum && curriculum.artist.images ? curriculum.artist.images : null
+            curriculum && curriculum.lesson.artist.images ? curriculum.lesson.artist.images : null
           })`,
           backgroundSize: 'cover',
         }}>
         <div className='h-6/10 flex justify-center items-center'>
-          {/* <img className=" w-32 rounded-full " src={`${curriculum && curriculum.artist.images ? curriculum.artist.images : null}`} alt={`${curriculum && curriculum.artist.name ? curriculum.artist.name : ''}`} /> */}
         </div>
         <div className='h-1/10 pl-6'>
           <div className='tracking-widest border-b text-gray-300 border-ketchup'
@@ -62,29 +72,21 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
         </div>
         <div className='h-3/10 flex flex-row-reverse'>
           <h2
-            className={`first w-full text-2xl text-right font-open font-medium tracking-widest mt-2 text-gray-200`}
+            className={`first w-full text-2xl text-right font-open font-medium tracking-widest mt-2 mr-1 text-gray-200`}
             style={{textShadow:'1px 1px black'}}>
-            {curriculum && curriculum.artist.name ? curriculum.artist.name : null}
+            {curriculum && curriculum.lesson.artist.name ? curriculum.lesson.artist.name : null}
           </h2>
         </div>
       </div>
       <div className='w-7.5/10 flex flex-col '>
         <div className='h-8.7/10 p-4 flex flex-col justify-center items-center'>
           <h1 className={`text-2xl text-black font-open text-left`}>
-            {curriculum && curriculum.title ? curriculum.title : null}
+            {curriculum && curriculum.lesson.title ? curriculum.lesson.title : null}
           </h1>
           <p className='text-sm text-left'>
-            {curriculum && curriculum.summary ? curriculum.summary : null}
+            {curriculum && curriculum.lesson.summary ? curriculum.lesson.summary : null}
           </p>
-          {/* <div className="flex w-3/10">
-                            <span className="mt-4 inline-flex rounded-full shadow-md">
-                                <button type="submit" onClick={handleLink} className={`${ accessible ? 'bg-ketchup hover:bg-red-300 focus:border-red-700 focus:shadow-outline-red active:bg-red-500 text-white' : 'bg-gray-500 text-gray-700 cursor-default' }
-                                tracking-wider 
-                                inline-flex justify-center py-2 px-2 border border-transparent leading-5 font-medium rounded-full focus:outline-none transition duration-150 ease-in-out`}>
-                                    START LESSON
-                                </button>
-                            </span>
-                        </div> */}
+         
         </div>
         <div
           className={`h-2/10 ${theme.dashboard.bg} flex justify-between text-sm  rounded-br-xl`}>
@@ -105,20 +107,15 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
             <div className={`w-auto mx-4 text-gray-200`}>Marlon</div>
           </div>
           <div className='flex w-3.3/10'>
-            <button
-              type='submit'
-              onClick={handleLink}
-              className={`${
-                accessible
-                  ? 'bg-ketchup hover:bg-red-300 focus:border-red-700 focus:shadow-outline-red active:bg-red-500 text-white'
-                  : 'bg-gray-500 text-gray-700 cursor-default'
-              }
-                                w-full text-white rounded-br-xl focus:outline-none transition duration-150 ease-in-out`}>
-              <span className='w-auto h-auto'>START LESSON</span>
-            </button>
+            <Start lessonKey={key}/>
           </div>
         </div>
       </div>
+      </div>
+      </div>
+      )
+    })
+        : null }
     </div>
   );
 };

@@ -74,6 +74,15 @@ const UserLookup = () => {
     
     return (
         <div className={`w-full h-full`}>
+            {/* <div className="w-full flex justify-end mb-1">
+                <span className="w-20 flex inline-flex rounded-md shadow-sm">
+                    <button type="submit" onClick={history.goBack} className="
+                    text-white bg-indigo-600 hover:bg-indigo-500 focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700
+                    inline-flex justify-center py-2 px-4 border border-transparent text-m leading-5 font-medium rounded-md focus:outline-none transition duration-150 ease-in-out">
+                        Back
+                    </button>
+                </span>
+            </div> */}
             {/* <div className={`py-4 px-8 white_back w-full h-auto rounded-lg shadow-elem-light`}>
                 <div className="mb-2 font-bold text-lg">Look up users by:</div>
                 <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-4">

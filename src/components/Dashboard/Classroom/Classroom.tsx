@@ -11,6 +11,7 @@ import Dashboard from './Dashboard';
 import Loading from '../../Lesson/Loading/ComponentLoading';
 import SurveyCard from './SurveyCard';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
+import queryString from 'query-string';
 
 interface Artist {
   id: string;
@@ -26,10 +27,15 @@ export interface CurriculumInfo {
   title: string;
 }
 
+interface DataObject {
+  [key: string]: any;
+}
+
 const Classroom: React.FC = () => {
   const history = useHistory();
   const { state, theme } = useContext(GlobalContext);
   const [curriculum, setCurriculum] = useState<CurriculumInfo>();
+  const [today, setToday] = useState<any>();
   const [survey, setSurvey] = useState<any>({
     display: false,
     data: null,
@@ -44,16 +50,50 @@ const Classroom: React.FC = () => {
       const courses: any = await API.graphql(
         graphqlOperation(customQueries.getCourse, { id: id, limit: limit })
       );
-      const nextLesson = courses.data.getCourse.curriculum.lessons.items[0].lesson;
+      const lesson = courses.data.getCourse.curriculum.lessons.items.slice(0, 2)
+      const nextLesson = lesson.lesson;
+      // console.log(courses, 'courses')
       const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
+      setToday(lesson);
       setCurriculum(nextLesson);
-      setListCurriculum(lessonsInfo.slice(1, 2));
+      setListCurriculum(lessonsInfo.slice(1, 4));
       if (state.user.onBoardSurvey) setStatus('done');
       // console.log(lessonsInfo, 'list');
     } catch (error) {
       console.error(error);
     }
   }
+
+  // const [ open, setOpen ] = useState<any>();
+
+  // async function getClassroom(id: string) {
+  //   let queryParams = queryString.parse(location.search)
+    
+  //   try {
+  //       // this any needs to be changed once a solution is found!!!
+  //       const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: id }))
+  //       // console.log('classroom data', classroom);
+  //       console.log(classroom.data.getClassroom, 'classroom')
+  //       setOpen(classroom.data.getClassroom.open)
+  //       // dispatch({
+  //       //   type: 'INITIAL_LESSON_SETUP', 
+  //       //   payload: { 
+  //       //     pages: classroom.data.getClassroom.lessonPlan, 
+  //       //     data: classroom.data.getClassroom,
+  //       //     students: classroom.data.getClassroom.data.items
+  //       // }})
+  //       // subscription = subscribeToStudentData()
+  //   } catch (error) {
+  //       console.error(error)
+  //   }
+  // }
+
+  // console.log(open, 'lesson')
+
+  // useEffect(() => {
+  //   getClassroom('1')
+  // }, [])
+
 
   const getSurvey = async () => {
     try {
@@ -107,6 +147,13 @@ const Classroom: React.FC = () => {
         };
       });
     }
+
+    // TEMPORARY HACK FOR AUTO-FORWARD TO HIGHLIGHTER
+    // TEMPORARY HACK FOR AUTO-FORWARD TO HIGHLIGHTER
+    // history.push('/lesson?id=1');
+    // TEMPORARY HACK FOR AUTO-FORWARD TO HIGHLIGHTER
+    // TEMPORARY HACK FOR AUTO-FORWARD TO HIGHLIGHTER
+    
   }, [state]);
 
   const handleLink = () => {
@@ -143,11 +190,11 @@ const Classroom: React.FC = () => {
               Today's Lesson
             </h2>
 
-            <Today display={survey.display} link={'/lesson?id=1'} curriculum={curriculum} />
+            <Today display={survey.display} link={'/lesson?id=1'} curriculums={today} />
           </div>
         </div>
 
-        <div className='w-full bg-grayscale bg-opacity-10'>
+        <div className='w-full bg-grayscale-light bg-opacity-10'>
           <div className='w-64rem text-xl m-auto'>
             <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
               Upcoming Lessons
