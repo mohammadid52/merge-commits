@@ -224,7 +224,7 @@ const LessonControl = () => {
                        {state.data.lesson.title}
                     </h1>
 
-                    <div className={`${!state.open ? 'bg-red-700 text-white cursor-pointer' : 'bg-gray-300 text-black'} w-1/10 h-7/10 shadow-elem-dark px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center text-center`} onClick={handleOpen}>
+                    <div className={`${!state.open ? 'bg-red-700 text-white cursor-pointer shadow-elem-dark' : 'bg-gray-500 text-black'} w-1/10 h-7/10 px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center text-center`} onClick={handleOpen}>
                         {!state.open ? 'START LESSON' : 'LESSON STARTED'}
                     </div>
 
