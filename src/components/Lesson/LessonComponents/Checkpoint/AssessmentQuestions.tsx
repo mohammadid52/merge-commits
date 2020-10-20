@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { LessonContext } from "../../../../contexts/LessonContext";
 import queryString from "query-string";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
 import SelectOneQuestions from "./Questions/SelectOneQuestions";
 import TextQuestions from "./Questions/TextQuestions";
 import Pagination from "../../../General/Pagination";

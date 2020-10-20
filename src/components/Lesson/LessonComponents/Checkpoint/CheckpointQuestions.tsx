@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import queryString from 'query-string';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import SelectOneQuestions from './Questions/SelectOneQuestions';
 import TextQuestions from './Questions/TextQuestions';
 
@@ -29,7 +29,7 @@ interface CheckpointQuestionsProps {
 const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const { handleSetTitle } = props;
   const { state, dispatch } = useContext(LessonContext);
-  const [cookies, setCookie] = useCookies(['questionData']);
+  // const [cookies, setCookie] = useCookies(['questionData']);
   const queryParams = queryString.parse(location.search);
   // console.log('params', queryParams);
   const checkpoints = state.data.lesson.checkpoints.items;

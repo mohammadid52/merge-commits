@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import InstructionsBlock from './InstructionBlock';
 import StoryForm from './StoryForm';
 import Banner from './Banner';
