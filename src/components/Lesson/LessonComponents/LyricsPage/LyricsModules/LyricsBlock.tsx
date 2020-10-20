@@ -77,19 +77,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   };
 
   /**
-   * Function that returns true | false if select-group for current
-   * text selection exists in the state
-   * @param groupName - name of select group to check
-   */
-  const checkIfSelectGroupExists = (groupName: string) => {
-    if (typeof initialSelectedText[groupName] === 'undefined') {
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  /**
    * Simple get functions to get arrays/values based on 'mappedWordID'
    */
   const getSelectGroupName = (mappedWordID: string) => {
@@ -129,7 +116,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     }, {});
   };
 
-
   /**
    * Function that handles the text selection
    * 1. drag mouse over text
@@ -141,12 +127,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * 6. mark html with color tag
    *
    */
-
-  const handleSelectGroupIncrement = () => {
-    if(color !== 'erase'){
-      console.log('handle increment: ', initialSelectedText[`group${selectGroup}`]['selected'].length);
-    }
-  }
 
   const handleDragSelectText = () => {
     if (color !== '') {
@@ -176,8 +156,10 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   };
 
   const handleClickSelectText = (e: React.MouseEvent) => {
-    const t = e.currentTarget as HTMLElement;
+    const t = e.target as HTMLElement;
     const targetWordID = t.id || '';
+
+
 
     if (typeof targetWordID !== 'undefined') {
       if (color !== 'erase') {
@@ -193,8 +175,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       } else {
         if (targetWordID.includes('mapped')) {
           //
-          //
-          //
+          //  Some functionality might need to go here
           //
         }
       }
@@ -213,7 +194,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       setMouseIsClicked(false);
     }
 
-    if(color !== 'erase'){
+    if (color !== 'erase') {
       setSelectGroup(selectGroup + 1);
     }
   };
@@ -226,7 +207,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       setMouseIsHeld(false);
       setMouseIsClicked(false);
     }
-  }
+  };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!mouseIsHeld || !mouseIsClicked) {
@@ -256,6 +237,8 @@ const LyricsBlock = (props: LyricsBlockProps) => {
 
   /**
    * Lyric/state organization
+   * - Combinelyrics adds a linebreak character \n to the string where there are spaces
+   * - Makes it easier to parse on the breakdown page
    */
 
   const combineLyrics = rawText
@@ -277,11 +260,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       return word.replace(trimReg, '');
     });
   };
-
-  /**
-   * Function(s) specifically for expanding multiline selection
-   * in selectedTextGroup arrays
-   */
 
   /**
    * Find min,max indexes of selectedText
@@ -346,7 +324,11 @@ const LyricsBlock = (props: LyricsBlockProps) => {
           <span
             key={`mappedWord__${i}__${mappedWord}`}
             id={`mappedWord__${i}__${mappedWord}`}
-            onMouseOver={handleMouseOver}
+            /* Mouse events */
+            // onClick={handleClickSelectText} // A little laggy
+            // onMouseOver={handleMouseOver}
+
+            onPointerOver={handleMouseOver}
             className={`relative py-2
                 ${
                   //  Check if current mapped word is highlighted
@@ -361,13 +343,19 @@ const LyricsBlock = (props: LyricsBlockProps) => {
             &nbsp;{`${mappedWord}`}&nbsp;
             <span
               id={`mappedWord__${i}__${mappedWord}`}
-              onMouseOver={handleMouseOver}
-              onClick={handleClickSelectText}
+              /* Mouse events */
+
+              // onMouseOver={handleMouseOver}
+              // onClick={handleClickSelectText}
+
+              /* Pointer events */
+
+              onPointerOver={handleMouseOver}
               className='w-1/2 h-8 absolute right-0 transform -translate-x-1/2'></span>
           </span>
         );
       } else {
-        return <br />;
+        return <br key={`key${i}`}/>;
       }
     });
   };
@@ -386,14 +374,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * ANDREW'S DISPATCH
    */
   useEffect(() => {
-    //  EMPTY GROUP CLEANUP ***temporary***
-    // const nonEmptySelectGroupKeys = Object.keys(initialSelectedText).filter(
-    //   (objKey) => initialSelectedText[objKey]['selected'].length > 0
-    // );
-    // const nonEmptySelectGroups = nonEmptySelectGroupKeys.reduce((acc: any, groupName: string) => {
-    //   return { ...acc, ...{ [groupName]: initialSelectedText[groupName] } };
-    // }, {});
-    //  EMPTY GROUP CLEANUP ***temporary***
     setSelected(adaptTextGroupsForDispatch(initialSelectedText));
   }, [initialSelectedText]);
 
@@ -423,10 +403,17 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         </div>
         <div
           className='h-9/10 leading-8 text-gray-200 text-sm overflow-y-auto overflow-x-hidden p-4'
-          onMouseDown={handleMouseDown}
-          onClick={handleClickSelectText}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
+          /* Mouse events */
+          onClick={handleClickSelectText} // Clickhandler on the parent...nice!
+          // onMouseDown={handleMouseDown}
+          // onMouseUp={handleMouseUp}
+          // onMouseLeave={handleMouseLeave}
+
+          /* Pointer events */
+
+          onPointerDown={handleMouseDown}
+          onPointerUp={handleMouseUp}
+          onPointerLeave={handleMouseLeave}
           style={{
             MozUserSelect: 'none',
             WebkitUserSelect: 'none',

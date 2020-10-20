@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface EditBlockProps {
@@ -14,22 +14,22 @@ interface EditBlockProps {
 const EditBlock = (props: EditBlockProps) => {
     const { editMode, fullscreen } = props;
     const { state, dispatch } = useContext(LessonControlContext);
-    const [ cookies, setCookie ] = useCookies(['poem']);
+    // const [ cookies, setCookie ] = useCookies(['poem']);
     const [ editInput, setEditInput ] = useState<{title: string, text: string}>({
         title: '',
         text: editMode.input,
     })
 
-    useEffect(() => {
-        if ( cookies.poem && cookies.poem.editMode ) {
-            setEditInput(() => {
-                return {
-                    title: cookies.poem.title,
-                    text: cookies.poem.editInput,
-                }
-            })
-        }
-    }, [])
+    // useEffect(() => {
+    //     if ( cookies.poem && cookies.poem.editMode ) {
+    //         setEditInput(() => {
+    //             return {
+    //                 title: cookies.poem.title,
+    //                 text: cookies.poem.editInput,
+    //             }
+    //         })
+    //     }
+    // }, [])
 
     useEffect(() => {
         // if ( state.componentState.poem && state.componentState.poem.editMode === true ) {

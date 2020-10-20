@@ -493,6 +493,7 @@ export const getStudentData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
+          assessmentID
           createdAt
           updatedAt
         }
@@ -875,6 +876,16 @@ export const getClassroom = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -965,6 +976,7 @@ export const listClassrooms = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
+          assessmentID
           createdAt
           updatedAt
         }
@@ -1038,6 +1050,7 @@ export const getFeedback = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
+          assessmentID
           createdAt
           updatedAt
         }
@@ -1302,6 +1315,19 @@ export const getLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      assessmentID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -1401,6 +1427,16 @@ export const listLessons = /* GraphQL */ `
           language
           SELTypes
           lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
           createdAt
           updatedAt
         }
@@ -1719,6 +1755,129 @@ export const listCheckpoints = /* GraphQL */ `
     }
   }
 `;
+export const getAssessment = /* GraphQL */ `
+  query GetAssessment($id: ID!) {
+    getAssessment(id: $id) {
+      id
+      title
+      type
+      openingMessage
+      closingMessage
+      checkpoints {
+        items {
+          id
+          assessmentID
+          checkpointID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAssessments = /* GraphQL */ `
+  query ListAssessments(
+    $filter: ModelAssessmentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAssessments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getAssessmentCheckpoint = /* GraphQL */ `
+  query GetAssessmentCheckpoint($id: ID!) {
+    getAssessmentCheckpoint(id: $id) {
+      id
+      assessmentID
+      checkpointID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      checkpoint {
+        id
+        label
+        title
+        subtitle
+        type
+        instructions
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAssessmentCheckpoints = /* GraphQL */ `
+  query ListAssessmentCheckpoints(
+    $filter: ModelAssessmentCheckpointFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAssessmentCheckpoints(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        assessmentID
+        checkpointID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        checkpoint {
+          id
+          label
+          title
+          subtitle
+          type
+          instructions
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getQuestion = /* GraphQL */ `
   query GetQuestion($id: ID!) {
     getQuestion(id: $id) {
@@ -1811,6 +1970,7 @@ export const getQuestionData = /* GraphQL */ `
           warmUpId
           coreLessonId
           activityId
+          assessmentID
           createdAt
           updatedAt
         }

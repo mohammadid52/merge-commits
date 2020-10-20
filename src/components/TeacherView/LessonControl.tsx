@@ -10,6 +10,7 @@ import {
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaExpand, FaCompress, FaHome, FaRegThumbsUp } from 'react-icons/fa';
+import { FiUsers } from 'react-icons/fi';
 import { BsPersonFill } from 'react-icons/bs';
 import { NavLink } from 'react-router-dom';
 import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
@@ -30,6 +31,7 @@ const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'));
 
 const LessonControl = () => {
     const { state, dispatch } = useContext(LessonControlContext);
+    console.log(state, 'state')
     const match = useRouteMatch();
     const history = useHistory();
     const location = useLocation();
@@ -38,6 +40,9 @@ const LessonControl = () => {
     const [ studentDataLoading, setStudentDataLoading ] = useState('');
     const [ shareable, setShareable ] = useState(false);
     const [ isSameStudentShared, setIsSameStudentShared ] = useState(false);
+    const [open, setOpen ] = useState(state.open);
+
+    console.log(open, 'open');
 
     const handleFullscreen = () => {
         setFullscreen(fullscreen => {
@@ -52,10 +57,14 @@ const LessonControl = () => {
         return firstInitial;
     }
 
+    useEffect(() => {
+        console.log(state, 'state')
+    }, [])
+
     const handleUpdateClassroom = async () => {
         let updatedClassroomData: any = {
-            id: '1',
-            open: true,
+            id: state.classroomID,
+            open: state.open ? state.open : false,
             viewing: state.studentViewing.studentInfo && state.studentViewing.studentInfo.studentAuthID ? state.studentViewing.studentInfo.studentAuthID : null,
             displayData: state.displayData,
             lessonPlan: state.pages
@@ -88,6 +97,12 @@ const LessonControl = () => {
             dispatch({ type: 'SET_SHARE_MODE', payload: state.studentViewing.studentInfo.lessonProgress })
             dispatch({ type: 'SET_DISPLAY_DATA', payload: displayData })
         }
+    }
+
+    const handleOpen = () => {
+        dispatch({ type: 'START_CLASSROOM' })
+        setOpen(true);
+        console.log(state)
     }
 
     const handleQuitShare = () => {
@@ -205,11 +220,16 @@ const LessonControl = () => {
                 <div className={`relative w-full h-1/10 border-b border-gray-400 flex flex-row items-center`} 
                 // onClick={handleQuitAll}
                 >
-                    <h1 className={`w-3/10 text-3xl pl-4 font-extrabold font-open`}>
-                        Where I'm From
+                    <h1 className={`w-2.5/10 text-3xl pl-4 font-extrabold font-open`}>
+                       {state.data.lesson.title}
                     </h1>
 
-                    <div className="w-6/10 flex justify-around items-center">
+                    <div className={`${!state.open ? 'bg-red-700 text-white cursor-pointer shadow-elem-dark' : 'bg-gray-500 text-black'} w-1/10 h-7/10 px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center text-center`} onClick={handleOpen}>
+                        {!state.open ? 'START LESSON' : 'LESSON STARTED'}
+                    </div>
+
+
+                    <div className="w-5/10 flex justify-around items-center">
 
                         <div className="w-1/3 flex justify-center items-center">
                             <div className="w-full flex flex-col justify-center items-center">
@@ -275,13 +295,23 @@ const LessonControl = () => {
 
                     </div>
                 
-                    <div className={`w-1/10 pr-4 flex flex-col justify-center items-center px-2 cursor-pointer`} style={{right: 0}}>
-                        <NavLink to="/dashboard">
-                            <IconContext.Provider value={{ size: '1.5rem'}}>
-                                <FaHome />
-                            </IconContext.Provider>
-                        </NavLink>
-                        <p className="text-xs text-center">Home</p>
+                    <div className={`w-1/10 pr-4 flex justify-between items-center px-2`} style={{right: 0}}>
+                        <div className="flex flex-col justify-center items-center cursor-pointer px-2">
+                            <NavLink to="/dashboard/manage-users">
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <FiUsers />
+                                </IconContext.Provider>
+                            </NavLink>
+                            <p className="text-xs text-center">Students</p>
+                        </div>
+                        <div className="flex flex-col justify-center items-center cursor-pointer px-2">
+                            <NavLink to="/dashboard">
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <FaHome />
+                                </IconContext.Provider>
+                            </NavLink>
+                            <p className="text-xs text-center">Home</p>
+                        </div>
                     </div>
                 </div>
                 <div className={`w-full h-9/10 flex p-3 pb-5 rounded-lg`}>

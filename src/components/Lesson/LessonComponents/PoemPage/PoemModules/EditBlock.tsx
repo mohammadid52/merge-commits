@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 
 interface EditBlockProps {
     editMode: {
@@ -12,22 +12,22 @@ interface EditBlockProps {
 const EditBlock = (props: EditBlockProps) => {
     const { editMode } = props;
     const { state, dispatch } = useContext(LessonContext);
-    const [ cookies, setCookie ] = useCookies(['poem']);
+    // const [ cookies, setCookie ] = useCookies(['poem']);
     const [ editInput, setEditInput ] = useState<{title: string, text: string}>({
         title: '',
         text: editMode.input,
     })
 
-    useEffect(() => {
-        if ( cookies.poem && cookies.poem.editMode ) {
-            setEditInput(() => {
-                return {
-                    title: cookies.poem.title,
-                    text: cookies.poem.editInput,
-                }
-            })
-        }
-    }, [])
+    // useEffect(() => {
+    //     if ( cookies.poem && cookies.poem.editMode ) {
+    //         setEditInput(() => {
+    //             return {
+    //                 title: cookies.poem.title,
+    //                 text: cookies.poem.editInput,
+    //             }
+    //         })
+    //     }
+    // }, [])
 
     useEffect(() => {
         if ( state.componentState.poem && state.componentState.poem.editMode === true ) {
@@ -40,7 +40,7 @@ const EditBlock = (props: EditBlockProps) => {
                 }
             })
 
-            setCookie('poem', {...cookies.poem, editInput: editInput.text})
+            // setCookie('poem', {...cookies.poem, editInput: editInput.text})
         } 
     }, [editInput.text])
 
@@ -55,7 +55,7 @@ const EditBlock = (props: EditBlockProps) => {
                 }
             })
 
-            setCookie('poem', {...cookies.poem, title: editInput.title})
+            // setCookie('poem', {...cookies.poem, title: editInput.title})
         } 
     }, [editInput.title])
 

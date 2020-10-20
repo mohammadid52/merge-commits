@@ -28,7 +28,9 @@ const Intro = () => {
                             <FaCheckSquare />
                         </div>
                     </IconContext.Provider>
+                    
                     <div className={`h-full w-full flex flex-row justify-center items-center text-5xl text-center font-open font-medium ${theme.block.text} z-10 my-4`}>
+                    
                         {
                             state.data.lesson.title ? state.data.lesson.title 
                             :
