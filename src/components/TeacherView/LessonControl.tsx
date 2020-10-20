@@ -40,6 +40,9 @@ const LessonControl = () => {
     const [ studentDataLoading, setStudentDataLoading ] = useState('');
     const [ shareable, setShareable ] = useState(false);
     const [ isSameStudentShared, setIsSameStudentShared ] = useState(false);
+    const [open, setOpen ] = useState(state.data.open);
+
+    console.log(open, 'open');
 
     const handleFullscreen = () => {
         setFullscreen(fullscreen => {
@@ -53,6 +56,8 @@ const LessonControl = () => {
         firstInitial = firstInitial.toUpperCase() + '.';
         return firstInitial;
     }
+
+
 
     const handleUpdateClassroom = async () => {
         let updatedClassroomData: any = {
@@ -90,6 +95,10 @@ const LessonControl = () => {
             dispatch({ type: 'SET_SHARE_MODE', payload: state.studentViewing.studentInfo.lessonProgress })
             dispatch({ type: 'SET_DISPLAY_DATA', payload: displayData })
         }
+    }
+
+    const handleOpen = () => {
+
     }
 
     const handleQuitShare = () => {
@@ -211,7 +220,12 @@ const LessonControl = () => {
                        {state.data.lesson.title}
                     </h1>
 
-                    <div className="w-6/10 flex justify-around items-center">
+                    <div className={`w-1/10 h-7/10 shadow-elem-dark px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center bg-red-300 text-center`} onClick={handleOpen}>
+                        OPEN LESSON
+                    </div>
+
+
+                    <div className="w-5/10 flex justify-around items-center">
 
                         <div className="w-1/3 flex justify-center items-center">
                             <div className="w-full flex flex-col justify-center items-center">
