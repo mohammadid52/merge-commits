@@ -6,7 +6,6 @@
   "scripts": {
     "build": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
-    "watchpoll": "npm run build && webpack --watch-poll --inline --hot --progress --config webpack.dev.js",
     "watch": "npm run build && webpack --watch  --inline --hot --progress --config webpack.dev.js"
   },
   "devDependencies": {

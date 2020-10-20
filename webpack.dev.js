@@ -18,7 +18,10 @@ module.exports = smp.wrap(merge(common, {
   devServer: {
     watchContentBase: true
   },
-  watchOptions: {
-    ignored: /node_modules/
-  }
+  watch: true,
+     watchOptions: {
+         aggregateTimeout: 1000,
+         poll: 2000,
+         ignored: [/node_modules/, 'node_modules']
+     }
 }));

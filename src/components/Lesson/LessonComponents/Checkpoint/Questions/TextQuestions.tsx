@@ -12,7 +12,7 @@ interface TextInputState {
  */
 
 const TextQuestions = (txtPrps: CPQuestionProps) => {
-  const { state, dispatch } = useContext(LessonContext);
+  const { state, theme, dispatch } = useContext(LessonContext);
   const [txtDataID, setTxtDataID] = useState<any>();
   const [contents, setContents] = useState<string>('');
 
@@ -34,14 +34,14 @@ const TextQuestions = (txtPrps: CPQuestionProps) => {
 
   return (
     <div key={txtPrps.keyProp} className={`w-full h-5/10 flex flex-col my-2 mb-3`}>
-      <label className='mb-2 text-lg' htmlFor={txtPrps.question.label}>
+      <label className={theme.elem.text} htmlFor={txtPrps.question.label}>
         {txtPrps.question.question}
       </label>
       <textarea
         id={txtPrps.question.id}
-        className='h-9/10 w-9/10 p-8 bg-gray-300 text-gray-800 w-full text-sm md:text-xl text-gray-800 rounded-lg shadow-2'
+        className={`h-40 ${theme.elem.textInput} w-full rounded-xl`}
         value={contents}
-        onChange={handleTextInputChange}
+        onChange={handleTextInputChange}/* sdfsdfd */
       />
     </div>
   );

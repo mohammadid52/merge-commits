@@ -31,7 +31,7 @@ interface CheckpointQuestionsProps {
 
 const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const { handleSetTitle } = props;
-  const { state, dispatch } = useContext(LessonContext);
+  const { state, theme, dispatch } = useContext(LessonContext);
   const checkpoints = state.data.lesson.checkpoints.items;
 
   console.log(state, "state");
@@ -190,13 +190,13 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     switch (question.type) {
       case "input":
         return (
-          <div key={key} className={"w-full flex flex-col mb-4 mx-2 mb-3"}>
-            <label className="mb-2 text-lg" htmlFor={question.label}>
+          <div key={key} className={"w-full flex flex-col mb-4"}>
+            <label className={theme.elem.text} htmlFor={question.label}>
               {question.question}
             </label>
             <input
               id={question.id}
-              className="w-9.5/10 py-2 px-4 text-gray-800 rounded-lg"
+              className={`h-40 ${theme.elem.textInput} w-full rounded-xl`}
               type="text"
               name={question.label}
               value={input[question.id]}
@@ -226,9 +226,9 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
         );
       case "selectMany":
         return (
-          <div className={`w-full flex flex-col mx-2 mb-3`}>
+          <>
             <p className="mb-3 text-lg">{question.question}</p>
-            <div id={question.label} className={"w-9.5/10 flex flex-col"}>
+            <div id={question.label}>
               {question.options.map(
                 (
                   option: {
@@ -241,7 +241,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                 ) => (
                   <div
                     key={key}
-                    className={`w-3/4 flex items-center mb-2`}
+                    className={`${theme.elem.text} flex items-center mb-2`}
                     onClick={handleSelect}
                     data-key={question.id}
                   >
@@ -270,7 +270,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                 )
               )}
             </div>
-          </div>
+         </>
         );
       default:
         return "";

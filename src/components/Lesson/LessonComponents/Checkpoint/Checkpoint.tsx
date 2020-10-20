@@ -36,9 +36,10 @@ const Checkpoint = () => {
     <div className={theme.section}>
       <Banner />
 
-      <div className='flex flex-col justify-between items-center'>
+      <div className={`${theme.elem.text}`}>
         {tempCheckPtSwitch(state.pages[state.currentPage].type)}
       </div>
+     
     </div>
   );
 };

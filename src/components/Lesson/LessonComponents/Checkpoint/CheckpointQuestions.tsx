@@ -28,7 +28,7 @@ interface CheckpointQuestionsProps {
 
 const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const { handleSetTitle } = props;
-  const { state, dispatch } = useContext(LessonContext);
+  const { state, theme, dispatch } = useContext(LessonContext);
   const [cookies, setCookie] = useCookies(['questionData']);
   const queryParams = queryString.parse(location.search);
   // console.log('params', queryParams);
@@ -41,8 +41,8 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     .pop();
   // console.log(checkpoint, 'checkpoint');
   // const checkpoint = state.data.lesson.checkpoints.items[0].checkpoint;
-  const [ status, setStatus ] = useState('');
-  const [ input, setInput ] = useState<any>();
+  const [status, setStatus] = useState('');
+  const [input, setInput] = useState<any>();
 
   useEffect(() => {
     // if ( cookies.questionData ) {
@@ -52,40 +52,41 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     //     })
     // }
 
-    let questionDataKeys = []; 
+    let questionDataKeys = [];
 
-    if ( state.questionData[checkpoint.checkpoint.id] ) { questionDataKeys = Object.keys(state.questionData[checkpoint.checkpoint.id]) }
+    if (state.questionData[checkpoint.checkpoint.id]) {
+      questionDataKeys = Object.keys(state.questionData[checkpoint.checkpoint.id]);
+    }
 
-
-    if (!input && questionDataKeys.length > 0 ) {
+    if (!input && questionDataKeys.length > 0) {
       // console.log('oldu', state.questionData);
-      
+
       setInput(() => {
         return state.questionData[checkpoint.checkpoint.id];
       });
     }
 
-    if (!input  && questionDataKeys.length <= 0) {
+    if (!input && questionDataKeys.length <= 0) {
       // console.log('bu da oldu');
-      
+
       setInput(() => {
         return setInitialState(checkpoint.checkpoint.questions.items);
       });
     }
 
-    setStatus('loaded')
+    setStatus('loaded');
     // if ( cookies.questionData ) {
     //     dispatch({
-      //         type: 'SET_QUESTION_DATA',
-      //         payload: cookies.questionData
-      //     })
-      // }
-      
-      // if (!input && !state.questionData) {
-        //   setInput(() => {
-          //     return setInitialState(checkpoint.checkpoint.questions.items);
-          //   });
-          // }
+    //         type: 'SET_QUESTION_DATA',
+    //         payload: cookies.questionData
+    //     })
+    // }
+
+    // if (!input && !state.questionData) {
+    //   setInput(() => {
+    //     return setInitialState(checkpoint.checkpoint.questions.items);
+    //   });
+    // }
   }, []);
 
   useEffect(() => {
@@ -96,12 +97,12 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     if (input && checkpoint.checkpoint.questions.items) {
       checkpoint.checkpoint.questions.items.forEach(
         (item: { question: { id: string; type: string; label: string } }) => {
-          let inputKeys = Object.keys(input)
-          let found = inputKeys.some((key: string ) => {
-            item.question.id === key
-          })
+          let inputKeys = Object.keys(input);
+          let found = inputKeys.some((key: string) => {
+            item.question.id === key;
+          });
 
-          if ( !found ) {
+          if (!found) {
             setInput((prev: any) => {
               return {
                 ...prev,
@@ -126,29 +127,28 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   useEffect(() => {
     // console.log('input', input);
     console.log('qData', state.questionData);
-
-  }, [state.questionData])
+  }, [state.questionData]);
 
   const handleSelect = (e: any) => {
-    const questionID = e.target.getAttribute('data-key')
+    const questionID = e.target.getAttribute('data-key');
     const { id } = e.target;
 
     let array;
     let found = input[questionID].some((item: string) => {
-      return item === id
-    })
+      return item === id;
+    });
 
-    if ( found ) {
+    if (found) {
       array = input[questionID].filter((item: string) => {
-        return item !== id
-      })
+        return item !== id;
+      });
     }
 
-    if ( !found ) {
-      array = input[questionID]
-      array.push(id)
+    if (!found) {
+      array = input[questionID];
+      array.push(id);
     }
-    
+
     setInput({
       ...input,
       [questionID]: array,
@@ -161,18 +161,24 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     // console.log('input', input);
 
     if (input && state.questionData[checkpoint.checkpoint.id] !== input) {
-      let dispatchInput: any = {}; 
-      checkpoint.checkpoint.questions.items.forEach((item: { question: { id: string; type: string; label: string } }) => {
-        if ( input[item.question.id] !== null && input[item.question.id] !== undefined && input[item.question.id] !== '' ) {
-          dispatchInput[item.question.id] = input[item.question.id]
+      let dispatchInput: any = {};
+      checkpoint.checkpoint.questions.items.forEach(
+        (item: { question: { id: string; type: string; label: string } }) => {
+          if (
+            input[item.question.id] !== null &&
+            input[item.question.id] !== undefined &&
+            input[item.question.id] !== ''
+          ) {
+            dispatchInput[item.question.id] = input[item.question.id];
+          }
         }
-      })
+      );
 
       dispatch({
         type: 'SET_QUESTION_DATA',
         payload: {
           key: checkpoint.checkpoint.id,
-          data: dispatchInput
+          data: dispatchInput,
         },
       });
     }
@@ -202,13 +208,13 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     switch (question.type) {
       case 'input':
         return (
-          <div key={key} className={'w-4.8/10 flex flex-col mb-4 mx-2 mb-3'}>
-            <label className='mb-2 text-lg' htmlFor={question.label}>
+          <div key={key} className={'flex flex-col mb-4'}>
+            <label className={theme.elem.text} htmlFor={question.label}>
               {question.question}
             </label>
             <input
               id={question.id}
-              className='w-9.5/10 py-2 px-4 text-gray-800 rounded-lg'
+              className={`w-full py-2 px-4 text-gray-800 rounded-xl ${theme.elem.textInput}`}
               type='text'
               name={question.label}
               value={input[question.id]}
@@ -238,31 +244,33 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
         );
       case 'selectMany':
         return (
-          <div className={`w-4.8/10 flex flex-col mx-2 mb-3`}>
-            <p className='mb-3 text-lg'>{question.question}</p>
-            <div id={question.label} className={'w-9.5/10 flex flex-col'}>
+          <div className={`w-full rounded-xl`}>
+            <p className={theme.elem.text}>{question.question}</p>
+            <div id={question.label} className={'flex'}>
               {question.options.map(
                 (
                   option: { label: string; icon: string; color: string; text: string },
                   key: any
                 ) => (
-                  <div key={key} className={`w-3/4 flex items-center mb-2`} onClick={handleSelect} data-key={question.id}>
+                  <div
+                    key={key}
+                    className={`w-3/4 flex items-center mb-2`}
+                    onClick={handleSelect}
+                    data-key={question.id}>
                     {input[question.id].indexOf(`${option.label}`) >= 0 ? (
                       <div
                         id={`${option.label}`}
                         className='cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center'
                         style={{ backgroundColor: `${option.color}` }}
-                        data-key={question.id}
-                      >
-                        { option.icon ? option.icon : '' }
+                        data-key={question.id}>
+                        {option.icon ? option.icon : ''}
                       </div>
                     ) : (
                       <div
                         id={`${option.label}`}
-                        className='bg-gray-400 shadow-2 cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center'
-                        data-key={question.id}
-                      >
-                        { option.icon ? option.icon : '' }
+                        className='bg-gray-400 cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center'
+                        data-key={question.id}>
+                        {option.icon ? option.icon : ''}
                       </div>
                     )}
                     <div id={`${option.label}`} className='mx-4'>
@@ -279,24 +287,24 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     }
   };
 
-  if ( status !== 'loaded' ) return null;
+  if (status !== 'loaded') return null;
 
   return (
-    <div className={`w-full h-full flex flex-col text-gray-200`}>
-      <h4
-        className={`w-full text-2xl font-open font-bold ${
-          checkpoint.checkpoint.subtitle ? 'border-b-2 border-gray-200 mb-2' : ''
-        }`}>
-        { checkpoint.checkpoint.subtitle ? checkpoint.checkpoint.subtitle : null }
-      </h4>
-      <h4 className={`w-full text-xl font-open font-bold`}>{checkpoint.checkpoint.instructions}</h4>
-      <div
-        className={`w-full h-full flex justify-center items-center divide-x-2 divide-dark divide-opacity-50`}>
-        <div className='w-full h-full flex flex-col flex-wrap justify-around items-center py-4 px-2'>
-          {checkpoint.checkpoint.questions.items.map((item: { question: any }, key: number) => {
-            return <>{inputSwitch(item.question, key)}</>;
-          })}
-        </div>
+    <div className={theme.section}>
+      {checkpoint.checkpoint.subtitle ? (
+        <h3 className={`w-full h-1/10 text-xl ${theme.banner} ${theme.underline}`}>
+          {checkpoint.checkpoint.subtitle}
+        </h3>
+      ) : (
+        ''
+      )}
+
+      <div className={theme.elem.text}>{checkpoint.checkpoint.instructions}</div>
+
+      <div className='w-full h-full flex flex-col flex-wrap justify-around items-center'>
+        {checkpoint.checkpoint.questions.items.map((item: { question: any }, key: number) => {
+          return <>{inputSwitch(item.question, key)}</>;
+        })}
       </div>
     </div>
   );

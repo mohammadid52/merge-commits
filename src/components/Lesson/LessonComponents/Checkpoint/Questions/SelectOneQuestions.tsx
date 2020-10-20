@@ -22,7 +22,7 @@ interface SelectOneRowState {
 
 const SelectOneQuestions = (selectOneProps: CPQuestionProps) => {
   const { question, checkpointID } = selectOneProps;
-  const { state, dispatch } = useContext(LessonContext);
+  const { state, theme, dispatch } = useContext(LessonContext);
   const [input, setInput] = useState<SelectOneRowState>({ id: '', value: '' });
 
   useEffect(() => {
@@ -65,8 +65,8 @@ const SelectOneQuestions = (selectOneProps: CPQuestionProps) => {
 // console.log(selectOneProps)
   return (
     <>
-      <div key={selectOneProps.keyProp} className={'w-6/10 flex flex-col mb-3 mx-2'}>
-        <p className='mb-2 text-lg'>{selectOneProps.question.question}</p>
+      <div key={selectOneProps.keyProp} className={'flex flex-col mb-3'}>
+        <p className={theme.elem.text}>{selectOneProps.question.question}</p>
         <div className={`flex justify-around`}>
           {selectOneProps.question.options.map(
             (
@@ -74,7 +74,7 @@ const SelectOneQuestions = (selectOneProps: CPQuestionProps) => {
               key2: number
             ) => {
               return (
-                <div key={key2} className={`flex justify-center items-center text-base`}>
+                <div key={key2} className={theme.elem.text}>
                   
                   <label className="w-auto cursor-pointer">
                     <input
