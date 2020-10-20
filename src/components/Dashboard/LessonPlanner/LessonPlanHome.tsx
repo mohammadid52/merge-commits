@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { Link } from 'react-router-dom';
-import Today from '../Classroom/TodayLessonTemp';
+import Today from '../Classroom/TodayLessonTeacher';
 import Upcoming from '../Classroom//Upcoming';
 import Completed from '../Classroom/Completed';
 import * as customQueries from '../../../customGraphql/customQueries';

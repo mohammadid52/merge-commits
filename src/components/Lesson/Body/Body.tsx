@@ -24,7 +24,7 @@ const Body = () => {
     const pageSwitch = (pageType: string) => {
         switch (pageType) {
             case 'story':
-                return <List />;
+                return <Story />;
             case 'lyrics':
                 return <Lyrics />;
             case 'poem':
