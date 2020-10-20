@@ -40,7 +40,7 @@ const LessonControl = () => {
     const [ studentDataLoading, setStudentDataLoading ] = useState('');
     const [ shareable, setShareable ] = useState(false);
     const [ isSameStudentShared, setIsSameStudentShared ] = useState(false);
-    const [open, setOpen ] = useState(state.data.open);
+    const [open, setOpen ] = useState(state.open);
 
     console.log(open, 'open');
 
@@ -57,12 +57,14 @@ const LessonControl = () => {
         return firstInitial;
     }
 
-
+    useEffect(() => {
+        console.log(state, 'state')
+    }, [])
 
     const handleUpdateClassroom = async () => {
         let updatedClassroomData: any = {
-            id: '1',
-            open: true,
+            id: state.classroomID,
+            open: state.open ? state.open : false,
             viewing: state.studentViewing.studentInfo && state.studentViewing.studentInfo.studentAuthID ? state.studentViewing.studentInfo.studentAuthID : null,
             displayData: state.displayData,
             lessonPlan: state.pages
@@ -98,7 +100,9 @@ const LessonControl = () => {
     }
 
     const handleOpen = () => {
-
+        dispatch({ type: 'START_CLASSROOM' })
+        setOpen(true);
+        console.log(state)
     }
 
     const handleQuitShare = () => {
@@ -220,8 +224,8 @@ const LessonControl = () => {
                        {state.data.lesson.title}
                     </h1>
 
-                    <div className={`w-1/10 h-7/10 shadow-elem-dark px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center bg-red-300 text-center`} onClick={handleOpen}>
-                        OPEN LESSON
+                    <div className={`${!state.open ? 'bg-red-700 text-white cursor-pointer' : 'bg-gray-300 text-black'} w-1/10 h-7/10 shadow-elem-dark px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center text-center`} onClick={handleOpen}>
+                        {!state.open ? 'START LESSON' : 'LESSON STARTED'}
                     </div>
 
 
