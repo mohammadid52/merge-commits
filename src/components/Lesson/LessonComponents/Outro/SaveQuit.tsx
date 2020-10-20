@@ -158,9 +158,6 @@ const SaveQuit = (props: SaveQuitProps) => {
     setVisible((prevState: any) => !prevState)
 }
 
-  
-
-
   return (
     <span className="relative w-7/10 ml-3 flex inline-flex rounded-md shadow-sm">
         <div className={`${visible ? 'absolute z-100' : 'hidden'} flex justify-center`} style={{top: '-450px'}} onClick={handleClick}>
