@@ -12,11 +12,12 @@ interface ClassProps {
   link: string;
   display?: boolean;
   curriculums: any;
+  // open: boolean
 }
 
 const Today: React.FC<ClassProps> = (props: ClassProps) => {
   const { link, curriculums, display } = props;
-  console.log(curriculums, 'curr')
+  // console.log(curriculums, 'curr')
   const [accessible, setAccessible] = useState<boolean>(true);
   const history = useHistory();
   const { theme } = useContext(GlobalContext);

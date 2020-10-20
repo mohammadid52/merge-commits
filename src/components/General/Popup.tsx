@@ -18,7 +18,6 @@ interface WritingAlertProps {
 
 const PosAlert = (props: WritingAlertProps) => {
     const {alert, setAlert, handleButton1, handleButton2, header, content, button1, button2, svg, button1Color, button2Color} = props
-
     const {visible, setVisible, ref } = useOutsideAlerter(false);
 
     const handleClick = () => {

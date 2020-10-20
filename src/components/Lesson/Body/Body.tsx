@@ -10,6 +10,7 @@ const Intro = lazy(() => import('../LessonComponents/Intro/Intro'));
 const Story = lazy(() => import('../LessonComponents/StoryPage/Story'));
 const Lyrics = lazy(() => import('../LessonComponents/LyricsPage/Lyrics'));
 const Poem = lazy(() => import('../LessonComponents/PoemPage/Poem'));
+const List = lazy(() => import('../LessonComponents/ListPage/List'));
 const Outro = lazy(() => import('../LessonComponents/Outro/Outro'));
 const LessonError = lazy(() => import('../../Error/LessonError'));
 const Checkpoint = lazy(() => import('../LessonComponents/Checkpoint/Checkpoint'));
@@ -28,6 +29,8 @@ const Body = () => {
                 return <Lyrics />;
             case 'poem':
                 return <Poem />;
+            case 'list':
+                return <List />;
             // case 'map-game':
             //     return <MapGame />;
             default:

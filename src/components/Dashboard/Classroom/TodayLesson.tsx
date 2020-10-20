@@ -7,23 +7,29 @@ import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/ai';
 import ProgressRing from './ProgressRing';
 import { CurriculumInfo } from './Classroom';
 import ToolTip from '../../General/ToolTip/ToolTip';
+import * as customQueries from '../../../customGraphql/customQueries';
+// import { API, graphqlOperation } from 'aws-amplify';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import { start } from 'repl';
+import Start from './Start'
 
 interface ClassProps {
   link: string;
   display?: boolean;
   curriculums: any;
+  // open: boolean
+  // getClassroom: any
 }
 
 const Today: React.FC<ClassProps> = (props: ClassProps) => {
   const { link, curriculums, display } = props;
-  console.log(curriculums, 'curr')
   const [accessible, setAccessible] = useState<boolean>(true);
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
 
-
   const handleLink = (key: number) => {
-    if (accessible) {
+
+    if (accessible  ) {
       history.push((`${`/lesson?id=${key + 1}`}`));
     }
     // For testing: enables clickthrough survey
@@ -44,7 +50,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
   return (
     <div
       className={``}>
-      { curriculums.map((curriculum: any, key: number) => {
+      { curriculums ? curriculums.map((curriculum: any, key: number, i: string) => {
         return (
           <div key={key}>
           <div className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} h-auto flex mb-8`}>
@@ -101,17 +107,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
             <div className={`w-auto mx-4 text-gray-200`}>Marlon</div>
           </div>
           <div className='flex w-3.3/10'>
-            <button
-              type='submit'
-              onClick={() => handleLink(key)}
-              className={`${
-                accessible
-                  ? 'bg-ketchup hover:bg-red-300 focus:border-red-700 focus:shadow-outline-red active:bg-red-500 text-white'
-                  : 'bg-gray-500 text-gray-700 cursor-default'
-              }
-                                w-full text-white rounded-br-xl focus:outline-none transition duration-150 ease-in-out`}>
-              <span className='w-auto h-auto'>START LESSON</span>
-            </button>
+            <Start lessonKey={key}/>
           </div>
         </div>
       </div>
@@ -119,7 +115,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
       </div>
       )
     })
-        }
+        : null }
     </div>
   );
 };

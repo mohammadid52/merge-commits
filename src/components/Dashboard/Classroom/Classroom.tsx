@@ -11,6 +11,7 @@ import Dashboard from './Dashboard';
 import Loading from '../../Lesson/Loading/ComponentLoading';
 import SurveyCard from './SurveyCard';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
+import queryString from 'query-string';
 
 interface Artist {
   id: string;
@@ -24,6 +25,10 @@ export interface CurriculumInfo {
   language: string;
   summary: string;
   title: string;
+}
+
+interface DataObject {
+  [key: string]: any;
 }
 
 const Classroom: React.FC = () => {
@@ -46,9 +51,8 @@ const Classroom: React.FC = () => {
         graphqlOperation(customQueries.getCourse, { id: id, limit: limit })
       );
       const lesson = courses.data.getCourse.curriculum.lessons.items.slice(0, 2)
-      console.log(lesson, 'lesson')
       const nextLesson = lesson.lesson;
-      console.log(courses, 'courses')
+      // console.log(courses, 'courses')
       const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
       setToday(lesson);
       setCurriculum(nextLesson);
@@ -59,7 +63,37 @@ const Classroom: React.FC = () => {
       console.error(error);
     }
   }
-  console.log(state, 'state')
+
+  // const [ open, setOpen ] = useState<any>();
+
+  // async function getClassroom(id: string) {
+  //   let queryParams = queryString.parse(location.search)
+    
+  //   try {
+  //       // this any needs to be changed once a solution is found!!!
+  //       const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: id }))
+  //       // console.log('classroom data', classroom);
+  //       console.log(classroom.data.getClassroom, 'classroom')
+  //       setOpen(classroom.data.getClassroom.open)
+  //       // dispatch({
+  //       //   type: 'INITIAL_LESSON_SETUP', 
+  //       //   payload: { 
+  //       //     pages: classroom.data.getClassroom.lessonPlan, 
+  //       //     data: classroom.data.getClassroom,
+  //       //     students: classroom.data.getClassroom.data.items
+  //       // }})
+  //       // subscription = subscribeToStudentData()
+  //   } catch (error) {
+  //       console.error(error)
+  //   }
+  // }
+
+  // console.log(open, 'lesson')
+
+  // useEffect(() => {
+  //   getClassroom('1')
+  // }, [])
+
 
   const getSurvey = async () => {
     try {
