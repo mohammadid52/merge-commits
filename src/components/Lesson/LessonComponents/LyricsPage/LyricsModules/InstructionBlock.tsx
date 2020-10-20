@@ -16,7 +16,7 @@ const InstructionsBlock = () => {
 
   return (
     <div className={`w-full h-auto rounded-xl`}>
-      <h3 className={`w-full h-1/10 text-xl ${theme.banner} ${theme.underline}`}>Instructions</h3>
+      <h3 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>Instructions</h3>
 
       <div className={theme.elem.text}>
         {instructionsArr.map((inst: any, key: number) => (

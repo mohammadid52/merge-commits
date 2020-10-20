@@ -292,19 +292,23 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   return (
     <div className={theme.section}>
       {checkpoint.checkpoint.subtitle ? (
-        <h3 className={`w-full h-1/10 text-xl ${theme.banner} ${theme.underline}`}>
+        <h3 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
           {checkpoint.checkpoint.subtitle}
         </h3>
       ) : (
         ''
       )}
 
-      <div className={theme.elem.text}>{checkpoint.checkpoint.instructions}</div>
+      <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
+        {checkpoint.checkpoint.instructions}
+      </div>
 
-      <div className='w-full h-full flex flex-col flex-wrap justify-around items-center'>
-        {checkpoint.checkpoint.questions.items.map((item: { question: any }, key: number) => {
-          return <>{inputSwitch(item.question, key)}</>;
-        })}
+      <div className={`${theme.elem.text}`}>
+        <div className='w-full h-full flex flex-col flex-wrap justify-around items-center'>
+          {checkpoint.checkpoint.questions.items.map((item: { question: any }, key: number) => {
+            return <>{inputSwitch(item.question, key)}</>;
+          })}
+        </div>
       </div>
     </div>
   );

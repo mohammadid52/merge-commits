@@ -39,7 +39,7 @@ const Modules = (props: any) => {
 
   return (
     <>
-      <div className={`w-full h-1/10 text-xl ${theme.banner} ${theme.underline}`}>
+      <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
         <h3>Keywords:</h3>
       </div>
       <div className={`flex justify-between text-sm md:text-base text-gray-200 mb-4 md:mb-0`}>

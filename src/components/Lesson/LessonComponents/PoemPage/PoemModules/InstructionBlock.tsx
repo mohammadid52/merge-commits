@@ -22,7 +22,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
     return (
       <>
         <div className={`w-full h-full rounded-xl`}>
-          <h3 className={`w-full h-1/10 text-xl ${theme.banner} ${theme.underline}`}>
+          <h3 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
             Instructions
           </h3>
         </div>
@@ -36,7 +36,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
   return (
     <>
       <div className={`w-full h-full rounded-xl`}>
-        <h3 className={`w-full h-1/10 text-xl ${theme.banner} ${theme.underline}`}>Instructions</h3>
+        <h3 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>Instructions</h3>
       </div>
         {/* {!videoMode ? ( */}
         <div className={theme.elem.text}>

@@ -23,7 +23,7 @@ const Intro = () => {
   if (state.data.lesson.type === 'survey') {
     return (
       <div className={`z-50 w-full h-full flex flex-col justify-center items-center`}>
-        <div className={`w-8/10 h-1/10 text-xl md:text-5xl ${theme.banner}`}>
+        <div className={`w-8/10 text-xl md:text-5xl ${theme.banner}`}>
           <div
             className={`h-full w-full flex flex-row justify-center items-center text-5xl text-center font-open font-medium ${theme.block.text} z-10 my-4`}>
             {state.data.lesson.title ? state.data.lesson.title : null}

@@ -12,7 +12,7 @@ const StoryOutput = (props: StoryOutputProps) => {
 
   return (
     <>
-    <div className={`w-full h-1/10 text-xl ${theme.banner} ${theme.underline}`}>
+    <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
       Your Story:
     </div>
       <div className='w-full h-48 flex flex-col'>

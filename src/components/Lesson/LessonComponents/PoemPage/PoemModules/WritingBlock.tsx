@@ -277,7 +277,7 @@ const WritingBlock = (props: WritingBlockProps) => {
         />
       </div>
       <div className={`w-full h-full rounded-xl`}>
-        <h3 className={`w-full h-1/10 text-xl ${theme.banner} border-b-4 border-sea-green`}>
+        <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
           Line Prompts{' '}
           <ToolTip
             width='w-40'

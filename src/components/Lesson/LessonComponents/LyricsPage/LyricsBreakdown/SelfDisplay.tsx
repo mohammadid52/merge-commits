@@ -54,8 +54,8 @@ const SelfDisplay = () => {
   return (
     <div className={theme.section}>
       <Banner title={title} artist={artist} />
-      <LyricsOutput modules={modules}/>
       <ReflectionQuestions />
+      <LyricsOutput modules={modules}/>
     </div>
   );
 };

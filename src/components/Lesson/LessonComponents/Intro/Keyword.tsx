@@ -9,7 +9,7 @@ const Keyword = () => {
 
   return (
     <div className={`flex flex-col md:w-full ${theme.block.text} rounded-r-lg`}>
-      <div className={`w-full h-1/10 text-xl ${theme.banner} ${theme.underline}`}>
+      <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
         <h3>Keywords we will cover in this lesson:</h3>
         <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
           <div className='absolute w-auto h-auto mr-2 right-0'>

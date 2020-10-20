@@ -32,26 +32,6 @@ const LyricsBreakdown = () => {
     }, [state.pages])
 
     useEffect(() => {
-        // if (displayProps) {
-        //     let modulesArray = moduleTypes.map((item: {[key: string]: any}) => {
-        //         let contentArray = displayProps.filter((selection: { color: string, content: any }) => {
-        //             return item.color === selection.color
-        //         })
-        //         .map((selection: { content: any}) => {
-        //             return selection.content
-        //         });
-
-        //         return {
-        //             name: item.name,
-        //             label: item.icon,
-        //             color: item.color,
-        //             content: arrayParseToString(contentArray)
-        //         }
-        //     })
-
-        //     setModules(modulesArray)
-        // }
-
         dispatch({type: 'ACTIVATE_LESSON', payload: 'corelesson/breakdown'})
     }, [])
 

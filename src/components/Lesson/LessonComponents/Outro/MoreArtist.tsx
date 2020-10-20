@@ -48,7 +48,7 @@ const MoreArtist = () => {
 
   return (
     <div className={`w-full h-full rounded-xl`}>
-        <h3 className={`w-full h-1/10 text-xl ${theme.banner} ${theme.underline}`}>
+        <h3 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
           Learn more about {state.data.lesson.artist.name}
         </h3>
       <div className='h-full w-full flex flex-col items-center rounded-lg'>

@@ -288,9 +288,9 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
         }`}>
         { checkpoint.checkpoint.subtitle ? checkpoint.checkpoint.subtitle : null }
       </h4>
-      <h4 className={`w-full text-2xl font-open font-semibold text-gray-200 mb-1`}>{checkpoint.checkpoint.instructions}</h4>
+      <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>{checkpoint.checkpoint.instructions}</div>
 
-      <div className={`h-8/10 w-full flex flex-col text-gray-200`}>
+      <div className={`${theme.elem.text}`}>
       {currentData.map(
         (value: {
           position: any;

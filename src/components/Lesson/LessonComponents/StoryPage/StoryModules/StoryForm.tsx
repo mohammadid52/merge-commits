@@ -68,7 +68,7 @@ const StoryForm = () => {
   return (
     <div className='w-full h-full rounded-xl'>
       <h3
-        className={`w-full h-1/10 text-xl ${theme.banner} border-b-4 border-sea-green`}>
+        className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
         Story{' '}
       </h3>
       <div className='relative h-full flex flex-col mb-5 mt-2'>

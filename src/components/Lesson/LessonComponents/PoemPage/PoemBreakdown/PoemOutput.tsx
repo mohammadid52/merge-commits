@@ -12,12 +12,12 @@ const PoemOutput = (props: PoemOutputProps) => {
 
   return (
     <>
-    <div className={`w-full h-1/10 text-xl ${theme.banner} ${theme.underline}`}>
+    <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
       Your Poem:
     </div>
       <div className='w-full h-48 flex flex-col'>
         {
-          typeof props.poem !== 'undefined'
+          props.poem !== ''
           ? <div className={`${theme.elem.text} align-middle text-center`}>{props.poem}</div>
           : <div className={`${theme.elem.text} align-middle text-center`}>You didn't write a poem :)</div>
         }

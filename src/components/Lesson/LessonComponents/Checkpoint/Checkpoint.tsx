@@ -35,13 +35,9 @@ const Checkpoint = () => {
   return (
     <div className={theme.section}>
       <Banner />
-
-      <div className={`${theme.elem.text}`}>
         {tempCheckPtSwitch(state.pages[state.currentPage].type)}
-      </div>
-     
     </div>
   );
 };
 
-export default Checkpoint;/*  */
+export default Checkpoint;

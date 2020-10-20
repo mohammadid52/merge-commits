@@ -72,11 +72,11 @@ const EditBlock = (props: EditBlockProps) => {
     return (
         <div className={theme.section}>
   
-            <h3 className={`w-full h-1/10 text-xl ${theme.banner} ${theme.underline}`}>
+            <h3 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
                 Final Edits
             </h3>
             <div className='w-full flex flex-col'>
-                <label className={`w-full h-1/10 text-xl ${theme.banner}`} htmlFor="title">
+                <label className={`w-full text-xl ${theme.banner}`} htmlFor="title">
                     Your poem's title
                 </label>
                 <input id="title" name="title" className={` rounded-xl mb-2 ${theme.elem.textInput}`} type="text" 

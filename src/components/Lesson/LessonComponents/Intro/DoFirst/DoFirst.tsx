@@ -204,7 +204,7 @@ const DoFirst = () => {
   return (
     // <div className='bg-dark-blue w-full h-full rounded-lg  text-gray-200 px-4 md:px-8 py-6'>
     <div className={`w-full h-full rounded-xl`}>
-      <h3 className={`w-full h-1/10 text-xl ${theme.banner} border-b-4 border-sea-green`}>
+      <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
         Do First 
       </h3>
       <div className='w-full flex flex-col'>
