@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 type InputProp = [{ name: string; example: string; prompt: string; }];
@@ -24,7 +24,7 @@ interface FormInputsState {
 const Modules = (props: ModulesProps) => {
     const { inputs, fullscreen, dataProps } = props
     const { state, dispatch, theme } = useContext(LessonControlContext);
-    const [ cookies, setCookie ] = useCookies(['story'])
+    // const [ cookies, setCookie ] = useCookies(['story'])
     const [ formInputs, setFormInputs ] = useState<FormInputsState>()
 
     useEffect(() => {

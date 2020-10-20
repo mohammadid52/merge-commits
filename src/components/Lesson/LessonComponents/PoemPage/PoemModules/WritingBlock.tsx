@@ -3,7 +3,7 @@ import {useOutsideAlerter} from '../../../../General/hooks/outsideAlerter';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaPlus } from 'react-icons/fa';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 import PositiveAlert from '../../../../General/Popup';
 
@@ -20,7 +20,7 @@ interface WritingBlockProps {
 
 const WritingBlock = (props: WritingBlockProps) => {
     const { editMode, setEditMode } = props;
-    const [ cookies, setCookie ] = useCookies(['poem']);
+    // const [ cookies, setCookie ] = useCookies(['poem']);
     const { state, dispatch } = useContext(LessonContext);
     const lineNo = state.data.lesson.activity.lineNumber;
     const promptArray = state.data.lesson.activity.writingPrompts;
@@ -40,16 +40,16 @@ const WritingBlock = (props: WritingBlockProps) => {
         lines: state.componentState.poem && state.componentState.poem.lines ? state.componentState.poem.lines : initialLines,
     });
 
-    useEffect(() => {
-        if ( cookies.poem && cookies.poem.lines.length >= lineNo ) {
-            setLineState(prev => {
-                return {
-                    ...prev,
-                    lines: cookies.poem.lines
-                }
-            })
-        }
-    }, [])
+    // useEffect(() => {
+    //     if ( cookies.poem && cookies.poem.lines.length >= lineNo ) {
+    //         setLineState(prev => {
+    //             return {
+    //                 ...prev,
+    //                 lines: cookies.poem.lines
+    //             }
+    //         })
+    //     }
+    // }, [])
 
     useEffect(() => {
         let lineArray = lineState.lines.map((line: { text: string }) => {
@@ -88,11 +88,11 @@ const WritingBlock = (props: WritingBlockProps) => {
                 }
             })
 
-            setCookie('poem', {
-                ...cookies.poem, 
-                lines: lineState.lines,
-                editInput: content
-            })
+            // setCookie('poem', {
+            //     ...cookies.poem, 
+            //     lines: lineState.lines,
+            //     editInput: content
+            // })
         }
     }, [lineState])
 

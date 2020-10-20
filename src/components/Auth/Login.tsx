@@ -240,8 +240,13 @@ const Login = () => {
                 </IconContext.Provider>
               )}
               <NavLink to='/forgot-password'>
-                <div className='text-bold text-center text-blueberry hover:text-blue-500'>
+                <div className='text-bold text-center text-blueberry hover:text-blue-500 mb-2'>
                   Forgot your password?
+                </div>
+              </NavLink>
+              <NavLink to='/confirm-code'>
+                <div className='text-bold text-center text-blueberry hover:text-blue-500 mb-2'>
+                  Have a confirmation code?
                 </div>
               </NavLink>
             </div>
