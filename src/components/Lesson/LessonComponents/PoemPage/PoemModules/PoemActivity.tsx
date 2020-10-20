@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import WritingBlock from './WritingBlock';
 import InstructionBlock from './InstructionBlock';
 import ToolBar from './ToolBar';
@@ -22,7 +22,7 @@ type storageObject = {
 
 const PoemActivity = () => {
     const { state, dispatch } = useContext(LessonContext);
-    const [ cookies, setCookie ] = useCookies(['poem']);
+    // const [ cookies, setCookie ] = useCookies(['poem']);
     const [ editMode, setEditMode ] = useState({
         open: state.componentState.poem && state.componentState.poem.editMode ? state.componentState.poem.editMode : false,
         input: state.componentState.poem && state.componentState.poem.editInput ? state.componentState.poem.editInput : '',
@@ -32,37 +32,39 @@ const PoemActivity = () => {
 
     
     useEffect(() => {
-        if ( cookies.poem ) {
-            if ( !cookies.poem.editMode ) {
-                dispatch({
-                    type: 'SET_INITIAL_COMPONENT_STATE',
-                    payload: {
-                        name: 'poem',
-                        content: cookies.poem
-                    }
-                })
-            }
+        // if ( cookies.poem ) {
+        //     if ( !cookies.poem.editMode ) {
+        //         dispatch({
+        //             type: 'SET_INITIAL_COMPONENT_STATE',
+        //             payload: {
+        //                 name: 'poem',
+        //                 content: cookies.poem
+        //             }
+        //         })
+        //     }
 
-            if ( cookies.poem.editMode && cookies.poem ) {
-                setEditMode(prev => {
-                    return {
-                        ...prev,
-                        editMode: true,
-                        input: cookies.poem.editInput
-                    }
-                })
+        //     if ( cookies.poem.editMode && cookies.poem ) {
+        //         setEditMode(prev => {
+        //             return {
+        //                 ...prev,
+        //                 editMode: true,
+        //                 input: cookies.poem.editInput
+        //             }
+        //         })
 
-                dispatch({
-                    type: 'SET_INITIAL_COMPONENT_STATE',
-                    payload: {
-                        name: 'poem',
-                        content: cookies.poem
-                    }
-                })
-            }
-        }
+        //         dispatch({
+        //             type: 'SET_INITIAL_COMPONENT_STATE',
+        //             payload: {
+        //                 name: 'poem',
+        //                 content: cookies.poem
+        //             }
+        //         })
+        //     }
+        // }
 
-        if ( !cookies.poem && !state.componentState.poem ) {
+        if ( 
+            // !cookies.poem && 
+            !state.componentState.poem ) {
             let storageObj: storageObject = {
                 title: '',
                 editMode: false,
@@ -78,7 +80,7 @@ const PoemActivity = () => {
                 }
             })
 
-            setCookie('poem', storageObj)
+            // setCookie('poem', storageObj)
         }
     }, [])
 
@@ -93,7 +95,7 @@ const PoemActivity = () => {
                 }
             })
 
-            setCookie('poem', {...cookies.poem, editMode: true})
+            // setCookie('poem', {...cookies.poem, editMode: true})
         }
     }, [editMode.open])
 

@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import Banner from './Banner';
 import Toolbar from './Toolbar';
 import LyricsBlock from './LyricsBlock';

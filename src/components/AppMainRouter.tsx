@@ -3,11 +3,12 @@ import { GlobalContext } from '../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
 // import { Auth } from 'aws-amplify';;
 import {Auth} from '@aws-amplify/auth';
-import PageHeaderBar from './Header/PageHeaderBar';
+// import PageHeaderBar from './Header/PageHeaderBar';
 import Login from './Auth/Login';
 import Forgot from './Auth/Forgot';
 import Dashboard from './Dashboard/Dashboard';
-const Confirmation = lazy(() => import('./Auth/Confirmation'));
+// const Confirmation = lazy(() => import('./Auth/Confirmation'));
+const ConfirmCode = lazy(() => import('./Auth/ConfirmCode'));
 const PrivacyPolicy = lazy(() => import('./Auth/PrivacyPolicy'));
 // const Dashboard = lazy(() => import('./Dashboard/Dashboard'));
 const Registration = lazy(() => import('./Auth/Register'));
@@ -21,7 +22,7 @@ import {
  } from 'react-router-dom';
 import PrivateRoute from './Auth/PrivateRoute';
 import NewPassword from './Auth/NewPassword';
-import Reset from './Auth/Reset';
+// import Reset from './Auth/Reset';
 import ComponentLoading from './Lesson/Loading/ComponentLoading';
 
 const MainRouter: React.FC = () => {
@@ -75,15 +76,29 @@ const MainRouter: React.FC = () => {
                     />
                     <Route 
                         path="/confirm"
+                        render={({ location }) => (
+                            <Redirect 
+                                to={{
+                                pathname: '/confirm-code',
+                                state: { from: location }
+                            }}/>
+                        )} 
+                    />
+                    <Route 
+                        path="/confirm-code"
                         render={() => (
-                            <Confirmation />  
+                            <ConfirmCode />  
                         )} 
                     />
                     <Route 
                         path="/new-password"
-                        render={() => (
-                            <NewPassword />  
-                        )} 
+                        render={({ location }) => (
+                            <Redirect 
+                                to={{
+                                pathname: '/confirm-code',
+                                state: { from: location }
+                            }}/>
+                        )}  
                     />
                     <Route 
                         path="/forgot-password"
@@ -93,8 +108,12 @@ const MainRouter: React.FC = () => {
                     />
                     <Route 
                         path="/reset-password"
-                        render={() => (
-                            <Reset />  
+                        render={({ location }) => (
+                            <Redirect 
+                                to={{
+                                pathname: '/confirm-code',
+                                state: { from: location }
+                            }}/>
                         )} 
                     />
                     <Route 
