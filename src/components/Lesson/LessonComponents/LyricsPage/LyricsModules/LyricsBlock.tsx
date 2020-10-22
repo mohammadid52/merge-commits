@@ -176,7 +176,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     const t = e.target as HTMLElement;
     const targetWordID = t.id || '';
 
-    if (color !== 'erase') {
+    if (color !== 'erase' && color !== '') {
       handleClickSelectText(targetWordID);
     } else if (color === 'erase') {
       handleEraseText(targetWordID);
