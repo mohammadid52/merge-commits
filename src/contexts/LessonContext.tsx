@@ -172,10 +172,11 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             dispatch({
                 type: 'SET_INITIAL_STATE', 
                 payload: { 
+                    classroomID: lesson.id,
+                    data: lesson,
                     pages: removeDisabled(lesson.lessonPlan), 
                     displayData: lesson.displayData,
                     word_bank: wordBank, 
-                    data: lesson,
                     subscribeFunc: subscribeToClassroom,
             }})
         }

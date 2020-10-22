@@ -3,16 +3,11 @@ import StageIcon from './StageIcon';
 import LessonControl from '../LessonControl';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 
-interface LessonControlBarProps {
-    setComponentView: React.Dispatch<React.SetStateAction<string>>
-}
-
-const LessonControlBar = (props: LessonControlBarProps) => {
-    const { setComponentView } = props
+const LessonControlBar = () => {
     const { state } = useContext(LessonControlContext);
     const [ menuOpen, setMenuOpen ] = useState<null | string>(null);
 
-    const handleOpenMenu = (stage: string) => {
+    const handleOpenMenu = (stage: string) => {        
         if ( menuOpen === stage ) {
             return setMenuOpen(null)
         } return setMenuOpen(stage)
