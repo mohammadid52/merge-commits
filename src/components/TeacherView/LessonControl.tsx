@@ -31,18 +31,17 @@ const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'));
 
 const LessonControl = () => {
     const { state, dispatch } = useContext(LessonControlContext);
-    console.log(state, 'state')
+    // console.log(state, 'state')
     const match = useRouteMatch();
     const history = useHistory();
     const location = useLocation();
-    const [ componentView, setComponentView ] = useState('');
     const [ fullscreen, setFullscreen ] = useState(false);
-    const [ studentDataLoading, setStudentDataLoading ] = useState('');
+    // const [ studentDataLoading, setStudentDataLoading ] = useState('');
     const [ shareable, setShareable ] = useState(false);
     const [ isSameStudentShared, setIsSameStudentShared ] = useState(false);
     const [open, setOpen ] = useState(state.open);
 
-    console.log(open, 'open');
+    // console.log(open, 'open');
 
     const handleFullscreen = () => {
         setFullscreen(fullscreen => {
@@ -58,7 +57,7 @@ const LessonControl = () => {
     }
 
     useEffect(() => {
-        console.log(state, 'state')
+        // console.log(state, 'state')
     }, [])
 
     const handleUpdateClassroom = async () => {
@@ -73,6 +72,8 @@ const LessonControl = () => {
         try {
             const updatedClassroom = await API.graphql(graphqlOperation(customMutations.updateClassroom, {input: updatedClassroomData}))
             dispatch({ type: 'SAVED_CHANGES' })
+            console.log(updatedClassroom);
+            
         } catch (err) {
             console.error(err);   
         }
@@ -102,7 +103,7 @@ const LessonControl = () => {
     const handleOpen = () => {
         dispatch({ type: 'START_CLASSROOM' })
         setOpen(true);
-        console.log(state)
+        // console.log(state)
     }
 
     const handleQuitShare = () => {
@@ -131,13 +132,13 @@ const LessonControl = () => {
     }, [state.unsavedChanges])
 
     useEffect(() => {
-        if ( !state.studentDataUpdated ) {
-            setStudentDataLoading('loading')
-        }
+        // if ( !state.studentDataUpdated ) {
+        //     setStudentDataLoading('loading')
+        // }
         
-        if ( state.studentDataUpdated ) {
-            setStudentDataLoading('')
-        }
+        // if ( state.studentDataUpdated ) {
+        //     setStudentDataLoading('')
+        // }
 
     }, [state.studentDataUpdated])
 
@@ -204,9 +205,9 @@ const LessonControl = () => {
     }, [state.displayData, state.studentViewing])
 
     useEffect(() => {
-        console.log(state);
+        console.log('state', state);
         
-    }, [state.studentViewing])
+    }, [state])
 
     if ( state.status !== 'loaded') {
         return (
@@ -478,7 +479,7 @@ const LessonControl = () => {
                                     }
                                     />
                                 </div>
-                            <LessonControlBar setComponentView={setComponentView} />
+                            <LessonControlBar />
                         </div>
                     </div>
                 </div>

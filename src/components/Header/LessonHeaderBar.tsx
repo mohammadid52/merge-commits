@@ -68,7 +68,7 @@ const LessonHeaderBar = () => {
             lessonProgress: lessonProgress,
             status: state.studentStatus,
             saveType: saveType,
-            classroomID: 1,
+            classroomID: state.classroomID,
             studentID: state.studentUsername,
             studentAuthID: state.studentAuthID,
             warmupData: state.componentState.story ? state.componentState.story : null,

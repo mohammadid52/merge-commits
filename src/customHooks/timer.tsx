@@ -100,7 +100,7 @@ const useStudentTimer = (inputs?: inputs) => {
             lessonProgress: lessonProgress,
             saveType: saveType,
             status: params.state.studentStatus,
-            classroomID: 1,
+            classroomID: params.state.classroomID,
             studentID: params.state.studentUsername,
             studentAuthID: params.state.studentAuthID,
             warmupData: params.state.componentState.story ? params.state.componentState.story : null,
