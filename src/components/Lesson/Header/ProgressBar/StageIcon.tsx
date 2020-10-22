@@ -16,6 +16,7 @@ import {
 import FooterLabels from '../../../General/LabelSwitch';
 
 interface StageIconProps {
+  isHovered: boolean;
   iconID: string | number;
   stage: string;
   type: string;
@@ -25,7 +26,7 @@ interface StageIconProps {
 }
 
 const StageIcon = (props: StageIconProps) => {
-  const { iconID, stage, type, active, disabled, open } = props;
+  const { isHovered, iconID, stage, type, active, disabled, open } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
   const match = useRouteMatch();
   const history = useHistory();
@@ -62,7 +63,10 @@ const StageIcon = (props: StageIconProps) => {
   const iconLabel = (centerFix: 'center' | 'noCenter'): ReactElement => {
     return (
       <div
-        className={`absolute transform translate-y-12 text-center z-50 ${theme.elem.text} w-24 
+        className={`
+        absolute transform translate-y-12 text-center z-50 w-24 transition-all duration-500 ease-in-out
+        ${theme.elem.text}
+        ${isHovered ? 'opacity-100' : 'opacity-0'}
         ${centerFix === 'center' && 'left-1/2 -translate-x-1/2'} 
         ${centerFix === 'noCenter' && '-translate-x-1/2'} 
         ${state.currentPage === iconID ? 'text-opacity-75' : ''}

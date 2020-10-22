@@ -2,7 +2,11 @@ import React, { useContext } from 'react';
 import StageIcon from './StageIcon';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
-const ProgressBar = () => {
+interface ProgressBarProps {
+  isHovered: boolean;
+}
+
+const ProgressBar = (props: ProgressBarProps) => {
   const { state, theme } = useContext(LessonContext);
 
   /**
@@ -29,6 +33,7 @@ const ProgressBar = () => {
                     key < state.pages.length - 1 ? 'w-full' : 'w-auto'
                   } flex justify-center items-center`}>
                   <StageIcon
+                    isHovered={props.isHovered}
                     iconID={key}
                     key={key}
                     stage={page.stage}

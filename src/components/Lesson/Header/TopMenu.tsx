@@ -8,7 +8,7 @@ import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 
 const TopMenu = () => {
   const { state, dispatch, theme } = useContext(LessonContext);
-  const [isHovered, setIsHovered] = useState<boolean>();
+  const [isHovered, setIsHovered] = useState<boolean>(false);
   const history = useHistory();
   const match = useRouteMatch();
 
@@ -45,7 +45,10 @@ const TopMenu = () => {
   return (
     <>
       <div
-        className={` ${theme.toolbar.bg} shadow-1 h-1.1/10 w-full flex justify-center items-center content-center py-4 px-6`}>
+        className={` ${theme.toolbar.bg} shadow-1 h-1.1/10 w-full flex justify-center items-center content-center py-4 px-6`}
+        onPointerEnter={()=>setIsHovered(true)}
+        onPointerLeave={()=>setIsHovered(false)}
+        >
         <div className='w-full flex flex-row items-center justify-between'>
           {/* BACK BUTTON */}
           <div
@@ -65,7 +68,7 @@ const TopMenu = () => {
             {/* <p className='mr-3 text-right'>Back</p> */}
           </div>
 
-          <ProgressBar />
+          <ProgressBar isHovered={isHovered}/>
 
           {/* FORWARD BUTTON */}
           <div
@@ -86,7 +89,7 @@ const TopMenu = () => {
           </div>
         </div>
       </div>
-      <div className='w-full h-6 bg-darker-gray'></div>
+      <div className={`${isHovered ? 'opacity-100' : 'opacity-0'} w-full h-6 bg-darker-gray`}></div>
     </>
   );
 };
