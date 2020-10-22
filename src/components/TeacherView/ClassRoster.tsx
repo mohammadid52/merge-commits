@@ -30,11 +30,11 @@ const ClassRoster = (props: classRosterProps) => {
     }
 
     useEffect(() => {
-        // console.log(state.studentViewing) 
+        console.log(state.studentViewing) 
     
-        if (state.studentViewing.studentInfo) {
-            handleUpdateClassroom()
-        }
+        // if (state.studentViewing.studentInfo) {
+        //     handleUpdateClassroom()
+        // }
 
     }, [state.studentViewing])
 

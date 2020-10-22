@@ -87,7 +87,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                     })
             };
         case 'UPDATE_STUDENT_DATA':
-            let found = state.roster.some((student: any) => {
+            let foundInRoster = state.roster.some((student: any) => {
                 return student.id === action.payload.id
             })
 
@@ -96,11 +96,11 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
             let saveType = action.payload.saveType;
             
             if ( saveType === 'done' ) {
-                let found = doneArray.some((item: string) => {
+                let foundInDoneArray = doneArray.some((item: string) => {
                     return item === action.payload.student.email
                 })
 
-                if ( !found ) {
+                if ( !foundInDoneArray ) {
                     doneArray.push(action.payload.student.email)
                     console.log('added', doneArray);
                 }
@@ -108,7 +108,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
 
             let viewing = state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.id === action.payload.id : null;
 
-            if ( found ) {
+            if ( foundInRoster ) {
 
                 if ( viewing ) {
                     return {
@@ -187,7 +187,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 }
             };
         case 'SET_STUDENT_VIEWING':
-            console.log(action.payload);
+            // console.log(action.payload);
             if ( state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === action.payload.id ) {
                 return { 
                     ...state,
