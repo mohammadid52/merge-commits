@@ -55,7 +55,7 @@ const LessonHeaderBar = () => {
     // }, [state.studentStatus])
 
     useEffect(()=>{
-        // history.push('/lesson/corelesson');
+        history.push('/lesson/corelesson');
     },[])
 
     const updateStudentData = async ( saveType?: string) => {
