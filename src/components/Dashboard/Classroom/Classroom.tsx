@@ -120,6 +120,8 @@ const Classroom: React.FC = () => {
 
   useEffect(() => {
     getCourse('1');
+
+    // history.push('/lesson?id=1');
   }, []);
 
   useEffect(() => {
@@ -148,12 +150,6 @@ const Classroom: React.FC = () => {
         };
       });
     }
-
-    // TEMPORARY HACK FOR AUTO-FORWARD TO HIGHLIGHTER
-    // TEMPORARY HACK FOR AUTO-FORWARD TO HIGHLIGHTER
-    // history.push('/lesson?id=1');
-    // TEMPORARY HACK FOR AUTO-FORWARD TO HIGHLIGHTER
-    // TEMPORARY HACK FOR AUTO-FORWARD TO HIGHLIGHTER
     
   }, [state]);
 
