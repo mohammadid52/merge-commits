@@ -12,7 +12,7 @@ const Branding: React.FC = () => {
       {/* CONTACT */}
       <div className='bg-darker-gray flex-row justify-center items-center'>
         <div
-          className={`w-64rem h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}>
+          className={`w-256 h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}>
           <div className={`w-3.3/10 ${theme.elem.text}`}>
             <p className='mb-1'>CONTACT US</p>
             <p>Info@IconoclastArtists.org</p>

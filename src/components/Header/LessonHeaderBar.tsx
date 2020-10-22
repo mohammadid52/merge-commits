@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaRegSave, FaHome, FaBook, FaRegThumbsUp } from 'react-icons/fa';
 import { AiOutlineSave, AiOutlineHome } from 'react-icons/ai';
@@ -11,7 +11,12 @@ import SideMenu from '../Lesson/Header/SideMenu';
 
 const LessonHeaderBar = () => {
   const [cookies, setCookie] = useCookies(['lesson']);
+  const history = useHistory();
   const { theme, state, dispatch } = useContext(LessonContext);
+
+  useEffect(()=>{
+    // history.push('/lesson/corelesson');
+  },[])
 
   useEffect(() => {
     if (!state.pages[0].active) {

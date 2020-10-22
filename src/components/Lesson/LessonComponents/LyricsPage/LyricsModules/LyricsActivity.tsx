@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
 import Banner from './Banner';
@@ -98,48 +98,52 @@ const Body = () => {
    * COOKIE loading for previously highlighted text WOOO!!!
    */
 
-  useEffect(()=>{
-    if(typeof selectedCookie.selected !== 'undefined') {
-        setInitialSelectedText(selectedCookie.selected);
-        setSelectGroup(parseInt(selectGroupCookie.selectGroup));
+  useEffect(() => {
+    if (typeof selectedCookie.selected !== 'undefined') {
+      setInitialSelectedText(selectedCookie.selected);
+      setSelectGroup(parseInt(selectGroupCookie.selectGroup));
     }
-  },[])
+  }, []);
 
-  useEffect(()=>{
-    setSelectGroupCookie('selectGroup', selectGroup)
-  },[selectGroup])
+  useEffect(() => {
+    setSelectGroupCookie('selectGroup', selectGroup);
+  }, [selectGroup]);
 
-  useEffect(()=>{
-    setSelectedCookie('selected', JSON.stringify(initialSelectedText))
-  },[initialSelectedText])
+  useEffect(() => {
+    setSelectedCookie('selected', JSON.stringify(initialSelectedText));
+  }, [initialSelectedText]);
 
   return (
     <>
       {/* <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup} /> */}
       <div className={theme.section}>
         <Banner />
-        
-          <div className='flex flex-col justify-between items-center'>
-            <InstructionBlock />
-            <VideoBlock link={state.data.lesson.coreLesson.content.link} fullscreen={fullscreen} />
-         
+
+        <div className='flex flex-col justify-between items-center'>
+          <InstructionBlock />
+          <VideoBlock link={state.data.lesson.coreLesson.content.link} fullscreen={fullscreen} />
         </div>
-            <Toolbar setColor={setColor} />
-            <LyricsBlock
-              color={color}
-              selected={selected}
-              setSelected={setSelected}
-              fullscreen={fullscreen}
-              setFullscreen={setFullscreen}
-              firstLastSelected={firstLastSelected}
-              setFirstLastSelected={setFirstLastSelected}
-              initialSelectedText={initialSelectedText}
-              setInitialSelectedText={setInitialSelectedText}
-              finalText={finalText}
-              setFinalText={setFinalText}
-              selectGroup={selectGroup}
-              setSelectGroup={setSelectGroup}
-            />
+
+        <div className='relative'>
+          {/* Toolbar becomes sticky */}
+          <Toolbar setColor={setColor} color={color}/>
+
+          <LyricsBlock
+            color={color}
+            selected={selected}
+            setSelected={setSelected}
+            fullscreen={fullscreen}
+            setFullscreen={setFullscreen}
+            firstLastSelected={firstLastSelected}
+            setFirstLastSelected={setFirstLastSelected}
+            initialSelectedText={initialSelectedText}
+            setInitialSelectedText={setInitialSelectedText}
+            finalText={finalText}
+            setFinalText={setFinalText}
+            selectGroup={selectGroup}
+            setSelectGroup={setSelectGroup}
+          />
+        </div>
       </div>
     </>
   );

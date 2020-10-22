@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../contexts/LessonContext';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import ProgressBar from './ProgressBar/ProgressBar';
@@ -8,6 +8,7 @@ import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 
 const TopMenu = () => {
   const { state, dispatch, theme } = useContext(LessonContext);
+  const [isHovered, setIsHovered] = useState<boolean>();
   const history = useHistory();
   const match = useRouteMatch();
 
@@ -85,7 +86,7 @@ const TopMenu = () => {
           </div>
         </div>
       </div>
-      <div className='w-full h-4 bg-black opacity-10'></div>
+      <div className='w-full h-6 bg-darker-gray'></div>
     </>
   );
 };

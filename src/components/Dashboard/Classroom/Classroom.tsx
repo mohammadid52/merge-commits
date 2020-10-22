@@ -80,7 +80,7 @@ const Classroom: React.FC = () => {
   useEffect(() => {
     getCourse('1');
 
-    history.push('/lesson?id=1')
+    // history.push('/lesson?id=1')
   }, []);
 
   useEffect(() => {
@@ -127,7 +127,7 @@ const Classroom: React.FC = () => {
         </p>
         <div className='w-full bg-opacity-10'>
           {survey.display ? (
-            <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
+            <h2 className={`w-256 text-xl m-auto ${theme.dashboard.sectionTitle}`}>
               Welcome to Iconoclast Artists
             </h2>
           ) : (
@@ -140,8 +140,8 @@ const Classroom: React.FC = () => {
         ) : null}
 
         <div className='w-full bg-opacity-10'>
-          <div className='w-64rem text-xl m-auto'>
-            <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
+          <div className='w-256 text-xl m-auto'>
+            <h2 className={`w-256 text-xl m-auto ${theme.dashboard.sectionTitle}`}>
               Today's Lesson
             </h2>
 
@@ -150,8 +150,8 @@ const Classroom: React.FC = () => {
         </div>
 
         <div className='w-full bg-grayscale-light bg-opacity-10'>
-          <div className='w-64rem text-xl m-auto'>
-            <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
+          <div className='w-256 text-xl m-auto'>
+            <h2 className={`w-256 text-xl m-auto ${theme.dashboard.sectionTitle}`}>
               Upcoming Lessons
             </h2>
 

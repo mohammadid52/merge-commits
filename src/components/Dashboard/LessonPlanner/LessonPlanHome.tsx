@@ -55,11 +55,11 @@ const LessonPlanHome = () => {
   {
     return (
       <div className='w-full'>
-        <div className='w-64rem text-xl m-auto'>
-          <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
+        <div className='w-256 text-xl m-auto'>
+          <h2 className={`w-256 text-xl m-auto ${theme.dashboard.sectionTitle}`}>
             Today's Lesson
           </h2>
-          <div className={`w-64rem h-9.28/10 md:h-auto flex flex-col mx-auto`}>
+          <div className={`w-256 h-9.28/10 md:h-auto flex flex-col mx-auto`}>
             <Today link='/lesson-control?id=1' curriculum={curriculum} />
             {/* <Link to="/lesson-control?id=1">
                 Teacher View 

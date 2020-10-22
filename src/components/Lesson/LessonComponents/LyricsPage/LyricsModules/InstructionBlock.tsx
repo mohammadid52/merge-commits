@@ -15,7 +15,7 @@ const InstructionsBlock = () => {
   };
 
   return (
-    <div className={`w-full h-auto rounded-xl`}>
+    <div className={`w-full h-auto ${theme.underline} mb-4`}>
       <h3 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>Instructions</h3>
 
       <div className={theme.elem.text}>
