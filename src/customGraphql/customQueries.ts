@@ -167,6 +167,8 @@ export const getClassroom = /* GraphQL */ `
           }
           inputs {
             title
+            textExample
+            titleExample
             example
             additionalInputs {
               id
@@ -504,6 +506,8 @@ export const getClassroomStudent = /* GraphQL */ `
           inputs {
             title
             example
+            textExample
+            titleExample
             additionalInputs {
               id
               name
