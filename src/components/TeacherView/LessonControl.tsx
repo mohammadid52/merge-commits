@@ -72,7 +72,7 @@ const LessonControl = () => {
         try {
             const updatedClassroom = await API.graphql(graphqlOperation(customMutations.updateClassroom, {input: updatedClassroomData}))
             dispatch({ type: 'SAVED_CHANGES' })
-            console.log(updatedClassroom);
+            // console.log(updatedClassroom);
             
         } catch (err) {
             console.error(err);   
@@ -204,10 +204,10 @@ const LessonControl = () => {
  
     }, [state.displayData, state.studentViewing])
 
-    useEffect(() => {
-        console.log('state', state);
+    // useEffect(() => {
+    //     console.log('state', state);
         
-    }, [state])
+    // }, [state])
 
     if ( state.status !== 'loaded') {
         return (
