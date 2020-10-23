@@ -29,7 +29,7 @@ const ReflectionQuestions = () => {
                     <div className="w-6 h-6 border-dark border-t-8 border-l-8 transform -rotate-45 ml-2 cursor-pointer"></div>
                 </div>
                 <div className="w-8/10 bg-gradient-to-tl from-dark-blue to-med-dark-blue flex-grow rounded-lg px-2 md:px-4 py-1 md:py-2 flex flex-col">
-                    <h3 className="font-open font-light mb-2">
+                    <h3 className="font-open font-light">
                     Discussion Questions
                     </h3>
                     <div className="question w-full flex-grow text-sm md:text-xl font-light text-gray-200 flex justify-center md:px-4">

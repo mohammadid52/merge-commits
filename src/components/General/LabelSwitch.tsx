@@ -12,6 +12,8 @@ const FooterLabels = ({label}: LabelProps) => {
             return <div>Intro</div>;
         case 'Story':
             return <div>Warm Up</div>;
+        case 'List':
+            return <div>Warm Up</div>;
         case 'Lyrics':
             return <div>Core Lesson</div>;
         case 'Poem':
