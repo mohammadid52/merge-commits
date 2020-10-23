@@ -121,7 +121,7 @@ const ListForm = () => {
           className='text-center w-full h-full px-4 py-2 rounded-lg text-xl text-gray-100'
           style={{backgroundColor: '#23314600'}}
           name='list'
-          placeholder={`${bullet} What do you see around you?`}
+          placeholder={`${bullet} ${state.data.lesson.warmUp.inputs.textExample}`}
           // defaultValue={bullet}
           value={input.story}
           onChange={handleInputChange}

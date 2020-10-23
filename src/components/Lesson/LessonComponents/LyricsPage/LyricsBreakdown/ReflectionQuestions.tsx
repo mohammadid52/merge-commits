@@ -28,7 +28,7 @@ const ReflectionQuestions = () => {
                 <div className="w-6 h-6 border-dark border-t-8 border-l-8 transform -rotate-45 ml-2"></div>
             </div>
             <div className={`w-8/10 ${theme.gradient.cardBase} flex-grow rounded-lg px-4 py-2 flex flex-col`}>
-                <div className="font-open font-light mb-2">
+                <div className="font-open font-light">
                     Discussion Questions
                 </div>
                 <div className="question w-full flex-grow text-xs md:text-xl text-gray-200 font-light flex justify-center px-4">

@@ -38,6 +38,8 @@ const StageIcon = (props: StageIconProps) => {
                 return <FaMap />
             case 'story':
                 return <FaScroll />
+            case 'list':
+                return <FaScroll />
             case 'lyrics':
                 return <FaMusic />
             case 'poem':
