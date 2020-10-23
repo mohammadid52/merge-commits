@@ -39,7 +39,7 @@ const LessonControl = () => {
     // const [ studentDataLoading, setStudentDataLoading ] = useState('');
     const [ shareable, setShareable ] = useState(false);
     const [ isSameStudentShared, setIsSameStudentShared ] = useState(false);
-    const [open, setOpen ] = useState(state.open);
+    const [ open, setOpen ] = useState(state.open);
 
     // console.log(open, 'open');
 

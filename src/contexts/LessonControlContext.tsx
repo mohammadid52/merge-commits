@@ -5,7 +5,7 @@ import queryString from 'query-string';
 import * as customQueries from '../customGraphql/customQueries';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 // import { API, graphqlOperation } from 'aws-amplify';
-import {Auth} from '@aws-amplify/auth';
+import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useLocation } from 'react-router-dom';
 import { pageThemes } from './GlobalContext';
