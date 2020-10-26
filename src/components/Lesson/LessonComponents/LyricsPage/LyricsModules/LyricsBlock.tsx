@@ -214,13 +214,16 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    */
   const minMaxOfArrays = (strArray: string[]) => {
     const parsedNumbers = strArray
-      .map((str: string) => {
-        return str.match(/\d+/);
-      })
-      .map((arr: string[]) => parseInt(arr[0]))
-      .sort();
+      .map((str: string) => str.match(/\d+/))
+      .map((arr: string[]) =>  parseInt(arr[0])
+      )
+      .sort((a,b)=>a-b);
 
-    return [parsedNumbers[0], +parsedNumbers[parsedNumbers.length - 1] + 1];
+
+
+    return (parsedNumbers.length > 1)
+    ? [parsedNumbers[0], +parsedNumbers[1]+1]
+    : [...parsedNumbers]
   };
 
   /**
