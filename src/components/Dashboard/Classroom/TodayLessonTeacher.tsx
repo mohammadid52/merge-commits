@@ -43,8 +43,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
   }, [props]);
 
   return (
-    <div
-      className={``}>
+    <div>
       { curriculums.map((curriculum: any, key: number) => {
         return (
           <div key={key}>
@@ -74,7 +73,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
         </div>
       </div>
       <div className='w-7.5/10 flex flex-col '>
-        <div className='h-8.7/10 p-4 flex flex-col justify-center items-center'>
+        <div className='h-44 p-4 flex flex-col justify-start items-center'>
           <h1 className={`text-2xl text-black font-open text-left`}>
             {curriculum && curriculum.lesson.title ? curriculum.lesson.title : null}
           </h1>
@@ -111,7 +110,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                   : 'bg-gray-500 text-gray-700 cursor-default'
               }
                                 w-full text-white rounded-br-xl focus:outline-none transition duration-150 ease-in-out`}>
-              <span className='w-auto h-auto'>START LESSON</span>
+              <span className='w-auto h-auto'>TEACH LESSON</span>
             </button>
           </div>
         </div>
