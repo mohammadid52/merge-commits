@@ -48,9 +48,9 @@ const Classroom: React.FC = () => {
     let limit = 2;
     try {
       const courses: any = await API.graphql(
-        graphqlOperation(customQueries.getCourse, { id: id, limit: limit })
+        graphqlOperation(customQueries.getCourse, { id: id })
       );
-      const lesson = courses.data.getCourse.curriculum.lessons.items.slice(0, 3)
+      const lesson = courses.data.getCourse.curriculum.lessons.items.slice(0, 2)
       const nextLesson = lesson.lesson;
       
       const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
