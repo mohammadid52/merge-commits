@@ -345,12 +345,12 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         {/* JUST A HARMLESS DIV WITH INSTRUCTIONS */}
         {/* @ANDREW -- TO BE REVISED */}
         <div className='w-full flex flex-row justify-between mb-1 pb-1'>
-          <div className='w-9/10 flex flex-row justify-between border-b border-white border-opacity-10 mr-4 md:mr-0'>
-            <p className='text-gray-600 text-sm text-center'>
-              - Double click a word to select it
+          <div className='w-9/10 flex flex-col justify-between border-b border-white border-opacity-10 mr-4 md:mr-0'>
+            <p className='text-gray-600 text-sm text-left'>
+              - Double click a word to select <b>one</b> word
             </p>
-            <p className='text-gray-600 text-sm text-center'>
-              - Click 2 different words to select a sentence
+            <p className='text-gray-600 text-sm text-left'>
+              - To select a sentence/phrase, click the <b>'first word'</b> and the <b>'last word'</b> of the sentence
             </p>
           </div>
         </div>
