@@ -562,6 +562,7 @@ export const getStudentData = /* GraphQL */ `
           color
           selected
         }
+        selectGroup
       }
       activityData {
         editInput
@@ -663,6 +664,9 @@ export const listStudentDatas = /* GraphQL */ `
           story
           title
         }
+        corelessonData {
+          selectGroup
+        }
         activityData {
           editInput
           editMode
@@ -753,6 +757,9 @@ export const getClassroom = /* GraphQL */ `
         warmUpData {
           story
           title
+        }
+        corelessonData {
+          selectGroup
         }
         activityData {
           editInput
