@@ -106,7 +106,9 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 }
             }
 
-            let viewing = state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.id === action.payload.id : null;
+            // let viewing = state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.id === action.payload.id : null;
+
+            let viewing = state.studentViewing.studentInfo?.id === action.payload.id;
 
             if ( foundInRoster ) {
 
@@ -187,8 +189,11 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 }
             };
         case 'SET_STUDENT_VIEWING':
-            // console.log(action.payload);
+            // console.log('SET_STUDENT_VIEWING', action.payload);
+
             if ( state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === action.payload.id ) {
+                // console.log('firstIf');
+                
                 return { 
                     ...state,
                     studentDataUpdated: true,
@@ -209,6 +214,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                     studentInfo: action.payload
                 }
             };
+
         case 'QUIT_STUDENT_VIEWING':
             return { 
                 ...state,

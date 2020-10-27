@@ -61,10 +61,10 @@ const ToolBar = (props: ToolbarProps) => {
             </div>
           ))}
           <div
-            id=''
+            id='erase'
             className={`${fullscreen ? 'h-12 w-12 text-3xl' : 'h-8 w-8 text-md'} bg-gray-200 rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center`}
             onClick={handleClick}>
-            <IconContext.Provider value={{ color: 'darkgray', size: '2rem' }}>
+            <IconContext.Provider value={{ color: 'darkgray', size: fullscreen ? '2rem' : '1rem' }}>
               <FaEraser />
             </IconContext.Provider>
           </div>

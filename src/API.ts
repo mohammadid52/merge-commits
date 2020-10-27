@@ -436,6 +436,7 @@ export type AdditionalInputsInput = {
 
 export type CoreLessonDataInput = {
   selected?: Array< SelectionInput | null > | null,
+  rawSelected?: Array< RawSelectionInput | null > | null,
 };
 
 export type SelectionInput = {
@@ -449,6 +450,11 @@ export type SelectionInput = {
 export type SelectedWordInput = {
   id?: number | null,
   text?: string | null,
+};
+
+export type RawSelectionInput = {
+  color?: string | null,
+  selected?: Array< string | null > | null,
 };
 
 export type ActivityDataInput = {
@@ -551,6 +557,9 @@ export type CreateClassroomInput = {
   roster: Array< string >,
   viewing?: string | null,
   displayData?: DisplayDataInput | null,
+  expectedStartData?: string | null,
+  expectedEndDate?: string | null,
+  SELStructure?: string | null,
   courseID: string,
   lessonID: string,
   lessonPlan: Array< ComponentSummaryInput >,
@@ -587,6 +596,9 @@ export type ModelClassroomConditionInput = {
   closedAt?: ModelStringInput | null,
   roster?: ModelStringInput | null,
   viewing?: ModelStringInput | null,
+  expectedStartData?: ModelStringInput | null,
+  expectedEndDate?: ModelStringInput | null,
+  SELStructure?: ModelStringInput | null,
   courseID?: ModelIDInput | null,
   lessonID?: ModelIDInput | null,
   and?: Array< ModelClassroomConditionInput | null > | null,
@@ -602,6 +614,9 @@ export type UpdateClassroomInput = {
   roster?: Array< string > | null,
   viewing?: string | null,
   displayData?: DisplayDataInput | null,
+  expectedStartData?: string | null,
+  expectedEndDate?: string | null,
+  SELStructure?: string | null,
   courseID?: string | null,
   lessonID?: string | null,
   lessonPlan?: Array< ComponentSummaryInput > | null,
@@ -822,6 +837,8 @@ export type InstructionsInput = {
 export type InputsInput = {
   title: boolean,
   example?: string | null,
+  titleExample?: string | null,
+  textExample?: string | null,
   additionalInputs?: Array< WritingPromptsInput > | null,
 };
 
@@ -1378,6 +1395,9 @@ export type ModelClassroomFilterInput = {
   closedAt?: ModelStringInput | null,
   roster?: ModelStringInput | null,
   viewing?: ModelStringInput | null,
+  expectedStartData?: ModelStringInput | null,
+  expectedEndDate?: ModelStringInput | null,
+  SELStructure?: ModelStringInput | null,
   courseID?: ModelIDInput | null,
   lessonID?: ModelIDInput | null,
   and?: Array< ModelClassroomFilterInput | null > | null,
@@ -3036,6 +3056,9 @@ export type CreateStudentDataMutation = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -3139,6 +3162,11 @@ export type CreateStudentDataMutation = {
         color: string | null,
         focus: string | null,
         id: number | null,
+      } | null > | null,
+      rawSelected:  Array< {
+        __typename: "RawSelection",
+        color: string | null,
+        selected: Array< string | null > | null,
       } | null > | null,
     } | null,
     activityData:  {
@@ -3208,6 +3236,9 @@ export type UpdateStudentDataMutation = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -3311,6 +3342,11 @@ export type UpdateStudentDataMutation = {
         color: string | null,
         focus: string | null,
         id: number | null,
+      } | null > | null,
+      rawSelected:  Array< {
+        __typename: "RawSelection",
+        color: string | null,
+        selected: Array< string | null > | null,
       } | null > | null,
     } | null,
     activityData:  {
@@ -3380,6 +3416,9 @@ export type DeleteStudentDataMutation = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -3483,6 +3522,11 @@ export type DeleteStudentDataMutation = {
         color: string | null,
         focus: string | null,
         id: number | null,
+      } | null > | null,
+      rawSelected:  Array< {
+        __typename: "RawSelection",
+        color: string | null,
+        selected: Array< string | null > | null,
       } | null > | null,
     } | null,
     activityData:  {
@@ -3662,6 +3706,9 @@ export type CreateClassroomMutation = {
         title: string | null,
       } | null,
     } | null,
+    expectedStartData: string | null,
+    expectedEndDate: string | null,
+    SELStructure: string | null,
     courseID: string,
     course:  {
       __typename: "Course",
@@ -3896,6 +3943,9 @@ export type UpdateClassroomMutation = {
         title: string | null,
       } | null,
     } | null,
+    expectedStartData: string | null,
+    expectedEndDate: string | null,
+    SELStructure: string | null,
     courseID: string,
     course:  {
       __typename: "Course",
@@ -4130,6 +4180,9 @@ export type DeleteClassroomMutation = {
         title: string | null,
       } | null,
     } | null,
+    expectedStartData: string | null,
+    expectedEndDate: string | null,
+    SELStructure: string | null,
     courseID: string,
     course:  {
       __typename: "Course",
@@ -4352,6 +4405,9 @@ export type CreateFeedbackMutation = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -4439,6 +4495,9 @@ export type UpdateFeedbackMutation = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -4526,6 +4585,9 @@ export type DeleteFeedbackMutation = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -4766,6 +4828,8 @@ export type CreateLessonMutation = {
         __typename: "Inputs",
         title: boolean,
         example: string | null,
+        titleExample: string | null,
+        textExample: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -4994,6 +5058,8 @@ export type UpdateLessonMutation = {
         __typename: "Inputs",
         title: boolean,
         example: string | null,
+        titleExample: string | null,
+        textExample: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -5222,6 +5288,8 @@ export type DeleteLessonMutation = {
         __typename: "Inputs",
         title: boolean,
         example: string | null,
+        titleExample: string | null,
+        textExample: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -5976,6 +6044,8 @@ export type CreateWarmUpMutation = {
       __typename: "Inputs",
       title: boolean,
       example: string | null,
+      titleExample: string | null,
+      textExample: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -6019,6 +6089,8 @@ export type UpdateWarmUpMutation = {
       __typename: "Inputs",
       title: boolean,
       example: string | null,
+      titleExample: string | null,
+      textExample: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -6062,6 +6134,8 @@ export type DeleteWarmUpMutation = {
       __typename: "Inputs",
       title: boolean,
       example: string | null,
+      titleExample: string | null,
+      textExample: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -6894,6 +6968,9 @@ export type CreateQuestionDataMutation = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -7024,6 +7101,9 @@ export type UpdateQuestionDataMutation = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -7154,6 +7234,9 @@ export type DeleteQuestionDataMutation = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -7284,6 +7367,9 @@ export type CreateQuestionDataStudentDataMutation = {
         closedAt: string | null,
         roster: Array< string >,
         viewing: string | null,
+        expectedStartData: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -7350,6 +7436,9 @@ export type CreateQuestionDataStudentDataMutation = {
         closedAt: string | null,
         roster: Array< string >,
         viewing: string | null,
+        expectedStartData: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -7419,6 +7508,9 @@ export type UpdateQuestionDataStudentDataMutation = {
         closedAt: string | null,
         roster: Array< string >,
         viewing: string | null,
+        expectedStartData: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -7485,6 +7577,9 @@ export type UpdateQuestionDataStudentDataMutation = {
         closedAt: string | null,
         roster: Array< string >,
         viewing: string | null,
+        expectedStartData: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -7554,6 +7649,9 @@ export type DeleteQuestionDataStudentDataMutation = {
         closedAt: string | null,
         roster: Array< string >,
         viewing: string | null,
+        expectedStartData: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -7620,6 +7718,9 @@ export type DeleteQuestionDataStudentDataMutation = {
         closedAt: string | null,
         roster: Array< string >,
         viewing: string | null,
+        expectedStartData: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -8769,6 +8870,9 @@ export type GetStudentDataQuery = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -8873,6 +8977,11 @@ export type GetStudentDataQuery = {
         focus: string | null,
         id: number | null,
       } | null > | null,
+      rawSelected:  Array< {
+        __typename: "RawSelection",
+        color: string | null,
+        selected: Array< string | null > | null,
+      } | null > | null,
     } | null,
     activityData:  {
       __typename: "ActivityData",
@@ -8943,6 +9052,9 @@ export type ListStudentDatasQuery = {
         closedAt: string | null,
         roster: Array< string >,
         viewing: string | null,
+        expectedStartData: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -9096,6 +9208,9 @@ export type GetClassroomQuery = {
         title: string | null,
       } | null,
     } | null,
+    expectedStartData: string | null,
+    expectedEndDate: string | null,
+    SELStructure: string | null,
     courseID: string,
     course:  {
       __typename: "Course",
@@ -9315,6 +9430,9 @@ export type ListClassroomsQuery = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -9400,6 +9518,9 @@ export type GetFeedbackQuery = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -9486,6 +9607,9 @@ export type ListFeedbacksQuery = {
         closedAt: string | null,
         roster: Array< string >,
         viewing: string | null,
+        expectedStartData: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -9662,6 +9786,8 @@ export type GetLessonQuery = {
         __typename: "Inputs",
         title: boolean,
         example: string | null,
+        titleExample: string | null,
+        textExample: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -9958,6 +10084,8 @@ export type GetWarmUpQuery = {
       __typename: "Inputs",
       title: boolean,
       example: string | null,
+      titleExample: string | null,
+      textExample: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -10004,6 +10132,8 @@ export type ListWarmUpsQuery = {
         __typename: "Inputs",
         title: boolean,
         example: string | null,
+        titleExample: string | null,
+        textExample: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -10470,6 +10600,9 @@ export type GetQuestionDataQuery = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -10599,6 +10732,9 @@ export type ListQuestionDatasQuery = {
         closedAt: string | null,
         roster: Array< string >,
         viewing: string | null,
+        expectedStartData: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -10856,6 +10992,9 @@ export type OnUpdateClassroomSubscription = {
         title: string | null,
       } | null,
     } | null,
+    expectedStartData: string | null,
+    expectedEndDate: string | null,
+    SELStructure: string | null,
     courseID: string,
     course:  {
       __typename: "Course",
@@ -11078,6 +11217,9 @@ export type OnChangeStudentDataSubscription = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -11181,6 +11323,11 @@ export type OnChangeStudentDataSubscription = {
         color: string | null,
         focus: string | null,
         id: number | null,
+      } | null > | null,
+      rawSelected:  Array< {
+        __typename: "RawSelection",
+        color: string | null,
+        selected: Array< string | null > | null,
       } | null > | null,
     } | null,
     activityData:  {
@@ -12597,6 +12744,9 @@ export type OnCreateFeedbackSubscription = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -12679,6 +12829,9 @@ export type OnUpdateFeedbackSubscription = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -12761,6 +12914,9 @@ export type OnDeleteFeedbackSubscription = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -12981,6 +13137,8 @@ export type OnCreateLessonSubscription = {
         __typename: "Inputs",
         title: boolean,
         example: string | null,
+        titleExample: string | null,
+        textExample: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -13204,6 +13362,8 @@ export type OnUpdateLessonSubscription = {
         __typename: "Inputs",
         title: boolean,
         example: string | null,
+        titleExample: string | null,
+        textExample: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -13427,6 +13587,8 @@ export type OnDeleteLessonSubscription = {
         __typename: "Inputs",
         title: boolean,
         example: string | null,
+        titleExample: string | null,
+        textExample: string | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -14131,6 +14293,8 @@ export type OnCreateWarmUpSubscription = {
       __typename: "Inputs",
       title: boolean,
       example: string | null,
+      titleExample: string | null,
+      textExample: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -14169,6 +14333,8 @@ export type OnUpdateWarmUpSubscription = {
       __typename: "Inputs",
       title: boolean,
       example: string | null,
+      titleExample: string | null,
+      textExample: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -14207,6 +14373,8 @@ export type OnDeleteWarmUpSubscription = {
       __typename: "Inputs",
       title: boolean,
       example: string | null,
+      titleExample: string | null,
+      textExample: string | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -14929,6 +15097,9 @@ export type OnCreateQuestionDataSubscription = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -15054,6 +15225,9 @@ export type OnUpdateQuestionDataSubscription = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -15179,6 +15353,9 @@ export type OnDeleteQuestionDataSubscription = {
         __typename: "DisplayData",
         breakdownComponent: string | null,
       } | null,
+      expectedStartData: string | null,
+      expectedEndDate: string | null,
+      SELStructure: string | null,
       courseID: string,
       course:  {
         __typename: "Course",
@@ -15304,6 +15481,9 @@ export type OnCreateQuestionDataStudentDataSubscription = {
         closedAt: string | null,
         roster: Array< string >,
         viewing: string | null,
+        expectedStartData: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -15370,6 +15550,9 @@ export type OnCreateQuestionDataStudentDataSubscription = {
         closedAt: string | null,
         roster: Array< string >,
         viewing: string | null,
+        expectedStartData: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -15434,6 +15617,9 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
         closedAt: string | null,
         roster: Array< string >,
         viewing: string | null,
+        expectedStartData: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -15500,6 +15686,9 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
         closedAt: string | null,
         roster: Array< string >,
         viewing: string | null,
+        expectedStartData: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -15564,6 +15753,9 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         closedAt: string | null,
         roster: Array< string >,
         viewing: string | null,
+        expectedStartData: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
@@ -15630,6 +15822,9 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         closedAt: string | null,
         roster: Array< string >,
         viewing: string | null,
+        expectedStartData: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
         courseID: string,
         lessonID: string,
         createdAt: string,
