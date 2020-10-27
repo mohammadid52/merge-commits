@@ -54,6 +54,7 @@ const StoryForm = () => {
         },
       });
 
+      
       setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], story: { ...cookies[`lesson-${state.classroomID}`].story, story: input.story }});
     }
   }, [input.story]);
