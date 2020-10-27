@@ -44,7 +44,7 @@ const Today: React.FC<Props> = (props: Props) => {
   const handleLink = (key: number) => {
 
     if (accessible && open ) {
-      history.push((`${`/lesson?id=${lessonKey + 1}`}`));
+      history.push((`${`/lesson?id=${lessonKey + 2}`}`));
     }
     // For testing: enables clickthrough survey
     // history.push(link);

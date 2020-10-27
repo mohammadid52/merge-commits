@@ -69,7 +69,7 @@ const StoryForm = () => {
     <div className='bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600'>
       <h3
         className={`text-xl text-gray-200 font-open font-light ${theme.underline}`}>
-        Story{' '}
+        Song{' '}
       </h3>
       <div className='relative h-full flex flex-col mb-5 mt-2'>
         <label

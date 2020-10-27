@@ -262,6 +262,8 @@ const WritingBlock = (props: WritingBlockProps) => {
  
     }
 
+    console.log(state, 'state')
+
     return (
         <div ref={ref} className="relative bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600" >
             {/* { visible &&  */}
@@ -306,7 +308,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                                     </IconContext.Provider>
                                 </div>
                             </div>
-                            <label className={`${line.example ? 'visible' : 'invisible'} font-light self-end flex justify-end text-gray-400 text-sm mr-12`} htmlFor={id}>
+                            <label className={`${line.example ? 'visible' : 'invisible'} w-9/10 font-light self-end flex justify-end text-gray-400 text-sm mr-12`} htmlFor={id}>
                                 ( ex. {line.example} )
                             </label>
                             {   line.menuOpen ?
