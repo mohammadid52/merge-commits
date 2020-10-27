@@ -48,6 +48,10 @@ export const getClassroom = /* GraphQL */ `
             focus
             id
           }
+          rawSelected {
+            color
+            selected
+          }
         }
         activityData {
           editInput
@@ -318,6 +322,10 @@ export const getClassroom = /* GraphQL */ `
               focus
               id
             }
+            rawSelected {
+              color
+              selected
+            }
           }
           activityData {
             editInput
@@ -384,6 +392,10 @@ export const getClassroomStudent = /* GraphQL */ `
             }
             focus
             id
+          }
+          rawSelected {
+            color
+            selected
           }
         }
         activityData {
@@ -654,6 +666,10 @@ export const getStudentData = /* GraphQL */ `
           }
           focus
           id
+        }
+        rawSelected {
+          color
+          selected
         }
       }
       activityData {

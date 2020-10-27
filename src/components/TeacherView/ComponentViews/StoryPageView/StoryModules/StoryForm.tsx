@@ -18,7 +18,7 @@ const StoryForm = (props: props) => {
         story: ''
     })
 
-    console.log(dataProps, 'dta props')
+    // console.log(dataProps, 'dta props')
 
     useEffect(() => {
         

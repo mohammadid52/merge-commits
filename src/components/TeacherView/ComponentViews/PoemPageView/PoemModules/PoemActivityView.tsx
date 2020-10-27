@@ -38,7 +38,7 @@ const PoemActivity = (props: props) => {
     const [ openPopup, setOpenPopup ] = useState(false);
 
 
-    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'activity' : false;
+    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo?.lessonProgress === 'activity' : false;
     
 
     useEffect(() => {
@@ -52,8 +52,7 @@ const PoemActivity = (props: props) => {
                 })
             }
         }  
-        
-    }, [])
+    }, [state.studentViewing])
 
     useEffect(() => {
         // if ( state.componentState.poem && editMode.open === true ) {
@@ -92,9 +91,9 @@ const PoemActivity = (props: props) => {
                 <div className="w-full h-8.8/10 justify-between flex flex-col md:flex-row">
                     <div className="md:w-6/10 md:h-full flex flex-col">
                         {   !editMode.open ?
-                            <WritingBlock editMode={editMode} setEditMode={setEditMode} fullscreen={fullscreen}/>
+                            <WritingBlock editMode={editMode} setEditMode={setEditMode} fullscreen={fullscreen} displayStudentData={displayStudentData}/>
                             :
-                            <EditBlock editMode={editMode} fullscreen={fullscreen}/>
+                            <EditBlock editMode={editMode} fullscreen={fullscreen} displayStudentData={displayStudentData}/>
                         }
                     </div>
                     <div className="md:w-3.9/10 justify-between md:h-full flex flex-col">

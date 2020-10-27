@@ -1250,6 +1250,9 @@ export const createStudentData = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -1342,6 +1345,10 @@ export const createStudentData = /* GraphQL */ `
           color
           focus
           id
+        }
+        rawSelected {
+          color
+          selected
         }
       }
       activityData {
@@ -1401,6 +1408,9 @@ export const updateStudentData = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -1493,6 +1503,10 @@ export const updateStudentData = /* GraphQL */ `
           color
           focus
           id
+        }
+        rawSelected {
+          color
+          selected
         }
       }
       activityData {
@@ -1552,6 +1566,9 @@ export const deleteStudentData = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -1644,6 +1661,10 @@ export const deleteStudentData = /* GraphQL */ `
           color
           focus
           id
+        }
+        rawSelected {
+          color
+          selected
         }
       }
       activityData {
@@ -1796,6 +1817,9 @@ export const createClassroom = /* GraphQL */ `
           title
         }
       }
+      expectedStartData
+      expectedEndDate
+      SELStructure
       courseID
       course {
         id
@@ -2004,6 +2028,9 @@ export const updateClassroom = /* GraphQL */ `
           title
         }
       }
+      expectedStartData
+      expectedEndDate
+      SELStructure
       courseID
       course {
         id
@@ -2212,6 +2239,9 @@ export const deleteClassroom = /* GraphQL */ `
           title
         }
       }
+      expectedStartData
+      expectedEndDate
+      SELStructure
       courseID
       course {
         id
@@ -2410,6 +2440,9 @@ export const createFeedback = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -2488,6 +2521,9 @@ export const updateFeedback = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -2566,6 +2602,9 @@ export const deleteFeedback = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -2778,6 +2817,8 @@ export const createLesson = /* GraphQL */ `
         inputs {
           title
           example
+          titleExample
+          textExample
         }
         breakdown {
           included
@@ -2977,6 +3018,8 @@ export const updateLesson = /* GraphQL */ `
         inputs {
           title
           example
+          titleExample
+          textExample
         }
         breakdown {
           included
@@ -3176,6 +3219,8 @@ export const deleteLesson = /* GraphQL */ `
         inputs {
           title
           example
+          titleExample
+          textExample
         }
         breakdown {
           included
@@ -3839,6 +3884,8 @@ export const createWarmUp = /* GraphQL */ `
       inputs {
         title
         example
+        titleExample
+        textExample
         additionalInputs {
           id
           name
@@ -3876,6 +3923,8 @@ export const updateWarmUp = /* GraphQL */ `
       inputs {
         title
         example
+        titleExample
+        textExample
         additionalInputs {
           id
           name
@@ -3913,6 +3962,8 @@ export const deleteWarmUp = /* GraphQL */ `
       inputs {
         title
         example
+        titleExample
+        textExample
         additionalInputs {
           id
           name
@@ -4637,6 +4688,9 @@ export const createQuestionData = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -4754,6 +4808,9 @@ export const updateQuestionData = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -4871,6 +4928,9 @@ export const deleteQuestionData = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -4988,6 +5048,9 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           closedAt
           roster
           viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
           courseID
           lessonID
           createdAt
@@ -5047,6 +5110,9 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           closedAt
           roster
           viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
           courseID
           lessonID
           createdAt
@@ -5110,6 +5176,9 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           closedAt
           roster
           viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
           courseID
           lessonID
           createdAt
@@ -5169,6 +5238,9 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           closedAt
           roster
           viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
           courseID
           lessonID
           createdAt
@@ -5232,6 +5304,9 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           closedAt
           roster
           viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
           courseID
           lessonID
           createdAt
@@ -5291,6 +5366,9 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           closedAt
           roster
           viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
           courseID
           lessonID
           createdAt
