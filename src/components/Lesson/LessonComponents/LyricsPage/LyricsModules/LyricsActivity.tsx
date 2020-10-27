@@ -50,6 +50,16 @@ const Body = () => {
   const [initialSelectedText, setInitialSelectedText] = useState<SelectedTextGroup>({});
   const [selectGroup, setSelectGroup] = useState<number>(0);
 
+  const initialSelectedObjectToArray = (obj: any) => {
+    if ( typeof obj === 'object' ) {
+      let selectionArray: Array<{color: string, selected: string[]}> = [];
+      let keyArray = Object.keys(obj)
+      keyArray.forEach((key: string) => {
+        selectionArray.push(obj[key])
+      })
+      return selectionArray
+    }
+  }
   
   useEffect(() => {
     if (cookies.lyrics) {
@@ -91,6 +101,16 @@ const Body = () => {
           content: selected,
         },
       });
+
+      dispatch({
+        type: 'UPDATE_COMPONENT_STATE',
+        payload: {
+          componentName: 'lyrics',
+          inputName: 'rawSelected',
+          content: initialSelectedObjectToArray(initialSelectedText),
+        },
+      });
+
       setCookie('lyrics', selected);
     }
   }, [selected]);
@@ -113,6 +133,11 @@ const Body = () => {
   useEffect(()=>{
     setSelectedCookie('selected', JSON.stringify(initialSelectedText))
   },[initialSelectedText])
+
+  useEffect(() => {
+    console.log(state.componentState.lyrics);
+    
+  }, [state.componentState.lyrics])
 
   return (
     <>

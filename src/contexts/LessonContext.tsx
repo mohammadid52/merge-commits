@@ -11,7 +11,6 @@ import {Auth} from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import { displayPartsToString } from 'typescript';
 
 const removeDisabled = (array: PagesType) => {
     let updatedArray = array.filter((item: { disabled: boolean, [key: string]: any}) => {
@@ -166,8 +165,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         if (lesson) {
             // console.log('lesson', lesson);
             const wordBank: Array<string> = ['Mimo provoz'];
-
-            
 
             dispatch({
                 type: 'SET_INITIAL_STATE', 

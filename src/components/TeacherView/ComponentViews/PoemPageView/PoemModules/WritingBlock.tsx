@@ -14,6 +14,7 @@ interface WritingBlockProps {
         open: boolean;
         input: string;
     }>>
+    displayStudentData?: boolean;
 }
 
 interface lineState {
@@ -28,7 +29,7 @@ interface lineState {
 }
 
 const WritingBlock = (props: WritingBlockProps) => {
-    const { editMode, setEditMode, fullscreen } = props;
+    const { editMode, setEditMode, fullscreen, displayStudentData } = props;
     const { state, dispatch } = useContext(LessonControlContext);
     const lineNo = state.data.lesson.activity.lineNumber;
     const promptArray = state.data.lesson.activity.writingPrompts;
@@ -48,15 +49,12 @@ const WritingBlock = (props: WritingBlockProps) => {
         lines: initialLines,
     });
 
-    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'activity' : false;
-
     const [alert, setAlert] = useState(false);
 
     const handleCancel = () => {
         setAlert(!alert);
     }
     
-
     useEffect(() => {
         if ( displayStudentData && state.studentViewing.studentInfo.activityData ) {
             setLineState(lineState => {
@@ -66,7 +64,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                 }
             })
         }
-    }, [])
+    }, [state.studentViewing])
 
     useEffect(() => {
         let lineArray = lineState.lines.map((line: { text: string }) => {

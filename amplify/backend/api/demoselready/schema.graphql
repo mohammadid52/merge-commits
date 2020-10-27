@@ -125,6 +125,7 @@ type Course @model {
   class: Class @connection(fields: ["classID"])
   curriculumID: ID!
   curriculum: Curriculum @connection(fields: ["curriculumID"])
+  # classrooms: [Classroom] @connection(keyName: '')
   location: String
   startDate: AWSDate
   endDate: AWSDate
@@ -178,8 +179,14 @@ type Selection {
   id: Int
 }
 
+type RawSelection {
+  color: String
+  selected: [String]
+}
+
 type CoreLessonData {
   selected: [Selection]
+  rawSelected: [RawSelection]
 }
 
 type LineInput {
@@ -286,6 +293,9 @@ type Classroom @model(subscriptions: null)
   roster: [String!]!
   viewing: String
   displayData: DisplayData
+  expectedStartData: AWSDate
+  expectedEndDate: AWSDate
+  SELStructure: String
   courseID: ID!
   course: Course @connection(fields: ["courseID"])
   lessonID: ID!
@@ -382,6 +392,8 @@ type Breakdown {
 type Inputs {
   title: Boolean!
   example: String
+  titleExample: String
+  textExample: String
   additionalInputs: [WritingPrompts!]
 }
 

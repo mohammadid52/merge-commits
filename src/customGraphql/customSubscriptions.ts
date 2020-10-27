@@ -33,6 +33,10 @@ export const onUpdateClassroom = /* GraphQL */ `
                     focus
                     id
                 }
+                rawSelected {
+                    color
+                    selected
+                }
             }
             activityData {
                 editInput
@@ -98,6 +102,10 @@ export const onChangeStudentData = /* GraphQL */ `
                 }
                 focus
                 id
+            }
+            rawSelected {
+                color
+                selected
             }
         }
         activityData {
