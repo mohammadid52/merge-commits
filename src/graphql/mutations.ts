@@ -1350,6 +1350,7 @@ export const createStudentData = /* GraphQL */ `
           color
           selected
         }
+        selectGroup
       }
       activityData {
         editInput
@@ -1508,6 +1509,7 @@ export const updateStudentData = /* GraphQL */ `
           color
           selected
         }
+        selectGroup
       }
       activityData {
         editInput
@@ -1666,6 +1668,7 @@ export const deleteStudentData = /* GraphQL */ `
           color
           selected
         }
+        selectGroup
       }
       activityData {
         editInput
@@ -1810,6 +1813,9 @@ export const createClassroom = /* GraphQL */ `
         warmUpData {
           story
           title
+        }
+        corelessonData {
+          selectGroup
         }
         activityData {
           editInput
@@ -2022,6 +2028,9 @@ export const updateClassroom = /* GraphQL */ `
           story
           title
         }
+        corelessonData {
+          selectGroup
+        }
         activityData {
           editInput
           editMode
@@ -2232,6 +2241,9 @@ export const deleteClassroom = /* GraphQL */ `
         warmUpData {
           story
           title
+        }
+        corelessonData {
+          selectGroup
         }
         activityData {
           editInput
@@ -5082,6 +5094,9 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           story
           title
         }
+        corelessonData {
+          selectGroup
+        }
         activityData {
           editInput
           editMode
@@ -5210,6 +5225,9 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           story
           title
         }
+        corelessonData {
+          selectGroup
+        }
         activityData {
           editInput
           editMode
@@ -5337,6 +5355,9 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
         warmupData {
           story
           title
+        }
+        corelessonData {
+          selectGroup
         }
         activityData {
           editInput

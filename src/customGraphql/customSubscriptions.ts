@@ -37,6 +37,7 @@ export const onUpdateClassroom = /* GraphQL */ `
                     color
                     selected
                 }
+                selectGroup
             }
             activityData {
                 editInput
@@ -107,6 +108,7 @@ export const onChangeStudentData = /* GraphQL */ `
                 color
                 selected
             }
+            selectGroup
         }
         activityData {
             editInput
