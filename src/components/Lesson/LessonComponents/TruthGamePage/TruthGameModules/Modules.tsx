@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-// import { useCookies } from 'react-cookie';
+import { useCookies } from 'react-cookie';
 import { string } from 'prop-types';
 
 type InputProp = [{ name: string; example: string; prompt: string; }];
@@ -16,7 +16,7 @@ interface FormInputsState {
 const Modules = (props: ModulesProps) => {
     const { inputs } = props
     const { state, theme, dispatch } = useContext(LessonContext);
-    // const [ cookies, setCookie ] = useCookies(['story']) 
+    const [ cookies, setCookie ] = useCookies(['story'])
     const [ formInputs, setFormInputs ] = useState<FormInputsState>() 
 
     useEffect(() => {
@@ -29,16 +29,16 @@ const Modules = (props: ModulesProps) => {
             })
         })
 
-        // if ( cookies.story && cookies.story.additional && cookies.story.additional.length > 0 ) {
-        //     cookies.story.additional.forEach((item: {name: string, input: string}) => {
-        //         setFormInputs(prev => {
-        //             return {
-        //                 ...prev,
-        //                 [item.name]: item.input,
-        //             }
-        //         })
-        //     })
-        // }
+        if ( cookies.story && cookies.story.additional && cookies.story.additional.length > 0 ) {
+            cookies.story.additional.forEach((item: {name: string, input: string}) => {
+                setFormInputs(prev => {
+                    return {
+                        ...prev,
+                        [item.name]: item.input,
+                    }
+                })
+            })
+        }
 
         if ( state.componentState.story &&state.componentState.story.additional && state.componentState.story.additional.length > 0 ) {
             state.componentState.story.additional.map((item: {name: string, input: string}) => {
@@ -74,7 +74,7 @@ const Modules = (props: ModulesProps) => {
                 }
             })
 
-            // setCookie('story', {...cookies.story, additional: tempArray})
+            setCookie('story', {...cookies.story, additional: tempArray})
         }
     }, [formInputs])
 
@@ -86,7 +86,7 @@ const Modules = (props: ModulesProps) => {
     }
 
     return (
-        <div className="md:h-5.8/10 overflow-y-scroll w-full bg-gradient-to-tl from-dark-blue to-med-dark-blue text-gray-200 md:mb-0 px-4 md:px-8 py-4 rounded-lg overflow-hidden">
+        <div className="md:h-5.8/10 w-full bg-gradient-to-tl from-dark-blue to-med-dark-blue text-gray-200 md:mb-0 px-4 md:px-8 py-4 rounded-lg overflow-hidden">
             <h3 className={`text-xl font-open font-light ${theme.underline}`}>Focus Questions</h3>
             <div className="w-full h-full ">
                 { 

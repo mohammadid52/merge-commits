@@ -11,14 +11,12 @@ interface props {
 }
 
 const StoryForm = (props: props) => {
-    const { theme } = useContext(LessonControlContext)
+    const { theme, state } = useContext(LessonControlContext)
     const { fullscreen, dataProps } = props;
     const [ input, setInput ] = useState({
         title: '',
         story: ''
     })
-
-    // console.log(dataProps, 'dta props')
 
     useEffect(() => {
         
@@ -49,7 +47,7 @@ const StoryForm = (props: props) => {
             className={`${fullscreen ? 'text-sm md:text-xl px-4 py-2 mb-4' : 'text-base p-2 mb-2'} md:w-88 rounded-lg text-gray-700 bg-gray-300`}
             name='title'
             type='text'
-            placeholder='La Llorona'
+            placeholder={state.data.lesson.warmUp.inputs.titleExample}
             defaultValue={input.title}
             // onChange={handleInputChange}
           />
@@ -58,7 +56,7 @@ const StoryForm = (props: props) => {
             id='story'
             className={`${fullscreen ? 'text-sm md:text-xl px-4 py-2' : 'text-base p-2'} w-full h-9/10 rounded-lg text-gray-700 bg-gray-300`}
             name='story'
-            placeholder='Write your story here!'
+            placeholder={state.data.lesson.warmUp.inputs.textExample}
             defaultValue={input.story}
             // onChange={handleInputChange}
           />
