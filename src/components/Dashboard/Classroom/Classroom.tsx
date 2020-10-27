@@ -48,15 +48,16 @@ const Classroom: React.FC = () => {
     let limit = 2;
     try {
       const courses: any = await API.graphql(
-        graphqlOperation(customQueries.getCourse, { id: id, limit: limit })
+        graphqlOperation(customQueries.getCourse, { id: id })
       );
-      const lesson = courses.data.getCourse.curriculum.lessons.items.slice(0, 2)
+      const lesson = courses.data.getCourse.curriculum.lessons.items.slice(1, 2)
       const nextLesson = lesson.lesson;
-      // console.log(courses, 'courses')
+      
       const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
+      console.log(lessonsInfo, 'courses')
       setToday(lesson);
       setCurriculum(nextLesson);
-      setListCurriculum(lessonsInfo.slice(1, 4));
+      setListCurriculum(lessonsInfo.slice(2, 7));
       if (state.user.onBoardSurvey) setStatus('done');
       // console.log(lessonsInfo, 'list');
     } catch (error) {
@@ -119,6 +120,8 @@ const Classroom: React.FC = () => {
 
   useEffect(() => {
     getCourse('1');
+
+    // history.push('/lesson?id=1');
   }, []);
 
   useEffect(() => {
@@ -147,12 +150,6 @@ const Classroom: React.FC = () => {
         };
       });
     }
-
-    // TEMPORARY HACK FOR AUTO-FORWARD TO HIGHLIGHTER
-    // TEMPORARY HACK FOR AUTO-FORWARD TO HIGHLIGHTER
-    // history.push('/lesson?id=1');
-    // TEMPORARY HACK FOR AUTO-FORWARD TO HIGHLIGHTER
-    // TEMPORARY HACK FOR AUTO-FORWARD TO HIGHLIGHTER
     
   }, [state]);
 

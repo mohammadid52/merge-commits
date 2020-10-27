@@ -62,6 +62,11 @@ export const createStudentData = /* GraphQL */ `
           focus
           id
         }
+        rawSelected {
+          color
+          selected
+        }
+        selectGroup
       }
       activityData {
         editInput
@@ -141,6 +146,11 @@ export const updateStudentData = /* GraphQL */ `
           focus
           id
         }
+        rawSelected {
+          color
+          selected
+        }
+        selectGroup
       }
       activityData {
         editInput
@@ -197,6 +207,11 @@ export const updateClassroom = /* GraphQL */ `
             focus
             id
           }
+          rawSelected {
+            color
+            selected
+          }
+          selectGroup
         }
         activityData {
           editInput

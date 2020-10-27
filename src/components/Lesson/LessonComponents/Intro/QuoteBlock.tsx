@@ -38,7 +38,7 @@ const QuoteBlock = () => {
                     <GoQuote />
                   </IconContext.Provider>
                 </div>
-                <div className='header-font text-lg font-open font-light pl-8 md:pl-12 ' style={{ textIndent: '-16px' }}>
+                <div className='header-font text-base font-open font-light pl-8 md:pl-12 ' style={{ textIndent: '-16px' }}>
                   {quote.text}
                 </div>
               </div>

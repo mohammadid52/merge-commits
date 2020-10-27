@@ -49,7 +49,7 @@ const ToolBar = (props: ToolBarProps) => {
                                 <div key={key} className="text-base font-bold">
                                     {line.prompt}
                                 </div>
-                                <label className={`${line.example ? 'visible' : 'invisible'} font-light self-end flex justify-end text-gray-400 text-sm`}>
+                                <label className={`${line.example ? 'visible' : 'invisible'} font-light flex text-gray-400 text-sm`}>
                                 ( ex. {line.example} )
                                 </label>
                             </div>

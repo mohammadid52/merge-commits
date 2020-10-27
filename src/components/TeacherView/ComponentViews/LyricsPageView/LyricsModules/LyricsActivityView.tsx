@@ -11,16 +11,27 @@ import { LessonControlContext } from '../../../../../contexts/LessonControlConte
 import { studentObject } from '../../../../../state/LessonControlState';
 
 type SelectObject = {
-        id?: string | number
-        anchor: string 
-        focus: string
-        color: string
-        content: Array<{ id: string | number, text: string }>,
+    id?: string | number
+    anchor: string 
+    focus: string
+    color: string
+    content: Array<{ id: string | number, text: string }>,
+}
+
+export interface SelectedTextGroup {
+    [key: string]: {
+        color: string;
+        selected: string[];
+    };
+}
+
+export interface FinalText {
+    [key: string]: string[];
 }
 
 interface props {
-        fullscreen: boolean
-    }
+    fullscreen: boolean
+}
 
 const Body = (props: props) => {
     const { fullscreen } = props
@@ -31,6 +42,20 @@ const Body = (props: props) => {
     const { video, link } = state.data.lesson.coreLesson.instructions
     const [ openPopup, setOpenPopup ] = useState(false)
 
+    const [finalText, setFinalText] = useState<FinalText>({});
+    const [initialSelectedText, setInitialSelectedText] = useState<SelectedTextGroup>({});
+    const [selectGroup, setSelectGroup] = useState<number>(0);
+
+    const convertRawSelectedArrayToObject = (array: Array<{ color: string, selected: string[] }>) => {
+        let initialSelectedTextObject: { [key: string]: { color: string, selected: string[] }} = {}
+
+        array.forEach((object: { color: string, selected: string[] }, key: number) => {
+            initialSelectedTextObject[`group${key}`] = object
+        })
+
+        return initialSelectedTextObject
+    }
+
     let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'corelesson' : false;
 
     useEffect(() => {
@@ -39,17 +64,26 @@ const Body = (props: props) => {
                 return setSelected(state.studentViewing.studentInfo.corelessonData.selected)
             } return setSelected([])
         }
+        
+    }, [state.studentViewing]);
+
+    useEffect(() => {
+        if (displayStudentData) {
+            if ( state.studentViewing.studentInfo.corelessonData && state.studentViewing.studentInfo.corelessonData.rawSelected ) {
+                return setInitialSelectedText(convertRawSelectedArrayToObject(state.studentViewing.studentInfo.corelessonData.rawSelected))
+            } return setInitialSelectedText({})
+        }
     }, [state.studentViewing]);
 
 
-    // useEffect(() => {
-    //    console.log(selected);
+    useEffect(() => {
+       console.log(initialSelectedText);
        
-    // }, [selected])
+    }, [initialSelectedText])
 
     return (
         <>
-            <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/> 
+            {/* <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/>  */}
             <div className="w-full h-full flex flex-col justify-between items-center">
                 <Banner fullscreen={fullscreen}/>
                 <div className="w-full md:h-8.8/10 flex flex-col-reverse md:flex-row justify-between items-center content-center">
@@ -59,7 +93,22 @@ const Body = (props: props) => {
                     </div>
                     <div className="h-full md:w-5.1/10 flex flex-col justify-between items-center">
                         <Toolbar setColor={setColor} fullscreen={fullscreen}/>
-                        <LyricsBlock color={color} selected={selected} setSelected={setSelected} fullscreenLyrics={fullscreenLyrics} setFullscreenLyrics={setFullscreenLyrics} fullscreen={fullscreen}/>
+                        <LyricsBlock
+                            color={color}
+                            selected={selected}
+                            setSelected={setSelected}
+                            fullscreen={fullscreen}
+                            fullscreenLyrics={fullscreenLyrics}
+                            setFullscreenLyrics={setFullscreenLyrics}
+                            // firstLastSelected={firstLastSelected}
+                            // setFirstLastSelected={setFirstLastSelected}
+                            initialSelectedText={initialSelectedText}
+                            setInitialSelectedText={setInitialSelectedText}
+                            finalText={finalText}
+                            setFinalText={setFinalText}
+                            selectGroup={selectGroup}
+                            setSelectGroup={setSelectGroup}
+                        />
                     </div>
                 </div>
             </div>

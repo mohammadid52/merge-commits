@@ -48,6 +48,11 @@ export const getClassroom = /* GraphQL */ `
             focus
             id
           }
+          rawSelected {
+            color
+            selected
+          }
+          selectGroup
         }
         activityData {
           editInput
@@ -167,6 +172,8 @@ export const getClassroom = /* GraphQL */ `
           }
           inputs {
             title
+            textExample
+            titleExample
             example
             additionalInputs {
               id
@@ -316,6 +323,11 @@ export const getClassroom = /* GraphQL */ `
               focus
               id
             }
+            rawSelected {
+              color
+              selected
+            }
+            selectGroup
           }
           activityData {
             editInput
@@ -383,6 +395,11 @@ export const getClassroomStudent = /* GraphQL */ `
             focus
             id
           }
+          rawSelected {
+            color
+            selected
+          }
+          selectGroup
         }
         activityData {
           editInput
@@ -504,6 +521,8 @@ export const getClassroomStudent = /* GraphQL */ `
           inputs {
             title
             example
+            textExample
+            titleExample
             additionalInputs {
               id
               name
@@ -651,6 +670,11 @@ export const getStudentData = /* GraphQL */ `
           focus
           id
         }
+        rawSelected {
+          color
+          selected
+        }
+        selectGroup
       }
       activityData {
         editInput

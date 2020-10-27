@@ -1250,6 +1250,9 @@ export const createStudentData = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -1343,6 +1346,11 @@ export const createStudentData = /* GraphQL */ `
           focus
           id
         }
+        rawSelected {
+          color
+          selected
+        }
+        selectGroup
       }
       activityData {
         editInput
@@ -1401,6 +1409,9 @@ export const updateStudentData = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -1494,6 +1505,11 @@ export const updateStudentData = /* GraphQL */ `
           focus
           id
         }
+        rawSelected {
+          color
+          selected
+        }
+        selectGroup
       }
       activityData {
         editInput
@@ -1552,6 +1568,9 @@ export const deleteStudentData = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -1645,6 +1664,11 @@ export const deleteStudentData = /* GraphQL */ `
           focus
           id
         }
+        rawSelected {
+          color
+          selected
+        }
+        selectGroup
       }
       activityData {
         editInput
@@ -1790,12 +1814,18 @@ export const createClassroom = /* GraphQL */ `
           story
           title
         }
+        corelessonData {
+          selectGroup
+        }
         activityData {
           editInput
           editMode
           title
         }
       }
+      expectedStartData
+      expectedEndDate
+      SELStructure
       courseID
       course {
         id
@@ -1998,12 +2028,18 @@ export const updateClassroom = /* GraphQL */ `
           story
           title
         }
+        corelessonData {
+          selectGroup
+        }
         activityData {
           editInput
           editMode
           title
         }
       }
+      expectedStartData
+      expectedEndDate
+      SELStructure
       courseID
       course {
         id
@@ -2206,12 +2242,18 @@ export const deleteClassroom = /* GraphQL */ `
           story
           title
         }
+        corelessonData {
+          selectGroup
+        }
         activityData {
           editInput
           editMode
           title
         }
       }
+      expectedStartData
+      expectedEndDate
+      SELStructure
       courseID
       course {
         id
@@ -2410,6 +2452,9 @@ export const createFeedback = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -2488,6 +2533,9 @@ export const updateFeedback = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -2566,6 +2614,9 @@ export const deleteFeedback = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -2778,6 +2829,8 @@ export const createLesson = /* GraphQL */ `
         inputs {
           title
           example
+          titleExample
+          textExample
         }
         breakdown {
           included
@@ -2977,6 +3030,8 @@ export const updateLesson = /* GraphQL */ `
         inputs {
           title
           example
+          titleExample
+          textExample
         }
         breakdown {
           included
@@ -3176,6 +3231,8 @@ export const deleteLesson = /* GraphQL */ `
         inputs {
           title
           example
+          titleExample
+          textExample
         }
         breakdown {
           included
@@ -3839,6 +3896,8 @@ export const createWarmUp = /* GraphQL */ `
       inputs {
         title
         example
+        titleExample
+        textExample
         additionalInputs {
           id
           name
@@ -3876,6 +3935,8 @@ export const updateWarmUp = /* GraphQL */ `
       inputs {
         title
         example
+        titleExample
+        textExample
         additionalInputs {
           id
           name
@@ -3913,6 +3974,8 @@ export const deleteWarmUp = /* GraphQL */ `
       inputs {
         title
         example
+        titleExample
+        textExample
         additionalInputs {
           id
           name
@@ -4637,6 +4700,9 @@ export const createQuestionData = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -4754,6 +4820,9 @@ export const updateQuestionData = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -4871,6 +4940,9 @@ export const deleteQuestionData = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -4988,6 +5060,9 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           closedAt
           roster
           viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
           courseID
           lessonID
           createdAt
@@ -5019,6 +5094,9 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           story
           title
         }
+        corelessonData {
+          selectGroup
+        }
         activityData {
           editInput
           editMode
@@ -5047,6 +5125,9 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           closedAt
           roster
           viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
           courseID
           lessonID
           createdAt
@@ -5110,6 +5191,9 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           closedAt
           roster
           viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
           courseID
           lessonID
           createdAt
@@ -5141,6 +5225,9 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           story
           title
         }
+        corelessonData {
+          selectGroup
+        }
         activityData {
           editInput
           editMode
@@ -5169,6 +5256,9 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           closedAt
           roster
           viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
           courseID
           lessonID
           createdAt
@@ -5232,6 +5322,9 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           closedAt
           roster
           viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
           courseID
           lessonID
           createdAt
@@ -5263,6 +5356,9 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           story
           title
         }
+        corelessonData {
+          selectGroup
+        }
         activityData {
           editInput
           editMode
@@ -5291,6 +5387,9 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           closedAt
           roster
           viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
           courseID
           lessonID
           createdAt

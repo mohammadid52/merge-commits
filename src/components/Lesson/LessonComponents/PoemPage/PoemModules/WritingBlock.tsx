@@ -3,7 +3,7 @@ import {useOutsideAlerter} from '../../../../General/hooks/outsideAlerter';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaPlus } from 'react-icons/fa';
-// import { useCookies } from 'react-cookie';
+import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 import PositiveAlert from '../../../../General/Popup';
 
@@ -20,8 +20,8 @@ interface WritingBlockProps {
 
 const WritingBlock = (props: WritingBlockProps) => {
     const { editMode, setEditMode } = props;
-    // const [ cookies, setCookie ] = useCookies(['poem']);
     const { state, dispatch } = useContext(LessonContext);
+    const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
     const lineNo = state.data.lesson.activity.lineNumber;
     const promptArray = state.data.lesson.activity.writingPrompts;
     const initialLines = [];
@@ -40,16 +40,16 @@ const WritingBlock = (props: WritingBlockProps) => {
         lines: state.componentState.poem && state.componentState.poem.lines ? state.componentState.poem.lines : initialLines,
     });
 
-    // useEffect(() => {
-    //     if ( cookies.poem && cookies.poem.lines.length >= lineNo ) {
-    //         setLineState(prev => {
-    //             return {
-    //                 ...prev,
-    //                 lines: cookies.poem.lines
-    //             }
-    //         })
-    //     }
-    // }, [])
+    useEffect(() => {
+        if ( cookies[`lesson-${state.classroomID}`]?.poem?.lines && cookies[`lesson-${state.classroomID}`]?.poem?.lines?.length >= lineNo ) {
+            setLineState(prev => {
+                return {
+                    ...prev,
+                    lines: cookies[`lesson-${state.classroomID}`].poem?.lines
+                }
+            })
+        }
+    }, [])
 
     useEffect(() => {
         let lineArray = lineState.lines.map((line: { text: string }) => {
@@ -88,12 +88,16 @@ const WritingBlock = (props: WritingBlockProps) => {
                 }
             })
 
-            // setCookie('poem', {
-            //     ...cookies.poem, 
-            //     lines: lineState.lines,
-            //     editInput: content
-            // })
+            setCookie(`lesson-${state.classroomID}`, {
+                ...cookies[`lesson-${state.classroomID}`],
+                poem: {
+                    ...cookies[`lesson-${state.classroomID}`].poem,
+                    lines: lineState.lines,
+                    editInput: content
+                }
+            })
         }
+        
     }, [lineState])
 
     const closeMenus = () => {
@@ -258,6 +262,8 @@ const WritingBlock = (props: WritingBlockProps) => {
  
     }
 
+    console.log(state, 'state')
+
     return (
         <div ref={ref} className="relative bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600" >
             {/* { visible &&  */}
@@ -302,7 +308,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                                     </IconContext.Provider>
                                 </div>
                             </div>
-                            <label className={`${line.example ? 'visible' : 'invisible'} font-light self-end flex justify-end text-gray-400 text-sm mr-12`} htmlFor={id}>
+                            <label className={`${line.example ? 'visible' : 'invisible'} w-9/10 font-light self-end flex justify-end text-gray-400 text-sm mr-12`} htmlFor={id}>
                                 ( ex. {line.example} )
                             </label>
                             {   line.menuOpen ?

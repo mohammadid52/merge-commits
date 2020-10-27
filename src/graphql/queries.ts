@@ -462,6 +462,9 @@ export const getStudentData = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -555,6 +558,11 @@ export const getStudentData = /* GraphQL */ `
           focus
           id
         }
+        rawSelected {
+          color
+          selected
+        }
+        selectGroup
       }
       activityData {
         editInput
@@ -622,6 +630,9 @@ export const listStudentDatas = /* GraphQL */ `
           closedAt
           roster
           viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
           courseID
           lessonID
           createdAt
@@ -652,6 +663,9 @@ export const listStudentDatas = /* GraphQL */ `
         warmupData {
           story
           title
+        }
+        corelessonData {
+          selectGroup
         }
         activityData {
           editInput
@@ -744,12 +758,18 @@ export const getClassroom = /* GraphQL */ `
           story
           title
         }
+        corelessonData {
+          selectGroup
+        }
         activityData {
           editInput
           editMode
           title
         }
       }
+      expectedStartData
+      expectedEndDate
+      SELStructure
       courseID
       course {
         id
@@ -945,6 +965,9 @@ export const listClassrooms = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -1019,6 +1042,9 @@ export const getFeedback = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -1096,6 +1122,9 @@ export const listFeedbacks = /* GraphQL */ `
           closedAt
           roster
           viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
           courseID
           lessonID
           createdAt
@@ -1246,6 +1275,8 @@ export const getLesson = /* GraphQL */ `
         inputs {
           title
           example
+          titleExample
+          textExample
         }
         breakdown {
           included
@@ -1507,6 +1538,8 @@ export const getWarmUp = /* GraphQL */ `
       inputs {
         title
         example
+        titleExample
+        textExample
         additionalInputs {
           id
           name
@@ -1546,6 +1579,8 @@ export const listWarmUps = /* GraphQL */ `
         inputs {
           title
           example
+          titleExample
+          textExample
         }
         breakdown {
           included
@@ -1939,6 +1974,9 @@ export const getQuestionData = /* GraphQL */ `
         displayData {
           breakdownComponent
         }
+        expectedStartData
+        expectedEndDate
+        SELStructure
         courseID
         course {
           id
@@ -2055,6 +2093,9 @@ export const listQuestionDatas = /* GraphQL */ `
           closedAt
           roster
           viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
           courseID
           lessonID
           createdAt
