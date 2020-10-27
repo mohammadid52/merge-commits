@@ -113,7 +113,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
   // }
 
   return (
-    <div className={`relative h-auto flex justify-start`}>
+    <div className={`relative h-auto flex flex-wrap justify-start`}>
       {lessons
         ? lessons.map(
             (
