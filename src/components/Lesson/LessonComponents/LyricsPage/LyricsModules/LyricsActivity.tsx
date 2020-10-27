@@ -38,9 +38,7 @@ const Body = () => {
       ? state.componentState.lyrics.selected
       : []
   );
-  const [cookies, setCookie] = useCookies(['lyrics']);
-  const [selectedCookie, setSelectedCookie] = useCookies(['selected']);
-  const [selectGroupCookie, setSelectGroupCookie] = useCookies(['selectGroup']);
+  const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
   const [fullscreen, setFullscreen] = useState(false);
   const { video, link } = state.data.lesson.coreLesson.instructions;
   const [openPopup, setOpenPopup] = useState(false);
@@ -62,32 +60,44 @@ const Body = () => {
   }
   
   useEffect(() => {
-    if (cookies.lyrics) {
+    if ( cookies[`lesson-${state.classroomID}`].lyrics ) {
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
         payload: {
           name: 'lyrics',
           content: {
-            selected: cookies.lyrics,
+            selected: cookies[`lesson-${state.classroomID}`].lyrics,
           },
         },
       });
 
-      setSelected(cookies.lyrics);
+      setSelected(cookies[`lesson-${state.classroomID}`].lyrics.selected);
+      setInitialSelectedText(cookies[`lesson-${state.classroomID}`].lyrics.rawSelected);
+      setSelectGroup(parseInt(cookies[`lesson-${state.classroomID}`].lyrics.selectGroup));
     }
 
-    if (!cookies.lyrics && !state.componentState.lyrics) {
+    if ( !cookies[`lesson-${state.classroomID}`].lyrics && !state.componentState.lyrics ) {
+      
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
         payload: {
           name: 'lyrics',
           content: {
             selected: [],
+            selectGroup: 0,
+            rawSelected: {}
           },
         },
       });
 
-      setCookie('lyrics', []);
+      setCookie(`lesson-${state.classroomID}`, {
+        ...cookies[`lesson-${state.classroomID}`],
+        lyrics: {
+          selected: [],
+          selectGroup: 0,
+          rawSelected: {}
+        }
+      });
     }
   }, []);
 
@@ -111,33 +121,29 @@ const Body = () => {
         },
       });
 
-      setCookie('lyrics', selected);
+      setCookie(`lesson-${state.classroomID}`, {
+        ...cookies[`lesson-${state.classroomID}`],
+        lyrics: {
+          ...cookies[`lesson-${state.classroomID}`].lyrics,
+          selected: selected,
+        }
+      })
+
+      setCookie(`lesson-${state.classroomID}`, {
+        ...cookies[`lesson-${state.classroomID}`],
+        lyrics: {
+          ...cookies[`lesson-${state.classroomID}`].lyrics,
+          rawSelected: initialSelectedText,
+          selectGroup: selectGroup,
+        }
+      })
+
     }
   }, [selected]);
 
   /**
    * COOKIE loading for previously highlighted text WOOO!!!
    */
-
-  useEffect(()=>{
-    if(typeof selectedCookie.selected !== 'undefined') {
-        setInitialSelectedText(selectedCookie.selected);
-        setSelectGroup(parseInt(selectGroupCookie.selectGroup));
-    }
-  },[])
-
-  useEffect(()=>{
-    setSelectGroupCookie('selectGroup', selectGroup)
-  },[selectGroup])
-
-  useEffect(()=>{
-    setSelectedCookie('selected', JSON.stringify(initialSelectedText))
-  },[initialSelectedText])
-
-  useEffect(() => {
-    console.log(state.componentState.lyrics);
-    
-  }, [state.componentState.lyrics])
 
   return (
     <>

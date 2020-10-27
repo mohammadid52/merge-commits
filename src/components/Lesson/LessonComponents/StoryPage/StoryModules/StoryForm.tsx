@@ -1,11 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-// import { useCookies } from 'react-cookie';
+import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 const StoryForm = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  // const [cookies, setCookie] = useCookies(['story']);
+  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
   const [input, setInput] = useState({
     title:
       state.componentState.story && state.componentState.story.title
@@ -17,16 +17,16 @@ const StoryForm = () => {
         : '',
   });
 
-  // useEffect(() => {
-  //   if (cookies.story) {
-  //     setInput(() => {
-  //       return {
-  //         title: cookies.story.title,
-  //         story: cookies.story.story,
-  //       };
-  //     });
-  //   }
-  // }, []);
+  useEffect(() => {
+    if ( cookies[`lesson-${state.classroomID}`]?.story ) {
+      setInput(() => {
+        return {
+          title: cookies[`lesson-${state.classroomID}`].story.title,
+          story: cookies[`lesson-${state.classroomID}`].story.story,
+        };
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (state.componentState.story) {
@@ -39,7 +39,7 @@ const StoryForm = () => {
         },
       });
 
-      // setCookie('story', { ...cookies.story, title: input.title });
+      setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], story: { ...cookies[`lesson-${state.classroomID}`].story, title: input.title }});
     }
   }, [input.title]);
 
@@ -54,7 +54,7 @@ const StoryForm = () => {
         },
       });
 
-      // setCookie('story', { ...cookies.story, story: input.story });
+      setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], story: { ...cookies[`lesson-${state.classroomID}`].story, story: input.story }});
     }
   }, [input.story]);
 

@@ -21,42 +21,49 @@ import useStudentTimer from '../../customHooks/timer';
 
 const LessonHeaderBar = () => {
     const history = useHistory();
-    const [ cookies, setCookie ] = useCookies(['lesson']);
+    const { theme, state, dispatch } = useContext(LessonContext);
+    const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
     // const match = useRouteMatch();
     // const location = useLocation();
     // const history = useHistory();
-    const { theme, state, dispatch } = useContext(LessonContext);
     // const [ dictOpen, setDictOpen ] = useState(false);
     // const { lookUp } = useDictionary('EN');
     // const [ searchTerm, setSearchTerm ] = useState('');
     const [isToggled, setIsToggled] = useState<string[]>(['']);
 
     useEffect(() => {
+
+        if ( cookies[`lesson-${state.classroomID}`] ) {
+            // console.log(cookies[`lesson-${state.classroomID}`]);
+
+            setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], lessonProgress: state.lessonProgress })
+        }
+
+        if ( !cookies[`lesson-${state.classroomID}`] ) {
+            // console.log('cookie set');
+            
+            setCookie(`lesson-${state.classroomID}`, { lessonProgress: 0 } )
+        }
+
+    }, [state.lessonProgress])
+
+    useEffect(() => {
+
         if ( !state.pages[0].active ) {
             // console.log('here', state);
             dispatch({ type: 'SET_PROGRESS', payload: state.lessonProgress })
         }
+
     }, [state.pages, state.currentPage])
-
-    useEffect(() => {
-        if ( cookies.lesson ) {
-            // console.log(state.lessonProgress)
-            setCookie('lesson', { ...cookies.lesson, lessonProgress: state.lessonProgress })
-        }
-
-        if ( !cookies.lesson ) {
-            setCookie('lesson', { lessonProgress: 0 })
-        }
-    }, [state.lessonProgress])
 
     // useEffect(() => {
     //     console.log(state.studentStatus);
         
     // }, [state.studentStatus])
 
-    useEffect(()=>{
-        // history.push('/lesson/corelesson');
-    },[])
+    // useEffect(()=>{
+    //     // history.push('/lesson/corelesson');
+    // },[])
 
     const updateStudentData = async ( saveType?: string) => {
         let lessonProgress = state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
