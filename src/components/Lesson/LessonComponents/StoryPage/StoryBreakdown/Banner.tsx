@@ -33,7 +33,7 @@ const Banner = (props: BannerProps) => {
         <div className='w-full h-full flex flex-row justify-center items-center'>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem' }}>
             <div className='bg-dark-red h-12 w-12 flex flex-col items-center justify-center z-20 rounded-lg shadow-2'>
-              <FaScroll />
+              <BsFillMusicPlayerFill />
             </div>
           </IconContext.Provider>
           <div
@@ -48,7 +48,7 @@ const Banner = (props: BannerProps) => {
           className={`w-full h-1/10 ${theme.banner} flex flex-row justify-center items-center`}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem' }}>
             <div className='bg-dark-red h-12 w-12 flex flex-col items-center  justify-center z-20 rounded-lg shadow-2'>
-              <FaScroll />
+              <BsFillMusicPlayerFill />
             </div>
           </IconContext.Provider>
           <div className={`text-3xl h-full text-gray-200 z-10 font-medium flex justify-center items-center`}>
