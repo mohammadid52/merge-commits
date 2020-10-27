@@ -58,6 +58,7 @@ const LessonPlanHome = () => {
   {
     return (
       <div className='w-full'>
+        <div className={`w-full bg-blueberry text-sm text-white pl-2`}>You're about to teach a lesson!</div>
         <div className='w-64rem text-xl m-auto'>
           <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
             Today's Lesson
@@ -68,7 +69,7 @@ const LessonPlanHome = () => {
                 Teacher View 
             </Link> */}
             {/* <Upcoming curriculum={listCurriculum}/> */}
-            <Dashboard />
+            {/* <Dashboard /> */}
           </div>
         </div>
       </div>

@@ -38,6 +38,10 @@ const StageIcon = (props: StageIconProps) => {
                 return <FaMap />
             case 'story':
                 return <FaScroll />
+            case 'list':
+                return <FaScroll />
+            case 'truthgame':
+                return <FaScroll />
             case 'lyrics':
                 return <FaMusic />
             case 'poem':
@@ -71,7 +75,7 @@ const StageIcon = (props: StageIconProps) => {
         {
             /* Capitalize the first letter */
             <FooterLabels label=
-            {props.type.charAt(0).toUpperCase()+props.type.slice(1)} />
+            {props.stage.charAt(0).toUpperCase()+props.stage.slice(1)} />
         }
       </div>
     );

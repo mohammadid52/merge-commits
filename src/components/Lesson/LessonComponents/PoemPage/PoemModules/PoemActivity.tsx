@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-// import { useCookies } from 'react-cookie';
+import { useCookies } from 'react-cookie';
 import WritingBlock from './WritingBlock';
 import InstructionBlock from './InstructionBlock';
 import ToolBar from './ToolBar';
@@ -22,7 +22,7 @@ type storageObject = {
 
 const PoemActivity = () => {
     const { state, dispatch } = useContext(LessonContext);
-    // const [ cookies, setCookie ] = useCookies(['poem']);
+    const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
     const [ editMode, setEditMode ] = useState({
         open: state.componentState.poem && state.componentState.poem.editMode ? state.componentState.poem.editMode : false,
         input: state.componentState.poem && state.componentState.poem.editInput ? state.componentState.poem.editInput : '',
@@ -32,38 +32,38 @@ const PoemActivity = () => {
 
     
     useEffect(() => {
-        // if ( cookies.poem ) {
-        //     if ( !cookies.poem.editMode ) {
-        //         dispatch({
-        //             type: 'SET_INITIAL_COMPONENT_STATE',
-        //             payload: {
-        //                 name: 'poem',
-        //                 content: cookies.poem
-        //             }
-        //         })
-        //     }
+        if ( cookies[`lesson-${state.classroomID}`]?.poem ) {
+            if ( !cookies[`lesson-${state.classroomID}`]?.poem?.editMode ) {
+                dispatch({
+                    type: 'SET_INITIAL_COMPONENT_STATE',
+                    payload: {
+                        name: 'poem',
+                        content: cookies[`lesson-${state.classroomID}`].poem
+                    }
+                })
+            }
 
-        //     if ( cookies.poem.editMode && cookies.poem ) {
-        //         setEditMode(prev => {
-        //             return {
-        //                 ...prev,
-        //                 editMode: true,
-        //                 input: cookies.poem.editInput
-        //             }
-        //         })
+            if ( cookies[`lesson-${state.classroomID}`]?.poem?.editMode ) {
+                setEditMode(prev => {
+                    return {
+                        ...prev,
+                        editMode: true,
+                        input: cookies[`lesson-${state.classroomID}`].poem.editInput
+                    }
+                })
 
-        //         dispatch({
-        //             type: 'SET_INITIAL_COMPONENT_STATE',
-        //             payload: {
-        //                 name: 'poem',
-        //                 content: cookies.poem
-        //             }
-        //         })
-        //     }
-        // }
+                dispatch({
+                    type: 'SET_INITIAL_COMPONENT_STATE',
+                    payload: {
+                        name: 'poem',
+                        content: cookies[`lesson-${state.classroomID}`]?.poem
+                    }
+                })
+            }
+        }
 
         if ( 
-            // !cookies.poem && 
+            !cookies[`lesson-${state.classroomID}`]?.poem && 
             !state.componentState.poem ) {
             let storageObj: storageObject = {
                 title: '',
@@ -80,12 +80,14 @@ const PoemActivity = () => {
                 }
             })
 
-            // setCookie('poem', storageObj)
+            setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], poem: storageObj })
         }
     }, [])
 
     useEffect(() => {
+
         if ( state.componentState.poem && editMode.open === true ) {
+
             dispatch({
                 type: 'UPDATE_COMPONENT_STATE',
                 payload: {
@@ -95,8 +97,16 @@ const PoemActivity = () => {
                 }
             })
 
-            // setCookie('poem', {...cookies.poem, editMode: true})
+            setCookie(`lesson-${state.classroomID}`, {
+                ...cookies[`lesson-${state.classroomID}`], 
+                poem: {
+                    ...cookies[`lesson-${state.classroomID}`].poem, 
+                    editMode: true 
+                }
+            })
+
         }
+
     }, [editMode.open])
 
     useEffect(() => {
@@ -109,7 +119,6 @@ const PoemActivity = () => {
                     content: editMode.input
                 }
             })
-
         }
     }, [editMode.input])
 
