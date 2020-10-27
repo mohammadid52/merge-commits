@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-// import { useCookies } from 'react-cookie';
-import { string } from 'prop-types';
+import { useCookies } from 'react-cookie';
 
 type InputProp = [{ name: string; example: string; prompt: string; }];
 
@@ -16,7 +15,7 @@ interface FormInputsState {
 const Modules = (props: ModulesProps) => {
     const { inputs } = props
     const { state, theme, dispatch } = useContext(LessonContext);
-    // const [ cookies, setCookie ] = useCookies(['story']) 
+    const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]) 
     const [ formInputs, setFormInputs ] = useState<FormInputsState>() 
 
     useEffect(() => {
@@ -29,18 +28,18 @@ const Modules = (props: ModulesProps) => {
             })
         })
 
-        // if ( cookies.story && cookies.story.additional && cookies.story.additional.length > 0 ) {
-        //     cookies.story.additional.forEach((item: {name: string, input: string}) => {
-        //         setFormInputs(prev => {
-        //             return {
-        //                 ...prev,
-        //                 [item.name]: item.input,
-        //             }
-        //         })
-        //     })
-        // }
+        if ( cookies[`lesson-${state.classroomID}`]?.story?.additional && cookies[`lesson-${state.classroomID}`].story.additional.length > 0 ) {
+            cookies[`lesson-${state.classroomID}`].story.additional.forEach((item: { name: string, input: string }) => {
+                setFormInputs(prev => {
+                    return {
+                        ...prev,
+                        [item.name]: item.input,
+                    }
+                })
+            })
+        }
 
-        if ( state.componentState.story &&state.componentState.story.additional && state.componentState.story.additional.length > 0 ) {
+        if ( state.componentState.story && state.componentState.story.additional && state.componentState.story.additional.length > 0 ) {
             state.componentState.story.additional.map((item: {name: string, input: string}) => {
                 setFormInputs(prev => {
                     return {
@@ -73,6 +72,8 @@ const Modules = (props: ModulesProps) => {
                     content: tempArray
                 }
             })
+
+            setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], story: { ...cookies[`lesson-${state.classroomID}`].story, additional: tempArray }})
 
             // setCookie('story', {...cookies.story, additional: tempArray})
         }
