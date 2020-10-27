@@ -45,7 +45,7 @@ const InstructionsBlock = () => {
                     {/* {   !videoMode ? */}
                         <div className="h-full overflow-y-auto overflow-x-hidden">
                             { instructionsArr.map((inst: any, key: number) => (
-                                <div className="text-sm font-light mb-2" key={key}>{inst}</div>
+                                <div className="text-sm font-light mb-2 pr-2" key={key}>{inst}</div>
                                 ))}
                         </div>
                         {/* :

@@ -50,14 +50,14 @@ const Classroom: React.FC = () => {
       const courses: any = await API.graphql(
         graphqlOperation(customQueries.getCourse, { id: id })
       );
-      const lesson = courses.data.getCourse.curriculum.lessons.items.slice(0, 2)
+      const lesson = courses.data.getCourse.curriculum.lessons.items.slice(1, 2)
       const nextLesson = lesson.lesson;
       
       const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
       console.log(lessonsInfo, 'courses')
       setToday(lesson);
       setCurriculum(nextLesson);
-      setListCurriculum(lessonsInfo.slice(2, 5));
+      setListCurriculum(lessonsInfo.slice(2, 7));
       if (state.user.onBoardSurvey) setStatus('done');
       // console.log(lessonsInfo, 'list');
     } catch (error) {
