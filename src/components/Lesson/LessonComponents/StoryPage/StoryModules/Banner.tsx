@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaScroll } from 'react-icons/fa';
+import { BsFillMusicPlayerFill } from 'react-icons/bs';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 
 const Banner = () => {
@@ -11,7 +12,7 @@ const Banner = () => {
     <div className={`w-full h-1/10  ${theme.banner} flex flex-row justify-center items-center`}>
       <IconContext.Provider value={{ color: '#EDF2F7', size: '2.7rem' }}>
         <div className='bg-dark-red h-16 w-16 flex flex-col items-center justify-center z-20 rounded-lg'>
-          <FaScroll />
+          <BsFillMusicPlayerFill />
         </div>
       </IconContext.Provider>
       <div

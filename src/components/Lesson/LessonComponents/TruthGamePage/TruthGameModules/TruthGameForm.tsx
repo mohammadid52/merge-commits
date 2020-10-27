@@ -90,20 +90,27 @@ const ListForm = () => {
       input: '',
     }
   ]
-  const [radioInput, setRadioInput] = useState<any>(tempData);
+  const [data, setData] = useState<any>(tempData);
 
-  const handleRadioSelect = (e: { target: { value: string; id: string } }) => {
-    setRadioInput({
-      ...radioInput,
-      [e.target.id]: true
-    });
+  const handleRadioSelect = (passedKey: any) => {
+    setData(tempData.map((item: {id: string, label: string, lie: boolean, input: string}, key: any) => {
+      if(key === passedKey)
+      {return {
+        ...item,
+        lie: true
+      }} else {
+        return {...item}
+      }
+    }))
+    
   };
 
   useEffect(() => {
     console.log(tempData)
   }, [input])
 
-  console.log(radioInput, 'radioInput')
+  console.log(data, 'data')
+  console.log(tempData, 'tempData')
 
   return (
     <div className='bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600'>
@@ -114,16 +121,15 @@ const ListForm = () => {
       
       <div className='relative h-full flex flex-col items-center mb-5 mt-2'>
         <div className="text-gray-200">
-          {/* {state ? state.data.lesson.warmUp.inputs.textExample : null} */}
+          {state ? state.data.lesson.warmUp.inputs.textExample : null}
           </div>
-        {tempData.map((item: any, key: number) => {
-          console.log(tempData, 'temp data')
+        {data.map((item: any, key: number) => {
           return (
-          <div key={key} className="flex flex-col p-4 items-center justify-between">
-            <div className="flex items-center justify-start py-4">
+          <div id={item.id} key={key} className="flex flex-col p-4 items-center justify-between">
+            <div id={item.id} className="flex items-center justify-start py-4">
               
-              <label className="w-auto cursor-pointer font-light text-gray-400 text-sm flex-none items-center px-2">
-                <input id={item.id} name='lie' type="radio" onChange={handleRadioSelect} value={item.lie} className="w-auto mx-4" />
+              <label id={item.id} className="w-auto cursor-pointer font-light text-gray-400 text-sm flex-none items-center px-2">
+          <button key={key} id={item.id} name='lie' onClick={() => handleRadioSelect(key)} value={item.lie} className={`${item.lie ? 'text-2xl' : ''} w-auto mx-4`} > {item.lie ? '🤥'  : '⚪️'}</button>
               
                 {item.label}
               </label>

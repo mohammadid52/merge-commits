@@ -86,7 +86,7 @@ const Modules = (props: ModulesProps) => {
     }
 
     return (
-        <div className="md:h-5.8/10 w-full bg-gradient-to-tl from-dark-blue to-med-dark-blue text-gray-200 md:mb-0 px-4 md:px-8 py-4 rounded-lg overflow-hidden">
+        <div className="md:h-5.8/10 overflow-y-scroll w-full bg-gradient-to-tl from-dark-blue to-med-dark-blue text-gray-200 md:mb-0 px-4 md:px-8 py-4 rounded-lg overflow-hidden">
             <h3 className={`text-xl font-open font-light ${theme.underline}`}>Focus Questions</h3>
             <div className="w-full h-full ">
                 { 

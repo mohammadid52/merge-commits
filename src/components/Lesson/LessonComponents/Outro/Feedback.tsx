@@ -20,7 +20,7 @@ const Feedback = (props: FeedbackProps) => {
     setThumb(() => {
       if ( item === thumb ) { return '' }
       
-      return item
+      return item 
     })
   }
 
