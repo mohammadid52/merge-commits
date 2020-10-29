@@ -206,23 +206,24 @@ const LessonControl = () => {
  
     }, [state.displayData, state.studentViewing])
 
-    // useEffect(() => {
-    //     console.log('state', state);
-        
-    // }, [state])
-
     const {visible, setVisible, ref} = useOutsideAlerter(false);
+
+    const [homePopup, setHomePopup] = useState(false);
 
     const handleClick = () => {
         setVisible((prevState: any) => !prevState)
     }
 
-    const handleCancel = () => {
-        handleClick
+    const handleHomePopup = () => {
+        setHomePopup((prevState: any) => !prevState)
     }
 
     const handleSubmit = () => {
         history.push('/dashboard/manage-users');
+    }
+
+    const handleHome = () => {
+        history.push('/dashboard/');
     }
 
     if ( state.status !== 'loaded') {
@@ -234,17 +235,28 @@ const LessonControl = () => {
     return (
         <div className={`w-full h-screen bg-gray-200`}>
             <div className={`relative w-full h-full flex flex-col`}>
-                <div className={`${visible ? 'absolute z-100' : 'hidden'} max-w-sm`} style={{top: '0', right: '-100px'}} onClick={handleClick}>
+                <div className={`${visible ? 'absolute z-100' : 'hidden'} max-w-sm`} style={{top: '20%', left: '500px'}} onClick={handleClick}>
                     <PositiveAlert 
                         alert={visible}
                         setAlert={setVisible}
-                        header='Are you ready to edit your poem?' 
-                        content="Once you go to 'Final Edits' you will not be able to come back to these line prompts" 
-                        button1='Go to Final Edits' 
+                        header='Are you sure you want to leave the Teacher View?'
+                        button1='Go to student management' 
                         button2='Cancel' 
-                        svg='question' 
+                        svg='warning' 
                         handleButton1={handleSubmit} 
-                        handleButton2={handleCancel}
+                        handleButton2={() => handleClick}
+                        />
+                </div>
+                <div className={`${homePopup ? 'absolute z-100' : 'hidden'} max-w-sm`} style={{top: '20%', left: '500px'}} onClick={handleHomePopup}>
+                    <PositiveAlert 
+                        alert={homePopup}
+                        setAlert={setHomePopup}
+                        header='Are you sure you want to leave the Teacher View?'
+                        button1='Go to the dashboard' 
+                        button2='Cancel' 
+                        svg='warning' 
+                        handleButton1={handleHome} 
+                        handleButton2={() => handleHomePopup}
                         />
                 </div>
                 <div className={`relative w-full h-1/10 border-b border-gray-400 flex flex-row items-center`} 
@@ -334,12 +346,12 @@ const LessonControl = () => {
                             {/* </NavLink> */}
                             <p className="text-xs text-center">Students</p> 
                         </div>
-                        <div className="flex flex-col justify-center items-center cursor-pointer px-2">
-                            <NavLink to="/dashboard">
+                        <div className="flex flex-col justify-center items-center cursor-pointer px-2" onClick={handleHomePopup}>
+                            {/* <NavLink to="/dashboard"> */}
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
                                     <FaHome />
                                 </IconContext.Provider>
-                            </NavLink>
+                            {/* </NavLink> */}
                             <p className="text-xs text-center">Home</p>
                         </div>
                     </div>
@@ -356,7 +368,7 @@ const LessonControl = () => {
                                 <div className="w-4/10 flex justify-around items-center relative">
                                     <ToolTip position='hidden-bottom' header='' content='students in class' display='none' fontSize= 'text-xs'/>
                                     <div className="w-auto">
-                                        <IconContext.Provider value={{ size: '1.4rem', style: {width: 'auto'}}}>
+                                        <IconContext.Provider value={{ size: '2rem', style: {width: 'auto'}}}>
                                             <BsPersonFill />
                                         </IconContext.Provider>
                                     </div>
@@ -367,16 +379,27 @@ const LessonControl = () => {
 
                                 <div className="w-4/10 flex justify-around items-center">
                                     {/* <ToolTip position='hidden-bottom' header='' content='students who are ready (click to reset)' width='w-20' cursor display='none' fontSize= 'text-xs'/> */}
-                                    <div className="w-auto relative" onClick={handleResetDoneCounter}>
+                                    <div className={`w-auto relative`} onClick={handleResetDoneCounter}>
                                     <ToolTip position='hidden-bottom'  
                                         cursor
                                         header=''
                                         width='w-24'
                                         content= {<div className="flex flex-col"><div>students who are ready</div> <p className="font-bold"> (click to reset)</p></div>}
                                         display='none' fontSize= 'text-xs'/>
-                                        <IconContext.Provider value={{ size: '1.4rem', style: {width: 'auto'}}}>
+                                        {console.log(state.done.length === 1, 'length')}
+                                        {state.done.length === state.roster.length ?
+                                        <IconContext.Provider value={{ size: '2rem', style: {width: 'auto'}, color: '#009e00' }}>
                                             <FaRegThumbsUp style={{ pointerEvents: 'none' }}/>
                                         </IconContext.Provider>
+                                        : state.done.length !== state.roster.length ?
+                                        <IconContext.Provider value={{ size: '2rem', style: {width: 'auto'}, color: 'yellow' }}>
+                                            <FaRegThumbsUp style={{ pointerEvents: 'none' }}/>
+                                        </IconContext.Provider>
+                                        :
+                                        <IconContext.Provider value={{ size: '2rem', style: {width: 'auto'}, color: 'yellow' }}>
+                                            <FaRegThumbsUp style={{ pointerEvents: 'none' }}/>
+                                        </IconContext.Provider>
+                                        }
                                     </div>
                                     <div className="w-auto">
                                        { state.done.length }
