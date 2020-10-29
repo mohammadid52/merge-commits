@@ -22,6 +22,8 @@ import ClassRoster from './ClassRoster';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
 import ToolTip from '../General/ToolTip/ToolTip';
 import FooterLabels from '../General/LabelSwitch';
+import PositiveAlert from '../General/Popup';
+import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
 const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
 const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
 const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
@@ -209,6 +211,20 @@ const LessonControl = () => {
         
     // }, [state])
 
+    const {visible, setVisible, ref} = useOutsideAlerter(false);
+
+    const handleClick = () => {
+        setVisible((prevState: any) => !prevState)
+    }
+
+    const handleCancel = () => {
+        handleClick
+    }
+
+    const handleSubmit = () => {
+        history.push('/dashboard/manage-users');
+    }
+
     if ( state.status !== 'loaded') {
         return (
             <ComponentLoading />
@@ -217,7 +233,20 @@ const LessonControl = () => {
 
     return (
         <div className={`w-full h-screen bg-gray-200`}>
-            <div className={`w-full h-full flex flex-col`}>
+            <div className={`relative w-full h-full flex flex-col`}>
+                <div className={`${visible ? 'absolute z-100' : 'hidden'} max-w-sm`} style={{top: '0', right: '-100px'}} onClick={handleClick}>
+                    <PositiveAlert 
+                        alert={visible}
+                        setAlert={setVisible}
+                        header='Are you ready to edit your poem?' 
+                        content="Once you go to 'Final Edits' you will not be able to come back to these line prompts" 
+                        button1='Go to Final Edits' 
+                        button2='Cancel' 
+                        svg='question' 
+                        handleButton1={handleSubmit} 
+                        handleButton2={handleCancel}
+                        />
+                </div>
                 <div className={`relative w-full h-1/10 border-b border-gray-400 flex flex-row items-center`} 
                 // onClick={handleQuitAll}
                 >
@@ -297,13 +326,13 @@ const LessonControl = () => {
                     </div>
                 
                     <div className={`w-1/10 pr-4 flex justify-between items-center px-2`} style={{right: 0}}>
-                        <div className="flex flex-col justify-center items-center cursor-pointer px-2">
-                            <NavLink to="/dashboard/manage-users">
+                        <div className="flex flex-col justify-center items-center cursor-pointer px-2" onClick={handleClick}>
+                            {/* <NavLink to="/dashboard/manage-users"> */}
                                 <IconContext.Provider value={{ size: '1.5rem'}}>
                                     <FiUsers />
                                 </IconContext.Provider>
-                            </NavLink>
-                            <p className="text-xs text-center">Students</p>
+                            {/* </NavLink> */}
+                            <p className="text-xs text-center">Students</p> 
                         </div>
                         <div className="flex flex-col justify-center items-center cursor-pointer px-2">
                             <NavLink to="/dashboard">
