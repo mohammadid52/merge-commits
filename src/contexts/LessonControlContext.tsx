@@ -65,7 +65,7 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
       const studentDataSubscription = API.graphql(graphqlOperation(customSubscriptions.onChangeStudentData, { classroomID: queryParams.id })).subscribe({
           next: (studentData: any) => {
             let updatedData = studentData.value.data.onChangeStudentData
-            // console.log(updatedData)
+            console.log(updatedData)
 
             dispatch({ type: 'UPDATE_STUDENT_DATA', payload: updatedData })
             // console.log(found)

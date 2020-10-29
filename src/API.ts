@@ -437,6 +437,7 @@ export type AdditionalInputsInput = {
 export type CoreLessonDataInput = {
   selected?: Array< SelectionInput | null > | null,
   rawSelected?: Array< RawSelectionInput | null > | null,
+  selectGroup?: number | null,
 };
 
 export type SelectionInput = {
@@ -3168,6 +3169,7 @@ export type CreateStudentDataMutation = {
         color: string | null,
         selected: Array< string | null > | null,
       } | null > | null,
+      selectGroup: number | null,
     } | null,
     activityData:  {
       __typename: "ActivityData",
@@ -3348,6 +3350,7 @@ export type UpdateStudentDataMutation = {
         color: string | null,
         selected: Array< string | null > | null,
       } | null > | null,
+      selectGroup: number | null,
     } | null,
     activityData:  {
       __typename: "ActivityData",
@@ -3528,6 +3531,7 @@ export type DeleteStudentDataMutation = {
         color: string | null,
         selected: Array< string | null > | null,
       } | null > | null,
+      selectGroup: number | null,
     } | null,
     activityData:  {
       __typename: "ActivityData",
@@ -3698,6 +3702,10 @@ export type CreateClassroomMutation = {
         __typename: "WarmUpData",
         story: string | null,
         title: string | null,
+      } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
       } | null,
       activityData:  {
         __typename: "ActivityData",
@@ -3936,6 +3944,10 @@ export type UpdateClassroomMutation = {
         story: string | null,
         title: string | null,
       } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
+      } | null,
       activityData:  {
         __typename: "ActivityData",
         editInput: string | null,
@@ -4172,6 +4184,10 @@ export type DeleteClassroomMutation = {
         __typename: "WarmUpData",
         story: string | null,
         title: string | null,
+      } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
       } | null,
       activityData:  {
         __typename: "ActivityData",
@@ -7403,6 +7419,10 @@ export type CreateQuestionDataStudentDataMutation = {
         story: string | null,
         title: string | null,
       } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
+      } | null,
       activityData:  {
         __typename: "ActivityData",
         editInput: string | null,
@@ -7544,6 +7564,10 @@ export type UpdateQuestionDataStudentDataMutation = {
         story: string | null,
         title: string | null,
       } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
+      } | null,
       activityData:  {
         __typename: "ActivityData",
         editInput: string | null,
@@ -7684,6 +7708,10 @@ export type DeleteQuestionDataStudentDataMutation = {
         __typename: "WarmUpData",
         story: string | null,
         title: string | null,
+      } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
       } | null,
       activityData:  {
         __typename: "ActivityData",
@@ -8982,6 +9010,7 @@ export type GetStudentDataQuery = {
         color: string | null,
         selected: Array< string | null > | null,
       } | null > | null,
+      selectGroup: number | null,
     } | null,
     activityData:  {
       __typename: "ActivityData",
@@ -9087,6 +9116,10 @@ export type ListStudentDatasQuery = {
         __typename: "WarmUpData",
         story: string | null,
         title: string | null,
+      } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
       } | null,
       activityData:  {
         __typename: "ActivityData",
@@ -9200,6 +9233,10 @@ export type GetClassroomQuery = {
         __typename: "WarmUpData",
         story: string | null,
         title: string | null,
+      } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
       } | null,
       activityData:  {
         __typename: "ActivityData",
@@ -10985,6 +11022,10 @@ export type OnUpdateClassroomSubscription = {
         story: string | null,
         title: string | null,
       } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
+      } | null,
       activityData:  {
         __typename: "ActivityData",
         editInput: string | null,
@@ -11329,6 +11370,7 @@ export type OnChangeStudentDataSubscription = {
         color: string | null,
         selected: Array< string | null > | null,
       } | null > | null,
+      selectGroup: number | null,
     } | null,
     activityData:  {
       __typename: "ActivityData",
@@ -15517,6 +15559,10 @@ export type OnCreateQuestionDataStudentDataSubscription = {
         story: string | null,
         title: string | null,
       } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
+      } | null,
       activityData:  {
         __typename: "ActivityData",
         editInput: string | null,
@@ -15653,6 +15699,10 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
         story: string | null,
         title: string | null,
       } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
+      } | null,
       activityData:  {
         __typename: "ActivityData",
         editInput: string | null,
@@ -15788,6 +15838,10 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         __typename: "WarmUpData",
         story: string | null,
         title: string | null,
+      } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
       } | null,
       activityData:  {
         __typename: "ActivityData",

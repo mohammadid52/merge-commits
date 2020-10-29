@@ -66,6 +66,7 @@ export const createStudentData = /* GraphQL */ `
           color
           selected
         }
+        selectGroup
       }
       activityData {
         editInput
@@ -149,6 +150,7 @@ export const updateStudentData = /* GraphQL */ `
           color
           selected
         }
+        selectGroup
       }
       activityData {
         editInput
@@ -209,6 +211,7 @@ export const updateClassroom = /* GraphQL */ `
             color
             selected
           }
+          selectGroup
         }
         activityData {
           editInput

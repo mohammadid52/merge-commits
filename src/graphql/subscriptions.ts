@@ -23,6 +23,9 @@ export const onUpdateClassroom = /* GraphQL */ `
           story
           title
         }
+        corelessonData {
+          selectGroup
+        }
         activityData {
           editInput
           editMode
@@ -328,6 +331,7 @@ export const onChangeStudentData = /* GraphQL */ `
           color
           selected
         }
+        selectGroup
       }
       activityData {
         editInput
@@ -4119,6 +4123,9 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           story
           title
         }
+        corelessonData {
+          selectGroup
+        }
         activityData {
           editInput
           editMode
@@ -4244,6 +4251,9 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           story
           title
         }
+        corelessonData {
+          selectGroup
+        }
         activityData {
           editInput
           editMode
@@ -4368,6 +4378,9 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
         warmupData {
           story
           title
+        }
+        corelessonData {
+          selectGroup
         }
         activityData {
           editInput
