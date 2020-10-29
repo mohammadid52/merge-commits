@@ -216,6 +216,7 @@ type StudentData @model(subscriptions: null)
 {
   id: ID!
   lessonProgress: String!
+  currentLocation: String
   status: String!
   saveType: String
   classroomID: ID!

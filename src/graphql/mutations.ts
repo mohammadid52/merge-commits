@@ -1294,6 +1294,7 @@ export const createStudentData = /* GraphQL */ `
     createStudentData(input: $input, condition: $condition) {
       id
       lessonProgress
+      currentLocation
       status
       saveType
       classroomID
@@ -1454,6 +1455,7 @@ export const updateStudentData = /* GraphQL */ `
     updateStudentData(input: $input, condition: $condition) {
       id
       lessonProgress
+      currentLocation
       status
       saveType
       classroomID
@@ -1614,6 +1616,7 @@ export const deleteStudentData = /* GraphQL */ `
     deleteStudentData(input: $input, condition: $condition) {
       id
       lessonProgress
+      currentLocation
       status
       saveType
       classroomID
@@ -2042,6 +2045,7 @@ export const createClassroom = /* GraphQL */ `
         items {
           id
           lessonProgress
+          currentLocation
           status
           saveType
           classroomID
@@ -2260,6 +2264,7 @@ export const updateClassroom = /* GraphQL */ `
         items {
           id
           lessonProgress
+          currentLocation
           status
           saveType
           classroomID
@@ -2478,6 +2483,7 @@ export const deleteClassroom = /* GraphQL */ `
         items {
           id
           lessonProgress
+          currentLocation
           status
           saveType
           classroomID
@@ -5128,6 +5134,7 @@ export const createQuestionDataStudentData = /* GraphQL */ `
       studentData {
         id
         lessonProgress
+        currentLocation
         status
         saveType
         classroomID
@@ -5261,6 +5268,7 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
       studentData {
         id
         lessonProgress
+        currentLocation
         status
         saveType
         classroomID
@@ -5394,6 +5402,7 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
       studentData {
         id
         lessonProgress
+        currentLocation
         status
         saveType
         classroomID
