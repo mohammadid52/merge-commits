@@ -851,6 +851,24 @@ export const createCourse = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      classrooms {
+        items {
+          id
+          open
+          openedAt
+          closedAt
+          roster
+          viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       location
       startDate
       endDate
@@ -926,6 +944,24 @@ export const updateCourse = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      classrooms {
+        items {
+          id
+          open
+          openedAt
+          closedAt
+          roster
+          viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       location
       startDate
       endDate
@@ -1000,6 +1036,24 @@ export const deleteCourse = /* GraphQL */ `
         }
         createdAt
         updatedAt
+      }
+      classrooms {
+        items {
+          id
+          open
+          openedAt
+          closedAt
+          roster
+          viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       location
       startDate
@@ -1856,6 +1910,9 @@ export const createClassroom = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        classrooms {
+          nextToken
+        }
         location
         startDate
         endDate
@@ -2067,6 +2124,9 @@ export const updateClassroom = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        classrooms {
+          nextToken
+        }
         location
         startDate
         endDate
@@ -2277,6 +2337,9 @@ export const deleteClassroom = /* GraphQL */ `
           languages
           createdAt
           updatedAt
+        }
+        classrooms {
+          nextToken
         }
         location
         startDate

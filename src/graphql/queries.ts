@@ -340,6 +340,24 @@ export const getCourse = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      classrooms {
+        items {
+          id
+          open
+          openedAt
+          closedAt
+          roster
+          viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       location
       startDate
       endDate
@@ -390,6 +408,9 @@ export const listCourses = /* GraphQL */ `
           languages
           createdAt
           updatedAt
+        }
+        classrooms {
+          nextToken
         }
         location
         startDate
@@ -798,6 +819,9 @@ export const getClassroom = /* GraphQL */ `
           languages
           createdAt
           updatedAt
+        }
+        classrooms {
+          nextToken
         }
         location
         startDate

@@ -68,6 +68,9 @@ export const onUpdateClassroom = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        classrooms {
+          nextToken
+        }
         location
         startDate
         endDate
@@ -1166,6 +1169,24 @@ export const onCreateCourse = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      classrooms {
+        items {
+          id
+          open
+          openedAt
+          closedAt
+          roster
+          viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       location
       startDate
       endDate
@@ -1238,6 +1259,24 @@ export const onUpdateCourse = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      classrooms {
+        items {
+          id
+          open
+          openedAt
+          closedAt
+          roster
+          viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       location
       startDate
       endDate
@@ -1309,6 +1348,24 @@ export const onDeleteCourse = /* GraphQL */ `
         }
         createdAt
         updatedAt
+      }
+      classrooms {
+        items {
+          id
+          open
+          openedAt
+          closedAt
+          roster
+          viewing
+          expectedStartData
+          expectedEndDate
+          SELStructure
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       location
       startDate
