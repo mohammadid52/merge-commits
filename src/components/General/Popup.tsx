@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { string } from 'prop-types';
 import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
 
-interface WritingAlertProps {
+interface WritingAlertProps { 
     alert: boolean,
     setAlert: React.Dispatch<React.SetStateAction<boolean>>,
     handleButton1?: () => void,
