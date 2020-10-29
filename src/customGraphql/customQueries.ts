@@ -52,6 +52,7 @@ export const getClassroom = /* GraphQL */ `
             color
             selected
           }
+          selectGroup
         }
         activityData {
           editInput
@@ -326,6 +327,7 @@ export const getClassroom = /* GraphQL */ `
               color
               selected
             }
+            selectGroup
           }
           activityData {
             editInput
@@ -397,6 +399,7 @@ export const getClassroomStudent = /* GraphQL */ `
             color
             selected
           }
+          selectGroup
         }
         activityData {
           editInput
@@ -671,6 +674,7 @@ export const getStudentData = /* GraphQL */ `
           color
           selected
         }
+        selectGroup
       }
       activityData {
         editInput
@@ -739,6 +743,36 @@ export const getCourse = /* GraphQL */ `
         }
         createdAt
         updatedAt
+      }
+      classrooms {
+        items {
+          id
+          open
+          openedAt
+          closedAt
+          complete
+          roster
+          viewing
+          expectedStartDate
+          expectedEndDate
+          SELStructure
+          courseID
+          lessonID
+          lesson {
+            title
+              artist {
+                id
+                images
+                name
+                type
+              }
+              language
+              summary
+          }
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       location
       startDate

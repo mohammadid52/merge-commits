@@ -187,6 +187,7 @@ type RawSelection {
 type CoreLessonData {
   selected: [Selection]
   rawSelected: [RawSelection]
+  selectGroup: Int
 }
 
 type LineInput {
@@ -290,10 +291,11 @@ type Classroom @model(subscriptions: null)
   open: Boolean!
   openedAt: AWSDate
   closedAt: AWSDate
+  complete: Boolean
   roster: [String!]!
   viewing: String
   displayData: DisplayData
-  expectedStartData: AWSDate
+  expectedStartDate: AWSDate
   expectedEndDate: AWSDate
   SELStructure: String
   courseID: ID!
