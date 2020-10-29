@@ -50,6 +50,7 @@ const Classroom: React.FC = () => {
       const courses: any = await API.graphql(
         graphqlOperation(customQueries.getCourse, { id: id })
       );
+      console.log(courses, 'courses main fetch')
       const lesson = courses.data.getCourse.curriculum.lessons.items.slice(1, 4)
       const nextLesson = lesson.lesson;
       
