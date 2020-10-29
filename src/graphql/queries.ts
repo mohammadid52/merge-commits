@@ -471,6 +471,7 @@ export const getStudentData = /* GraphQL */ `
     getStudentData(classroomID: $classroomID, studentID: $studentID) {
       id
       lessonProgress
+      currentLocation
       status
       saveType
       classroomID
@@ -643,6 +644,7 @@ export const listStudentDatas = /* GraphQL */ `
       items {
         id
         lessonProgress
+        currentLocation
         status
         saveType
         classroomID
@@ -950,6 +952,7 @@ export const getClassroom = /* GraphQL */ `
         items {
           id
           lessonProgress
+          currentLocation
           status
           saveType
           classroomID

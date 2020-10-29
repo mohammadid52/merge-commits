@@ -191,6 +191,7 @@ export const onUpdateClassroom = /* GraphQL */ `
         items {
           id
           lessonProgress
+          currentLocation
           status
           saveType
           classroomID
@@ -222,6 +223,7 @@ export const onChangeStudentData = /* GraphQL */ `
     onChangeStudentData(classroomID: $classroomID) {
       id
       lessonProgress
+      currentLocation
       status
       saveType
       classroomID
@@ -4147,6 +4149,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
       studentData {
         id
         lessonProgress
+        currentLocation
         status
         saveType
         classroomID
@@ -4277,6 +4280,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
       studentData {
         id
         lessonProgress
+        currentLocation
         status
         saveType
         classroomID
@@ -4407,6 +4411,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
       studentData {
         id
         lessonProgress
+        currentLocation
         status
         saveType
         classroomID
