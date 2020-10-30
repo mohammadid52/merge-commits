@@ -93,11 +93,14 @@ const useStudentTimer = (inputs?: inputs) => {
     const updateStudentData = async (saveType?: string) => {
         let lessonProgress = params.state.pages[params.state.lessonProgress].stage === '' ? 'intro' : params.state.pages[params.state.lessonProgress].stage;
 
-        // console.log('thisone', params.state )
+        let currentLocation = params.state.pages[params.state.currentPage].stage === '' ? 'intro' : params.state.pages[params.state.currentPage].stage;
+
+        // console.log( 'thisone', params.state )
 
         let data = {
             id: state.studentDataID,
             lessonProgress: lessonProgress,
+            currentLocation: currentLocation,
             saveType: saveType,
             status: params.state.studentStatus,
             classroomID: params.state.classroomID,

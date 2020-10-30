@@ -71,6 +71,7 @@ export const onChangeStudentData = /* GraphQL */ `
     onChangeStudentData(classroomID: $classroomID) {
         id
         lessonProgress
+        currentLocation
         status
         saveType
         classroomID

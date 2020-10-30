@@ -200,12 +200,8 @@ const WritingBlock = (props: WritingBlockProps) => {
 
     const {visible, setVisible, ref} = useOutsideAlerter(false);
 
-    const handleClick = () => {
+    const handlePopup = () => {
         setVisible((prevState: any) => !prevState)
-    }
-
-    const handleCancel = () => {
-        handleClick
     }
 
     const handleSubmit = () => {
@@ -215,7 +211,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                 open: true,
             }
         })
-        handleClick
+        handlePopup
     }
 
     const handleInputChange = (e: any) => {
@@ -267,7 +263,7 @@ const WritingBlock = (props: WritingBlockProps) => {
     return (
         <div ref={ref} className="relative bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600" >
             {/* { visible &&  */}
-            <div className={`${visible ? 'absolute z-100' : 'hidden'} max-w-sm`} style={{top: '0', right: '-100px'}} onClick={handleClick}>
+            <div className={`${visible ? 'absolute z-100' : 'hidden'} max-w-sm`} style={{top: '0', right: '-100px'}} onClick={handlePopup}>
                 <PositiveAlert 
                     alert={visible}
                     setAlert={setVisible}
@@ -277,7 +273,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                     button2='Cancel' 
                     svg='question' 
                     handleButton1={handleSubmit} 
-                    handleButton2={handleCancel}
+                    handleButton2={() => handlePopup}
                     />
             </div>
             
@@ -329,7 +325,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                     )}) : null
                 }
             </div>
-            <button className="self-start w-auto px-3 h-8 text-xl font-open font-light bg-yellow-500 text-gray-900 flex justify-center items-center rounded-lg mt-2" onClick={handleClick}>
+            <button className="self-start w-auto px-3 h-8 text-xl font-open font-light bg-yellow-500 text-gray-900 flex justify-center items-center rounded-lg mt-2" onClick={handlePopup}>
                 Save and Edit
             </button>
             

@@ -125,7 +125,7 @@ type Course @model {
   class: Class @connection(fields: ["classID"])
   curriculumID: ID!
   curriculum: Curriculum @connection(fields: ["curriculumID"])
-  # classrooms: [Classroom] @connection(keyName: '')
+  classrooms: [Classroom] @connection(keyName: "byCourse", fields: ["id"])
   location: String
   startDate: AWSDate
   endDate: AWSDate
@@ -216,6 +216,7 @@ type StudentData @model(subscriptions: null)
 {
   id: ID!
   lessonProgress: String!
+  currentLocation: String
   status: String!
   saveType: String
   classroomID: ID!
@@ -291,10 +292,11 @@ type Classroom @model(subscriptions: null)
   open: Boolean!
   openedAt: AWSDate
   closedAt: AWSDate
+  complete: Boolean
   roster: [String!]!
   viewing: String
   displayData: DisplayData
-  expectedStartData: AWSDate
+  expectedStartDate: AWSDate
   expectedEndDate: AWSDate
   SELStructure: String
   courseID: ID!

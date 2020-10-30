@@ -1,11 +1,8 @@
-import React, { useState, useContext, useEffect, SyntheticEvent } from 'react';
+import React, { useState, useContext, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 
-interface KeyboardEvent {
-  enterKey: boolean;
-}
 
 const ListForm = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
@@ -69,23 +66,33 @@ const ListForm = () => {
     });
   };
 
-  let previousLength = 0;
+  
   const bullet = "\u2022";
 
   const handleInput = (e: any) => {
-    
+    let previousLength = 0;
+    e.preventDefault();
     const newLength = e.target.value.length;
     const characterCode = e.target.value.substr(-1).charCodeAt(0);
-  
+    // console.log(characterCode, '?');
+  // console.log(e.currentTarget, 'value')
+  // console.log(newLength, 'newlength')
+  // console.log(previousLength, 'prev length')
     if (newLength > previousLength) {
       if (characterCode === 10) {
         e.target.value = `${e.target.value}${bullet} `;
-      } else if (newLength === 1) {
+      } 
+      else if (newLength === 1) {
         e.target.value = `${bullet} ${e.target.value}`;
       }
     }
-    
+    // else if (newLength - 1 ) {
+    //   if(characterCode !== 8226) {
+    //     console.log(e.target.value, 'hello')
+    //   }
+     
     previousLength = newLength;
+    // console.log(previousLength, 'prev')
   }
 
 
@@ -94,32 +101,30 @@ const ListForm = () => {
   const bulletWithSpace = `${bullet} `;
 
 
-// const handleInput = (event: React.KeyboardEvent) => {
-//   const target = event.target;
-//   const k = event.keyCode as unknown
-//   // const { k, target } = e as unknown;
-//   console.log(k, 'key')
-//   console.log(target, 'target')
-//   const { selectionStart, value } = target;
+const handleInputTest = (e: KeyboardEvent<HTMLTextAreaElement>, event: ChangeEvent<HTMLTextAreaElement>) => {
+  e.preventDefault();
+  const { keyCode, target } = e;
+  const { selectionStart, value } = event.target;
   
-//   if (k === enter) {
-//     console.log('a');
-//     // target.value = [...value]
-//     //   .map((c, i) => i === selectionStart - 1
-//     //     ? `\n${bulletWithSpace}`
-//     //     : c
-//     //   )
-//     //   .join('');
-//     //   console.log(target.value);
+  if (keyCode === enter) {
+    console.log('a');
+    event.target.value = [value]
+      .map((c, i) => i === selectionStart - 1
+        ? `\n${bulletWithSpace}`
+        : c
+      )
+      .join('');
+      console.log(event.target.value);
       
-//     // target.selectionStart = selectionStart+bulletWithSpace.length;
-//     // target.selectionEnd = selectionStart+bulletWithSpace.length;
-//   }
+    event.target.selectionStart = selectionStart+bulletWithSpace.length;
+    event.target.selectionEnd = selectionStart+bulletWithSpace.length;
+  }
   
-//   // if (value[0] !== bullet) {
-//   //   target.value = `${bulletWithSpace}${value}`;
-//   // }
-// }
+  if (value[0] !== bullet) {
+    event.target.value = `${bulletWithSpace}${value}`;
+  }
+}
+
 
   return (
     <div className='bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600'>
@@ -134,7 +139,6 @@ const ListForm = () => {
           style={{backgroundColor: '#23314600'}}
           name='list'
           placeholder={`${bullet} ${state.data.lesson.warmUp.inputs.textExample}`}
-          // defaultValue={bullet}
           defaultValue={`${input.story}`}
           onChange={handleInputChange}
           onInput={handleInput}

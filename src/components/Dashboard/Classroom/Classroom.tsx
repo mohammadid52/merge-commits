@@ -47,13 +47,13 @@ const Classroom: React.FC = () => {
   async function getCourse(id: string) {
     let limit = 2;
     try {
-      const courses: any = await API.graphql(
+      const course: any = await API.graphql(
         graphqlOperation(customQueries.getCourse, { id: id })
       );
-      const lesson = courses.data.getCourse.curriculum.lessons.items.slice(1, 2)
+      const lesson = course.data.getCourse.curriculum.lessons.items.slice(1, 4)
       const nextLesson = lesson.lesson;
       
-      const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
+      const lessonsInfo = course.data.getCourse.curriculum.lessons.items;
       console.log(lessonsInfo, 'courses')
       setToday(lesson);
       setCurriculum(nextLesson);

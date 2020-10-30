@@ -340,6 +340,25 @@ export const getCourse = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      classrooms {
+        items {
+          id
+          open
+          openedAt
+          closedAt
+          complete
+          roster
+          viewing
+          expectedStartDate
+          expectedEndDate
+          SELStructure
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       location
       startDate
       endDate
@@ -390,6 +409,9 @@ export const listCourses = /* GraphQL */ `
           languages
           createdAt
           updatedAt
+        }
+        classrooms {
+          nextToken
         }
         location
         startDate
@@ -449,6 +471,7 @@ export const getStudentData = /* GraphQL */ `
     getStudentData(classroomID: $classroomID, studentID: $studentID) {
       id
       lessonProgress
+      currentLocation
       status
       saveType
       classroomID
@@ -457,12 +480,13 @@ export const getStudentData = /* GraphQL */ `
         open
         openedAt
         closedAt
+        complete
         roster
         viewing
         displayData {
           breakdownComponent
         }
-        expectedStartData
+        expectedStartDate
         expectedEndDate
         SELStructure
         courseID
@@ -620,6 +644,7 @@ export const listStudentDatas = /* GraphQL */ `
       items {
         id
         lessonProgress
+        currentLocation
         status
         saveType
         classroomID
@@ -628,9 +653,10 @@ export const listStudentDatas = /* GraphQL */ `
           open
           openedAt
           closedAt
+          complete
           roster
           viewing
-          expectedStartData
+          expectedStartDate
           expectedEndDate
           SELStructure
           courseID
@@ -744,6 +770,7 @@ export const getClassroom = /* GraphQL */ `
       open
       openedAt
       closedAt
+      complete
       roster
       viewing
       displayData {
@@ -767,7 +794,7 @@ export const getClassroom = /* GraphQL */ `
           title
         }
       }
-      expectedStartData
+      expectedStartDate
       expectedEndDate
       SELStructure
       courseID
@@ -805,6 +832,9 @@ export const getClassroom = /* GraphQL */ `
           languages
           createdAt
           updatedAt
+        }
+        classrooms {
+          nextToken
         }
         location
         startDate
@@ -922,6 +952,7 @@ export const getClassroom = /* GraphQL */ `
         items {
           id
           lessonProgress
+          currentLocation
           status
           saveType
           classroomID
@@ -960,12 +991,13 @@ export const listClassrooms = /* GraphQL */ `
         open
         openedAt
         closedAt
+        complete
         roster
         viewing
         displayData {
           breakdownComponent
         }
-        expectedStartData
+        expectedStartDate
         expectedEndDate
         SELStructure
         courseID
@@ -1037,12 +1069,13 @@ export const getFeedback = /* GraphQL */ `
         open
         openedAt
         closedAt
+        complete
         roster
         viewing
         displayData {
           breakdownComponent
         }
-        expectedStartData
+        expectedStartDate
         expectedEndDate
         SELStructure
         courseID
@@ -1120,9 +1153,10 @@ export const listFeedbacks = /* GraphQL */ `
           open
           openedAt
           closedAt
+          complete
           roster
           viewing
-          expectedStartData
+          expectedStartDate
           expectedEndDate
           SELStructure
           courseID
@@ -1969,12 +2003,13 @@ export const getQuestionData = /* GraphQL */ `
         open
         openedAt
         closedAt
+        complete
         roster
         viewing
         displayData {
           breakdownComponent
         }
-        expectedStartData
+        expectedStartDate
         expectedEndDate
         SELStructure
         courseID
@@ -2091,9 +2126,10 @@ export const listQuestionDatas = /* GraphQL */ `
           open
           openedAt
           closedAt
+          complete
           roster
           viewing
-          expectedStartData
+          expectedStartDate
           expectedEndDate
           SELStructure
           courseID
