@@ -254,7 +254,7 @@ const LessonControl = () => {
                         header='Are you sure you want to leave the Teacher View?'
                         button1='Go to student management' 
                         button2='Cancel' 
-                        svg='warning' 
+                        svg='question' 
                         handleButton1={handleSubmit} 
                         handleButton2={() => handleClick}
                         />
@@ -266,7 +266,7 @@ const LessonControl = () => {
                         header='Are you sure you want to leave the Teacher View?'
                         button1='Go to the dashboard' 
                         button2='Cancel' 
-                        svg='warning' 
+                        svg='question' 
                         handleButton1={handleHome} 
                         handleButton2={() => handleHomePopup}
                         />
@@ -356,7 +356,7 @@ const LessonControl = () => {
                                     <FiUsers />
                                 </IconContext.Provider>
                             {/* </NavLink> */}
-                            <p className="text-xs text-center">Students</p> 
+                            <p className="text-xs text-center">Students Management</p> 
                         </div>
                         <div className="flex flex-col justify-center items-center cursor-pointer px-2" onClick={handleHomePopup}>
                             {/* <NavLink to="/dashboard"> */}
