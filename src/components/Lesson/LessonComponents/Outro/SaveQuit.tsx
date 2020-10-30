@@ -41,13 +41,17 @@ const SaveQuit = (props: SaveQuitProps) => {
 
   const updateStudentData = async () => {
     let lessonProgress = state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
+    
+    let currentLocation = state.pages[state.currentPage].stage === '' ? 'intro' : state.pages[state.currentPage].stage;
 
     // console.log('thisone', state )
 
     let data = {
         id: state.studentDataID,
         lessonProgress: lessonProgress,
+        currentLocation: currentLocation,
         status: state.studentStatus,
+        saveType: 'finalSave',
         classroomID: state.classroomID,
         studentID: state.studentUsername,
         studentAuthID: state.studentAuthID,

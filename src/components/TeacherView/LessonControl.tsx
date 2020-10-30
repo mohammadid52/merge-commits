@@ -163,7 +163,19 @@ const LessonControl = () => {
         
         if (state.studentViewing.live) {
             // console.log(state.studentViewing.live)
-            history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`)
+            let hasCurrentLocation = typeof state.studentViewing.studentInfo.currentLocation === 'string';
+
+            console.log(typeof state.studentViewing.studentInfo.currentLocation, hasCurrentLocation);
+            
+
+            if (hasCurrentLocation) {
+                history.push(`${match.url}/${state.studentViewing.studentInfo.currentLocation}`)
+            }
+
+            if (!hasCurrentLocation) {
+                history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`)
+            }
+            
         }
 
     }, [state.studentViewing])
@@ -386,7 +398,7 @@ const LessonControl = () => {
                                         width='w-24'
                                         content= {<div className="flex flex-col"><div>students who are ready</div> <p className="font-bold"> (click to reset)</p></div>}
                                         display='none' fontSize= 'text-xs'/>
-                                        {console.log(state.done.length === 1, 'length')}
+                                        {/* {console.log(state.done.length === 1, 'length')} */}
                                         {state.done.length === state.roster.length ?
                                         <IconContext.Provider value={{ size: '2rem', style: {width: 'auto'}, color: '#009e00' }}>
                                             <FaRegThumbsUp style={{ pointerEvents: 'none' }}/>

@@ -74,6 +74,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             if ( !studentData.data.getStudentData ) {
                 const newStudentData: any = await API.graphql(graphqlOperation(customMutations.createStudentData, { input: {
                     lessonProgress: 'intro',
+                    currentLocation: 'intro',
                     status: 'ACTIVE',
                     classroomID: queryParams.id,
                     studentID: studentID,

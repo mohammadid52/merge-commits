@@ -32,6 +32,13 @@ const LessonHeaderBar = () => {
     const [isToggled, setIsToggled] = useState<string[]>(['']);
 
     useEffect(() => {
+        let lessonLocation = state.pages[state.currentPage].stage === '' ? 'intro' : state.pages[state.currentPage].stage;
+
+        console.log(lessonLocation);
+        
+    }, [state.lessonProgress, state.currentPage])
+
+    useEffect(() => {
 
         if ( cookies[`lesson-${state.classroomID}`] ) {
             // console.log(cookies[`lesson-${state.classroomID}`]);
@@ -67,12 +74,14 @@ const LessonHeaderBar = () => {
 
     const updateStudentData = async ( saveType?: string) => {
         let lessonProgress = state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
+        let currentLocation = state.pages[state.currentPage].stage === '' ? 'intro' : state.pages[state.currentPage].stage;
 
         // console.log('thisone', state )
 
         let data = {
             id: state.studentDataID,
             lessonProgress: lessonProgress,
+            currentLocation: currentLocation,
             status: state.studentStatus,
             saveType: saveType,
             classroomID: state.classroomID,

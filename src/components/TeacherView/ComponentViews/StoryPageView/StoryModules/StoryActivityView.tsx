@@ -30,7 +30,7 @@ const Story = (props: props) => {
     const [ openPopup, setOpenPopup ] = useState(false)
     const [ dataProps, setDataProps ] = useState<{ title?: string, story?: string, [key: string]: any}>()
     
-    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'warmup' : false;
+    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.currentLocation ? state.studentViewing.studentInfo.currentLocation === 'warmup' : state.studentViewing.studentInfo.lessonProgress === 'warmup' : false;
 
     useEffect(() => {
         if (displayStudentData) {
