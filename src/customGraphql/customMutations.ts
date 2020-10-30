@@ -29,6 +29,7 @@ export const createStudentData = /* GraphQL */ `
     createStudentData(input: $input, condition: $condition) {
       id
       lessonProgress
+      currentLocation
       status
       saveType
       classroomID
@@ -113,6 +114,7 @@ export const updateStudentData = /* GraphQL */ `
     updateStudentData(input: $input, condition: $condition) {
       id
       lessonProgress
+      currentLocation
       status
       saveType
       classroomID

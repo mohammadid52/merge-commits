@@ -291,6 +291,7 @@ export const getClassroom = /* GraphQL */ `
         items {
           id
           lessonProgress
+          currentLocation
           status
           classroomID
           studentID
@@ -646,6 +647,7 @@ export const getStudentData = /* GraphQL */ `
     getStudentData(classroomID: $classroomID, studentID: $studentID) {
       id
       lessonProgress
+      currentLocation
       status
       saveType
       classroomID
