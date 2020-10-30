@@ -34,7 +34,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
   }
 
   return (
-    <div className='bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full p-4 md:pr-8 mb-4 flex flex-row text-gray-200 rounded-lg border-l-4 border-green-light'>
+    <div className='h-5/10 bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full p-4 md:pr-8 mb-4 flex flex-row text-gray-200 rounded-lg border-l-4 border-green-light'>
       <div className='w-full flex flex-col'>
         <div className='w-auto flex flex-row mb-1 pb-1 border-b border-white border-opacity-10 mr-4'>
           <h3 className='w-3/10 mr-2 flex text-xl font-open font-light animate-bounce'>

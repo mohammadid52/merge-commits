@@ -51,7 +51,7 @@ const Classroom: React.FC = () => {
         graphqlOperation(customQueries.getCourse, { id: id })
       );
       console.log(course, 'courses main fetch')
-      const lesson = course.data.getCourse.classrooms.items.slice(1, 4)
+      const lesson = course.data.getCourse.classrooms.items.slice(1, 8)
       const nextLesson = lesson.lesson;
       
       const lessonsInfo = course.data.getCourse.classrooms.items;
