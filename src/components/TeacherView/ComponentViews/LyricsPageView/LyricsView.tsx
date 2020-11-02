@@ -26,13 +26,7 @@ const Lyrics = (props: props) => {
             <Route exact path={`${match.url}`}>
                 <LyricsActivityView fullscreen={fullscreen} />
             </Route>
-            {/* <Route>
-                <ErrorPage />
-            </Route> */}
         </Switch>
-        // <div className="h-full w-screen flex flex-col justify-center items-center">
-        //     {lessonSteps[lessonStep]}
-        // </div>
     )
 }
 
