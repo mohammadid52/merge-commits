@@ -36,10 +36,8 @@ const PoemActivity = (props: props) => {
     })
     const { video, link, text } = state.data.lesson.activity.instructions
     const [ openPopup, setOpenPopup ] = useState(false);
-
-
-    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo?.lessonProgress === 'activity' : false;
     
+    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.currentLocation ? state.studentViewing.studentInfo.currentLocation === 'activity' : state.studentViewing.studentInfo.lessonProgress === 'activity' : false;
 
     useEffect(() => {
         if ( displayStudentData && state.studentViewing.studentInfo.activityData ) {

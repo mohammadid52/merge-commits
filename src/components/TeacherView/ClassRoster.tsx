@@ -104,7 +104,7 @@ const ClassRoster = (props: classRosterProps) => {
                                 {item.student.preferredName ? item.student.preferredName : item.student.firstName } {item.student.lastName}
                             </div>
                             <div id={`${item.id}`} className={`w-4.5/10 mx-2 flex justify-center items-center`}>
-                                <ProgressSwitch label={item.lessonProgress} id={item.id}/>
+                                <ProgressSwitch label={item.currentLocation ? item.currentLocation : item.lessonProgress} id={item.id}/>
                             </div>
                             
                             {/* <div id={`${item.id}`} className="w-1.3/10 flex justify-center items-center cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium">

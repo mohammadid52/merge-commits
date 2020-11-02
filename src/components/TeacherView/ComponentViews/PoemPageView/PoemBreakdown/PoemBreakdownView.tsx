@@ -14,7 +14,7 @@ const PoemBreakdownView = (props: props) => {
         null
     )
 
-    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'activity/breakdown' : false;
+    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.currentLocation ? state.studentViewing.studentInfo.currentLocation === 'activity/breakdown' : state.studentViewing.studentInfo.lessonProgress === 'activity/breakdown' : false;
 
     useEffect(() => {
         if ( displayStudentData && state.studentViewing.studentInfo.activityData ) {
