@@ -85,7 +85,7 @@ const LessonControl = () => {
         // console.log(state.studentViewing);
         if ( state.studentViewing.studentInfo ) {
             let displayData = {
-                breakdownComponent: state.studentViewing.studentInfo.lessonProgress,
+                breakdownComponent: state.studentViewing.studentInfo.currentLocation ? state.studentViewing.studentInfo.currentLocation : state.studentViewing.studentInfo.lessonProgress,
                 studentInfo: {
                     id: state.studentViewing.studentInfo.student.id,
                     firstName: state.studentViewing.studentInfo.student.firstName,
@@ -96,8 +96,8 @@ const LessonControl = () => {
                 corelessonData: state.studentViewing.studentInfo.corelessonData ? state.studentViewing.studentInfo.corelessonData : null, 
                 activityData: state.studentViewing.studentInfo.activityData ? state.studentViewing.studentInfo.activityData : null, 
             }
-            // console.log(displayData)
-            dispatch({ type: 'SET_SHARE_MODE', payload: state.studentViewing.studentInfo.lessonProgress })
+            console.log(displayData)
+            dispatch({ type: 'SET_SHARE_MODE', payload: state.studentViewing.studentInfo.currentLocation ? state.studentViewing.studentInfo.currentLocation : state.studentViewing.studentInfo.lessonProgress })
             dispatch({ type: 'SET_DISPLAY_DATA', payload: displayData })
         }
     }
