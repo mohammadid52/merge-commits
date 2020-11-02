@@ -20,6 +20,22 @@ const ListForm = (props: props) => {
 
     const bullet = "\u2022";
 
+    const handleInput = (e: any) => {
+      let previousLength = 0;
+      e.preventDefault();
+      const newLength = e.target.value.length;
+      const characterCode = e.target.value.substr(-1).charCodeAt(0);
+      if (newLength > previousLength) {
+        if (characterCode === 10) {
+          e.target.value = `${e.target.value}${bullet} `;
+        } 
+        else if (newLength === 1) {
+          e.target.value = `${bullet} ${e.target.value}`;
+        }
+      }
+      previousLength = newLength;
+    }
+
     useEffect(() => {
         
         setInput({
@@ -45,7 +61,7 @@ const ListForm = (props: props) => {
           placeholder={`${bullet} ${state.data.lesson.warmUp.inputs.textExample}`}
           defaultValue={`${input.story}`}
           // onChange={handleInputChange}
-          // onInput={handleInput}
+          onInput={handleInput}
         />
       </div>
     </div>

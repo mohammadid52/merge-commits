@@ -24,6 +24,7 @@ import ToolTip from '../General/ToolTip/ToolTip';
 import FooterLabels from '../General/LabelSwitch';
 import PositiveAlert from '../General/Popup';
 import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
+import Body from './Body';
 const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
 const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
 const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
@@ -460,7 +461,8 @@ const LessonControl = () => {
                                     <ComponentLoading />
                                 </div>
                             }>  
-                                <Switch>
+                            <Body />
+                                {/* <Switch>
                                     <Route 
                                         path={`${match.url}/intro`}
                                         render={() => (
@@ -508,7 +510,7 @@ const LessonControl = () => {
                                             }}/>
                                             )}
                                             />
-                                </Switch>
+                                </Switch> */}
                             </Suspense>
 
                             <div className="cursor-pointer w-full text-xl m-2 z-50"  onClick={handleFullscreen}>
