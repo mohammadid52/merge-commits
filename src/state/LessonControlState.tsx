@@ -10,6 +10,7 @@ type pageObject = {
 export type studentObject = {
     id: string
     lessonProgress: string
+    currentLocation?: string
     status: string
     live: boolean
     studentID: string

@@ -163,7 +163,19 @@ const LessonControl = () => {
         
         if (state.studentViewing.live) {
             // console.log(state.studentViewing.live)
-            history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`)
+            let hasCurrentLocation = typeof state.studentViewing.studentInfo.currentLocation === 'string';
+
+            console.log(typeof state.studentViewing.studentInfo.currentLocation, hasCurrentLocation);
+            
+
+            if (hasCurrentLocation) {
+                history.push(`${match.url}/${state.studentViewing.studentInfo.currentLocation}`)
+            }
+
+            if (!hasCurrentLocation) {
+                history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`)
+            }
+            
         }
 
     }, [state.studentViewing])

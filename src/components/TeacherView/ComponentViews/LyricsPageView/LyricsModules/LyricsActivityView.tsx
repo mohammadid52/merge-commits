@@ -56,7 +56,7 @@ const Body = (props: props) => {
         return initialSelectedTextObject
     }
 
-    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'corelesson' : false;
+    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.currentLocation ? state.studentViewing.studentInfo.currentLocation === 'corelesson' : state.studentViewing.studentInfo.lessonProgress === 'corelesson' : false;
 
     useEffect(() => {
         if (displayStudentData) {
