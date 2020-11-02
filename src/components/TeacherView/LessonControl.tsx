@@ -259,6 +259,7 @@ const LessonControl = () => {
                         handleButton2={() => handleClick}
                         />
                 </div>
+                {console.log(state.displayData, 'display Data')}
                 <div className={`${homePopup ? 'absolute z-100' : 'hidden'} max-w-sm`} style={{top: '20%', left: '500px'}} onClick={handleHomePopup}>
                     <PositiveAlert 
                         alert={homePopup}

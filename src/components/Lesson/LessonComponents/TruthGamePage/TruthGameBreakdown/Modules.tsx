@@ -31,6 +31,8 @@ const Modules = (props: any) => {
   const { theme, state } = useContext(LessonContext);
   const { additional, displayMode } = props;
 
+  const length = state.data.lesson.warmUp.inputs.additionalInputs.length;
+
   if (!additional) {
     return null;
   }
