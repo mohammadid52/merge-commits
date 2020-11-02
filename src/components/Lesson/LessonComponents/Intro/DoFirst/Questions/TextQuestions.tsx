@@ -23,9 +23,6 @@ const TextQuestions = (txtPrps: CPQuestionProps) => {
   }
 
   useEffect(() => {
-    // console.log('contents: ', contents);
-    // console.log('quesData: ', state.questionData[txtPrps.question.id]);
-    // console.log('text area id: ', txtPrps.question.id);
     if ( state.questionData.doFirst && state.questionData.doFirst[txtPrps.question.id] && state.questionData.doFirst[txtPrps.question.id] !== '') {
       setContents(state.questionData.doFirst[txtPrps.question.id])
     }

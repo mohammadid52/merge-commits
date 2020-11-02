@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface props {
-    fullscreen: boolean,
+    fullscreen: boolean,
     dataProps?: {
         title?: string,
         story?: string,
@@ -31,7 +31,7 @@ const keywordParser = (str: string) => {
             tempWord = '';
         }
     })
-    
+
     finalArray.push(tempWord);
 
     return finalArray;
@@ -47,48 +47,34 @@ const Modules = (props: props) => {
     }
 
     return (
-        <div className={`flex md:w-full h-2.8/10 justify-between text-sm md:text-base text-gray-200 mb-4 md:mb-0`} >
-            {   dataProps && dataProps.additional ?
-                dataProps.additional.map((item: any, key: number) => {
-                    let wordArray = keywordParser(item.input)
+        <>
+            <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
+                <h3>Keywords:</h3>
+            </div>
+            <div className={`flex justify-between text-sm md:text-base text-gray-200 mb-4 md:mb-0`}>
+                {dataProps.additional.map((item: any, key: number) => {
+                    let wordArray = keywordParser(item.input);
                     return (
-                    <div key={key} className={`md:w-3.2/10 h-full ${theme.gradient.cardBase} font-open font-light shadow-2 rounded-lg px-4 py-2 ${key === dataProps.additional.length - 1 ? '' : ''}`}>
-                        <h3>{keywordCapitilizer(item.name)}:</h3>
-                        <div className="w-full px-2 overflow-scroll h-8/10">
-                            {   item.input ? wordArray.map((word: string, key: number) => (
-                                    <p key={key} className={`${fullscreen ? 'text-sm md:text-base' : 'text-xs'} font-normal`}>
-                                        { word }
-                                    </p>
-                                ))
-                                :
-                                null
-                            }
+                        <div
+                            key={key}
+                            className={`font-open font-light h-16 rounded-lg py-2 ${key === dataProps.additional.length - 1 ? '' : ''
+                                }`}>
+                            <h3>{keywordCapitilizer(item.name)}:</h3>
+                            <div className='w-full px-2 overflow-y-auto overflow-x-hidden'>
+                                {item.input
+                                    ? wordArray.map((word: string, key: number) => (
+                                        <p key={key} className={``}>
+                                            {word}
+                                        </p>
+                                    ))
+                                    : null}
+                            </div>
                         </div>
-                    </div>
-                )})
-                : null
-            }
-            {/* <div className="bg-dark-blue font-open font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
-                <h3>Culture:</h3>
-                <p className="text-2xl">{displayProps.culture}</p>
+                    );
+                })}
             </div>
-            <div className="bg-dark-blue font-open font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
-                <h3>My Storyteller:</h3>
-                <p className="text-2xl">{displayProps.storyteller}</p>
-            </div>
-            <div className="bg-dark-blue font-open font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
-                <h3>Morals:</h3>
-                <div className="h-24 flex flex-col overflow-scroll">
-                    {keywordParser(displayProps.lessons).map((term, key) => (
-                        <p className="text-2xl" key={key}>
-                            {term}
-                        </p>
-                    ))
-                    }
-                </div>
-            </div> */}
-        </div>
-    )
+        </>
+    );
 }
 
 export default Modules;

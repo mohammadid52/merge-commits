@@ -1,6 +1,4 @@
 import React, { useContext } from 'react';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineForm } from 'react-icons/ai';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 
 interface StoryOutputProps {

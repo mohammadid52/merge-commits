@@ -29,7 +29,7 @@ const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'));
 
 
 const LessonControl = () => {
-    const { state, dispatch } = useContext(LessonControlContext);
+    const { state, theme, dispatch } = useContext(LessonControlContext);
     const match = useRouteMatch();
     const history = useHistory();
     const location = useLocation();
@@ -353,7 +353,7 @@ const LessonControl = () => {
                             </div>
                             : null
                         } */}
-                        <div className={`${fullscreen ? 'h-full' : 'h-8.3/10'} relative w-full bg-dark shadow-elem-light rounded-lg mb-4 p-4`}>
+                        <div className={`${fullscreen ? 'h-full' : 'h-8.3/10'} relative w-full ${theme.bg} shadow-elem-light rounded-lg mb-4 p-4 overflow-scroll`}>
                             {/*  */}
                             {/* <LyricsActivityView
                                 student={selectedStudent}

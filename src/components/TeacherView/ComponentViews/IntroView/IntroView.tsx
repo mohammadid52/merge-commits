@@ -5,6 +5,8 @@ import QuoteBlock from './QuoteBlock';
 import Block from './Block';
 import Banner from './Banner';
 import InstructionsBlock from './InstructionsBlock';
+import Keyword from './Keyword';
+import Connect from './Connect';
 import DoFirst from './DoFirst';
 
 interface props {
@@ -12,31 +14,27 @@ interface props {
 }
 
 const IntroView = (props: props) => {
-    const { state, dispatch } = useContext(LessonControlContext);
-    const [ doFirstData, setDoFirstData ] = useState<{ [key: string]: any }>()
+    const { state, theme, dispatch } = useContext(LessonControlContext);
+    const [doFirstData, setDoFirstData] = useState<{ [key: string]: any }>()
     const { fullscreen } = props;
 
     let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'intro' : false;
 
 
     return (
-    <div className="w-full h-full flex flex-col md:flex-row justify-between items-center">
-        <div className="md:w-6/10 h-full flex flex-col justify-between items-center">
-            <Banner 
-                fullscreen={fullscreen}/>
-            <div className="w-full h-4.3/10 flex">
-                <QuoteBlock 
-                    fullscreen={fullscreen}/>
+        <div className={theme.section}>
+            <Banner fullscreen={fullscreen} />
+            <div
+                className='h-96 flex flex-col mb-4 justify-between items-center bg-cover bg-right-top rounded-xl'
+                style={{ backgroundImage: `url(https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/marlon_reading.jpg)` }}>
+                <QuoteBlock fullscreen={fullscreen} />
             </div>
-            <div className="w-full h-4.3/10">
-                <Block
-                    fullscreen={fullscreen} />
+                <Keyword fullscreen={fullscreen}/>
+            <div className='flex flex-col justify-between items-center'>
+                <DoFirst data={doFirstData ? doFirstData : null} fullscreen={fullscreen} />
             </div>
+            <Connect fullscreen={fullscreen} />
         </div>
-        <div className="md:w-3.9/10 h-full flex flex-col justify-between items-center">
-            <DoFirst data={ doFirstData ? doFirstData : null } fullscreen={fullscreen}/>
-        </div>
-    </div>
     )
 }
 

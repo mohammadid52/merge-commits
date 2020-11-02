@@ -48,17 +48,16 @@ const Modules = (props: any) => {
           return (
             <div
               key={key}
-              className={`font-open font-light h-16 rounded-lg py-2 ${
-                key === additional.length - 1 ? '' : ''
-              }`}>
+              className={`font-open font-light h-16 rounded-lg py-2 ${key === additional.length - 1 ? '' : ''
+                }`}>
               <h3>{keywordCapitilizer(item.name)}:</h3>
               <div className='w-full px-2 overflow-y-auto overflow-x-hidden'>
                 {item.input
                   ? wordArray.map((word: string, key: number) => (
-                      <p key={key} className={``}>
-                        {word}
-                      </p>
-                    ))
+                    <p key={key} className={``}>
+                      {word}
+                    </p>
+                  ))
                   : null}
               </div>
             </div>
