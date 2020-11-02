@@ -398,7 +398,6 @@ const LessonControl = () => {
                                         width='w-24'
                                         content= {<div className="flex flex-col"><div>students who are ready</div> <p className="font-bold"> (click to reset)</p></div>}
                                         display='none' fontSize= 'text-xs'/>
-                                        {/* {console.log(state.done.length === 1, 'length')} */}
                                         {state.done.length === state.roster.length ?
                                         <IconContext.Provider value={{ size: '2rem', style: {width: 'auto'}, color: '#009e00' }}>
                                             <FaRegThumbsUp style={{ pointerEvents: 'none' }}/>

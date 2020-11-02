@@ -12,6 +12,9 @@ import {
   FaQuestion,
   FaMap,
   FaCheck,
+  FaPoll,
+  FaListAlt,
+  FaGamepad
 } from 'react-icons/fa';
 import FooterLabels from '../../../General/LabelSwitch';
 
@@ -39,9 +42,13 @@ const StageIcon = (props: StageIconProps) => {
             case 'story':
                 return <FaScroll />
             case 'list':
-                return <FaScroll />
+                return <FaListAlt />
             case 'truthgame':
-                return <FaScroll />
+                return <FaGamepad />
+            case 'poll':
+                return <FaPoll />
+            case 'tchart':
+                return <FaListAlt />
             case 'lyrics':
                 return <FaMusic />
             case 'poem':
