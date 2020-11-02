@@ -27,7 +27,7 @@ const Today: React.FC<Props> = (props: Props) => {
 
   async function getClassroom() {
     try {
-        let id = lessonKey + 1
+        let id = lessonKey
         // this any needs to be changed once a solution is found!!!
         const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: id }))
         setLesson(classroom.data.getClassroom)
@@ -44,7 +44,7 @@ const Today: React.FC<Props> = (props: Props) => {
   const handleLink = (key: number) => {
 
     if (accessible && open ) {
-      history.push((`${`/lesson?id=${lessonKey + 2}`}`));
+      history.push((`${`/lesson?id=${lessonKey}`}`));
     }
     // For testing: enables clickthrough survey
     // history.push(link);

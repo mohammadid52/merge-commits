@@ -32,17 +32,21 @@ const QuoteBlock = () => {
 
           <div className="h-4.8/10 my-auto flex flex-col justify-end items-center">
             <div className='h-full quote flex flex-col justify-around items-center py-2 px-4 bg-gradient-to-l from-transparent to-black80'>
-              <div className='relative'>
+              <div className='h-full relative'>
                 <div className='absolute w-16' style={{ top: '-30px', left: '-5px' }}>
                   <IconContext.Provider value={{ size: '7rem', style: { opacity: '40%' } }}>
                     <GoQuote />
                   </IconContext.Provider>
                 </div>
-                <div className='header-font text-base font-open font-light pl-8 md:pl-12 ' style={{ textIndent: '-16px' }}>
+                <div className='h-full absolute overflow-y-auto header-font text-base font-open font-light pl-8 pr-2 md:pl-12 ' style={{ textIndent: '-16px' }}>
+                  <div>
                   {quote.text}
+                  </div>
+                  <div className='text-right pr-4 mt-2'>- {quote.source}</div>
                 </div>
+                
               </div>
-              <div className='text-gray-500 text-sm self-end text-right mt-2'>- {quote.source}</div>
+              
             </div>
           </div>
         </div>

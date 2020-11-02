@@ -112,7 +112,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                         <div className={`w-auto mx-4 text-gray-200`}>Marlon</div>
                       </div>
                       <div className='flex w-3.3/10'>
-                        <Start lessonKey={key} />
+                        <Start lessonKey={curriculum ? curriculum.lessonID : null} />
                       </div>
                     </div>
                   </div>
