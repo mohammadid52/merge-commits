@@ -42,11 +42,11 @@ const Modules = (props: props) => {
     const { fullscreen, dataProps } = props;
     const { theme, state } = useContext(LessonControlContext);
 
+    const length = state.data.lesson.warmUp.inputs.additionalInputs.length;
+
     if (!dataProps || !dataProps.additional) {
         return null;
     }
-
-    const length = state.data.lesson.warmUp.inputs.additionalInputs.length;
 
     return (
         <div className={`flex md:w-full h-2.8/10 justify-between text-sm md:text-base text-gray-200 mb-4 md:mb-0`} >
