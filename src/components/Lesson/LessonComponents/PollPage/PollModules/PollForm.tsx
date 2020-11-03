@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 
-const ListForm = () => {
+const PollForm = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
   // const [cookies, setCookie] = useCookies(['story']);
   const [input, setInput] = useState({
@@ -130,12 +130,12 @@ const handleInputTest = (e: KeyboardEvent<HTMLTextAreaElement>, event: ChangeEve
     <div className='bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600'>
       <h3
         className={`text-xl text-gray-200 font-open font-light ${theme.underline}`}>
-        List{' '}
+        Poll{' '}
       </h3>
       <div className='relative h-full flex flex-col items-center mb-5 mt-2'>
         <textarea
           id='story'
-          className=' w-9/10 h-full px-4 py-2 rounded-lg text-xl text-gray-100'
+          className=' w-6/10 h-full px-4 py-2 rounded-lg text-xl text-gray-100'
           style={{backgroundColor: '#23314600'}}
           name='list'
           placeholder={`${bullet} ${state.data.lesson.warmUp.inputs.textExample}`}
@@ -148,4 +148,4 @@ const handleInputTest = (e: KeyboardEvent<HTMLTextAreaElement>, event: ChangeEve
   );
 };
 
-export default ListForm;
+export default PollForm;

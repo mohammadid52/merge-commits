@@ -72,7 +72,7 @@ const CoopDisplay = () => {
                             </div>
                             <Modules 
                                 additional={displayProps.additional} 
-                                displayMode = "SELFinCOOP" />
+                                displayMode = "COOP" />
                         </div>
                     </div>
 

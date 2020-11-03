@@ -15,65 +15,20 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
   const [openCards, setOpenCards] = useState<string[]>(['']);
+  const [lessons, setLessons] = useState<Array<CurriculumInfo>>();
 
   const curriculumLesson = curriculum
-    ? curriculum.map((value: any, index: number, array: CurriculumInfo[]) => {
-        return value.lesson;
+    ? curriculum.filter((value: any, index: number, array: CurriculumInfo[]) => {
+        if(!value.complete && value.SELStructure !== null && !value.open ) {
+          return value.lesson;
+        }
       })
     : [];
 
   useEffect(() => {
     setLessons(curriculumLesson);
-    // curriculum;
   }, [props]);
 
-  // make sure to limit (max 5?) when fetching from data
-  const [lessons, setLessons] = useState(curriculumLesson.slice(1, 2));
-
-  const setOpen = () => {
-    setLessons(
-      lessons.map(
-        (
-          lesson: {
-            title: string;
-            artist: { id: string; images: any; name: string; type: string };
-            language: string;
-            summary: string;
-          },
-          i: number
-        ) => {
-          return {
-            ...lesson,
-            open: false,
-          };
-        }
-      )
-    );
-  };
-
-  const toggle = (key: number) => {
-    setOpen();
-
-    setLessons(
-      lessons.map(
-        (
-          lesson: {
-            title: string;
-            artist: { id: string; images: any; name: string; type: string };
-            language: string;
-            summary: string;
-            open: boolean;
-          },
-          i: number
-        ) => {
-          if (i === key) {
-            lesson.open = !lesson.open;
-          }
-          return lesson;
-        }
-      )
-    );
-  };
 
   /**
    * Function to toggle card opening
@@ -108,25 +63,11 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
     );
   };
 
-  // const handleLink = () => {
-  //     history.push('/lesson');
-  // }
-
   return (
     <div className={`relative h-auto flex flex-wrap justify-start`}>
-      {lessons
-        ? lessons.map(
-            (
-              lesson: {
-                title: string;
-                artist: { id: string; images: any; name: string; type: string };
-                language: string;
-                summary: string;
-                open: boolean;
-              },
-              i: number
-            ) => (
-              <div
+      {lessons ? lessons.map((lesson: any, i: number) => 
+      (
+            <div
                 id={`upcoming-${i}`}
                 key={i}
                 className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
@@ -135,7 +76,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                     className={`w-full bg-white  ${theme.dashboard.bg} rounded-t-xl bg-cover`}
                     style={{
                       background: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))`,
-                      backgroundImage: `url(${lesson.artist.images})`,
+                      backgroundImage: `url(${lesson.lesson.artist.images})`,
                       backgroundSize: 'cover',
                     }}
                    >
@@ -150,7 +91,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                     <div className='h-3/10 flex flex-row-reverse'>
                       <h2
                         className={`first w-full text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200 text-center`} style={{textShadow:'1px 1px black'}}>
-                        <p> {lesson.artist.name} </p>
+                        <p> {lesson.lesson.artist.name} </p>
                       </h2>
                     </div>
                   </div>
@@ -159,14 +100,14 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                       className={`${
                         openCards.includes(`upcoming-${i}`) ? 'h-72 h-auto' : 'h-32'
                       } p-4 mb-2 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
-                      <h1 className={`text-lg text-black font-open text-left`}>{lesson.title}</h1>
+                      <h1 className={`text-lg text-black font-open text-left`}>{lesson.lesson.title}</h1>
                       <p className={`text-sm text-left`}>
-                        {lesson.summary ? lesson.summary : 'No Information Available'}
+                        {lesson.lesson.summary ? lesson.lesson.summary : 'No Information Available'}
                       </p>
                     </div>
-                    {/* Gradient - start*/}
+                    
                     {gradientCover(`upcoming-${i}`)}
-                    {/* Gradient - end */}
+
                     <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b-xl`}>
                       <div
                         className={`flex mx-2 justify-center items-center my-2 w-5/10 text-gray-300`}>
@@ -191,9 +132,9 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                   </div>
                 </div>
               </div>
-            )
-          )
-        : null}
+      ))
+      : null }
+
     </div>
   );
 };
