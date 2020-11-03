@@ -846,7 +846,13 @@ export type InputsInput = {
   example?: string | null,
   titleExample?: string | null,
   textExample?: string | null,
+  truthGameInputs?: Array< TruthGameInputInput | null > | null,
   additionalInputs?: Array< WritingPromptsInput > | null,
+};
+
+export type TruthGameInputInput = {
+  id?: string | null,
+  label?: string | null,
 };
 
 export type WritingPromptsInput = {
@@ -6160,6 +6166,11 @@ export type CreateWarmUpMutation = {
       example: string | null,
       titleExample: string | null,
       textExample: string | null,
+      truthGameInputs:  Array< {
+        __typename: "TruthGameInput",
+        id: string | null,
+        label: string | null,
+      } | null > | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -6205,6 +6216,11 @@ export type UpdateWarmUpMutation = {
       example: string | null,
       titleExample: string | null,
       textExample: string | null,
+      truthGameInputs:  Array< {
+        __typename: "TruthGameInput",
+        id: string | null,
+        label: string | null,
+      } | null > | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -6250,6 +6266,11 @@ export type DeleteWarmUpMutation = {
       example: string | null,
       titleExample: string | null,
       textExample: string | null,
+      truthGameInputs:  Array< {
+        __typename: "TruthGameInput",
+        id: string | null,
+        label: string | null,
+      } | null > | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -10271,6 +10292,11 @@ export type GetWarmUpQuery = {
       example: string | null,
       titleExample: string | null,
       textExample: string | null,
+      truthGameInputs:  Array< {
+        __typename: "TruthGameInput",
+        id: string | null,
+        label: string | null,
+      } | null > | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -14561,6 +14587,11 @@ export type OnCreateWarmUpSubscription = {
       example: string | null,
       titleExample: string | null,
       textExample: string | null,
+      truthGameInputs:  Array< {
+        __typename: "TruthGameInput",
+        id: string | null,
+        label: string | null,
+      } | null > | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -14601,6 +14632,11 @@ export type OnUpdateWarmUpSubscription = {
       example: string | null,
       titleExample: string | null,
       textExample: string | null,
+      truthGameInputs:  Array< {
+        __typename: "TruthGameInput",
+        id: string | null,
+        label: string | null,
+      } | null > | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
@@ -14641,6 +14677,11 @@ export type OnDeleteWarmUpSubscription = {
       example: string | null,
       titleExample: string | null,
       textExample: string | null,
+      truthGameInputs:  Array< {
+        __typename: "TruthGameInput",
+        id: string | null,
+        label: string | null,
+      } | null > | null,
       additionalInputs:  Array< {
         __typename: "WritingPrompts",
         id: number | null,
