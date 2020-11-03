@@ -50,14 +50,13 @@ const Modules = (props: any) => {
         let wordArray = keywordParser(item.input);
         return (
           <div
-            key={key}
-            className={`${
-              displayMode === 'SELF'
-                ? 'md:h-3.2/10'
-                : displayMode === 'COOP'
-                ? 'md:h-full md:w-3.2/10'
-                : 'md:h-full md:w-3.2/10'
-            } ${theme.gradient.cardBase} font-open font-light h-16 rounded-lg px-4 py-2 ${
+          key={key}
+          className={`
+          ${length === 1 && displayMode === 'SELF' ? 'h-full' : length === 2 && displayMode === 'SELF' ? 'h-4.8/10' : length === 3  && displayMode === 'SELF' ? 'h-3.2/10' : 
+          length === 1 && displayMode === 'COOP' ? 'md:h-full md:w-full' : length === 2 && displayMode === 'COOP' ? 'md:h-full md:w-4.8/10' : length === 3 && displayMode === 'COOP' ? 'md:h-full md:w-3.2/10' :
+          
+          'h-auto'} 
+            ${theme.gradient.cardBase} font-open font-light h-16 rounded-lg px-4 py-2 ${
               key === additional.length - 1 ? '' : ''
             }`}>
             <h3>{keywordCapitilizer(item.name)}:</h3>
