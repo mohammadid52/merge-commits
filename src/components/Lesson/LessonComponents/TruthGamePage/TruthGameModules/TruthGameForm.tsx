@@ -4,7 +4,8 @@ import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 
-const ListForm = () => {
+const ListForm = (props: any) => {
+  const tempData = props;
   const { state, theme, dispatch } = useContext(LessonContext);
   // const [cookies, setCookie] = useCookies(['story']);
   const [input, setInput] = useState({
@@ -71,26 +72,7 @@ const ListForm = () => {
     
   };
 
-  const tempData = [
-    {
-      id: 'deepest-fear',
-      label: 'Deepest fear',
-      isLie: false,
-      text: '',
-    },
-    {
-      id: 'most-anxious',
-      label: 'Most anxious',
-      isLie: false,
-      text: '',
-    },
-    {
-      id: 'happiest-moment',
-      label: 'Happiest moment',
-      isLie: false,
-      text: '',
-    }
-  ]
+
   const [data, setData] = useState<any>(tempData);
 
 
