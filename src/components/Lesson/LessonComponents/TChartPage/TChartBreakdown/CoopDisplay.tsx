@@ -66,7 +66,7 @@ const CoopDisplay = () => {
                         <div className="w-full h-8.8/10 flex flex-col justify-between">
                             <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${displayProps.additional ? 'md:w-full' : 'w-full'} md:mb-0 overflow-y-auto overflow-x-hidden h-7.83/10 p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg`}>
                                 {/* bg-lighter-blue shadow-inner-box  */}
-                                <div style={{'whiteSpace' : 'pre-line'}} className={`h-full rounded-lg font-light text-xl`}>
+                                <div className={`h-full rounded-lg font-light text-xl`}>
                                     { displayProps.story }
                                 </div>
                             </div>
@@ -101,12 +101,12 @@ const CoopDisplay = () => {
                             <div className="w-full h-8.8/10 flex md:flex-col justify-between">
                                 <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${ teacherData &&teacherData.warmUpData && teacherData.warmUpData.additional ? 'md:h-7.85/10' : 'h-full'} ${fullscreen ? 'text-lg md:text-2xl' : 'text-md md:text-xl'} md:mb-0 overflow-y-auto overflow-x-hidden w-full p-4 md:p-6 items-center text-gray-200 rounded-lg shadow-2`}>
                                     {/* bg-lighter-blue shadow-inner-box  */}
-                                    <div style={{'whiteSpace' : 'pre-line'}} className={`${fullscreen ? 'text-3xl' : 'text-xl'} h-full rounded-lg font-light`}>
+                                    <div className={`${fullscreen ? 'text-3xl' : 'text-xl'} h-full rounded-lg font-light`}>
                                         { teacherData && teacherData.warmUpData && teacherData.warmUpData.story }
                                     </div>
                                 </div>
                                 <Modules 
-                                    additional={ teacherData && teacherData.warmUpData && teacherData.warmUpData.additional ? teacherData.warmUpData.additional : null}
+                                    additional={ teacherData &&teacherData.warmUpData && teacherData.warmUpData.additional ? teacherData.warmUpData.additional : null}
                                     displayMode = "COOP" />
                             </div>
                         </div>
