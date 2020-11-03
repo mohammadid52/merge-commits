@@ -28,8 +28,10 @@ const keywordParser = (str: string) => {
 };
 
 const Modules = (props: any) => {
-  const { theme } = useContext(LessonContext);
+  const { theme, state } = useContext(LessonContext);
   const { additional, displayMode } = props;
+
+  const length = state.data.lesson.warmUp.inputs.additionalInputs.length;
 
   if (!additional) {
     return null;
@@ -50,16 +52,16 @@ const Modules = (props: any) => {
         let wordArray = keywordParser(item.input);
         return (
           <div
-            key={key}
-            className={`${
-              displayMode === 'SELF'
-                ? 'md:h-3.2/10'
-                : displayMode === 'COOP'
-                ? 'md:h-full md:w-3.2/10'
-                : 'md:h-full md:w-3.2/10'
-            } ${theme.gradient.cardBase} font-open font-light h-16 rounded-lg px-4 py-2 ${
+          key={key}
+          
+          className={`
+          ${length === 1 && displayMode === 'SELF' ? 'h-full' : length === 2 && displayMode === 'SELF' ? 'h-4.8/10' : length === 3  && displayMode === 'SELF' ? 'h-3.2/10' : 
+          length === 1 && displayMode === 'COOP' ? 'md:h-full md:w-full' : length === 2 && displayMode === 'COOP' ? 'md:h-full md:w-4.8/10' : length === 3 && displayMode === 'COOP' ? 'h-full w-3.2/10' :
+        
+          'h-auto'} 
+            ${theme.gradient.cardBase} font-open font-light h-16 rounded-lg px-4 py-2 ${
               key === additional.length - 1 ? '' : ''
-            }`}>
+            }`}>{console.log(length, 'length')}{console.log(displayMode, 'displayMode')}
             <h3>{keywordCapitilizer(item.name)}:</h3>
             <div className='w-full px-2 overflow-y-auto overflow-x-hidden'>
               {item.input
