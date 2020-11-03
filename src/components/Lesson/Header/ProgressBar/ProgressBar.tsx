@@ -20,7 +20,7 @@ const ProgressBar = (props: ProgressBarProps) => {
   return (
     <>
       <div className='hidden w-full md:flex flex-col flex-grow items-center justify-center content-center px-4 z-0'>
-        <div className='w-256 flex items-center justify-between'>
+        <div className='w-full max-w-256 flex items-center justify-between'>
           <div className='w-full flex flex-row items-center justify-between'>
             {/* ICON */}
             {state.pages.map(

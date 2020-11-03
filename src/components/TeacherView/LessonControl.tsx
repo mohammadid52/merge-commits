@@ -353,7 +353,7 @@ const LessonControl = () => {
                             </div>
                             : null
                         } */}
-                        <div className={`${fullscreen ? 'h-full' : 'h-8.3/10'} relative w-full ${theme.bg} shadow-elem-light rounded-lg mb-4 p-4 overflow-scroll`}>
+                        <div className={`${fullscreen ? 'h-full' : 'h-8.3/10'} relative w-full ${theme.bg} shadow-elem-light rounded-lg mb-4 p-4 overflow-y-scroll overflow-x-hidden`}>
                             {/*  */}
                             {/* <LyricsActivityView
                                 student={selectedStudent}

@@ -11,6 +11,7 @@ export const pageThemes = {
     },
     banner:
       'relative flex flex-row justify-center items-center text-center font-open font-light text-base text-gray-200',
+    section: 'sm:w-full md:w-full xl:w-256 mx-auto h-full flex flex-col justify-between items-center z-50',
     elem: {
       bg: 'bg-gray-200',
       text: 'text-dark',
@@ -22,7 +23,7 @@ export const pageThemes = {
       text: 'text-gray-200',
     },
     dashboard: {
-      sectionTitle: 'w-auto text-black pb-2 font-light mt-4 mb-1',
+      sectionTitle: 'w-auto text-black pb-2 font-light mt-4 mb-1 text-left',
       bg: 'bg-dark-gray',
     },
     sidemenu: {
@@ -46,7 +47,7 @@ export const pageThemes = {
     },
     banner:
       'w-auto pb-2 mt-4 mb-2 relative font-open font-light text-left flex flex-row items-center text-gray-200',
-    section: 'z-50 w-256 mx-auto h-full flex flex-col justify-between items-center',
+    section: 'w-full max-w-256 mx-auto  flex flex-col justify-between items-center z-50',
     elem: {
       bg: 'bg-dark-block',
       title: 'text-lg text-gray-200',
@@ -59,7 +60,7 @@ export const pageThemes = {
       text: 'text-gray-200',
     },
     dashboard: {
-      sectionTitle: 'w-auto text-black pb-2 font-light mt-4 mb-1',
+      sectionTitle: 'w-auto text-black pb-2 font-light mt-4 mb-1 text-left',
       bg: 'bg-dark-gray',
     },
     sidemenu: {
