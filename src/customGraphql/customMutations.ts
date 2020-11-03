@@ -43,6 +43,7 @@ export const createStudentData = /* GraphQL */ `
         preferredName
         lastName
         language
+        role
       }
       warmupData {
         story
@@ -128,6 +129,7 @@ export const updateStudentData = /* GraphQL */ `
         preferredName
         lastName
         language
+        role
       }
       warmupData {
         story

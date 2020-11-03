@@ -58,7 +58,7 @@ const SelfDisplay = () => {
           ? modules.map((module: any, key: number) => (
               <div
                 key={key}
-                className={`${theme.gradient.cardBase} h-64 md:h-full w-3.27/10 text-gray-200 flex flex-col flex-no-wrap items-center p-4 rounded-lg shadow-2xlr`}>
+                className={`${theme.gradient.cardBase} h-64 md:h-full ${modules.length > 1 ? `w-${Math.floor((100 / modules.length) -.5)/ 10 }/10` : modules.length === 1 ? 'w-full' : 'w-auto' } text-gray-200 flex flex-col flex-no-wrap items-center p-4 rounded-lg shadow-2xlr`}>
                 <div className='w-full flex flex-row justify-between items-center pb-2 border-b border-white border-opacity-10'>
                   <div
                     className={`w-12 h-12 p-2 text-3xl rounded-lg bg-${module.color} flex justify-center items-center shadow-2`}>
