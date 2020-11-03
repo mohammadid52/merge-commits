@@ -73,10 +73,13 @@ const ClassRoster = (props: classRosterProps) => {
                 <div className={`w-.5/10 mx-2 text-center`}>
                     
                 </div>
-                <div className={`w-4.8/10 mx-2`}>
+                <div className={`w-4.3/10 mx-2`}>
                     Name
                 </div>
-                <div className={`w-4.5/10 mx-2`}>
+                <div className={`w-1.5/10 mx-2`}>
+                    Role
+                </div>
+                <div className={`w-3.5/10 mx-2`}>
                     Page
                 </div>
                 
@@ -98,12 +101,17 @@ const ClassRoster = (props: classRosterProps) => {
                                         width='w-auto z-100'
                                         content= {item.student.email}
                                         fontSize= 'text-xs'/> */}
-                            <div id={`${item.id}`} className={`w-4.8/10 mx-2 flex items-center`}>
+                            <div id={`${item.id}`} className={`w-4.3/10 mx-2 flex items-center`}>
                                 {/* <ToolTip header='' position='hidden-bottom' display='none'
                                 /> */}
                                 {item.student.preferredName ? item.student.preferredName : item.student.firstName } {item.student.lastName}
                             </div>
-                            <div id={`${item.id}`} className={`w-4.5/10 mx-2 flex justify-center items-center`}>
+                            <div id={`${item.id}`} className={`w-1.5/10 mx-2 flex items-center ${item.student.role !== 'ST' ? 'text-gray-700' : 'font-semibold'} text-center `}>
+                                {/* <ToolTip header='' position='hidden-bottom' display='none'
+                                /> */}
+                                {item.student.role === 'ST' ? 'Student' : item.student.role}
+                            </div>
+                            <div id={`${item.id}`} className={`w-3.5/10 mx-2 flex justify-center items-center`}>
                                 <ProgressSwitch label={item.currentLocation ? item.currentLocation : item.lessonProgress} id={item.id}/>
                             </div>
                             

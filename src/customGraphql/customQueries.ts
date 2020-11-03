@@ -308,6 +308,7 @@ export const getClassroom = /* GraphQL */ `
             preferredName
             lastName
             language
+            role
           }
           warmupData {
             story

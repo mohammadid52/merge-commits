@@ -25,29 +25,43 @@ export interface CurriculumInfo {
 }
 
 const LessonPlanHome = () => {
-  const [curriculum, setCurriculum] = useState<CurriculumInfo>();
-  const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
   const [status, setStatus] = useState('');
   const { theme } = useContext(GlobalContext);
-  const [today, setToday] = useState<any>();
+  const [today, setToday] = useState<CurriculumInfo>();
+  const [test, setTest] = useState<any>();
 
   async function getCourse(id: string) {
     try {
       const courses: any = await API.graphql(
         graphqlOperation(customQueries.getCourse, { id: '1' })
       );
-      const lesson = courses.data.getCourse.curriculum.lessons.items.slice(0, 3)
-      const nextLesson = courses.data.getCourse.curriculum.lessons.items[0].lesson;
-      const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
+      const classrooms = courses.data.getCourse.classrooms
+      const testLesson = classrooms.items
+
+      // (console.log(classrooms.items, 'testLesson'))
+      
+      const lesson = courses.data.getCourse.curriculum.lessons.items
+      console.log(courses.data, 'data')
+      // .slice(0, 3)
       setToday(lesson);
+
+      setTest(testLesson)
+
       setStatus('done');
-      setCurriculum(nextLesson);
-      setListCurriculum(lessonsInfo);
     } catch (error) {
       console.error(error);
     }
   }
 
+  const curriculumLesson = test
+    ? test.filter((value: any, index: number, array: CurriculumInfo[]) => {
+        if(!value.complete && value.SELStructure !== null && !value.open ) {
+          return value.lesson;
+        }
+      })
+    : [];
+
+    console.log(curriculumLesson, 'test if this works')
   useEffect(() => {
     getCourse('1');
   }, []);

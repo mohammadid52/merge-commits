@@ -51,12 +51,13 @@ const Classroom: React.FC = () => {
         graphqlOperation(customQueries.getCourse, { id: id })
       );
       console.log(course, 'courses main fetch')
-      const lesson = course.data.getCourse.classrooms.items.slice(1, 3)
-      const nextLesson = lesson.lesson;
+      // const lesson = course.data.getCourse.classrooms.items.slice(1, 8)
+      // const nextLesson = lesson.lesson;
+      // setToday(lesson)
       
       const lessonsInfo = course.data.getCourse.classrooms.items;
-      console.log(lessonsInfo, 'courses')
-      setToday(lesson);
+      const nextLesson = lessonsInfo.lesson;
+      setToday(lessonsInfo);
       setCurriculum(nextLesson);
       setListCurriculum(lessonsInfo);
       if (state.user.onBoardSurvey) setStatus('done');
