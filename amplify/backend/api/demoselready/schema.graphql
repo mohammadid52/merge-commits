@@ -392,11 +392,17 @@ type Breakdown {
   reflectionQuestions: [String]
 }
 
+type TruthGameInput {
+  id: String
+  label: String
+}
+
 type Inputs {
   title: Boolean!
   example: String
   titleExample: String
   textExample: String
+  truthGameInputs: [TruthGameInput]
   additionalInputs: [WritingPrompts!]
 }
 
