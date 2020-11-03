@@ -38,7 +38,7 @@ const LessonPlanHome = () => {
       const classrooms = courses.data.getCourse.classrooms
       const testLesson = classrooms.items
 
-      (console.log(classrooms.items, 'testLesson'))
+      // (console.log(classrooms.items, 'testLesson'))
       
       const lesson = courses.data.getCourse.curriculum.lessons.items
       console.log(courses.data, 'data')

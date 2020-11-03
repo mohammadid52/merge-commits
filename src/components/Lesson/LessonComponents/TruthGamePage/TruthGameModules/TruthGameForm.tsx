@@ -6,6 +6,7 @@ import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 const ListForm = (props: any) => {
   const tempData = props;
+
   const { state, theme, dispatch } = useContext(LessonContext);
   // const [cookies, setCookie] = useCookies(['story']);
   const [input, setInput] = useState({
@@ -33,7 +34,7 @@ const ListForm = (props: any) => {
   // }, []);
 
   useEffect(() => {
-    if (state.componentState.story) {
+    if (state.componentState.truthGame) {
       dispatch({
         type: 'UPDATE_COMPONENT_STATE',
         payload: {
@@ -73,11 +74,11 @@ const ListForm = (props: any) => {
   };
 
 
-  const [data, setData] = useState<any>(tempData);
+  const [data, setData] = useState<any>(tempData.props);
 
 
   const handleRadioSelect = (passedKey: any) => {
-    setData(tempData.map((item: {id: string, label: string, isLie: boolean, text: string}, key: any) => {
+    setData(tempData.props.map((item: {id: string, label: string, isLie: boolean, text: string}, key: any) => {
       if(key === passedKey)
       {return {
         ...item,

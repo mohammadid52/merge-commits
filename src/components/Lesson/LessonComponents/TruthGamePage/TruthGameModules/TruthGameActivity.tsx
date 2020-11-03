@@ -39,17 +39,25 @@ const List = () => {
     const video = state.data.lesson.warmUp.instructions.link
     const [ openPopup, setOpenPopup ] = useState(false)
 
-    
+    console.log(inputs, 'inputs')
     useEffect(() => {
-        if ( !cookies.story && !state.componentState.story ) {
+        if ( !cookies.story && !state.componentState.truthGame ) {
            let tempObj: {
                truthGameArray: TruthInputState
                additional?: Array<{name: string, text: string | []}>
            }
 
-           let tempArr = tempData.map((item: {id: string, label: string}, ) => {
-                
+           let tempArr = inputs.truthGameInputs.map((item: {id: string, label: string}, ) => {
+                let storageObj = {
+                    id: item.id,
+                    label: item.label,
+                    isLie: false,
+                    text: ''
+                }
+                return storageObj
            })
+
+           tempObj.truthGameArray = tempArr
 
             if (inputs.additionalInputs.length > 0) {
                 let additional:Array<{name: string, text: string | []}>= [];
@@ -68,19 +76,19 @@ const List = () => {
             dispatch({
                 type: 'SET_INITIAL_COMPONENT_STATE',
                 payload: {
-                    name: 'story',
+                    name: 'truthGame',
                     content: tempArr
                 }
             })
 
-            setCookie('story', tempArr)
+            setCookie('truthGame', tempArr)
         }
         
         if ( cookies.story ) {
             dispatch({
                 type: 'SET_INITIAL_COMPONENT_STATE',
                 payload: {
-                    name: 'story',
+                    name: 'truthGame',
                     content: cookies.story
                 }
             })
