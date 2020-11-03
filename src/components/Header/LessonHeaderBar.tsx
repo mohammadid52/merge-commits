@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { 
     NavLink,
-    // useHistory, 
+    useHistory, 
     // useLocation, 
     // useRouteMatch 
 } from 'react-router-dom';
 import { IconContext } from "react-icons/lib/esm/iconContext";
+import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
+import PositiveAlert from '../General/Popup';
 import { FaRegSave, FaHome, FaBook, FaRegThumbsUp } from 'react-icons/fa';
 import { AiOutlineSave, AiOutlineHome } from 'react-icons/ai';
 import { FiClock } from 'react-icons/fi'
@@ -30,6 +31,13 @@ const LessonHeaderBar = () => {
     // const { lookUp } = useDictionary('EN');
     // const [ searchTerm, setSearchTerm ] = useState('');
     const [isToggled, setIsToggled] = useState<string[]>(['']);
+
+    useEffect(() => {
+        let lessonLocation = state.pages[state.currentPage].stage === '' ? 'intro' : state.pages[state.currentPage].stage;
+
+        console.log(lessonLocation);
+        
+    }, [state.lessonProgress, state.currentPage])
 
     useEffect(() => {
 
@@ -67,12 +75,14 @@ const LessonHeaderBar = () => {
 
     const updateStudentData = async ( saveType?: string) => {
         let lessonProgress = state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
+        let currentLocation = state.pages[state.currentPage].stage === '' ? 'intro' : state.pages[state.currentPage].stage;
 
         // console.log('thisone', state )
 
         let data = {
             id: state.studentDataID,
             lessonProgress: lessonProgress,
+            currentLocation: currentLocation,
             status: state.studentStatus,
             saveType: saveType,
             classroomID: state.classroomID,
@@ -111,6 +121,16 @@ const LessonHeaderBar = () => {
         }, 300);
       };
 
+    const {visible, setVisible, ref} = useOutsideAlerter(false);
+
+    const handlePopup = () => {
+        setVisible((prevState: any) => !prevState)
+    }
+
+    const handleSubmit = () => {
+        history.push('/dashboard')
+    }
+
     // const toggleDictionary = () => {
     //     setDictOpen(() => {
     //         return !dictOpen
@@ -146,7 +166,19 @@ const LessonHeaderBar = () => {
     }, [state.studentStatus, state.viewing, state.saveCount, state.subscription])
 
     return (
-        <div className={`z-40 center w-full h-.7/10 ${theme.toolbar.bg} text-gray-200 shadow-2xl flex justify-between`}>
+        <div ref={ref} className={`relative z-40 center w-full h-.7/10 ${theme.toolbar.bg} text-gray-200 shadow-2xl flex justify-between`}>
+            <div className={`${visible ? 'absolute z-100' : 'hidden'} max-w-sm`} style={{top: '300%', left: '500px'}} onClick={handlePopup}>
+                <PositiveAlert 
+                    alert={visible}
+                    setAlert={setVisible}
+                    header='Are you sure you want to leave the Lesson?'
+                    button1='Go to the dashboard' 
+                    button2='Cancel' 
+                    svg='question' 
+                    handleButton1={handleSubmit} 
+                    handleButton2={() => handlePopup}
+                    />
+            </div>
             <div className={`w-56 h-full flex justify-center items-center text-2xl font-bold`}>
                 <NavLink to="/dashboard">
                     <img className="h-6 px-4" src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg" alt="Iconoclast Artists"/>
@@ -220,12 +252,12 @@ const LessonHeaderBar = () => {
                         </p>
                     </div>
                 }
-                <div className={`w-4.5/10 flex flex-col justify-center items-center px-2 cursor-pointer`}>
-                    <NavLink to="/dashboard">
+                <div className={`w-4.5/10 flex flex-col justify-center items-center px-2 cursor-pointer`} onClick={handlePopup}>
+                    {/* <NavLink to="/dashboard"> */}
                         <IconContext.Provider value={{ size: '1.5rem'}}>
                             <AiOutlineHome />
                         </IconContext.Provider>
-                    </NavLink>
+                    {/* </NavLink> */}
                     <p className="text-xs text-gray-200 text-center">Home</p>
                 </div>
             </div>

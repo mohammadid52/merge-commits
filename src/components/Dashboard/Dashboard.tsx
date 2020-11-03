@@ -110,6 +110,16 @@ const Dashboard: React.FC = () => {
                             )}
                         />
                         <Route 
+                            path={`${match.url}/classroom`}
+                            render={({ location }) => (
+                                <Redirect 
+                                    to={{
+                                    pathname: '/',
+                                    state: { from: location }
+                                }}/>
+                            )}
+                        />
+                        <Route 
                             path={`${match.url}/manage-users`}
                             render={() => (
                                 <UserManagement />

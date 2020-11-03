@@ -8,6 +8,7 @@ import Banner from './Banner';
 const SelfDisplay = () => {
     const { state, theme, dispatch } = useContext(LessonContext);
     const displayProps = state.componentState.story;
+    const inputs = state.data.lesson.warmUp.inputs;
 
     useEffect(() => {
         dispatch({type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown'})
@@ -22,9 +23,11 @@ const SelfDisplay = () => {
                 <div className={`${theme.gradient.cardBase} ${displayProps.additional ? 'md:w-7.85/10' : 'w-full'} mb-4 md:mb-0 overflow-y-auto overflow-x-hidden h-full px-4 md:px-12 py-4 md:py-8 items-center text-md md:text-3xl font-light text-gray-200 rounded-lg shadow-2`}>
                     { displayProps.story }
                 </div>
+                { inputs.additionalInputs.length > 0 ?
                 <Modules 
                     additional={displayProps.additional} 
                     displayMode = 'SELF'/>
+                : null }
             </div>
             <ReflectionQuestions />
         </div>

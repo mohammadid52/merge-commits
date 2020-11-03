@@ -36,7 +36,7 @@ const LessonPlanHome = () => {
       const courses: any = await API.graphql(
         graphqlOperation(customQueries.getCourse, { id: '1' })
       );
-      const lesson = courses.data.getCourse.curriculum.lessons.items.slice(0, 2)
+      const lesson = courses.data.getCourse.curriculum.lessons.items.slice(0, 3)
       const nextLesson = courses.data.getCourse.curriculum.lessons.items[0].lesson;
       const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
       setToday(lesson);
@@ -65,11 +65,6 @@ const LessonPlanHome = () => {
           </h2>
           <div className={`w-64rem h-9.28/10 md:h-auto flex flex-col mx-auto`}>
             <Today link='/lesson-control?id=1' curriculums={today} />
-            {/* <Link to="/lesson-control?id=1">
-                Teacher View 
-            </Link> */}
-            {/* <Upcoming curriculum={listCurriculum}/> */}
-            {/* <Dashboard /> */}
           </div>
         </div>
       </div>

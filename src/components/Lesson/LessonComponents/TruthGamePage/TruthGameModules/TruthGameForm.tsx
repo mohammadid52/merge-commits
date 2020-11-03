@@ -109,9 +109,6 @@ const ListForm = () => {
     console.log(tempData)
   }, [input])
 
-  console.log(data, 'data')
-  console.log(tempData, 'tempData')
-
   return (
     <div className='bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600'>
       <h3
@@ -126,14 +123,14 @@ const ListForm = () => {
         {data.map((item: any, key: number) => {
           return (
           <div id={item.id} key={key} className="flex flex-col p-4 items-center justify-between">
+            
             <div id={item.id} className="flex items-center justify-start py-4">
-              
-              <label id={item.id} className="w-auto cursor-pointer font-light text-gray-400 text-sm flex-none items-center px-2">
-          <button key={key} id={item.id} name='lie' onClick={() => handleRadioSelect(key)} value={item.lie} className={`${item.lie ? 'text-2xl' : ''} w-auto mx-4`} > {item.lie ? '🤥'  : '⚪️'}</button>
-              
+              <label id={item.id} className="h-8 w-full cursor-pointer font-light text-gray-400 text-sm flex flex-row-reverse justify-between items-center px-2">
+                <button key={key} id={item.id} name='lie' onClick={() => handleRadioSelect(key)} value={item.lie} className={`${item.lie ? 'text-2xl' : ''} w-auto mx-4`} > {item.lie ? '🤥'  : '⚪️'}</button>
                 {item.label}
               </label>
             </div>
+
             <input
               id={item.id}
               className='w-full h-10 px-4 py-2 rounded-lg text-gray-700 bg-gray-300'

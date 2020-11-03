@@ -291,6 +291,7 @@ export const getClassroom = /* GraphQL */ `
         items {
           id
           lessonProgress
+          currentLocation
           status
           classroomID
           studentID
@@ -646,6 +647,7 @@ export const getStudentData = /* GraphQL */ `
     getStudentData(classroomID: $classroomID, studentID: $studentID) {
       id
       lessonProgress
+      currentLocation
       status
       saveType
       classroomID
@@ -743,6 +745,36 @@ export const getCourse = /* GraphQL */ `
         }
         createdAt
         updatedAt
+      }
+      classrooms {
+        items {
+          id
+          open
+          openedAt
+          closedAt
+          complete
+          roster
+          viewing
+          expectedStartDate
+          expectedEndDate
+          SELStructure
+          courseID
+          lessonID
+          lesson {
+            title
+              artist {
+                id
+                images
+                name
+                type
+              }
+              language
+              summary
+          }
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       location
       startDate

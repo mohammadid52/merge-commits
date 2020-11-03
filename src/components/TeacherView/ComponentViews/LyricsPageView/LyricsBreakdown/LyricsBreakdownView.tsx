@@ -19,10 +19,8 @@ const SelfDisplay = (props: props) => {
       : [];
   const { artist, title } = state.data.lesson.coreLesson.content;
   const moduleTypes = state.data.lesson.coreLesson.tools;
-
-  let displayStudentData = state.studentViewing.live
-    ? state.studentViewing.studentInfo.lessonProgress === 'corelesson/breakdown'
-    : false;
+  
+  let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.currentLocation ? state.studentViewing.studentInfo.currentLocation === 'corelesson/breakdown' : state.studentViewing.studentInfo.lessonProgress === 'corelesson/breakdown' : false;
 
   const arrayParseToString = (arr: Array<Array<{ [key: string]: any }>>) => {
     let resultArray = arr.map((item: Array<{ text: string; [key: string]: any }>) => {
