@@ -14,17 +14,6 @@ const LyricsBreakdown = () => {
 
     const [displayMode, setDisplayMode] = useState(state.data.lessonPlan[state.currentPage].displayMode);
 
-    // const arrayParseToString = (arr: Array<Array<{[key: string]: any}>>) => {
-    //     let resultArray = arr.map((item: Array<{ text: string, [key: string]: any}>) => {
-    //         let parsedString = ''
-    //         item.forEach((item: { text: string, [key: string]: any}) => {
-    //             parsedString = parsedString + item.text
-    //         })
-    //         return parsedString
-    //     })
-    //     return resultArray
-    // }
-
     useEffect(() => {
         if ( state.pages[state.currentPage].displayMode !== displayMode ) {
             setDisplayMode(state.pages[state.currentPage].displayMode)

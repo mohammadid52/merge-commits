@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Banner from './Banner';
 import ReflectionQuestions from './ReflectionQuestions';
+import PoemOutput from './PoemOutput';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface props {
@@ -9,15 +10,15 @@ interface props {
 
 const PoemBreakdownView = (props: props) => {
     const { fullscreen } = props;
-    const { state, dispatch } = useContext(LessonControlContext);
-    const [ dataProps, setDataProps ] = useState<{title: string, editInput: string} | null>(
+    const { state, theme, dispatch } = useContext(LessonControlContext);
+    const [dataProps, setDataProps] = useState<{ title: string, editInput: string } | null>(
         null
     )
 
     let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'activity/breakdown' : false;
 
     useEffect(() => {
-        if ( displayStudentData && state.studentViewing.studentInfo.activityData ) {
+        if (displayStudentData && state.studentViewing.studentInfo.activityData) {
             setDataProps(() => {
                 return {
                     title: state.studentViewing.studentInfo.activityData.title ? state.studentViewing.studentInfo.activityData.title : '',
@@ -26,22 +27,17 @@ const PoemBreakdownView = (props: props) => {
             })
         }
 
-        if ( !displayStudentData ) {
+        if (!displayStudentData) {
             setDataProps(null)
         }
 
     }, [state.studentViewing])
 
     return (
-        <div className="w-full h-full flex flex-row justify-center items-center">
-            <div className="w-full h-full flex flex-col justify-between items-center">
-                <Banner title={ dataProps ? dataProps.title : null } 
-                display="SELF" fullscreen={fullscreen}/>
-                <div className={`${fullscreen ? 'text-2xl p-8' : 'text-lg p-4'} bg-dark-blue w-full h-112 md:h-7/10 font-light flex flex-col items-center text-gray-200 rounded-lg whitespace-pre-wrap overflow-y-auto overflow-x-hidden`}>
-                    { dataProps && dataProps.editInput ? dataProps.editInput : null }
-                </div>
-                <ReflectionQuestions fullscreen={fullscreen}/>
-            </div>
+        <div className={theme.section}>
+            <Banner title={dataProps !== null ? dataProps.title : 'No title'} display="SELF" fullscreen={fullscreen} />
+            <ReflectionQuestions fullscreen={fullscreen} />
+            <PoemOutput poem={dataProps !== null ? dataProps.editInput : 'Your Poem :)'} />
         </div>
     )
 };

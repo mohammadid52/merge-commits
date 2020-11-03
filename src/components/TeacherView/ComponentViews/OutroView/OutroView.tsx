@@ -9,7 +9,7 @@ import Feedback from './Feedback';
 import Links from './Links';
 import SaveQuit from './SaveQuit';
 import { studentObject } from '../../../../state/LessonControlState';
-// import { LessonControlContext } from '../../../../contexts/LessonControlContext';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
 interface props {
     fullscreen: boolean
@@ -17,22 +17,20 @@ interface props {
 
 const OutroView = (props: props) => {
     const { fullscreen } = props;
-    // const { dispatch } = useContext(LessonControlContext);
+    const { theme } = useContext(LessonControlContext);
 
     return (
-        <div className="w-full md:h-full flex flex-col justify-between items-center">
-            <Banner fullscreen={fullscreen}/>
-
-            <div className="w-full md:h-full flex flex-col justify-around items-center">
-                <div className="w-5/10 h-8/10 flex flex-col justify-between items-center">
-                    <Feedback fullscreen={fullscreen}/>
-                    <MoreArtist fullscreen={fullscreen}/>
-                    <SaveQuit fullscreen={fullscreen}/>
-                </div>
+    <div className={theme.section}>
+    <Banner fullscreen={fullscreen} />       
+      <div className={theme.section}>          
+            <div className="flex flex-col justify-between items-center">
+              <Feedback fullscreen={fullscreen}/>
+              <MoreArtist fullscreen={fullscreen}/>
+              <SaveQuit fullscreen={fullscreen}/>
             </div>
-
-        </div>
-    )
+      </div>
+    </div>
+  );
 }
 
 export default OutroView
