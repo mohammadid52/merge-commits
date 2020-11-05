@@ -27,7 +27,17 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
 
   useEffect(() => {
     setLessons(curriculumLesson);
+    
+    
+
   }, [props]);
+
+  console.log(lessons, 'lessons')
+  
+  const sortDates = lessons ? lessons.sort((a: any, b: any) => {
+    return (a.expectedStartDate > b.expectedStartDate) ? 1 : -1;
+  }) : []
+
 
 
   /**

@@ -27,41 +27,21 @@ export interface CurriculumInfo {
 const LessonPlanHome = () => {
   const [status, setStatus] = useState('');
   const { theme } = useContext(GlobalContext);
-  const [today, setToday] = useState<CurriculumInfo>();
-  const [test, setTest] = useState<any>();
+  const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
 
   async function getCourse(id: string) {
     try {
       const courses: any = await API.graphql(
         graphqlOperation(customQueries.getCourse, { id: '1' })
       );
-      const classrooms = courses.data.getCourse.classrooms
-      const testLesson = classrooms.items
-
-      // (console.log(classrooms.items, 'testLesson'))
-      
-      const lesson = courses.data.getCourse.curriculum.lessons.items
-      console.log(courses.data, 'data')
-      // .slice(0, 3)
-      setToday(lesson);
-
-      setTest(testLesson)
-
+      const lessons = courses.data.getCourse.classrooms.items
+      setListCurriculum(lessons);
       setStatus('done');
     } catch (error) {
       console.error(error);
     }
   }
 
-  const curriculumLesson = test
-    ? test.filter((value: any, index: number, array: CurriculumInfo[]) => {
-        if(!value.complete && value.SELStructure !== null && !value.open ) {
-          return value.lesson;
-        }
-      })
-    : [];
-
-    console.log(curriculumLesson, 'test if this works')
   useEffect(() => {
     getCourse('1');
   }, []);
@@ -78,7 +58,7 @@ const LessonPlanHome = () => {
             Today's Lesson
           </h2>
           <div className={`w-64rem h-9.28/10 md:h-auto flex flex-col mx-auto`}>
-            <Today link='/lesson-control?id=1' curriculums={today} />
+            <Today link='/lesson-control?id=1' curriculums={listCurriculum} />
           </div>
         </div>
       </div>

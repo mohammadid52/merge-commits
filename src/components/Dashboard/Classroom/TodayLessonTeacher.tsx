@@ -17,20 +17,31 @@ interface ClassProps {
 
 const Today: React.FC<ClassProps> = (props: ClassProps) => {
   const { link, curriculums, display } = props;
-  // console.log(curriculums, 'curr')
   const [accessible, setAccessible] = useState<boolean>(true);
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
 
-
   const handleLink = (key: any) => {
     if (accessible) {
-        history.push((`${`/lesson-control?id=${key + 1}`}`));
+        history.push((`${`/lesson-control?id=${key}`}`));
     }
 
     // For testing: enables clickthrough survey
     // history.push(link);
   };
+
+  const Lessons = curriculums
+  ? curriculums.map((value: any, index: number, array: CurriculumInfo[]) => {
+    if (value.expectedStartDate !== undefined && value.expectedStartDate !== null) {
+      return value
+    }}
+      )  
+  : [];
+
+  const sortDates = Lessons.sort((a: any, b: any) => {
+    return (a.expectedStartDate > b.expectedStartDate) ? 1 : -1;
+  })
+
 
   useEffect(() => {
     if (display) {
@@ -44,7 +55,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
 
   return (
     <div>
-      { curriculums.map((curriculum: any, key: number) => {
+      { Lessons.map((curriculum: any, key: number) => {
         return (
           <div key={key}>
           <div className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} h-auto flex mb-8`}>
@@ -103,7 +114,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
           <div className='flex w-3.3/10'>
             <button
               type='submit'
-              onClick={() => handleLink(key)}
+              onClick={() => handleLink(curriculum.lessonID)}
               className={`${
                 accessible
                   ? 'bg-ketchup hover:bg-red-300 focus:border-red-700 focus:shadow-outline-red active:bg-red-500 text-white'
