@@ -731,30 +731,6 @@ export const getCourse = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      curriculumID
-      curriculum {
-        id
-        name
-        languages
-        lessons {
-          items {
-            lesson {
-              title
-              artist {
-                id
-                images
-                name
-                type
-              }
-              language
-              summary
-            }
-          }
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       classrooms {
         items {
           id
