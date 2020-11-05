@@ -13,14 +13,15 @@ const Branding: React.FC = () => {
       <div className='bg-darker-gray flex-row justify-center items-center'>
         <div
           className={`w-256 h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}>
-          <div className={`w-3.3/10 ${theme.elem.text}`}>
+          
+          {/* <div className={`w-3.3/10 ${theme.elem.text}`}>
             <p className='mb-1'>CONTACT US</p>
             <p>Info@IconoclastArtists.org</p>
             <p>MAILING ADDRESS:</p>
             <p>Iconoclast Artists</p>
             <p>11140 Greenbay Street</p>
             <p>Houston, TX 77024</p>
-          </div>
+          </div> */}
 
           {/* LOGO */}
           <div className='w-3.3/10 flex justify-center items-center'>
@@ -34,7 +35,7 @@ const Branding: React.FC = () => {
           </div>
           
           {/* SOCIAL */}
-          <div className={`w-3.3/10 ${theme.elem.text}`}>
+          {/* <div className={`w-3.3/10 ${theme.elem.text}`}>
             <p className='mb-1'>FOLLOW US</p>
             <div className='flex flex-row justify-center'>
               <IconContext.Provider
@@ -47,7 +48,10 @@ const Branding: React.FC = () => {
                 <AiOutlineFacebook className='text-white' />
               </IconContext.Provider>
             </div>
-          </div>
+          </div> */}
+
+
+
         </div>
       </div>
     </>

@@ -107,7 +107,7 @@ const StageIcon = (props: StageIconProps) => {
         <div
           className='relative h-8 w-8 flex justify-center items-center rounded-full z-20'
           onClick={handleLink}>
-          <IconContext.Provider value={{ color: iconColor, size: '0.9rem' }}>
+          <IconContext.Provider value={{ color: iconColor}}>
             <div
               className={`${
                 active ? 'bg-blueberry' : 'bg-darker-gray'

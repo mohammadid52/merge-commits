@@ -416,11 +416,12 @@ const LessonControl = () => {
                                 </Switch>
                             </Suspense>
 
-                            <div className="cursor-pointer w-full text-xl m-2 z-50"  onClick={handleFullscreen}>
-                                <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem', style: {width: 'auto', right: '0', top: '0', position: 'absolute', marginRight: '.5rem', marginTop: '.5rem', zIndex: 50} }}>
-                                    {fullscreen ? < FaCompress /> :< FaExpand />}
-                                </IconContext.Provider>
-                            </div>
+                        </div>
+                            
+                        <div className="cursor-pointer w-full text-xl m-2 z-50"  onClick={handleFullscreen}>
+                            <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem', style: {width: 'auto', right: '1rem', top: '0', position: 'absolute', marginRight: '.5rem', marginTop: '.5rem', zIndex: 50} }}>
+                                {fullscreen ? < FaCompress /> :< FaExpand />}
+                            </IconContext.Provider>
                         </div>
 
                         <div className={`${fullscreen ? 'hidden' : ''} relative flex justify-center items-center`}>

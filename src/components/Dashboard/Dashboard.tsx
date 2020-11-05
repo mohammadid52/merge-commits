@@ -75,7 +75,7 @@ const Dashboard: React.FC = () => {
     }, [])
 
     return ( 
-            <div className={`w-screen md:w-full h-screen md:h-auto flex`}>
+            <div className={`w-screen md:w-full h-screen md:h-full flex`}>
                 <SideMenu setCurrentPage={setCurrentPage} currentPage={currentPage}>
                     <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage}/>
                     <Links setCurrentPage={setCurrentPage} currentPage={currentPage}/> 

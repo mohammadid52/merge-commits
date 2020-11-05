@@ -44,6 +44,9 @@ module.exports = {
     maxWidth: {
       '256': '64rem',
     },
+    minHeight: {
+      '2': '2rem'
+    },
     cursor: {
       auto: 'auto',
       default: 'default',
