@@ -51,6 +51,9 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
               data: classroom.data.getClassroom,
               students: classroom.data.getClassroom.data.items,
               open: classroom.data.getClassroom.open,
+              complete: classroom.data.getClassroom.complete,
+              expectedStartDate: classroom.data.getClassroom.expectedStartDate,
+              expectedEndDate: classroom.data.getClassroom.expectedEndDate
           }})
           subscription = subscribeToStudentData()
       } catch (error) {

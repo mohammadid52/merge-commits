@@ -43,6 +43,7 @@ const LessonControl = () => {
     const [ shareable, setShareable ] = useState(false);
     const [ isSameStudentShared, setIsSameStudentShared ] = useState(false);
     const [ open, setOpen ] = useState(state.open);
+    console.log(state, 'state')
 
     // console.log(open, 'open');
 
@@ -82,6 +83,26 @@ const LessonControl = () => {
         }
     }
 
+    const handleUpdateClassroomDate = async () => {
+        let updatedClassroomDateData: any = {
+            id: state.classroomID,
+            open: state.open ? state.open : false,
+            lessonPlan: state.pages,
+            complete: state.complete,
+            expectedStartDate: state.expectedStartDate,
+            expectedEndDate: state.expectedEndDate
+        }
+        
+        try {
+            const updatedClassroomDate = await API.graphql(graphqlOperation(customMutations.updateClassroomDate, {input: updatedClassroomDateData}))
+            dispatch({ type: 'SAVED_CHANGES' })
+            // console.log(updatedClassroom);
+            
+        } catch (err) {
+            console.error(err);   
+        }
+    }
+
     const handleShareStudentData = async () => {
         // console.log(state.studentViewing);
         if ( state.studentViewing.studentInfo ) {
@@ -105,6 +126,12 @@ const LessonControl = () => {
 
     const handleOpen = () => {
         dispatch({ type: 'START_CLASSROOM' })
+        setOpen(true);
+        // console.log(state)
+    }
+
+    const handleComplete = () => {
+        dispatch({ type: 'COMPLETE_CLASSROOM' })
         setOpen(true);
         // console.log(state)
     }
@@ -222,6 +249,7 @@ const LessonControl = () => {
     const {visible, setVisible, ref} = useOutsideAlerter(false);
 
     const [homePopup, setHomePopup] = useState(false);
+    const [lessonButton, setLessonButton] = useState(false);
 
     const handleClick = () => {
         setVisible((prevState: any) => !prevState)
@@ -229,6 +257,10 @@ const LessonControl = () => {
 
     const handleHomePopup = () => {
         setHomePopup((prevState: any) => !prevState)
+    }
+
+    const handleLessonButton = () => {
+        setLessonButton((prevState: any) => !prevState)
     }
 
     const handleSubmit = () => {
@@ -260,7 +292,6 @@ const LessonControl = () => {
                         handleButton2={() => handleClick}
                         />
                 </div>
-                {console.log(state.displayData, 'display Data')}
                 <div className={`${homePopup ? 'absolute z-100' : 'hidden'} max-w-sm`} style={{top: '20%', left: '500px'}} onClick={handleHomePopup}>
                     <PositiveAlert 
                         alert={homePopup}
@@ -273,6 +304,18 @@ const LessonControl = () => {
                         handleButton2={() => handleHomePopup}
                         />
                 </div>
+                <div className={`${lessonButton ? 'absolute z-100' : 'hidden'} max-w-sm`} style={{top: '20%', left: '500px'}} onClick={handleLessonButton}>
+                        <PositiveAlert 
+                            alert={lessonButton}
+                            setAlert={setLessonButton}
+                            header='Are you sure you want to close this lesson?'
+                            button1='Complete lesson' 
+                            button2='Cancel' 
+                            svg='question' 
+                            handleButton1={handleHome} 
+                            handleButton2={() => handleLessonButton}
+                            />
+                    </div>
                 <div className={`relative w-full h-1/10 border-b border-gray-400 flex flex-row items-center`} 
                 // onClick={handleQuitAll}
                 >
@@ -280,12 +323,31 @@ const LessonControl = () => {
                        {state.data.lesson.title}
                     </h1>
 
-                    <div className={`${!state.open ? 'bg-red-700 text-white cursor-pointer shadow-elem-dark' : 'bg-gray-500 text-black'} w-1/10 h-7/10 px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center text-center`} onClick={handleOpen}>
+                    {/* <div className={`${!state.open ? 'bg-red-700 text-white cursor-pointer shadow-elem-dark' : 'bg-gray-500 text-black'} w-1/10 h-7/10 px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center text-center`} onClick={handleOpen}>
                         {!state.open ? 'START LESSON' : 'LESSON STARTED'}
+                    </div> */}
+                    {!state.open? 
+                    <div className="bg-red-700 text-white cursor-pointer shadow-elem-dark w-1/10 h-7/10 px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center text-center" onClick={handleOpen}>
+                        START LESSON
+                    </div>
+                        :
+                    <div className="bg-black text-gray-500 cursor-pointer shadow-elem-dark w-1/10 h-7/10 px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center text-center" onClick={handleLessonButton}>
+                        COMPLETE LESSON
+                    </div>
+                    }
+
+                    <div className="w-1/10 h-full flex flex-col justify-center items-center">
+                        <div className="flex flex-col w-auto leading-4 items-center">
+                            Start Lesson:
+                            <span className="font-open font-semibold w-auto">{state.expectedStartDate}</span>
+                        </div>
+                        <div className="flex flex-col w-auto leading-4 items-center">
+                            End Lesson:
+                            <span className="font-open font-semibold w-auto">{state.expectedEndDate}</span>
+                        </div>
                     </div>
 
-
-                    <div className="w-5/10 flex justify-around items-center">
+                    <div className="w-4/10 flex justify-around items-center">
 
                         <div className="w-1/3 flex justify-center items-center">
                             <div className="w-full flex flex-col justify-center items-center">
