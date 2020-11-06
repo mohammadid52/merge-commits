@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 
-const ListForm = (props: any) => {
+const TruthGameForm = (props: any) => {
   const tempData = props;
 
   const { state, theme, dispatch } = useContext(LessonContext);
@@ -134,4 +134,4 @@ const ListForm = (props: any) => {
   );
 };
 
-export default ListForm;
+export default TruthGameForm;

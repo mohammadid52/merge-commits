@@ -5,7 +5,7 @@ import InstructionsBlock from './InstructionBlock';
 import Banner from './Banner';
 import Modules from './Modules';
 import InstructionsPopup from '../../../Popup/InstructionsPopup';
-import ListForm from './TruthGameForm';
+import TruthGameForm from './TruthGameForm';
 import { string } from 'prop-types';
 
 export interface TruthInput {
@@ -32,7 +32,7 @@ const tempData = [
     }
   ]
 
-const List = () => {
+const TruthGame = () => {
     const { state, dispatch } = useContext(LessonContext);
     const [ cookies, setCookie ] = useCookies(['story']);
     const inputs = state.data.lesson.warmUp.inputs;
@@ -116,7 +116,7 @@ const List = () => {
                         }
                     </div>
                     <div className="md:w-5.9/10 h-full flex flex-col items-center">
-                        <ListForm props={tempData}/>
+                        <TruthGameForm props={tempData}/>
                     </div>
                 </div>
             </div>
@@ -124,4 +124,4 @@ const List = () => {
     )
 }
 
-export default List;
+export default TruthGame;

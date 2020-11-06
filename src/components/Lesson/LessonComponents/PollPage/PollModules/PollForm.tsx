@@ -66,64 +66,93 @@ const PollForm = () => {
     });
   };
 
-  
-  const bullet = "\u2022";
 
-  const handleInput = (e: any) => {
-    let previousLength = 0;
-    e.preventDefault();
-    const newLength = e.target.value.length;
-    const characterCode = e.target.value.substr(-1).charCodeAt(0);
-    // console.log(characterCode, '?');
-  // console.log(e.currentTarget, 'value')
-  // console.log(newLength, 'newlength')
-  // console.log(previousLength, 'prev length')
-    if (newLength > previousLength) {
-      if (characterCode === 10) {
-        e.target.value = `${e.target.value}${bullet} `;
-      } 
-      else if (newLength === 1) {
-        e.target.value = `${bullet} ${e.target.value}`;
+/////// below are all temporary
+  const tempData = [
+    {
+      id: 'classes-school',
+      label: 'Would you rather have classes on Saturdays or school during the summer',
+      options: [
+        {
+          id: 'classes',
+          option: 'classes on Saturdays',
+        },
+        {
+          id: 'school',
+          option: 'school during the summer',
+        }
+      ]
+    },
+    {
+      id: 'clean-or-sleep',
+      label: 'Would you rather clean the house everyday or sleep in the backyard?',
+      options: [
+        {
+          id: 'clean',
+          option: 'clean the house everyday',
+        },
+        {
+          id: 'sleep',
+          option: 'sleep in the backyard',
+        }
+      ]
+    },
+    {
+      id: 'food-taste',
+      label: 'Would you rather only eat your favorite food for the rest of your life or lose your sense of taste but can eat whatever you want?',
+      options: [
+        {
+          id: 'fav-food',
+          option: 'eat your favorite food for the rest of your life',
+        },
+        {
+          id: 'lose-sense',
+          option: 'lose your sense of taste but can eat whatever you want',
+        }
+      ]
+    },
+  ]
+
+
+  const [data, setData] = useState<any>(tempData);
+  const [test, setTest] = useState<any>([]);
+
+  const tryTest = 
+    setTest(data.map((item: {id: string, label: string, options: any}, key: any) => { 
+      return item.options
+     }))
+  
+
+     console.log(test, 'test')
+
+
+  const handleRadioSelect = (passedKey: any) => {
+
+    // setTest(tryTest.map((option: any, optionKey: number) => {
+
+    // }))
+    setData(tempData.map((item: {id: string, label: string, options: any}, key: any) => {
+      if(key === passedKey ) {
+
+        item.options.map((option: any, key: any) =>{
+        
+          if(key === passedKey)
+
+          // console.log(option, 'option')
+          {return {
+            ...item,
+            ...option,
+            choice: true 
+          }} else {
+            return {...item, ...option}
+          }
+        })
       }
-    }
-    // else if (newLength - 1 ) {
-    //   if(characterCode !== 8226) {
-    //     console.log(e.target.value, 'hello')
-    //   }
-     
-    previousLength = newLength;
-    // console.log(previousLength, 'prev')
-  }
-
-
-  // const bullet = "\u2022";
-  const enter = 13;
-  const bulletWithSpace = `${bullet} `;
-
-
-const handleInputTest = (e: KeyboardEvent<HTMLTextAreaElement>, event: ChangeEvent<HTMLTextAreaElement>) => {
-  e.preventDefault();
-  const { keyCode, target } = e;
-  const { selectionStart, value } = event.target;
-  
-  if (keyCode === enter) {
-    console.log('a');
-    event.target.value = [value]
-      .map((c, i) => i === selectionStart - 1
-        ? `\n${bulletWithSpace}`
-        : c
-      )
-      .join('');
-      console.log(event.target.value);
       
-    event.target.selectionStart = selectionStart+bulletWithSpace.length;
-    event.target.selectionEnd = selectionStart+bulletWithSpace.length;
-  }
-  
-  if (value[0] !== bullet) {
-    event.target.value = `${bulletWithSpace}${value}`;
-  }
-}
+     
+    }))
+    
+  };
 
 
   return (
@@ -133,16 +162,38 @@ const handleInputTest = (e: KeyboardEvent<HTMLTextAreaElement>, event: ChangeEve
         Poll{' '}
       </h3>
       <div className='relative h-full flex flex-col items-center mb-5 mt-2'>
-        <textarea
-          id='story'
-          className=' w-6/10 h-full px-4 py-2 rounded-lg text-xl text-gray-100'
-          style={{backgroundColor: '#23314600'}}
-          name='list'
-          placeholder={`${bullet} ${state.data.lesson.warmUp.inputs.textExample}`}
-          defaultValue={`${input.story}`}
-          onChange={handleInputChange}
-          onInput={handleInput}
-        />
+        {data ? data.map((item: {id: string, label:string, options: any}, key: number) => {
+          return (
+          <div key={key} className="flex flex-col p-4 items-center justify-between">
+            
+            <div id={item ? item.id : null} className="flex flex-col items-center justify-start py-4 font-light text-gray-400">
+              <label id={item ? item.id : null} className="w-full font-light text-gray-400 text-base flex justify-between items-center m-2 px-2">
+                {item ? item.label : null}
+              </label>
+              <div className="flex">
+
+                {
+                
+                item ? item.options.map((option: any, optionKey: number) => {
+
+                  return (
+                    
+                    <label key={optionKey} id={option.id} className="flex text-sm cursor-pointer h-8">
+                      <button key={optionKey} id={option.id} name='lie' onClick={() => handleRadioSelect(optionKey)} className={`${option.choice ? 'text-xl' : ''} w-auto px-4`}> {option.choice ? '❌'  : '⚪️'}</button>
+                        {option.option}
+                    </label>
+                  )
+
+                }) : null}
+
+                
+
+              </div>
+            </div>
+            
+        </div> 
+        )
+        }) : null }
       </div>
     </div>
   );

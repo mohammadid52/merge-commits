@@ -37,6 +37,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
     })
   : [];
 
+
   useEffect(() => {
     setLessons(todayLesson);
   }, [props]);
