@@ -57,7 +57,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
 
   return (
     <div>
-      { curriculums.map((curriculum: any, key: number) => {
+      { Lessons.map((curriculum: any, key: number) => {
         return (
           <div key={key}>
           <div className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} h-auto flex mb-8`}>

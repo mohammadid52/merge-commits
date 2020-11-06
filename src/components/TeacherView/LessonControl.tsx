@@ -336,7 +336,7 @@ const LessonControl = () => {
                     </div>
                     }
 
-                    <div className="w-1/10 h-full flex flex-col justify-center items-center">
+                    <div className="w-1/10 h-full flex flex-col justify-center items-center ml-4">
                         <div className="flex flex-col w-auto leading-4 items-center">
                             Start Lesson:
                             <span className="font-open font-semibold w-auto">{state.expectedStartDate}</span>
