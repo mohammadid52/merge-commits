@@ -105,13 +105,13 @@ const StageIcon = (props: StageIconProps) => {
     return (
       <>
         <div
-          className='relative h-8 w-8 flex justify-center items-center rounded-full z-20'
+          className='relative h-8 w-8 flex justify-center items-center rounded-full z-50'
           onClick={handleLink}>
           <IconContext.Provider value={{ color: iconColor}}>
             <div
               className={`${
                 active ? 'bg-blueberry' : 'bg-darker-gray'
-              } h-8 w-8 flex justify-center items-center rounded-full z-30`}
+              } h-6 w-6 flex justify-center items-center rounded-full z-30`}
               >
               {iconSwitch(type)}
             </div>
@@ -126,7 +126,7 @@ const StageIcon = (props: StageIconProps) => {
 
   return (
     <>
-      <div className={`flex-grow-0 w-auto flex flex-row justify-around items-center z-20`}>
+      <div className={`flex-grow-0 w-auto flex flex-row justify-around items-center z-50`}>
         <div
           className={`relative h-8 w-8 rounded-full flex items-center justify-center ${
             active ? 'cursor-pointer' : 'cursor-default'

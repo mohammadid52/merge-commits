@@ -10,7 +10,7 @@ const Branding: React.FC = () => {
   return (
     <>
       {/* CONTACT */}
-      <div className='bg-darker-gray flex-row justify-center items-center'>
+      <div className='mt-auto mb-0 bg-darker-gray flex-row justify-center items-center'>
         <div
           className={`w-256 h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}>
           

@@ -52,7 +52,7 @@ const StoryForm = (props: props) => {
         <div className='py-2'></div>
         <textarea
           id='story'
-          className={`w-full py-2 px-4 text-gray-800 rounded-xl ${theme.elem.textInput}`}
+          className={`w-full h-64 py-2 px-4 text-gray-800 rounded-xl ${theme.elem.textInput}`}
           name='story'
           placeholder='Write your story here!'
           value={input.story}

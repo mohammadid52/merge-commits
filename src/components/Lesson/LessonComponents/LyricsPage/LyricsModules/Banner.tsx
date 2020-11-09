@@ -8,7 +8,7 @@ const Banner = () => {
   const { title, artist } = state.data.lesson.coreLesson.content;
 
   return (
-    <div className={`w-full text-2xl ${theme.banner}`}>
+    <div className={`w-full text-3xl ${theme.banner}`}>
       <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
         <div className='w-auto h-auto mr-2'>
           <AiOutlineCustomerService />

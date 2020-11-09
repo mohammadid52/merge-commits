@@ -16,7 +16,7 @@ const Banner = (props: BannerProps) => {
   return (
     <>
       {display === 'SELF' ? (
-        <div className={`w-full h-1/10 text-2xl ${theme.banner}`}>
+        <div className={`w-full h-1/10 text-3xl ${theme.banner}`}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
             <div className='w-auto h-auto mr-2'>
               <AiOutlineForm />
@@ -32,7 +32,7 @@ const Banner = (props: BannerProps) => {
 
 
       ) : display === 'COOP' ? (
-        <div className={`w-full h-1/10 text-2xl ${theme.banner}`}>
+        <div className={`w-full h-1/10 text-3xl ${theme.banner}`}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
             <div className='w-auto h-auto mr-2'>
               <AiOutlineForm />
@@ -48,7 +48,7 @@ const Banner = (props: BannerProps) => {
 
 
       ) : (
-        <div className={`w-full h-1/10 text-2xl ${theme.banner}`}>
+        <div className={`w-full h-1/10 text-3xl ${theme.banner}`}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
             <div className='w-auto h-auto mr-2'>
               <AiOutlineForm />

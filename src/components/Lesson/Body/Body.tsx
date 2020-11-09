@@ -84,7 +84,7 @@ const Body = () => {
 
     return (
         // <div className="p-4 md:px-8 md:h-8.3/10"> 
-        <div className={`z-0 p-4 ${theme.bg}`}> 
+        <div className={`z-0 p-4  mt-4 ${theme.bg}`}> 
             <Switch>
                 <Route exact path={`${match.url}/`}>
                     <Intro />

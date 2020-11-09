@@ -47,7 +47,7 @@ const ProgressBar = (props: ProgressBarProps) => {
                   {key < state.pages.length - 1 && (
                     <div
                       key={key + 'bar'}
-                      className='relative h-2 w-full bg-dark-gray z-10 flex items-center justify-center '>
+                      className='relative h-2 w-full bg-dark-gray z-10 flex items-center justify-center transform scale-x-125 '>
                       <div
                         className={`h-2 w-full ${
                           state.pages[key + 1].active ? 'bg-blueberry' : 'bg-dark-gray'

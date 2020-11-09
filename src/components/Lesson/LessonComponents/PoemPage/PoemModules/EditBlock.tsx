@@ -82,7 +82,7 @@ const EditBlock = (props: EditBlockProps) => {
                 <input id="title" name="title" className={` rounded-xl mb-2 ${theme.elem.textInput}`} type="text" 
                 value={editInput.title} onChange={handleChange} 
                 placeholder="Choose a title"/>
-                <textarea id="text" className={` rounded-xl mb-2 ${theme.elem.textInput}`} 
+                <textarea id="text" className={`h-64 rounded-xl mb-2 ${theme.elem.textInput}`} 
                 value={editInput.text} onChange={handleChange}/>
             </div>
         </div>

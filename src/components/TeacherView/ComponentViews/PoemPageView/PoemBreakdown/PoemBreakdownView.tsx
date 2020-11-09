@@ -35,8 +35,8 @@ const PoemBreakdownView = (props: props) => {
 
     return (
         <div className={theme.section}>
-            <Banner title={dataProps !== null ? dataProps.title : 'No title'} display="SELF" fullscreen={fullscreen} />
             <ReflectionQuestions fullscreen={fullscreen} />
+            <Banner title={dataProps !== null ? dataProps.title : 'No title'} display="SELF" fullscreen={fullscreen} />
             <PoemOutput poem={dataProps !== null ? dataProps.editInput : 'Your Poem :)'} />
         </div>
     )

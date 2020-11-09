@@ -24,13 +24,14 @@ const Keyword = () => {
         </IconContext.Provider>
       </div>
 
-      <div className='flex flex-row'>
+      <div className='flex flex-row flex-wrap'>
         {typeof keywords !== 'undefined'
           ? keywords.map(
-              (item: { word: { word: string; definition: string }; wordID: number }, i: number) => {
-                return (
-                  <div key={i} className={`relative mx-1 w-3.3/10 `}>
-                    <div className='rounded-xl h-auto flex flex-col mb-2'>
+            (item: { word: { word: string; definition: string }; wordID: number }, i: number) => {
+              return (
+                <div key={i} className={`px-1 w-3.3/10`}>
+                  <div className={`relative p-2 h-full  ${theme.elem.card}`}>
+                    <div className='h-auto flex flex-col mb-2'>
                       <div className={`w-full`}>
                         <div className='h-6/10 justify-center items-center align-center'>
                           <p className={`${theme.elem.title}`}>{item.word.word}:</p>{' '}
@@ -39,9 +40,10 @@ const Keyword = () => {
                       </div>
                     </div>
                   </div>
-                );
-              }
-            )
+                </div>
+              );
+            }
+          )
           : ''}
       </div>
     </div>

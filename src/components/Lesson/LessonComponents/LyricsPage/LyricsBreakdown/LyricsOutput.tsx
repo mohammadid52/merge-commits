@@ -11,7 +11,7 @@ const LyricsOutput = (props: LyricsOutputProps) => {
   const { theme } = useContext(LessonContext);
 
   return (
-    <div className={`flex flex-row ${theme.block.text} mt-4 rounded-r-lg`}>
+    <div className={`flex flex-row flex-wrap ${theme.block.text} mt-4 rounded-r-lg`}>
       {props.modules && props.modules.length >= 1
         ? props.modules.map((module: any, key: number) => (
             <div

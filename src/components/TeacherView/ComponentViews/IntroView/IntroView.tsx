@@ -30,7 +30,7 @@ const IntroView = (props: props) => {
                 <QuoteBlock fullscreen={fullscreen} />
             </div>
                 <Keyword fullscreen={fullscreen}/>
-            <div className='flex flex-col justify-between items-center'>
+            <div className='flex flex-col justify-between items-center mt-4'>
                 <DoFirst data={doFirstData ? doFirstData : null} fullscreen={fullscreen} />
             </div>
             <Connect fullscreen={fullscreen} />

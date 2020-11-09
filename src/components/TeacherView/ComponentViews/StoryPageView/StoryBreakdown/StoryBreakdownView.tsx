@@ -33,8 +33,8 @@ const SelfDisplay = (props: props) => {
 
     return (
         <div className={theme.section}>
-            <Banner dataProps={dataProps} fullscreen={fullscreen} />
             <ReflectionQuestions fullscreen={fullscreen} />
+            <Banner dataProps={dataProps} fullscreen={fullscreen} />
             <Modules dataProps={dataProps} fullscreen={fullscreen} />
             <StoryOutput story={(dataProps && dataProps.story) ? dataProps.story : '' } />
         </div>

@@ -144,7 +144,7 @@ const SaveQuit = (props: SaveQuitProps) => {
   };
 
   return (
-    <div className='w-full flex flex-col'>
+    <div className='w-full flex flex-col mt-4'>
       <div className={`${alert ? 'absolute z-100' : 'hidden'}`} style={{ top: '-450px' }}>
         <Popup
           alert={alert}
@@ -158,7 +158,7 @@ const SaveQuit = (props: SaveQuitProps) => {
 
       <button
         type='submit'
-        className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 flex justify-center items-center rounded-xl mt-2 ${theme.elem.text}`}
+        className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 font-bold flex justify-center items-center rounded-xl mt-4 ${theme.elem.text}`}
         onClick={() => setAlert(!alert)}>
         Save and Go to Dashboard
       </button>

@@ -47,7 +47,7 @@ const MoreArtist = () => {
   const img = '../../../../../public/instagram.svg';
 
   return (
-    <div className={`w-full h-full rounded-xl`}>
+    <div className={`w-full h-full ${theme.underline}`}>
         <h3 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
           Learn more about {state.data.lesson.artist.name}
         </h3>

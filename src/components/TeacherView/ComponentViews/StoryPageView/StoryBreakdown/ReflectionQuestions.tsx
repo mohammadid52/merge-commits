@@ -30,7 +30,7 @@ const ReflectionQuestions = (props: props) => {
     }
 
     return (
-        <div className={`${theme.elem.text} reflection w-full flex flex-col`}>
+        <div className={`${theme.elem.text} ${theme.elem.card} reflection w-full flex flex-col`}>
         <div className={`w-full`}>
           <div className={`w-full flex flex-row text-xl ${theme.banner} border-b-4 border-sea-green`}>
             <h3>Discussion Questions:</h3>

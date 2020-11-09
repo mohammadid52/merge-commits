@@ -313,7 +313,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                                             {/* MENU TOGGLE BUTTON */}
                                             <div
                                                 id={id}
-                                                className='w-10 h-10 bg-dark-gray rounded-r-xl flex justify-center items-center cursor-pointer'
+                                                className='w-10 h-10 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-r-xl flex justify-center items-center cursor-pointer'
                                                 onClick={handleMenuToggle}>
                                                 <IconContext.Provider
                                                     value={{
@@ -331,7 +331,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                                             {/* REMOVE LINE PROMPT */}
                                             <div
                                                 id={id}
-                                                className={`w-8 h-8 ml-2 flex justify-center items-center ${lineState.lines.length > lineNo ? 'cursor-pointer' : ''
+                                                className={`w-10 h-10 ml-2 flex justify-center items-center ${lineState.lines.length > lineNo ? 'cursor-pointer' : ''
                                                     }`}
                                                 onClick={handleDeleteInput}>
                                                 <IconContext.Provider
@@ -355,7 +355,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                                             ( ex. {line.example} )
                           </label>
                                         {line.menuOpen ? (
-                                            <div className={`absolute left-0 top-3 w-192 rounded-b-xl z-50 ${theme.elem.textInput}`}>
+                                            <div className={`absolute left-0 top-3 w-full rounded-b-xl z-50 ${theme.elem.textInput}`}>
                                                 {
                                                     lineState.prompts.map((prompt: any, key: number) => (
                                                         <div

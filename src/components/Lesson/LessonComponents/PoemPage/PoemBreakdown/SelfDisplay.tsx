@@ -15,8 +15,8 @@ const SelfDisplay = () => {
 
   return (
     <div className={theme.section}>
-      <Banner title={typeof displayProps !== 'undefined' ? displayProps.title : 'Your Poem Title :)'} display='SELF' fullscreen={fullscreen} />    
       <ReflectionQuestions />
+      <Banner title={typeof displayProps !== 'undefined' ? displayProps.title : 'Your Poem Title :)'} display='SELF' fullscreen={fullscreen} />    
       <PoemOutput poem={typeof displayProps !== 'undefined' ? displayProps.editInput : 'Your Poem :)'} />
     </div>
   );

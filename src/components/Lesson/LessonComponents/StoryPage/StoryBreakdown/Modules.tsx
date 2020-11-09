@@ -40,7 +40,7 @@ const Modules = (props: any) => {
   return (
     <>
       <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
-        <h3>Keywords:</h3>
+        <h3>About The Story:</h3>
       </div>
       <div className={`flex justify-between text-sm md:text-base text-gray-200 mb-4 md:mb-0`}>
         {additional.map((item: any, key: number) => {

@@ -77,8 +77,8 @@ const SelfDisplay = (props: props) => {
 
   return (
     <div className={theme.section}>
-      <Banner title={title} artist={artist} fullscreen={fullscreen} />
       <ReflectionQuestions fullscreen={fullscreen} />
+      <Banner title={title} artist={artist} fullscreen={fullscreen} />
       <LyricsOutput modules={(modules) ? modules : [] }/>
     </div>
   );

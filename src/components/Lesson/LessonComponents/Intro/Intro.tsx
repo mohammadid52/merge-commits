@@ -52,7 +52,7 @@ const Intro = () => {
         {/* <Block /> */}
       </div>
         <Keyword />
-      <div className='flex flex-col justify-between items-center'>
+      <div className='flex flex-col justify-between items-center mt-4'>
         <DoFirst />
       </div>
       <Connect />

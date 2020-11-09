@@ -125,10 +125,11 @@ const CoopDisplay = () => {
 
   return (
     <div className={theme.section}>
+      
+      <ReflectionQuestions />
 
       <Banner title={title} artist={artist} />
 
-      <ReflectionQuestions />
 
       {/* self view */}
       <div className='h-7.2/10 w-full flex flex-col justify-between items-center'>
@@ -139,7 +140,7 @@ const CoopDisplay = () => {
         </div>
 
         {/* teacher view */}
-        <div className={`relative ${fullscreen ? 'h-full' : 'h-4.85/10' }  w-full rounded-lg border p-2 bg-white bg-opacity-20`}>
+        <div className={`relative ${fullscreen ? 'h-full' : 'h-4.85/10' }  w-full border ${theme.elem.card}`}>
           <div className='absolute w-full z-50 top-0 transform -translate-y-1/2'>
             <div className='w-2.5/10 h-auto w-auto mx-auto py-1 px-2 bg-yellow-300 text-gray-800 font-light text-center flex flex-col justify-center items-center font-medium rounded-xl shadow-elem-dark z-50'>
               <p>
