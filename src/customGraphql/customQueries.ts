@@ -21,6 +21,9 @@ export const getClassroom = /* GraphQL */ `
       open
       roster
       viewing
+      complete
+      expectedStartDate
+      expectedEndDate
       displayData {
         breakdownComponent
         studentInfo {

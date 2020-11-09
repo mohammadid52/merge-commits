@@ -17,13 +17,15 @@ interface ClassProps {
 
 const Today: React.FC<ClassProps> = (props: ClassProps) => {
   const { link, curriculums, display } = props;
+  // console.log(curriculums, 'curr')
   const [accessible, setAccessible] = useState<boolean>(true);
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
 
+
   const handleLink = (key: any) => {
     if (accessible) {
-        history.push((`${`/lesson-control?id=${key}`}`));
+        history.push((`${`/lesson-control?id=${key + 1}`}`));
     }
 
     // For testing: enables clickthrough survey
@@ -31,8 +33,8 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
   };
 
   const Lessons = curriculums
-  ? curriculums.map((value: any, index: number, array: CurriculumInfo[]) => {
-    if (value.expectedStartDate !== undefined && value.expectedStartDate !== null) {
+  ? curriculums.filter((value: any, index: number, array: CurriculumInfo[]) => {
+    if (value.SELStructure !== null) {
       return value
     }}
       )  
@@ -85,8 +87,13 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
       </div>
       <div className='w-7.5/10 flex flex-col '>
         <div className='h-44 p-4 flex flex-col justify-start items-center'>
-          <h1 className={`text-2xl text-black font-open text-left`}>
-            {curriculum && curriculum.lesson.title ? curriculum.lesson.title : null}
+          <h1 className={`text-2xl text-black font-open text-left flex justify-between`}>
+            <div>
+              {curriculum && curriculum.lesson.title ? curriculum.lesson.title : null}
+            </div>
+            <div className="text-xl text-right">
+              expected start date: <span className="font-semibold">{curriculum && curriculum.expectedStartDate ? curriculum.expectedStartDate : null}</span>
+            </div>
           </h1>
           <p className='text-sm text-left'>
             {curriculum && curriculum.lesson.summary ? curriculum.lesson.summary : null}
@@ -114,7 +121,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
           <div className='flex w-3.3/10'>
             <button
               type='submit'
-              onClick={() => handleLink(curriculum.lessonID)}
+              onClick={() => handleLink(key)}
               className={`${
                 accessible
                   ? 'bg-ketchup hover:bg-red-300 focus:border-red-700 focus:shadow-outline-red active:bg-red-500 text-white'
