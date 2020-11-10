@@ -78,14 +78,19 @@ const TruthGameForm = (props: any) => {
 
 
   const handleRadioSelect = (passedKey: any) => {
-    setData(tempData.props.map((item: {id: string, label: string, isLie: boolean, text: string}, key: any) => {
+    setData(tempData.props.map((item: {id: string, label: string, text: string}, key: any) => {
       if(key === passedKey)
-      {return {
+      {
+      
+        return {
         ...item,
         isLie: true
-      }} else {
+      }
+    } 
+      else {
         return {...item}
       }
+      
     }))
     
   };

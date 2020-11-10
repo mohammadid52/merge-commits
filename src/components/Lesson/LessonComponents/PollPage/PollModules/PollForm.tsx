@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect, ChangeEvent, KeyboardEvent } fr
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
+import { MdSettingsBackupRestore } from 'react-icons/md';
 
 
 const PollForm = () => {
@@ -71,11 +72,11 @@ const PollForm = () => {
   const tempData = [
     {
       id: 'classes-school',
-      label: 'Would you rather have classes on Saturdays or school during the summer',
+      question: 'Would you rather have classes on Saturdays or school during the summer',
       options: [
         {
           id: 'classes',
-          option: 'classes on Saturdays',
+          option: 'classes on Saturdays'
         },
         {
           id: 'school',
@@ -85,7 +86,7 @@ const PollForm = () => {
     },
     {
       id: 'clean-or-sleep',
-      label: 'Would you rather clean the house everyday or sleep in the backyard?',
+      question: 'Would you rather clean the house everyday or sleep in the backyard?',
       options: [
         {
           id: 'clean',
@@ -99,7 +100,7 @@ const PollForm = () => {
     },
     {
       id: 'food-taste',
-      label: 'Would you rather only eat your favorite food for the rest of your life or lose your sense of taste but can eat whatever you want?',
+      question: 'Would you rather only eat your favorite food for the rest of your life or lose your sense of taste but can eat whatever you want?',
       options: [
         {
           id: 'fav-food',
@@ -113,47 +114,50 @@ const PollForm = () => {
     },
   ]
 
+  const test = tempData ? tempData.map((item: {id: string, question: string, options: any}, key: any) => {
 
-  const [data, setData] = useState<any>(tempData);
-  const [test, setTest] = useState<any>([]);
+    return (
+      item.options
+    )
 
-  const tryTest = 
-    setTest(data.map((item: {id: string, label: string, options: any}, key: any) => { 
-      return item.options
-     }))
+  }) : null
+
   
 
-     console.log(test, 'test')
+  const [data, setData] = useState<any>([]);
+  const [options, setOptions] = useState<any>(test);
+  // console.log(options, 'test')
 
+  const handleRadioSelect = (passedKey: any, passedId: string) => {
 
-  const handleRadioSelect = (passedKey: any) => {
+    setData(() => {
+      return data.map((item: {id: string, question: string, options: any}, key: any) => {
 
-    // setTest(tryTest.map((option: any, optionKey: number) => {
-
-    // }))
-    setData(tempData.map((item: {id: string, label: string, options: any}, key: any) => {
-      if(key === passedKey ) {
-
-        item.options.map((option: any, key: any) =>{
-        
-          if(key === passedKey)
-
-          // console.log(option, 'option')
-          {return {
-            ...item,
-            ...option,
-            choice: true 
-          }} else {
-            return {...item, ...option}
-          }
-        })
+      if(key === passedKey) {
+        return {
+          ...item,
+          ...item.options.map((options: {id: string, option: string}, key: number) => {
+            if(options.id === passedId ) {
+              return {
+                ...options,
+                isChoice: true 
+              }} 
+              else {
+                return {...options}
+            } }
+          )}
       }
+        
+      else {
+        return {...item}
+        
+      } 
       
-     
-    }))
+    }) })
     
   };
 
+  console.log(data, 'data')
 
   return (
     <div className='bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600'>
@@ -162,24 +166,22 @@ const PollForm = () => {
         Poll{' '}
       </h3>
       <div className='relative h-full flex flex-col items-center mb-5 mt-2'>
-        {data ? data.map((item: {id: string, label:string, options: any}, key: number) => {
+        {data ? data.map((item: {id: string, question:string, options: any}, key: number) => {
           return (
           <div key={key} className="flex flex-col p-4 items-center justify-between">
             
             <div id={item ? item.id : null} className="flex flex-col items-center justify-start py-4 font-light text-gray-400">
               <label id={item ? item.id : null} className="w-full font-light text-gray-400 text-base flex justify-between items-center m-2 px-2">
-                {item ? item.label : null}
+                {item ? item.question : null}
               </label>
               <div className="flex">
 
                 {
-                
-                item ? item.options.map((option: any, optionKey: number) => {
+                item ? item.options.map((option: {id: string, option: string, isChoice: boolean}, optionKey: number) => {
 
                   return (
-                    
                     <label key={optionKey} id={option.id} className="flex text-sm cursor-pointer h-8">
-                      <button key={optionKey} id={option.id} name='lie' onClick={() => handleRadioSelect(optionKey)} className={`${option.choice ? 'text-xl' : ''} w-auto px-4`}> {option.choice ? '❌'  : '⚪️'}</button>
+                      <button key={optionKey} id={option.id} name='choice' onClick={() => handleRadioSelect(key, option.id)} className={`${option.isChoice ? 'text-xl' : ''} w-auto px-4`}> {option.isChoice ? '❌'  : '⚪️'}</button>
                         {option.option}
                     </label>
                   )
