@@ -132,11 +132,10 @@ const handleInputTest = (e: KeyboardEvent<HTMLTextAreaElement>, event: ChangeEve
         className={`text-xl text-gray-200 font-open font-light ${theme.underline}`}>
         List{' '}
       </h3>
-      <div className='relative h-full flex flex-col items-center mb-5 mt-2'>
+      <div className='text-gray-800 rounded-lg relative h-full flex flex-col items-center mb-5 mt-2'>
         <textarea
           id='story'
-          className=' w-9/10 h-full px-4 py-2 rounded-lg text-xl text-gray-100'
-          style={{backgroundColor: '#23314600'}}
+          className=' w-9/10 h-full px-4 py-2 rounded-lg text-xl '
           name='list'
           placeholder={`${bullet} ${state.data.lesson.warmUp.inputs.textExample}`}
           defaultValue={`${input.story}`}
