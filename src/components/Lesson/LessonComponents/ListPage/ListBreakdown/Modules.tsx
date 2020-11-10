@@ -41,7 +41,7 @@ const Modules = (props: any) => {
 
   return (
     <div
-      className={`flex ${
+      className={`flex ${length === 0 ? 'hidden' : ''} ${
         displayMode === 'SELF'
           ? 'flex-col md:w-2/10 h-full'
           : displayMode === 'COOP'
