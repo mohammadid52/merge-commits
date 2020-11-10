@@ -21,6 +21,9 @@ export const getClassroom = /* GraphQL */ `
       open
       roster
       viewing
+      complete
+      expectedStartDate
+      expectedEndDate
       displayData {
         breakdownComponent
         studentInfo {
@@ -175,6 +178,10 @@ export const getClassroom = /* GraphQL */ `
             textExample
             titleExample
             example
+            truthGameInputs {
+              id
+              label
+            }
             additionalInputs {
               id
               name
@@ -304,6 +311,7 @@ export const getClassroom = /* GraphQL */ `
             preferredName
             lastName
             language
+            role
           }
           warmupData {
             story
@@ -524,6 +532,10 @@ export const getClassroomStudent = /* GraphQL */ `
             example
             textExample
             titleExample
+            truthGameInputs {
+              id
+              label
+            }
             additionalInputs {
               id
               name
@@ -717,30 +729,6 @@ export const getCourse = /* GraphQL */ `
               language
             }
           } 
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      curriculumID
-      curriculum {
-        id
-        name
-        languages
-        lessons {
-          items {
-            lesson {
-              title
-              artist {
-                id
-                images
-                name
-                type
-              }
-              language
-              summary
-            }
-          }
           nextToken
         }
         createdAt

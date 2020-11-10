@@ -3075,6 +3075,10 @@ export const onCreateWarmUp = /* GraphQL */ `
         example
         titleExample
         textExample
+        truthGameInputs {
+          id
+          label
+        }
         additionalInputs {
           id
           name
@@ -3111,6 +3115,10 @@ export const onUpdateWarmUp = /* GraphQL */ `
         example
         titleExample
         textExample
+        truthGameInputs {
+          id
+          label
+        }
         additionalInputs {
           id
           name
@@ -3147,6 +3155,10 @@ export const onDeleteWarmUp = /* GraphQL */ `
         example
         titleExample
         textExample
+        truthGameInputs {
+          id
+          label
+        }
         additionalInputs {
           id
           name

@@ -6,7 +6,7 @@ type lessonControlActions =
         payload: any
     }
 |   {
-        type: 'OPEN_LESSON' | 'DISABLE_LESSON' | 'CLOSE_LESSON' | 'DELETE_DISPLAY_DATA' | 'SET_DISPLAY_DATA' | 'SET_STUDENT_VIEWING' | 'SET_SHARE_MODE' | 'QUIT_SHARE_MODE' | 'SAVED_CHANGES' | 'UPDATE_STUDENT_DATA' | 'QUIT_STUDENT_VIEWING' | 'RESET_DONE' | 'START_CLASSROOM';
+        type: 'OPEN_LESSON' | 'DISABLE_LESSON' | 'CLOSE_LESSON' | 'DELETE_DISPLAY_DATA' | 'SET_DISPLAY_DATA' | 'SET_STUDENT_VIEWING' | 'SET_SHARE_MODE' | 'QUIT_SHARE_MODE' | 'SAVED_CHANGES' | 'UPDATE_STUDENT_DATA' | 'QUIT_STUDENT_VIEWING' | 'RESET_DONE' | 'START_CLASSROOM' | 'COMPLETE_CLASSROOM';
         payload: any
     }
 |   {
@@ -24,7 +24,10 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
                 pages: action.payload.pages,
                 data: action.payload.data,
                 roster: action.payload.students,
-                open: action.payload.open
+                open: action.payload.open,
+                complete: action.payload.complete,
+                expectedStartDate: action.payload.expectedStartDate,
+                expectedEndDate: action.payload.expectedEndDate
             }
         case 'OPEN_LESSON':
             return {
@@ -229,6 +232,12 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
             return {
                 ...state,
                 open: true,
+                unsavedChanges: true,
+            };
+        case 'COMPLETE_CLASSROOM':
+            return {
+                ...state,
+                complete: true,
                 unsavedChanges: true,
             };
         case 'CLEANUP': 

@@ -4,7 +4,9 @@ import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 
-const ListForm = () => {
+const ListForm = (props: any) => {
+  const tempData = props;
+
   const { state, theme, dispatch } = useContext(LessonContext);
   // const [cookies, setCookie] = useCookies(['story']);
   const [input, setInput] = useState({
@@ -32,7 +34,7 @@ const ListForm = () => {
   // }, []);
 
   useEffect(() => {
-    if (state.componentState.story) {
+    if (state.componentState.truthGame) {
       dispatch({
         type: 'UPDATE_COMPONENT_STATE',
         payload: {
@@ -56,48 +58,31 @@ const ListForm = () => {
           content: input.story,
         },
       });
-
       // setCookie('story', { ...cookies.story, story: input.story });
     }
+
   }, [input.story]);
 
   const handleInputChange = (e: { target: { id: string; value: string } }) => {
+    console.log(input, 'e.target')
     setInput({
       ...input,
       [e.target.id]: e.target.value,
+      
     });
+    
   };
 
-  const [radio, setRadio] = useState(false)
 
-  const tempData = [
-    {
-      id: 'deepest-fear',
-      label: 'Deepest fear',
-      lie: false,
-      input: '',
-    },
-    {
-      id: 'most-anxious',
-      label: 'Most anxious',
-      lie: false,
-      input: '',
-    },
-    {
-      id: 'happiest-moment',
-      label: 'Happiest moment',
-      lie: false,
-      input: '',
-    }
-  ]
-  const [data, setData] = useState<any>(tempData);
+  const [data, setData] = useState<any>(tempData.props);
+
 
   const handleRadioSelect = (passedKey: any) => {
-    setData(tempData.map((item: {id: string, label: string, lie: boolean, input: string}, key: any) => {
+    setData(tempData.props.map((item: {id: string, label: string, isLie: boolean, text: string}, key: any) => {
       if(key === passedKey)
       {return {
         ...item,
-        lie: true
+        isLie: true
       }} else {
         return {...item}
       }
@@ -107,6 +92,7 @@ const ListForm = () => {
 
   useEffect(() => {
     console.log(tempData)
+    {console.log(input.story, 'input')}
   }, [input])
 
   return (
@@ -126,7 +112,7 @@ const ListForm = () => {
             
             <div id={item.id} className="flex items-center justify-start py-4">
               <label id={item.id} className="h-8 w-full cursor-pointer font-light text-gray-400 text-sm flex flex-row-reverse justify-between items-center px-2">
-                <button key={key} id={item.id} name='lie' onClick={() => handleRadioSelect(key)} value={item.lie} className={`${item.lie ? 'text-2xl' : ''} w-auto mx-4`} > {item.lie ? '🤥'  : '⚪️'}</button>
+                <button key={key} id={item.id} name='lie' onClick={() => handleRadioSelect(key)} value={item.isLie} className={`${item.isLie ? 'text-2xl' : ''} w-auto mx-4`} > {item.isLie ? '🤥'  : '⚪️'}</button>
                 {item.label}
               </label>
             </div>
@@ -140,6 +126,7 @@ const ListForm = () => {
               defaultValue={`${input.story}`}
               onChange={handleInputChange}
             />
+            
         </div> )
         })}
       </div>

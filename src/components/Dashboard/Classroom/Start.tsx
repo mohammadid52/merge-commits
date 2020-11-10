@@ -14,40 +14,19 @@ import { start } from 'repl';
 
 interface Props {
     lessonKey: any
+    open: boolean
+    accessible: boolean
 }
 
 const Today: React.FC<Props> = (props: Props) => {
-  const { lessonKey } = props;
-  const [accessible, setAccessible] = useState<boolean>(true);
+  const { lessonKey, open, accessible } = props;
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
 
-  const [lesson, setLesson] = useState<any>();
-  const [ open, setOpen ] = useState<any>();
-
-  async function getClassroom() {
-    try {
-        let id = lessonKey
-        // this any needs to be changed once a solution is found!!!
-        const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: id }))
-        setLesson(classroom.data.getClassroom)
-        setOpen(classroom.data.getClassroom.open)
-    } catch (error) {
-        console.error(error)
-    }
-  }
-
-  useEffect(() => {
-    getClassroom()
-  }, [])
-
-  const handleLink = (key: number) => {
-
+  const handleLink = () => {
     if (accessible && open ) {
       history.push((`${`/lesson?id=${lessonKey}`}`));
     }
-    // For testing: enables clickthrough survey
-    // history.push(link);
   };
 
 
@@ -55,7 +34,7 @@ const Today: React.FC<Props> = (props: Props) => {
     <div>
         <button
               type='submit'
-              onClick={() => handleLink(lessonKey)}
+              onClick={handleLink}
               className={`${
                 accessible && open
                   ? 'bg-ketchup hover:bg-red-300 focus:border-red-700 focus:shadow-outline-red active:bg-red-500 text-white'

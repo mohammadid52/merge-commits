@@ -8,14 +8,29 @@ import InstructionsPopup from '../../../Popup/InstructionsPopup';
 import ListForm from './TruthGameForm';
 import { string } from 'prop-types';
 
-export interface StoryState {
-    story: string,
-    title?: string,
-    additional?: {
-        name: string,
-        text: string | [],
-    }[]
+export interface TruthInput {
+    id: string,
+    label: string,
+    isLie: boolean,
+    text: string
 }
+
+export type TruthInputState = Array<TruthInput>
+
+const tempData = [
+    {
+      id: 'deepest-fear',
+      label: 'Deepest fear'
+    },
+    {
+      id: 'most-anxious',
+      label: 'Most anxious'
+    },
+    {
+      id: 'happiest-moment',
+      label: 'Happiest moment'
+    }
+  ]
 
 const List = () => {
     const { state, dispatch } = useContext(LessonContext);
@@ -24,17 +39,25 @@ const List = () => {
     const video = state.data.lesson.warmUp.instructions.link
     const [ openPopup, setOpenPopup ] = useState(false)
 
-    
-    
-
+    console.log(inputs, 'inputs')
     useEffect(() => {
-        if ( !cookies.story && !state.componentState.story ) {
-           let tempObj: StoryState = {
-                story: '',
-            }
-            if ( inputs.title ) {
-                tempObj.title = '';
-            }
+        if ( !cookies.story && !state.componentState.truthGame ) {
+           let tempObj: {
+               truthGameArray: TruthInputState
+               additional?: Array<{name: string, text: string | []}>
+           }
+
+           let tempArr = inputs.truthGameInputs.map((item: {id: string, label: string}, ) => {
+                let storageObj = {
+                    id: item.id,
+                    label: item.label,
+                    isLie: false,
+                    text: ''
+                }
+                return storageObj
+           })
+
+           tempObj.truthGameArray = tempArr
 
             if (inputs.additionalInputs.length > 0) {
                 let additional:Array<{name: string, text: string | []}>= [];
@@ -53,19 +76,19 @@ const List = () => {
             dispatch({
                 type: 'SET_INITIAL_COMPONENT_STATE',
                 payload: {
-                    name: 'story',
-                    content: tempObj
+                    name: 'truthGame',
+                    content: tempArr
                 }
             })
 
-            setCookie('story', tempObj)
+            setCookie('truthGame', tempArr)
         }
         
         if ( cookies.story ) {
             dispatch({
                 type: 'SET_INITIAL_COMPONENT_STATE',
                 payload: {
-                    name: 'story',
+                    name: 'truthGame',
                     content: cookies.story
                 }
             })
@@ -93,7 +116,7 @@ const List = () => {
                         }
                     </div>
                     <div className="md:w-5.9/10 h-full flex flex-col items-center">
-                        <ListForm />
+                        <ListForm props={tempData}/>
                     </div>
                 </div>
             </div>

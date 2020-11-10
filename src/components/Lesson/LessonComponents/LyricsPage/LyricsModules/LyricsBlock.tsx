@@ -275,7 +275,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
           <span
             key={`mappedWord__${i}__${mappedWord}`}
             id={`mappedWord__${i}__${mappedWord}`}
-            className={`relative py-2
+            className={`relative py-2 w-full
                 ${
                   //  Check if current mapped word is highlighted
                   //  or
