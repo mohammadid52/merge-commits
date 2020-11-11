@@ -46,8 +46,8 @@ const Intro = () => {
     <div className={theme.section}>
       <Banner />
       <div
-        className='h-96 flex flex-col mb-4 justify-between items-center bg-cover bg-right-top rounded-xl'
-        style={{ backgroundImage: `url(https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/marlon_reading.jpg)`}}>
+        className='h-96 flex flex-col mb-4 justify-between items-center bg-cover bg-right-top rounded-xl z-10'
+        style={{ backgroundImage: `url(${imgArray[0]})`}}>
         <QuoteBlock />
         {/* <Block /> */}
       </div>

@@ -28,8 +28,10 @@ const keywordParser = (str: string) => {
 };
 
 const Modules = (props: any) => {
-  const { theme } = useContext(LessonContext);
+  const { theme, state } = useContext(LessonContext);
   const { additional, displayMode } = props;
+
+  const length = state.data.lesson.warmUp.inputs.additionalInputs.length;
 
   if (!additional) {
     return null;
@@ -50,7 +52,7 @@ const Modules = (props: any) => {
               key={key}
               className={`font-open font-light h-16 rounded-lg py-2 ${key === additional.length - 1 ? '' : ''
                 }`}>
-              <h3>{keywordCapitilizer(item.name)}:</h3>
+              <h3 className={`font-medium`}>{keywordCapitilizer(item.name)}:</h3>
               <div className='w-full px-2 overflow-y-auto overflow-x-hidden'>
                 {item.input
                   ? wordArray.map((word: string, key: number) => (

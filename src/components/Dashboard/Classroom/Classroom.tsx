@@ -11,6 +11,7 @@ import Dashboard from './Dashboard';
 import Loading from '../../Lesson/Loading/ComponentLoading';
 import SurveyCard from './SurveyCard';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
+import queryString from 'query-string';
 
 interface Artist {
   id: string;
@@ -24,6 +25,10 @@ export interface CurriculumInfo {
   language: string;
   summary: string;
   title: string;
+}
+
+interface DataObject {
+  [key: string]: any;
 }
 
 const Classroom: React.FC = () => {
@@ -41,19 +46,41 @@ const Classroom: React.FC = () => {
   async function getCourse(id: string) {
     let limit = 2;
     try {
-      const courses: any = await API.graphql(
-        graphqlOperation(customQueries.getCourse, { id: id, limit: limit })
+      const course: any = await API.graphql(
+        graphqlOperation(customQueries.getCourse, { id: id })
       );
-      const nextLesson = courses.data.getCourse.curriculum.lessons.items[0].lesson;
-      const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
+      const lessonsInfo = course.data.getCourse.classrooms.items;
+      const nextLesson = lessonsInfo.lesson;
       setCurriculum(nextLesson);
-      setListCurriculum(lessonsInfo.slice(1, 2));
+      setListCurriculum(lessonsInfo);
       if (state.user.onBoardSurvey) setStatus('done');
-      // console.log(lessonsInfo, 'list');
     } catch (error) {
       console.error(error);
     }
   }
+
+  // async function getClassroom(id: string) {
+  //   let queryParams = queryString.parse(location.search)
+
+  //   try {
+  //       // this any needs to be changed once a solution is found!!!
+  //       const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: id }))
+  //       // console.log('classroom data', classroom);
+  //       console.log(classroom.data.getClassroom, 'classroom')
+  //       setOpen(classroom.data.getClassroom.open)
+  //       // dispatch({
+  //       //   type: 'INITIAL_LESSON_SETUP', 
+  //       //   payload: { 
+  //       //     pages: classroom.data.getClassroom.lessonPlan, 
+  //       //     data: classroom.data.getClassroom,
+  //       //     students: classroom.data.getClassroom.data.items
+  //       // }})
+  //       // subscription = subscribeToStudentData()
+  //   } catch (error) {
+  //       console.error(error)
+  //   }
+  // }
+
 
   const getSurvey = async () => {
     try {
@@ -79,7 +106,6 @@ const Classroom: React.FC = () => {
 
   useEffect(() => {
     getCourse('1');
-    // history.push('/lesson?id=1')
   }, []);
 
   useEffect(() => {
@@ -108,6 +134,7 @@ const Classroom: React.FC = () => {
         };
       });
     }
+
   }, [state]);
 
   const handleLink = () => {
@@ -119,7 +146,7 @@ const Classroom: React.FC = () => {
   }
   {
     return (
-      <div>
+      <div className='transform translate-y-12'>
         {
           console.log('theme: ', theme)
         }
@@ -152,7 +179,7 @@ const Classroom: React.FC = () => {
               Today's Lesson
             </h2>
 
-            <Today display={survey.display} link={'/lesson?id=1'} curriculum={curriculum} />
+            <Today display={survey.display} link={'/lesson?id=1'} curriculums={listCurriculum} />
           </div>
         </div>
 

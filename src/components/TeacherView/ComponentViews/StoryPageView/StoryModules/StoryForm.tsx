@@ -11,7 +11,7 @@ interface props {
 }
 
 const StoryForm = (props: props) => {
-    const { theme } = useContext(LessonControlContext)
+    const { theme, state } = useContext(LessonControlContext)
     const { fullscreen, dataProps } = props;
     const [ input, setInput ] = useState({
         title: '',

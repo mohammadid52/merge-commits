@@ -6,7 +6,6 @@ import StoryForm from './StoryForm';
 import Banner from './Banner';
 import Modules from './Modules';
 import InstructionsPopup from '../../../Popup/InstructionsPopup';
-import { string } from 'prop-types';
 
 export interface StoryState {
     story: string,
@@ -19,16 +18,15 @@ export interface StoryState {
 
 const Story = () => {
     const { state, theme, dispatch } = useContext(LessonContext);
-    const [ cookies, setCookie ] = useCookies(['story']);
+    const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
     const inputs = state.data.lesson.warmUp.inputs;
     const video = state.data.lesson.warmUp.instructions.link
     const [ openPopup, setOpenPopup ] = useState(false)
 
-    
-    
-
     useEffect(() => {
-        if ( !cookies.story && !state.componentState.story ) {
+        if ( 
+            !cookies[`lesson-${state.classroomID}`].story && 
+            !state.componentState.story ) {
            let tempObj: StoryState = {
                 story: '',
             }
@@ -58,15 +56,15 @@ const Story = () => {
                 }
             })
 
-            setCookie('story', tempObj)
+            setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], story: tempObj })
         }
         
-        if ( cookies.story ) {
+        if ( cookies[`lesson-${state.classroomID}`].story ) {
             dispatch({
                 type: 'SET_INITIAL_COMPONENT_STATE',
                 payload: {
                     name: 'story',
-                    content: cookies.story
+                    content: cookies[`lesson-${state.classroomID}`].story
                 }
             })
         }

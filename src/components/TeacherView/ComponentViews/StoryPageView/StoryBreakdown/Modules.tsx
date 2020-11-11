@@ -40,16 +40,18 @@ const keywordParser = (str: string) => {
 
 const Modules = (props: props) => {
     const { fullscreen, dataProps } = props;
-    const { theme } = useContext(LessonControlContext);
+    const { theme, state } = useContext(LessonControlContext);
 
     if (!dataProps || !dataProps.additional) {
         return null;
     }
 
+    const length = state.data.lesson.warmUp.inputs.additionalInputs.length;
+
     return (
         <>
             <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
-                <h3>Keywords:</h3>
+                <h3 className={`font-medium`}>Keywords:</h3>
             </div>
             <div className={`flex justify-between text-sm md:text-base text-gray-200 mb-4 md:mb-0`}>
                 {dataProps.additional.map((item: any, key: number) => {

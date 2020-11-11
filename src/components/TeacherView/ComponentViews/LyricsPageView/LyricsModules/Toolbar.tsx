@@ -64,8 +64,8 @@ const ToolBar = (props: ToolbarProps) => {
 
           <div
             className={`${isSticky
-                ? 'fixed top-0 w-full flex flex-row justify-center items-center bg-dark-gray translate-y-full z-50'
-                : ''
+              ? 'fixed top-0 w-full flex flex-row justify-center items-center bg-dark-gray translate-y-full z-50'
+              : ''
               } w-auto cursor-pointer flex flex-row`}>
 
             {buttons.map((button: { color: string; icon: string; name: string }, key: number) => (
@@ -97,13 +97,13 @@ const ToolBar = (props: ToolbarProps) => {
               </div>
             ))}
 
+
             <div
               id='erase'
-              className={`relative bg-gray-200 h-12 w-12 text-3xl rounded-lg mb-2 mx-4 flex flex-row justify-center items-center`}
+              className={`${fullscreen ? 'h-12 w-12 text-3xl' : 'h-8 w-8 text-md'} bg-gray-200 rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center`}
               onClick={handleClick}>
-              {/* <ToolTip position='hidden-bottom' header='eraser' display='none' fontSize= 'text-xs px-2' cursor/> */}
-              <IconContext.Provider value={{ color: 'darkgray', size: '2rem' }}>
-                <FaEraser style={{ pointerEvents: 'none' }} />
+              <IconContext.Provider value={{ color: 'darkgray', size: fullscreen ? '2rem' : '1rem' }}>
+                <FaEraser />
               </IconContext.Provider>
             </div>
           </div>

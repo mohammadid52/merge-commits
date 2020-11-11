@@ -11,7 +11,7 @@ export const pageThemes = {
     section: 'sm:w-full md:w-full xl:w-256 mx-auto h-full flex flex-col justify-between items-center z-50',
     elem: {
       bg: 'bg-gray-200',
-      title: 'text-lg text-gray-200 mt-4',
+      title: 'text-lg font-semibold text-gray-200',
       text: 'text-dark',
       textInput: 'bg-gray-300 py-2 px-4',
       shadow: 'shadow-elem-light',
@@ -47,7 +47,7 @@ export const pageThemes = {
     section: 'w-full max-w-256 mx-auto  flex flex-col justify-between items-center z-50',
     elem: {
       bg: 'bg-dark-block',
-      title: 'text-lg text-gray-200 mt-4',
+      title: 'text-lg font-semibold text-gray-200',
       text: 'text-sm text-gray-200 mb-2',
       textInput: 'bg-darker-gray text-blue-100 py-2 px-4',
       shadow: 'shadow-elem-dark',

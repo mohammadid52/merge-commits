@@ -3,27 +3,25 @@ import { IconContext } from 'react-icons';
 import { FaEraser } from 'react-icons/fa';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
-
 interface ToolbarProps {
   setColor: React.Dispatch<React.SetStateAction<string>>;
   color: string;
 }
-
 const ToolBar = (props: ToolbarProps) => {
-  const { color, setColor } = props;
+  const { setColor, color } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
   const [search, setSearch] = useState('');
+
 
   const [isSticky, setSticky] = useState(false);
   const ref = useRef(null);
 
   const buttons = state.data.lesson.coreLesson.tools;
+
   const handleClick = (e: any) => {
     setColor(e.target.id);
-    console.log(e.target.id, 'e');
+    console.log(e.target.id, 'e')
   };
-
-
 
   const handleScroll = () => {
     if (ref.current) {

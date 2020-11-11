@@ -2,7 +2,7 @@ import React, { useReducer, useEffect, useState, } from 'react';
 import { lessonState, PagesType } from '../state/LessonState'
 import { lessonReducer } from '../reducers/LessonReducer'
 import { pageThemes } from './GlobalContext';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 import * as customMutations from '../customGraphql/customMutations';
 import * as customQueries from '../customGraphql/customQueries';
@@ -11,7 +11,6 @@ import {Auth} from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import { displayPartsToString } from 'typescript';
 
 const removeDisabled = (array: PagesType) => {
     let updatedArray = array.filter((item: { disabled: boolean, [key: string]: any}) => {
@@ -38,7 +37,7 @@ export const LessonContext = React.createContext(null);
 export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     const [ data, setData ] = useState<DataObject>();
     const [ lesson, setLesson ] = useState<DataObject>();
-    const [ cookies ] = useCookies(['auth']);
+    // const [ cookies ] = useCookies(['auth']);
     const [ state, dispatch ] = useReducer(lessonReducer, lessonState);
     const [ lightOn, setLightOn ] = useState(false);
     const location = useLocation();
@@ -75,6 +74,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             if ( !studentData.data.getStudentData ) {
                 const newStudentData: any = await API.graphql(graphqlOperation(customMutations.createStudentData, { input: {
                     lessonProgress: 'intro',
+                    currentLocation: 'intro',
                     status: 'ACTIVE',
                     classroomID: queryParams.id,
                     studentID: studentID,
@@ -167,15 +167,14 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             // console.log('lesson', lesson);
             const wordBank: Array<string> = ['Mimo provoz'];
 
-            
-
             dispatch({
                 type: 'SET_INITIAL_STATE', 
                 payload: { 
+                    classroomID: lesson.id,
+                    data: lesson,
                     pages: removeDisabled(lesson.lessonPlan), 
                     displayData: lesson.displayData,
                     word_bank: wordBank, 
-                    data: lesson,
                     subscribeFunc: subscribeToClassroom,
             }})
         }

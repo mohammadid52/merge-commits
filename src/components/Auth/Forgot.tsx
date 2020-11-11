@@ -27,7 +27,7 @@ const Forgot = () => {
     try {
       const user = await Auth.forgotPassword(username);
       console.log({ user });
-      history.push('/reset-password');
+      history.push('/confirm-code');
     } catch (error) {
       console.error('error signing in', error);
       setMessage(() => {

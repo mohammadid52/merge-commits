@@ -10,7 +10,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../customGraphql/customMutations';
 import useStudentTimer from '../../../customHooks/timer';
 
-const SideMenu = () => {
+const SideMenu = (props:{handlePopup: ()=> void}) => {
   const [cookies, setCookie] = useCookies(['lesson']);
   const { theme, state, dispatch } = useContext(LessonContext);
   const [isToggled, setIsToggled] = useState<string[]>(['']);
@@ -101,12 +101,12 @@ const SideMenu = () => {
             <p className={`self-end text-xs text-gray-200 text-center`}>AutoSave</p>
           </div>
         )}
-        <div className={`cursor-pointer flex flex-col justify-center items-center mb-4`}>
-          <NavLink to='/dashboard'>
+        <div className={`cursor-pointer flex flex-col justify-center items-center mb-4`} onClick={props.handlePopup}>
+          {/* <NavLink to='/dashboard'> */}
             <IconContext.Provider value={{ size: '1.5rem' }}>
               <AiOutlineHome />
             </IconContext.Provider>
-          </NavLink>
+          {/* </NavLink> */}
           <p className='text-xs text-gray-200 text-center'>Home</p>
         </div>
       </div>

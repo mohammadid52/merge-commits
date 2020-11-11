@@ -10,6 +10,8 @@ interface props {
 const QuoteBlock = (props: props) => {
   const { fullscreen } = props;
   const [heroIsActive, setHeroIsActive] = useState<boolean>(false);
+  const [isToggled, setIsToggled] = useState<string[]>(['']);
+
   const { state, theme } = useContext(LessonControlContext);
   const quoteArray = state.data.lesson.artist.quotes;
   const artistName = state.data.lesson.artist.name;
@@ -28,13 +30,23 @@ const QuoteBlock = (props: props) => {
  * @param e - Hover/click over hero image
  */
   const toggleHeroDescription = (e: React.MouseEvent) => {
-    const t = e.target as HTMLElement;
+    const t = e.currentTarget as HTMLElement;
+    const targetWordID = t.id || '';
 
     if (!heroIsActive) {
       setHeroIsActive(true);
     } else {
       setHeroIsActive(false);
     }
+
+    /**
+     * Animation
+     */
+    setIsToggled([...isToggled, targetWordID]);
+
+    setTimeout(() => {
+      setIsToggled(isToggled.filter((targetString: string) => targetString !== targetWordID));
+    }, 300);
   };
 
   return (
@@ -42,10 +54,12 @@ const QuoteBlock = (props: props) => {
       className={`relative w-full md:h-96 flex flex-grow items-center p-4 rounded-xl ${theme.block.text} ${heroIsActive ? 'bg-black50' : ''}`}>
       {/* READ ICON */}
       <div
+        id='read-icon'
         className='absolute top-1 right-1 w-auto h-auto transition-all duration-500 ease-in-out text-gray-200 hover:text-white'
         onClick={toggleHeroDescription}>
         <IconContext.Provider value={{ size: '2rem', style: { width: 'auto', cursor: 'pointer' } }}>
           <AiOutlineRead
+            className={`${isToggled.includes('read-icon') && 'animate-jiggle'} hover:animate-jiggle`}
             style={{
               MozUserSelect: 'none',
               WebkitUserSelect: 'none',
@@ -74,7 +88,7 @@ const QuoteBlock = (props: props) => {
           className={`${heroIsActive ? 'hidden' : 'visible'
             } h-full flex flex-col justify-end transition-all duration-500 ease-in-out animate-fadeIn`}>
           <div className='h-auto mb-0 flex flex-col'>
-            <div className='text-sm flex text-left items-center'>Featured Artist:</div>
+            <div className='text-lg flex text-left items-center'>Featured Artist:</div>
             <div className='w-full text-4.5xl leading-none font-light'>{artistName}</div>
           </div>
 
@@ -83,7 +97,7 @@ const QuoteBlock = (props: props) => {
               <div className='relative'>
                 <div className='header-font text-lg font-open font-light'>"{quote.text}"</div>
               </div>
-              <div className='text-sm pl-8 mt-2'>- {quote.source}</div>
+              {/* <div className='text-sm pl-8 mt-2'>- {quote.source}</div> */}
             </div>
           </div>
         </div>

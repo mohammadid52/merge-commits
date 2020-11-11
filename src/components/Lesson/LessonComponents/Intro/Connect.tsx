@@ -6,7 +6,8 @@ import { LessonContext } from '../../../../contexts/LessonContext';
 const Connect = () => {
     const { state, theme } = useContext(LessonContext);
     const connection = state.data.lesson.connection;
-
+    console.log(state, 'state ')
+ 
 
 
     return (

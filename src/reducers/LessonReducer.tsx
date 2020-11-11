@@ -7,10 +7,11 @@ export type LessonActions =
 |   {
         type: 'SET_INITIAL_STATE';
         payload: {
+            classroomID: string,
             data?: any;
             pages: PagesType
-            word_bank?: any;
             displayData?: any;
+            word_bank?: any;
             subscribeFunc: () => any,
         }
     }
@@ -125,6 +126,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             return {
                 ...state,
                 status: 'loaded',
+                classroomID: action.payload.classroomID,
                 data: action.payload.data,
                 pages: action.payload.pages,
                 word_bank: action.payload.word_bank,

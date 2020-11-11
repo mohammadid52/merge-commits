@@ -15,6 +15,7 @@ interface WritingBlockProps {
         open: boolean;
         input: string;
     }>>
+    displayStudentData?: boolean;
 }
 
 interface lineState {
@@ -29,7 +30,7 @@ interface lineState {
 }
 
 const WritingBlock = (props: WritingBlockProps) => {
-    const { editMode, setEditMode, fullscreen } = props;
+    const { editMode, setEditMode, fullscreen, displayStudentData } = props;
     const { state, theme, dispatch } = useContext(LessonControlContext);
     const lineNo = state.data.lesson.activity.lineNumber;
     const promptArray = state.data.lesson.activity.writingPrompts;
@@ -49,14 +50,11 @@ const WritingBlock = (props: WritingBlockProps) => {
         lines: initialLines,
     });
 
-    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'activity' : false;
-
     const [alert, setAlert] = useState(false);
 
     const handleCancel = () => {
         setAlert(!alert);
     }
-
 
     useEffect(() => {
         if (displayStudentData && state.studentViewing.studentInfo.activityData) {
@@ -67,7 +65,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                 }
             })
         }
-    }, [])
+    }, [state.studentViewing])
 
     useEffect(() => {
         let lineArray = lineState.lines.map((line: { text: string }) => {
@@ -269,18 +267,34 @@ const WritingBlock = (props: WritingBlockProps) => {
                         content='Make sure you are finished with the line prompts before you click "Save and Edit"'
                     />
                 </h3>
-                <IconContext.Provider
-                    value={{
-                        size: '1.5rem',
-                        style: { width: '32px' },
-                        className: `text-white`,
-                    }}>
-                    <div className='w-8 cursor-pointer' onClick={handleAddInput}>
-                        <AiOutlinePlus />
-                    </div>
-                </IconContext.Provider>
+
+
+                {/* ADD LINE PROMPS BUTTON */}
+
+                <button
+                    className={`mx-auto w-auto px-3 h-8 bg-sea-green text-gray-900 flex justify-center items-center rounded-xl mt-2 ${theme.elem.text}`}
+                    onClick={handleAddInput}>
+
+                    Add Line
+
+                    <IconContext.Provider
+                        value={{
+                            size: '1.5rem',
+                            style: { width: '32px' },
+                            className: `text-white`,
+                        }}>
+                        <div className='w-8 cursor-pointer'>
+                            <AiOutlinePlus />
+                        </div>
+                    </IconContext.Provider>
+
+                </button>
+
+
+
+
             </div>
-            <div className='w-full flex flex-col'>
+            <div className='w-full flex flex-col p-4 border-2 border-white border-opacity-20 rounded-lg'>
 
                 {/* MAP THE LINE PROMPTS */}
                 {lineState.lines.length > 1

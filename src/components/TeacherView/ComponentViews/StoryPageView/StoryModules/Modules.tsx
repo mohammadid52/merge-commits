@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
@@ -26,8 +26,8 @@ interface FormInputsState {
 const Modules = (props: ModulesProps) => {
     const { inputs, fullscreen, dataProps } = props
     const { state, dispatch, theme } = useContext(LessonControlContext);
-    const [cookies, setCookie] = useCookies(['story'])
-    const [formInputs, setFormInputs] = useState<FormInputsState>()
+    // const [ cookies, setCookie ] = useCookies(['story'])
+    const [ formInputs, setFormInputs ] = useState<FormInputsState>()
 
     useEffect(() => {
         inputs.forEach((item: { name: string; example: string; prompt: string; }) => {
@@ -84,7 +84,7 @@ const Modules = (props: ModulesProps) => {
                     ? inputs.map((input, key) => (
                         <div key={key} className={`flex flex-col ${key !== inputs.length - 1}`}>
                             <label className={`${theme.elem.text} mt-2 mb-2 w-full`} htmlFor={input.name}>
-                                {input.prompt}
+                                <p><span className='font-bold'>{key+1}.</span>&nbsp;{input.prompt}</p>
                             </label>
                             <input
                                 id={input.name}

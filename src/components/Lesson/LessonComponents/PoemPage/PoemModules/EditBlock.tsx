@@ -12,18 +12,18 @@ interface EditBlockProps {
 const EditBlock = (props: EditBlockProps) => {
     const { editMode } = props;
     const { state, theme, dispatch } = useContext(LessonContext);
-    const [ cookies, setCookie ] = useCookies(['poem']);
+    const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
     const [ editInput, setEditInput ] = useState<{title: string, text: string}>({
         title: '',
         text: editMode.input,
     })
 
     useEffect(() => {
-        if ( cookies.poem && cookies.poem.editMode ) {
+        if ( cookies[`lesson-${state.classroomID}`].poem && cookies[`lesson-${state.classroomID}`].poem.editMode ) {
             setEditInput(() => {
                 return {
-                    title: cookies.poem.title,
-                    text: cookies.poem.editInput,
+                    title: cookies[`lesson-${state.classroomID}`].poem.title,
+                    text: cookies[`lesson-${state.classroomID}`].poem.editInput,
                 }
             })
         }
@@ -40,7 +40,13 @@ const EditBlock = (props: EditBlockProps) => {
                 }
             })
 
-            setCookie('poem', {...cookies.poem, editInput: editInput.text})
+            setCookie(`lesson-${state.classroomID}`, {
+                ...cookies[`lesson-${state.classroomID}`],
+                poem: {
+                    ...cookies[`lesson-${state.classroomID}`].poem,
+                    editInput: editInput.text
+                }
+            })
         } 
     }, [editInput.text])
 
@@ -55,7 +61,13 @@ const EditBlock = (props: EditBlockProps) => {
                 }
             })
 
-            setCookie('poem', {...cookies.poem, title: editInput.title})
+            setCookie(`lesson-${state.classroomID}`, {
+                ...cookies[`lesson-${state.classroomID}`],
+                poem: {
+                    ...cookies[`lesson-${state.classroomID}`].poem,
+                    title: editInput.title
+                }
+            })
         } 
     }, [editInput.title])
 

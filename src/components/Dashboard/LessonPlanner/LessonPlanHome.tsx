@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { Link } from 'react-router-dom';
-import Today from '../Classroom/TodayLesson';
+import Today from '../Classroom/TodayLessonTeacher';
 import Upcoming from '../Classroom//Upcoming';
 import Completed from '../Classroom/Completed';
 import * as customQueries from '../../../customGraphql/customQueries';
@@ -25,21 +25,18 @@ export interface CurriculumInfo {
 }
 
 const LessonPlanHome = () => {
-  const [curriculum, setCurriculum] = useState<CurriculumInfo>();
-  const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
   const [status, setStatus] = useState('');
   const { theme } = useContext(GlobalContext);
+  const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
 
   async function getCourse(id: string) {
     try {
       const courses: any = await API.graphql(
         graphqlOperation(customQueries.getCourse, { id: '1' })
       );
-      const nextLesson = courses.data.getCourse.curriculum.lessons.items[0].lesson;
-      const lessonsInfo = courses.data.getCourse.curriculum.lessons.items;
+      const lessons = courses.data.getCourse.classrooms.items
+      setListCurriculum(lessons);
       setStatus('done');
-      setCurriculum(nextLesson);
-      setListCurriculum(lessonsInfo);
     } catch (error) {
       console.error(error);
     }
@@ -60,7 +57,7 @@ const LessonPlanHome = () => {
             Today's Lesson
           </h2>
           <div className={`w-256 h-9.28/10 md:h-auto flex flex-col mx-auto`}>
-            <Today link='/lesson-control?id=1' curriculum={curriculum} />
+            <Today link='/lesson-control?id=1' curriculums={listCurriculum} />
             {/* <Link to="/lesson-control?id=1">
                 Teacher View 
             </Link> */}

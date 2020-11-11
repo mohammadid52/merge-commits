@@ -21,6 +21,9 @@ export const getClassroom = /* GraphQL */ `
       open
       roster
       viewing
+      complete
+      expectedStartDate
+      expectedEndDate
       displayData {
         breakdownComponent
         studentInfo {
@@ -48,6 +51,11 @@ export const getClassroom = /* GraphQL */ `
             focus
             id
           }
+          rawSelected {
+            color
+            selected
+          }
+          selectGroup
         }
         activityData {
           editInput
@@ -167,7 +175,13 @@ export const getClassroom = /* GraphQL */ `
           }
           inputs {
             title
+            textExample
+            titleExample
             example
+            truthGameInputs {
+              id
+              label
+            }
             additionalInputs {
               id
               name
@@ -284,6 +298,7 @@ export const getClassroom = /* GraphQL */ `
         items {
           id
           lessonProgress
+          currentLocation
           status
           classroomID
           studentID
@@ -296,6 +311,7 @@ export const getClassroom = /* GraphQL */ `
             preferredName
             lastName
             language
+            role
           }
           warmupData {
             story
@@ -316,6 +332,11 @@ export const getClassroom = /* GraphQL */ `
               focus
               id
             }
+            rawSelected {
+              color
+              selected
+            }
+            selectGroup
           }
           activityData {
             editInput
@@ -383,6 +404,11 @@ export const getClassroomStudent = /* GraphQL */ `
             focus
             id
           }
+          rawSelected {
+            color
+            selected
+          }
+          selectGroup
         }
         activityData {
           editInput
@@ -504,6 +530,12 @@ export const getClassroomStudent = /* GraphQL */ `
           inputs {
             title
             example
+            textExample
+            titleExample
+            truthGameInputs {
+              id
+              label
+            }
             additionalInputs {
               id
               name
@@ -627,6 +659,7 @@ export const getStudentData = /* GraphQL */ `
     getStudentData(classroomID: $classroomID, studentID: $studentID) {
       id
       lessonProgress
+      currentLocation
       status
       saveType
       classroomID
@@ -651,6 +684,11 @@ export const getStudentData = /* GraphQL */ `
           focus
           id
         }
+        rawSelected {
+          color
+          selected
+        }
+        selectGroup
       }
       activityData {
         editInput
@@ -696,15 +734,22 @@ export const getCourse = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      curriculumID
-      curriculum {
-        id
-        name
-        languages
-        lessons {
-          items {
-            lesson {
-              title
+      classrooms {
+        items {
+          id
+          open
+          openedAt
+          closedAt
+          complete
+          roster
+          viewing
+          expectedStartDate
+          expectedEndDate
+          SELStructure
+          courseID
+          lessonID
+          lesson {
+            title
               artist {
                 id
                 images
@@ -713,12 +758,11 @@ export const getCourse = /* GraphQL */ `
               }
               language
               summary
-            }
           }
-          nextToken
+          createdAt
+          updatedAt
         }
-        createdAt
-        updatedAt
+        nextToken
       }
       location
       startDate

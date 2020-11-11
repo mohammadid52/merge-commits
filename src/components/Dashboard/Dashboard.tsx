@@ -1,13 +1,13 @@
-import React, { useContext, useEffect,useState, Suspense, lazy } from 'react';
+import React, { useContext, useEffect, useState, Suspense, lazy } from 'react';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { GlobalContext } from '../../contexts/GlobalContext';
-import { 
+import {
     useRouteMatch,
-    Switch, 
+    Switch,
     Route,
     Redirect
- } from 'react-router-dom';
+} from 'react-router-dom';
 // import PageHeaderBar from '../Header/PageHeaderBar';
 import SideMenu from './Menu/SideMenu';
 // import Classroom from './Classroom/Classroom';
@@ -65,32 +65,32 @@ const Dashboard: React.FC = () => {
     }
 
     if (state.user.role === 'FLW') {
-        
+
     }
 
     useEffect(() => {
-        if( !state.user.firstName ) {
+        if (!state.user.firstName) {
             getUser()
         }
     }, [])
 
-    return ( 
-            <div className={`w-screen md:w-full h-screen md:h-full flex`}>
-                <SideMenu setCurrentPage={setCurrentPage} currentPage={currentPage}>
-                    <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage}/>
-                    <Links setCurrentPage={setCurrentPage} currentPage={currentPage}/> 
-                </SideMenu>
-                <div className={`height h-full flex flex-col`}>
-                <PageHeaderBar setCurrentPage={setCurrentPage} currentPage={currentPage}/>
+    return (
+        <div className={`w-screen md:w-full h-screen md:h-full flex`}>
+            <SideMenu setCurrentPage={setCurrentPage} currentPage={currentPage}>
+                <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage} />
+                <Links setCurrentPage={setCurrentPage} currentPage={currentPage} />
+            </SideMenu>
+                <PageHeaderBar setCurrentPage={setCurrentPage} currentPage={currentPage} />
+            <div className={`height h-full overflow-x-hidden overflow-y-scroll flex flex-col`}>
                 <Suspense fallback={
-                <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                    {/* <div className="min-h-full w-full flex flex-col justify-center items-center">
+                    <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                        {/* <div className="min-h-full w-full flex flex-col justify-center items-center">
                         Give us one second! It is loading... 
                     </div> */}
-                    <ComponentLoading/>
-                </div>
-                }> 
-                    <Switch> 
+                        <ComponentLoading />
+                    </div>
+                }>
+                    <Switch>
                         {/* <Route 
                             exact
                             path={`${match.url}`}
@@ -102,38 +102,48 @@ const Dashboard: React.FC = () => {
                                 }}/>
                             )} 
                         /> */}
-                        <Route 
+                        <Route
                             exact
                             path={`${match.url}`}
                             render={() => (
                                 <Classroom />
                             )}
                         />
-                        <Route 
+                        <Route
+                            path={`${match.url}/classroom`}
+                            render={({ location }) => (
+                                <Redirect
+                                    to={{
+                                        pathname: '/',
+                                        state: { from: location }
+                                    }} />
+                            )}
+                        />
+                        <Route
                             path={`${match.url}/manage-users`}
                             render={() => (
                                 <UserManagement />
                             )}
                         />
-                        <Route 
+                        <Route
                             path={`${match.url}/registration`}
                             render={() => (
                                 <Registration />
                             )}
                         />
-                        <Route 
+                        <Route
                             path={`${match.url}/profile`}
                             render={() => (
                                 <Profile />
                             )}
                         />
-                        <Route 
+                        <Route
                             path={`${match.url}/lesson-planner`}
                             render={() => (
                                 <LessonPlanHome />
                             )}
                         />
-                        <Route 
+                        <Route
                             path={`${match.url}/manage-institutions`}
                             render={() => (
                                 <InstitutionsHome />
@@ -141,8 +151,8 @@ const Dashboard: React.FC = () => {
                         />
                     </Switch>
                 </Suspense>
-                </div>
             </div>
+        </div>
     )
 }
 

@@ -33,6 +33,11 @@ export const onUpdateClassroom = /* GraphQL */ `
                     focus
                     id
                 }
+                rawSelected {
+                    color
+                    selected
+                }
+                selectGroup
             }
             activityData {
                 editInput
@@ -66,6 +71,7 @@ export const onChangeStudentData = /* GraphQL */ `
     onChangeStudentData(classroomID: $classroomID) {
         id
         lessonProgress
+        currentLocation
         status
         saveType
         classroomID
@@ -79,6 +85,7 @@ export const onChangeStudentData = /* GraphQL */ `
             preferredName
             lastName
             language
+            role
         }
         warmupData {
             story
@@ -99,6 +106,11 @@ export const onChangeStudentData = /* GraphQL */ `
                 focus
                 id
             }
+            rawSelected {
+                color
+                selected
+            }
+            selectGroup
         }
         activityData {
             editInput

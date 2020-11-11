@@ -19,7 +19,7 @@ const SelfDisplay = (props: props) => {
         dispatch({type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown'})
     }, [])
 
-    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'warmup/breakdown' : false;
+    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.currentLocation ? state.studentViewing.studentInfo.currentLocation === 'warmup/breakdown' : state.studentViewing.studentInfo.lessonProgress === 'warmup/breakdown' : false;
 
     useEffect(() => {
         if (displayStudentData) {

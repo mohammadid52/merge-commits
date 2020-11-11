@@ -125,6 +125,7 @@ type Course @model {
   class: Class @connection(fields: ["classID"])
   curriculumID: ID!
   curriculum: Curriculum @connection(fields: ["curriculumID"])
+  classrooms: [Classroom] @connection(keyName: "byCourse", fields: ["id"])
   location: String
   startDate: AWSDate
   endDate: AWSDate
@@ -178,8 +179,15 @@ type Selection {
   id: Int
 }
 
+type RawSelection {
+  color: String
+  selected: [String]
+}
+
 type CoreLessonData {
   selected: [Selection]
+  rawSelected: [RawSelection]
+  selectGroup: Int
 }
 
 type LineInput {
@@ -208,6 +216,7 @@ type StudentData @model(subscriptions: null)
 {
   id: ID!
   lessonProgress: String!
+  currentLocation: String
   status: String!
   saveType: String
   classroomID: ID!
@@ -283,9 +292,13 @@ type Classroom @model(subscriptions: null)
   open: Boolean!
   openedAt: AWSDate
   closedAt: AWSDate
+  complete: Boolean
   roster: [String!]!
   viewing: String
   displayData: DisplayData
+  expectedStartDate: AWSDate
+  expectedEndDate: AWSDate
+  SELStructure: String
   courseID: ID!
   course: Course @connection(fields: ["courseID"])
   lessonID: ID!
@@ -379,9 +392,17 @@ type Breakdown {
   reflectionQuestions: [String]
 }
 
+type TruthGameInput {
+  id: String
+  label: String
+}
+
 type Inputs {
   title: Boolean!
   example: String
+  titleExample: String
+  textExample: String
+  truthGameInputs: [TruthGameInput]
   additionalInputs: [WritingPrompts!]
 }
 

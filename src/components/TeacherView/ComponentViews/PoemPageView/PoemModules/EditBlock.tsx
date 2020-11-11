@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 interface EditBlockProps {
@@ -8,58 +8,72 @@ interface EditBlockProps {
         open: boolean;
         input: string;
     }
-    fullscreen: boolean
+    fullscreen: boolean
+    displayStudentData?: boolean;
 }
 
 const EditBlock = (props: EditBlockProps) => {
-    const { editMode, fullscreen } = props;
+    const { editMode, fullscreen, displayStudentData } = props;
     const { state, theme, dispatch } = useContext(LessonControlContext);
-    const [cookies, setCookie] = useCookies(['poem']);
-    const [editInput, setEditInput] = useState<{ title: string, text: string }>({
+    // const [ cookies, setCookie ] = useCookies(['poem']);
+    const [ editInput, setEditInput ] = useState<{title: string, text: string}>({
         title: '',
         text: editMode.input,
     })
 
     useEffect(() => {
-        if (cookies.poem && cookies.poem.editMode) {
-            setEditInput(() => {
-                return {
-                    title: cookies.poem.title,
-                    text: cookies.poem.editInput,
-                }
-            })
-        }
-    }, [])
+        if ( displayStudentData && state.studentViewing.studentInfo.activityData ) {
+            if ( state.studentViewing.studentInfo.activityData.editMode ) {
+                setEditInput(() => {
+                    return {
+                        title: state.studentViewing.studentInfo.activityData.title,
+                        text: state.studentViewing.studentInfo.activityData.editInput,
+                    }
+                })
+            }
+        }  
+    }, [state.studentViewing])
 
-    useEffect(() => {
-        // if ( state.componentState.poem && state.componentState.poem.editMode === true ) {
-        //     dispatch({
-        //         type: 'UPDATE_COMPONENT_STATE',
-        //         payload: {
-        //             componentName: 'poem',
-        //             inputName: 'editInput',
-        //             content: editInput.text
-        //         }
-        //     })
+    // useEffect(() => {
+    //     if ( cookies.poem && cookies.poem.editMode ) {
+    //         setEditInput(() => {
+    //             return {
+    //                 title: cookies.poem.title,
+    //                 text: cookies.poem.editInput,
+    //             }
+    //         })
+    //     }
+    // }, [])
 
-        //     setCookie('poem', {...cookies.poem, editInput: editInput.text})
-        // } 
-    }, [editInput.text])
+    // useEffect(() => {
+    //     if ( state.componentState.poem && state.componentState.poem.editMode === true ) {
+    //         dispatch({
+    //             type: 'UPDATE_COMPONENT_STATE',
+    //             payload: {
+    //                 componentName: 'poem',
+    //                 inputName: 'editInput',
+    //                 content: editInput.text
+    //             }
+    //         })
 
-    useEffect(() => {
-        // if ( state.componentState.poem && state.componentState.poem.editMode === true ) {
-        //     dispatch({
-        //         type: 'UPDATE_COMPONENT_STATE',
-        //         payload: {
-        //             componentName: 'poem',
-        //             inputName: 'title',
-        //             content: editInput.title
-        //         }
-        //     })
+    //         setCookie('poem', {...cookies.poem, editInput: editInput.text})
+    //     } 
+    // }, [editInput.text])
 
-        //     setCookie('poem', {...cookies.poem, title: editInput.title})
-        // } 
-    }, [editInput.title])
+    // useEffect(() => {
+    //     if ( state.componentState.poem && state.componentState.poem.editMode === true ) {
+    //         dispatch({
+    //             type: 'UPDATE_COMPONENT_STATE',
+    //             payload: {
+    //                 componentName: 'poem',
+    //                 inputName: 'title',
+    //                 content: editInput.title
+    //             }
+    //         })
+
+    //         setCookie('poem', {...cookies.poem, title: editInput.title})
+    //     } 
+    // }, [editInput.title])
 
     const handleChange = (e: { target: { id: string; value: string; }; }) => {
         const { id, value } = e.target

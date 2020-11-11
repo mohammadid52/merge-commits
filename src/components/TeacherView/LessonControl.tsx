@@ -10,6 +10,7 @@ import {
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaExpand, FaCompress, FaHome, FaRegThumbsUp } from 'react-icons/fa';
+import { FiUsers } from 'react-icons/fi';
 import { BsPersonFill } from 'react-icons/bs';
 import { NavLink } from 'react-router-dom';
 import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
@@ -21,6 +22,9 @@ import ClassRoster from './ClassRoster';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
 import ToolTip from '../General/ToolTip/ToolTip';
 import FooterLabels from '../General/LabelSwitch';
+import PositiveAlert from '../General/Popup';
+import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
+import Body from './Body';
 const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
 const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
 const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
@@ -33,11 +37,14 @@ const LessonControl = () => {
     const match = useRouteMatch();
     const history = useHistory();
     const location = useLocation();
-    const [ componentView, setComponentView ] = useState('');
     const [ fullscreen, setFullscreen ] = useState(false);
-    const [ studentDataLoading, setStudentDataLoading ] = useState('');
+    // const [ studentDataLoading, setStudentDataLoading ] = useState('');
     const [ shareable, setShareable ] = useState(false);
     const [ isSameStudentShared, setIsSameStudentShared ] = useState(false);
+    const [ open, setOpen ] = useState(state.open);
+    console.log(state, 'state')
+
+    // console.log(open, 'open');
 
     const handleFullscreen = () => {
         setFullscreen(fullscreen => {
@@ -52,10 +59,14 @@ const LessonControl = () => {
         return firstInitial;
     }
 
+    useEffect(() => {
+        // console.log(state, 'state')
+    }, [])
+
     const handleUpdateClassroom = async () => {
         let updatedClassroomData: any = {
-            id: '1',
-            open: true,
+            id: state.classroomID,
+            open: state.open ? state.open : false,
             viewing: state.studentViewing.studentInfo && state.studentViewing.studentInfo.studentAuthID ? state.studentViewing.studentInfo.studentAuthID : null,
             displayData: state.displayData,
             lessonPlan: state.pages
@@ -64,6 +75,28 @@ const LessonControl = () => {
         try {
             const updatedClassroom = await API.graphql(graphqlOperation(customMutations.updateClassroom, {input: updatedClassroomData}))
             dispatch({ type: 'SAVED_CHANGES' })
+            // console.log(updatedClassroom);
+            
+        } catch (err) {
+            console.error(err);   
+        }
+    }
+
+    const handleUpdateClassroomDate = async () => {
+        let updatedClassroomDateData: any = {
+            id: state.classroomID,
+            open: state.open ? state.open : false,
+            lessonPlan: state.pages,
+            complete: state.complete,
+            expectedStartDate: state.expectedStartDate,
+            expectedEndDate: state.expectedEndDate
+        }
+        
+        try {
+            const updatedClassroomDate = await API.graphql(graphqlOperation(customMutations.updateClassroomDate, {input: updatedClassroomDateData}))
+            dispatch({ type: 'SAVED_CHANGES' })
+            // console.log(updatedClassroom);
+            
         } catch (err) {
             console.error(err);   
         }
@@ -73,7 +106,7 @@ const LessonControl = () => {
         // console.log(state.studentViewing);
         if ( state.studentViewing.studentInfo ) {
             let displayData = {
-                breakdownComponent: state.studentViewing.studentInfo.lessonProgress,
+                breakdownComponent: state.studentViewing.studentInfo.currentLocation ? state.studentViewing.studentInfo.currentLocation : state.studentViewing.studentInfo.lessonProgress,
                 studentInfo: {
                     id: state.studentViewing.studentInfo.student.id,
                     firstName: state.studentViewing.studentInfo.student.firstName,
@@ -84,10 +117,22 @@ const LessonControl = () => {
                 corelessonData: state.studentViewing.studentInfo.corelessonData ? state.studentViewing.studentInfo.corelessonData : null, 
                 activityData: state.studentViewing.studentInfo.activityData ? state.studentViewing.studentInfo.activityData : null, 
             }
-            // console.log(displayData)
-            dispatch({ type: 'SET_SHARE_MODE', payload: state.studentViewing.studentInfo.lessonProgress })
+            console.log(displayData)
+            dispatch({ type: 'SET_SHARE_MODE', payload: state.studentViewing.studentInfo.currentLocation ? state.studentViewing.studentInfo.currentLocation : state.studentViewing.studentInfo.lessonProgress })
             dispatch({ type: 'SET_DISPLAY_DATA', payload: displayData })
         }
+    }
+
+    const handleOpen = () => {
+        dispatch({ type: 'START_CLASSROOM' })
+        setOpen(true);
+        // console.log(state)
+    }
+
+    const handleComplete = () => {
+        dispatch({ type: 'COMPLETE_CLASSROOM' })
+        setOpen(true);
+        // console.log(state)
     }
 
     const handleQuitShare = () => {
@@ -116,13 +161,13 @@ const LessonControl = () => {
     }, [state.unsavedChanges])
 
     useEffect(() => {
-        if ( !state.studentDataUpdated ) {
-            setStudentDataLoading('loading')
-        }
+        // if ( !state.studentDataUpdated ) {
+        //     setStudentDataLoading('loading')
+        // }
         
-        if ( state.studentDataUpdated ) {
-            setStudentDataLoading('')
-        }
+        // if ( state.studentDataUpdated ) {
+        //     setStudentDataLoading('')
+        // }
 
     }, [state.studentDataUpdated])
 
@@ -145,7 +190,19 @@ const LessonControl = () => {
         
         if (state.studentViewing.live) {
             // console.log(state.studentViewing.live)
-            history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`)
+            let hasCurrentLocation = typeof state.studentViewing.studentInfo.currentLocation === 'string';
+
+            console.log(typeof state.studentViewing.studentInfo.currentLocation, hasCurrentLocation);
+            
+
+            if (hasCurrentLocation) {
+                history.push(`${match.url}/${state.studentViewing.studentInfo.currentLocation}`)
+            }
+
+            if (!hasCurrentLocation) {
+                history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`)
+            }
+            
         }
 
     }, [state.studentViewing])
@@ -188,10 +245,30 @@ const LessonControl = () => {
  
     }, [state.displayData, state.studentViewing])
 
-    useEffect(() => {
-        console.log(state);
-        
-    }, [state.studentViewing])
+    const {visible, setVisible, ref} = useOutsideAlerter(false);
+
+    const [homePopup, setHomePopup] = useState(false);
+    const [lessonButton, setLessonButton] = useState(false);
+
+    const handleClick = () => {
+        setVisible((prevState: any) => !prevState)
+    }
+
+    const handleHomePopup = () => {
+        setHomePopup((prevState: any) => !prevState)
+    }
+
+    const handleLessonButton = () => {
+        setLessonButton((prevState: any) => !prevState)
+    }
+
+    const handleSubmit = () => {
+        history.push('/dashboard/manage-users');
+    }
+
+    const handleHome = () => {
+        history.push('/dashboard/lesson-planner');
+    }
 
     if ( state.status !== 'loaded') {
         return (
@@ -201,23 +278,83 @@ const LessonControl = () => {
 
     return (
         <div className={`w-full h-screen bg-gray-200`}>
-            <div className={`w-full h-full flex flex-col`}>
+            <div className={`relative w-full h-full flex flex-col`}>
+                <div className={`${visible ? 'absolute z-100' : 'hidden'} max-w-sm`} style={{top: '20%', left: '500px'}} onClick={handleClick}>
+                    <PositiveAlert 
+                        alert={visible}
+                        setAlert={setVisible}
+                        header='Are you sure you want to leave the Teacher View?'
+                        button1='Go to student management' 
+                        button2='Cancel' 
+                        svg='question' 
+                        handleButton1={handleSubmit} 
+                        handleButton2={() => handleClick}
+                        />
+                </div>
+                <div className={`${homePopup ? 'absolute z-100' : 'hidden'} max-w-sm`} style={{top: '20%', left: '500px'}} onClick={handleHomePopup}>
+                    <PositiveAlert 
+                        alert={homePopup}
+                        setAlert={setHomePopup}
+                        header='Are you sure you want to leave the Teacher View?'
+                        button1='Go to the dashboard' 
+                        button2='Cancel' 
+                        svg='question' 
+                        handleButton1={handleHome} 
+                        handleButton2={() => handleHomePopup}
+                        />
+                </div>
+                <div className={`${lessonButton ? 'absolute z-100' : 'hidden'} max-w-sm`} style={{top: '20%', left: '500px'}} onClick={handleLessonButton}>
+                        <PositiveAlert 
+                            alert={lessonButton}
+                            setAlert={setLessonButton}
+                            header='Are you sure you want to close this lesson?'
+                            button1='Complete lesson' 
+                            button2='Cancel' 
+                            svg='question' 
+                            handleButton1={handleHome} 
+                            handleButton2={() => handleLessonButton}
+                            />
+                    </div>
                 <div className={`relative w-full h-1/10 border-b border-gray-400 flex flex-row items-center`} 
                 // onClick={handleQuitAll}
                 >
-                    <h1 className={`w-3/10 text-3xl pl-4 font-extrabold font-open`}>
-                        Where I'm From
+                    <h1 className={`w-2.5/10 text-3xl pl-4 font-extrabold font-open`}>
+                       {state.data.lesson.title}
                     </h1>
 
-                    <div className="w-6/10 flex justify-around items-center">
+                    {/* <div className={`${!state.open ? 'bg-red-700 text-white cursor-pointer shadow-elem-dark' : 'bg-gray-500 text-black'} w-1/10 h-7/10 px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center text-center`} onClick={handleOpen}>
+                        {!state.open ? 'START LESSON' : 'LESSON STARTED'}
+                    </div> */}
+                    {!state.open? 
+                    <div className="bg-red-700 text-white cursor-pointer shadow-elem-dark w-1/10 h-7/10 px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center text-center" onClick={handleOpen}>
+                        START LESSON
+                    </div>
+                        :
+                    <div className="bg-black text-gray-500 cursor-pointer shadow-elem-dark w-1/10 h-7/10 px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center text-center" onClick={handleLessonButton}>
+                        COMPLETE LESSON
+                    </div>
+                    }
+
+                    <div className="w-1/10 h-full flex flex-col justify-center items-center ml-4">
+                        <div className="flex flex-col w-auto leading-4 items-center">
+                            Start Lesson:
+                            <span className="font-open font-semibold w-auto">{state.expectedStartDate}</span>
+                        </div>
+                        <div className="flex flex-col w-auto leading-4 items-center">
+                            End Lesson:
+                            <span className="font-open font-semibold w-auto">{state.expectedEndDate}</span>
+                        </div>
+                    </div>
+
+                    <div className="w-4/10 flex justify-around items-center">
 
                         <div className="w-1/3 flex justify-center items-center">
                             <div className="w-full flex flex-col justify-center items-center">
-                                <div className="w-6/10 font-semibold text-indigo-500 text-center">
+                                <div className="w-6/10 font-semibold leading-4 mb-1 text-indigo-500 text-center">
                                     <span className="font-normal text-black">currently </span> viewing:
                                 </div>
                                 <div className="w-full flex justify-center items-center">
-                                    <div className={`w-auto px-2 flex justify-center items-center ${state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? 'bg-indigo-500 hover:bg-indigo-400 text-gray-200 rounded-xl text-xl font-semibold overflow-x-auto shadow-elem-dark cursor-pointer': 'text-black text-xs'}`} onClick={handleQuitViewing}>
+                                    <div className={`w-auto ml-5 px-2 flex justify-center items-center ${state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? 'bg-indigo-500 hover:bg-indigo-400 text-gray-200 rounded-xl text-xl font-semibold overflow-x-auto shadow-elem-dark cursor-pointer': 'text-black text-xs'}`} onClick={handleQuitViewing}>
                                         { state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.student.firstName + ' ' + firstInitialFunc(state.studentViewing.studentInfo.student.lastName): '(click on a student)' }
                                     </div>
                                     <div className={`w-auto ml-2 ${state.studentViewing.live ? '' : 'hidden'}`}>
@@ -250,13 +387,13 @@ const LessonControl = () => {
                             </div>
                         </div>
 
-                        <div className={`w-1/3 h-18 ${state.sharing ? 'border-dotted border-4 border-red-700 ' : ''} flex justify-around items-center `}>
+                        <div className={`w-1/3 h-full ${state.sharing ? 'border-dotted border-4 border-red-700 ' : ''} flex justify-around items-center `}>
                             <div className={`${state.sharing ? '' : 'hidden'} w-full h-full flex flex-col justify-center items-center`}>
-                                <div className="w-6/10 h-4/10 text-purple-400 font-semibold text-center"> 
+                                <div className="w-6/10 h-4/10 leading-4 mb-1 text-purple-400 font-semibold text-center"> 
                                     <span className="font-normal text-black">currently </span> sharing:
                                 </div>
-                                <div className="w-full h-full flex justify-center items-center">
-                                    <div className={`w-auto px-2 flex justify-center items-center ${state.sharing ? 'bg-purple-400 hover:bg-purple-300 shadow-elem-dark rounded-xl text-gray-200 text-xl font-semibold cursor-pointer' : 'text-black text-xs' }`} onClick={handleQuitShare}>
+                                <div className="w-full h-6/10 flex justify-center items-center">
+                                    <div className={`w-auto ml-5 px-2 flex justify-center items-center ${state.sharing ? 'bg-purple-400 hover:bg-purple-300 shadow-elem-dark rounded-xl text-gray-200 text-xl font-semibold cursor-pointer' : 'text-black text-xs' }`} onClick={handleQuitShare}>
                                         { state.sharing ? state.displayData.studentInfo.firstName + ' ' + firstInitialFunc(state.displayData.studentInfo.lastName): '(share student info)'  }
                                     </div>
                                     <div className={`w-auto ml-2 ${state.sharing ? '' : 'hidden'}`}>
@@ -275,13 +412,23 @@ const LessonControl = () => {
 
                     </div>
                 
-                    <div className={`w-1/10 pr-4 flex flex-col justify-center items-center px-2 cursor-pointer`} style={{right: 0}}>
-                        <NavLink to="/dashboard">
-                            <IconContext.Provider value={{ size: '1.5rem'}}>
-                                <FaHome />
-                            </IconContext.Provider>
-                        </NavLink>
-                        <p className="text-xs text-center">Home</p>
+                    <div className={`w-1/10 pr-4 flex justify-between items-center px-2`} style={{right: 0}}>
+                        <div className="flex flex-col justify-center items-center cursor-pointer px-2" onClick={handleClick}>
+                            {/* <NavLink to="/dashboard/manage-users"> */}
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <FiUsers />
+                                </IconContext.Provider>
+                            {/* </NavLink> */}
+                            <p className="text-xs text-center">Students Management</p> 
+                        </div>
+                        <div className="flex flex-col justify-center items-center cursor-pointer px-2" onClick={handleHomePopup}>
+                            {/* <NavLink to="/dashboard"> */}
+                                <IconContext.Provider value={{ size: '1.5rem'}}>
+                                    <FaHome />
+                                </IconContext.Provider>
+                            {/* </NavLink> */}
+                            <p className="text-xs text-center">Home</p>
+                        </div>
                     </div>
                 </div>
                 <div className={`w-full h-9/10 flex p-3 pb-5 rounded-lg`}>
@@ -296,7 +443,7 @@ const LessonControl = () => {
                                 <div className="w-4/10 flex justify-around items-center relative">
                                     <ToolTip position='hidden-bottom' header='' content='students in class' display='none' fontSize= 'text-xs'/>
                                     <div className="w-auto">
-                                        <IconContext.Provider value={{ size: '1.4rem', style: {width: 'auto'}}}>
+                                        <IconContext.Provider value={{ size: '2rem', style: {width: 'auto'}}}>
                                             <BsPersonFill />
                                         </IconContext.Provider>
                                     </div>
@@ -307,16 +454,26 @@ const LessonControl = () => {
 
                                 <div className="w-4/10 flex justify-around items-center">
                                     {/* <ToolTip position='hidden-bottom' header='' content='students who are ready (click to reset)' width='w-20' cursor display='none' fontSize= 'text-xs'/> */}
-                                    <div className="w-auto relative" onClick={handleResetDoneCounter}>
+                                    <div className={`w-auto relative`} onClick={handleResetDoneCounter}>
                                     <ToolTip position='hidden-bottom'  
                                         cursor
                                         header=''
                                         width='w-24'
                                         content= {<div className="flex flex-col"><div>students who are ready</div> <p className="font-bold"> (click to reset)</p></div>}
                                         display='none' fontSize= 'text-xs'/>
-                                        <IconContext.Provider value={{ size: '1.4rem', style: {width: 'auto'}}}>
+                                        {state.done.length === state.roster.length ?
+                                        <IconContext.Provider value={{ size: '2rem', style: {width: 'auto'}, color: '#009e00' }}>
                                             <FaRegThumbsUp style={{ pointerEvents: 'none' }}/>
                                         </IconContext.Provider>
+                                        : state.done.length !== state.roster.length ?
+                                        <IconContext.Provider value={{ size: '2rem', style: {width: 'auto'}, color: 'yellow' }}>
+                                            <FaRegThumbsUp style={{ pointerEvents: 'none' }}/>
+                                        </IconContext.Provider>
+                                        :
+                                        <IconContext.Provider value={{ size: '2rem', style: {width: 'auto'}, color: 'yellow' }}>
+                                            <FaRegThumbsUp style={{ pointerEvents: 'none' }}/>
+                                        </IconContext.Provider>
+                                        }
                                     </div>
                                     <div className="w-auto">
                                        { state.done.length }
@@ -365,7 +522,8 @@ const LessonControl = () => {
                                     <ComponentLoading />
                                 </div>
                             }>  
-                                <Switch>
+                            <Body />
+                                {/* <Switch>
                                     <Route 
                                         path={`${match.url}/intro`}
                                         render={() => (
@@ -413,7 +571,7 @@ const LessonControl = () => {
                                             }}/>
                                             )}
                                             />
-                                </Switch>
+                                </Switch> */}
                             </Suspense>
 
                         </div>
@@ -449,7 +607,7 @@ const LessonControl = () => {
                                     }
                                     />
                                 </div>
-                            <LessonControlBar setComponentView={setComponentView} />
+                            <LessonControlBar />
                         </div>
                     </div>
                 </div>

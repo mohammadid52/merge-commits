@@ -10,6 +10,7 @@ type pageObject = {
 export type studentObject = {
     id: string
     lessonProgress: string
+    currentLocation?: string
     status: string
     live: boolean
     studentID: string
@@ -65,7 +66,9 @@ export interface lessonControlStateType  {
     studentViewing: {
         live: boolean,
         studentInfo?: studentObject
-    }
+    },
+    open?: boolean,
+    classroomID: string
 }
 
 export const lessonControlState: lessonControlStateType = {
@@ -83,5 +86,7 @@ export const lessonControlState: lessonControlStateType = {
     },
     studentViewing: {
         live: false,
-    }
+    },
+    open: null,
+    classroomID: '',
 }

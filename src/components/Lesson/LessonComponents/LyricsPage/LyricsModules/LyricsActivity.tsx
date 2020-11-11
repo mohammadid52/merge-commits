@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
 import Banner from './Banner';
@@ -38,45 +38,66 @@ const Body = () => {
       ? state.componentState.lyrics.selected
       : []
   );
-  const [cookies, setCookie] = useCookies(['lyrics']);
-  const [selectedCookie, setSelectedCookie] = useCookies(['selected']);
-  const [selectGroupCookie, setSelectGroupCookie] = useCookies(['selectGroup']);
+  const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
   const [fullscreen, setFullscreen] = useState(false);
   const { video, link } = state.data.lesson.coreLesson.instructions;
   const [openPopup, setOpenPopup] = useState(false);
   //  text
-  const [firstLastSelected, setFirstLastSelected] = useState<string[]>([]);
-  const [initialSelectedText, setInitialSelectedText] = useState<SelectedTextGroup>({});
+  // const [firstLastSelected, setFirstLastSelected] = useState<string[]>([]);
   const [finalText, setFinalText] = useState<FinalText>({});
+  const [initialSelectedText, setInitialSelectedText] = useState<SelectedTextGroup>({});
   const [selectGroup, setSelectGroup] = useState<number>(0);
 
+  const initialSelectedObjectToArray = (obj: any) => {
+    if ( typeof obj === 'object' ) {
+      let selectionArray: Array<{color: string, selected: string[]}> = [];
+      let keyArray = Object.keys(obj)
+      keyArray.forEach((key: string) => {
+        selectionArray.push(obj[key])
+      })
+      return selectionArray
+    }
+  }
+  
   useEffect(() => {
-    if (cookies.lyrics) {
+    if ( cookies[`lesson-${state.classroomID}`].lyrics ) {
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
         payload: {
           name: 'lyrics',
           content: {
-            selected: cookies.lyrics,
+            selected: cookies[`lesson-${state.classroomID}`].lyrics,
           },
         },
       });
 
-      setSelected(cookies.lyrics);
+      setSelected(cookies[`lesson-${state.classroomID}`].lyrics.selected);
+      setInitialSelectedText(cookies[`lesson-${state.classroomID}`].lyrics.rawSelected);
+      setSelectGroup(parseInt(cookies[`lesson-${state.classroomID}`].lyrics.selectGroup));
     }
 
-    if (!cookies.lyrics && !state.componentState.lyrics) {
+    if ( !cookies[`lesson-${state.classroomID}`].lyrics && !state.componentState.lyrics ) {
+      
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
         payload: {
           name: 'lyrics',
           content: {
             selected: [],
+            selectGroup: 0,
+            rawSelected: {}
           },
         },
       });
 
-      setCookie('lyrics', []);
+      setCookie(`lesson-${state.classroomID}`, {
+        ...cookies[`lesson-${state.classroomID}`],
+        lyrics: {
+          selected: [],
+          selectGroup: 0,
+          rawSelected: {}
+        }
+      });
     }
   }, []);
 
@@ -90,28 +111,39 @@ const Body = () => {
           content: selected,
         },
       });
-      setCookie('lyrics', selected);
+
+      dispatch({
+        type: 'UPDATE_COMPONENT_STATE',
+        payload: {
+          componentName: 'lyrics',
+          inputName: 'rawSelected',
+          content: initialSelectedObjectToArray(initialSelectedText),
+        },
+      });
+
+      setCookie(`lesson-${state.classroomID}`, {
+        ...cookies[`lesson-${state.classroomID}`],
+        lyrics: {
+          ...cookies[`lesson-${state.classroomID}`].lyrics,
+          selected: selected,
+        }
+      })
+
+      setCookie(`lesson-${state.classroomID}`, {
+        ...cookies[`lesson-${state.classroomID}`],
+        lyrics: {
+          ...cookies[`lesson-${state.classroomID}`].lyrics,
+          rawSelected: initialSelectedText,
+          selectGroup: selectGroup,
+        }
+      })
+
     }
   }, [selected]);
 
   /**
    * COOKIE loading for previously highlighted text WOOO!!!
    */
-
-  useEffect(() => {
-    if (typeof selectedCookie.selected !== 'undefined') {
-      setInitialSelectedText(selectedCookie.selected);
-      setSelectGroup(parseInt(selectGroupCookie.selectGroup));
-    }
-  }, []);
-
-  useEffect(() => {
-    setSelectGroupCookie('selectGroup', selectGroup);
-  }, [selectGroup]);
-
-  useEffect(() => {
-    setSelectedCookie('selected', JSON.stringify(initialSelectedText));
-  }, [initialSelectedText]);
 
   return (
     <>
@@ -127,25 +159,24 @@ const Body = () => {
         <div className='relative'>
           {/* Toolbar becomes sticky */}
           <Toolbar setColor={setColor} color={color}/>
-
-          <LyricsBlock
-            color={color}
-            selected={selected}
-            setSelected={setSelected}
-            fullscreen={fullscreen}
-            setFullscreen={setFullscreen}
-            firstLastSelected={firstLastSelected}
-            setFirstLastSelected={setFirstLastSelected}
-            initialSelectedText={initialSelectedText}
-            setInitialSelectedText={setInitialSelectedText}
-            finalText={finalText}
-            setFinalText={setFinalText}
-            selectGroup={selectGroup}
-            setSelectGroup={setSelectGroup}
-          />
-        </div>
-      </div>
-    </>
+            <LyricsBlock
+              color={color}
+              selected={selected}
+              setSelected={setSelected}
+              fullscreen={fullscreen}
+              setFullscreen={setFullscreen}
+              // firstLastSelected={firstLastSelected}
+              // setFirstLastSelected={setFirstLastSelected}
+              initialSelectedText={initialSelectedText}
+              setInitialSelectedText={setInitialSelectedText}
+              finalText={finalText}
+              setFinalText={setFinalText}
+              selectGroup={selectGroup}
+              setSelectGroup={setSelectGroup}
+              />
+              </div>
+            </div>
+          </>
   );
 };
 

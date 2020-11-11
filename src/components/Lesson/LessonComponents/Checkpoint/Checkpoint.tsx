@@ -13,18 +13,16 @@ const Checkpoint = () => {
     setTitle(title);
   };
 
-  const tempCheckPtSwitch = (type: string) => {
-    switch (type) {
-      case 'profile':
-        return <SampleProfileQuestions />;
-      case 'survey':
-        return <CheckpointQuestions handleSetTitle={handleSetTitle} />;
-      case 'assessment':
-        return <Assessments handleSetTitle={handleSetTitle} />;
-      default:
-        return;
+    const tempCheckPtSwitch = (type: string) => {
+        switch(type) {
+            case 'profile': 
+                return <SampleProfileQuestions  />
+            case 'survey':
+                return <CheckpointQuestions handleSetTitle={handleSetTitle} />
+            default:
+                return
+        }
     }
-  };
 
   useEffect(() => {
     if (!state.pages[state.currentPage].active) {

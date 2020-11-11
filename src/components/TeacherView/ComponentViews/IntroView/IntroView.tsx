@@ -18,7 +18,7 @@ const IntroView = (props: props) => {
     const [doFirstData, setDoFirstData] = useState<{ [key: string]: any }>()
     const { fullscreen } = props;
 
-    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'intro' : false;
+    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.currentLocation ? state.studentViewing.studentInfo.currentLocation === 'intro' : state.studentViewing.studentInfo.lessonProgress === 'intro' : false;
 
 
     return (

@@ -1,11 +1,13 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
 
 const Keyword = () => {
-  const { state, theme } = useContext(LessonContext);
+  const { state, theme } = useContext(LessonContext); 
   const keywords = state.data.lesson.keywords.items;
+
+ 
 
   return (
     <div className={`flex flex-col md:w-full ${theme.block.text} rounded-r-lg`}>
@@ -24,22 +26,29 @@ const Keyword = () => {
         </IconContext.Provider>
       </div>
 
-      <div className='flex flex-row flex-wrap'>
+      <div className='flex flex-row flex-wrap z-50'>
         {typeof keywords !== 'undefined'
           ? keywords.map(
             (item: { word: { word: string; definition: string }; wordID: number }, i: number) => {
               return (
-                <div key={i} className={`px-1 w-3.3/10`}>
-                  <div className={`relative p-2 h-full  ${theme.elem.card}`}>
-                    <div className='h-auto flex flex-col mb-2'>
-                      <div className={`w-full`}>
-                        <div className='h-6/10 justify-center items-center align-center'>
-                          <p className={`${theme.elem.title}`}>{item.word.word}:</p>{' '}
-                          <p className={theme.elem.text}>{item.word.definition}</p>
-                        </div>
+                <div
+                  key={i}
+                  id={`kw${i}`}
+                  className={`relative h-32 min-h-32 mb-4 p-2 w-3.3/10 z-10 hover:z-50 rounded-lg`}
+                >
+
+                  <div className={`relative h-32 min-h-32 hover:z-50 bg-light-gray rounded-lg`}>
+                    <div className='relative min-h-32 h-32 h-full w-full rounded-lg'>
+
+                      <div className='h-32 hover:h-auto p-2 hover:absolute hover:shadow-lg overflow-hidden bg-light-gray rounded-lg border-8 border-light-gray'>
+                        <p className={`${theme.elem.title}`}>{item.word.word}:</p>
+                        <p className={theme.elem.text}>{item.word.definition}</p>
                       </div>
+
                     </div>
+
                   </div>
+
                 </div>
               );
             }

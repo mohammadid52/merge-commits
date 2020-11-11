@@ -21,6 +21,7 @@ interface ToolTipProps {
   width?: string;
   cursor?: boolean;
   id?: string;
+  style?: string;
 }
 const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
   const [visible, setVisible] = useState<boolean>(false);
@@ -68,7 +69,7 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
     }
   }, []);
   return (
-    <div className={`${toolTipProps.display === 'none' ? 'absolute w-full h-full' : 'w-8 h-8'} `} style={{
+    <div className={`${toolTipProps.display === 'none' ? 'absolute w-full h-full' : 'w-8 h-8'} ${toolTipProps.style ? `${toolTipProps.style}` : ''}`} style={{
       MozUserSelect: 'none',
       WebkitUserSelect: 'none',
       msUserSelect: 'none',
@@ -80,7 +81,7 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
         onMouseOut={handleToolTipHover}
         id={toolTipProps.id ? toolTipProps.id : null}>
         <IconContext.Provider value={{ size: '1.2rem', color: toolTipProps.color || 'white', style: {display: toolTipProps.display}  }}>
-          <div className='animate-pulse' id={toolTipProps.id ? toolTipProps.id : null}>
+          <div className='animate-pulse flex justify-center items-center' id={toolTipProps.id ? toolTipProps.id : null}>
             <AiOutlineInfoCircle />
           </div>
         </IconContext.Provider>

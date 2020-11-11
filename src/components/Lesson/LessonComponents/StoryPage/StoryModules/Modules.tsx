@@ -16,10 +16,10 @@ interface FormInputsState {
 }
 
 const Modules = (props: ModulesProps) => {
-  const { inputs } = props;
-  const { state, theme, dispatch } = useContext(LessonContext);
-  const [cookies, setCookie] = useCookies(['story']);
-  const [formInputs, setFormInputs] = useState<FormInputsState>();
+    const { inputs } = props
+    const { state, theme, dispatch } = useContext(LessonContext);
+    const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]) 
+    const [ formInputs, setFormInputs ] = useState<FormInputsState>() 
 
   useEffect(() => {
     inputs.forEach((item: { name: string; example: string; prompt: string }) => {
@@ -31,32 +31,28 @@ const Modules = (props: ModulesProps) => {
       });
     });
 
-    if (cookies.story && cookies.story.additional && cookies.story.additional.length > 0) {
-      cookies.story.additional.forEach((item: { name: string; input: string }) => {
-        setFormInputs((prev) => {
-          return {
-            ...prev,
-            [item.name]: item.input,
-          };
-        });
-      });
-    }
+        if ( cookies[`lesson-${state.classroomID}`]?.story?.additional && cookies[`lesson-${state.classroomID}`].story.additional.length > 0 ) {
+            cookies[`lesson-${state.classroomID}`].story.additional.forEach((item: { name: string, input: string }) => {
+                setFormInputs(prev => {
+                    return {
+                        ...prev,
+                        [item.name]: item.input,
+                    }
+                })
+            })
+        }
 
-    if (
-      state.componentState.story &&
-      state.componentState.story.additional &&
-      state.componentState.story.additional.length > 0
-    ) {
-      state.componentState.story.additional.map((item: { name: string; input: string }) => {
-        setFormInputs((prev) => {
-          return {
-            ...prev,
-            [item.name]: item.input,
-          };
-        });
-      });
-    }
-  }, []);
+        if ( state.componentState.story && state.componentState.story.additional && state.componentState.story.additional.length > 0 ) {
+            state.componentState.story.additional.map((item: {name: string, input: string}) => {
+                setFormInputs(prev => {
+                    return {
+                        ...prev,
+                        [item.name]: item.input,
+                    }
+                })
+            })
+        }
+    }, [])
 
   useEffect(() => {
     if (
@@ -82,10 +78,13 @@ const Modules = (props: ModulesProps) => {
           content: tempArray,
         },
       });
+            setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], story: { ...cookies[`lesson-${state.classroomID}`].story, additional: tempArray }})
 
-      setCookie('story', { ...cookies.story, additional: tempArray });
-    }
-  }, [formInputs]);
+            // setCookie('story', {...cookies.story, additional: tempArray})
+        }
+    }, [formInputs])
+
+
 
   const handleFormInputChange = (e: { target: { id: string; value: string } }) => {
     setFormInputs({
@@ -116,7 +115,7 @@ const Modules = (props: ModulesProps) => {
           ? inputs.map((input, key) => (
               <div key={key} className={`flex flex-col ${key !== inputs.length - 1}`}>
                 <label className={`${theme.elem.text} mt-2 mb-2 w-full`} htmlFor={input.name}>
-                  {input.prompt}
+                  <p><span className='font-bold'>{key+1}.</span>&nbsp;{input.prompt}</p>
                 </label>
                 <input
                   id={input.name}

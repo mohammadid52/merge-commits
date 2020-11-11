@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import InstructionsBlock from './InstructionBlock';
 import StoryForm from './StoryForm';
 import Banner from './Banner';
@@ -27,10 +27,10 @@ const Story = (props: props) => {
     const { state, theme } = useContext(LessonControlContext);
     const inputs = state.data.lesson.warmUp.inputs;
     const video = state.data.lesson.warmUp.instructions.link
-    const [openPopup, setOpenPopup] = useState(false)
-    const [dataProps, setDataProps] = useState<{ title?: string, story?: string, [key: string]: any }>()
-
-    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.lessonProgress === 'warmup' : false;
+    const [ openPopup, setOpenPopup ] = useState(false)
+    const [ dataProps, setDataProps ] = useState<{ title?: string, story?: string, [key: string]: any}>()
+    
+    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.currentLocation ? state.studentViewing.studentInfo.currentLocation === 'warmup' : state.studentViewing.studentInfo.lessonProgress === 'warmup' : false;
 
     useEffect(() => {
         if (displayStudentData) {

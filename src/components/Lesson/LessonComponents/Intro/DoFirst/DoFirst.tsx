@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import TextQuestions from './Questions/TextQuestions';
+import { useCookies } from 'react-cookie';
 import SelectOneQuestions from './Questions/SelectOneQuestions';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 
@@ -23,6 +24,7 @@ const setInitialState = (array: Array<any>) => {
 
 const DoFirst = () => {
   const { state, dispatch, theme } = useContext(LessonContext);
+  const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
   const { questions, required, type } = state.data.lesson.doFirst;
   const doFirstID = state.data.lesson.doFirst.id
   const questionArray = questions.items;
@@ -59,6 +61,12 @@ const DoFirst = () => {
     }
 
     setStatus('loaded')
+
+    if ( cookies[`lesson-${state.classroomID}`]?.doFirst ) {
+      setInput(() => {
+        return cookies[`lesson-${state.classroomID}`].doFirst
+      })
+    }
 
   }, []);
 
@@ -161,9 +169,11 @@ const DoFirst = () => {
       });
     }
 
-    // if (input && cookies.questionData !== input) {
-    //   setCookie('questionData', input);
-    // }
+    setCookie(`lesson-${state.classroomID}`, {
+      ...cookies[`lesson-${state.classroomID}`],
+      doFirst: input
+    })
+
   }, [input]);
 
   const handleSelect = (e: any) => {
