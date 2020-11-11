@@ -255,6 +255,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                     svg='question'
                     handleButton1={handleSubmit}
                     handleButton2={handleCancel}
+                    fill='section'
                 />
             </div>
             <div className={`w-full h-full rounded-xl`}>

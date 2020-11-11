@@ -128,7 +128,7 @@ const PoemActivity = () => {
       <div className={theme.section}>
         <Banner />
         <InstructionBlock editMode={editMode.open} />
-        <div className='flex flex-col justify-between items-center'>
+        <div className='relative flex flex-col justify-between items-center'>
           {!editMode.open ? (
             <WritingBlock editMode={editMode} setEditMode={setEditMode} />
           ) : (

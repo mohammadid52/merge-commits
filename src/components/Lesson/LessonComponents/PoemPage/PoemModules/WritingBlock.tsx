@@ -264,8 +264,7 @@ const WritingBlock = (props: WritingBlockProps) => {
     return (
         <div className='w-full flex flex-col'>
             <div
-                className={`${alert ? 'absolute z-100' : 'hidden'}`}
-                style={{ top: '50%' }} onClick={handlePopup}>
+                className={`${alert ? 'absolute z-100 w-full h-full' : 'hidden'}`} onClick={handlePopup}>
                 <PositiveAlert
                     alert={visible}
                     setAlert={setVisible}
@@ -276,6 +275,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                     svg='question'
                     handleButton1={handleSubmit}
                     handleButton2={() => handlePopup}
+                    fill='section'
                 />
             </div>
             <div className={`w-full h-full rounded-xl`}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface VideoBlockProps {
   link: string;
@@ -8,12 +8,32 @@ interface VideoBlockProps {
 const VideoBlock = (props: VideoBlockProps) => {
   const { link, fullscreen } = props;
 
+   /**
+   * Specific code for making toolbar sticky
+   */
+  const [isSticky, setSticky] = useState(false);
+  const ref = useRef(null);
+
+  const handleScroll = () => {
+    if (ref.current) {
+      setSticky(ref.current.getBoundingClientRect().bottom <= 24);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', () => handleScroll);
+    };
+  }, []);
+
   return (
     <>
       {!fullscreen ? (
-        <div className='w-128 rounded-xl'>
+        <div ref={ref} className={`z-50 w-128 rounded-xl`} style={{height: '320px'}}>
           <iframe
-            className='rounded-xl'
+            className={`${isSticky ? 'fixed bottom-2 right-2 w-1/4 h-1/4' : ''} rounded-xl`}
             height='320'
             src={link}
             frameBorder='0'

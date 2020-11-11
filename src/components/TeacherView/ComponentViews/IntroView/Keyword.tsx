@@ -41,9 +41,9 @@ const Keyword = (props: props) => {
                 >
 
                   <div className={`relative h-32 min-h-32 hover:z-50 bg-light-gray rounded-lg`}>
-                    <div className='relative min-h-32 h-32 h-full w-full rounded-lg'>
+                    <div className='relative min-h-32 h-32 h-full w-full rounded-lg hover:shadow-lg'>
 
-                      <div className='h-32 hover:h-auto p-2 hover:absolute hover:shadow-lg overflow-hidden bg-light-gray rounded-lg border-8 border-light-gray'>
+                      <div className='h-32 hover:h-auto p-2 hover:absolute overflow-hidden bg-light-gray rounded-lg border-8 border-light-gray'>
                         <p className={`${theme.elem.title}`}>{item.word.word}:</p>
                         <p className={theme.elem.text}>{item.word.definition}</p>
                       </div>

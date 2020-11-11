@@ -14,7 +14,7 @@ import SideMenu from '../Lesson/Header/SideMenu';
 const LessonHeaderBar = () => {
     const history = useHistory();
     const { theme, state, dispatch } = useContext(LessonContext);
-    const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
+    const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
     const { visible, setVisible, ref } = useOutsideAlerter(false);
 
     useEffect(() => {
@@ -37,7 +37,7 @@ const LessonHeaderBar = () => {
         }
     }, [state.lessonProgress]);
 
-    
+
 
     const handlePopup = () => {
         setVisible((prevState: any) => !prevState)
@@ -53,12 +53,12 @@ const LessonHeaderBar = () => {
         <div
             className={`z-40 relative center w-full h-.7/10 ${theme.toolbar.bg} text-gray-200 shadow-2xl`}>
 
-        {/**
+            {/**
          * 
          * Potentially need to fix html below
          * 
         */}
-            <div className={`${visible ? 'absolute z-100' : 'hidden'} max-w-sm transform translate-x-1/2 translate-y-1/2 right-1/2`} onClick={handlePopup}>
+            <div className={`${visible ? 'absolute z-100' : 'hidden'}`} onClick={handlePopup}>
                 <PositiveAlert
                     alert={visible}
                     setAlert={setVisible}
@@ -68,15 +68,17 @@ const LessonHeaderBar = () => {
                     svg='question'
                     handleButton1={handleSubmit}
                     handleButton2={() => handlePopup}
+                    theme='dark'
+                    fill='screen'
                 />
 
-                </div>
-
-                <TopMenu />
-                <SideMenu handlePopup={handlePopup}/>
-
             </div>
-  );
+
+            <TopMenu />
+            <SideMenu handlePopup={handlePopup} />
+
+        </div>
+    );
 };
 
 export default LessonHeaderBar;

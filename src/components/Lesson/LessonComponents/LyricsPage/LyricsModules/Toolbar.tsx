@@ -12,7 +12,9 @@ const ToolBar = (props: ToolbarProps) => {
   const { state, theme, dispatch } = useContext(LessonContext);
   const [search, setSearch] = useState('');
 
-
+  /**
+   * Specific code for making toolbar sticky
+   */
   const [isSticky, setSticky] = useState(false);
   const ref = useRef(null);
 

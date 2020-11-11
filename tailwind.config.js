@@ -21,7 +21,7 @@ module.exports = {
         'border-red-700',
         'text-red-400',
         'text-red-700',
-        'bg-purple-300',
+        'bg-purple-300'
       ],
     },
   },

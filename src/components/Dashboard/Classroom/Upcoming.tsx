@@ -13,7 +13,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
   const { curriculum } = props;
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
-  const [openCards, setOpenCards] = useState<string[]>(['']);
+  const [openCards, setOpenCards] = useState<string>('');
   const [lessons, setLessons] = useState<Array<CurriculumInfo>>();
 
   const curriculumLesson = curriculum
@@ -37,12 +37,19 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
    * @param cardID - self explanatory
    */
   const toggleOpenCard = (cardID: string /* e: React.MouseEvent */) => {
-    if (openCards.includes(cardID)) {
-      setOpenCards(openCards.filter((stringID: string) => stringID !== cardID));
+    // if (openCards.includes(cardID)) {
+    //   setOpenCards(openCards.filter((stringID: string) => stringID !== cardID));
+    // } else {
+    //   setOpenCards([...openCards, cardID]);
+    // }
+    if (!openCards.includes(cardID)) {
+      setOpenCards(cardID);
     } else {
-      setOpenCards([...openCards, cardID]);
+      setOpenCards('');
     }
   };
+
+
 
   /**
    * Functional 'component' to toggle on/off covering too much text
@@ -54,7 +61,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
         className={`w-full h-20 absolute flex items-end bottom-0 transform -translate-y-10 transition ${!openCards.includes(toggleID) ? 'bg-gradient-to-t from-white h-8' : ''
           }`}>
         <p
-          className='text-center text-sm text-bold text-blueberry cursor-pointer'
+          className='py-2 text-center text-sm font-bold text-blueberry cursor-pointer'
           onClick={() => {
             toggleOpenCard(toggleID);
           }}>
@@ -71,10 +78,11 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
           <div
             id={`upcoming-${i}`}
             key={i}
-            className={`relative pl-2 pr-2 ${theme.elem.text} w-2.5/10 `}>
+            className={`${openCards.includes(`upcoming-${i}`) ? 'z-50' : 'z-10'} ${theme.elem.text} relative pl-2 pr-2 w-2.5/10 h-100 transition ease-in-out duration-500`}
+            >
 
 
-            <div className={`${openCards.includes(`upcoming-${i}`) ? 'absolute mr-2 h-auto w-auto' : 'min-h-100 h-100'} rounded-xl  bg-white h-auto flex flex-col mb-8`}>
+            <div className={`${openCards.includes(`upcoming-${i}`) ? 'absolute h-auto ' : 'absolute h-100'} min-h-100 p-2 rounded-xl h-auto flex flex-col mb-6 transition ease-in-out duration-500`}>
               <div
                 className={`w-full bg-white  ${theme.dashboard.bg} rounded-t-xl bg-cover`}
                 style={{
@@ -98,7 +106,7 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                   </h2>
                 </div>
               </div>
-              <div className='w-full relative flex flex-col rounded-b-xl'>
+              <div className='w-full relative flex flex-col rounded-b-xl hover:shadow-lg bg-white'>
                 {/* <div
                   className={`${openCards.includes(`upcoming-${i}`) ? 'h-72' : 'h-32'
                     } p-4 mb-2 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
@@ -108,8 +116,8 @@ const UpcomingClass: React.FC<UpcomingProps> = (props: UpcomingProps) => {
                   </p>
                 </div> */}
                 <div
-                  className={`${openCards.includes(`upcoming-${i}`) ? 'h-72' : 'h-32'
-                    } p-4 mb-2 flex flex-col justify-start overflow-hidden ease-in-out duration-500`}>
+                  className={`${openCards.includes(`upcoming-${i}`) ? 'min-h-72 h-full' : 'h-32'
+                    }  p-4 mb-8 flex flex-col justify-start overflow-hidden transition ease-in-out duration-500 bg-white`}>
                   <h1 className={`text-lg text-black font-open text-left`}>{lesson.lesson.title}</h1>
                   <p className={`text-sm text-left`}>
                     {lesson.lesson.summary ? lesson.lesson.summary : 'No Information Available'}
