@@ -28,11 +28,9 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
   const todayLesson = curriculums
   ? curriculums.filter((value: any, index: number, array: CurriculumInfo[]) => {
       if(new Date(value.expectedStartDate) <= new Date )  {
-        if (new Date(value.expectedEndDate) >= new Date){
           if (!value.complete && value.SELStructure !== null){
             return value.lesson;
           }
-        }
       }
     })
   : [];

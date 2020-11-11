@@ -15,6 +15,7 @@ const Poll = lazy(() => import('../LessonComponents/PollPage/Poll'));
 const TChart = lazy(() => import('../LessonComponents/TChartPage/TChart'));
 const TruthGame = lazy(() => import('../LessonComponents/TruthGamePage/TruthGame'));
 const MultiList = lazy(() => import('../LessonComponents/MultiListPage/MultiList'));
+const Adventure = lazy(() => import('../LessonComponents/AdventurePage/Adventure'));
 const Outro = lazy(() => import('../LessonComponents/Outro/Outro'));
 const LessonError = lazy(() => import('../../Error/LessonError'));
 const Checkpoint = lazy(() => import('../LessonComponents/Checkpoint/Checkpoint'));
@@ -43,12 +44,14 @@ const Body = () => {
                 return <MultiList />;
             case 'poll':
                 return <Poll />;
-            // case 'map-game':
-            //     return <MapGame />;
+            case 'adventure':
+                return <Adventure />;
             default:
                 return <LessonError />;
         }
     }
+
+    console.log(state, 'state')
 
     const pageFetch = (stage: string) => {
         let pageMatch = state.pages.filter((page: { stage: string; }) => {

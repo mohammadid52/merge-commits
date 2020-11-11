@@ -8,74 +8,70 @@ const TruthGameForm = (props: any) => {
   const tempData = props;
 
   const { state, theme, dispatch } = useContext(LessonContext);
-  // const [cookies, setCookie] = useCookies(['story']);
+  const gameInputs = state.data.lesson.warmUp.inputs.truthGameInputs;
+  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
   const [input, setInput] = useState({
-    inputs:
-      state.componentState.truthGame && state.componentState.truthGame.inputs
-        ? state.componentState.truthGame.inputs
+    truthGameInputs:
+      state.componentState.truthGame && state.componentState.truthGame.truthGameInputs
+        ? state.componentState.truthGame.truthGameInputs
         : [],
-    title:
-      state.componentState.truthGame && state.componentState.truthGame.title
-        ? state.componentState.truthGame.title
-        : '',
+    // title:
+    //   state.componentState.truthGame && state.componentState.truthGame.title
+    //     ? state.componentState.truthGame.title
+    //     : '',
     // story:
     //   state.componentState.story && state.componentState.story.story
     //     ? state.componentState.story.story
     //     : '',
-  });
-
-  
-
-  // useEffect(() => {
-  //   if (cookies.story) {
-  //     setInput(() => {
-  //       return {
-  //         title: cookies.story.title,
-  //         story: cookies.story.story,
-  //       };
-  //     });
-  //   }
-  // }, []);
-
-  useEffect(() => {
-    if (state.componentState.truthGame) {
-      dispatch({
-        type: 'UPDATE_COMPONENT_STATE',
-        payload: {
-          componentName: 'truthGame',
-          inputName: 'title',
-          content: input.title,
-        },
-      });
-
-      // setCookie('story', { ...cookies.story, title: input.title });
-    }
-  }, [input.title]);
-
-  useEffect(() => {
-    if (state.componentState.truthGame) {
-      dispatch({
-        type: 'UPDATE_COMPONENT_STATE',
-        payload: {
-          componentName: 'truthGame',
-          inputName: 'inputs',
-          content: input.inputs,
-        },
-      });
-      // setCookie('story', { ...cookies.story, story: input.story });
-    }
-
-  }, [input.inputs]);
-
-  const handleInputChange = (e: { target: { id: string; value: string } }) => {
-    console.log(input, 'e.target')
-    setInput({
-      ...input,
-      [e.target.id]: e.target.value,
-      
     });
-    
-  };
+    useEffect(() => {
+      if ( cookies[`lesson-${state.classroomID}`]?.truthGame ) {
+        setInput(() => {
+          return {
+            // title: cookies[`lesson-${state.classroomID}`].truthGame.title,
+            truthGameInputs: cookies[`lesson-${state.classroomID}`].truthGame.truthGameInputs,
+          };
+        });
+      }
+    }, []);
+
+    useEffect(() => {
+      if (state.componentState.truthGame) {
+        dispatch({
+          type: 'UPDATE_COMPONENT_STATE',
+          payload: {
+            componentName: 'truthGame',
+            inputName: 'truthGameInputs',
+            content: input.truthGameInputs,
+          },
+        });
+
+        setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], truthGameInputs: { ...cookies[`lesson-${state.classroomID}`].truthGame, }});
+      }
+    }, [input.truthGameInputs]);
+
+    // useEffect(() => {
+    //   if (state.componentState.truthGame) {
+    //     dispatch({
+    //       type: 'UPDATE_COMPONENT_STATE',
+    //       payload: {
+    //         componentName: 'story',
+    //         inputName: 'story',
+    //         content: input.inputs,
+    //       },
+    //     });
+
+    //     setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], story: { ...cookies[`lesson-${state.classroomID}`].story, story: input.story }});
+    //   }
+    // }, [input.inputs]);
+
+    const handleInputChange = (e: { target: { id: string; value: string } }) => {
+      setInput({
+        ...input,
+        [e.target.id]: e.target.value,
+      });
+    };
+  
 
 
   const [data, setData] = useState<any>(tempData.props);
@@ -101,7 +97,7 @@ const TruthGameForm = (props: any) => {
 
   useEffect(() => {
     console.log(tempData)
-    {console.log(input.inputs, 'input')}
+    {console.log(input.truthGameInputs, 'input')}
   }, [input])
 
   return (
@@ -132,7 +128,7 @@ const TruthGameForm = (props: any) => {
               name='list'
               type='text'
               // placeholder={`${state.data.lesson.warmUp.inputs.textExample}`}
-              defaultValue={`${input.inputs}`}
+              // defaultValue={`${input.truthGameInputs}`}
               onChange={handleInputChange}
             />
             

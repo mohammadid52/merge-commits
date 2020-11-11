@@ -5,12 +5,11 @@ import Modules from './Modules';
 import Banner from './Banner';
 import SelfDisplay from './SelfDisplay';
 import CoopDisplay from './CoopDisplay';
-import CoopDisplaycopy from './CoopDisplaycopy';
 
 
-const TruthGameBreakdown = () => {
+const AdventureBreakdown = () => {
     const { state, dispatch } = useContext(LessonContext);
-    const displayProps = state.componentState.truthGame;
+    const displayProps = state.componentState.story;
     const [displayMode, setDisplayMode] = useState(state.data.lessonPlan[state.currentPage].displayMode);
 
 
@@ -34,4 +33,4 @@ if (displayMode === 'SELF') {
     }
 }
 
-export default TruthGameBreakdown;
+export default AdventureBreakdown;

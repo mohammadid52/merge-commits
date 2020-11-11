@@ -2,10 +2,10 @@ import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
 import InstructionsBlock from './InstructionBlock';
-import StoryForm from './StoryForm';
 import Banner from './Banner';
 import Modules from './Modules';
 import InstructionsPopup from '../../../Popup/InstructionsPopup';
+import AdventureForm from './AdventureForm';
 
 export interface StoryState {
     story: string,
@@ -16,17 +16,18 @@ export interface StoryState {
     }[]
 }
 
-const Story = () => {
+const Adventure = () => {
     const { state, dispatch } = useContext(LessonContext);
-    const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
+    const [ cookies, setCookie ] = useCookies(['story']);
     const inputs = state.data.lesson.warmUp.inputs;
     const video = state.data.lesson.warmUp.instructions.link
     const [ openPopup, setOpenPopup ] = useState(false)
- 
+
+    
+    
+
     useEffect(() => {
-        if ( 
-            !cookies[`lesson-${state.classroomID}`].story && 
-            !state.componentState.story ) {
+        if ( !cookies.story && !state.componentState.story ) {
            let tempObj: StoryState = {
                 story: '',
             }
@@ -56,15 +57,15 @@ const Story = () => {
                 }
             })
 
-            setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], story: tempObj })
+            setCookie('story', tempObj)
         }
         
-        if ( cookies[`lesson-${state.classroomID}`].story ) {
+        if ( cookies.story ) {
             dispatch({
                 type: 'SET_INITIAL_COMPONENT_STATE',
                 payload: {
                     name: 'story',
-                    content: cookies[`lesson-${state.classroomID}`].story
+                    content: cookies.story
                 }
             })
         }
@@ -91,7 +92,7 @@ const Story = () => {
                         }
                     </div>
                     <div className="md:w-5.9/10 h-full flex flex-col items-center">
-                        <StoryForm />
+                        <AdventureForm />
                     </div>
                 </div>
             </div>
@@ -99,4 +100,4 @@ const Story = () => {
     )
 }
 
-export default Story;
+export default Adventure;
