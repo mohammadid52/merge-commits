@@ -5,10 +5,9 @@ import Modules from './Modules';
 import Banner from './Banner';
 import SelfDisplay from './SelfDisplay';
 import CoopDisplay from './CoopDisplay';
-import CoopDisplaycopy from './CoopDisplaycopy';
 
 
-const StoryBreakdown = () => {
+const MultiListBreakdown = () => {
     const { state, dispatch } = useContext(LessonContext);
     const displayProps = state.componentState.story;
     const [displayMode, setDisplayMode] = useState(state.data.lessonPlan[state.currentPage].displayMode);
@@ -26,12 +25,12 @@ const StoryBreakdown = () => {
 
 if (displayMode === 'SELF') {
     return (
-    //     <SelfDisplay />
-    // )} if (displayMode === 'COOP') {
-    //     return (
-            <CoopDisplaycopy />
+        <SelfDisplay />
+    )} if (displayMode === 'COOP') {
+        return (
+            <CoopDisplay />
         )
     }
 }
 
-export default StoryBreakdown;
+export default MultiListBreakdown;

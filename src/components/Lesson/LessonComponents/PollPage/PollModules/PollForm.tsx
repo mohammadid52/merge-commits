@@ -76,7 +76,8 @@ const PollForm = () => {
       options: [
         {
           id: 'classes',
-          option: 'classes on Saturdays'
+          option: 'classes on Saturdays',
+          isChoice: true
         },
         {
           id: 'school',
@@ -91,6 +92,7 @@ const PollForm = () => {
         {
           id: 'clean',
           option: 'clean the house everyday',
+          isChoice: true
         },
         {
           id: 'sleep',
@@ -105,10 +107,12 @@ const PollForm = () => {
         {
           id: 'fav-food',
           option: 'eat your favorite food for the rest of your life',
+          
         },
         {
           id: 'lose-sense',
           option: 'lose your sense of taste but can eat whatever you want',
+          isChoice: true
         }
       ]
     },
@@ -166,7 +170,7 @@ const PollForm = () => {
         Poll{' '}
       </h3>
       <div className='relative h-full flex flex-col items-center mb-5 mt-2'>
-        {data ? data.map((item: {id: string, question:string, options: any}, key: number) => {
+        {tempData ? tempData.map((item: {id: string, question:string, options: any}, key: number) => {
           return (
           <div key={key} className="flex flex-col p-4 items-center justify-between">
             
@@ -180,7 +184,7 @@ const PollForm = () => {
                 item ? item.options.map((option: {id: string, option: string, isChoice: boolean}, optionKey: number) => {
 
                   return (
-                    <label key={optionKey} id={option.id} className="flex text-sm cursor-pointer h-8">
+                    <label key={optionKey} id={option.id} className="flex items-center text-sm cursor-pointer h-8">
                       <button key={optionKey} id={option.id} name='choice' onClick={() => handleRadioSelect(key, option.id)} className={`${option.isChoice ? 'text-xl' : ''} w-auto px-4`}> {option.isChoice ? '❌'  : '⚪️'}</button>
                         {option.option}
                     </label>

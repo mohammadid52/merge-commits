@@ -10,14 +10,18 @@ const TruthGameForm = (props: any) => {
   const { state, theme, dispatch } = useContext(LessonContext);
   // const [cookies, setCookie] = useCookies(['story']);
   const [input, setInput] = useState({
+    inputs:
+      state.componentState.truthGame && state.componentState.truthGame.inputs
+        ? state.componentState.truthGame.inputs
+        : [],
     title:
-      state.componentState.story && state.componentState.story.title
-        ? state.componentState.story.title
+      state.componentState.truthGame && state.componentState.truthGame.title
+        ? state.componentState.truthGame.title
         : '',
-    story:
-      state.componentState.story && state.componentState.story.story
-        ? state.componentState.story.story
-        : '',
+    // story:
+    //   state.componentState.story && state.componentState.story.story
+    //     ? state.componentState.story.story
+    //     : '',
   });
 
   
@@ -38,7 +42,7 @@ const TruthGameForm = (props: any) => {
       dispatch({
         type: 'UPDATE_COMPONENT_STATE',
         payload: {
-          componentName: 'story',
+          componentName: 'truthGame',
           inputName: 'title',
           content: input.title,
         },
@@ -49,19 +53,19 @@ const TruthGameForm = (props: any) => {
   }, [input.title]);
 
   useEffect(() => {
-    if (state.componentState.story) {
+    if (state.componentState.truthGame) {
       dispatch({
         type: 'UPDATE_COMPONENT_STATE',
         payload: {
-          componentName: 'story',
-          inputName: 'story',
-          content: input.story,
+          componentName: 'truthGame',
+          inputName: 'inputs',
+          content: input.inputs,
         },
       });
       // setCookie('story', { ...cookies.story, story: input.story });
     }
 
-  }, [input.story]);
+  }, [input.inputs]);
 
   const handleInputChange = (e: { target: { id: string; value: string } }) => {
     console.log(input, 'e.target')
@@ -97,7 +101,7 @@ const TruthGameForm = (props: any) => {
 
   useEffect(() => {
     console.log(tempData)
-    {console.log(input.story, 'input')}
+    {console.log(input.inputs, 'input')}
   }, [input])
 
   return (
@@ -128,7 +132,7 @@ const TruthGameForm = (props: any) => {
               name='list'
               type='text'
               // placeholder={`${state.data.lesson.warmUp.inputs.textExample}`}
-              defaultValue={`${input.story}`}
+              defaultValue={`${input.inputs}`}
               onChange={handleInputChange}
             />
             

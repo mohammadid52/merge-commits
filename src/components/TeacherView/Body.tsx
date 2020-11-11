@@ -102,7 +102,7 @@ const Body = () => {
         // <div className="z-0 p-4 md:h-8.2/10 bg-dark"> 
             <Switch>
                 <Route 
-                    path={`${match.url}/intro`}
+                    path={`${match.url}`}
                     render={() => (
                         <IntroView fullscreen={fullscreen} />
                         )}

@@ -5,11 +5,12 @@ import Modules from './Modules';
 import Banner from './Banner';
 import SelfDisplay from './SelfDisplay';
 import CoopDisplay from './CoopDisplay';
+import CoopDisplaycopy from './CoopDisplaycopy';
 
 
 const TruthGameBreakdown = () => {
     const { state, dispatch } = useContext(LessonContext);
-    const displayProps = state.componentState.story;
+    const displayProps = state.componentState.truthGame;
     const [displayMode, setDisplayMode] = useState(state.data.lessonPlan[state.currentPage].displayMode);
 
 
@@ -25,10 +26,10 @@ const TruthGameBreakdown = () => {
 
 if (displayMode === 'SELF') {
     return (
-        <SelfDisplay />
-    )} if (displayMode === 'COOP') {
-        return (
-            <CoopDisplay />
+    //     <SelfDisplay />
+    // )} if (displayMode === 'COOP') {
+    //     return (
+            <CoopDisplaycopy />
         )
     }
 }

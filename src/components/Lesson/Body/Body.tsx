@@ -14,6 +14,7 @@ const List = lazy(() => import('../LessonComponents/ListPage/List'));
 const Poll = lazy(() => import('../LessonComponents/PollPage/Poll'));
 const TChart = lazy(() => import('../LessonComponents/TChartPage/TChart'));
 const TruthGame = lazy(() => import('../LessonComponents/TruthGamePage/TruthGame'));
+const MultiList = lazy(() => import('../LessonComponents/MultiListPage/MultiList'));
 const Outro = lazy(() => import('../LessonComponents/Outro/Outro'));
 const LessonError = lazy(() => import('../../Error/LessonError'));
 const Checkpoint = lazy(() => import('../LessonComponents/Checkpoint/Checkpoint'));
@@ -38,6 +39,8 @@ const Body = () => {
                 return <TruthGame />;
             case 'tchart':
                 return <TChart />;
+            case 'multi-list':
+                return <MultiList />;
             case 'poll':
                 return <Poll />;
             // case 'map-game':
@@ -99,7 +102,7 @@ const Body = () => {
         // <div className="p-4 md:px-8 md:h-8.3/10"> 
         <div className="z-0 p-4 md:h-8.2/10 bg-dark"> 
             <Switch>
-                <Route exact path={`${match.url}/`}>
+                <Route exact path={`${match.url}/intro`}>
                     <Intro />
                 </Route>
                 {/* <Route path='/icebreaker'>

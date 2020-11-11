@@ -20,9 +20,50 @@ interface teacherData {
     activityData?: { [key: string]: any }
 }
 
+const tempData = [
+    {
+      id: 'classes-school',
+      question: 'Would you rather have classes on Saturdays or school during the summer',
+      option: 'classes on Saturdays',
+    },
+    {
+      id: 'clean-or-sleep',
+      question: 'Would you rather clean the house everyday or sleep in the backyard?',
+      option: 'clean the house everyday',
+    },
+    {
+      id: 'food-taste',
+      question: 'Would you rather only eat your favorite food for the rest of your life or lose your sense of taste but can eat whatever you want?',
+      option: 'lose your sense of taste but can eat whatever you want',
+
+    },
+  ]
+
+  const tempData2 = [
+    {
+      id: 'classes-school',
+      question: 'Would you rather have classes on Saturdays or school during the summer',
+      option: 'classes on Saturdays',
+      option2: 'school during the summer'
+    },
+    {
+      id: 'clean-or-sleep',
+      question: 'Would you rather clean the house everyday or sleep in the backyard?',
+      option: 'clean the house everyday',
+      option2: 'sleep in the backyard'
+    },
+    {
+      id: 'food-taste',
+      question: 'Would you rather only eat your favorite food for the rest of your life or lose your sense of taste but can eat whatever you want?',
+      option: 'eat your favorite food for the rest of your life',
+      option2: 'lose your sense of taste but can eat whatever you want'
+
+    },
+  ]
+
 const CoopDisplay = () => {
     const { state, dispatch } = useContext(LessonContext);
-    const displayProps = state.componentState.truthGame;
+    const displayProps = state.componentState.story;
     const [fullscreen, setFullscreen] = useState(false);
 
     const [ teacherData, setTeacherData ] = useState<teacherData>();
@@ -66,15 +107,25 @@ const CoopDisplay = () => {
                         
 
                         <div className="w-full h-full flex flex-col justify-between">
-                            <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${displayProps.additional ? 'md:w-full' : 'w-full'} md:mb-0 overflow-y-auto overflow-x-hidden h-7.83/10 p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg`}>
+                            <div className={`h-full bg-gradient-to-tl from-dark-blue to-med-dark-blue ${displayProps.additional ? 'md:w-full' : 'w-full'} md:mb-0 overflow-y-auto overflow-x-hidden h-7.83/10 p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg`}>
                                 {/* bg-lighter-blue shadow-inner-box  */}
                                 <div className={`h-full rounded-lg font-light text-xl`}>
-                                    { displayProps.story }
+                                {tempData.map((item: {id: string, question: string, option: any}, key: number) => {
+                                    return (
+                                        <div className={`py-4`}>
+                                            
+                                            <div className={`text-xl mb-4`}>
+                                                {`${item.question}:`} 
+                                            </div>
+                                            <div className={`text-lg text-center`}>
+                                                {item.option}
+                                            </div>
+                                        </div>
+                                    )
+                                })}
                                 </div>
                             </div>
-                            <Modules 
-                                additional={displayProps.additional} 
-                                displayMode = "SELFinCOOP" />
+                          
                         </div>
                     </div>
 
@@ -90,7 +141,9 @@ const CoopDisplay = () => {
 
                                 <div className="absolute w-auto z-50" style={{bottom: '-15px', right: 0, }}>
                                     <div className="bg-yellow-300 text-gray-800 font-light text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
-                                    <p>by: { student ? student.preferredName ? student.preferredName : student.firstName : null } { student ? firstInitialFunc(student.lastName) : null}</p>
+                                    <p>class results
+                                         {/* { student ? student.preferredName ? student.preferredName : student.firstName : null } { student ? firstInitialFunc(student.lastName) : null} */}
+                                         </p>
                                     </div>
                                 </div>
 
@@ -101,12 +154,28 @@ const CoopDisplay = () => {
                                 <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${ teacherData &&teacherData.warmUpData && teacherData.warmUpData.additional ? 'md:h-7.85/10' : 'h-full'} ${fullscreen ? 'text-lg md:text-2xl' : 'text-md md:text-xl'} md:mb-0 overflow-y-auto overflow-x-hidden w-full p-4 md:p-6 items-center text-gray-200 rounded-lg shadow-2`}>
                                     {/* bg-lighter-blue shadow-inner-box  */}
                                     <div className={`${fullscreen ? 'text-3xl' : 'text-xl'} h-full rounded-lg font-light`}>
-                                        { teacherData && teacherData.warmUpData && teacherData.warmUpData.story }
+                                    {tempData2.map((item: {id: string, question: string, option: any, option2: any}, key: number) => {
+                                    return (
+                                        <div className={`pb-4`}>
+                                            
+                                            <div className={`text-xl mb-4`}>
+                                                {`${item.question}:`} 
+                                            </div>
+                                            <div>
+                                                <div className={`text-base w-auto`}>
+                                                    {item.option} <span className="text-yellow-300">2</span>
+                                                </div>
+                                                <div className={`text-base w-auto`}>
+                                                    {item.option2} <span className="text-yellow-300">8</span>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    )
+                                })}
                                     </div>
                                 </div>
-                                <Modules 
-                                    additional={ teacherData &&teacherData.warmUpData && teacherData.warmUpData.additional ? teacherData.warmUpData.additional : null}
-                                    displayMode = "COOP" />
+                               
                             </div>
                         </div>
                     </div>

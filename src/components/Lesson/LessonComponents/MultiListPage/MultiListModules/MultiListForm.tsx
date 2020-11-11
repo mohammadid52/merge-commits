@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 
-const TChartForm = () => {
+const MultiListForm = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
   // const [cookies, setCookie] = useCookies(['story']);
   const [input, setInput] = useState({
@@ -162,4 +162,4 @@ const handleInputTest = (e: KeyboardEvent<HTMLTextAreaElement>, event: ChangeEve
   );
 };
 
-export default TChartForm;
+export default MultiListForm;
