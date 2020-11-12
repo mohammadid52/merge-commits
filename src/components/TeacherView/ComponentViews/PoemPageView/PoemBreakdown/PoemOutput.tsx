@@ -17,13 +17,10 @@ const PoemOutput = (props: PoemOutputProps) => {
 
   return (
     <>
-    <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
-      Your Poem:
-    </div>
       <div className='w-full h-48 flex flex-col'>
         {
           props.poem !== ''
-          ? <div className={`${theme.elem.text} align-middle text-center`} dangerouslySetInnerHTML={{__html: parseBlankLines(props.poem)}}></div>
+          ? <div className={`${theme.elem.text} align-middle text-left`} dangerouslySetInnerHTML={{__html: parseBlankLines(props.poem)}}></div>
           : <div className={`${theme.elem.text} align-middle text-center`}>You didn't write a poem :)</div>
         }
       </div>

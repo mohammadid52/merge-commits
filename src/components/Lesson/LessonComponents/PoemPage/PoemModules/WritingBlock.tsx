@@ -263,22 +263,34 @@ const WritingBlock = (props: WritingBlockProps) => {
 
     return (
         <div className='w-full flex flex-col'>
-            <div
-                className={`${alert ? 'absolute z-100 w-full h-full' : 'hidden'}`} onClick={handlePopup}>
-                <PositiveAlert
-                    alert={visible}
-                    setAlert={setVisible}
-                    header='Are you ready to edit your poem?'
-                    content="Once you go to 'Final Edits' you will not be able to come back to these line prompts"
-                    button1='Go to Final Edits'
-                    button2='Cancel'
-                    svg='question'
-                    handleButton1={handleSubmit}
-                    handleButton2={() => handlePopup}
-                    fill='section'
-                />
-            </div>
-            <div className={`w-full h-full rounded-xl`}>
+
+
+            {/* POPUPPY VISIBILIBITY */}
+            {
+                (visible
+                    ?
+                    (<div
+                        className={`${alert ? 'absolute z-100 w-full h-full' : 'hidden z-0'}`} onClick={handlePopup}>
+                        <PositiveAlert
+                            alert={visible}
+                            setAlert={setVisible}
+                            header='Are you ready to edit your poem?'
+                            content="Once you go to 'Final Edits' you will not be able to come back to these line prompts"
+                            button1='Go to Final Edits'
+                            button2='Cancel'
+                            svg='question'
+                            handleButton1={handleSubmit}
+                            handleButton2={() => handlePopup}
+                            fill='section'
+                        />
+                    </div>)
+                    : null
+                )
+            }
+
+
+
+            <div className={`w-full h-full rounded-xl z-10`}>
                 <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
                     Line Prompts{' '}
                     <ToolTip

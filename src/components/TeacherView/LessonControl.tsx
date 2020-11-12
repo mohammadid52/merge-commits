@@ -447,7 +447,7 @@ const LessonControl = () => {
 
                                 <h2 className={`w-3/10 flex justify-between`}>
                                     <div className="w-4/10 flex justify-around items-center relative">
-                                        <ToolTip position='hidden-bottom' header='' content='students in class' display='none' fontSize='text-xs' />
+                                        <ToolTip position='bottom' header='' content='students in class' display='none' fontSize='text-xs' />
                                         <div className="w-auto">
                                             <IconContext.Provider value={{ size: '2rem', style: { width: 'auto' } }}>
                                                 <BsPersonFill />
@@ -459,9 +459,9 @@ const LessonControl = () => {
                                     </div>
 
                                     <div className="w-4/10 flex justify-around items-center">
-                                        {/* <ToolTip position='hidden-bottom' header='' content='students who are ready (click to reset)' width='w-20' cursor display='none' fontSize= 'text-xs'/> */}
+                                        {/* <ToolTip position='bottom' header='' content='students who are ready (click to reset)' width='w-20' cursor display='none' fontSize= 'text-xs'/> */}
                                         <div className={`w-auto relative`} onClick={handleResetDoneCounter}>
-                                            <ToolTip position='hidden-bottom'
+                                            <ToolTip position='bottom'
                                                 cursor
                                                 header=''
                                                 width='w-24'

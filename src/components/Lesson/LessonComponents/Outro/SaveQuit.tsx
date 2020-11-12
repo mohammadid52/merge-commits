@@ -9,7 +9,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../../customGraphql/customMutations';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import Popup from '../../../General/Popup';
-import {useOutsideAlerter} from '../../../General/hooks/outsideAlerter';
+import { useOutsideAlerter } from '../../../General/hooks/outsideAlerter';
 
 interface SaveQuitProps {
   id: string;
@@ -24,7 +24,7 @@ const SaveQuit = (props: SaveQuitProps) => {
   const { globalStateAccess } = useContext(GlobalContext);
   const { id, feedback } = props;
   const history = useHistory();
-  const {visible, setVisible, ref} = useOutsideAlerter(false);
+  const { visible, setVisible, ref } = useOutsideAlerter(false);
   // the bottom is from 'LessonHeaderBar.tsx'
   // const { theme, state, dispatch } = useContext(LessonContext);
   // const handleSave = () => {
@@ -41,23 +41,23 @@ const SaveQuit = (props: SaveQuitProps) => {
 
   const updateStudentData = async () => {
     let lessonProgress = state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
-    
+
     let currentLocation = state.pages[state.currentPage].stage === '' ? 'intro' : state.pages[state.currentPage].stage;
 
     // console.log('thisone', state )
 
     let data = {
-        id: state.studentDataID,
-        lessonProgress: lessonProgress,
-        currentLocation: currentLocation,
-        status: state.studentStatus,
-        saveType: 'finalSave',
-        classroomID: state.classroomID,
-        studentID: state.studentUsername,
-        studentAuthID: state.studentAuthID,
-        warmupData: state.componentState.story ? state.componentState.story : null,
-        corelessonData: state.componentState.lyrics ? state.componentState.lyrics : null,
-        activityData: state.componentState.poem ? state.componentState.poem : null
+      id: state.studentDataID,
+      lessonProgress: lessonProgress,
+      currentLocation: currentLocation,
+      status: state.studentStatus,
+      saveType: 'finalSave',
+      classroomID: state.classroomID,
+      studentID: state.studentUsername,
+      studentAuthID: state.studentAuthID,
+      warmupData: state.componentState.story ? state.componentState.story : null,
+      corelessonData: state.componentState.lyrics ? state.componentState.lyrics : null,
+      activityData: state.componentState.poem ? state.componentState.poem : null
     }
 
     // console.log('update', data);
@@ -160,28 +160,38 @@ const SaveQuit = (props: SaveQuitProps) => {
 
   const handleClick = () => {
     setVisible((prevState: any) => !prevState)
-}
+  }
 
   return (
-    <div className='w-full flex flex-col mt-4'>
-      <div className={`${alert ? 'absolute z-100' : 'hidden'}`} style={{ top: '-450px' }}  onClick={handleClick}>
-        <Popup
-          alert={visible}
-          setAlert={setVisible}
-          header='You have completed a lesson!'
-          button1='Save your lesson'
-          svg='smile'
-          handleButton1={handleSave}
-        />
-      </div>
+    <>
+      {
+        (alert)
+          ? (
+            <div className={`${alert ? 'absolute z-100 top-0' : 'hidden'}`} onClick={handleClick}>
+              <Popup
+                alert={visible}
+                setAlert={setVisible}
+                header='You have completed a lesson!'
+                button1='Save your lesson'
+                svg='smile'
+                handleButton1={handleSave}
+                fill='screen'
+              />
+            </div>
+          )
+          :
+          null
+      }
 
-      <button
-        type='submit'
-        className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 font-bold flex justify-center items-center rounded-xl mt-4 ${theme.elem.text}`}
-        onClick={handleClick}>
-        Save and Go to Dashboard
+      <div className='w-full flex flex-col mt-4'>
+        <button
+          type='submit'
+          className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 font-bold flex justify-center items-center rounded-xl mt-4 ${theme.elem.text}`}
+          onClick={handleClick}>
+          Save and Go to Dashboard
       </button>
-    </div>
+      </div>
+    </>
   );
 };
 

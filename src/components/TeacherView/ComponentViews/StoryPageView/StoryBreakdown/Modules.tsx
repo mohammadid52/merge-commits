@@ -27,7 +27,7 @@ const keywordParser = (str: string) => {
         if (letter !== ',') {
             tempWord = tempWord + letter;
         } else {
-            finalArray.push(tempWord);
+            finalArray.push(tempWord+',');
             tempWord = '';
         }
     })

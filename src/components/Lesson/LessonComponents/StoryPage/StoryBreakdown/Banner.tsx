@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineForm } from 'react-icons/ai';
+import { FaScroll } from 'react-icons/fa';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 
 interface BannerProps {
@@ -19,7 +19,7 @@ const Banner = (props: BannerProps) => {
         <div className={`w-full h-1/10 text-4xl ${theme.banner}`}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
             <div className='w-auto h-auto mr-2'>
-              <AiOutlineForm />
+              <FaScroll />
             </div>
           </IconContext.Provider>
 
@@ -35,7 +35,7 @@ const Banner = (props: BannerProps) => {
         <div className={`w-full h-1/10 text-4xl ${theme.banner}`}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
             <div className='w-auto h-auto mr-2'>
-              <AiOutlineForm />
+              <FaScroll />
             </div>
           </IconContext.Provider>
 
@@ -51,7 +51,7 @@ const Banner = (props: BannerProps) => {
         <div className={`w-full h-1/10 text-4xl ${theme.banner}`}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
             <div className='w-auto h-auto mr-2'>
-              <AiOutlineForm />
+              <FaScroll />
             </div>
           </IconContext.Provider>
 

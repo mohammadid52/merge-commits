@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineCustomerService } from 'react-icons/ai';
+import { FaHeadphonesAlt } from 'react-icons/fa';
 
 const Banner = () => {
   const { state, theme } = useContext(LessonContext);
@@ -11,7 +11,7 @@ const Banner = () => {
     <div className={`w-full text-4xl ${theme.banner}`}>
       <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
         <div className='w-auto h-auto mr-2'>
-          <AiOutlineCustomerService />
+          <FaHeadphonesAlt />
         </div>
       </IconContext.Provider>
       {title}

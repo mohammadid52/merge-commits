@@ -23,7 +23,7 @@ export const pageThemes = {
       text: 'text-gray-200',
     },
     dashboard: {
-      sectionTitle: 'w-auto text-black pb-2 font-light mt-4 mb-1 text-left',
+      sectionTitle: 'w-auto text-black pb-2 font-medium mt-4 mb-1 text-left',
       bg: 'bg-dark-gray',
     },
     sidemenu: {
@@ -59,7 +59,7 @@ export const pageThemes = {
       text: 'text-gray-200',
     },
     dashboard: {
-      sectionTitle: 'w-auto text-black pb-2 font-light mt-4 mb-1 text-left',
+      sectionTitle: 'w-auto text-black pb-2 font-medium mt-4 mb-1 text-left',
       bg: 'bg-dark-gray',
     },
     sidemenu: {

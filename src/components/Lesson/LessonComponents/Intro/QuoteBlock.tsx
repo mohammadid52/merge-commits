@@ -48,6 +48,7 @@ const QuoteBlock = () => {
   return (
     <div
       className={`relative w-full md:h-96 flex flex-grow items-center p-4 rounded-xl ${theme.block.text} ${heroIsActive ? 'bg-black50' : ''}`}>
+      
       {/* READ ICON */}
       <div
         id='read-icon'
@@ -63,6 +64,11 @@ const QuoteBlock = () => {
             }}
           />
         </IconContext.Provider>
+      </div>
+
+      {/* READ ICON - RIGHT TEXT */}
+      <div className='absolute top-1 right-0 w-full transform translate-x-full'>
+        <p className='animate-bounce ml-2'>&larr; Read Me!</p>
       </div>
 
       <div className='h-full text-left flex flex-col items-start'>
@@ -85,20 +91,13 @@ const QuoteBlock = () => {
           className={`${
             heroIsActive ? 'hidden' : 'visible'
           } h-full flex flex-col justify-end transition-all duration-500 ease-in-out animate-fadeIn`}
-          style={{textShadow: '0px 1px 1px #000, 1px 1px 2px #000'}}>
-          <div className='h-auto mb-0 flex flex-col'>
-            <div className='text-lg flex text-left items-center'>Featured Artist:</div>
+          style={{textShadow: 'rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) -1px 0px 1px, rgb(0, 0, 0) 0px -1px 1px, rgb(0, 0, 0) 0px 1px 1px'}}>
+          <div className='absolute bottom-0 left-0 p-2 h-auto mb-0 flex flex-col bg-gradient-to-t from-black50 rounded-xl'>
+            <div className='text-xl header-font font-open font-light'>Featured Artist:</div>
             <div className='w-full text-4.5xl leading-none font-light'>{artistName}</div>
+            <div className='text-xl header-font font-open font-light'>"{quote.text}"</div>
           </div>
 
-          <div className={`h-auto mb-0 flex flex-col justify-end items-center`}>
-            <div className='h-full flex flex-col justify-around items-center'>
-              <div className='relative'>
-                <div className='header-font text-lg font-open font-light'>"{quote.text}"</div>
-              </div>
-              {/* <div className='text-sm pl-8 mt-2'>- {quote.source}</div> */}
-            </div>
-          </div>
         </div>
       </div>
       {/* <PhotoBlock /> */}

@@ -19,7 +19,7 @@ const ProgressBar = (props: ProgressBarProps) => {
 
   return (
     <>
-      <div className='hidden w-full md:flex flex-col flex-grow items-center justify-center content-center px-4 z-0'>
+      <div className='hidden max-w-256 md:flex flex-col flex-grow items-center justify-center content-center z-0'>
         <div className='w-full max-w-256 flex items-center justify-between'>
           <div className='w-full flex flex-row items-center justify-between'>
             {/* ICON */}
@@ -32,6 +32,8 @@ const ProgressBar = (props: ProgressBarProps) => {
                   className={`${
                     key < state.pages.length - 1 ? 'w-full' : 'w-auto'
                   } flex justify-center items-center`}>
+                  
+                  
                   <StageIcon
                     isHovered={props.isHovered}
                     iconID={key}

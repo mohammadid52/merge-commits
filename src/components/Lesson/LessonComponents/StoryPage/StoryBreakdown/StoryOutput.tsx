@@ -15,9 +15,6 @@ const StoryOutput = (props: StoryOutputProps) => {
 
   return (
     <>
-    <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
-      Your Story:
-    </div>
       <div className='w-full flex flex-col'>
         {
           props.story !== '' 

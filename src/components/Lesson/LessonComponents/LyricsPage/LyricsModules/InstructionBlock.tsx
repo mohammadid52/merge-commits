@@ -20,7 +20,7 @@ const InstructionsBlock = () => {
 
       <div className={theme.elem.text}>
         {instructionsArr.map((inst: any, key: number) => (
-          <p key={key} className='mb-2'>
+          <p key={key} className='mb-1'>
             {inst}
           </p>
         ))}

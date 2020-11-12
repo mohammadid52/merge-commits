@@ -42,7 +42,7 @@ const InstructionsBlock = (props: InstructionsBlockProps) => {
             {/* {!videoMode ? ( */}
             <div className={theme.elem.text}>
                 {instructions.text.map((inst: string, key: number) => (
-                    <p key={key} className='mb-2'>
+                    <p key={key} className='mb-1'>
                         {inst}
                     </p>
                 ))}

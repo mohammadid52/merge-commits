@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { IconContext } from "react-icons/lib/esm/iconContext";
-import { BsPen } from 'react-icons/bs/';
+import { FaHourglassStart } from 'react-icons/fa/';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
 interface props {
@@ -17,7 +17,7 @@ const Banner = (props: props) => {
         <div className={`w-full text-4xl ${theme.banner}`}>
         <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
           <div className="w-auto h-auto mr-2">
-          <BsPen />
+          <FaHourglassStart />
           </div>
         </IconContext.Provider>
         {title}

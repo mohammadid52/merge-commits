@@ -12,7 +12,11 @@ import {
   FaQuestion,
   FaMap,
   FaCheck,
+  FaHeadphonesAlt,
 } from 'react-icons/fa';
+import {
+  AiOutlineCustomerService
+} from 'react-icons/ai';
 import FooterLabels from '../../../General/LabelSwitch';
 
 interface StageIconProps {
@@ -40,7 +44,7 @@ const StageIcon = (props: StageIconProps) => {
       case 'story':
         return <FaScroll />;
       case 'lyrics':
-        return <FaMusic />;
+        return <FaHeadphonesAlt />;
       case 'poem':
         return <FaPenFancy />;
       case 'breakdown':
@@ -69,8 +73,8 @@ const StageIcon = (props: StageIconProps) => {
         ${isHovered ? 'opacity-100' : 'opacity-0'}
         ${centerFix === 'center' && 'left-1/2 -translate-x-1/2'} 
         ${centerFix === 'noCenter' && '-translate-x-1/2'} 
-        ${state.currentPage === iconID ? 'text-opacity-75' : ''}
-        ${state.currentPage !== iconID ? 'text-opacity-20' : ''}
+        ${state.currentPage === iconID ? 'text-opacity-100' : ''}
+        ${state.currentPage !== iconID ? 'text-opacity-50' : ''}
         `}>
         {
           /* Capitalize the first letter */

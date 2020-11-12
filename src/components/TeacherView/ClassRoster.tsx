@@ -102,12 +102,12 @@ const ClassRoster = (props: classRosterProps) => {
                                         content= {item.student.email}
                                         fontSize= 'text-xs'/> */}
                             <div id={`${item.id}`} className={`w-4.3/10 mx-2 flex items-center`}>
-                                {/* <ToolTip header='' position='hidden-bottom' display='none'
+                                {/* <ToolTip header='' position='bottom' display='none'
                                 /> */}
                                 {item.student.preferredName ? item.student.preferredName : item.student.firstName } {item.student.lastName}
                             </div>
                             <div id={`${item.id}`} className={`w-1.5/10 mx-2 flex items-center ${item.student.role !== 'ST' ? 'text-gray-700' : 'font-semibold'} text-center `}>
-                                {/* <ToolTip header='' position='hidden-bottom' display='none'
+                                {/* <ToolTip header='' position='bottom' display='none'
                                 /> */}
                                 {item.student.role === 'ST' ? 'Student' : item.student.role}
                             </div>

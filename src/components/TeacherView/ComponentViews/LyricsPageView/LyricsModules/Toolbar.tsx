@@ -80,7 +80,7 @@ const ToolBar = (props: ToolbarProps) => {
                   `}
                 onClick={handleClick}>
                 <ToolTip
-                  position='hidden-bottom'
+                  position='bottom'
                   id={button.color}
                   cursor
                   header=''

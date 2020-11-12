@@ -60,9 +60,9 @@ const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
                     Lights
                 </button> */}
         {state.isAuthenticated ? (
-          <div className={`h-full flex align-center justify-center ${theme.sidemenu.bg}`} onClick={handleSignOut}>
+          <div className={`h-full text-sm flex align-center justify-center ${theme.sidemenu.bg}`} onClick={handleSignOut}>
             <span className='relative mr-1 w-auto h-full flex items-center justify-center'>
-              <IconContext.Provider value={{ size: '1.5rem', className: 'self-center' }}>
+              <IconContext.Provider value={{ size: '1.25rem', className: 'self-center' }}>
                 <AiOutlineLogout />
               </IconContext.Provider>
             </span>

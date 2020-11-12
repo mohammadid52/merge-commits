@@ -17,11 +17,12 @@ module.exports = {
         'translate-y-1/2',
         'animate-jiggle',
         'animate-spin',
+        'animate-bounce',
         'text-purple-400',
         'border-red-700',
         'text-red-400',
         'text-red-700',
-        'bg-purple-300'
+        'bg-purple-300',
       ],
     },
   },
@@ -42,10 +43,10 @@ module.exports = {
       3: 3,
     },
     maxWidth: {
-      '256': '64rem',
+      256: '64rem',
     },
     minHeight: {
-      '2': '2rem'
+      2: '2rem',
     },
     cursor: {
       auto: 'auto',
@@ -169,7 +170,7 @@ module.exports = {
         'extra-tight': '.8',
       },
       animation: {
-        bounce: 'bounce 2.5s linear 2',
+        bounce: 'bounce 1s ease-in-out 1',
         jiggle: 'jiggle 0.2s linear infinite',
         ping: 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
         fadeIn: 'fadeIn 1s ease-in-out',
@@ -178,22 +179,20 @@ module.exports = {
       keyframes: {
         bounce: {
           '0%': {
-            transform: 'translateY(0)',
-          },
-          '60%': {
-            transform: 'translateY(0)',
-          },
-          '65%': {
-            transform: 'translateY(-4px)',
+            right: '0',
+            opacity: '0',
           },
           '75%': {
-            transform: 'translateY(-6px)',
+            right: '0',
+            opacity: '0',
           },
-          '78%': {
-            transform: 'translateY(0)',
+          '90%': {
+            right: '-24px',
+            opacity: '0.5',
           },
           '100%': {
-            transform: 'translateY(0)',
+            right: '0',
+            opacity: '1',
           },
         },
         jiggle: {
@@ -251,6 +250,7 @@ module.exports = {
         '64rem': '64rem',
       },
       spacing: {
+        '1px': '1px',
         0.5: '.125rem',
         2.5: '.625rem',
         11: '2.75rem',
@@ -366,7 +366,7 @@ module.exports = {
         2: '0px 2px 4px black',
         5: '0 1px 5px 0 rgba(0, 0, 0, 0.1)',
         xlr: '0 -12px 25px -8px rgba(0, 0, 0, 0.25)',
-        xl: '0 12px 25px -8px rgba(0, 0, 0, 0.25)',
+        xl: '0 24px 32px -12px rgba(0, 0, 0, 0.55)',
         '2xlr': '0 -25px 50px -12px rgba(0, 0, 0, 0.25)',
         '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
         'elem-dark': '0 2px 4px black',

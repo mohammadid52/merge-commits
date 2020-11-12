@@ -17,7 +17,7 @@ const keywordParser = (str: string) => {
     if (letter !== ',') {
       tempWord = tempWord + letter;
     } else {
-      finalArray.push(tempWord);
+      finalArray.push(tempWord+',');
       tempWord = '';
     }
   });
@@ -53,7 +53,7 @@ const Modules = (props: any) => {
               className={`font-open font-light h-16 rounded-lg py-2 ${key === additional.length - 1 ? '' : ''
                 }`}>
               <h3 className={`font-medium`}>{keywordCapitilizer(item.name)}:</h3>
-              <div className='w-full px-2 overflow-y-auto overflow-x-hidden'>
+              <div className='w-full overflow-y-auto overflow-x-hidden'>
                 {item.input
                   ? wordArray.map((word: string, key: number) => (
                     <p key={key} className={``}>
