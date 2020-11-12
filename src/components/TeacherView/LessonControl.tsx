@@ -132,7 +132,7 @@ const LessonControl = () => {
 
     const handleComplete = () => {
         dispatch({ type: 'COMPLETE_CLASSROOM' })
-        setOpen(true);
+        // setOpen(true);
         // console.log(state)
     }
 
@@ -312,7 +312,7 @@ const LessonControl = () => {
                             button1='Complete lesson' 
                             button2='Cancel' 
                             svg='question' 
-                            handleButton1={handleHome} 
+                            handleButton1={handleComplete} 
                             handleButton2={() => handleLessonButton}
                             />
                     </div>
@@ -336,6 +336,8 @@ const LessonControl = () => {
                     </div>
                     }
 
+
+                    {/* the dates */}
                     <div className="w-1/10 h-full flex flex-col justify-center items-center ml-4">
                         <div className="flex flex-col w-auto leading-4 items-center">
                             Start Lesson:

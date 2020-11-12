@@ -66,7 +66,7 @@ const CoopDisplay = () => {
                         
 
                         <div className="w-full h-full flex flex-col justify-between">
-                            <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${displayProps.additional ? 'md:w-full' : 'w-full'} md:mb-0 overflow-y-auto overflow-x-hidden h-7.83/10 p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg`}>
+                            <div className={`h-full bg-gradient-to-tl from-dark-blue to-med-dark-blue ${displayProps.additional ? 'md:w-full' : 'w-full'} md:mb-0 overflow-y-auto overflow-x-hidden h-7.83/10 p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg`}>
                                 {/* bg-lighter-blue shadow-inner-box  */}
                                 <div className={`h-full rounded-lg font-light text-xl`}>
                                 {displayProps.truthGameArray.map((item: {id: string, label: string, isLie: boolean, text: string}, key: number) => {
@@ -115,7 +115,7 @@ const CoopDisplay = () => {
                                     {/* bg-lighter-blue shadow-inner-box  */}
                                     <div className={`${fullscreen ? 'text-3xl' : 'text-xl'} h-full rounded-lg font-light`}>
                                         {/* { teacherData && teacherData.warmUpData && teacherData.warmUpData.truthGame } */}
-                                        {/* {teacherData && teacherData.warmUpData && teacherData.warmUpData.truthGame.truthGameArray.map((item: {id: string, label: string, isLie: boolean, text: string}, key: number) => {
+                                        {teacherData && teacherData.warmUpData && teacherData.warmUpData.truthGame.truthGameArray.map((item: {id: string, label: string, isLie: boolean, text: string}, key: number) => {
                                             return (
                                                 <div className={`p-4`}>
                                                     
@@ -128,8 +128,8 @@ const CoopDisplay = () => {
                                                 </div>
                                             )
                                             
-                                        })} */}
-                                        {/* {console.log(teacherData, 'teacherData')} */}
+                                        })}
+                                        {console.log(teacherData, 'teacherData')}
                                     </div>
                                 </div>
                                 <Modules 
