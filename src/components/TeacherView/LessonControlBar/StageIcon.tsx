@@ -77,7 +77,7 @@ const StageIcon = (props: StageIconProps) => {
       };
 
     const handleView = () => {
-        if (stage === '') {
+        if (stage === 'intro') {
             handleOpenMenu(null)
             return history.push(`${match.url}`)
         }
@@ -92,7 +92,7 @@ const StageIcon = (props: StageIconProps) => {
     }
 
     const handleOpenCloseComponent = () => {
-        if ( stage !== '' ) {
+        if ( stage !== 'intro' ) {
             if ( open ) { 
                 return handleStateChange('CLOSE_LESSON')
             }
@@ -161,7 +161,7 @@ const StageIcon = (props: StageIconProps) => {
                             <div className={`flex justify-center items-center w-3/10 h-8/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={handleView}>
                                 View
                             </div>
-                            <div className={`flex justify-center items-center w-3/10 h-8/10 ${ stage !== '' ? 'bg-gray-200 text-gray-600 shadow-elem-light active:shadow-none cursor-pointer' : 'bg-gray-500 text-gray-600 shadow-none cursor-default'} text-xs rounded-lg m-1`} onClick={handleOpenCloseComponent}>
+                            <div className={`flex justify-center items-center w-3/10 h-8/10 ${ stage !== 'intro' ? 'bg-gray-200 text-gray-600 shadow-elem-light active:shadow-none cursor-pointer' : 'bg-gray-500 text-gray-600 shadow-none cursor-default'} text-xs rounded-lg m-1`} onClick={handleOpenCloseComponent}>
                                 { !open ? 'Open' : 'Close' }
                             </div>
                             {/* <div className={`flex justify-center items-center w-4/10 h-4/10 bg-gray-200 text-gray-600 text-xs rounded-lg m-1 shadow-elem-light active:shadow-none cursor-pointer`} onClick={() => handleStateChange('CLOSE_LESSON')}>

@@ -4,7 +4,8 @@ import {
     Switch,
     Route,
     useLocation,
-    useRouteMatch, 
+    useRouteMatch,
+    Redirect 
 } from "react-router-dom";
 const Intro = lazy(() => import('../LessonComponents/Intro/Intro'));
 const Story = lazy(() => import('../LessonComponents/StoryPage/Story'));
@@ -126,6 +127,16 @@ const Body = () => {
                 <Route path={`${match.url}/assessment`}>
                     <Assessments />
                 </Route>
+                <Route 
+                    path={`${match.url}/intro`}
+                    render={({ location }) => (
+                        <Redirect 
+                            to={{
+                            pathname: `${match.url}`,
+                            state: { from: location }
+                        }}/>
+                    )} 
+                />
                 {/* <Route>
                     <ErrorPage />
                 </Route> */}
