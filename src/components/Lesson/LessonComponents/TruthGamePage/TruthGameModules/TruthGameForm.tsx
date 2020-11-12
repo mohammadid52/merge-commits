@@ -17,22 +17,26 @@ const TruthGameForm = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
   const gameInputs = state.data.lesson.warmUp.inputs.truthGameInputs;
   const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
-  const [input, setInput] = useState({
-    truthGameArray:
-      state.componentState.truthGame && state.componentState.truthGame.truthGameArray
-        ? state.componentState.truthGame.truthGameArray
-        : [],
-    });
+  // const [input, setInput] = useState(
+  //   {truthGameArray:
+  //     state.componentState.truthGame && state.componentState.truthGame.truthGameArray
+  //       ? state.componentState.truthGame.truthGameArray
+  //       : [],
+  //   }
+  //   );
+
+  const [truthGameInput, setTruthGameInput] = useState(state.componentState.truthGame && state.componentState.truthGame.truthGameArray
+    ? state.componentState.truthGame.truthGameArray
+    : gameInputs);
 
     useEffect(() => {
       if ( cookies[`lesson-${state.classroomID}`]?.truthGame ) {
-        setInput(() => {
-          return {
-            truthGameArray: cookies[`lesson-${state.classroomID}`].truthGame.truthGameArray,
-          };
+        setTruthGameInput(() => {
+          return (cookies[`lesson-${state.classroomID}`].truthGame.truthGameArray);
         });
       }
     }, []);
+
 
     useEffect(() => {
       if ( gameInputs && state.componentState.truthGame) {
@@ -42,23 +46,21 @@ const TruthGameForm = () => {
          payload: {
              componentName: 'truthGame',
              inputName: 'truthGameArray',
-             content: input.truthGameArray
+             content: truthGameInput
          }
      }) 
 
-        setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], truthGameArray: { ...cookies[`lesson-${state.classroomID}`].truthGame.truthGameArray, }});
+        setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`] });
       }
 
-      console.log(input.truthGameArray, 'input.truthGameArray')
-
-    }, [input.truthGameArray]);
+    }, [truthGameInput]);
 
     const handleInputChange = (e: { target: { id: string; value: string } }) => {
       let value = e.target.value;
       let targetId = e.target.id
 
-      setTest(() => {
-        return input.truthGameArray.map((item: any) => {
+      setTruthGameInput(() => {
+        return truthGameInput.map((item: any) => {
           if (targetId === item.id) {
             return {
               ...item,
@@ -74,15 +76,8 @@ const TruthGameForm = () => {
     };
 
 
-  const [test, setTest] = useState(input.truthGameArray)
-  console.log(input.truthGameArray, 'input what is here')
-
-
-
     const handleRadioSelect = (passedKey: any) => {
-      let newArray = input.truthGameArray;
-    
-      input.truthGameArray.map((item: {id: string, label: string, text: string}, key: any) => {
+      setTruthGameInput(truthGameInput.map((item: {id: string, label: string, text: string}, key: any) => {
         if(key === passedKey) {
           return { 
           ...item,
@@ -97,18 +92,8 @@ const TruthGameForm = () => {
 
         
       })
-      console.log(input.truthGameArray, 'wtf')
-      setInput(() => { return newArray }
       )
     };
-
-  console.log(test, 'test')
-
-  useEffect(() => {
-    console.log(test, 'test input')
-    {console.log(input, 'input')}
-      
-  }, [input])
 
   return (
     <div className='bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600'>
@@ -121,7 +106,7 @@ const TruthGameForm = () => {
         <div className="text-gray-200">
           {state ? state.data.lesson.warmUp.inputs.textExample : null}
           </div>
-        {input ? input.truthGameArray.map((item: {id: string, label: string, text: string, isLie: boolean}, key: number) => {
+        {truthGameInput ? truthGameInput.map((item: {id: string, label: string, text: string, isLie: boolean}, key: number) => {
           return (
           <div id={item.id} key={key} className="flex flex-col p-4 items-center justify-between">
             <div id={item.id} className="flex items-center justify-start py-4">
@@ -130,8 +115,6 @@ const TruthGameForm = () => {
                 {item.label}
               </label>
             </div>
-{console.log(input.truthGameArray, 'inside the main map input.truthArray')}
-{console.log(item, 'inside main the item')}
             <input
               id={item.id}
               className='w-full h-10 px-4 py-2 rounded-lg text-gray-700 bg-gray-300'

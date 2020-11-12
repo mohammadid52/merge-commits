@@ -26,9 +26,9 @@ const TruthGameBreakdown = () => {
 
 if (displayMode === 'SELF') {
     return (
-    //     <SelfDisplay />
-    // )} if (displayMode === 'COOP') {
-    //     return (
+        <SelfDisplay />
+    )} if (displayMode === 'COOP') {
+        return (
             <CoopDisplay />
         )
     }

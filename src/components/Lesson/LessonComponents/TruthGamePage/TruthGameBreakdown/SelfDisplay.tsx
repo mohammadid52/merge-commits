@@ -42,7 +42,7 @@ const SelfDisplay = () => {
                 display='SELF' fullscreen={fullscreen}/>
             <div className="w-full h-7/10 flex flex-col md:flex-row justify-between">
                 <div className={`${theme.gradient.cardBase} ${inputs.additionalInputs.length > 0 ? 'md:w-7.85/10' : 'w-full'} mb-4 md:mb-0 overflow-y-auto overflow-x-hidden h-full px-4 md:px-12 py-4 md:py-8 items-center text-md md:text-3xl font-light text-gray-200 rounded-lg shadow-2`}>
-                    {displayProps.truthGameArray.map((item: {id: string, label: string, isLie: boolean, text: string}, key: number) => {
+                    {displayProps ? displayProps.truthGameArray.map((item: {id: string, label: string, isLie: boolean, text: string}, key: number) => {
                         return (
                             <div className={`p-4`}>
                                 
@@ -55,7 +55,7 @@ const SelfDisplay = () => {
                                 </div>
                             </div>
                         )
-                    })}
+                    }) : null }
                     
                     {/* { displayProps.truthGame } */}
                 </div>
