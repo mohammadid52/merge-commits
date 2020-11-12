@@ -36,8 +36,8 @@ const Body = () => {
                 return <PoemView fullscreen={fullscreen}/>;
             case 'list':
                 return <ListView fullscreen={fullscreen}/>;
-            // case 'truthgame':
-            //     return <TruthGameView />;
+            case 'truthgame':
+                return <TruthGameView fullscreen={fullscreen} />;
             // case 'tchart':
             //     return <TChartView />;
             // case 'poll':
@@ -102,7 +102,7 @@ const Body = () => {
         // <div className="z-0 p-4 md:h-8.2/10 bg-dark"> 
             <Switch>
                 <Route 
-                    path={`${match.url}`}
+                    path={`${match.url}/intro`}
                     render={() => (
                         <IntroView fullscreen={fullscreen} />
                         )}

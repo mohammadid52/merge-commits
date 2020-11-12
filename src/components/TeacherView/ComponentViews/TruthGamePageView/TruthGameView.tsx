@@ -4,14 +4,18 @@ import {
     Route,
     useRouteMatch,
 } from "react-router-dom";
-import TruthGameActivity from './TruthGameModules/TruthGameActivity';
-import TruthGameBreakdown from './TruthGameBreakdown/TruthGameBreakdown';
+import TruthGameActivityView from './TruthGameModules/TruthGameActivityView';
+import TruthGameBreakdownView from './TruthGameBreakdown/TruthGameBreakdownView';
 // import ErrorPage from '../../Error/ErrorPage';
-import { LessonContext } from '../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
+interface props {
+        fullscreen: boolean
+}
 
-const TruthGamePage = () => {
-    const { dispatch } = useContext(LessonContext);
+const TruthGamePage = (props: props) => {
+    const { fullscreen } = props;
+    const { dispatch } = useContext(LessonControlContext);
     const match = useRouteMatch();
 
     useEffect(() => {
@@ -22,10 +26,10 @@ const TruthGamePage = () => {
     return (
         <Switch>
             <Route path={`${match.url}/breakdown`}>
-                <TruthGameBreakdown />
+                <TruthGameBreakdownView fullscreen={fullscreen}/>
             </Route>
             <Route exact path={`${match.url}`}>
-                <TruthGameActivity />
+                <TruthGameActivityView fullscreen={fullscreen}/>
             </Route>
             {/* <Route>
                 <ErrorPage />
