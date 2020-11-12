@@ -36,8 +36,8 @@ const Body = () => {
                 return <PoemView fullscreen={fullscreen}/>;
             case 'list':
                 return <ListView fullscreen={fullscreen}/>;
-            case 'truthgame':
-                return <TruthGameView />;
+            // case 'truthgame':
+            //     return <TruthGameView />;
             // case 'tchart':
             //     return <TChartView />;
             // case 'poll':
