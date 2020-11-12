@@ -4,9 +4,8 @@ import { useCookies } from 'react-cookie';
 import InstructionsBlock from './InstructionBlock';
 import Banner from './Banner';
 import Modules from './Modules';
-import InstructionsPopup from '../../../Popup/InstructionsPopup';
+import InstructionsPopup from '../../../../Lesson/Popup/InstructionsPopup';
 import TruthGameForm from './TruthGameForm';
-import { string } from 'prop-types';
 
 export interface TruthInput {
     id: string,
@@ -17,21 +16,6 @@ export interface TruthInput {
 
 export type TruthInputState = Array<TruthInput>
 
-const tempData = [
-    {
-      id: 'deepest-fear',
-      label: 'Deepest fear'
-    },
-    {
-      id: 'most-anxious',
-      label: 'Most anxious'
-    },
-    {
-      id: 'happiest-moment',
-      label: 'Happiest moment'
-    }
-  ]
-
 const TruthGame = () => {
     const { state, dispatch } = useContext(LessonContext);
     const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
@@ -40,22 +24,27 @@ const TruthGame = () => {
     const [ openPopup, setOpenPopup ] = useState(false)
 
     useEffect(() => {
-        if ( !cookies[`lesson-${state.classroomID}`].truthGame &&
-        !state.componentState.truthGame ) {
-           let tempObj: {
+        if ( !cookies[`lesson-${state.classroomID}`].truthGame && !state.componentState.truthGame ) {
+             
+            let tempObj : {
                truthGameArray: TruthInputState
                additional?: Array<{name: string, text: string | []}>
            }
 
-           let tempArr = inputs.truthGameInputs.map((item: {id: string, label: string}, ) => {
-                let storageObj = {
-                    id: item.id, 
+           tempObj = {
+               truthGameArray: []
+           };
+
+           let tempArr = inputs.truthGameInputs.map((item: {id: string, label: string}, ) => {  
+            let storageObj = {
+                    id: item.id,
                     label: item.label,
                     isLie: false,
                     text: ''
                 }
                 return storageObj
-           })
+                
+           } ) 
 
            tempObj.truthGameArray = tempArr
 
@@ -77,12 +66,13 @@ const TruthGame = () => {
                 type: 'SET_INITIAL_COMPONENT_STATE',
                 payload: {
                     name: 'truthGame',
-                    content: tempArr
+                    content: tempObj
                 }
             })
-            setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], truthGame: tempArr })
-        }
 
+            setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], truthGame: tempObj })
+        }
+        
         if ( cookies[`lesson-${state.classroomID}`].truthGame ) {
             dispatch({
                 type: 'SET_INITIAL_COMPONENT_STATE',
@@ -92,7 +82,6 @@ const TruthGame = () => {
                 }
             })
         }
-    
 
     }, []);
 
@@ -116,7 +105,7 @@ const TruthGame = () => {
                         }
                     </div>
                     <div className="md:w-5.9/10 h-full flex flex-col items-center">
-                        <TruthGameForm props={tempData}/>
+                        <TruthGameForm />
                     </div>
                 </div>
             </div>

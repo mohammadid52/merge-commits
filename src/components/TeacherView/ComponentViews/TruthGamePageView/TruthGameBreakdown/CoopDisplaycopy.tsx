@@ -20,6 +20,25 @@ interface teacherData {
     activityData?: { [key: string]: any }
 }
 
+const tempData = [
+    {
+      id: 'deepest-fear',
+      label: 'Deepest fear',
+      text: 'My deepest fear is losing someone I love',
+      isLie: true
+    },
+    {
+      id: 'most-anxious',
+      label: 'Most anxious',
+      text: 'school'
+    },
+    {
+      id: 'happiest-moment',
+      label: 'Happiest moment',
+      text: 'My happiest moment was when I got a new iPhone'
+    }
+  ]
+
 const CoopDisplay = () => {
     const { state, dispatch } = useContext(LessonContext);
     const displayProps = state.componentState.truthGame;
@@ -66,10 +85,10 @@ const CoopDisplay = () => {
                         
 
                         <div className="w-full h-full flex flex-col justify-between">
-                            <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${displayProps.additional ? 'md:w-full' : 'w-full'} md:mb-0 overflow-y-auto overflow-x-hidden h-7.83/10 p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg`}>
+                            <div className={`h-full bg-gradient-to-tl from-dark-blue to-med-dark-blue ${displayProps.additional ? 'md:w-full' : 'w-full'} md:mb-0 overflow-y-auto overflow-x-hidden h-7.83/10 p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg`}>
                                 {/* bg-lighter-blue shadow-inner-box  */}
                                 <div className={`h-full rounded-lg font-light text-xl`}>
-                                {displayProps.truthGameArray.map((item: {id: string, label: string, isLie: boolean, text: string}, key: number) => {
+                                {tempData.map((item: {id: string, label: string, isLie: boolean, text: string}, key: number) => {
                                     return (
                                         <div className={`p-4`}>
                                             
@@ -85,9 +104,7 @@ const CoopDisplay = () => {
                                 })}
                                 </div>
                             </div>
-                            <Modules 
-                                additional={displayProps.additional} 
-                                displayMode = "SELFinCOOP" />
+                          
                         </div>
                     </div>
 
@@ -103,7 +120,9 @@ const CoopDisplay = () => {
 
                                 <div className="absolute w-auto z-50" style={{bottom: '-15px', right: 0, }}>
                                     <div className="bg-yellow-300 text-gray-800 font-light text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
-                                    <p>by: { student ? student.preferredName ? student.preferredName : student.firstName : null } { student ? firstInitialFunc(student.lastName) : null}</p>
+                                    <p>by: Jayne
+                                         {/* { student ? student.preferredName ? student.preferredName : student.firstName : null } { student ? firstInitialFunc(student.lastName) : null} */}
+                                         </p>
                                     </div>
                                 </div>
 
@@ -114,27 +133,22 @@ const CoopDisplay = () => {
                                 <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${ teacherData &&teacherData.warmUpData && teacherData.warmUpData.additional ? 'md:h-7.85/10' : 'h-full'} ${fullscreen ? 'text-lg md:text-2xl' : 'text-md md:text-xl'} md:mb-0 overflow-y-auto overflow-x-hidden w-full p-4 md:p-6 items-center text-gray-200 rounded-lg shadow-2`}>
                                     {/* bg-lighter-blue shadow-inner-box  */}
                                     <div className={`${fullscreen ? 'text-3xl' : 'text-xl'} h-full rounded-lg font-light`}>
-                                        {/* { teacherData && teacherData.warmUpData && teacherData.warmUpData.truthGame } */}
-                                        {/* {teacherData && teacherData.warmUpData && teacherData.warmUpData.truthGame.truthGameArray.map((item: {id: string, label: string, isLie: boolean, text: string}, key: number) => {
-                                            return (
-                                                <div className={`p-4`}>
-                                                    
-                                                    <div className={`text-2xl`}>
-                                                        {`${item.label}:`} 
-                                                    </div>
-                                                    <div className={`text-xl`}>
-                                                        {item.text}
-                                                    </div>
-                                                </div>
-                                            )
+                                    {tempData.map((item: {id: string, label: string, isLie: boolean, text: string}, key: number) => {
+                                    return (
+                                        <div className={`p-4`}>
                                             
-                                        })} */}
-                                        {/* {console.log(teacherData, 'teacherData')} */}
+                                            <div className={`text-2xl`}>
+                                                {`${item.label}:`} 
+                                            </div>
+                                            <div className={`text-xl`}>
+                                                {item.text}
+                                            </div>
+                                        </div>
+                                    )
+                                })}
                                     </div>
                                 </div>
-                                <Modules 
-                                    additional={ teacherData &&teacherData.warmUpData && teacherData.warmUpData.additional ? teacherData.warmUpData.additional : null}
-                                    displayMode = "COOP" />
+                               
                             </div>
                         </div>
                     </div>
