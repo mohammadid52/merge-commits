@@ -5,6 +5,9 @@ import queryString from 'query-string';
 import SelectOneQuestions from './Questions/SelectOneQuestions';
 import TextQuestions from './Questions/TextQuestions';
 
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { ImCheckboxUnchecked, ImCheckboxChecked } from 'react-icons/im';
+
 const setInitialState = (array: Array<any>) => {
   let tempObj: any = {};
   array.forEach((item: { question: { id: string; type: string; label: string } }) => {
@@ -12,12 +15,12 @@ const setInitialState = (array: Array<any>) => {
       item.question.type === 'text'
         ? ''
         : item.question.type === 'input'
-        ? ''
-        : item.question.type === 'selectOne'
-        ? null
-        : item.question.type === 'selectMany'
-        ? []
-        : null;
+          ? ''
+          : item.question.type === 'selectOne'
+            ? null
+            : item.question.type === 'selectMany'
+              ? []
+              : null;
   });
   return tempObj;
 };
@@ -110,12 +113,12 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                   item.question.type === 'text'
                     ? ''
                     : item.question.type === 'input'
-                    ? ''
-                    : item.question.type === 'selectOne'
-                    ? null
-                    : item.question.type === 'selectMany'
-                    ? []
-                    : null,
+                      ? ''
+                      : item.question.type === 'selectOne'
+                        ? null
+                        : item.question.type === 'selectMany'
+                          ? []
+                          : null,
               };
             });
           }
@@ -252,32 +255,54 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                   option: { label: string; icon: string; color: string; text: string },
                   key: any
                 ) => (
-                  <div
-                    key={key}
-                    className={`w-3/4 flex items-center mb-2`}
-                    onClick={handleSelect}
-                    data-key={question.id}>
-                    {input[question.id].indexOf(`${option.label}`) >= 0 ? (
-                      <div
-                        id={`${option.label}`}
-                        className='cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center'
-                        style={{ backgroundColor: `${option.color}` }}
-                        data-key={question.id}>
-                        {option.icon ? option.icon : ''}
-                      </div>
-                    ) : (
-                      <div
-                        id={`${option.label}`}
-                        className='bg-gray-400 cursor-pointer w-12 h-12 p-2 text-3xl rounded flex justify-center items-center'
-                        data-key={question.id}>
-                        {option.icon ? option.icon : ''}
-                      </div>
-                    )}
-                    <div id={`${option.label}`} className='mx-4'>
-                      {option.text}
+                    <div
+                      key={key}
+                      className={`w-3/4 flex items-center mb-2`}
+                      onClick={handleSelect}
+                      data-key={question.id}>
+
+                      {input[question.id].indexOf(`${option.label}`) >= 0 ? (
+                        <div
+                          id={`${option.label}`}
+                          className='cursor-pointer w-36 h-12 p-2 text-base rounded flex justify-start items-center'
+                          style={{ backgroundColor: `${option.color}` }}
+                          data-key={question.id}>
+
+                          <IconContext.Provider  value={{ color: '#EDF2F7', size: '1.25rem', className: 'w-auto mr-2'}}>
+                            
+                              <ImCheckboxChecked />
+                          
+                          </IconContext.Provider>
+
+                          {/* {option.icon ? option.icon : ''} */}
+                          {option.text}
+
+                        </div>
+                      ) : (
+                          <div
+                            id={`${option.label}`}
+                            className='bg-gray-400 text-black50 cursor-pointer w-36 h-12 p-2 text-base rounded flex justify-start items-center'
+                            data-key={question.id}>
+
+                            <IconContext.Provider value={{ color: '#000', size: '1.25rem', className: 'w-auto mr-2' }}>
+                             
+                                <ImCheckboxUnchecked />
+                              
+                            </IconContext.Provider>
+
+                            {/* {option.icon ? option.icon : ''} */}
+                            {option.text}
+
+                          </div>
+                        )}
+
+                      {/* <div id={`${option.label}`} className='mx-4'>
+                        {option.text}
+                      </div> */}
+
+
                     </div>
-                  </div>
-                )
+                  )
               )}
             </div>
           </div>
@@ -296,8 +321,8 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
           {checkpoint.checkpoint.subtitle}
         </h3>
       ) : (
-        ''
-      )}
+          ''
+        )}
 
       <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
         {checkpoint.checkpoint.instructions}
@@ -308,9 +333,9 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
           {checkpoint.checkpoint.questions.items.map((item: { question: any }, key: number) => {
             return <>{inputSwitch(item.question, key)}</>;
           })}
-          </div>
         </div>
       </div>
+    </div>
   );
 };
 

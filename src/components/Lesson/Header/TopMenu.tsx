@@ -88,9 +88,9 @@ const TopMenu = () => {
 
 
           <div ref={ref} className='flex flex-row justify-center'>
-            
+
             {/* BACK BUTTON */}
-            
+
             <div
               className={`mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${state.currentPage > 0 ? 'cursor-pointer bg-dark-red' : 'cursor-default bg-darker-gray'
                 } }`}
@@ -106,13 +106,13 @@ const TopMenu = () => {
               </IconContext.Provider>
             </div>
 
-            
+
             {/* PROGRESS BAR */}
 
             <ProgressBar isHovered={isHovered} />
 
-            
-            
+
+
             {/* FORWARD BUTTON */}
 
             <div
@@ -148,29 +148,33 @@ const TopMenu = () => {
 
 
       {/* FLOATING NAV BUTTONS */}
-
+{/* 
       {
         (isSticky
           ?
           (
             <>
 
-              <div
-                className={`fixed bottom-1/2 right-0 w-24 h-8 text-center transform -translate-x-1/2 leading-relaxed rounded-full z-30 ${state.canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark-gray cursor-default'
-                  } `}
-                onClick={handleForward}>Continue</div>
+              <div className='fixed h-16 bottom-1/2 w-full'>
+                <div
+                  className={`absolute right-0 w-24 h-8 text-center transform -translate-x-1/2 leading-relaxed rounded-full z-30 ${state.canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark-gray cursor-default'
+                    } `}
+                  onClick={handleForward}>Continue</div>
 
-              <div
-                className={`fixed bottom-1/2 left-0 w-24 h-8 text-center transform translate-x-1/2 leading-relaxed rounded-full z-30 ${state.currentPage > 0 ? 'cursor-pointer bg-dark-red' : 'cursor-default bg-darker-gray'
-                  } }`}
-                onClick={handleBack}>Back</div>
+                <div className='max-w-256 w-full' style={{pointerEvents: 'none'}}></div>
+
+                <div
+                  className={`absolute left-0 w-24 h-8 text-center transform translate-x-1/2 leading-relaxed rounded-full z-30 ${state.currentPage > 0 ? 'cursor-pointer bg-dark-red' : 'cursor-default bg-darker-gray'
+                    } }`}
+                  onClick={handleBack}>Back</div>
+              </div>
 
             </>
           )
           : null
 
         )
-      }
+      } */}
 
 
     </>

@@ -1,57 +1,42 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
+import { NavLink } from 'react-router-dom';
 import { LessonContext } from '../../../contexts/LessonContext';
-import { 
-    useHistory,
-    useRouteMatch,
-} from 'react-router-dom';
-import ProgressBar from './ProgressBar/ProgressBar';
 
-const Foot = () => {
-    const { state, dispatch, theme } = useContext(LessonContext);
-    const history = useHistory();
-    const match = useRouteMatch();
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { AiOutlineInstagram, AiOutlineFacebook } from 'react-icons/ai';
 
-    useEffect(() => {
-        if ( state.pages[state.currentPage + 1] ){
-            if ( state.pages[state.currentPage + 1].open ) {
-                // console.log(state.pages);
-                return dispatch({ type: 'CAN_CONTINUE' })
-            } return dispatch({ type: 'NO_CONTINUE' })
-        } return dispatch({ type: 'NO_CONTINUE' })
-    }, [state.pages, state.currentPage])
+import BottomMenu from './BottomMenu';
 
-    const handleForward = () => {
-        if ( state.canContinue && state.currentPage < state.pages.length - 1 ) {
-            history.push(`${match.url}/${state.pages[state.currentPage + 1].stage}`);
-            dispatch({type: 'PAGE_FORWARD'});
-        }
-    }
+const Branding: React.FC = () => {
+  const { state, theme } = useContext(LessonContext);
+  return (
+    <>
+     
+      <div className='mt-auto mb-0 bg-darker-gray flex-row justify-center items-center'>
 
-    const handleBack = () => {
-        if (state.currentPage === 1) {
-            history.push(`/lesson`);
-            dispatch({type: 'PAGE_BACK'});
-        }
+      <BottomMenu/>
 
-        if (state.currentPage > 1) {
-            history.push(`${match.url}/${state.pages[state.currentPage - 1].stage}`);
-            dispatch({type: 'PAGE_BACK'});
-        }
-    }
+        <div
+          className={`w-256 h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}>
+     
 
-    return (
-        <div className={`flex-grow-0 ${theme.footer.bg} shadow-1 h-1.1/10 w-full flex justify-center items-center content-center py-4 px-6`}>
-            <div className="w-full flex flex-row items-center justify-around md:mx-8">
-                <div className={`flex-grow-0 ${state.currentPage > 0 ? 'bg-dark-red text-gray-300 cursor-pointer' : 'bg-gray-500 text-gray-600 cursor-default'} text-xl font-open font-bold flex justify-center items-center w-32 h-8 rounded-lg z-30 transform -translate-y-2`} onClick={handleBack}>
-                    Back
-                </div>
-                <ProgressBar />
-                <div className={`flex-grow-0 ${state.canContinue ? 'bg-green-600 text-gray-300 cursor-pointer' : 'bg-gray-500 text-gray-600 cursor-default'} text-xl font-open font-bold flex justify-center items-center w-32 h-8 rounded-lg z-30 transform -translate-y-2`} onClick={handleForward}>
-                    Continue
-                </div> 
-            </div>
+
+          {/* LOGO */}
+          <div className='w-3.3/10 flex justify-center items-center'>
+            <NavLink to='/dashboard'>
+              <img
+                className='h-6 px-4'
+                src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg'
+                alt='Iconoclast Artists'
+              />
+            </NavLink>
+          </div>
+        
+
         </div>
-    )
-}
+      </div>
+    </>
+  );
+};
 
-export default Foot;
+export default Branding;
