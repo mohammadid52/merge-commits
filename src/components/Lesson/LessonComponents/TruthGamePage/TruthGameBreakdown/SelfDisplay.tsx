@@ -26,11 +26,9 @@ const tempData = [
 
 const SelfDisplay = () => {
     const { state, theme, dispatch } = useContext(LessonContext);
-    console.log(state, 'state')
     const displayProps = state.componentState.truthGame;
     const inputs = state.data.lesson.warmUp.inputs;
 
-    console.log(displayProps, 'displayProps')
     useEffect(() => {
         dispatch({type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown'})
     }, [])

@@ -27,7 +27,7 @@ const TruthGameForm = () => {
 
   const [truthGameInput, setTruthGameInput] = useState(state.componentState.truthGame && state.componentState.truthGame.truthGameArray
     ? state.componentState.truthGame.truthGameArray
-    : gameInputs);
+    : []);
 
     useEffect(() => {
       if ( cookies[`lesson-${state.classroomID}`]?.truthGame ) {
@@ -89,8 +89,6 @@ const TruthGameForm = () => {
           isLie: false
         }
       }
-
-        
       })
       )
     };

@@ -8,33 +8,113 @@ import InstructionsPopup from '../../../Popup/InstructionsPopup';
 import PollForm from './PollForm';
 import { string } from 'prop-types';
 
-export interface StoryState {
-    story: string,
-    title?: string,
-    additional?: {
-        name: string,
-        text: string | [],
-    }[]
+export interface PollInput {
+    id: string,
+    question: string,
+    options: {
+        id: string,
+        option: string,
+        isChoice: boolean
+    }
 }
+
+export type PollInputState = Array<PollInput>
+
+export const tempPollInputs = [
+    {
+      id: 'classes-school',
+      question: 'Would you rather have classes on Saturdays or school during the summer',
+      options: [
+        {
+          id: 'classes',
+          option: 'classes on Saturdays',
+        },
+        {
+          id: 'school',
+          option: 'school during the summer',
+        }
+      ]
+    },
+    {
+      id: 'clean-or-sleep',
+      question: 'Would you rather clean the house everyday or sleep in the backyard?',
+      options: [
+        {
+          id: 'clean',
+          option: 'clean the house everyday',
+        },
+        {
+          id: 'sleep',
+          option: 'sleep in the backyard',
+        }
+      ]
+    },
+    {
+      id: 'food-taste',
+      question: 'Would you rather only eat your favorite food for the rest of your life or lose your sense of taste but can eat whatever you want?',
+      options: [
+        {
+          id: 'fav-food',
+          option: 'eat your favorite food for the rest of your life',
+          
+        },
+        {
+          id: 'lose-sense',
+          option: 'lose your sense of taste but can eat whatever you want',
+        }
+      ]
+    },
+  ]
 
 const Poll = () => {
     const { state, dispatch } = useContext(LessonContext);
-    const [ cookies, setCookie ] = useCookies(['story']);
+    const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
     const inputs = state.data.lesson.warmUp.inputs;
     const video = state.data.lesson.warmUp.instructions.link
     const [ openPopup, setOpenPopup ] = useState(false)
 
-    
-    
-
     useEffect(() => {
-        if ( !cookies.story && !state.componentState.story ) {
-           let tempObj: StoryState = {
-                story: '',
-            }
-            if ( inputs.title ) {
-                tempObj.title = '';
-            }
+        if ( !cookies[`lesson-${state.classroomID}`].poll && !state.componentState.poll ) {
+             
+            let tempObj : {
+               pollArray: PollInputState
+               additional?: Array<{name: string, text: string | []}>
+           }
+
+           tempObj = {
+               pollArray: []
+           };
+// need to change here when database is updated
+
+           let tempOptions = tempPollInputs.map((item: {id: string, question: string, options: any}) => {
+               item.options.map((item: {id: string, option: string}) => {
+                   let tempOption = {
+                       id: item.id,
+                       option: item.option,
+                       isChoice: false
+                   }
+                   return tempOption
+               })
+           })
+
+           console.log(tempOptions, 'tempOptions');
+
+           let tempArr = tempPollInputs.map((item: {id: string, question: string, options: any}, ) => {  
+            let storageObj = {
+                    id: item.id,
+                    question: item.question,
+                    options: {
+                        id: item.options.id,
+                        option: item.options.option,
+                        isChoice: false
+                    }
+                }
+                return storageObj
+                console.log(storageObj, 'storage')
+                
+           } ) 
+
+           tempObj.pollArray = tempArr
 
             if (inputs.additionalInputs.length > 0) {
                 let additional:Array<{name: string, text: string | []}>= [];
@@ -53,20 +133,20 @@ const Poll = () => {
             dispatch({
                 type: 'SET_INITIAL_COMPONENT_STATE',
                 payload: {
-                    name: 'story',
+                    name: 'poll',
                     content: tempObj
                 }
             })
 
-            setCookie('story', tempObj)
+            setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], poll: tempObj })
         }
         
-        if ( cookies.story ) {
+        if ( cookies[`lesson-${state.classroomID}`].poll ) {
             dispatch({
                 type: 'SET_INITIAL_COMPONENT_STATE',
                 payload: {
-                    name: 'story',
-                    content: cookies.story
+                    name: 'poll',
+                    content: cookies[`lesson-${state.classroomID}`].poll
                 }
             })
         }

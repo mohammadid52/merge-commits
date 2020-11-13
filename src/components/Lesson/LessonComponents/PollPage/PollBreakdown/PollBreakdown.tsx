@@ -26,9 +26,9 @@ const StoryBreakdown = () => {
 
 if (displayMode === 'SELF') {
     return (
-    //     <SelfDisplay />
-    // )} if (displayMode === 'COOP') {
-    //     return (
+        <SelfDisplay />
+    )} if (displayMode === 'COOP') {
+        return (
             <CoopDisplaycopy />
         )
     }

@@ -18,8 +18,6 @@ const Modules = (props: ModulesProps) => {
     const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]) 
     const [ formInputs, setFormInputs ] = useState<FormInputsState>() 
 
-    console.log(formInputs, 'form inputs')
-
     useEffect(() => {
         inputs.forEach((item: { name: string; example: string; prompt: string; }) => {
             setFormInputs(prev => {

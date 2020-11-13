@@ -39,7 +39,7 @@ const TruthGame = () => {
             let storageObj = {
                     id: item.id,
                     label: item.label,
-                    isLie: false,
+                    isLie: false, 
                     text: ''
                 }
                 return storageObj

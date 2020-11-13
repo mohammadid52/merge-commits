@@ -4,61 +4,110 @@ import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 import { MdSettingsBackupRestore } from 'react-icons/md';
 
+export interface PollInput {
+  id: string,
+  quesiton: string,
+  options: {
+      id: string,
+      option: string,
+      isChoice: boolean
+  }
+}
+
+export type PollInputState = Array<PollInput>
+
+
+const tempData = [
+  {
+    id: 'classes-school',
+    question: 'Would you rather have classes on Saturdays or school during the summer',
+    options: [
+      {
+        id: 'classes',
+        option: 'classes on Saturdays',
+      },
+      {
+        id: 'school',
+        option: 'school during the summer',
+      }
+    ]
+  },
+  {
+    id: 'clean-or-sleep',
+    question: 'Would you rather clean the house everyday or sleep in the backyard?',
+    options: [
+      {
+        id: 'clean',
+        option: 'clean the house everyday',
+      },
+      {
+        id: 'sleep',
+        option: 'sleep in the backyard',
+      }
+    ]
+  },
+  {
+    id: 'food-taste',
+    question: 'Would you rather only eat your favorite food for the rest of your life or lose your sense of taste but can eat whatever you want?',
+    options: [
+      {
+        id: 'fav-food',
+        option: 'eat your favorite food for the rest of your life',
+        
+      },
+      {
+        id: 'lose-sense',
+        option: 'lose your sense of taste but can eat whatever you want',
+      }
+    ]
+  },
+]
 
 const PollForm = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  // const [cookies, setCookie] = useCookies(['story']);
-  const [input, setInput] = useState({
-    title:
-      state.componentState.story && state.componentState.story.title
-        ? state.componentState.story.title
-        : '',
-    story:
-      state.componentState.story && state.componentState.story.story
-        ? state.componentState.story.story
-        : '',
-  });
+  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const pollInputs = state.data.lesson.warmUp.inputs.pollInputs;
+  // const [input, setInput] = useState({
+  //   title:
+  //     state.componentState.story && state.componentState.story.title
+  //       ? state.componentState.story.title
+  //       : '',
+  //   story:
+  //     state.componentState.story && state.componentState.story.story
+  //       ? state.componentState.story.story
+  //       : '',
+  // });
 
-  // useEffect(() => {
-  //   if (cookies.story) {
-  //     setInput(() => {
-  //       return {
-  //         title: cookies.story.title,
-  //         story: cookies.story.story,
-  //       };
-  //     });
-  //   }
-  // }, []);
+  const [input, setInput] = useState(state.componentState.poll && state.componentState.poll.pollArray
+    ? state.componentState.poll.pollArray
+    : []);
 
-  useEffect(() => {
-    if (state.componentState.story) {
-      dispatch({
-        type: 'UPDATE_COMPONENT_STATE',
-        payload: {
-          componentName: 'story',
-          inputName: 'title',
-          content: input.title,
-        },
-      });
+    useEffect(() => {
+      if ( cookies[`lesson-${state.classroomID}`]?.poll ) {
+        setInput(() => {
+          return (cookies[`lesson-${state.classroomID}`].poll.pollArray);
+        });
+      }
+    }, []);
 
-      // setCookie('story', { ...cookies.story, title: input.title });
-    }
-  }, [input.title]);
 
-  useEffect(() => {
-    if (state.componentState.story) {
-      dispatch({
-        type: 'UPDATE_COMPONENT_STATE',
-        payload: {
-          componentName: 'story',
-          inputName: 'story',
-          content: input.story,
-        },
-      });
+    useEffect(() => {
+      if ( pollInputs && state.componentState.poll) {
+  
+       dispatch({
+         type: 'UPDATE_COMPONENT_STATE',
+         payload: {
+             componentName: 'poll',
+             inputName: 'pollArray',
+             content: input
+         }
+     }) 
 
-      // setCookie('story', { ...cookies.story, story: input.story });
-    }
-  }, [input.story]);
+        setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`] });
+      }
+
+    }, [input]);
+
 
   const handleInputChange = (e: { target: { id: string; value: string } }) => {
     setInput({
@@ -69,54 +118,7 @@ const PollForm = () => {
 
 
 /////// below are all temporary
-  const tempData = [
-    {
-      id: 'classes-school',
-      question: 'Would you rather have classes on Saturdays or school during the summer',
-      options: [
-        {
-          id: 'classes',
-          option: 'classes on Saturdays',
-          isChoice: true
-        },
-        {
-          id: 'school',
-          option: 'school during the summer',
-        }
-      ]
-    },
-    {
-      id: 'clean-or-sleep',
-      question: 'Would you rather clean the house everyday or sleep in the backyard?',
-      options: [
-        {
-          id: 'clean',
-          option: 'clean the house everyday',
-          isChoice: true
-        },
-        {
-          id: 'sleep',
-          option: 'sleep in the backyard',
-        }
-      ]
-    },
-    {
-      id: 'food-taste',
-      question: 'Would you rather only eat your favorite food for the rest of your life or lose your sense of taste but can eat whatever you want?',
-      options: [
-        {
-          id: 'fav-food',
-          option: 'eat your favorite food for the rest of your life',
-          
-        },
-        {
-          id: 'lose-sense',
-          option: 'lose your sense of taste but can eat whatever you want',
-          isChoice: true
-        }
-      ]
-    },
-  ]
+
 
   const test = tempData ? tempData.map((item: {id: string, question: string, options: any}, key: any) => {
 
@@ -160,7 +162,7 @@ const PollForm = () => {
     }) })
     
   };
-
+console.log(cookies[`lesson-${state.classroomID}`], 'cookies')
   console.log(data, 'data')
 
   return (
