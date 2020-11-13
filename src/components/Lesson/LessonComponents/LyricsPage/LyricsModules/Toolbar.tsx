@@ -44,12 +44,12 @@ const ToolBar = (props: ToolbarProps) => {
       <div className={`w-full rounded-xl`}>
         <h3 className={`w-auto text-xl ${theme.banner} ${theme.underline} flex flex-row`}>
           Highlighters{' '}
-          <ToolTip
+          {/* <ToolTip
             width='w-40'
             position='bottom'
             header='Highlighters'
             content='You really gotta click & drag those highlighters across the words!'
-          />
+          /> */}
         </h3>
       </div>
 
@@ -95,7 +95,21 @@ const ToolBar = (props: ToolbarProps) => {
               id='erase'
               className={`relative bg-gray-200 h-12 w-12 text-3xl rounded-lg mb-2 mx-4 flex flex-row justify-center items-center`}
               onClick={handleClick}>
-              {/* <ToolTip position='bottom' header='eraser' display='none' fontSize= 'text-xs px-2' cursor/> */}
+
+              <ToolTip
+                position='bottom'
+                id={'erase'}
+                cursor
+                header=''
+                width='w-24 px-1 flex justify-center items-center'
+                content={
+                  <div className='flex text-center justify-center w-24'>
+                    {'erase'}
+                  </div>
+                }
+                display='none'
+                fontSize='text-xs'
+              />
               <IconContext.Provider value={{ color: 'darkgray', size: '2rem' }}>
                 <FaEraser style={{ pointerEvents: 'none' }} />
               </IconContext.Provider>

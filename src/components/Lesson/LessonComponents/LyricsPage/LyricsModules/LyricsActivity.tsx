@@ -151,7 +151,7 @@ const Body = () => {
       <div className={theme.section}>
         <Banner />
 
-        <div className='flex flex-col justify-between items-center'>
+        <div className='z-50 z-100 flex flex-col justify-between items-center'>
           <InstructionBlock />
           <VideoBlock link={state.data.lesson.coreLesson.content.link} fullscreen={fullscreen} />
         </div>

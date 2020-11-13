@@ -33,7 +33,7 @@ const VideoBlock = (props: VideoBlockProps) => {
       {!fullscreen ? (
         <div ref={ref} className={`z-50 w-128 rounded-xl`} style={{height: '320px'}}>
           <iframe
-            className={`${isSticky ? 'fixed bottom-2 right-2 w-1/4 h-1/4' : ''} rounded-xl`}
+            className={`${isSticky ? 'fixed z-50 top-4 right-2 w-1/4 h-1/4' : ''} rounded-xl`}
             height='320'
             src={link}
             frameBorder='0'
