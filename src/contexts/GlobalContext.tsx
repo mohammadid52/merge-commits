@@ -6,6 +6,9 @@ export const pageThemes = {
   light: {
     bg: 'bg-opacity-10',
     underline: 'border-b border-white border-opacity-10 pb-1 mb-1',
+    gradient: {
+      cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue',
+    },
     banner:
       'relative flex flex-row justify-center items-center text-center font-open font-light text-base text-gray-200 mt-4',
     section: 'sm:w-full md:w-full xl:w-256 mx-auto h-full flex flex-col justify-between items-center z-50',
@@ -42,6 +45,9 @@ export const pageThemes = {
   dark: {
     bg: 'bg-dark-gray',
     underline: 'border-b border-white border-opacity-10 pb-1 mb-1',
+    gradient: {
+      cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue',
+    },
     banner:
       'w-auto pb-2 mb-2 relative font-open font-light text-left flex flex-row items-center text-gray-200 mt-4',
     section: 'w-full max-w-256 mx-auto  flex flex-col justify-between items-center z-50',

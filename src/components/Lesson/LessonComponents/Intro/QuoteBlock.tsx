@@ -91,8 +91,8 @@ const QuoteBlock = () => {
           className={`${
             heroIsActive ? 'hidden' : 'visible'
           } h-full flex flex-col justify-end transition-all duration-500 ease-in-out animate-fadeIn`}
-          style={{textShadow: 'rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) -1px 0px 1px, rgb(0, 0, 0) 0px -1px 1px, rgb(0, 0, 0) 0px 1px 1px'}}>
-          <div className='absolute bottom-0 left-0 p-2 h-auto mb-0 flex flex-col bg-gradient-to-t from-black50 rounded-xl'>
+          >
+          <div className='absolute bottom-0 left-0 p-2 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-xl'>
             <div className='text-xl header-font font-open font-light'>Featured Artist:</div>
             <div className='w-full text-4.5xl leading-none font-light'>{artistName}</div>
             <div className='text-xl header-font font-open font-light'>"{quote.text}"</div>

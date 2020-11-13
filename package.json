@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "webpack --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
     "build:prod": "webpack --config webpack.prod.js",
     "watch": "npm run build && webpack --watch  --inline --hot --progress --config webpack.dev.js"
   },

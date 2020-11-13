@@ -13,6 +13,7 @@ import {
   FaMap,
   FaCheck,
   FaHeadphonesAlt,
+  FaListAlt
 } from 'react-icons/fa';
 import {
   AiOutlineCustomerService
@@ -55,6 +56,8 @@ const StageIcon = (props: StageIconProps) => {
         return <FaCheck />;
       case 'profile':
         return <FaCheck />;
+      case 'list':
+        return <FaListAlt />
       default:
         return <FaPencilRuler />;
     }
