@@ -3,7 +3,6 @@ const {merge} = require('webpack-merge');
 // const path = require('path');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = merge(common, {
   mode: 'production',
@@ -20,6 +19,5 @@ module.exports = merge(common, {
         ecma: 6,
       },
     }),
-    new BundleAnalyzerPlugin(),
   ],
 });

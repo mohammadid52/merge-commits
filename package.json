@@ -5,8 +5,9 @@
   "private": true,
   "scripts": {
     "build": "webpack --config webpack.prod.js",
+    "build:dev": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
-    "watch": "npm run build && webpack --watch  --inline --hot --progress --config webpack.dev.js"
+    "watch": "npm run build:dev && webpack --watch  --inline --hot --progress --config webpack.dev.js"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
