@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { studentObject } from '../../../../../state/LessonControlState'
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
+
 import ReflectionQuestions from './ReflectionQuestions';
 import Modules from './Modules';
 import Banner from './Banner';
-import { studentObject } from '../../../../../state/LessonControlState'
-import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
+import ListOutput from './ListOutput';
 
 interface props {
     fullscreen: boolean
@@ -11,7 +13,7 @@ interface props {
 
 const SelfDisplay = (props: props) => {
     const { fullscreen } = props;
-    const { state, dispatch } = useContext(LessonControlContext);
+    const { state, theme, dispatch } = useContext(LessonControlContext);
     const [ dataProps, setDataProps ] = useState<{ title?: string, story?: string, [key: string]: any} | null>(null)
 
     useEffect(() => {
@@ -28,22 +30,16 @@ const SelfDisplay = (props: props) => {
         } return setDataProps(null)
     }, [state.studentViewing]);
 
-
+    useEffect(()=>{
+        console.log('List breakdown selfdisplay: ', dataProps)
+    },[dataProps])
 
     return (
-        <div className="w-full h-full flex flex-col justify-between items-center">
-            <Banner dataProps={dataProps}
-                fullscreen={fullscreen}
-                />
-            <div className="w-full h-7.2/10 flex flex-col justify-between">
-                <div style={{'whiteSpace' : 'pre-line'}} className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${dataProps && dataProps.additional ? 'md:h-7/10' : 'h-full'} ${fullscreen ? 'text-md md:text-2xl px-4 md:px-12 py-4 md:py-8' : 'text-ls px-2 md:px-6 py-2 md:py-4'} mb-4 md:mb-0 overflow-y-auto overflow-x-hidden h-full items-center text-gray-200 rounded-lg`}>
-                    { dataProps && dataProps.story ? dataProps.story : null }
-                </div> 
-                <Modules 
-                    dataProps={dataProps} 
-                    fullscreen={fullscreen}/>
-            </div>
-            <ReflectionQuestions fullscreen={fullscreen}/>
+        <div className={theme.section}>
+            <ReflectionQuestions fullscreen={fullscreen} />
+            <Banner dataProps={dataProps} fullscreen={fullscreen} />
+            <ListOutput list={(dataProps && dataProps.story) ? dataProps.story : ''} fullscreen={fullscreen}/>            
+            <Modules dataProps={dataProps} fullscreen={fullscreen}/>           
         </div>
     )
 }

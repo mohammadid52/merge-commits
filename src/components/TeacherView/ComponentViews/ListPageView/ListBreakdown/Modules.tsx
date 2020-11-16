@@ -70,25 +70,6 @@ const Modules = (props: props) => {
                 )})
                 : null
             }
-            {/* <div className="bg-dark-blue font-open font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
-                <h3>Culture:</h3>
-                <p className="text-2xl">{displayProps.culture}</p>
-            </div>
-            <div className="bg-dark-blue font-open font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
-                <h3>My Storyteller:</h3>
-                <p className="text-2xl">{displayProps.storyteller}</p>
-            </div>
-            <div className="bg-dark-blue font-open font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
-                <h3>Morals:</h3>
-                <div className="h-24 flex flex-col overflow-scroll">
-                    {keywordParser(displayProps.lessons).map((term, key) => (
-                        <p className="text-2xl" key={key}>
-                            {term}
-                        </p>
-                    ))
-                    }
-                </div>
-            </div> */}
         </div>
     )
 }

@@ -18,9 +18,9 @@ const SelfDisplay = () => {
     return (
         <div className={theme.section}>
             <ReflectionQuestions />
-            <Banner title={displayProps.title} display='SELF' fullscreen={fullscreen} />
-            <ListOutput list={displayProps.story} />            
-            <Modules additional={displayProps.additional} displayMode='SELF' />           
+            <Banner title={typeof displayProps !== 'undefined' ? displayProps.title : 'Your List Title :)'} display='SELF' fullscreen={fullscreen} />
+            <ListOutput list={typeof displayProps !== 'undefined' ? displayProps.story : 'Your List :)'} />            
+            {<Modules additional={typeof displayProps !== 'undefined' ? displayProps.additional : 'Your Poem Title :)'} displayMode='SELF' />           }
         </div>
     )
 }

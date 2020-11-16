@@ -1,7 +1,5 @@
 import React, { useContext } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
-
-
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 /**
  * Module imports
@@ -9,12 +7,12 @@ import { LessonContext } from '../../../../../contexts/LessonContext';
 import {parseBlankLines} from '../../../../../utilities/strings';
 
 interface ListOutputProps {
-  list?: string;
+  list?: 'test';
   fullscreen?: boolean;
 }
 
 const ListOutput = (props: ListOutputProps) => {
-  const { theme } = useContext(LessonContext);
+  const { theme } = useContext(LessonControlContext);
 
   return (
     <>
