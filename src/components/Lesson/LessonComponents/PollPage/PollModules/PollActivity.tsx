@@ -77,44 +77,43 @@ const Poll = () => {
         if ( !cookies[`lesson-${state.classroomID}`].poll && !state.componentState.poll ) {
              
             let tempObj : {
-               pollArray: PollInputState
+               pollArray: Array<{id: string, question: string, options: any | []}>
+               pollOptions: Array<{id: string, question: string, answer: string} | []>
                additional?: Array<{name: string, text: string | []}>
            }
 
            tempObj = {
-               pollArray: []
+               pollArray: [],
+               pollOptions: []
            };
-// need to change here when database is updated
-
-           let tempOptions = tempPollInputs.map((item: {id: string, question: string, options: any}) => {
-               item.options.map((item: {id: string, option: string}) => {
-                   let tempOption = {
-                       id: item.id,
-                       option: item.option,
-                       isChoice: false
-                   }
-                   return tempOption
-               })
-           })
-
-           console.log(tempOptions, 'tempOptions');
+// need to change here (tempPollInputs) when database is updated
 
            let tempArr = tempPollInputs.map((item: {id: string, question: string, options: any}, ) => {  
             let storageObj = {
                     id: item.id,
                     question: item.question,
-                    options: {
-                        id: item.options.id,
-                        option: item.options.option,
-                        isChoice: false
-                    }
+                    options: item.options
                 }
                 return storageObj
-                console.log(storageObj, 'storage')
                 
            } ) 
 
            tempObj.pollArray = tempArr
+
+            let tempOptions:Array<{id: string, question: string, answer: string} | []>= [];
+                tempPollInputs.map((input: { id: string, question: string, options: any }) => {
+                    let newInput = {
+                        id: input.id,
+                        question: input.question,
+                        answer: '',
+                    }
+
+                    tempOptions.push(newInput);
+                })
+
+                tempObj.pollOptions = tempOptions;
+           
+             
 
             if (inputs.additionalInputs.length > 0) {
                 let additional:Array<{name: string, text: string | []}>= [];

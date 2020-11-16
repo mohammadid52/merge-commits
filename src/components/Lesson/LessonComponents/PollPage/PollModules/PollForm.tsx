@@ -68,90 +68,117 @@ const PollForm = () => {
   const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
   const pollInputs = state.data.lesson.warmUp.inputs.pollInputs;
   // const [input, setInput] = useState({
-  //   title:
-  //     state.componentState.story && state.componentState.story.title
-  //       ? state.componentState.story.title
-  //       : '',
+  //   pollOptions:
+  //     state.componentState.poll && state.componentState.poll.pollOptions
+  //       ? state.componentState.poll.pollOptions
+  //       : [],
   //   story:
-  //     state.componentState.story && state.componentState.story.story
-  //       ? state.componentState.story.story
-  //       : '',
+  //     state.componentState.poll && state.componentState.poll.pollArray
+  //       ? state.componentState.poll.pollArray
+  //       : [],
   // });
 
-  const [input, setInput] = useState(state.componentState.poll && state.componentState.poll.pollArray
-    ? state.componentState.poll.pollArray
+  const [input, setInput] = useState(state.componentState.poll && state.componentState.poll.pollOptions
+    ? state.componentState.poll.pollOptions
     : []);
 
     useEffect(() => {
       if ( cookies[`lesson-${state.classroomID}`]?.poll ) {
         setInput(() => {
-          return (cookies[`lesson-${state.classroomID}`].poll.pollArray);
+          return (cookies[`lesson-${state.classroomID}`].poll.pollOptions);
         });
       }
     }, []);
 
 
     useEffect(() => {
-      if ( pollInputs && state.componentState.poll) {
+      if ( state.componentState.poll ) {
   
        dispatch({
          type: 'UPDATE_COMPONENT_STATE',
          payload: {
              componentName: 'poll',
-             inputName: 'pollArray',
+             inputName: 'pollOptions',
              content: input
          }
      }) 
 
-        setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`] });
+        setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], poll: {...cookies[`lesson-${state.classroomID}`].poll } });
       }
 
     }, [input]);
 
 
-  const handleInputChange = (e: { target: { id: string; value: string } }) => {
-    setInput({
-      ...input,
-      [e.target.id]: e.target.value,
-    });
-  };
+  // const handleInputChange = (e: { target: { id: string; value: string } }) => {
+  //   setInput({
+  //     ...input,
+  //     [e.target.id]: e.target.value,
+  //   });
+  // };
 
 
 /////// below are all temporary
 
 
-  const test = tempData ? tempData.map((item: {id: string, question: string, options: any}, key: any) => {
-
-    return (
-      item.options
-    )
-
-  }) : null
-
   
 
   const [data, setData] = useState<any>([]);
-  const [options, setOptions] = useState<any>(test);
   // console.log(options, 'test')
 
-  const handleRadioSelect = (passedKey: any, passedId: string) => {
+  // const handleRadioSelect = (passedKey: any, passedId: string, passedAns: string) => {
 
-    setData(() => {
-      return data.map((item: {id: string, question: string, options: any}, key: any) => {
+  //   setData(() => {
+  //     return tempData.map((item: {id: string, question: string, options: any}, key: any) => {
 
-      if(key === passedKey) {
-        return {
-          ...item,
-          ...item.options.map((options: {id: string, option: string}, key: number) => {
-            if(options.id === passedId ) {
-              return {
-                ...options,
-                isChoice: true 
-              }} 
-              else {
-                return {...options}
-            } }
-          )}
+  //     if(item.id === passedKey) {
+  //       console.log(item.id, 'item.id')
+  //       console.log(passedKey, 'item.id')
+  //       console.log(passedId, 'passedID')
+  //       return {
+  //         // ...item,
+  //         ...item.options.map((options: {id: string, option: string}, key: number) => {
+  //           if(options.id === passedId ) {
+  //             setInput(() => {
+  //               return {...input,
+  //               answer: passedAns}
+
+  //             })
+  //             return {
+                
+  //               ...options,
+  //               isChoice: true 
+  //             }} 
+  //           //   else {
+  //           //     return {...options}
+  //           // } 
+  //         }
+  //         )}
+  //     }
+        
+  //     else {
+  //       return {...item}
+        
+  //     } 
+      
+  //   }) })
+    
+  // };
+
+  const handleRadioSelect = (passedKey: any, passedId: string, passedAns: string) => {
+
+    setInput(() => {
+      return input ? input.map((item: {id: string, question: string, answer: any}, key: any) => {
+
+      if(item.id === passedKey) {
+        console.log(item.id, 'item.id')
+        console.log(passedKey, 'item.id')
+        console.log(passedId, 'passedID')
+          return {
+            ...item,
+          // id: item.id,
+          // question: item.question,
+          answer: passedAns
+        }        
       }
         
       else {
@@ -159,11 +186,15 @@ const PollForm = () => {
         
       } 
       
-    }) })
+    }) : null }) 
     
   };
+
+
+
 console.log(cookies[`lesson-${state.classroomID}`], 'cookies')
   console.log(data, 'data')
+  console.log(input, 'input')
 
   return (
     <div className='bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600'>
@@ -187,7 +218,8 @@ console.log(cookies[`lesson-${state.classroomID}`], 'cookies')
 
                   return (
                     <label key={optionKey} id={option.id} className="flex items-center text-sm cursor-pointer h-8">
-                      <button key={optionKey} id={option.id} name='choice' onClick={() => handleRadioSelect(key, option.id)} className={`${option.isChoice ? 'text-xl' : ''} w-auto px-4`}> {option.isChoice ? '❌'  : '⚪️'}</button>
+                      {console.log(input, 'input in loop')}
+                      <button key={optionKey} id={option.id} name='choice' onClick={() => handleRadioSelect(item.id, option.id, option.option)} className={`${option.option ? 'text-xl' : ''} w-auto px-4`}> {option.isChoice ? '❌'  : '⚪️'}</button>
                         {option.option}
                     </label>
                   )
