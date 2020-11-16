@@ -63,7 +63,7 @@ const CoopDisplay = () => {
 
             {/* self display */}
             <div className={`${fullscreen ? 'hidden' : 'w-full'} h-full flex flex-col justify-between items-center mb-4`}>
-                <Banner title={displayProps.title}
+                <Banner title={displayProps && displayProps.title ? displayProps.title : 'Your List'}
                     display='SELFinCOOP' fullscreen={fullscreen} />
 
                 <div className="w-full h-8.8/10 flex flex-col justify-between">

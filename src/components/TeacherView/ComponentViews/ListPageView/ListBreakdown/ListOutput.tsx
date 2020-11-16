@@ -7,7 +7,7 @@ import { LessonControlContext } from '../../../../../contexts/LessonControlConte
 import {parseBlankLines} from '../../../../../utilities/strings';
 
 interface ListOutputProps {
-  list?: 'test';
+  list?: any;
   fullscreen?: boolean;
 }
 
