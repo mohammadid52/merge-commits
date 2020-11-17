@@ -75,6 +75,7 @@ export type CreateInstitutionInput = {
   phone?: string | null,
   contact: ContactInput,
   website?: string | null,
+  extraField?: string | null,
   image?: string | null,
 };
 
@@ -94,6 +95,7 @@ export type ModelInstitutionConditionInput = {
   zip?: ModelStringInput | null,
   phone?: ModelStringInput | null,
   website?: ModelStringInput | null,
+  extraField?: ModelStringInput | null,
   image?: ModelStringInput | null,
   and?: Array< ModelInstitutionConditionInput | null > | null,
   or?: Array< ModelInstitutionConditionInput | null > | null,
@@ -128,6 +130,7 @@ export type UpdateInstitutionInput = {
   phone?: string | null,
   contact?: ContactInput | null,
   website?: string | null,
+  extraField?: string | null,
   image?: string | null,
 };
 
@@ -1294,6 +1297,7 @@ export type ModelInstitutionFilterInput = {
   zip?: ModelStringInput | null,
   phone?: ModelStringInput | null,
   website?: ModelStringInput | null,
+  extraField?: ModelStringInput | null,
   image?: ModelStringInput | null,
   and?: Array< ModelInstitutionFilterInput | null > | null,
   or?: Array< ModelInstitutionFilterInput | null > | null,
@@ -1727,6 +1731,7 @@ export type CreateInstitutionMutation = {
       email: string | null,
     },
     website: string | null,
+    extraField: string | null,
     type:  {
       __typename: "InstitutionType",
       id: string,
@@ -1771,6 +1776,7 @@ export type UpdateInstitutionMutation = {
       email: string | null,
     },
     website: string | null,
+    extraField: string | null,
     type:  {
       __typename: "InstitutionType",
       id: string,
@@ -1815,6 +1821,7 @@ export type DeleteInstitutionMutation = {
       email: string | null,
     },
     website: string | null,
+    extraField: string | null,
     type:  {
       __typename: "InstitutionType",
       id: string,
@@ -2569,6 +2576,7 @@ export type CreateCourseMutation = {
         email: string | null,
       },
       website: string | null,
+      extraField: string | null,
       type:  {
         __typename: "InstitutionType",
         id: string,
@@ -2676,6 +2684,7 @@ export type UpdateCourseMutation = {
         email: string | null,
       },
       website: string | null,
+      extraField: string | null,
       type:  {
         __typename: "InstitutionType",
         id: string,
@@ -2783,6 +2792,7 @@ export type DeleteCourseMutation = {
         email: string | null,
       },
       website: string | null,
+      extraField: string | null,
       type:  {
         __typename: "InstitutionType",
         id: string,
@@ -3813,6 +3823,7 @@ export type CreateClassroomMutation = {
         zip: string,
         phone: string | null,
         website: string | null,
+        extraField: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -4060,6 +4071,7 @@ export type UpdateClassroomMutation = {
         zip: string,
         phone: string | null,
         website: string | null,
+        extraField: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -4307,6 +4319,7 @@ export type DeleteClassroomMutation = {
         zip: string,
         phone: string | null,
         website: string | null,
+        extraField: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -8555,6 +8568,7 @@ export type GetInstitutionQuery = {
       email: string | null,
     },
     website: string | null,
+    extraField: string | null,
     type:  {
       __typename: "InstitutionType",
       id: string,
@@ -8604,6 +8618,7 @@ export type ListInstitutionsQuery = {
         email: string | null,
       },
       website: string | null,
+      extraField: string | null,
       type:  {
         __typename: "InstitutionType",
         id: string,
@@ -8822,6 +8837,7 @@ export type GetCourseQuery = {
         email: string | null,
       },
       website: string | null,
+      extraField: string | null,
       type:  {
         __typename: "InstitutionType",
         id: string,
@@ -8919,6 +8935,7 @@ export type ListCoursesQuery = {
         zip: string,
         phone: string | null,
         website: string | null,
+        extraField: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -9406,6 +9423,7 @@ export type GetClassroomQuery = {
         zip: string,
         phone: string | null,
         website: string | null,
+        extraField: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -11205,6 +11223,7 @@ export type OnUpdateClassroomSubscription = {
         zip: string,
         phone: string | null,
         website: string | null,
+        extraField: string | null,
         image: string | null,
         createdAt: string,
         updatedAt: string,
@@ -11628,6 +11647,7 @@ export type OnCreateInstitutionSubscription = {
       email: string | null,
     },
     website: string | null,
+    extraField: string | null,
     type:  {
       __typename: "InstitutionType",
       id: string,
@@ -11667,6 +11687,7 @@ export type OnUpdateInstitutionSubscription = {
       email: string | null,
     },
     website: string | null,
+    extraField: string | null,
     type:  {
       __typename: "InstitutionType",
       id: string,
@@ -11706,6 +11727,7 @@ export type OnDeleteInstitutionSubscription = {
       email: string | null,
     },
     website: string | null,
+    extraField: string | null,
     type:  {
       __typename: "InstitutionType",
       id: string,
@@ -12410,6 +12432,7 @@ export type OnCreateCourseSubscription = {
         email: string | null,
       },
       website: string | null,
+      extraField: string | null,
       type:  {
         __typename: "InstitutionType",
         id: string,
@@ -12512,6 +12535,7 @@ export type OnUpdateCourseSubscription = {
         email: string | null,
       },
       website: string | null,
+      extraField: string | null,
       type:  {
         __typename: "InstitutionType",
         id: string,
@@ -12614,6 +12638,7 @@ export type OnDeleteCourseSubscription = {
         email: string | null,
       },
       website: string | null,
+      extraField: string | null,
       type:  {
         __typename: "InstitutionType",
         id: string,

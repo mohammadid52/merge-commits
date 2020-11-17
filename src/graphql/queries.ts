@@ -57,6 +57,7 @@ export const getInstitution = /* GraphQL */ `
         email
       }
       website
+      extraField
       type {
         id
         name
@@ -106,6 +107,7 @@ export const listInstitutions = /* GraphQL */ `
           email
         }
         website
+        extraField
         type {
           id
           name
@@ -305,6 +307,7 @@ export const getCourse = /* GraphQL */ `
           email
         }
         website
+        extraField
         type {
           id
           name
@@ -390,6 +393,7 @@ export const listCourses = /* GraphQL */ `
           zip
           phone
           website
+          extraField
           image
           createdAt
           updatedAt
@@ -813,6 +817,7 @@ export const getClassroom = /* GraphQL */ `
           zip
           phone
           website
+          extraField
           image
           createdAt
           updatedAt

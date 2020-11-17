@@ -68,6 +68,7 @@ export const createInstitution = /* GraphQL */ `
         email
       }
       website
+      extraField
       type {
         id
         name
@@ -107,6 +108,7 @@ export const updateInstitution = /* GraphQL */ `
         email
       }
       website
+      extraField
       type {
         id
         name
@@ -146,6 +148,7 @@ export const deleteInstitution = /* GraphQL */ `
         email
       }
       website
+      extraField
       type {
         id
         name
@@ -816,6 +819,7 @@ export const createCourse = /* GraphQL */ `
           email
         }
         website
+        extraField
         type {
           id
           name
@@ -910,6 +914,7 @@ export const updateCourse = /* GraphQL */ `
           email
         }
         website
+        extraField
         type {
           id
           name
@@ -1004,6 +1009,7 @@ export const deleteCourse = /* GraphQL */ `
           email
         }
         website
+        extraField
         type {
           id
           name
@@ -1906,6 +1912,7 @@ export const createClassroom = /* GraphQL */ `
           zip
           phone
           website
+          extraField
           image
           createdAt
           updatedAt
@@ -2125,6 +2132,7 @@ export const updateClassroom = /* GraphQL */ `
           zip
           phone
           website
+          extraField
           image
           createdAt
           updatedAt
@@ -2344,6 +2352,7 @@ export const deleteClassroom = /* GraphQL */ `
           zip
           phone
           website
+          extraField
           image
           createdAt
           updatedAt

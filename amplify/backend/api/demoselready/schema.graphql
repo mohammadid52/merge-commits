@@ -56,6 +56,7 @@ type Institution @model @key(fields: ["id"]) {
   phone: String
   contact: Contact!
   website: String
+  extraField: String
   # coordinator: [Person]
   type: InstitutionType @connection
   image: String
