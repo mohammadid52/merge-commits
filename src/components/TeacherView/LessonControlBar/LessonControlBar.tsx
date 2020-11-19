@@ -14,7 +14,7 @@ const LessonControlBar = () => {
     }
 
     return (
-        <div className="relative w-9/10 h-1/10 md:flex flex-col items-center justify-center content-center px-4 z-0">
+        <div className="relative w-full h-full md:flex flex-col items-center justify-center content-center px-4 z-0">
             <div className="w-full flex flex-row items-center justify-between cursor-pointer">
                 { 
                     state.pages.map((page: { stage: string; type: string; breakdown: boolean; open: boolean, disabled: boolean}, key: React.ReactText) => (

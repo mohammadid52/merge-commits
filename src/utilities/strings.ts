@@ -5,3 +5,10 @@ export const parseBlankLines = (inputText: string) => {
     return 'No input text...'
   }
 }
+
+export const firstInitialFunc = (str: string) => {
+  if (typeof str !== 'string' || str === '') { return 'Profile' }
+  let firstInitial = str.charAt(0)
+  firstInitial = firstInitial.toUpperCase() + '.';
+  return firstInitial;
+}

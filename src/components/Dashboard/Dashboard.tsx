@@ -91,22 +91,18 @@ const Dashboard: React.FC = () => {
                     </div>
                 }>
                     <Switch>
-                        {/* <Route 
+                        {/* <Route
                             exact
                             path={`${match.url}`}
-                            render={({ location }) => (
-                                <Redirect 
-                                    to={{
-                                    pathname: '/dashboard',
-                                    state: { from: location }
-                                }}/>
-                            )} 
+                            render={() => (
+                                <Classroom />
+                            )}
                         /> */}
                         <Route
                             exact
                             path={`${match.url}`}
                             render={() => (
-                                <Classroom />
+                                <LessonPlanHome />
                             )}
                         />
                         <Route

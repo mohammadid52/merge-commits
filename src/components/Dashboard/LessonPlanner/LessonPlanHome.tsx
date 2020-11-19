@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import {useHistory} from 'react-router-dom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { Link } from 'react-router-dom';
 import Today from '../Classroom/TodayLessonTeacher';
@@ -27,6 +28,7 @@ export interface CurriculumInfo {
 const LessonPlanHome = () => {
   const [status, setStatus] = useState('');
   const { theme } = useContext(GlobalContext);
+  const history =  useHistory();
   const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
 
   async function getCourse(id: string) {
@@ -44,6 +46,8 @@ const LessonPlanHome = () => {
 
   useEffect(() => {
     getCourse('1');
+
+    history.push('/lesson-control?id=1')
   }, []);
 
   if (status !== 'done') {

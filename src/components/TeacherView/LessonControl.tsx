@@ -25,6 +25,9 @@ import FooterLabels from '../General/LabelSwitch';
 import PositiveAlert from '../General/Popup';
 import { useOutsideAlerter } from '../General/hooks/outsideAlerter';
 import Body from './Body';
+import TopMenu from './TopMenu';
+import ClassRosterTitleBar from './ClassRosterTitleBar';
+
 const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
 const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
 const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
@@ -321,171 +324,40 @@ const LessonControl = () => {
                         fill='screen'
                     />
                 </div>
-                <div className={`relative w-full h-1/10 border-b border-gray-400 flex flex-row items-center`}
-                // onClick={handleQuitAll}
-                >
-                    <h1 className={`w-2.5/10 text-3xl pl-4 font-extrabold font-open`}>
-                        {state.data.lesson.title}
-                    </h1>
 
-                    {/* <div className={`${!state.open ? 'bg-red-700 text-white cursor-pointer shadow-elem-dark' : 'bg-gray-500 text-black'} w-1/10 h-7/10 px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center text-center`} onClick={handleOpen}>
-                        {!state.open ? 'START LESSON' : 'LESSON STARTED'}
-                    </div> */}
-                    {!state.open ?
-                        <div className="bg-red-700 text-white cursor-pointer shadow-elem-dark w-1/10 h-7/10 px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center text-center" onClick={handleOpen}>
-                            START LESSON
-                    </div>
-                        :
-                        <div className="bg-black text-gray-500 cursor-pointer shadow-elem-dark w-1/10 h-7/10 px-2 text-xl font-medium leading-none rounded-full flex items-center justify-center text-center" onClick={handleLessonButton}>
-                            COMPLETE LESSON
-                    </div>
-                    }
 
-                    <div className="w-1/10 h-full flex flex-col justify-center items-center ml-4">
-                        <div className="flex flex-col w-auto leading-4 items-center">
-                            Start Lesson:
-                            <span className="font-open font-semibold w-auto">{state.expectedStartDate}</span>
-                        </div>
-                        <div className="flex flex-col w-auto leading-4 items-center">
-                            End Lesson:
-                            <span className="font-open font-semibold w-auto">{state.expectedEndDate}</span>
-                        </div>
-                    </div>
 
-                    <div className="w-4/10 flex justify-around items-center">
 
-                        <div className="w-1/3 flex justify-center items-center">
-                            <div className="w-full flex flex-col justify-center items-center">
-                                <div className="w-6/10 font-semibold leading-4 mb-1 text-indigo-500 text-center">
-                                    <span className="font-normal text-black">currently </span> viewing:
-                                </div>
-                                <div className="w-full flex justify-center items-center">
-                                    <div className={`w-auto ml-5 px-2 flex justify-center items-center ${state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? 'bg-indigo-500 hover:bg-indigo-400 text-gray-200 rounded-xl text-xl font-semibold overflow-x-auto shadow-elem-dark cursor-pointer' : 'text-black text-xs'}`} onClick={handleQuitViewing}>
-                                        {state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.student.firstName + ' ' + firstInitialFunc(state.studentViewing.studentInfo.student.lastName) : '(click on a student)'}
-                                    </div>
-                                    <div className={`w-auto ml-2 ${state.studentViewing.live ? '' : 'hidden'}`}>
-                                        {
-                                            state.studentViewing.live ?
-                                                <div className="font-bold cursor-pointer text-xl text-red-700 hover:text-red-400 flex justify-center items-center" onClick={handleQuitViewing}>
-                                                    X
-                                            </div>
-                                                :
-                                                null
-                                        }
-                                    </div>
-                                </div>
-                            </div>
 
-                        </div>
 
-                        <div className="w-2/10 flex justify-center items-center mr-8">
+                {/* START TOP MENU */}
+                <TopMenu 
+                shareable={shareable}
+                setShareable={setShareable}
+                isSameStudentShared={isSameStudentShared}
+                handleOpen={handleOpen}
+                handleLessonButton={handleLessonButton}
+                handleQuitViewing={handleQuitViewing}
+                handleShareStudentData={handleShareStudentData}
+                handleQuitShare={handleQuitShare}
+                handleClick={handleClick}
+                handleHomePopup={handleHomePopup}
+                />
+                {/* END TOP MENU */}
 
-                            <div className="w-full">
-                                {
-                                    shareable && state.studentViewing.live && !isSameStudentShared ?
-                                        <div className={` cursor-pointer w-auto text-xl z-50`} style={{ bottom: 0, left: 0 }}>
-                                            <button className="bg-purple-400 hover:bg-purple-300 text-gray-200 h-8 w-36 rounded-xl shadow-elem-dark" onClick={handleShareStudentData}>
-                                                share student
-                                            </button>
-                                        </div>
-                                        : null
-                                }
-                            </div>
-                        </div>
 
-                        <div className={`w-1/3 h-full ${state.sharing ? 'border-dotted border-4 border-red-700 ' : ''} flex justify-around items-center `}>
-                            <div className={`${state.sharing ? '' : 'hidden'} w-full h-full flex flex-col justify-center items-center`}>
-                                <div className="w-6/10 h-4/10 leading-4 mb-1 text-purple-400 font-semibold text-center">
-                                    <span className="font-normal text-black">currently </span> sharing:
-                                </div>
-                                <div className="w-full h-6/10 flex justify-center items-center">
-                                    <div className={`w-auto ml-5 px-2 flex justify-center items-center ${state.sharing ? 'bg-purple-400 hover:bg-purple-300 shadow-elem-dark rounded-xl text-gray-200 text-xl font-semibold cursor-pointer' : 'text-black text-xs'}`} onClick={handleQuitShare}>
-                                        {state.sharing ? state.displayData.studentInfo.firstName + ' ' + firstInitialFunc(state.displayData.studentInfo.lastName) : '(share student info)'}
-                                    </div>
-                                    <div className={`w-auto ml-2 ${state.sharing ? '' : 'hidden'}`}>
-                                        {
-                                            state.sharing ?
-                                                <div className="font-bold cursor-pointer text-xl text-red-700 hover:text-red-400 flex justify-center items-center" onClick={handleQuitShare}>
-                                                    X
-                                            </div>
-                                                :
-                                                null
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                    </div>
 
-                    <div className={`w-1/10 pr-4 flex justify-between items-center px-2`} style={{ right: 0 }}>
-                        <div className="flex flex-col justify-center items-center cursor-pointer px-2" onClick={handleClick}>
-                            {/* <NavLink to="/dashboard/manage-users"> */}
-                            <IconContext.Provider value={{ size: '1.5rem' }}>
-                                <FiUsers />
-                            </IconContext.Provider>
-                            {/* </NavLink> */}
-                            <p className="text-xs text-center">Students Management</p>
-                        </div>
-                        <div className="flex flex-col justify-center items-center cursor-pointer px-2" onClick={handleHomePopup}>
-                            {/* <NavLink to="/dashboard"> */}
-                            <IconContext.Provider value={{ size: '1.5rem' }}>
-                                <FaHome />
-                            </IconContext.Provider>
-                            {/* </NavLink> */}
-                            <p className="text-xs text-center">Home</p>
-                        </div>
-                    </div>
-                </div>
-                <div className={`w-full h-9/10 flex p-3 pb-5 rounded-lg`}>
+
+
+
+                <div className={`w-full h-8.5/10 flex p-3 pb-5 rounded-lg`}>
                     <div className={`${fullscreen ? 'hidden' : ''} w-4/10 h-full pr-4 flex flex-col items-center`}>
                         <div className={`h-full w-full flex flex-col justify-between items-center`}>
-                            <div className={`h-.8/10 w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between items-center text-2xl text-gray-200 font-extrabold font-open`}>
-                                <h2 className={`w-auto`}>
-                                    Class Roster
-                                </h2>
-
-                                <h2 className={`w-3/10 flex justify-between`}>
-                                    <div className="w-4/10 flex justify-around items-center relative">
-                                        <ToolTip position='bottom' header='' content='students in class' display='none' fontSize='text-xs' />
-                                        <div className="w-auto">
-                                            <IconContext.Provider value={{ size: '2rem', style: { width: 'auto' } }}>
-                                                <BsPersonFill />
-                                            </IconContext.Provider>
-                                        </div>
-                                        <div className="w-auto">
-                                            {state.roster.length}
-                                        </div>
-                                    </div>
-
-                                    <div className="w-4/10 flex justify-around items-center">
-                                        {/* <ToolTip position='bottom' header='' content='students who are ready (click to reset)' width='w-20' cursor display='none' fontSize= 'text-xs'/> */}
-                                        <div className={`w-auto relative`} onClick={handleResetDoneCounter}>
-                                            <ToolTip position='bottom'
-                                                cursor
-                                                header=''
-                                                width='w-24'
-                                                content={<div className="flex flex-col"><div>students who are ready</div> <p className="font-bold"> (click to reset)</p></div>}
-                                                display='none' fontSize='text-xs' />
-                                            {state.done.length === state.roster.length ?
-                                                <IconContext.Provider value={{ size: '2rem', style: { width: 'auto' }, color: '#009e00' }}>
-                                                    <FaRegThumbsUp style={{ pointerEvents: 'none' }} />
-                                                </IconContext.Provider>
-                                                : state.done.length !== state.roster.length ?
-                                                    <IconContext.Provider value={{ size: '2rem', style: { width: 'auto' }, color: 'yellow' }}>
-                                                        <FaRegThumbsUp style={{ pointerEvents: 'none' }} />
-                                                    </IconContext.Provider>
-                                                    :
-                                                    <IconContext.Provider value={{ size: '2rem', style: { width: 'auto' }, color: 'yellow' }}>
-                                                        <FaRegThumbsUp style={{ pointerEvents: 'none' }} />
-                                                    </IconContext.Provider>
-                                            }
-                                        </div>
-                                        <div className="w-auto">
-                                            {state.done.length}
-                                        </div>
-                                    </div>
-                                </h2>
+                            
+                            
+                            <div className={`h-.8/10 w-full px-4 bg-dark rounded-lg flex justify-between items-center text-2xl text-gray-200 font-bold font-open`}>
+                               <ClassRosterTitleBar handleResetDoneCounter={handleResetDoneCounter} />
                             </div>
 
 
@@ -494,34 +366,11 @@ const LessonControl = () => {
                                     handleUpdateClassroom={handleUpdateClassroom}
                                 />
                             </div>
-                            {/* <div className={`w-full px-4 bg-dark shadow-elem-light rounded-lg flex justify-between text-xl text-gray-200 font-extrabold font-open`}>
-                                <h2 className={`w-auto`}>
-                                    Teacher Notes 
-                                </h2>
-                            </div>
-                            <textarea id="text" className="bg-gray-300 w-full h-4/10 p-8 my-4 text-sm md:text-2xl text-gray-800 rounded-lg shadow-inner-dark" 
-                            // value={input}
-                            /> */}
                         </div>
                     </div>
-                    {/* <div className={`${fullscreen ? 'w-full' : 'w-6/10'} h-full flex flex-col items-center`}>
-                        <div className={`${fullscreen ? 'h-full' : 'h-8.3/10'} relative w-full bg-dark shadow-elem-light rounded-lg mb-4 p-4`}> */}
                     <div className={`relative ${fullscreen ? 'w-full' : 'w-6/10'} h-full flex flex-col items-center`}>
-                        {/* {
-                            studentDataLoading === 'loading' ? 
-                            <div className={`absolute h-8/10 bg-dark bg-opacity-75 flex flex-col justify-center items-center rounded-lg z-50`}>
-                                <div className={`text-center text-3xl text-gray-200 `}>
-                                    Loading student data...
-                                </div>
-                            </div>
-                            : null
-                        } */}
-                        <div className={`${fullscreen ? 'h-full' : 'h-8.3/10'} relative w-full ${theme.bg} shadow-elem-light rounded-lg mb-4 p-4 overflow-y-scroll overflow-x-hidden`}>
-                            {/*  */}
-                            {/* <LyricsActivityView
-                                student={selectedStudent}
-                                fullscreen={fullscreen}/> */}
-                            {/*  */}
+
+                        <div className={`${fullscreen ? 'h-full' : 'h-8.3/10'} relative w-full ${theme.bg} rounded-lg mb-4 p-4 overflow-y-scroll overflow-x-hidden`}>
 
                             <Suspense fallback={
                                 <div className="min-h-screen w-full flex flex-col justify-center items-center">
@@ -529,55 +378,7 @@ const LessonControl = () => {
                                 </div>
                             }>
                                 <Body />
-                                {/* <Switch>
-                                    <Route 
-                                        path={`${match.url}/intro`}
-                                        render={() => (
-                                            <IntroView fullscreen={fullscreen} />
-                                            )}
-                                            />
-                                    <Route 
-                                        path={`${match.url}/warmup`}
-                                        render={() => (
-                                            <StoryView fullscreen={fullscreen} />
-                                            )}
-                                            />
-                                    <Route 
-                                        path={`${match.url}/corelesson`}
-                                        render={() => (
-                                            <LyricsView fullscreen={fullscreen} />
-                                            )}
-                                            />
-                                    <Route 
-                                        path={`${match.url}/activity`}
-                                        render={() => (
-                                            <PoemView fullscreen={fullscreen} />
-                                            )}
-                                            />
-                                    <Route 
-                                        path={`${match.url}/checkpoint`}
-                                        render={() => (
-                                            <Checkpoint fullscreen={fullscreen}/>
-                                            )}
-                                            />
-                                    <Route 
-                                        path={`${match.url}/outro`}
-                                        render={() => (
-                                            <OutroView fullscreen={fullscreen} />
-                                            )}
-                                            />
-                                    <Route 
-                                        exact
-                                        path={`${match.url}/`}
-                                        render={({location}) => (
-                                            <Redirect 
-                                            to={{
-                                                pathname: `${match.url}/intro`,
-                                                state: { from: location }
-                                            }}/>
-                                            )}
-                                            />
-                                </Switch> */}
+
                             </Suspense>
 
                         </div>
