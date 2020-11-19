@@ -41,7 +41,7 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
         return 'transform translate-y-14';
         break;
       case 'top-left':
-        return 'transform -translate-y-4 right-1/2';
+        return 'transform -translate-y-full right-1/2';
         break;
       case 'top-right':
         return 'transform -translate-y-4 left-1/2';

@@ -67,33 +67,33 @@ const ClassRoster = (props: classRosterProps) => {
             case 'ACTIVE':
                 return (
                     <div className="flex justify-center items-center">
-                        <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-green-400"></span>
+                        <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-green-400 border border-white"></span>
                     </div>
                 )
             case 'IDLE':
                 return (
                     <div className="flex justify-center items-center ">
-                        <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-yellow-400"></span>
+                        <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-yellow-400 border border-dark-gray"></span>
                     </div>
                 )
             case 'OFFLINE':
                 return (
                     <div className="flex justify-center items-center ">
-                        <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-red-400"></span>
+                        <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-red-400 border border-dark-gray"></span>
                     </div>
                 )
             default:
                 return (
                     <div className="flex justify-center items-center">
-                        <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-gray-400"></span>
+                        <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-gray-400 border border-dark-gray"></span>
                     </div>
                 )
         }
     }
 
     return (
-        <div className={`w-full h-full bg-gray-500 shadow-inner-dark rounded-lg overflow-y-scroll overflow-x-auto`}>
-            <div className={`w-full flex justify-center font-semibold py-3 pl-4 pr-1 bg-black bg-opacity-20`}>
+        <div className={`w-full h-full bg-dark-gray bg-opacity-20 border border-dark-gray rounded-lg overflow-y-scroll overflow-x-auto`}>
+            <div className={`w-full flex justify-center font-medium py-3 pl-4 pr-1 bg-dark-gray bg-opacity-40`}>
                 <div className={`w-.5/10 mx-2 text-center`}>
 
                 </div>
@@ -108,20 +108,20 @@ const ClassRoster = (props: classRosterProps) => {
                 </div>
 
             </div>
-            <div className={`w-full flex flex-col items-center`}>
+            <div className={`w-full flex flex-col items-center bg-dark-gray bg-opacity-20`}>
                 {
                     state.roster && state.roster.length > 0 ?
                         sortedRoster.map((item: any, key: number) => (
 
                             <div key={key} id={`${item.id}`} className={`w-full flex py-2 pl-4 pr-1 hover:underline cursor-pointer 
-                        ${(key % 2 === 0) ? 'bg-white bg-opacity-20' : null} 
-                        ${state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === item.id ? 'bg-indigo-500' : ''}
+                                    ${(key % 2 === 0) ? 'bg-white bg-opacity-20' : null} 
+                                    ${state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === item.id ? 'bg-blueberry bg-opacity-60' : ''}
 
-                        ${(typeof state.displayData.studentInfo === 'undefined')
-                                    ? null
-                                    : (state.displayData.studentInfo.firstName === item.student.firstName && state.displayData.studentInfo.lastName === item.student.lastName)
-                                        ? 'bg-red-700 bg-opacity-20'
-                                        : null}`}
+                                    ${(typeof state.displayData.studentInfo === 'undefined')
+                                                ? null
+                                                : (state.displayData.studentInfo.firstName === item.student.firstName && state.displayData.studentInfo.lastName === item.student.lastName)
+                                                    ? 'bg-yellow-500 bg-opacity-60'
+                                                    : null}`}
 
                                 onClick={handleSelect}>
 
@@ -133,7 +133,7 @@ const ClassRoster = (props: classRosterProps) => {
                                     {item.student.preferredName ? item.student.preferredName : item.student.firstName} {item.student.lastName}
                                 </div>
 
-                                <div id={`${item.id}`} className={`w-1.5/10 mx-2 ${item.student.role !== 'ST' ? 'text-center text-white bg-blueberry rounded-lg' : 'font-semibold'} text-center `}>
+                                <div id={`${item.id}`} className={`w-1.5/10 mx-2 ${item.student.role !== 'ST' ? 'text-center text-white bg-dark-gray rounded-lg' : 'font-semibold'} text-center `}>
                                     {item.student.role === 'ST' ? 'Student' : item.student.role}
                                 </div>
 
