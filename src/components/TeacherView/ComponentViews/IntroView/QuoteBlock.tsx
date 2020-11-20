@@ -72,7 +72,7 @@ const QuoteBlock = (props: props) => {
       <div className='h-full text-left flex flex-col items-start'>
         {/* BIO */}
         <div
-          className={`${heroIsActive ? 'visible' : 'hidden'
+          className={`${heroIsActive ? 'visible overflow-y-auto' : 'hidden'
             } h-96 w-9/10 bg-black50 flex flex-col justify-start transition-all duration-500 ease-in-out animate-fadeIn overflow-hidden`}>
           {typeof artistBio !== 'undefined'
             ? artistBio.map((paragraph: string, i: number) => (

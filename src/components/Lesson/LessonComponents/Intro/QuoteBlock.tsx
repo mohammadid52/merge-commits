@@ -4,7 +4,7 @@ import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineRead } from 'react-icons/ai';
 import PhotoBlock from './PhotoBlock';
 
-const QuoteBlock = () => {
+const QuoteBlock =  overflow-y-auto() => {
   const { state, theme } = useContext(LessonContext);
   const [heroIsActive, setHeroIsActive] = useState<boolean>(false);
   const [isToggled, setIsToggled] = useState<string[]>(['']);
@@ -75,7 +75,7 @@ const QuoteBlock = () => {
         {/* BIO */}
         <div
           className={`${
-            heroIsActive ? 'visible' : 'hidden'
+            heroIsActive ? 'visible overflow-y-auto' : 'hidden'
           } h-96 w-9/10 flex flex-col justify-start transition-all duration-500 ease-in-out animate-fadeIn overflow-hidden`}>
           {typeof artistBio !== 'undefined'
             ? artistBio.map((paragraph: string, i: number) => (
