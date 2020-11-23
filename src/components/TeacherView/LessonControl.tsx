@@ -368,10 +368,10 @@ const LessonControl = () => {
               </div>
 
               <div className={`h-9/10`}>
-                {/* <ClassRoster 
+                <ClassRoster 
                 handleUpdateClassroom={handleUpdateClassroom} 
                 handleShareStudentData={handleShareStudentData}
-                isSameStudentShared={isSameStudentShared}/> */}
+                isSameStudentShared={isSameStudentShared}/>
               </div>
             </div>
           </div>

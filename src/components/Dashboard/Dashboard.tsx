@@ -91,20 +91,20 @@ const Dashboard: React.FC = () => {
                     </div>
                 }>
                     <Switch>
-                        <Route
+                        {/* <Route
                             exact
                             path={`${match.url}`}
                             render={() => (
                                 <Classroom />
                             )}
-                        />
-                        {/* <Route
+                        /> */}
+                        <Route
                             exact
                             path={`${match.url}`}
                             render={() => (
                                 <LessonPlanHome />
                             )}
-                        /> */}
+                        />
                         <Route
                             path={`${match.url}/classroom`}
                             render={({ location }) => (

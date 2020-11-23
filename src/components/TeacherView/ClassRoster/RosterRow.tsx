@@ -38,7 +38,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
   } = props;
   const { state, dispatch } = useContext(LessonControlContext);
   const location = useLocation();
-  const [quickShare, setQuickShare] = useState<boolean>(false)
+  const [quickShare, setQuickShare] = useState<boolean>(false);
   const [shareable, setShareable] = useState(true);
 
   useEffect(() => {
@@ -59,14 +59,27 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     }
   }, [lessonProgress]);
 
-  // useEffect(()=>{
-  //   if(state.studentViewing.studentInfo && quickShare){
-  //     if(state.studentViewing.studentInfo.student.id !== state.displayData.studentInfo.id){
-  //       handleShareStudentData();
-  //     }
-  //     setQuickShare(false);
-  //   }
-  // },[state.studentViewing.studentInfo])
+
+  /**
+   * 
+   * 
+   * CODE BELOW IS FOR QUICKLY VIEWING AND IMMEDIATELY SHARING STUDENT
+   * WRITTEN SPECIFICALLY FOR THE "SHARE BUTTON" IN THE CLASS ROSTER
+   * CODE BELOW NEEDS TO BE CLEANED UP BIGTIME
+   * 
+   * 
+   */
+  useEffect(() => {
+    if (state.studentViewing.live && quickShare) {
+      if (typeof state.displayData.studentInfo === 'undefined') {
+        handleShareStudentData();
+      } else if (state.studentViewing.studentInfo.student.id !== state.displayData.studentInfo.id) {
+        handleShareStudentData();
+      }
+
+      setQuickShare(false);
+    }
+  }, [quickShare]);
 
   const handleSelect = async (e: any) => {
     const { id } = e.target;
@@ -83,8 +96,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     const id = t.id;
 
     handleSelect(e);
-
-    
+    setQuickShare(true);
   };
 
   return (
@@ -94,13 +106,28 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
       className={`w-full flex py-2 pl-4 pr-1 
                                     ${number % 2 === 0 ? 'bg-white bg-opacity-20' : null} 
                                     ${
+                                      /**
+                                       * 
+                                       *
+                                       * IF ROW IS SELECTED,
+                                       *  BUT ROW DOES NOT BELONG TO SOMEONE WHO IS BEING SHARED...
+                                       *    mAKE A BLUEBERRY
+                                       */
                                       state.studentViewing.studentInfo &&
-                                      state.studentViewing.studentInfo.id === id
+                                      state.studentViewing.studentInfo.id === id &&
+                                      state.displayData.studentInfo.firstName !== firstName &&
+                                      state.displayData.studentInfo.lastName !== lastName
                                         ? 'bg-blueberry bg-opacity-60'
                                         : ''
                                     }
 
                                     ${
+                                      /**
+                                       * 
+                                       * IF ROW BELONMGS TO PERSON WHO IS BEING SHARED
+                                       * MAKE YELLOW BABBYYYY
+                                       * 
+                                       */
                                       typeof state.displayData.studentInfo === 'undefined'
                                         ? null
                                         : state.displayData.studentInfo.firstName === firstName &&

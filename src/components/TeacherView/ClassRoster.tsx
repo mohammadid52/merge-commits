@@ -35,6 +35,17 @@ const ClassRoster = (props: ClassRosterProps) => {
     }
   });
 
+  /**
+   * ALL I WANTS IS THE STUDENTS || non-STUDENTS FROM THE ROSTER
+   */
+  const studentRoster = state.roster.filter((entry: any) => {
+    return entry.student.role === 'ST';
+  });
+
+  const nonStudentRoster = state.roster.filter((entry: any) => {
+    return entry.student.role !== 'ST';
+  });
+
   useEffect(() => {
     console.log(' sorted : ', sortedRoster);
   }, []);
@@ -93,7 +104,7 @@ const ClassRoster = (props: ClassRosterProps) => {
 
   return (
     <div
-      className={`w-full h-full bg-dark-gray bg-opacity-20 border border-dark-gray rounded-lg overflow-y-scroll overflow-x-auto`}>
+      className={`w-full h-full flex flex-col bg-dark-gray bg-opacity-20 border border-dark-gray rounded-lg overflow-y-scroll overflow-x-auto`}>
       {/* TABLE HEAD */}
       <div
         className={`w-full flex justify-center font-medium py-3 pl-4 pr-1 bg-dark-gray bg-opacity-40`}>
@@ -105,29 +116,40 @@ const ClassRoster = (props: ClassRosterProps) => {
 
       {/* ROWS */}
       <div className={`w-full flex flex-col items-center bg-dark-gray bg-opacity-20`}>
+        {/* STUDENTS */}
         {state.roster && state.roster.length > 0
-          ? sortedRoster.map((item: any, key: number) => (
+          ? studentRoster.map((item: any, key: number) => (
               <>
-
                 <RosterRow
-                    key={key}
-                    number={key}
-                    id={item.id}
-                    status={item.status}
-                    firstName={item.student.firstName}
-                    lastName={item.student.lastName}
-                    preferredName={item.student.preferredName}
-                    role={item.student.role}
-                    currentLocation={item.currentLocation}
-                    lessonProgress={item.lessonProgress}
-                    handleSelect={handleSelect}
-                    studentStatus={studentStatus}
-                    handleShareStudentData={handleShareStudentData}
+                  key={key}
+                  number={key}
+                  id={item.id}
+                  status={item.status}
+                  firstName={item.student.firstName}
+                  lastName={item.student.lastName}
+                  preferredName={item.student.preferredName}
+                  role={item.student.role}
+                  currentLocation={item.currentLocation}
+                  lessonProgress={item.lessonProgress}
+                  handleSelect={handleSelect}
+                  studentStatus={studentStatus}
+                  handleShareStudentData={handleShareStudentData}
                 />
-
               </>
             ))
           : null}
+      </div>
+
+      <div className={`w-full flex flex-col items-center mt-auto mb-0 text-xs`}>
+        <span>Non-students logged in: </span>
+        {/* non-STUDENTS */}
+          {
+            state.roster && state.roster.length > 0
+            ? nonStudentRoster.reduce((acc: string, elem: any, i: number )=>{
+              return acc + `${elem.student.firstName} ${elem.student.lastName} (${elem.student.role})${i !== nonStudentRoster.length-1 ? ',' : ''} `
+            },'')
+            : null
+          }
       </div>
     </div>
   );

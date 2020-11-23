@@ -44,11 +44,17 @@ const LessonPlanHome = () => {
     }
   }
 
-  // useEffect(() => {
-  //   getCourse('1');
 
-  //   history.push('/lesson-control?id=1')
-  // }, []);
+
+  useEffect(() => {
+    getCourse('1');
+
+    history.push('/lesson-control?id=1')
+  }, []);
+
+
+
+  
 
   if (status !== 'done') {
     return <ComponentLoading />;
