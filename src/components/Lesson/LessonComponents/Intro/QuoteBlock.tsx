@@ -4,7 +4,7 @@ import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineRead } from 'react-icons/ai';
 import PhotoBlock from './PhotoBlock';
 
-const QuoteBlock =  overflow-y-auto() => {
+const QuoteBlock = () => {
   const { state, theme } = useContext(LessonContext);
   const [heroIsActive, setHeroIsActive] = useState<boolean>(false);
   const [isToggled, setIsToggled] = useState<string[]>(['']);
