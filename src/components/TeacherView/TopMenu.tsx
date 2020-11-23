@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect, Suspense, lazy } from 'react';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaExpand, FaCompress, FaHome, FaRegThumbsUp } from 'react-icons/fa';
-import { FiUsers } from 'react-icons/fi';
+import { FaPlay, FaFlagCheckered, FaHome } from 'react-icons/fa';
+import { FiUsers, FiMenu } from 'react-icons/fi';
 
 /**
  * IMPORT FUNCTIONS
@@ -37,6 +37,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
   } = props;
 
   const { state, theme, dispatch } = useContext(LessonControlContext);
+  const [hamburgerOpen, setHamburgerOpen] = useState<boolean>(false);
 
   return (
     <>
@@ -48,7 +49,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
         <div className='absolute w-full h-8 top-0 font-medium bg-light-gray bg-opacity-30'></div>
 
         {/* LEFT */}
-        <div className='h-full w-4/10 min-w-100 max-w-160 px-4 flex flex-row justify-between '>
+        <div className='h-full w-3/10 min-w-100 max-w-160 px-4 flex flex-row justify-between '>
           <div className='w-full flex flex-col'>
             <div title='title' className='h-8 align-middle font-bold text-xs leading-8 '>
               Lesson:
@@ -93,7 +94,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
           {/* SHARING END */}
 
           {/* BUTTONS */}
-          <div className='w-1.5/10 flex flex-col content-between'>
+          <div className='w-auto mr-4 flex flex-col content-between'>
             <div className='h-8 align-middle font-bold text-xs leading-8 '>
               <span className='font-bold text-black'>Navigation:</span>
             </div>
@@ -106,9 +107,10 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
       <div
         className={`relative w-full h-22 py-2 bg-light-gray bg-opacity-10 border-b border-gray-400 flex flex-row mt-0`}>
         {/* LEFT */}
-        <div className='h-full w-4/10 min-w-100 max-w-160 px-4 flex flex-row justify-between '>
+        <div className='h-full w-3/10 min-w-100 max-w-160 px-4 flex flex-row justify-between '>
           <div className='w-full flex flex-col my-auto'>
             <h1 className={`text-3xl font-medium`}>"{state.data.lesson.title}"</h1>
+            <p className='text-xs'>Start Date: {state.expectedStartDate}</p>
           </div>
 
           <div className='w-32 h-full flex flex-col  text-sm'>
@@ -120,11 +122,15 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
                   onClick={() => {
                     !state.open ? handleOpen() : null;
                   }}>
-                  Start
+                  <IconContext.Provider value={{ size: '1.5rem' }}>
+                    <FaPlay />
+                  </IconContext.Provider>
                 </div>
               ) : (
                 <div className='w-full bg-dark-gray bg-opacity-20 text-white w-24 mt-0 p-2 leading-none rounded-lg flex items-center justify-center text-center border border-light-gray'>
-                  Start
+                  <IconContext.Provider value={{ size: '1.5rem' }}>
+                    <FaPlay />
+                  </IconContext.Provider>
                 </div>
               )}
             </div>
@@ -137,11 +143,15 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
                   onClick={() => {
                     state.open ? handleLessonButton() : null;
                   }}>
-                  Complete
+                  <IconContext.Provider value={{ size: '1.5rem' }}>
+                    <FaFlagCheckered />
+                  </IconContext.Provider>
                 </div>
               ) : (
                 <div className='w-full bg-dark-red text-gray-200 cursor-pointer w-24 mb-0 p-2 leading-none rounded-lg flex items-center justify-center text-center border border-light-gray'>
-                  Complete
+                  <IconContext.Provider value={{ size: '1.5rem' }}>
+                    <FaFlagCheckered />
+                  </IconContext.Provider>
                 </div>
               )}
             </div>
@@ -149,7 +159,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
         </div>
 
         {/* RIGHT */}
-        <div className='h-full w-full pr-4 flex flex-row justify-between '>
+        {/* <div className='h-full w-full pr-4 flex flex-row justify-between '>
           <div className='w-1/10 h-full flex flex-col  my-auto text-center text-sm'>
             <div className='h-1/2 flex items-start'>
               <div className='w-auto mx-auto bg-white bg-opacity-50 rounded-lg mt-0 p-1 text-sea-green hover:text-green-600 font-bold border border-light-gray'>
@@ -162,108 +172,130 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
                 E: {state.expectedEndDate}
               </div>
             </div>
-          </div>
+          </div> */}
 
-          {/* SHARING START */}
-          <div className='w-7/10 flex justify-around'>
-            {/* VIEWING TAB */}
-            <div className='w-full flex flex-col border border-light-gray mx-2 rounded-lg'>
-              <div className='w-full flex justify-center my-auto'>
-                <div
-                  className={`w-auto  h-8 px-3 flex justify-center items-center rounded-lg text-sm font-medium overflow-x-auto cursor-pointer ${
-                    state.studentViewing.studentInfo && state.studentViewing.studentInfo.id
-                      ? 'bg-blueberry hover:bg-opacity-80 text-white'
-                      : 'text-gray-600 text-sm'
-                  }`}
-                  onClick={handleQuitViewing}>
-                  {state.studentViewing.studentInfo && state.studentViewing.studentInfo.id
-                    ? state.studentViewing.studentInfo.student.firstName +
-                      ' ' +
-                      firstInitialFunc(state.studentViewing.studentInfo.student.lastName)
-                    : '(click on a student)'}
-                </div>
-                <div className={`w-auto ml-2 ${state.studentViewing.live ? '' : 'hidden'}`}>
-                  {state.studentViewing.live ? (
-                    <div
-                      className='font-bold cursor-pointer text-xl text-red-700 hover:text-red-400 flex justify-center items-center'
-                      onClick={handleQuitViewing}>
-                      X
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-
-            {/* SHARE ACTION */}
-            <div className='w-full flex flex-col border border-light-gray mx-2 rounded-lg'>
-              {shareable && state.studentViewing.live && !isSameStudentShared ? (
-                <div className={`cursor-pointer w-auto my-auto text-center text-sm z-50`}>
-                  <button
-                    className='bg-sea-green hover:bg-opacity-80 text-white h-8 w-36 rounded-lg'
-                    onClick={handleShareStudentData}>
-                    Share Student
-                  </button>
-                </div>
-              ) : (
-                <div className={`w-auto my-auto text-center text-sm z-50`}>
-                  <button
-                    className='bg-dark-gray bg-opacity-20 text-white h-8 w-36 rounded-lg'
-                    style={{ pointerEvents: 'none' }}>
-                    Share Student
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* SHARING TAB */}
-            <div
-              className={`w-full h-full flex flex-col mx-2 rounded-lg ${
-                state.sharing ? 'border-2 border-dark-gray' : 'border border-light-gray'
-              }`}>
-              <div className={`w-full flex justify-center my-auto`}>
-                <div
-                  className={`w-auto h-8 px-3 flex justify-center items-center text-sm rounded-lg font-medium cursor-pointer ${
-                    state.sharing
-                      ? 'bg-blueberry hover:bg-opacity-80  text-white '
-                      : 'text-gray-600'
-                  }`}
-                  onClick={handleQuitShare}>
-                  {state.sharing
-                    ? state.displayData.studentInfo.firstName +
-                      ' ' +
-                      firstInitialFunc(state.displayData.studentInfo.lastName)
-                    : '(share student info)'}
-                </div>
-                <div className={`w-auto ml-2 ${state.sharing ? '' : 'hidden'}`}>
-                  {state.sharing ? (
-                    <div
-                      className='font-bold cursor-pointer text-xl text-red-700 hover:text-red-400 flex justify-center items-center'
-                      onClick={handleQuitShare}>
-                      X
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* SHARING END */}
-
-          {/* BUTTONS */}
-          <div className='w-1.5/10 flex flex-col content-between '>
-            <div className='flex flex-row my-auto justify-around'>
+        {/* SHARING START */}
+        <div className='w-7/10 flex justify-around'>
+          {/* VIEWING TAB */}
+          {/* <div className='w-full flex flex-col border border-light-gray mx-2 rounded-lg'>
+            <div className='w-full flex justify-center my-auto'>
               <div
+                className={`w-auto  h-8 px-3 flex justify-center items-center rounded-lg text-sm font-medium overflow-x-auto cursor-pointer ${
+                  state.studentViewing.studentInfo && state.studentViewing.studentInfo.id
+                    ? 'bg-blueberry hover:bg-opacity-80 text-white'
+                    : 'text-gray-600 text-sm'
+                }`}
+                onClick={handleQuitViewing}>
+                {state.studentViewing.studentInfo && state.studentViewing.studentInfo.id
+                  ? state.studentViewing.studentInfo.student.firstName +
+                    ' ' +
+                    firstInitialFunc(state.studentViewing.studentInfo.student.lastName)
+                  : '(click on a student)'}
+              </div>
+              <div className={`w-auto ml-2 ${state.studentViewing.live ? '' : 'hidden'}`}>
+                {state.studentViewing.live ? (
+                  <div
+                    className='font-bold cursor-pointer text-xl text-red-700 hover:text-red-400 flex justify-center items-center'
+                    onClick={handleQuitViewing}>
+                    X
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          </div> */}
+
+          {/* SHARE ACTION */}
+          {/* <div className='w-full flex flex-col border border-light-gray mx-2 rounded-lg'>
+            {shareable && state.studentViewing.live && !isSameStudentShared ? (
+              <div className={`cursor-pointer w-auto my-auto text-center text-sm z-50`}>
+                <button
+                  className='bg-sea-green hover:bg-opacity-80 text-white h-8 w-36 rounded-lg'
+                  onClick={handleShareStudentData}>
+                  Share Student
+                </button>
+              </div>
+            ) : (
+              <div className={`w-auto my-auto text-center text-sm z-50`}>
+                <button
+                  className='bg-dark-gray bg-opacity-20 text-white h-8 w-36 rounded-lg'
+                  style={{ pointerEvents: 'none' }}>
+                  Share Student
+                </button>
+              </div>
+            )}
+          </div> */}
+
+          {/* SHARING TAB */}
+          {/* <div
+            className={`w-full h-full flex flex-col mx-2 rounded-lg ${
+              state.sharing ? 'border-2 border-dark-gray' : 'border border-light-gray'
+            }`}>
+            <div className={`w-full flex justify-center my-auto`}>
+              <div
+                className={`w-auto h-8 px-3 flex justify-center items-center text-sm rounded-lg font-medium cursor-pointer ${
+                  state.sharing ? 'bg-blueberry hover:bg-opacity-80  text-white ' : 'text-gray-600'
+                }`}
+                onClick={handleQuitShare}>
+                {state.sharing
+                  ? state.displayData.studentInfo.firstName +
+                    ' ' +
+                    firstInitialFunc(state.displayData.studentInfo.lastName)
+                  : '(share student info)'}
+              </div>
+              <div className={`w-auto ml-2 ${state.sharing ? '' : 'hidden'}`}>
+                {state.sharing ? (
+                  <div
+                    className='font-bold cursor-pointer text-xl text-red-700 hover:text-red-400 flex justify-center items-center'
+                    onClick={handleQuitShare}>
+                    X
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          </div> */}
+        </div>
+        {/* SHARING END */}
+
+        {/* BUTTONS */}
+        <div className='w-auto mr-4 flex flex-col content-between '>
+
+          <div className='relative flex flex-col my-auto justify-around'>
+            <div className='hover:animate-jiggle' onClick={() => setHamburgerOpen(!hamburgerOpen)}>
+              <IconContext.Provider value={{ size: '1.5rem' }}>
+                <FiMenu />
+              </IconContext.Provider>
+            </div>
+
+            <div className='relative w-full'>
+              <div
+                className={`${
+                  hamburgerOpen ? 'visible animate-fadeIn' : 'hidden'
+                } w-32 absolute bg-white shadow-xl overflow-hidden z-100 right-1/2 transform  rounded-lg`}> //translate-x-1/2
+                <div
+                  className='relative h-auto w-full p-2 flex flex-col content-between justify-center items-center text-center text-sm cursor-pointer px-2 hover:bg-blueberry hover:bg-opacity-20'
+                  onClick={handleClick}>
+                  <IconContext.Provider value={{ size: '1.5rem' }}>
+                    <FiUsers />
+                  </IconContext.Provider>
+                  User Management
+                </div>
+                <div
+                  className='relative h-auto w-full p-2 flex flex-col content-between justify-center items-center text-center text-sm cursor-pointer px-2 hover:bg-blueberry hover:bg-opacity-20'
+                  onClick={handleHomePopup}>
+                  <IconContext.Provider value={{ size: '1.5rem' }}>
+                    <FaHome />
+                  </IconContext.Provider>
+                  Home
+                </div>
+              </div>
+            </div>
+
+            {/* <div
                 className='relative w-16 flex flex-col content-between justify-center items-center text-center cursor-pointer px-2'
                 onClick={handleClick}>
                 <IconContext.Provider value={{ size: '1.5rem' }}>
                   <FiUsers />
                 </IconContext.Provider>
-                {/**
-                 *
-                 * STILL NEED TO ADD THE LABELS OF THE BUTTOINS TO
-                 * TOOLTIPS...
-                 *
-                 */}
-                {/* <p className="absolute bottom-0 text-sm text-center">Students Management</p> */}
               </div>
               <div
                 className='relative w-16 flex flex-col content-between justify-center items-center text-center cursor-pointer px-2'
@@ -271,9 +303,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
                 <IconContext.Provider value={{ size: '1.5rem' }}>
                   <FaHome />
                 </IconContext.Provider>
-                {/* <p className="absolute bottom-0 text-sm text-center">Home</p> */}
-              </div>
-            </div>
+              </div> */}
           </div>
         </div>
       </div>

@@ -33,13 +33,12 @@ const LessonControl = () => {
   const history = useHistory();
   const location = useLocation();
   const [fullscreen, setFullscreen] = useState(false);
-  // const [ studentDataLoading, setStudentDataLoading ] = useState('');
-  const [shareable, setShareable] = useState(false);
+
+  const [shareable, setShareable] = useState(false); // THIS ROW MOVED TO RosterRow.tsx, NEEDS TO BE DELETED
+
   const [isSameStudentShared, setIsSameStudentShared] = useState(false);
   const [open, setOpen] = useState(state.open);
   console.log(state, 'state');
-
-  // console.log(open, 'open');
 
   const handleFullscreen = () => {
     setFullscreen((fullscreen) => {
@@ -56,9 +55,6 @@ const LessonControl = () => {
     return firstInitial;
   };
 
-  useEffect(() => {
-    // console.log(state, 'state')
-  }, []);
 
   const handleUpdateClassroom = async () => {
     let updatedClassroomData: any = {
@@ -105,7 +101,7 @@ const LessonControl = () => {
   };
 
   const handleShareStudentData = async () => {
-    // console.log(state.studentViewing);
+
     if (state.studentViewing.studentInfo) {
       let displayData = {
         breakdownComponent: state.studentViewing.studentInfo.currentLocation
@@ -372,7 +368,10 @@ const LessonControl = () => {
               </div>
 
               <div className={`h-9/10`}>
-                <ClassRoster handleUpdateClassroom={handleUpdateClassroom} />
+                <ClassRoster 
+                handleUpdateClassroom={handleUpdateClassroom} 
+                handleShareStudentData={handleShareStudentData}
+                isSameStudentShared={isSameStudentShared}/>
               </div>
             </div>
           </div>
