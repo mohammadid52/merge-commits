@@ -30,11 +30,12 @@ export interface FinalText {
 }
 
 interface props {
-    fullscreen: boolean
+    fullscreen: boolean;
+    fullscreenInstructions: boolean;
 }
 
 const Body = (props: props) => {
-    const { fullscreen } = props
+    const { fullscreen, fullscreenInstructions } = props
     const { state, theme, dispatch } = useContext(LessonControlContext)
     const [color, setColor] = useState('')
     const [selected, setSelected] = useState<Array<SelectObject>>([])
@@ -81,20 +82,39 @@ const Body = (props: props) => {
        
     }, [initialSelectedText])
 
+    const colorPicker = (colorName: string): string => {
+        switch (colorName) {
+          case 'dark-red':
+            return '#CA2222';
+          case 'blueberry':
+            return '#488AC7';
+          case 'sea-green':
+            return '#17A589';
+          case 'fire-orange':
+            return '#FF5733';
+          case 'erase':
+          default:
+            return '';
+        }
+      };
+
     return (
         <>
-            {/* <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup} /> */}
-            <div className={theme.section}>
-                <Banner fullscreen={fullscreen} />
+            <div className={`${(fullscreenInstructions) ? 'absolute w-5/10 h-5/10 left-1/2 transform -translate-x-1/2 translate-y-1/2 mx-auto my-auto shadow-xl text-lg bg-light-gray p-4 rounded-xl animate-fadeIn z-50' : 'hidden'}`}>
+                <InstructionBlock fullscreen={fullscreen}/>
+            </div>
 
-                <div className='flex flex-col justify-between items-center'>
-                    <InstructionBlock fullscreen={fullscreen} />
-                    <VideoBlock link={state.data.lesson.coreLesson.content.link} fullscreenLyrics={fullscreenLyrics} />
-                </div>
-                <div className='relative'>
-                <Toolbar setColor={setColor} color={color} fullscreen={fullscreen} />
+            
+            <div className={`${(fullscreenInstructions) ? 'opacity-10' : ''} transition ease-in-out duration-500 w-full h-full max-w-256 flex flex-col items-start z-50`}>
+               
+
+                
+               
+                <Toolbar setColor={setColor} color={color} colorPicker={colorPicker} fullscreen={fullscreen} />
+
                 <LyricsBlock
                             color={color}
+                            colorPicker={colorPicker}
                             selected={selected}
                             setSelected={setSelected}
                             fullscreen={fullscreen}
@@ -109,6 +129,7 @@ const Body = (props: props) => {
                             selectGroup={selectGroup}
                             setSelectGroup={setSelectGroup}
                         />
+                <div className='overflow-y-scroll  rounded-xl bg-darker-gray text-gray-200'>
                     </div>
                 </div>
         </>

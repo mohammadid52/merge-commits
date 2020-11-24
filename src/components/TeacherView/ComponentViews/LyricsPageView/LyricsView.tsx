@@ -12,10 +12,11 @@ import { LessonControlContext } from '../../../../contexts/LessonControlContext'
 import { studentObject } from '../../../../state/LessonControlState';
 // import ErrorPage from '../../Error/ErrorPage';
 interface props {
-        fullscreen: boolean
+        fullscreen: boolean;
+        fullscreenInstructions: boolean;
     }
 const Lyrics = (props: props) => {
-    const { fullscreen } = props;
+    const { fullscreen, fullscreenInstructions } = props;
     const match = useRouteMatch();
 
     return (
@@ -24,7 +25,7 @@ const Lyrics = (props: props) => {
                 <LyricsBreakdownView fullscreen={fullscreen} />
             </Route>
             <Route exact path={`${match.url}`}>
-                <LyricsActivityView fullscreen={fullscreen} />
+                <LyricsActivityView fullscreen={fullscreen} fullscreenInstructions={fullscreenInstructions}/>
             </Route>
         </Switch>
     )

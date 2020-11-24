@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
 import Banner from './Banner';
@@ -7,6 +7,8 @@ import LyricsBlock from './LyricsBlock';
 import InstructionBlock from './InstructionBlock';
 import VideoBlock from './VideoBlock';
 import InstructionsPopup from '../../../Popup/InstructionsPopup';
+
+import {useWindowSize} from '../../../../../customHooks/windowSize';
 
 /**
  * interfaces
@@ -43,10 +45,24 @@ const Body = () => {
   const { video, link } = state.data.lesson.coreLesson.instructions;
   const [openPopup, setOpenPopup] = useState(false);
   //  text
-  // const [firstLastSelected, setFirstLastSelected] = useState<string[]>([]);
   const [finalText, setFinalText] = useState<FinalText>({});
   const [initialSelectedText, setInitialSelectedText] = useState<SelectedTextGroup>({});
   const [selectGroup, setSelectGroup] = useState<number>(0);
+
+  const [toptop, setTopTop] = useState<number>(0);
+
+  /**
+   * 
+   * 
+   * REF USAGE FOR UNRESPONSIVE HIGHLIGHT BOX
+   * 
+   * 
+   */
+  const ref = useRef(null);
+  const winSize = useWindowSize();
+
+
+
 
   const initialSelectedObjectToArray = (obj: any) => {
     if (typeof obj === 'object') {
@@ -58,6 +74,12 @@ const Body = () => {
       return selectionArray;
     }
   };
+
+  useEffect(()=>{
+    if(ref.current){
+      setTopTop(ref.current.getBoundingClientRect().top)
+    }
+  },[])
 
   useEffect(() => {
     if (cookies[`lesson-${state.classroomID}`].lyrics) {
@@ -162,8 +184,7 @@ const Body = () => {
   return (
     <>
       <div className='relative max-w-256 h-full flex flex-row overflow-hidden mx-auto'>
-        
-        <div className='w-3/10 h-full max-h-192 mr-4'>
+        <div className='w-3/10 h-full  max-h-192 mr-4'> 
           <div className='z-50 flex flex-col justify-between items-center'>
             <InstructionBlock />
           </div>
@@ -171,12 +192,14 @@ const Body = () => {
           <VideoBlock link={state.data.lesson.coreLesson.content.link} fullscreen={fullscreen} />
         </div>
 
-        <div className='w-7/10 h-full max-w-256 max-h-192 flex flex-col justify-between items-center z-50'>
+        <div className='w-7/10 h-full max-w-256 flex flex-col items-start z-50'>
           <Banner />
 
           <Toolbar setColor={setColor} color={color} colorPicker={colorPicker} />
 
-          <div className='overflow-y-scroll  rounded-xl bg-darker-gray text-gray-200'>
+          
+          <div ref={ref} className='overflow-y-scroll  rounded-xl bg-darker-gray text-gray-200' style={{height: `${winSize.height - toptop - 12}px`}}>
+
             <LyricsBlock
               color={color}
               colorPicker={colorPicker}

@@ -2,10 +2,7 @@ import React, { useContext, useState, useEffect, Suspense, lazy } from 'react';
 import { Switch, Route, Redirect, useRouteMatch, useHistory, useLocation } from 'react-router-dom';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaExpand, FaCompress, FaHome, FaRegThumbsUp } from 'react-icons/fa';
-import { FiUsers } from 'react-icons/fi';
-import { BsPersonFill } from 'react-icons/bs';
-import { NavLink } from 'react-router-dom';
+import { FaExpand, FaCompress, FaHome, FaRegThumbsUp, FaInfoCircle } from 'react-icons/fa';
 import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
 import * as customMutations from '../../customGraphql/customMutations';
 // import { API, graphqlOperation } from 'aws-amplify';
@@ -33,6 +30,7 @@ const LessonControl = () => {
   const history = useHistory();
   const location = useLocation();
   const [fullscreen, setFullscreen] = useState(false);
+  const [fullscreenInstructions, setFullscreenInstructions] = useState(false);
 
   const [shareable, setShareable] = useState(false); // THIS ROW MOVED TO RosterRow.tsx, NEEDS TO BE DELETED
 
@@ -54,7 +52,6 @@ const LessonControl = () => {
     firstInitial = firstInitial.toUpperCase() + '.';
     return firstInitial;
   };
-
 
   const handleUpdateClassroom = async () => {
     let updatedClassroomData: any = {
@@ -101,7 +98,6 @@ const LessonControl = () => {
   };
 
   const handleShareStudentData = async () => {
-
     if (state.studentViewing.studentInfo) {
       let displayData = {
         breakdownComponent: state.studentViewing.studentInfo.currentLocation
@@ -368,31 +364,67 @@ const LessonControl = () => {
               </div>
 
               <div className={`h-9/10`}>
-                <ClassRoster 
-                handleUpdateClassroom={handleUpdateClassroom} 
-                handleShareStudentData={handleShareStudentData}
-                isSameStudentShared={isSameStudentShared}/>
+                <ClassRoster
+                  handleUpdateClassroom={handleUpdateClassroom}
+                  handleShareStudentData={handleShareStudentData}
+                  isSameStudentShared={isSameStudentShared}
+                />
               </div>
             </div>
           </div>
 
           {/* RIGHT SECTION */}
           <div
-            className={`relative ${
-              fullscreen ? 'w-full' : 'w-6/10'
-            } lg:w-full h-full flex flex-col items-center`}>
+            className={`relative 
+            ${fullscreen ? 'w-full' : 'w-6/10'} lg:w-full h-full flex flex-col items-center`}>
             <div
-              className={`${fullscreen ? 'h-full' : 'h-8.3/10'} relative w-full ${
-                theme.bg
-              } rounded-lg p-4 overflow-y-scroll overflow-x-hidden`}>
+              className={`
+              ${fullscreen ? 'h-full' : 'h-8.3/10'}
+              ${theme.bg} 
+              relative w-full 
+              rounded-lg p-4 overflow-y-scroll overflow-x-hidden`}>
               <Suspense
                 fallback={
                   <div className='min-h-screen w-full flex flex-col justify-center items-center'>
                     <ComponentLoading />
                   </div>
                 }>
-                <Body />
+
+
+
+                {/**
+                 * 
+                 * 
+                 * THIS LOADS THE LESSON COMPONENTO
+                 * 
+                 * 
+                */}
+                <Body fullscreenInstructions={fullscreenInstructions}/>
+
+
+
+
               </Suspense>
+            </div>
+
+            {/* ICONS TOP RIGHT */}
+            <div className='cursor-pointer w-full text-xl z-50' onClick={()=>setFullscreenInstructions(!fullscreenInstructions)}>
+              <IconContext.Provider
+                value={{
+                  color: '#E2E8F0',
+                  size: '2rem',
+                  style: {
+                    width: 'auto',
+                    right: '1rem',
+                    top: '0',
+                    position: 'absolute',
+                    marginRight: '3rem',
+                    marginTop: '.5rem',
+                    zIndex: 50,
+                  },
+                }}>
+                <FaInfoCircle />
+              </IconContext.Provider>
             </div>
 
             <div className='cursor-pointer w-full text-xl z-50' onClick={handleFullscreen}>
@@ -413,12 +445,12 @@ const LessonControl = () => {
                 {fullscreen ? <FaCompress /> : <FaExpand />}
               </IconContext.Provider>
             </div>
+            {/* ICONS TOP RIGHT */}
 
             <div
               className={`${
                 fullscreen ? 'hidden' : ''
               } relative flex flex-col justify-center items-center`}>
-              
               <div className='relative w-full flex flex-row my-2 font-bold text-xs'>
                 <p>Control: </p>
 

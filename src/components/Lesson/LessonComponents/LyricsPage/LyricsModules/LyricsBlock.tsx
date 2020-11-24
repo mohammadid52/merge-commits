@@ -1,5 +1,5 @@
 // import { access } from 'fs';
-import React, { useState, useEffect, useContext, ReactNode } from 'react';
+import React, { useRef, useState, useEffect, useContext, ReactNode } from 'react';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaHighlighter, FaExpand } from 'react-icons/fa';
 // import { isMainThread } from 'worker_threads';
@@ -48,20 +48,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   //  mouse
   const [mouseTarget, setMouseTarget] = useState<string>('');
 
-  /* const colorPicker = (colorName: string): string => {
-    switch (colorName) {
-      case 'dark-red':
-        return '#CA2222';
-      case 'blueberry':
-        return '#488AC7';
-      case 'sea-green':
-        return '#17A589';
-      case 'fire-orange':
-        return '#FF5733';
-      case 'erase':
-        return '';
-    }
-  }; */
 
   /**
    * Function to check if selected textID is already somewhere in the initialSelectedText state
@@ -354,7 +340,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         </div> */}
 
           <div
-            className={`leading-8 text-sm px-1/10`}
+            className={`leading-6 text-sm px-1/10`}
             onClick={handleSelection} // Clickhandler on the parent...nice!
             style={{
               MozUserSelect: 'none',

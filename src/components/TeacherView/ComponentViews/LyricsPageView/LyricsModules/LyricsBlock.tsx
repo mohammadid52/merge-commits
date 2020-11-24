@@ -22,6 +22,7 @@ const textParser = (str: string) => {
 
 interface LyricsBlockProps {
   color: string;
+  colorPicker: (color:string) => string;
   selected: any;
   fullscreen: boolean;
   fullscreenLyrics: boolean;
@@ -40,6 +41,7 @@ interface LyricsBlockProps {
 const LyricsBlock = (props: LyricsBlockProps) => {
   const {
     color,
+    colorPicker,
     selected,
     setSelected,
     fullscreen,
@@ -66,20 +68,20 @@ const LyricsBlock = (props: LyricsBlockProps) => {
 
   const [mouseTarget, setMouseTarget] = useState<string>('');
 
-  const colorPicker = (colorName: string): string => {
-    switch (colorName) {
-      case 'dark-red':
-        return '#CA2222';
-      case 'blueberry':
-        return '#488AC7';
-      case 'sea-green':
-        return '#17A589';
-      case 'fire-orange':
-        return '#FF5733';
-      case 'erase':
-        return '';
-    }
-  };
+  // const colorPicker = (colorName: string): string => {
+  //   switch (colorName) {
+  //     case 'dark-red':
+  //       return '#CA2222';
+  //     case 'blueberry':
+  //       return '#488AC7';
+  //     case 'sea-green':
+  //       return '#17A589';
+  //     case 'fire-orange':
+  //       return '#FF5733';
+  //     case 'erase':
+  //       return '';
+  //   }
+  // };
 
   /**
  * Function to check if selected textID is already somewhere in the initialSelectedText state
@@ -333,7 +335,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   return (
 
     <>
-      <div className={`relative w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
+      {/* <div className={`relative w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
         <h3 className='w-auto'>Lyrics</h3>
 
         <div className='absolute w-auto right-0 top-0'>
@@ -346,9 +348,9 @@ const LyricsBlock = (props: LyricsBlockProps) => {
             <FaHighlighter />
           </IconContext.Provider>
         </div>
-      </div>
+      </div> */}
 
-      <div className='w-full flex flex-row justify-between mb-1 pb-1'>
+      {/* <div className='w-full flex flex-row justify-between mb-1 pb-1'>
         <div className='w-9/10 flex flex-row justify-between border-b border-white border-opacity-10 mr-4 md:mr-0'>
           <p className='text-gray-600 text-sm text-center'>
             - Double click a word to select it
@@ -357,7 +359,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
             - Click 2 different words to select a sentence
             </p>
         </div>
-      </div>
+      </div> */}
 
       <div
         className={`h-192 leading-8  text-sm overflow-y-scroll overflow-x-hidden px-1/10 rounded-xl bg-darker-gray text-gray-200`}
