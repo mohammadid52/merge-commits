@@ -12,28 +12,30 @@ const VideoBlock = (props: VideoBlockProps) => {
    * Specific code for making toolbar sticky
    */
   const [isSticky, setSticky] = useState(false);
+  // const [videoYPos, setVideoYPos] = useState<number>(0);
   const ref = useRef(null);
 
-  const handleScroll = () => {
-    if (ref.current) {
-      setSticky(ref.current.getBoundingClientRect().bottom <= 24);
-    }
-  };
+  // const handleScroll = () => {
+  //   if (ref.current) {
+  //     setSticky(ref.current.getBoundingClientRect().bottom <= 360);
+  //     // setVideoYPos(ref.current.getBoundingClientRect().bottom);
+  //   }
+  // };
 
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
+  // useEffect(() => {
+  //   window.addEventListener('scroll', handleScroll);
 
-    return () => {
-      window.removeEventListener('scroll', () => handleScroll);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('scroll', () => handleScroll);
+  //   };
+  // }, []);
 
   return (
     <>
       {!fullscreen ? (
-        <div ref={ref} className={`z-50 w-128 rounded-xl`} style={{height: '320px'}}>
+        <div ref={ref} className={`z-50 rounded-xl`} style={{height: '320px'}}>
           <iframe
-            className={`${isSticky ? 'fixed z-50 top-4 right-2 w-1/4 h-1/4' : ''} rounded-xl`}
+            className={`${!isSticky ? '' : 'fixed w-auto transform -translate-y-full'} rounded-xl`}
             height='320'
             src={link}
             frameBorder='0'

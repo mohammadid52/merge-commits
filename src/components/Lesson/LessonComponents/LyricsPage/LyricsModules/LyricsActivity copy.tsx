@@ -163,7 +163,7 @@ const Body = () => {
     <>
       <div className='relative max-w-256 h-full flex flex-row overflow-hidden mx-auto'>
         
-        <div className='w-3/10 h-full max-h-192 mr-4'>
+        <div className='w-3/10 h-full mr-4'>
           <div className='z-50 flex flex-col justify-between items-center'>
             <InstructionBlock />
           </div>
@@ -171,12 +171,12 @@ const Body = () => {
           <VideoBlock link={state.data.lesson.coreLesson.content.link} fullscreen={fullscreen} />
         </div>
 
-        <div className='w-7/10 h-full max-w-256 max-h-192 flex flex-col justify-between items-center z-50'>
+        <div className='w-7/10 h-full max-w-256 flex flex-col justify-between items-center z-50'>
           <Banner />
 
           <Toolbar setColor={setColor} color={color} colorPicker={colorPicker} />
 
-          <div className='overflow-y-scroll  rounded-xl bg-darker-gray text-gray-200'>
+          <div className='h-full overflow-y-scroll  rounded-xl bg-darker-gray text-gray-200'>
             <LyricsBlock
               color={color}
               colorPicker={colorPicker}

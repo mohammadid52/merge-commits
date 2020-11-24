@@ -17,9 +17,18 @@ const LessonHeaderBar = () => {
     const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
     const { visible, setVisible, ref } = useOutsideAlerter(false);
 
+  /**
+   * 
+   * 
+   * AUTO-PUSH TO SPECIFIC LESSON
+   * 
+   * 
+   */
+
     useEffect(() => {
-        // history.push('/lesson/corelesson');
+        history.push('/lesson/corelesson');
     }, [])
+
 
     useEffect(() => {
         if (!state.pages[0].active) {

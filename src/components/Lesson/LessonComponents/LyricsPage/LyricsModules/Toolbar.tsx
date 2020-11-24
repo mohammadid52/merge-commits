@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useContext, useState } from 'react';
 import { IconContext } from 'react-icons';
-import { FaEraser } from 'react-icons/fa';
+import { FaEraser, FaHighlighter } from 'react-icons/fa';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 interface ToolbarProps {
   setColor: React.Dispatch<React.SetStateAction<string>>;
   color: string;
+  colorPicker: (color: string) => string;
 }
 const ToolBar = (props: ToolbarProps) => {
-  const { setColor, color } = props;
+  const { setColor, color, colorPicker } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
   const [search, setSearch] = useState('');
 
@@ -25,43 +26,45 @@ const ToolBar = (props: ToolbarProps) => {
     console.log(e.target.id, 'e')
   };
 
-  const handleScroll = () => {
-    if (ref.current) {
-      setSticky(ref.current.getBoundingClientRect().top <= 0);
-    }
-  };
+  // const handleScroll = () => {
+  //   if (ref.current) {
+  //     setSticky(ref.current.getBoundingClientRect().top <= 0);
+  //   }
+  // };
 
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
+  // useEffect(() => {
+  //   window.addEventListener('scroll', handleScroll);
 
-    return () => {
-      window.removeEventListener('scroll', () => handleScroll);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('scroll', () => handleScroll);
+  //   };
+  // }, []);
 
   return (
-    <div className='h-24 z-50'>
-      <div className={`w-full rounded-xl`}>
+    <div className='h-auto z-50'>
+      {/* <div className={`w-full rounded-xl`}>
         <h3 className={`w-auto text-xl ${theme.banner} ${theme.underline} flex flex-row`}>
-          Highlighters{' '}
-          {/* <ToolTip
+          Highlighters
+           <ToolTip
             width='w-40'
             position='bottom'
             header='Highlighters'
             content='You really gotta click & drag those highlighters across the words!'
-          /> */}
+          />
         </h3>
-      </div>
+      </div> */}
 
-      <div ref={ref}>
-        <div className={`h-16 flex  justify-center items-center pt-2 z-50`}>
-
+      <div ref={ref} className={`w-full rounded-xl flex flex-row w-auto text-xl ${theme.banner} flex flex-row`} style={{marginTop: '0'}}>
+        <div className='w-3.3/10 h-16 flex items-center'><span>Highlighters:</span></div>
+        <div className={`w-3.3/10 h-16 flex  justify-center items-center pt-2 z-50`}>
+        
           <div
             className={`${isSticky
               ? 'fixed top-0 w-full flex flex-row justify-center items-center bg-dark-gray translate-y-full z-50'
               : ''
               } w-auto cursor-pointer flex flex-row`}>
 
+            
             {buttons.map((button: { color: string; icon: string; name: string }, key: number) => (
 
               <div
@@ -116,6 +119,17 @@ const ToolBar = (props: ToolbarProps) => {
             </div>
 
           </div>
+        </div>
+        <div className='w-3.3/10 h-16 w-16 flex items-center'>
+        <IconContext.Provider
+            value={{
+              className: 'ml-auto mr-0',
+              color: `${props.colorPicker(color) === '' ? 'white' : props.colorPicker(color)}`,
+              size: '2rem',
+              style: { width: 'auto' },
+            }}>
+            <FaHighlighter />
+          </IconContext.Provider>
         </div>
       </div>
     </div>

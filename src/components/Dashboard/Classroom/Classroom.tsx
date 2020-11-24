@@ -104,8 +104,18 @@ const Classroom: React.FC = () => {
     }
   };
 
+  /**
+   * 
+   * 
+   * AUTO-PUSH TO SPECIFIC LESSON
+   * 
+   * 
+   */
+
   useEffect(() => {
     getCourse('1');
+
+    history.push('/lesson?id=2');
   }, []);
 
   useEffect(() => {
