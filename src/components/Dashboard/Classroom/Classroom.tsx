@@ -13,6 +13,8 @@ import SurveyCard from './SurveyCard';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 import queryString from 'query-string';
 
+import useDeviceDetect from '../../../customHooks/deviceDetect';
+
 interface Artist {
   id: string;
   images: [];
@@ -115,7 +117,7 @@ const Classroom: React.FC = () => {
   useEffect(() => {
     getCourse('1');
 
-    history.push('/lesson?id=2');
+    // history.push('/lesson?id=2');
   }, []);
 
   useEffect(() => {
@@ -157,12 +159,6 @@ const Classroom: React.FC = () => {
   {
     return (
       <div className='transform translate-y-12'>
-        {
-          console.log('theme: ', theme)
-        }
-        <p className='md:hidden text-xl text-center flex justify-center mb-4' style={{ top: '0' }}>
-          * lessons are available on PC or laptop *
-        </p>
         {survey.display ? (
           <div className={` bg-opacity-10`} >
             <div className={`${theme.section} p-4`}>
