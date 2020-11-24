@@ -6,9 +6,11 @@ const useDeviceDetect = () => {
 
   useEffect(() => {
     const userAgent = typeof navigator === 'undefined' ? '' : window.navigator.userAgent;
+    const userAgentMatch = userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i);
     const mobileBoolean =
-      userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i).length >
-      0;
+      userAgentMatch === null ? false : true;
+
+    // console.log('detect: ', userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i))
 
     setDetectedDevice(userAgent);
     setIsMobile(mobileBoolean);
