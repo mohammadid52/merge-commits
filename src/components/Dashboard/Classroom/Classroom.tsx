@@ -115,7 +115,7 @@ const Classroom: React.FC = () => {
   useEffect(() => {
     getCourse('1');
 
-    history.push('/lesson?id=2');
+    // history.push('/lesson?id=2');
   }, []);
 
   useEffect(() => {

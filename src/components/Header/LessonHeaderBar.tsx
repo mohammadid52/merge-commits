@@ -26,7 +26,7 @@ const LessonHeaderBar = () => {
    */
 
     useEffect(() => {
-        history.push('/lesson/corelesson');
+        // history.push('/lesson/corelesson');
     }, [])
 
 
