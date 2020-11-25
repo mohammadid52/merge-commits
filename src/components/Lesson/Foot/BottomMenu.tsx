@@ -46,24 +46,24 @@ const BottomMenu = () => {
       {/* FLOATING NAV BUTTONS */}
 
       {!history.location.pathname.includes('corelesson') ? (
-        <div className='z-0 w-screen  bg-dark-gray'>
+        <div className='z-0 bg-dark-gray'>
           <div className='z-0 w-full max-w-256 mx-auto py-2 flex flex-row row-reverse justify-between items-center text-white'>
             <div
-              className={`z-0  w-24 h-8 text-center transform leading-relaxed rounded-full ${
+              className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
                 state.currentPage > 0
                   ? 'cursor-pointer bg-dark-red'
                   : 'cursor-default bg-darker-gray'
               } }`}
               onClick={handleBack}>
-              Back
+              <div className='w-auto h-auto'>Back</div>
             </div>
 
             <div
-              className={`z-0  w-24 h-8 text-center transform leading-relaxed rounded-full ${
+              className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
                 state.canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark-gray cursor-default'
               } `}
               onClick={handleForward}>
-              Continue
+              <div className='w-auto h-auto'>Continue</div>
             </div>
           </div>
         </div>

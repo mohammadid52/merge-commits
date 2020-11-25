@@ -49,6 +49,9 @@ const Story = (props: props) => {
 
                 <div className='flex flex-col justify-between items-center'>
                     <InstructionsBlock fullscreen={fullscreen} />
+
+                    <StoryForm dataProps={dataProps} fullscreen={fullscreen} />
+
                     {inputs.additionalInputs.length > 0 ?
                         <Modules
                             dataProps={dataProps}
@@ -60,7 +63,7 @@ const Story = (props: props) => {
                     }
                 </div>
 
-                <StoryForm dataProps={dataProps} fullscreen={fullscreen} />
+                
             </div>
 
         </>

@@ -16,7 +16,7 @@ const Banner = (props: BannerProps) => {
   return (
     <>
       {display === 'SELF' ? (
-        <div className={`w-full h-1/10 text-4xl ${theme.banner}`}>
+        <div className={`w-full h-1/10 text-4xl ${theme.banner}`} style={{marginTop: '0'}}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
             <div className='w-auto h-auto mr-2'>
               <FaScroll />
@@ -32,7 +32,7 @@ const Banner = (props: BannerProps) => {
 
 
       ) : display === 'COOP' ? (
-        <div className={`w-full h-1/10 text-4xl ${theme.banner}`}>
+        <div className={`w-full h-1/10 text-4xl ${theme.banner}`} style={{marginTop: '0'}}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
             <div className='w-auto h-auto mr-2'>
               <FaScroll />
@@ -48,7 +48,7 @@ const Banner = (props: BannerProps) => {
 
 
       ) : (
-        <div className={`w-full h-1/10 text-4xl ${theme.banner}`}>
+        <div className={`w-full h-1/10 text-4xl ${theme.banner}`} style={{marginTop: '0'}}>
           <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
             <div className='w-auto h-auto mr-2'>
               <FaScroll />

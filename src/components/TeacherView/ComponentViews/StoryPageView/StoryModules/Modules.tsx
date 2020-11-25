@@ -82,7 +82,7 @@ const Modules = (props: ModulesProps) => {
             <div className='w-full h-full '>
                 {formInputs
                     ? inputs.map((input, key) => (
-                        <div key={key} className={`flex flex-col ${key !== inputs.length - 1}`}>
+                        <div key={key} className={`flex flex-col mb-4 ${key !== inputs.length - 1}`}>
                             <label className={`${theme.elem.text} mt-2 mb-2 w-full`} htmlFor={input.name}>
                                 <p><span className='font-bold'>{key+1}.</span>&nbsp;{input.prompt}</p>
                             </label>

@@ -67,7 +67,7 @@ const QuoteBlock = () => {
       </div>
 
       {/* READ ICON - RIGHT TEXT */}
-      <div className='absolute top-1 right-0 w-full transform translate-x-full'>
+      <div className='absolute w-auto overflow-x-hidden top-1 right-0 transform translate-x-full'>
         <p className='animate-bounce ml-2'>&larr; Read Me!</p>
       </div>
 

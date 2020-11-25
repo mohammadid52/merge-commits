@@ -49,9 +49,9 @@ const CoopDisplay = () => {
   };
 
   const arrayParseToString = (arr: Array<Array<{ [key: string]: any }>>) => {
-    let resultArray = arr.map((item: Array<{ text: string;[key: string]: any }>) => {
+    let resultArray = arr.map((item: Array<{ text: string; [key: string]: any }>) => {
       let parsedString = '';
-      item.forEach((item: { text: string;[key: string]: any }) => {
+      item.forEach((item: { text: string; [key: string]: any }) => {
         parsedString = parsedString + ' ' + item.text;
       });
       return parsedString;
@@ -125,22 +125,19 @@ const CoopDisplay = () => {
 
   return (
     <div className={theme.section}>
-      
       <ReflectionQuestions />
 
       <Banner title={title} artist={artist} />
 
-
-      {/* self view */}
       <div className='h-7.2/10 w-full flex flex-col justify-between items-center'>
-        <div
-          className={`${fullscreen ? 'hidden' : 'h-4.7/10'
-            } w-full flex flex-col md:flex-row justify-between items-center`}>
-          <LyricsOutput modules={modules} />
-        </div>
-
+       
+       
+       
         {/* teacher view */}
-        <div className={`relative ${fullscreen ? 'h-full' : 'h-4.85/10' }  w-full border ${theme.elem.card}`}>
+        <div
+          className={`relative ${fullscreen ? 'h-full' : 'h-4.85/10'}  w-full border ${
+            theme.elem.card
+          }`}>
           <div className='absolute w-full z-50 top-0 transform -translate-y-1/2'>
             <div className='w-2.5/10 h-auto w-auto mx-auto py-1 px-2 bg-yellow-300 text-gray-800 font-light text-center flex flex-col justify-center items-center font-medium rounded-xl shadow-elem-dark z-50'>
               <p>
@@ -171,7 +168,20 @@ const CoopDisplay = () => {
             <LyricsOutput modules={teacherModules} />
           </div>
         </div>
+
+        
+
+        {/* self view */}
+        <div
+          className={`${
+            fullscreen ? 'hidden' : 'h-4.7/10'
+          } w-full flex flex-col md:flex-row justify-between items-center`}>
+          <LyricsOutput modules={modules} />
+        </div>
+
+
       </div>
+
 
 
     </div>

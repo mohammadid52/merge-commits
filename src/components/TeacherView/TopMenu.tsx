@@ -177,7 +177,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
         {/* SHARING START */}
         <div className='w-7/10 flex justify-around'>
           {/* VIEWING TAB */}
-          {/* <div className='w-full flex flex-col border border-light-gray mx-2 rounded-lg'>
+          <div className='w-full flex flex-col border border-light-gray mx-2 rounded-lg'>
             <div className='w-full flex justify-center my-auto'>
               <div
                 className={`w-auto  h-8 px-3 flex justify-center items-center rounded-lg text-sm font-medium overflow-x-auto cursor-pointer ${
@@ -202,10 +202,10 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
                 ) : null}
               </div>
             </div>
-          </div> */}
+          </div>
 
           {/* SHARE ACTION */}
-          {/* <div className='w-full flex flex-col border border-light-gray mx-2 rounded-lg'>
+          <div className='w-full flex flex-col border border-light-gray mx-2 rounded-lg'>
             {shareable && state.studentViewing.live && !isSameStudentShared ? (
               <div className={`cursor-pointer w-auto my-auto text-center text-sm z-50`}>
                 <button
@@ -223,10 +223,10 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
                 </button>
               </div>
             )}
-          </div> */}
+          </div>
 
           {/* SHARING TAB */}
-          {/* <div
+          <div
             className={`w-full h-full flex flex-col mx-2 rounded-lg ${
               state.sharing ? 'border-2 border-dark-gray' : 'border border-light-gray'
             }`}>
@@ -252,7 +252,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
                 ) : null}
               </div>
             </div>
-          </div> */}
+          </div>
         </div>
         {/* SHARING END */}
 

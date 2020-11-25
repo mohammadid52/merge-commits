@@ -84,7 +84,17 @@ const LessonHeaderBar = () => {
             </div>
 
             <TopMenu />
-            <SideMenu handlePopup={handlePopup} />
+
+
+            {/**
+             * 
+             * 
+             * SIDE MENU UNDER PROGRESS BAR HIDDEN UNTIL FURTHER NOTICE
+             * 
+             * 
+            */}
+
+            {/* <SideMenu handlePopup={handlePopup} /> */}
 
         </div>
     );

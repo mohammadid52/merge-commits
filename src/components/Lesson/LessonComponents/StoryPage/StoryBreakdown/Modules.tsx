@@ -50,7 +50,7 @@ const Modules = (props: any) => {
           return (
             <div
               key={key}
-              className={`font-open font-light h-16 rounded-lg py-2 ${key === additional.length - 1 ? '' : ''
+              className={`font-open font-light h-auto rounded-lg py-2 ${key === additional.length - 1 ? '' : ''
                 }`}>
               <h3 className={`font-medium`}>{keywordCapitilizer(item.name)}:</h3>
               <div className='w-full overflow-y-auto overflow-x-hidden'>

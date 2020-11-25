@@ -47,15 +47,17 @@ const Intro = () => {
       <Banner />
       <div
         className='h-96 flex flex-col mb-4 justify-between items-center bg-cover bg-right-top rounded-xl z-10'
-        style={{ backgroundImage: `url(${imgArray[0]})`}}>
+        style={{ backgroundImage: `url(${imgArray[0]})` }}>
         <QuoteBlock />
         {/* <Block /> */}
       </div>
+      <Connect />
+      <div className='flex flex-col justify-between items-center mt-4'>
         <Keyword />
+      </div>
       <div className='flex flex-col justify-between items-center mt-4'>
         <DoFirst />
       </div>
-      <Connect />
     </div>
   );
 };

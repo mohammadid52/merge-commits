@@ -51,7 +51,7 @@ const MainRouter: React.FC = () => {
 
   return (
     <div
-      className={`background-test h-screen md:max-w-full md:h-screen w-screen ${theme.bg} flex flex-col`}>
+      className={`background-test h-screen md:max-w-full md:h-screen w-full overflow-x-hidden ${theme.bg} flex flex-col`}>
       
       {deviceDetected.mobile ? (
         <MobileOops userAgent={deviceDetected.device}/>

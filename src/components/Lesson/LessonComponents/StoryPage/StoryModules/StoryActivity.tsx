@@ -80,6 +80,9 @@ const Story = () => {
 
                 <div className='flex flex-col justify-between items-center'>
                 <InstructionsBlock />             
+
+
+                <StoryForm />
                 
                 {/* FOCUS QUESTIONS */}
                 { inputs.additionalInputs.length > 0 ?
@@ -91,7 +94,7 @@ const Story = () => {
                         }       
                 </div>
 
-                <StoryForm />
+                
             </div>
        </>
     )
