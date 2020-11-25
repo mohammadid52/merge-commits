@@ -366,7 +366,7 @@ const LessonControl = () => {
               <div className={`h-9/10`}>
                 <ClassRoster
                   handleUpdateClassroom={handleUpdateClassroom}
-                  // handleShareStudentData={handleShareStudentData}
+                  handleShareStudentData={handleShareStudentData}
                   isSameStudentShared={isSameStudentShared}
                 />
               </div>
