@@ -36,6 +36,12 @@ const FooterLabels = ({label}: LabelProps) => {
             return <div>Checkpoint</div>;
         case 'Checkpoint?id=9':
             return <div>Checkpoint</div>;
+        case 'Checkpoint?id=10':
+            return <div>Checkpoint</div>;
+        case 'Checkpoint?id=11':
+            return <div>Checkpoint</div>;
+        case 'Checkpoint?id=12':
+            return <div>Checkpoint</div>;
         // case 'Breakdown':
         //     return <div>Breakdown</div>;
         case 'Warmup/breakdown':

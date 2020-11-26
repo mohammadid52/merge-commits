@@ -61,8 +61,11 @@ const SelectOneQuestions = (selectOneProps: CPQuestionProps) => {
     const { value, id } = e.target;
     setInput({ id: id, value: value });
     selectOneProps.handleInputChange(e);
+
   };
-// console.log(selectOneProps)
+console.log(selectOneProps)
+console.log(input, 'input')
+
   return (
     <>
       <div key={selectOneProps.keyProp} className={'w-full flex flex-col mb-3 mx-2'}>

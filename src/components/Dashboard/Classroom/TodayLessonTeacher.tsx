@@ -25,7 +25,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
 
   const handleLink = (key: any) => {
     if (accessible) {
-        history.push((`${`/lesson-control?id=${key + 1}`}`));
+        history.push((`${`/lesson-control?id=${key}`}`));
     }
 
     // For testing: enables clickthrough survey
@@ -121,7 +121,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
           <div className='flex w-3.3/10'>
             <button
               type='submit'
-              onClick={() => handleLink(key)}
+              onClick={() => handleLink(curriculum.lessonID)}
               className={`${
                 accessible
                   ? 'bg-ketchup hover:bg-red-300 focus:border-red-700 focus:shadow-outline-red active:bg-red-500 text-white'
