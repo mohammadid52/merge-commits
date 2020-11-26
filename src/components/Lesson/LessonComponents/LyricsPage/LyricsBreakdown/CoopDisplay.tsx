@@ -7,6 +7,14 @@ import { FaExpand, FaCompress } from 'react-icons/fa';
 
 import LyricsOutput from './LyricsOutput';
 
+
+/**
+ * 
+ * IMPORT EXTERNAL FUNCTIONS
+ * 
+ */
+import { firstInitialFunc } from '../../../../../utilities/strings';
+
 interface teacherData {
   breakdownComponent: string;
   studentInfo?: {
@@ -37,15 +45,6 @@ const CoopDisplay = () => {
     setFullscreen((fullscreen) => {
       return !fullscreen;
     });
-  };
-
-  const firstInitialFunc = (str: string) => {
-    if (typeof str !== 'string' || str === '') {
-      return 'Profile';
-    }
-    let firstInitial = str.charAt(0);
-    firstInitial = firstInitial.toUpperCase() + '.';
-    return firstInitial;
   };
 
   const arrayParseToString = (arr: Array<Array<{ [key: string]: any }>>) => {
@@ -130,24 +129,28 @@ const CoopDisplay = () => {
       <Banner title={title} artist={artist} />
 
       <div className='h-7.2/10 w-full flex flex-col justify-between items-center'>
-       
-       
-       
         {/* teacher view */}
         <div
-          className={`relative ${fullscreen ? 'h-full' : 'h-4.85/10'}  w-full border ${
-            theme.elem.card
-          }`}>
-          <div className='absolute w-full z-50 top-0 transform -translate-y-1/2'>
-            <div className='w-2.5/10 h-auto w-auto mx-auto py-1 px-2 bg-yellow-300 text-gray-800 font-light text-center flex flex-col justify-center items-center font-medium rounded-xl shadow-elem-dark z-50'>
+          className={`relative 
+          ${fullscreen ? 'h-full' : ''} 
+          ${theme.elem.card}
+          p-4 my-4
+          w-full border
+          `}>
+          <div className=' w-full z-50 top-0 '>
+            <div className='w-2.5/10 h-auto w-auto py-1 text-gray-800 font-light flex flex-col justify-center items-center z-50'>
               <p>
-                by:{' '}
-                {student
-                  ? student.preferredName
-                    ? student.preferredName
-                    : student.firstName
-                  : null}{' '}
-                {student ? firstInitialFunc(student.lastName) : null}
+                <span className='text-white'>
+                  by:{' '}
+                  <span className='font-medium text-yellow-600'>
+                    {student
+                      ? student.preferredName
+                        ? student.preferredName
+                        : student.firstName
+                      : null}{' '}
+                    {student ? firstInitialFunc(student.lastName) : null}
+                  </span>
+                </span>
               </p>
             </div>
           </div>
@@ -164,26 +167,29 @@ const CoopDisplay = () => {
               {fullscreen ? <FaCompress /> : <FaExpand />}
             </IconContext.Provider>
           </div>
-          <div className='h-full w-full flex flex-col md:flex-row justify-between items-center'>
+          <div className='h-full w-full flex flex-col justify-between items-center'>
             <LyricsOutput modules={teacherModules} />
           </div>
         </div>
 
-        
-
         {/* self view */}
         <div
           className={`${
-            fullscreen ? 'hidden' : 'h-4.7/10'
-          } w-full flex flex-col md:flex-row justify-between items-center`}>
+            fullscreen ? 'hidden' : 'h-full'
+          } w-full flex flex-col justify-between items-center p-4 bg-darker-gray rounded-lg`}>
+          <div className=' w-full z-50 top-0 '>
+            <div className='w-2.5/10 h-auto w-auto py-1 text-gray-800 font-light flex flex-col justify-center items-center z-50'>
+              <p>
+                <span className='text-white'>
+                  by: <span className='font-medium text-blueberry'>You</span>
+                </span>
+              </p>
+            </div>
+          </div>
+
           <LyricsOutput modules={modules} />
         </div>
-
-
       </div>
-
-
-
     </div>
   );
 };

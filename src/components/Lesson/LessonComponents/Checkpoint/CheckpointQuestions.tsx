@@ -213,7 +213,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
         return (
           <div key={key} className={'flex flex-col mb-4'}>
             <label className={theme.elem.text} htmlFor={question.label}>
-              {question.question}
+            <p><b>{key + 1}. </b>{question.question}</p>
             </label>
             <input
               id={question.id}
@@ -228,6 +228,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       case 'text':
         return (
           <TextQuestions
+          number={key}
             keyProp={key}
             question={question}
             value={input[question.id]}
@@ -238,6 +239,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       case 'selectOne':
         return (
           <SelectOneQuestions
+          number={key}
             keyProp={key}
             question={question}
             value={input[question.id]}
@@ -248,7 +250,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       case 'selectMany':
         return (
           <div className={`w-full rounded-xl`}>
-            <p className={theme.elem.text}>{question.question}</p>
+            <div className={theme.elem.text}><p><b>{key + 1}. </b>{question.question}</p></div>
             <div id={question.label} className={'flex'}>
               {question.options.map(
                 (
@@ -257,7 +259,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                 ) => (
                     <div
                       key={key}
-                      className={`w-3/4 flex items-center mb-2`}
+                      className={`w-3/4 flex justify-center items-center mb-2`}
                       onClick={handleSelect}
                       data-key={question.id}>
 

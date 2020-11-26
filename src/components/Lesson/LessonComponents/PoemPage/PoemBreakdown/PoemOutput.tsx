@@ -17,7 +17,7 @@ const PoemOutput = (props: PoemOutputProps) => {
 
   return (
     <>
-      <div className='w-full h-48 flex flex-col'>
+      <div className={`w-full flex flex-col ${theme.blockQuote}`}>
         {
           props.poem !== ''
           ? <div className={`${theme.elem.text} align-middle text-left`} dangerouslySetInnerHTML={{__html: parseBlankLines(props.poem)}}></div>

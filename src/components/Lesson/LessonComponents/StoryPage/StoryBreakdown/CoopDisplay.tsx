@@ -8,6 +8,13 @@ import StoryOutput from './StoryOutput';
 import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaExpand, FaCompress } from 'react-icons/fa';
 
+/**
+ * 
+ * IMPORT EXTERNAL FUNCTIONS
+ * 
+ */
+import { firstInitialFunc } from '../../../../../utilities/strings';
+
 interface teacherData {
     breakdownComponent: string,
     studentInfo?: {
@@ -36,13 +43,6 @@ const CoopDisplay = () => {
         });
     }
 
-    const firstInitialFunc = (str: string) => {
-        if (typeof str !== 'string' || str === '') { return 'Profile' }
-        let firstInitial = str.charAt(0)
-        firstInitial = firstInitial.toUpperCase() + '.';
-        return firstInitial;
-    }
-
     useEffect(() => {
         dispatch({ type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown' })
     }, [])
@@ -67,19 +67,18 @@ const CoopDisplay = () => {
                 {/* teacher display */}
                 <div className={`relative ${fullscreen ? 'w-full' : ''} h-full flex flex-col justify-between items-center rounded-lg border my-4 p-4 bg-white bg-opacity-20`}>
 
-                    
-                        <div className="absolute top-2 right-0 cursor-pointer w-full text-xl m-2" onClick={handleFullscreen}>
-                            <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem', style: { width: 'auto', right: '0', bottom: '0', position: 'absolute' } }}>
-                                {fullscreen ? < FaCompress /> : < FaExpand />}
-                            </IconContext.Provider>
-                        </div>
+                    <div className="absolute top-2 right-0 cursor-pointer w-full text-xl m-2" onClick={handleFullscreen}>
+                        <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem', style: { width: 'auto', right: '0', bottom: '0', position: 'absolute' } }}>
+                            {fullscreen ? < FaCompress /> : < FaExpand />}
+                        </IconContext.Provider>
+                    </div>
 
-                        <div className=" w-full z-50 top-0 ">
-                            <div className="w-2.5/10 h-auto w-auto py-1 text-gray-800 font-light flex flex-col justify-center items-center z-50">
-                                <p><span className='text-white'>by: <span className='font-medium text-yellow-600'>{student ? student.preferredName ? student.preferredName : student.firstName : null} {student ? firstInitialFunc(student.lastName) : null}</span></span></p>
-                            </div>
+                    <div className=" w-full z-50 top-0 ">
+                        <div className="w-2.5/10 h-auto w-auto py-1 text-gray-800 font-light flex flex-col justify-center items-center z-50">
+                            <p><span className='text-white'>by: <span className='font-medium text-yellow-600'>{student ? student.preferredName ? student.preferredName : student.firstName : null} {student ? firstInitialFunc(student.lastName) : null}</span></span></p>
                         </div>
-                    
+                    </div>
+                
 
                     <Banner title={teacherData && teacherData.warmUpData && teacherData.warmUpData.title ? teacherData.warmUpData.title : ''}
                         fullscreen={fullscreen}
@@ -102,11 +101,11 @@ const CoopDisplay = () => {
                  {/* self display */}
                  <div className={`${fullscreen ? 'hidden' : 'w-full'} h-full flex flex-col justify-between items-center p-4 bg-darker-gray rounded-xl`}>
 
-                        <div className=" w-full z-50 top-0 ">
-                            <div className="w-2.5/10 h-auto w-auto py-1 text-gray-800 font-light flex flex-col justify-center items-center z-50">
-                                <p><span className='text-white'>by: <span className='font-medium text-blueberry'>You</span></span></p>
-                            </div>
+                    <div className=" w-full z-50 top-0 ">
+                        <div className="w-2.5/10 h-auto w-auto py-1 text-gray-800 font-light flex flex-col justify-center items-center z-50">
+                            <p><span className='text-white'>by: <span className='font-medium text-blueberry'>You</span></span></p>
                         </div>
+                    </div>
 
                     <Banner title={displayProps.title}
                         display='SELFinCOOP' fullscreen={fullscreen} />

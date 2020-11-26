@@ -62,7 +62,7 @@ const LessonHeaderBar = () => {
         <div
             className={`z-40 relative center w-full h-.7/10 ${theme.toolbar.bg} text-gray-200 shadow-2xl`}>
 
-            {/**
+       {/**
          * 
          * Potentially need to fix html below
          * 
@@ -94,7 +94,7 @@ const LessonHeaderBar = () => {
              * 
             */}
 
-            {/* <SideMenu handlePopup={handlePopup} /> */}
+            <SideMenu handlePopup={handlePopup} />
 
         </div>
     );

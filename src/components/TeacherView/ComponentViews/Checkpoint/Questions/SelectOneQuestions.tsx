@@ -13,6 +13,7 @@ export interface CPQuestionProps {
   handleInputChange?: (e: any) => void;
   keyProp?: any;
   value?: string;
+  number: number;
 }
 
 interface SelectOneRowState {
@@ -20,68 +21,31 @@ interface SelectOneRowState {
   value: string;
 }
 
-const SelectOneQuestions = (selectOneProps: CPQuestionProps) => {
-  const { question, checkpointID } = selectOneProps;
+const SelectOneQuestions = (props: CPQuestionProps) => {
+  const { question, checkpointID } = props;
   const { state, theme, dispatch } = useContext(LessonControlContext);
   const [input, setInput] = useState<SelectOneRowState>({ id: '', value: '' });
 
-  // useEffect(() => {
-  //   // console.log('czech this', question, checkpointID );
-    
-  //   if (
-  //     state.questionData[selectOneProps.checkpointID] &&
-  //     state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] &&
-  //     state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] !== ''
-  //   ) {
-  //     // console.log('match', state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] );
-  //     setInput((prev: any) => {
-  //       return {
-  //         ...prev,
-  //         value: state.questionData[selectOneProps.checkpointID][selectOneProps.question.id],
-  //       }
-  //     });
-  //   }
-
-  //   if (
-  //     state.questionData[selectOneProps.checkpointID] === undefined ||
-  //     state.questionData[selectOneProps.checkpointID][selectOneProps.question.id] === undefined
-  //   ) {
-  //     // console.log('nomatch');
-      
-  //     setInput((prev: any) => {
-  //       return {
-  //         ...prev,
-  //         value: '',
-  //       }
-  //     });
-  //   }
-  // }, [checkpointID]);
-
-  // const handleRadioSelect = (e: { target: { value: string; id: string } }) => {
-  //   const { value, id } = e.target;
-  //   setInput({ id: id, value: value });
-  //   selectOneProps.handleInputChange(e);
-  // };
-// console.log(selectOneProps)
+ 
   return (
     <>
-      <div key={selectOneProps.keyProp} className={'flex flex-col mb-3'}>
-        <p className={theme.elem.text}>{selectOneProps.question.question}</p>
-        <div className={`flex justify-around`}>
-          {selectOneProps.question.options.map(
+      <div key={props.keyProp} className={'flex flex-col mb-3'}>
+      <p className={theme.elem.text}><b>{props.number + 1}. </b>{props.question.question}</p>
+        <div className={`flex justify-center`}>
+          {props.question.options.map(
             (
               option: { label: string; icon: string; color: string; text: string },
               key2: number
             ) => {
               return (
-                <div key={key2} className={theme.elem.text}>
+                <div key={key2} className={`${theme.elem.text} w-auto`}>
                   
-                  <label className="w-auto cursor-pointer">
+                  <label className="w-auto cursor-pointer flex flex-row">
                     <input
-                    id={selectOneProps.question.id}
-                    className='w-4 mx-4 cursor-pointer'
+                    id={props.question.id}
+                    className='w-12 my-auto mx-4 cursor-pointer'
                     type='radio'
-                    name={selectOneProps.question.label}
+                    name={props.question.label}
                     value={option.label}
                     // onChange={handleRadioSelect}
                     checked={

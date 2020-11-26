@@ -105,7 +105,7 @@ const Body = (props: props) => {
             </div>
 
             
-            <div className={`${(fullscreenInstructions) ? 'opacity-10' : ''} transition ease-in-out duration-500 w-full h-full max-w-256 flex flex-col items-start z-50`}>
+            <div className={`${(fullscreenInstructions) ? 'opacity-10' : ''} transition ease-in-out duration-500 w-full h-full max-w-256 flex flex-col mx-auto z-50`}>
                
 
                 

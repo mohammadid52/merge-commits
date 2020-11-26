@@ -56,25 +56,35 @@ const ToolBar = (props: ToolbarProps) => {
 
       <div
         ref={ref}
-        className={`w-full rounded-xl flex flex-row w-auto text-xl ${theme.banner} flex flex-row`}
+        className={`flex flex-row w-auto text-xl ${theme.banner} ${theme.underline} flex flex-row`}
         style={{ marginTop: '0', paddingBottom: '0' }}>
-        <div className='w-3.3/10 h-16 flex flex-col justify-center items-center'>
+        <div className='w-3.3/10  flex flex-col justify-center items-center'>
           <span>Highlighters:</span>
         </div>
-        <div className={`w-3.3/10 h-16 flex  justify-center items-center pt-2 z-50`}>
+        <div className={`w-3.3/10  flex  justify-center items-center z-50`}>
           <div
             className={`${
               isSticky
                 ? 'fixed top-0 w-full flex flex-row justify-center items-center bg-dark-gray translate-y-full z-50'
                 : ''
             } w-auto cursor-pointer flex flex-row`}>
+
+
+
+            {/**
+             * 
+             * 
+             * HIGHLIGHTER BUTTONSZ
+             * 
+             *  
+             **/}
             {buttons.map((button: { color: string; icon: string; name: string }, key: number) => (
               <div
                 key={key}
                 id={button.color}
                 className={`${color === button.color ? 'border-2 border-white' : ''} 
                   bg-${button.color} 
-                  relative h-12 w-12 text-3xl rounded-lg mb-2 mx-4 flex flex-row justify-center items-center animate-fadeIn
+                  relative h-12 w-12 text-3xl rounded-lg mx-4 flex flex-row justify-center items-center
                   `}
                 onClick={handleClick}>
                 <ToolTip
@@ -92,6 +102,10 @@ const ToolBar = (props: ToolbarProps) => {
                 {button.icon}
               </div>
             ))}
+
+
+
+
 
             <div
               id='erase'
@@ -113,7 +127,7 @@ const ToolBar = (props: ToolbarProps) => {
             </div>
           </div>
         </div>
-        <div className='w-3.3/10 h-16 w-16 flex items-center'>
+        <div className='w-3.3/10  w-16 flex items-center'>
           <IconContext.Provider
             value={{
               className: 'ml-auto mr-0',
@@ -126,7 +140,7 @@ const ToolBar = (props: ToolbarProps) => {
         </div>
       </div>
 
-      <div className='w-full leading-6 border-b border-t border-white border-opacity-10 mb-4'>
+      <div className='w-full leading-6 border-b border-white border-opacity-10 mb-4'>
         <p className='pl-2 text-sm text-left  text-white '>
           1. To select a <b>sentence/phrase</b>, click the 'first word' and the 'last word'.
         </p>

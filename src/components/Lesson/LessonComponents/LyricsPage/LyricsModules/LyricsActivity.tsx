@@ -8,7 +8,7 @@ import InstructionBlock from './InstructionBlock';
 import VideoBlock from './VideoBlock';
 import InstructionsPopup from '../../../Popup/InstructionsPopup';
 
-import {useWindowSize} from '../../../../../customHooks/windowSize';
+import { useWindowSize } from '../../../../../customHooks/windowSize';
 
 /**
  * interfaces
@@ -52,17 +52,14 @@ const Body = () => {
   const [toptop, setTopTop] = useState<number>(0);
 
   /**
-   * 
-   * 
+   *
+   *
    * REF USAGE FOR UNRESPONSIVE HIGHLIGHT BOX
-   * 
-   * 
+   *
+   *
    */
   const ref = useRef(null);
   const winSize = useWindowSize();
-
-
-
 
   const initialSelectedObjectToArray = (obj: any) => {
     if (typeof obj === 'object') {
@@ -75,11 +72,11 @@ const Body = () => {
     }
   };
 
-  useEffect(()=>{
-    if(ref.current){
-      setTopTop(ref.current.getBoundingClientRect().top)
+  useEffect(() => {
+    if (ref.current) {
+      setTopTop(ref.current.getBoundingClientRect().top);
     }
-  },[])
+  }, []);
 
   useEffect(() => {
     if (cookies[`lesson-${state.classroomID}`].lyrics) {
@@ -183,36 +180,39 @@ const Body = () => {
 
   return (
     <>
-      <div className='relative max-w-256 h-full flex flex-row overflow-hidden mx-auto'>
-        <div className='w-3/10 h-full  max-h-192 mr-4'> 
-          <div className='z-50 flex flex-col justify-between items-center'>
-            <InstructionBlock />
+      <div className='relative max-w-256 h-full flex flex-col overflow-hidden mx-auto'>
+        <Banner />
+
+        <div className='flex flex-row'>
+          <div className='w-3/10 h-full  max-h-192 mr-4'>
+            <div className='z-50 flex flex-col justify-between items-center'>
+              <InstructionBlock />
+            </div>
+            {/* <Toolbar setColor={setColor} color={color} /> */}
+            <VideoBlock link={state.data.lesson.coreLesson.content.link} fullscreen={fullscreen} />
           </div>
-          {/* <Toolbar setColor={setColor} color={color} /> */}
-          <VideoBlock link={state.data.lesson.coreLesson.content.link} fullscreen={fullscreen} />
-        </div>
 
-        <div className='w-7/10 h-full max-w-256 flex flex-col items-start z-50'>
-          <Banner />
+          <div className='w-7/10 h-full max-w-256 flex flex-col items-start z-50'>
+            <Toolbar setColor={setColor} color={color} colorPicker={colorPicker} />
 
-          <Toolbar setColor={setColor} color={color} colorPicker={colorPicker} />
-
-          
-          <div ref={ref} className='overflow-y-scroll  rounded-xl bg-darker-gray text-gray-200' style={{height: `${winSize.height - toptop - 12}px`}}>
-
-            <LyricsBlock
-              color={color}
-              colorPicker={colorPicker}
-              selected={selected}
-              setSelected={setSelected}
-              fullscreen={fullscreen}
-              setFullscreen={setFullscreen}
-              initialSelectedText={initialSelectedText}
-              setInitialSelectedText={setInitialSelectedText}
-              finalText={finalText}
-              setFinalText={setFinalText}
-              selectGroup={selectGroup}
-              setSelectGroup={setSelectGroup}></LyricsBlock>
+            <div
+              ref={ref}
+              className='overflow-y-scroll overflow-x-hidden rounded-xl bg-darker-gray text-gray-200'
+              style={{ height: `${winSize.height - toptop - 12}px` }}>
+              <LyricsBlock
+                color={color}
+                colorPicker={colorPicker}
+                selected={selected}
+                setSelected={setSelected}
+                fullscreen={fullscreen}
+                setFullscreen={setFullscreen}
+                initialSelectedText={initialSelectedText}
+                setInitialSelectedText={setInitialSelectedText}
+                finalText={finalText}
+                setFinalText={setFinalText}
+                selectGroup={selectGroup}
+                setSelectGroup={setSelectGroup}></LyricsBlock>
+            </div>
           </div>
         </div>
       </div>

@@ -250,7 +250,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                 (alert
                     ?
                     (<div
-                        className={`${alert ? 'absolute z-100 w-full h-full' : 'hidden z-0'}`} onClick={handleCancel}>
+                        className={`${alert ? 'absolute z-100 w-full h-full' : 'hidden z-0'}`}>
                         <PositiveAlert
                             alert={alert}
                             setAlert={setAlert}
@@ -270,7 +270,7 @@ const WritingBlock = (props: WritingBlockProps) => {
 
 
 
-            <div className={`w-full h-full rounded-xl`}>
+            <div className={`w-full h-full rounded-xl z-10`}>
                 <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
                     Line Prompts{' '}
                     <ToolTip
@@ -306,8 +306,12 @@ const WritingBlock = (props: WritingBlockProps) => {
 
 
 
+
             </div>
-            <div className='w-full flex flex-col p-4 border-2 border-white border-opacity-20 rounded-lg'>
+            
+            
+            
+            <div className={`w-full flex flex-col border-2 border-white border-opacity-20 rounded-lg ${(lineState.lines[lineNo - 1].menuOpen) ? 'pt-4 pl-4 pr-4 pb-52' : 'p-4'}`}>
 
                 {/* MAP THE LINE PROMPTS */}
                 {lineState.lines.length > 1
@@ -323,18 +327,39 @@ const WritingBlock = (props: WritingBlockProps) => {
                                         <div
                                             key={key}
                                             id={id}
-                                            className='relative w-full h-12 flex flex-row items-center rounded-xl'
+                                            className={`relative w-full h-12 flex flex-row items-center rounded-xl`}
                                             onDragOver={handleDragOver}
                                             onDrop={handleDrop}>
-                                            <input
-                                                id={id}
-                                                className={`rounded-l-xl ${theme.elem.textInput}`}
-                                                name={id}
-                                                type='text'
-                                                value={line.text}
-                                                onChange={handleInputChange}
-                                                onDoubleClick={handleMenuToggle}
-                                            />
+                                            
+                                            
+                                            {/* PROMPTS INPUT FIELD */}
+                                            <div className='relative w-full'>
+                                                <input
+                                                    id={id}
+                                                    className={` ${line.menuOpen ? 'rounded-tl-xl border-t border-l border-r border-white' : 'rounded-l-xl'}  ${theme.elem.textInput}`}
+                                                    name={id}
+                                                    type='text'
+                                                    value={line.text}
+                                                    onChange={handleInputChange}
+                                                    onDoubleClick={handleMenuToggle}
+                                                />
+
+                                            {/* MAP AVAILABLE LINE PROMPTS */}
+                                                {line.menuOpen ? (
+                                                    <div className={`absolute left-0 h-48 overflow-y-scroll w-full rounded-b-xl z-50 shadow-xlwhite border-b border-l border-r border-white ${theme.elem.textInput}`}>
+                                                        {lineState.prompts.map((prompt: any, key: number) => (
+                                                            <div
+                                                                key={key}
+                                                                id={id}
+                                                                className={`w-full mb-2 font-light cursor-pointer border-t border-white border-opacity-20`}
+                                                                onClick={handleSelectPrompt}>
+                                                                <span id={prompt.id}>{prompt.prompt}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ) : null}
+
+                                            </div>
 
 
                                             {/* MENU TOGGLE BUTTON */}
@@ -373,28 +398,18 @@ const WritingBlock = (props: WritingBlockProps) => {
                                                     <AiOutlineClose />
                                                 </IconContext.Provider>
                                             </div>
+
+
                                         </div>
 
+                                        {/* EXAMPLE LINE PROMPT */}
                                         <label
                                             className={`${line.example ? 'visible' : 'invisible'
                                                 } font-light self-end flex justify-start text-gray-400 text-sm mr-12`}
                                             htmlFor={id}>
                                             ( ex. {line.example} )
-                          </label>
-                                        {line.menuOpen ? (
-                                            <div className={`absolute left-0 top-3 w-full rounded-b-xl z-50 ${theme.elem.textInput}`}>
-                                                {
-                                                    lineState.prompts.map((prompt: any, key: number) => (
-                                                        <div
-                                                            key={key}
-                                                            id={id}
-                                                            className='w-full mb-2 font-light cursor-pointer'
-                                                            onClick={handleSelectPrompt}>
-                                                            <span id={prompt.id}>{prompt.prompt}</span>
-                                                        </div>
-                                                    ))}
-                                            </div>
-                                        ) : null}
+                                        </label>
+
                                     </div>
                                 </div>
                             );
@@ -406,7 +421,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                 className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 flex justify-center items-center rounded-xl mt-2 ${theme.elem.text}`}
                 onClick={() => setAlert(!alert)}>
                 Save and Edit
-          </button>
+        </button>
         </div>
     );
 }
