@@ -14,7 +14,7 @@ const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'));
 const ListView = lazy(() => import('./ComponentViews/ListPageView/ListView'));
 // const Poll = lazy(() => import('./ComponentViews/PollPageView/PollView'));
 // const TChart = lazy(() => import('./ComponentViews/TChartPageView/TChartView'));
-// const TruthGame = lazy(() => import('./ComponentViews/TruthGamePageView/TruthGameView'));
+const TruthGameView = lazy(() => import('./ComponentViews/TruthGamePageView/TruthGameView'));
 const OutroView = lazy(() => import('./ComponentViews/OutroView/OutroView'));
 const LessonError = lazy(() => import('./../Error/LessonError'));
 const Checkpoint = lazy(() => import('./ComponentViews/Checkpoint/Checkpoint'));
@@ -46,8 +46,8 @@ const Body: React.FC<BodyProps> = (props: BodyProps) => {
                 return <PoemView fullscreen={fullscreen}/>;
             case 'list':
                 return <ListView fullscreen={fullscreen}/>;
-            // case 'truthgame':
-            //     return <TruthGameView />;
+            case 'truthgame':
+                return <TruthGameView fullscreen={fullscreen} />;
             // case 'tchart':
             //     return <TChartView />;
             // case 'poll':

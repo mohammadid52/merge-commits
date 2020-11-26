@@ -46,7 +46,6 @@ const Classroom: React.FC = () => {
   const [status, setStatus] = useState('');
 
   async function getCourse(id: string) {
-    let limit = 2;
     try {
       const course: any = await API.graphql(
         graphqlOperation(customQueries.getCourse, { id: id })
@@ -60,6 +59,8 @@ const Classroom: React.FC = () => {
       console.error(error);
     }
   }
+
+
 
   // async function getClassroom(id: string) {
   //   let queryParams = queryString.parse(location.search)

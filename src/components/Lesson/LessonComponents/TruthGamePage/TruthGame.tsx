@@ -5,12 +5,12 @@ import {
     useRouteMatch,
 } from "react-router-dom";
 import TruthGameActivity from './TruthGameModules/TruthGameActivity';
-import TruthGameBreakdown from './TruthGameBreakdown/ListBreakdown';
+import TruthGameBreakdown from './TruthGameBreakdown/TruthGameBreakdown';
 // import ErrorPage from '../../Error/ErrorPage';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
 
-const ListPage = () => {
+const TruthGamePage = () => {
     const { dispatch } = useContext(LessonContext);
     const match = useRouteMatch();
 
@@ -34,4 +34,4 @@ const ListPage = () => {
     )
 }
 
-export default ListPage;
+export default TruthGamePage;

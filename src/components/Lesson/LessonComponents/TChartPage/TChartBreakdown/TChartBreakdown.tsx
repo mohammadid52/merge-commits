@@ -7,7 +7,7 @@ import SelfDisplay from './SelfDisplay';
 import CoopDisplay from './CoopDisplay';
 
 
-const StoryBreakdown = () => {
+const TChartBreakdown = () => {
     const { state, dispatch } = useContext(LessonContext);
     const displayProps = state.componentState.story;
     const [displayMode, setDisplayMode] = useState(state.data.lessonPlan[state.currentPage].displayMode);
@@ -33,4 +33,4 @@ if (displayMode === 'SELF') {
     }
 }
 
-export default StoryBreakdown;
+export default TChartBreakdown;

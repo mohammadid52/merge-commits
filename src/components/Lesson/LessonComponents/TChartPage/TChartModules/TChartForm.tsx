@@ -130,19 +130,33 @@ const handleInputTest = (e: KeyboardEvent<HTMLTextAreaElement>, event: ChangeEve
     <div className='bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600'>
       <h3
         className={`text-xl text-gray-200 font-open font-light ${theme.underline}`}>
-        List{' '}
+        Compare and Contrast{' '}
       </h3>
-      <div className='relative h-full flex flex-col items-center mb-5 mt-2'>
-        <textarea
-          id='story'
-          className=' w-6/10 h-full px-4 py-2 rounded-lg text-xl text-gray-100'
-          style={{backgroundColor: '#23314600'}}
-          name='list'
-          placeholder={`${bullet} ${state.data.lesson.warmUp.inputs.textExample}`}
-          defaultValue={`${input.story}`}
-          onChange={handleInputChange}
-          onInput={handleInput}
-        />
+      <div className="flex h-9/10 w-full justify-between">
+        <div className='relative text-gray-800 h-full w-4.8/10 flex flex-col items-center mb-5 mt-2'>
+          <label className="h-1/10 flex justify-center items-center text-lg text-center font-open font-light text-gray-100">Things I would change about myself</label>
+          <textarea
+            id='story'
+            className='w-full h-9/10 px-4 py-2 rounded-lg text-xl text-gray-800 '
+            name='list'
+            placeholder={`${bullet} ${state.data.lesson.warmUp.inputs.textExample}`}
+            defaultValue={`${input.story}`}
+            onChange={handleInputChange}
+            onInput={handleInput}
+          />
+        </div>
+        <div className='relative text-gray-800 h-full w-4.8/10 flex flex-col items-center mb-5 mt-2'>
+          <label className="h-1/10 flex justify-center items-center text-lg font-open font-light text-center text-gray-100">Things I love about myself</label>
+          <textarea
+            id='story2'
+            className='w-full h-9/10 px-4 py-2 rounded-lg text-xl text-gray-800 '
+            name='list'
+            placeholder={`${bullet} ${state.data.lesson.warmUp.inputs.textExample}`}
+            defaultValue={`${input.story}`}
+            onChange={handleInputChange}
+            onInput={handleInput}
+          />
+      </div>
       </div>
     </div>
   );
