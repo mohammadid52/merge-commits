@@ -61,19 +61,6 @@ const CoopDisplay = () => {
 
             <ReflectionQuestions />
 
-            {/* self display */}
-            <div className={`${fullscreen ? 'hidden' : 'w-full'} h-full flex flex-col justify-between items-center mb-4`}>
-                <Banner title={displayProps && displayProps.title ? displayProps.title : 'Your List'}
-                    display='SELFinCOOP' fullscreen={fullscreen} />
-
-                <div className="w-full h-8.8/10 flex flex-col justify-between">
-                    <ListOutput list={displayProps.story} />
-                    <Modules
-                        additional={displayProps.additional}
-                        displayMode="SELFinCOOP" />
-                </div>
-            </div>
-
             {/* teacher display */}
             <div className={`relative ${fullscreen ? 'w-full' : ''} h-full flex flex-col justify-between items-center rounded-lg border p-2 bg-white bg-opacity-20`}>
 
@@ -83,9 +70,9 @@ const CoopDisplay = () => {
                     </IconContext.Provider>
                 </div>
 
-                <div className="absolute w-full z-50 top-0 transform -translate-y-1/2">
-                    <div className="w-2.5/10 h-auto w-auto mx-auto py-1 px-2 bg-yellow-300 text-gray-800 font-light text-center flex flex-col justify-center items-center font-medium rounded-xl shadow-elem-dark z-50">
-                        <p>by: {student ? student.preferredName ? student.preferredName : student.firstName : null} {student ? firstInitialFunc(student.lastName) : null}</p>
+                <div className=" w-full z-50 top-0 ">
+                    <div className="w-2.5/10 h-auto w-auto py-1 text-gray-800 font-light flex flex-col justify-center items-center z-50">
+                        <p><span className='text-white'>by: <span className='font-medium text-yellow-600'>{student ? student.preferredName ? student.preferredName : student.firstName : null} {student ? firstInitialFunc(student.lastName) : null}</span></span></p>
                     </div>
                 </div>
 
@@ -100,6 +87,27 @@ const CoopDisplay = () => {
                         displayMode="COOP" />
                 </div>
 
+            </div>
+
+
+
+            {/* self display */}
+            <div className={`${fullscreen ? 'hidden' : 'w-full'} h-full flex flex-col justify-between items-center mb-4`}>
+                <Banner title={displayProps && displayProps.title ? displayProps.title : 'Your List'}
+                    display='SELFinCOOP' fullscreen={fullscreen} />
+
+                <div className=" w-full z-50 top-0 ">
+                    <div className="w-2.5/10 h-auto w-auto py-1 text-gray-800 font-light flex flex-col justify-center items-center z-50">
+                        <p><span className='text-white'>by: <span className='font-medium text-blueberry'>You</span></span></p>
+                    </div>
+                </div>
+
+                <div className="w-full h-8.8/10 flex flex-col justify-between">
+                    <ListOutput list={displayProps.story} />
+                    <Modules
+                        additional={displayProps.additional}
+                        displayMode="SELFinCOOP" />
+                </div>
             </div>
 
         </div>

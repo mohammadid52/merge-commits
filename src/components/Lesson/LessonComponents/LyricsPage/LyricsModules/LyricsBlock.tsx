@@ -340,7 +340,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         </div> */}
 
           <div
-            className={`leading-6 text-sm px-1/10`}
+            className={`leading-6 text-sm px-4`}
             onClick={handleSelection} // Clickhandler on the parent...nice!
             style={{
               MozUserSelect: 'none',

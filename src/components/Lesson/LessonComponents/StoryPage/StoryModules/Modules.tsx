@@ -97,7 +97,7 @@ const Modules = (props: ModulesProps) => {
     <div className='relative w-full h-full rounded-xl'>
       <div className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
       <h3>Focus Questions</h3>
-      <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
+      {/* <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
         <div className='absolute w-auto h-auto mr-2 right-0'>
           <AiOutlineInfoCircle
             style={{
@@ -107,7 +107,7 @@ const Modules = (props: ModulesProps) => {
             }}
           />
         </div>
-      </IconContext.Provider>
+      </IconContext.Provider> */}
       </div>
 
       <div className='w-full h-full '>

@@ -85,13 +85,11 @@ const SampleSELQuestions = (props: props) => {
       case 'text':
         return (
           <TextQuestions
-            // keyProp={key}
             number={key}
             question={question}
-            // checkpointID={checkpoint.checkpoint.id}
             value={''}
-            // handleInputChange={handleInputChange}
           />
+          // <h1>TEXT QU</h1>
         );
       case 'selectOne':
         return (

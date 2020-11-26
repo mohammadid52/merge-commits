@@ -18,7 +18,7 @@ const ListOutput = (props: ListOutputProps) => {
 
   return (
     <>
-      <div className='w-full flex flex-col'>
+      <div className={`w-full flex flex-col ${theme.blockQuote}`}>
         {
           props.list !== '' 
           ? <div className={`text-gray-200 mb-2 align-middle leading-7`} dangerouslySetInnerHTML={{__html: parseBlankLines(props.list)}}></div>

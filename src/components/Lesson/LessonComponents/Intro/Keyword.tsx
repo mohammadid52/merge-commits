@@ -31,7 +31,7 @@ const Keyword = () => {
     <div className={`flex flex-col md:w-full ${theme.block.text} rounded-r-lg`}>
       <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
         <h3>Keywords we will cover in this lesson:</h3>
-        <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
+        {/* <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
           <div className='absolute w-auto h-auto mr-2 right-0'>
             <AiOutlineInfoCircle
               style={{
@@ -41,7 +41,7 @@ const Keyword = () => {
               }}
             />
           </div>
-        </IconContext.Provider>
+        </IconContext.Provider> */}
       </div>
 
       <div className='flex flex-row flex-wrap z-50'>

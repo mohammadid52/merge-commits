@@ -72,36 +72,33 @@ const QuoteBlock = (props: props) => {
       <div className='h-full text-left flex flex-col items-start'>
         {/* BIO */}
         <div
-          className={`${heroIsActive ? 'visible overflow-y-auto' : 'hidden'
-            } h-96 w-9/10 bg-black50 flex flex-col justify-start transition-all duration-500 ease-in-out animate-fadeIn overflow-hidden`}>
+          className={`${
+            heroIsActive ? 'visible overflow-y-auto' : 'hidden'
+          } h-96 w-9/10 flex flex-col justify-start transition-all duration-500 ease-in-out animate-fadeIn overflow-hidden`}>
           {typeof artistBio !== 'undefined'
             ? artistBio.map((paragraph: string, i: number) => (
-              <p key={`paraBio${i}`} className='mb-2 text-blue-100 text-opacity-75'>
-                {paragraph}
-              </p>
-            ))
+                <p key={`paraBio${i}`} className='mb-2 text-blue-100 text-opacity-75'>
+                  {paragraph}
+                </p>
+              ))
             : ''}
         </div>
 
         {/* STANDARD HERO TEXT */}
         <div
-          className={`${heroIsActive ? 'hidden' : 'visible'
-            } h-full flex flex-col justify-end transition-all duration-500 ease-in-out animate-fadeIn`}>
-          <div className='h-auto mb-0 flex flex-col'>
-            <div className='text-lg flex text-left items-center'>Featured Artist:</div>
+          className={`${
+            heroIsActive ? 'hidden' : 'visible'
+          } h-full flex flex-col justify-end transition-all duration-500 ease-in-out animate-fadeIn`}
+          >
+          <div className='absolute bottom-0 left-0 p-2 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-xl'>
+            <div className='text-xl header-font font-open font-light'>Featured Artist:</div>
             <div className='w-full text-4.5xl leading-none font-light'>{artistName}</div>
+            <div className='text-xl header-font font-open font-light'>"{quote.text}"</div>
           </div>
 
-          <div className={`h-auto mb-0 flex flex-col justify-end items-center`}>
-            <div className='h-full flex flex-col justify-around items-center'>
-              <div className='relative'>
-                <div className='header-font text-lg font-open font-light'>"{quote.text}"</div>
-              </div>
-              {/* <div className='text-sm pl-8 mt-2'>- {quote.source}</div> */}
-            </div>
-          </div>
         </div>
       </div>
+      
       {/* <PhotoBlock /> */}
     </div>
   );

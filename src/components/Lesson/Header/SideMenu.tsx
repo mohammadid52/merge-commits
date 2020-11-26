@@ -83,7 +83,7 @@ const SideMenu = (props:{handlePopup: ()=> void}) => {
         {!state.viewing ? (
           <div
             id='lesson-done'
-            className={`cursor-pointer flex flex-col justify-center items-center mb-4`}
+            className={`hidden cursor-pointer flex flex-col justify-center items-center mb-4`}
             onClick={handleDone}>
             <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
               <FaRegThumbsUp
@@ -93,7 +93,7 @@ const SideMenu = (props:{handlePopup: ()=> void}) => {
             <p className={`text-xs text-gray-200 text-center`}>Done</p>
           </div>
         ) : (
-          <div className={`cursor-default flex flex-col justify-center items-center mb-4`}>
+          <div className={`hidden cursor-default flex flex-col justify-center items-center mb-4`}>
             <div className='relative flex items-center justify-center h-4 w-4 m-1'>
               <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75'></span>
               <span className='relative inline-flex rounded-full h-4 w-4 bg-green-600'></span>

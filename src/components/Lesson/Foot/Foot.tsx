@@ -64,7 +64,7 @@ const Branding: React.FC = () => {
                     : 'cursor-default bg-darker-gray'
                 } }`}
                 onClick={handleBack}>
-                <div className='w-auto h-auto'>Back</div>
+                <div className='w-auto h-auto text-white'>Back</div>
               </div>
             ) : null}
           </div>
@@ -88,7 +88,7 @@ const Branding: React.FC = () => {
                   state.canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark-gray cursor-default'
                 } `}
                 onClick={handleForward}>
-                <div className='w-auto h-auto'>Continue</div>
+                <div className='w-auto h-auto text-white'>Continue</div>
               </div>
             ) : null}
           </div>

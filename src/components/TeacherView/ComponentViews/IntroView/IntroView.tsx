@@ -17,6 +17,7 @@ const IntroView = (props: props) => {
   const { state, theme, dispatch } = useContext(LessonControlContext);
   const [doFirstData, setDoFirstData] = useState<{ [key: string]: any }>();
   const { fullscreen } = props;
+  const imgArray = state.data.lesson.artist.images;
 
   let displayStudentData = state.studentViewing.live
     ? state.studentViewing.studentInfo.currentLocation
@@ -28,18 +29,17 @@ const IntroView = (props: props) => {
     <div className={theme.section}>
       <Banner fullscreen={fullscreen} />
       <div
-        className='h-96 flex flex-col mb-4 justify-between items-center bg-cover bg-right-top rounded-xl'
-        style={{
-          backgroundImage: `url(https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/marlon_reading.jpg)`,
-        }}>
+        className='h-96 flex flex-col mb-4 justify-between items-center bg-cover bg-right-top rounded-xl z-10'
+        style={{ backgroundImage: `url(${imgArray[0]})` }}>
         <QuoteBlock fullscreen={fullscreen} />
+        {/* <Block /> */}
       </div>
       <Connect fullscreen={fullscreen} />
       <div className='flex flex-col justify-between items-center mt-4'>
         <Keyword fullscreen={fullscreen} />
       </div>
       <div className='flex flex-col justify-between items-center mt-4'>
-        <DoFirst data={doFirstData ? doFirstData : null} fullscreen={fullscreen} />
+        <DoFirst fullscreen={fullscreen} />
       </div>
     </div>
   );

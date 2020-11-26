@@ -8,6 +8,7 @@ const QuoteBlock = () => {
   const { state, theme } = useContext(LessonContext);
   const [heroIsActive, setHeroIsActive] = useState<boolean>(false);
   const [isToggled, setIsToggled] = useState<string[]>(['']);
+  const [showReadMe, setShowReadMe] = useState<boolean>(true);
 
   const quoteArray = state.data.lesson.artist.quotes;
   const artistName = state.data.lesson.artist.name;
@@ -33,6 +34,10 @@ const QuoteBlock = () => {
       setHeroIsActive(true);
     } else {
       setHeroIsActive(false);
+    }
+
+    if(showReadMe){
+      setShowReadMe(false);
     }
 
     /**
@@ -67,16 +72,16 @@ const QuoteBlock = () => {
       </div>
 
       {/* READ ICON - RIGHT TEXT */}
-      <div className='absolute w-auto overflow-x-hidden top-1 right-0 transform translate-x-full'>
+      <div className={`${showReadMe ? 'visible' : 'hidden'} absolute w-auto overflow-x-hidden top-1 right-0 transform translate-x-full`}>
         <p className='animate-bounce ml-2'>&larr; Read Me!</p>
       </div>
 
-      <div className='h-full text-left flex flex-col items-start'>
+      <div className='h-full text-left flex flex-col mr-8 items-start'>
         {/* BIO */}
         <div
           className={`${
             heroIsActive ? 'visible overflow-y-auto' : 'hidden'
-          } h-96 w-9/10 flex flex-col justify-start transition-all duration-500 ease-in-out animate-fadeIn overflow-hidden`}>
+          } h-96 w-full flex flex-col justify-start transition-all duration-500 ease-in-out animate-fadeIn overflow-hidden`}>
           {typeof artistBio !== 'undefined'
             ? artistBio.map((paragraph: string, i: number) => (
                 <p key={`paraBio${i}`} className='mb-2 text-blue-100 text-opacity-75'>

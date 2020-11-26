@@ -293,12 +293,12 @@ const WritingBlock = (props: WritingBlockProps) => {
             <div className={`w-full h-full rounded-xl z-10`}>
                 <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
                     Line Prompts{' '}
-                    <ToolTip
+                    {/* <ToolTip
                         width='w-40'
                         position='bottom'
                         header='Instructions'
                         content='Make sure you are finished with the line prompts before you click "Save and Edit"'
-                    />
+                    /> */}
                 </h3>
 
 
@@ -440,7 +440,7 @@ const WritingBlock = (props: WritingBlockProps) => {
             <button
                 className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 flex justify-center items-center rounded-xl mt-2 ${theme.elem.text}`}
                 onClick={handlePopup}>
-                Save and Edit
+                Save and Edit Your Poem
         </button>
         </div>
     );
