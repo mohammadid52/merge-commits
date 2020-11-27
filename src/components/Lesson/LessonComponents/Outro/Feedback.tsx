@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
 import { LessonContext } from '../../../../contexts/LessonContext';
+import StarRating from './Feedback/StarRating';
 
 interface FeedbackProps {
   setFeedback: React.Dispatch<
@@ -17,6 +18,8 @@ const Feedback = (props: FeedbackProps) => {
   const { setFeedback } = props;
   const [thumb, setThumb] = useState('');
   const [feedbackText, setFeedbackText] = useState('');
+  const [isRated, setIsRated] = useState<boolean>(false);
+  const [rating, setRating] = useState<number>(0);
 
   const handleThumb = (item: string) => {
     setThumb(() => {
@@ -50,7 +53,15 @@ const Feedback = (props: FeedbackProps) => {
           
           <h3>What did you think about the {state.data.lesson.type}?</h3>
 
-          <div
+          <StarRating
+            isRated={isRated}
+            setIsRated={setIsRated}
+            rating={rating}
+            setRating={setRating}
+            handleStarRating={()=>console.log('handleStarRating(): ', ' test ')}
+          />
+
+          {/* <div
             className={`text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 cursor-pointer`}
             onClick={() => handleThumb('up')}>
             {thumb === 'up' ? (
@@ -75,7 +86,7 @@ const Feedback = (props: FeedbackProps) => {
                 <FaThumbsDown />
               </IconContext.Provider>
             )}
-          </div>
+          </div> */}
 
         </div>
       </div>
