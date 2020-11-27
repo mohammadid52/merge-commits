@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
+import StarRating from './Feedback/StarRating';
 
 interface props {
   fullscreen: boolean
@@ -11,6 +12,8 @@ const Feedback = (props: props) => {
   const { fullscreen } = props;
   const { state, theme } = useContext(LessonControlContext);
   const [thumb, setThumb] = useState('');
+  const [isRated, setIsRated] = useState<boolean>(false);
+  const [rating, setRating] = useState<number>(0);
 
   const handleThumb = (item: string) => {
     setThumb(() => {
@@ -27,7 +30,15 @@ const Feedback = (props: props) => {
 
         <h3>What did you think about the {state.data.lesson.type}?</h3>
 
-        <div
+        <StarRating
+            isRated={isRated}
+            setIsRated={setIsRated}
+            rating={rating}
+            setRating={setRating}
+            handleStarRating={()=>console.log('handleStarRating(): ', ' test ')}
+          />
+
+        {/* <div
           className={`text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 cursor-pointer`}
           onClick={() => handleThumb('up')}>
           {thumb === 'up' ? (
@@ -52,7 +63,7 @@ const Feedback = (props: props) => {
                 <FaThumbsDown />
               </IconContext.Provider>
             )}
-        </div>
+        </div> */}
 
       </div>
     </div>

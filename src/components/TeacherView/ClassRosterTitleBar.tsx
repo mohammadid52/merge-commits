@@ -31,8 +31,7 @@ const ClassRosterTitleBar: React.FC<ClassRosterTitleBar> = (props: ClassRosterTi
           </div>
         </div>
 
-        <div className="w-4/10 flex justify-around items-center">
-          {/* <ToolTip position='bottom' header='' content='students who are ready (click to reset)' width='w-20' cursor display='none' fontSize= 'text-xs'/> */}
+        {/* <div className="w-4/10 flex justify-around items-center">
           <div className={`w-auto relative`} onClick={handleResetDoneCounter}>
             <ToolTip position='bottom'
               cursor
@@ -57,7 +56,9 @@ const ClassRosterTitleBar: React.FC<ClassRosterTitleBar> = (props: ClassRosterTi
           <div className="w-auto">
             {state.done.length}
           </div>
-        </div>
+        </div> */}
+
+
       </h2>
     </>
   )

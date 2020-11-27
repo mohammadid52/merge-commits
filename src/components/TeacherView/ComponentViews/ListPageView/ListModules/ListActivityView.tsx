@@ -50,7 +50,7 @@ const List = (props: props) => {
                 <div className='flex flex-col justify-between items-center'>
                     <InstructionsBlock fullscreen={fullscreen} />
 
-                    {inputs.additionalInputs.length > 0 ?
+                    {/* {inputs.additionalInputs.length > 0 ?
                         <Modules
                             dataProps={dataProps}
                             inputs={inputs.additionalInputs}
@@ -58,7 +58,7 @@ const List = (props: props) => {
                         />
                         :
                         null
-                    }
+                    } */}
 
                 <ListForm dataProps={dataProps} fullscreen={fullscreen} />
 

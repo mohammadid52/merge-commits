@@ -39,7 +39,7 @@ const SelfDisplay = (props: props) => {
             <ReflectionQuestions fullscreen={fullscreen} />
             <Banner dataProps={dataProps} fullscreen={fullscreen} />
             <ListOutput list={(dataProps && dataProps.story) ? dataProps.story : ''} fullscreen={fullscreen}/>            
-            <Modules dataProps={dataProps} fullscreen={fullscreen}/>           
+            {/* <Modules dataProps={dataProps} fullscreen={fullscreen}/>            */}
         </div>
     )
 }

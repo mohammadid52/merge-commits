@@ -368,6 +368,8 @@ const LessonControl = () => {
                   handleUpdateClassroom={handleUpdateClassroom}
                   handleShareStudentData={handleShareStudentData}
                   isSameStudentShared={isSameStudentShared}
+                  handleQuitShare={handleQuitShare}
+                  handleQuitViewing={handleQuitViewing}
                 />
               </div>
             </div>
@@ -379,7 +381,7 @@ const LessonControl = () => {
             ${fullscreen ? 'w-full' : 'w-6/10'} lg:w-full h-full flex flex-col items-center`}>
             <div
               className={`
-              ${fullscreen ? 'h-full' : 'h-8.3/10'}
+              ${fullscreen ? 'h-full' : 'h-full'}
               ${theme.bg} 
               relative w-full 
               rounded-lg p-4 overflow-y-scroll overflow-x-hidden`}>
@@ -445,9 +447,10 @@ const LessonControl = () => {
                 {fullscreen ? <FaCompress /> : <FaExpand />}
               </IconContext.Provider>
             </div>
+            
             {/* ICONS TOP RIGHT */}
 
-            <div
+            {/* <div
               className={`${
                 fullscreen ? 'hidden' : ''
               } relative flex flex-col justify-center items-center`}>
@@ -483,7 +486,10 @@ const LessonControl = () => {
               </div>
 
               <LessonControlBar />
-            </div>
+            </div> */}
+
+
+
           </div>
         </div>
       </div>

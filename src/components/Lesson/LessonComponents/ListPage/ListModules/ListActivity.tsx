@@ -83,15 +83,13 @@ const List = () => {
                 <div className='flex flex-col justify-between items-center'>
                     <InstructionsBlock />
 
-                    {inputs.additionalInputs.length > 0 ?
+                    {/* {inputs.additionalInputs.length > 0 ?
                         <Modules
-                            // breakdownProps={breakdownProps}
-                            // setBreakdownProps={setBreakdownProps}
                             inputs={inputs.additionalInputs}
                         />
                         :
                         null
-                    }
+                    } */}
 
                     <ListForm />
                 </div>

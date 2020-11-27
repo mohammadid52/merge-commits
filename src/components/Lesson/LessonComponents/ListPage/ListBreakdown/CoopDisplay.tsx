@@ -82,9 +82,9 @@ const CoopDisplay = () => {
 
                 <div className="w-full h-8.8/10 flex md:flex-col justify-between">
                     <ListOutput list={teacherData && teacherData.warmUpData && teacherData.warmUpData.story} />
-                    <Modules
+                    {/* <Modules
                         additional={teacherData && teacherData.warmUpData && teacherData.warmUpData.additional ? teacherData.warmUpData.additional : null}
-                        displayMode="COOP" />
+                        displayMode="COOP" /> */}
                 </div>
 
             </div>
@@ -104,9 +104,9 @@ const CoopDisplay = () => {
 
                 <div className="w-full h-8.8/10 flex flex-col justify-between">
                     <ListOutput list={displayProps.story} />
-                    <Modules
+                    {/* <Modules
                         additional={displayProps.additional}
-                        displayMode="SELFinCOOP" />
+                        displayMode="SELFinCOOP" /> */}
                 </div>
             </div>
 

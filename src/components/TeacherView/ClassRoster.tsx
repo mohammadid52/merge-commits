@@ -8,11 +8,13 @@ import RosterRow from './ClassRoster/RosterRow';
 interface classRosterProps {
   handleUpdateClassroom: () => Promise<void>;
   handleShareStudentData: () => Promise<void>;
+  handleQuitShare: () => void;
+  handleQuitViewing: () => void;
   isSameStudentShared: boolean;
 }
 
 const ClassRoster = (props: classRosterProps) => {
-  const { handleUpdateClassroom, handleShareStudentData, isSameStudentShared } = props;
+  const { handleUpdateClassroom, handleShareStudentData, isSameStudentShared, handleQuitShare, handleQuitViewing } = props;
   const { state, dispatch } = useContext(LessonControlContext);
 
   // console.log(state.roster)
@@ -73,11 +75,11 @@ const ClassRoster = (props: classRosterProps) => {
     <div
       className={`w-full h-full bg-gray-500 shadow-inner-dark rounded-lg pt-4 overflow-y-scroll overflow-x-auto`}>
       {/* TABLE HEAD */}
-      <div className={`w-full flex justify-center font-bold py-2 pl-4 pr-1 `}>
-        <div className={`w-.5/10 mx-2 text-center`}></div>
-        <div className={`w-4.3/10 mx-2`}>Name</div>
-        <div className={`w-1.5/10 mx-2`}>Role</div>
+      <div className={`w-full flex py-2 pl-2 pr-1 `}>
+        <div className={`w-1/10 mx-2 text-center`}></div>
+        <div className={`w-3.5/10 mx-2`}>Name</div>
         <div className={`w-3.5/10 mx-2`}>Page</div>
+        <div className={`w-2/10 mx-2`}>Action</div>
       </div>
 
       {/* ROWS */}
@@ -100,6 +102,9 @@ const ClassRoster = (props: classRosterProps) => {
               handleSelect={handleSelect}
               studentStatus={studentStatus}
               handleShareStudentData={handleShareStudentData}
+              handleQuitShare={handleQuitShare}
+              handleQuitViewing={handleQuitViewing}
+              isSameStudentShared={isSameStudentShared}
             />
           </>
             ))

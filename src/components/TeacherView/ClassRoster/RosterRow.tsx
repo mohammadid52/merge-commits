@@ -5,6 +5,9 @@ import { studentObject } from '../../../state/LessonControlState';
 import ProgressSwitch from '../../General/LessonProgressSwitch';
 import ToolTip from '../../General/ToolTip/ToolTip';
 
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+
 interface RosterRowProps {
   key: number;
   number: number;
@@ -19,6 +22,9 @@ interface RosterRowProps {
   handleSelect: (e: any) => Promise<void>;
   studentStatus: (status: string) => JSX.Element;
   handleShareStudentData?: () => void;
+  handleQuitShare: () => void;
+  handleQuitViewing: () => void;
+  isSameStudentShared: boolean;
 }
 
 const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
@@ -36,6 +42,9 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     handleSelect,
     studentStatus,
     handleShareStudentData,
+    handleQuitShare,
+    handleQuitViewing,
+    isSameStudentShared,
   } = props;
   const { state, dispatch } = useContext(LessonControlContext);
   const location = useLocation();
@@ -60,69 +69,72 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     }
   }, [lessonProgress]);
 
+  const studentIsShared = () => {
+    if (/* state.studentViewing.live &&  */ state.sharing) {
+      return (
+        state.displayData.studentInfo.firstName === firstName &&
+        state.displayData.studentInfo.lastName === lastName
+      );
+    }
+  };
 
-  /**
-   * 
-   * 
-   * CODE BELOW IS FOR QUICKLY VIEWING AND IMMEDIATELY SHARING STUDENT
-   * WRITTEN SPECIFICALLY FOR THE "SHARE BUTTON" IN THE CLASS ROSTER
-   * CODE BELOW NEEDS TO BE CLEANED UP BIGTIME
-   * 
-   * 
-   */
-  // useEffect(() => {
-  //   if (state.studentViewing.live && quickShare) {
-  //     if (typeof state.displayData.studentInfo === 'undefined') {
-  //       handleShareStudentData();
-  //     } else if (state.studentViewing.studentInfo.student.id !== state.displayData.studentInfo.id) {
-  //       handleShareStudentData();
-  //     }
-
-  //     setQuickShare(false);
-  //   }
-  // }, [quickShare]);
-
-  // const handleSelect = async (e: any) => {
-  //   const { id } = e.target;
-  //   const selected = state.roster.filter((item: any) => {
-  //     return item.id === id;
-  //   });
-
-  //   // console.log('selected', id, selected[0]);
-  //   dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] });
-  // };
-
-  // const quickShareStudent = async (e: React.MouseEvent) => {
-  //   const t = e.target as HTMLElement;
-  //   const id = t.id;
-
-  //   handleSelect(e);
-  //   setQuickShare(true);
-  // };
+  const studentIsViewed = () => {
+    if (state.studentViewing.live) {
+      return state.studentViewing.studentInfo.id === id;
+    }
+  };
 
   return (
+    /**
+     *
+     * \\\\\~~ . , ` -
+     * THE WHOLE STUDENT ROW
+     * /////~~ * ` . _
+     *
+     */
     <div
       key={key}
       id={`${id}`}
-      className={`w-full flex py-2 pl-4 pr-1 
-                                    ${number % 2 === 0 ? 'bg-white bg-opacity-20' : null} 
-                                   `}>
-      <div id={`${id}`} className={`w-.5/10 text-center mx-2 text-xs flex`}>
-        {studentStatus(status)}
+      className={`w-full flex py-2 pl-2 pr-1 
+                    ${number % 2 === 0 ? 'bg-white bg-opacity-20' : null} 
+                    ${studentIsShared() ? 'bg-yellow-500 bg-opacity-60' : null}
+                    `}>
+      {/* STUDENT STATUS */}
+
+      <div id={`${id}`} className={`w-1/10 text-center text-xs flex`}>
+        {studentIsViewed() ? (
+          <div onClick={handleQuitViewing}>
+            <IconContext.Provider value={{ color: '#FFFFFF', size: '100%' }}>
+              <AiOutlineEye style={{ pointerEvents: 'none' }} />
+            </IconContext.Provider>
+          </div>
+        ) : (
+          <div>
+            <IconContext.Provider value={{ color: '#9098a9', size: '100%' }}>
+              <AiOutlineEyeInvisible style={{ pointerEvents: 'none' }} />
+            </IconContext.Provider>
+          </div>
+        )}
       </div>
+
+      {/* STUDENT NAME */}
 
       <div
         id={`${id}`}
-        className={`w-4.3/10 mx-2 flex items-center hover:underline cursor-pointer`}
+        className={`w-3.5/10 h-12 overflow-hidden mx-2 flex items-center hover:underline cursor-pointer text-sm`}
         onClick={handleSelect}>
         {preferredName ? preferredName : firstName} {lastName}
       </div>
 
+      {/* LESSON PROGRESS */}
+
       <div
         id={`${id}`}
-        className={`w-3.5/10 mx-2 flex justify-center items-center overflow-hidden`}>
+        className={`w-3.5/10 mx-2 flex justify-center items-center overflow-hidden text-sm`}>
         <ProgressSwitch label={currentLocation ? currentLocation : lessonProgress} id={id} />
       </div>
+
+      {/* STUDENT ROLEY */}
 
       {/* <div
         id={`${id}`}
@@ -132,20 +144,35 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
         {role === 'ST' ? 'Student' : role}
       </div> */}
 
+      {/* MR SHARE BUTTON */}
+
       {shareable ? (
-        <div
-          id={`${id}`}
-          className={`w-1.5/10 mx-2 flex items-center text-center rounded-lg text-white bg-sea-green`}
-          onClick={(e) => {
-            console.log('RosterRow: ', 'share')
-          }}>
-          Share
-        </div>
+        studentIsShared() ? (
+          <div
+            id={`${id}`}
+            className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-red text-sm`}
+            onClick={handleQuitShare}>
+            <span>Unshare</span>
+          </div>
+        ) : studentIsViewed() ? (
+          <div
+            id={`${id}`}
+            className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-sea-green text-sm`}
+            onClick={handleShareStudentData}>
+            <span>Share</span>
+          </div>
+        ) : (
+          <div
+            id={`${id}`}
+            className={`w-2/10 mx-2 flex items-center text-center rounded-lg font-semibold text-sea-green text-sm`}>
+            <span>Shareable</span>
+          </div>
+        )
       ) : (
         <div
           id={`${id}`}
-          className={`w-1.5/10 mx-2 flex items-center text-center rounded-lg text-light-gray bg-light-gray bg-opacity-40`}>
-          Share
+          className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-light-gray text-sm`}>
+          <span>n/a</span>
         </div>
       )}
     </div>
