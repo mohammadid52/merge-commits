@@ -106,7 +106,36 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
       id={`${id}`}
       className={`w-full flex py-2 pl-4 pr-1 
                                     ${number % 2 === 0 ? 'bg-white bg-opacity-20' : null} 
-                                   `}>
+                                    ${
+                                      /**
+                                       * 
+                                       *
+                                       * IF ROW IS SELECTED,
+                                       *  BUT ROW DOES NOT BELONG TO SOMEONE WHO IS BEING SHARED...
+                                       *    mAKE A BLUEBERRY
+                                       */
+                                      state.studentViewing.studentInfo &&
+                                      state.studentViewing.studentInfo.id === id &&
+                                      state.displayData.studentInfo.firstName !== firstName &&
+                                      state.displayData.studentInfo.lastName !== lastName
+                                        ? 'bg-blueberry bg-opacity-60'
+                                        : ''
+                                    }
+
+                                    ${
+                                      /**
+                                       * 
+                                       * IF ROW BELONMGS TO PERSON WHO IS BEING SHARED
+                                       * MAKE YELLOW BABBYYYY
+                                       * 
+                                       */
+                                      typeof state.displayData.studentInfo === 'undefined'
+                                        ? null
+                                        : state.displayData.studentInfo.firstName === firstName &&
+                                          state.displayData.studentInfo.lastName === lastName
+                                        ? 'bg-yellow-500 bg-opacity-60'
+                                        : null
+                                    }`}>
       <div id={`${id}`} className={`w-.5/10 text-center mx-2 text-xs flex`}>
         {studentStatus(status)}
       </div>

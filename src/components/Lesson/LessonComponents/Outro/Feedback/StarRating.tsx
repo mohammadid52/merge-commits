@@ -7,6 +7,7 @@ interface StarRatingProps {
   setIsRated: React.Dispatch<React.SetStateAction<boolean>>;
   rating: number;
   setRating: React.Dispatch<React.SetStateAction<number>>;
+  handleStarRating: ()=> void;
 }
 
 const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
