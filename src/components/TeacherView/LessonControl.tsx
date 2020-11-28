@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect, Suspense, lazy } from 'react';
 import { Switch, Route, Redirect, useRouteMatch, useHistory, useLocation } from 'react-router-dom';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaExpand, FaCompress, FaHome, FaRegThumbsUp, FaInfoCircle } from 'react-icons/fa';
+// import { IconContext } from 'react-icons/lib/esm/iconContext';
+// import { FaExpand, FaCompress, FaHome, FaRegThumbsUp, FaInfoCircle } from 'react-icons/fa';
 import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
 import * as customMutations from '../../customGraphql/customMutations';
 // import { API, graphqlOperation } from 'aws-amplify';
@@ -16,7 +16,8 @@ import PositiveAlert from '../General/Popup';
 import { useOutsideAlerter } from '../General/hooks/outsideAlerter';
 import Body from './Body';
 import TopMenu from './TopMenu';
-import ClassRosterTitleBar from './ClassRosterTitleBar';
+import ClassRosterTitleBar from './ClassRoster/ClassRosterTitleBar';
+import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
 
 const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
 const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
@@ -44,14 +45,14 @@ const LessonControl = () => {
     });
   };
 
-  const firstInitialFunc = (str: string) => {
-    if (typeof str !== 'string' || str === '') {
-      return 'Profile';
-    }
-    let firstInitial = str.charAt(0);
-    firstInitial = firstInitial.toUpperCase() + '.';
-    return firstInitial;
-  };
+  // const firstInitialFunc = (str: string) => {
+  //   if (typeof str !== 'string' || str === '') {
+  //     return 'Profile';
+  //   }
+  //   let firstInitial = str.charAt(0);
+  //   firstInitial = firstInitial.toUpperCase() + '.';
+  //   return firstInitial;
+  // };
 
   const handleUpdateClassroom = async () => {
     let updatedClassroomData: any = {
@@ -351,19 +352,17 @@ const LessonControl = () => {
         />
         {/* END TOP MENU */}
 
-        <div className={`w-full h-8.5/10 flex p-3 pb-5 rounded-lg`}>
+        <div className={`w-full h-8.5/10 flex rounded-lg`}>
           {/* LEFT SECTION */}
           <div
             className={`${
               fullscreen ? 'hidden' : ''
-            } w-4/10 min-w-100 max-w-160 h-full pr-4 flex flex-col items-center`}>
+            } w-4/10 min-w-100 max-w-160 h-full flex flex-col items-center `}>
             <div className={`h-full w-full flex flex-col justify-between items-center`}>
-              <div
-                className={`h-.8/10 w-full px-4 bg-dark-gray rounded-lg flex justify-between items-center text-2xl text-gray-200 font-medium`}>
-                <ClassRosterTitleBar handleResetDoneCounter={handleResetDoneCounter} />
-              </div>
+              
+              <ClassRosterTitleBar handleResetDoneCounter={handleResetDoneCounter} />
 
-              <div className={`h-9/10`}>
+              <div className={`h-full`}>
                 <ClassRoster
                   handleUpdateClassroom={handleUpdateClassroom}
                   handleShareStudentData={handleShareStudentData}
@@ -378,13 +377,23 @@ const LessonControl = () => {
           {/* RIGHT SECTION */}
           <div
             className={`relative 
-            ${fullscreen ? 'w-full' : 'w-6/10'} lg:w-full h-full flex flex-col items-center`}>
+            ${fullscreen ? 'w-full' : 'w-6/10'} relative 
+            w-6/10 lg:w-full h-full flex flex-col items-center`}>
+
+            <StudentWindowTitleBar 
+              setFullscreenInstructions={setFullscreenInstructions}
+              fullscreenInstructions={fullscreenInstructions}
+              handleFullscreen={handleFullscreen}
+              fullscreen={fullscreen}
+            />
+
             <div
               className={`
               ${fullscreen ? 'h-full' : 'h-full'}
               ${theme.bg} 
-              relative w-full 
-              rounded-lg p-4 overflow-y-scroll overflow-x-hidden`}>
+              relative w-full p-4 
+              border-t-2 border-black
+              overflow-y-scroll overflow-x-hidden`}>
               <Suspense
                 fallback={
                   <div className='min-h-screen w-full flex flex-col justify-center items-center'>
@@ -408,88 +417,7 @@ const LessonControl = () => {
 
               </Suspense>
             </div>
-
-            {/* ICONS TOP RIGHT */}
-            <div className='cursor-pointer w-full text-xl z-50' onClick={()=>setFullscreenInstructions(!fullscreenInstructions)}>
-              <IconContext.Provider
-                value={{
-                  color: '#E2E8F0',
-                  size: '2rem',
-                  style: {
-                    width: 'auto',
-                    right: '1rem',
-                    top: '0',
-                    position: 'absolute',
-                    marginRight: '3rem',
-                    marginTop: '.5rem',
-                    zIndex: 50,
-                  },
-                }}>
-                <FaInfoCircle />
-              </IconContext.Provider>
-            </div>
-
-            <div className='cursor-pointer w-full text-xl z-50' onClick={handleFullscreen}>
-              <IconContext.Provider
-                value={{
-                  color: '#E2E8F0',
-                  size: '2rem',
-                  style: {
-                    width: 'auto',
-                    right: '1rem',
-                    top: '0',
-                    position: 'absolute',
-                    marginRight: '.5rem',
-                    marginTop: '.5rem',
-                    zIndex: 50,
-                  },
-                }}>
-                {fullscreen ? <FaCompress /> : <FaExpand />}
-              </IconContext.Provider>
-            </div>
-            
-            {/* ICONS TOP RIGHT */}
-
-            {/* <div
-              className={`${
-                fullscreen ? 'hidden' : ''
-              } relative flex flex-col justify-center items-center`}>
-              <div className='relative w-full flex flex-row my-2 font-bold text-xs'>
-                <p>Control: </p>
-
-                <div className='absolute right-0 w-auto transform -translate-y-2'>
-                  <ToolTip
-                    color='black'
-                    width='w-96'
-                    position='top-left'
-                    header=''
-                    content={
-                      <div className='flex'>
-                        <div className='flex flex-col'>
-                          <h1 className='font-bold'>View:</h1>
-                          <p>view the page</p>
-                        </div>
-                        <div className='flex flex-col px-1'>
-                          <h1 className='font-bold'>Close/Open:</h1>
-                          <p>the students can progress to this component</p>
-                        </div>
-                        <div className='flex flex-col px-1'>
-                          <h1 className='font-bold'>Enable/Disable:</h1>
-                          <p>
-                            the students will be able to see/unsee this component on their footer
-                          </p>
-                        </div>
-                      </div>
-                    }
-                  />
-                </div>
-              </div>
-
-              <LessonControlBar />
-            </div> */}
-
-
-
+        
           </div>
         </div>
       </div>

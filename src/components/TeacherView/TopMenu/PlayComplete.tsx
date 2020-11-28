@@ -17,49 +17,58 @@ const PlayComplete: React.FC<PlayCompleteProps> = (props: PlayCompleteProps) => 
   const { state, theme, dispatch } = useContext(LessonControlContext);
 
   return (
-    <div className='w-auto h-12 flex flex-row items-center text-sm'>
-      <div className='w-8 h-8'>
-        {/* START BUTTON */}
-        {!state.open ? (
-          <div
-            className='w-full bg-sea-green hover:bg-green-400 text-white cursor-pointer  w-24 mt-0 p-2 leading-none rounded-lg flex items-center justify-center text-center border border-light-gray'
-            onClick={() => {
-              !state.open ? handleOpen() : null;
-            }}>
-            <IconContext.Provider value={{ size: '1rem' }}>
-              <FaPlay />
-            </IconContext.Provider>
-          </div>
-        ) : (
-          <div className='w-full bg-dark-gray bg-opacity-20 text-white w-24 mt-0 p-2 leading-none rounded-lg flex items-center justify-center text-center border border-light-gray'>
-            <IconContext.Provider value={{ size: '1rem' }}>
-              <FaPlay />
-            </IconContext.Provider>
-          </div>
-        )}
-      </div>
+    <>
 
-      <div className='w-8 h-8'>
-        {/* COMPLETE BUTTON */}
-        {state.open ? (
-          <div
-            className='w-full bg-dark-red hover:bg-red-700 text-white cursor-pointer w-24 mb-0 p-2 leading-none rounded-lg flex items-center justify-center text-center border border-light-gray'
-            onClick={() => {
-              state.open ? handleLessonButton() : null;
-            }}>
-            <IconContext.Provider value={{ size: '1rem' }}>
+      {/* START BUTTON */}
+      {!state.open ? (
+        <span
+          className='w-auto font-bold text-blueberry hover:text-blue-500 hover:text-underline cursor-pointer'
+          onClick={() => {
+            !state.open ? handleOpen() : null;
+          }}>
+          Start
+          {/* <IconContext.Provider value={{ size: '1rem' }}>
+              <FaPlay />
+            </IconContext.Provider> */}
+        </span>
+      ) : (
+        <span className='w-auto bg-opacity-20 text-light-gray'>
+          Start
+          {/* <IconContext.Provider value={{ size: '1rem' }}>
+              <FaPlay />
+            </IconContext.Provider> */}
+        </span>
+      )}
+
+      
+      
+      {/* START-COMPLETE DIVIDER */}
+      <span className='w-auto'> / </span>
+
+      
+      
+      {/* COMPLETE BUTTON */}
+      {state.open ? (
+        <span
+          className='w-auto font-bold text-blueberry hover:text-blue-500 hover:text-underline cursor-pointer'
+          onClick={() => {
+            state.open ? handleLessonButton() : null;
+          }}>
+          Complete
+          {/* <IconContext.Provider value={{ size: '1rem' }}>
               <FaFlagCheckered />
-            </IconContext.Provider>
-          </div>
-        ) : (
-          <div className='w-full bg-dark-red text-gray-200 cursor-pointer w-24 mb-0 p-2 leading-none rounded-lg flex items-center justify-center text-center border border-light-gray'>
-            <IconContext.Provider value={{ size: '1rem' }}>
+            </IconContext.Provider> */}
+        </span>
+      ) : (
+        <span className='w-auto bg-opacity-20 text-light-gray'>
+          Complete
+          {/* <IconContext.Provider value={{ size: '1rem' }}>
               <FaFlagCheckered />
-            </IconContext.Provider>
-          </div>
-        )}
-      </div>
-    </div>
+            </IconContext.Provider> */}
+        </span>
+      )}
+
+    </>
   );
 };
 

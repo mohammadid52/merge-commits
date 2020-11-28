@@ -40,7 +40,10 @@ const WritingBlock = (props: WritingBlockProps) => {
         lines: state.componentState.poem && state.componentState.poem.lines ? state.componentState.poem.lines : initialLines,
     });
 
+    const [menuToggled,  setMenuToggled] = useState<boolean>(false);
+
     useEffect(() => {
+        
         if (cookies[`lesson-${state.classroomID}`]?.poem?.lines && cookies[`lesson-${state.classroomID}`]?.poem?.lines?.length >= lineNo) {
             setLineState(prev => {
                 return {
@@ -49,6 +52,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                 }
             })
         }
+
     }, [])
 
     useEffect(() => {
@@ -180,6 +184,9 @@ const WritingBlock = (props: WritingBlockProps) => {
 
     const handleMenuToggle = (e: any) => {
         const { id } = e.target;
+
+        setMenuToggled(true);
+
         setLineState(lineState => {
             return {
                 ...lineState,
@@ -259,7 +266,7 @@ const WritingBlock = (props: WritingBlockProps) => {
 
     }
 
-    console.log(state, 'state')
+    // console.log(state, 'state')
 
     return (
         <div className='w-full flex flex-col'>
@@ -356,7 +363,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                                             <div className='relative w-full'>
                                                 <input
                                                     id={id}
-                                                    className={` ${line.menuOpen ? 'rounded-tl-xl border-t border-l border-r border-white' : 'rounded-l-xl'}  ${theme.elem.textInput}`}
+                                                    className={` ${line.menuOpen && menuToggled ? 'rounded-tl-xl border-t border-l border-r border-white' : 'rounded-l-xl'}  ${theme.elem.textInput}`}
                                                     name={id}
                                                     type='text'
                                                     value={line.text}
@@ -365,7 +372,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                                                 />
 
                                             {/* MAP AVAILABLE LINE PROMPTS */}
-                                                {line.menuOpen ? (
+                                                {line.menuOpen && menuToggled ? (
                                                     <div className={`absolute left-0 h-48 overflow-y-scroll w-full rounded-b-xl z-50 shadow-xlwhite border-b border-l border-r border-white ${theme.elem.textInput}`}>
                                                         {lineState.prompts.map((prompt: any, key: number) => (
                                                             <div

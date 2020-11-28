@@ -73,13 +73,13 @@ const ClassRoster = (props: classRosterProps) => {
 
   return (
     <div
-      className={`w-full h-full bg-gray-500 shadow-inner-dark rounded-lg pt-4 overflow-y-scroll overflow-x-auto`}>
+      className={`w-full h-full bg-gray-500 overflow-y-auto overflow-x-hidden border-r-2 border-t-2 border-black`}>
       {/* TABLE HEAD */}
-      <div className={`w-full flex py-2 pl-2 pr-1 `}>
-        <div className={`w-1/10 mx-2 text-center`}></div>
-        <div className={`w-3.5/10 mx-2`}>Name</div>
-        <div className={`w-3.5/10 mx-2`}>Page</div>
-        <div className={`w-2/10 mx-2`}>Action</div>
+      <div className={`w-full h-8 flex py-2 pl-2 pr-1 text-white bg-darker-gray bg-opacity-80`}>
+        <div className={`w-1/10 text-center text-xs flex`}></div>
+        <div className={`w-3.5/10 overflow-hidden mx-2 flex items-center hover:underline cursor-pointer text-sm`}>Students <span className='font-bold'>( {state.roster.length} )</span></div>
+        <div className={`w-3.5/10 mx-2 flex justify-center items-center overflow-hidden text-sm text-center`}>Page</div>
+        <div className={`w-2/10 mx-2 flex items-center justify-center rounded-lg text-sm`}>Action</div>
       </div>
 
       {/* ROWS */}
@@ -90,6 +90,7 @@ const ClassRoster = (props: classRosterProps) => {
             <>
             <RosterRow
               key={key}
+              keyProp={key}
               number={key}
               id={item.id}
               status={item.status}

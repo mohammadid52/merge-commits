@@ -9,35 +9,35 @@ type LabelProps = {
 const FooterLabels = ({ label }: LabelProps) => {
   switch (label) {
     case 'Intro':
-      return <div>Intro</div>;
+      return <div className='whitespace-pre'>Intro</div>;
     case 'Warmup':
-      return <div>Warm Up</div>;
+      return <div className='whitespace-pre'>Warm Up</div>;
     case 'Corelesson':
-      return <div>Core Lesson</div>;
+      return <div className='whitespace-pre'>Core Lesson</div>;
     case 'Activity':
-      return <div>Activity</div>;
+      return <div className='whitespace-pre'>Activity</div>;
     case label.includes('checkpoint?'):
-      return <div>Checkpoint</div>;
+      return <div className='whitespace-pre'>Checkpoint</div>;
     case 'Checkpoint?id=1':
-      return <div>Checkpoint</div>;
+      return <div className='whitespace-pre'>Checkpoint</div>;
     case 'Checkpoint?id=8':
-      return <div>Checkpoint</div>;
+      return <div className='whitespace-pre'>Checkpoint</div>;
     case 'Checkpoint?id=9':
-      return <div>Checkpoint</div>;
+      return <div className='whitespace-pre'>Checkpoint</div>;
     case 'Checkpoint?id=10':
-      return <div>Checkpoint</div>;
+      return <div className='whitespace-pre'>Checkpoint</div>;
     case 'Checkpoint?id=11':
-      return <div>Checkpoint</div>;
+      return <div className='whitespace-pre'>Checkpoint</div>;
     case 'Checkpoint?id=12':
-      return <div>Checkpoint</div>;
+      return <div className='whitespace-pre'>Checkpoint</div>;
     case 'Warmup/breakdown':
-      return <div>Breakdown</div>;
+      return <div className='whitespace-pre'>Breakdown</div>;
     case 'Corelesson/breakdown':
-      return <div>Breakdown</div>;
+      return <div className='whitespace-pre'>Breakdown</div>;
     case 'Activity/breakdown':
-      return <div>Breakdown</div>;
+      return <div className='whitespace-pre'>Breakdown</div>;
     case 'Outro':
-      return <div>Outro</div>;
+      return <div className='whitespace-pre'>Outro</div>;
     default:
       return label;
   }

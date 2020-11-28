@@ -16,7 +16,8 @@ const LessonControlBar = () => {
 
   return (
     <div className='relative w-full h-full md:flex flex-col items-center justify-center content-center px-2 z-0'>
-      <div className='w-full flex flex-row items-center justify-between cursor-pointer'>
+      <ol className='relative w-full cursor-pointer 
+      bg-white rounded-md shadow px-2 flex justify-between'>
         {state.pages.map(
           (
             page: {
@@ -26,7 +27,7 @@ const LessonControlBar = () => {
               open: boolean;
               disabled: boolean;
             },
-            key: React.ReactText
+            key: number
           ) => (
             <StageButton
               iconID={key}
@@ -42,7 +43,7 @@ const LessonControlBar = () => {
             />
           )
         )}
-      </div>
+      </ol>
     </div>
   );
 };

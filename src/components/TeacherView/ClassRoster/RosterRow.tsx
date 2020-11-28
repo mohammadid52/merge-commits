@@ -9,7 +9,7 @@ import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 interface RosterRowProps {
-  key: number;
+  keyProp: number;
   number: number;
   id: string;
   status: string;
@@ -29,7 +29,7 @@ interface RosterRowProps {
 
 const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
   const {
-    key,
+    keyProp,
     number,
     id,
     status,
@@ -93,9 +93,9 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
      *
      */
     <div
-      key={key}
+      key={keyProp}
       id={`${id}`}
-      className={`w-full flex py-2 pl-2 pr-1 
+      className={`w-full flex h-10 py-2 pl-2 pr-1 
                     ${number % 2 === 0 ? 'bg-white bg-opacity-20' : null} 
                     ${studentIsShared() ? 'bg-yellow-500 bg-opacity-60' : null}
                     `}>
@@ -121,7 +121,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
 
       <div
         id={`${id}`}
-        className={`w-3.5/10 h-12 overflow-hidden mx-2 flex items-center hover:underline cursor-pointer text-sm`}
+        className={`w-3.5/10 overflow-hidden mx-2 flex items-center hover:underline cursor-pointer text-sm whitespace-pre`}
         onClick={handleSelect}>
         {preferredName ? preferredName : firstName} {lastName}
       </div>
@@ -130,7 +130,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
 
       <div
         id={`${id}`}
-        className={`w-3.5/10 mx-2 flex justify-center items-center overflow-hidden text-sm`}>
+        className={`w-3.5/10 mx-2 flex justify-center items-center overflow-hidden text-sm text-center`}>
         <ProgressSwitch label={currentLocation ? currentLocation : lessonProgress} id={id} />
       </div>
 
