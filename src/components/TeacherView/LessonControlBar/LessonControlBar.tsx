@@ -3,7 +3,13 @@ import StageButton from './StageButton';
 import LessonControl from '../LessonControl';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 
-const LessonControlBar = () => {
+interface LessonControlBarProps {
+  pageViewed: {pageID: number, stage: string};
+  setPageViewed: React.Dispatch<React.SetStateAction<object>>;
+}
+
+const LessonControlBar: React.FC<LessonControlBarProps> = (props: LessonControlBarProps) => {
+  const {pageViewed, setPageViewed} = props;
   const { state } = useContext(LessonControlContext);
   const [menuOpen, setMenuOpen] = useState<null | string>(null);
 
@@ -40,6 +46,8 @@ const LessonControlBar = () => {
               breakdown={page.breakdown ? page.breakdown : null}
               menuOpen={menuOpen === page.stage ? true : false}
               handleOpenMenu={handleOpenMenu}
+              pageViewed={pageViewed}
+              setPageViewed={setPageViewed}
             />
           )
         )}

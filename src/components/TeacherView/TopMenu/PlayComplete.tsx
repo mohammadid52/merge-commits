@@ -1,12 +1,6 @@
 import React, { useContext, useState, useEffect, Suspense, lazy } from 'react';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 
-import LessonControlBar from '../LessonControlBar/LessonControlBar';
-
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaPlay, FaFlagCheckered, FaHome } from 'react-icons/fa';
-import { FiUsers, FiMenu } from 'react-icons/fi';
-
 interface PlayCompleteProps {
   handleOpen: () => void;
   handleLessonButton: () => void;
@@ -19,54 +13,26 @@ const PlayComplete: React.FC<PlayCompleteProps> = (props: PlayCompleteProps) => 
   return (
     <>
 
-      {/* START BUTTON */}
+      {/* START / COMPLETE BUTTON */}
       {!state.open ? (
         <span
-          className='w-auto font-bold text-blueberry hover:text-blue-500 hover:text-underline cursor-pointer'
+          className='w-auto h-6 my-auto mr-2 leading-4 text-xs text-white bg-sea-green hover:bg-green-500 hover:text-underline p-1 rounded-lg cursor-pointer'
           onClick={() => {
             !state.open ? handleOpen() : null;
           }}>
           Start
-          {/* <IconContext.Provider value={{ size: '1rem' }}>
-              <FaPlay />
-            </IconContext.Provider> */}
         </span>
-      ) : (
-        <span className='w-auto bg-opacity-20 text-light-gray'>
-          Start
-          {/* <IconContext.Provider value={{ size: '1rem' }}>
-              <FaPlay />
-            </IconContext.Provider> */}
-        </span>
-      )}
+      ) : null}
 
-      
-      
-      {/* START-COMPLETE DIVIDER */}
-      <span className='w-auto'> / </span>
-
-      
-      
-      {/* COMPLETE BUTTON */}
       {state.open ? (
         <span
-          className='w-auto font-bold text-blueberry hover:text-blue-500 hover:text-underline cursor-pointer'
+          className='w-auto h-6 my-auto  mr-2 leading-4 text-xs text-white bg-blueberry hover:bg-blue-500 hover:text-underline p-1 rounded-lg cursor-pointer'
           onClick={() => {
             state.open ? handleLessonButton() : null;
           }}>
           Complete
-          {/* <IconContext.Provider value={{ size: '1rem' }}>
-              <FaFlagCheckered />
-            </IconContext.Provider> */}
         </span>
-      ) : (
-        <span className='w-auto bg-opacity-20 text-light-gray'>
-          Complete
-          {/* <IconContext.Provider value={{ size: '1rem' }}>
-              <FaFlagCheckered />
-            </IconContext.Provider> */}
-        </span>
-      )}
+      ) : null}
 
     </>
   );

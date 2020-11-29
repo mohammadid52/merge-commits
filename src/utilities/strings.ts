@@ -6,6 +6,10 @@ export const parseBlankLines = (inputText: string) => {
   }
 }
 
+export const lc = (inputText: string): string => {
+  return inputText.toLowerCase();
+}
+
 export const firstInitialFunc = (str: string) => {
   if (typeof str !== 'string' || str === '') { return 'Profile' }
   let firstInitial = str.charAt(0)

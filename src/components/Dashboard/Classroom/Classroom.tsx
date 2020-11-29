@@ -127,9 +127,7 @@ const Classroom: React.FC = () => {
     }
 
     if (state.user.onBoardSurvey) {
-      // console.log('user', state.user);
       setSurvey(() => {
-        // console.log('setFalse');
         return {
           ...survey,
           display: false,
@@ -138,9 +136,7 @@ const Classroom: React.FC = () => {
     }
 
     if (!state.user.onBoardSurvey) {
-      // console.log('user', state.user);
       setSurvey(() => {
-        // console.log('setTrue');
         return {
           ...survey,
           display: true,

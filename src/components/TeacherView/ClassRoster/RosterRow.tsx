@@ -97,11 +97,13 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
       id={`${id}`}
       className={`w-full flex h-10 py-2 pl-2 pr-1 
                     ${number % 2 === 0 ? 'bg-white bg-opacity-20' : null} 
-                    ${studentIsShared() ? 'bg-yellow-500 bg-opacity-60' : null}
+                    ${studentIsViewed() ? 'bg-blueberry bg-opacity-30' : null}
                     `}>
+     
+     
       {/* STUDENT STATUS */}
 
-      <div id={`${id}`} className={`w-1/10 text-center text-xs flex`}>
+      {/* <div id={`${id}`} className={`w-1/10 text-center text-xs flex`}>
         {studentIsViewed() ? (
           <div onClick={handleQuitViewing}>
             <IconContext.Provider value={{ color: '#FFFFFF', size: '100%' }}>
@@ -115,7 +117,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
             </IconContext.Provider>
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* STUDENT NAME */}
 
@@ -130,7 +132,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
 
       <div
         id={`${id}`}
-        className={`w-3.5/10 mx-2 flex justify-center items-center overflow-hidden text-sm text-center`}>
+        className={`w-3.5/10 mx-2 flex justify-center items-center overflow-hidden text-sm text-left`}>
         <ProgressSwitch label={currentLocation ? currentLocation : lessonProgress} id={id} />
       </div>
 
@@ -150,14 +152,14 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
         studentIsShared() ? (
           <div
             id={`${id}`}
-            className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-red text-sm`}
+            className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-red hover:bg-red-500 text-sm`}
             onClick={handleQuitShare}>
             <span>Unshare</span>
           </div>
         ) : studentIsViewed() ? (
           <div
             id={`${id}`}
-            className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-sea-green text-sm`}
+            className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-sea-green hover:bg-green-400 text-sm`}
             onClick={handleShareStudentData}>
             <span>Share</span>
           </div>

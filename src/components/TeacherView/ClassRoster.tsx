@@ -1,9 +1,14 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import { studentObject } from '../../state/LessonControlState';
 import ProgressSwitch from '../General/LessonProgressSwitch';
 import ToolTip from '../General/ToolTip/ToolTip';
 import RosterRow from './ClassRoster/RosterRow';
+
+/**
+ * Function imports
+ */
+import {lc} from '../../utilities/strings';
 
 interface classRosterProps {
   handleUpdateClassroom: () => Promise<void>;
@@ -11,13 +16,76 @@ interface classRosterProps {
   handleQuitShare: () => void;
   handleQuitViewing: () => void;
   isSameStudentShared: boolean;
+  setPageViewed: React.Dispatch<React.SetStateAction<object>>;
+}
+
+enum SortByEnum {
+  FNAME = 'firstName',
+  PAGE = 'lessonProgress',
+  ACTION = 'action',
 }
 
 const ClassRoster = (props: classRosterProps) => {
-  const { handleUpdateClassroom, handleShareStudentData, isSameStudentShared, handleQuitShare, handleQuitViewing } = props;
+  const { handleUpdateClassroom, handleShareStudentData, isSameStudentShared, handleQuitShare, handleQuitViewing, setPageViewed } = props;
   const { state, dispatch } = useContext(LessonControlContext);
+  const [sortBy, setSortBy] = useState<string>('');
 
-  // console.log(state.roster)
+
+  /**
+   * UPDATE THIS SORT FUNCTION TO SORT CONTEXT
+   * @param column - which column you want sorted
+   */
+  const sortStudentBy = (column: string) => {
+    const thereAreStudents = state.roster && state.roster.length > 0;
+
+    if(thereAreStudents){
+      if(column === SortByEnum.FNAME){
+        return state.roster.sort((a:any, b: any)=>{
+          if(lc(a.student[column]) < lc(b.student[column])){
+            return -1;
+          } else {
+            return 1;
+          }
+        })
+      } 
+
+      if(column === SortByEnum.PAGE){
+        return state.roster.sort((a:any, b: any)=>{
+          if(lc(a.lessonProgress) < lc(b.lessonProgress)){
+            return -1;
+          } else {
+            return 1;
+          }
+        })
+      } 
+      
+      if(column === SortByEnum.ACTION) {
+        return state.roster.sort((a:any, b: any)=>{
+          if(a.lessonProgress.includes('breakdown') && b.lessonProgress.includes('breakdown') === false){
+            return -1;
+          } else {
+            return 1;
+          }
+        })
+      }
+    }
+  }
+
+  const studentRoster = () => {
+    switch(sortBy){
+      case 'firstName':
+        return sortStudentBy(SortByEnum.FNAME);
+        break;
+      case 'lessonProgress':
+        return sortStudentBy(SortByEnum.PAGE);
+        break;
+      case 'action':
+        return sortStudentBy(SortByEnum.ACTION);
+        break;
+      default:
+        return state.roster;
+    }
+  }
 
   const handleSelect = async (e: any) => {
     const { id } = e.target;
@@ -73,20 +141,26 @@ const ClassRoster = (props: classRosterProps) => {
 
   return (
     <div
-      className={`w-full h-full bg-gray-500 overflow-y-auto overflow-x-hidden border-r-2 border-t-2 border-black`}>
+      className={`w-full h-full bg-light-gray bg-opacity-20 overflow-y-auto overflow-x-hidden border-r-2 border-t-2 border-black`}>
       {/* TABLE HEAD */}
       <div className={`w-full h-8 flex py-2 pl-2 pr-1 text-white bg-darker-gray bg-opacity-80`}>
-        <div className={`w-1/10 text-center text-xs flex`}></div>
-        <div className={`w-3.5/10 overflow-hidden mx-2 flex items-center hover:underline cursor-pointer text-sm`}>Students <span className='font-bold'>( {state.roster.length} )</span></div>
-        <div className={`w-3.5/10 mx-2 flex justify-center items-center overflow-hidden text-sm text-center`}>Page</div>
-        <div className={`w-2/10 mx-2 flex items-center justify-center rounded-lg text-sm`}>Action</div>
+        {/* <div className={`w-1/10 text-center text-xs flex`}></div> */}
+        <div className={`w-3.5/10 overflow-hidden mx-2 flex items-center hover:underline cursor-pointer text-xs`}
+          
+        >Students <span className='font-bold'>( {state.roster.length} )</span></div>
+        <div className={`w-3.5/10 mx-2 flex items-center overflow-hidden text-center text-xs `}
+          
+        >Current Page</div>
+        <div className={`w-2/10 mx-2 flex items-center justify-center rounded-lg text-xs`}
+          
+        >Action</div>
       </div>
 
       {/* ROWS */}
       <div className={`w-full flex flex-col items-center`}>
         {/* STUDENTS */}
         {state.roster && state.roster.length > 0
-          ? state.roster.map((item: any, key: number) => (
+          ? studentRoster().map((item: any, key: number) => (
             <>
             <RosterRow
               key={key}

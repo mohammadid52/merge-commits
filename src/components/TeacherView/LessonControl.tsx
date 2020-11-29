@@ -25,6 +25,7 @@ const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView
 const OutroView = lazy(() => import('./ComponentViews/OutroView/OutroView'));
 const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'));
 
+
 const LessonControl = () => {
   const { state, theme, dispatch } = useContext(LessonControlContext);
   const match = useRouteMatch();
@@ -33,11 +34,14 @@ const LessonControl = () => {
   const [fullscreen, setFullscreen] = useState(false);
   const [fullscreenInstructions, setFullscreenInstructions] = useState(false);
 
-  const [shareable, setShareable] = useState(false); // THIS ROW MOVED TO RosterRow.tsx, NEEDS TO BE DELETED
+  const [shareable, setShareable] = useState(false); // THIS ROW COPIED TO RosterRow.tsx, NEEDS TO BE REFACTORED
 
   const [isSameStudentShared, setIsSameStudentShared] = useState(false);
   const [open, setOpen] = useState(state.open);
-  console.log(state, 'state');
+  const [pageViewed, setPageViewed] = useState({
+    pageID: 0,
+    stage: 'intro'
+  });
 
   const handleFullscreen = () => {
     setFullscreen((fullscreen) => {
@@ -45,14 +49,6 @@ const LessonControl = () => {
     });
   };
 
-  // const firstInitialFunc = (str: string) => {
-  //   if (typeof str !== 'string' || str === '') {
-  //     return 'Profile';
-  //   }
-  //   let firstInitial = str.charAt(0);
-  //   firstInitial = firstInitial.toUpperCase() + '.';
-  //   return firstInitial;
-  // };
 
   const handleUpdateClassroom = async () => {
     let updatedClassroomData: any = {
@@ -349,6 +345,8 @@ const LessonControl = () => {
           handleQuitShare={handleQuitShare}
           handleClick={handleClick}
           handleHomePopup={handleHomePopup}
+          pageViewed={pageViewed}
+          setPageViewed={setPageViewed}
         />
         {/* END TOP MENU */}
 
@@ -369,6 +367,7 @@ const LessonControl = () => {
                   isSameStudentShared={isSameStudentShared}
                   handleQuitShare={handleQuitShare}
                   handleQuitViewing={handleQuitViewing}
+                  setPageViewed={setPageViewed}
                 />
               </div>
             </div>
@@ -385,6 +384,8 @@ const LessonControl = () => {
               fullscreenInstructions={fullscreenInstructions}
               handleFullscreen={handleFullscreen}
               fullscreen={fullscreen}
+              pageViewed={pageViewed}
+              setPageViewed={setPageViewed}
             />
 
             <div

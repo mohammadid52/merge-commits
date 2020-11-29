@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect, Suspense, lazy } from 'react';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 
+import LessonInfoTitleBar from './TopMenu/LessonInfoTitleBar';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
 import PlayComplete from './TopMenu/PlayComplete';
 
@@ -22,6 +23,8 @@ interface TopMenuControlProps {
   handleQuitShare: () => void;
   handleClick: () => void;
   handleHomePopup: () => void;
+  pageViewed: {pageID: number, stage: string};
+  setPageViewed: React.Dispatch<React.SetStateAction<object>>;
 }
 
 const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProps) => {
@@ -36,6 +39,8 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
     handleQuitShare,
     handleClick,
     handleHomePopup,
+    pageViewed,
+    setPageViewed
   } = props;
 
   const { state, theme, dispatch } = useContext(LessonControlContext);
@@ -47,15 +52,10 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
       <div
         className={`relative  h-0.5/10 h-8 top-0 font-medium bg-light-gray bg-opacity-10 border-b border-gray-400 flex flex-row items-center z-100`}>
         {/* LEFT */}
-        <div className='h-full w-4/10 min-w-100 max-w-160 border-r border-white bg-light-gray bg-opacity-20 pl-2 flex flex-row justify-between '>
-          <div title='title' className='h-8 align-middle font-bold text-xs leading-8 '>
-            Lesson:
-          </div>
-
-          {/* <div className='w-32 flex flex-col text-center'>
-            <div className='h-8 align-middle font-bold text-xs leading-8 '>Control:</div>
-          </div> */}
-        </div>
+        <LessonInfoTitleBar 
+          handleOpen={handleOpen}
+          handleLessonButton={handleLessonButton}
+        />
 
         {/* RIGHT */}
         <div
@@ -78,12 +78,10 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
         {/* LEFT */}
         <div className='h-full  w-4/10 min-w-100 max-w-160 border-r border-white bg-light-gray bg-opacity-10 pl-2 flex flex-row justify-between '>
           <div className='w-full flex flex-col my-auto'>
-            <h1 className={`text-3xl font-medium`}>"{state.data.lesson.title}"</h1>
-            <div className='flex flex-row text-xs'>
-              <span className='w-auto mr-4'>Control: </span>
-              <PlayComplete handleOpen={handleOpen} handleLessonButton={handleLessonButton} />
-            </div>
+            
+            <p className='text-xs'>Topic: Identity</p>
             <p className='text-xs'>Start Date: {state.expectedStartDate}</p>
+            <p className='text-xs'>Estimated Time: 1 hr 15 mins</p>
           </div>
         </div>
 
@@ -92,45 +90,13 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
         {/* CONTROL START */}
         <div
           className='relative 
-            w-6/10 lg:w-full h-full flex flex-col items-center z-100'>
-          <LessonControlBar />
+            w-6/10 lg:w-full h-20 flex flex-col items-center z-100'>
+          <LessonControlBar 
+            pageViewed={pageViewed}
+            setPageViewed={setPageViewed}
+          />
           
-          {/* BUTTONS */}
-          {/* <div className='w-auto mr-4 flex flex-col content-between '>
-            <div className='relative flex flex-col my-auto justify-around'>
-              <div className='hover:animate-jiggle' onClick={() => setHamburgerOpen(!hamburgerOpen)}>
-                <IconContext.Provider value={{ size: '1.5rem' }}>
-                  <FiMenu />
-                </IconContext.Provider>
-              </div>
-
-              <div className='relative w-full'>
-                <div
-                  className={`${hamburgerOpen ? 'visible animate-fadeIn' : 'hidden'
-                    } w-32 absolute bg-white shadow-xl overflow-hidden z-100 right-1/2 transform  rounded-lg`}>
-                  <div
-                    className='relative h-auto w-full p-2 flex flex-col content-between justify-center items-center text-center text-sm cursor-pointer px-2 hover:bg-blueberry hover:bg-opacity-20'
-                    onClick={handleClick}>
-                    <IconContext.Provider value={{ size: '1.5rem' }}>
-                      <FiUsers />
-                    </IconContext.Provider>
-                  User Management
-                </div>
-                  <div
-                    className='relative h-auto w-full p-2 flex flex-col content-between justify-center items-center text-center text-sm cursor-pointer px-2 hover:bg-blueberry hover:bg-opacity-20'
-                    onClick={handleHomePopup}>
-                    <IconContext.Provider value={{ size: '1.5rem' }}>
-                      <FaHome />
-                    </IconContext.Provider>
-                  Home
-                </div>
-                </div>
-              </div>
-            </div>
-          </div> */}
-
-
-
+         
         </div>
         {/* CONTROL END */}
 
