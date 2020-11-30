@@ -4,6 +4,7 @@ import Banner from './Banner';
 import ReflectionQuestions from './ReflectionQuestions';
 import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaExpand, FaCompress } from 'react-icons/fa';
+import PoemOutput from './PoemOutput';
 
 
 interface teacherData {
@@ -27,7 +28,7 @@ const CoopDisplay = () => {
     const [fullscreen, setFullscreen] = useState(false);
     const student = state.displayData.studentInfo;
 
-    const [ teacherData, setTeacherData ] = useState<teacherData>();
+    const [teacherData, setTeacherData] = useState<teacherData>();
 
     const handleFullscreen = () => {
         setFullscreen(fullscreen => {
@@ -43,69 +44,73 @@ const CoopDisplay = () => {
     }
 
     useEffect(() => {
-        if ( state.displayData && state.displayData.breakdownComponent && state.displayData.breakdownComponent === 'activity/breakdown' ) {
+        if (state.displayData && state.displayData.breakdownComponent && state.displayData.breakdownComponent === 'activity/breakdown') {
             // console.log( 'got it', state.displayData );
             setTeacherData(state.displayData)
         }
     }, [state.displayData])
 
     useEffect(() => {
-        dispatch({type: 'ACTIVATE_LESSON', payload: 'activity/breakdown'})
+        dispatch({ type: 'ACTIVATE_LESSON', payload: 'activity/breakdown' })
     }, [])
 
     return (
-        <div className="w-full h-full flex flex-col justify-between items-center">
-            <div className="h-8.3/10 flex justify-between items-center">
+        <div className={theme.section}>
+            
 
-            {/* self display */}
-            <div className={`${fullscreen ? 'hidden' : 'w-4.8/10'}  h-full flex flex-col justify-between items-center`}>
-                <Banner title={displayProps ? displayProps.title : null} 
-                    display="SELFinCOOP" fullscreen={fullscreen}/>
 
-                <div className="w-full h-8.8/10 flex flex-col text-light justify-between items-center">
-                    <div className={`${theme.gradient.cardBase} w-full h-full p-6 flex flex-col items-center text-xl text-gray-200 rounded-lg whitespace-pre-wrap overflow-y-auto overflow-x-hidden`}>
-                        {/* bg-lighter-blue shadow-inner-box  */}
-                        <div className="p-4 h-full text-center rounded-lg font-light">
-                        { displayProps ? displayProps.editInput : null}
+                <ReflectionQuestions />
+               
+
+                {/* teacher display */}
+                <div className={`relative ${fullscreen ? 'w-full' : ''} h-full flex flex-col justify-between items-center rounded-lg border my-4 p-4 bg-white bg-opacity-20`}>
+                    <div className="absolute top-2 right-0 cursor-pointer w-full text-xl m-2" onClick={handleFullscreen}>
+                        <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem', style: { width: 'auto', right: '0', bottom: '0', position: 'absolute' } }}>
+                            {fullscreen ? < FaCompress /> : < FaExpand />}
+                        </IconContext.Provider>
+                    </div>
+                    
+                    <div className="w-full h-full flex flex-col justify-between items-center p-1">
+                        
+                    <div className=" w-full z-50 top-0 ">
+                        <div className="w-2.5/10 h-auto w-auto py-1 text-gray-800 font-light flex flex-col justify-center items-center z-50">
+                            <p><span className='text-white'>by: <span className='font-medium text-yellow-600'>{student ? student.preferredName ? student.preferredName : student.firstName : null} {student ? firstInitialFunc(student.lastName) : null}</span></span></p>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            {/* teacher display */}
-            <div className={`relative ${fullscreen ? 'w-full' : 'w-4.85/10 '} h-full rounded-lg border shadow-inner-dark bg-darker-blue p-4`}>
-                <div className="absolute cursor-pointer w-full text-xl m-2" style={{bottom: 0, right: 0}} onClick={handleFullscreen}>
-                    <IconContext.Provider value={{ color: '#E2E8F0', size: '2rem', style: {width: 'auto', right: '0', bottom: '0', position: 'absolute'} }}>
-                        {fullscreen ? < FaCompress /> :< FaExpand />}
-                    </IconContext.Provider>
-                </div>
-                <div className="w-full h-full flex flex-col justify-between items-center">
-                    <div className="relative h-1/10">
-                        <Banner title={teacherData && teacherData.activityData &&teacherData.activityData.title  ? teacherData.activityData.title : null} 
-                            fullscreen={fullscreen}
-                            display="COOP" />
+                    <Banner title={teacherData && teacherData.activityData && teacherData.activityData.title ? teacherData.activityData.title : null}
+                        fullscreen={fullscreen}
+                        display="COOP" />
 
-                        <div className="absolute w-auto z-50" style={{bottom: '-15px', right: 0, }}>
-                            <div className="bg-yellow-300 font-light text-gray-800 text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
-                            <p>by: { student ? student.preferredName ? student.preferredName : student.firstName : null } { student ? firstInitialFunc(student.lastName) : null}</p>
-                            </div>
-                        </div>
+
+
+                    <PoemOutput poem={typeof teacherData !== 'undefined' ? teacherData.activityData.editInput : 'Classmates Poem :)'} />
 
                     </div>
+                </div>
 
-                    <div className="w-full h-8.8/10 flex flex-col justify-between items-center">
-                        <div className={`${fullscreen ? 'text-3xl' : 'text-xl'} font-light bg-dark-blue w-full h-full p-6 flex flex-col items-center text-gray-200 rounded-lg whitespace-pre-wrap overflow-y-auto overflow-x-hidden`}>
-                            {/* bg-lighter-blue  shadow-inner-box */}
-                            <div className="p-4 h-full text-center rounded-lg">
-                            { teacherData && teacherData.activityData && teacherData.activityData.editInput ? teacherData.activityData.editInput : null}
-                            </div>
+
+
+
+                 {/* self display */}
+                 <div className={`${fullscreen ? 'hidden' : 'w-full'} h-full flex flex-col justify-between items-center p-4 bg-darker-gray rounded-xl`}>
+
+                    <div className=" w-full z-50 top-0 ">
+                        <div className="w-2.5/10 h-auto w-auto py-1 text-gray-800 font-light flex flex-col justify-center items-center z-50">
+                            <p><span className='text-white'>by: <span className='font-medium text-blueberry'>You</span></span></p>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            </div>
-            <ReflectionQuestions />
+                    <Banner title={displayProps ? displayProps.title : null}
+                        display="SELFinCOOP" fullscreen={fullscreen} />
+
+                    <PoemOutput poem={typeof displayProps !== 'undefined' ? displayProps.editInput : 'Your Poem :)'} />
+                </div>
+
+
+
+
+
         </div>
     )
 };

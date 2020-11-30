@@ -1,15 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { GoQuote } from 'react-icons/go';
-import { FaQuoteLeft, FaPenFancy } from 'react-icons/fa';
+import { AiOutlineRead } from 'react-icons/ai';
 import PhotoBlock from './PhotoBlock';
 
 const QuoteBlock = () => {
   const { state, theme } = useContext(LessonContext);
+  const [heroIsActive, setHeroIsActive] = useState<boolean>(false);
+  const [isToggled, setIsToggled] = useState<string[]>(['']);
+  const [showReadMe, setShowReadMe] = useState<boolean>(true);
+
   const quoteArray = state.data.lesson.artist.quotes;
   const artistName = state.data.lesson.artist.name;
   const title = state.data.lesson.title;
+  const artistBio = state.data.lesson.artist.bio;
 
   const randomQuote = () => {
     let quote = quoteArray[Math.floor(Math.random() * quoteArray.length)];
@@ -18,87 +22,91 @@ const QuoteBlock = () => {
 
   const quote = randomQuote();
 
+  /**
+   * Function for toggling hero description hover
+   * @param e - Hover/click over hero image
+   */
+  const toggleHeroDescription = (e: React.MouseEvent) => {
+    const t = e.currentTarget as HTMLElement;
+    const targetWordID = t.id || '';
+
+    if (!heroIsActive) {
+      setHeroIsActive(true);
+    } else {
+      setHeroIsActive(false);
+    }
+
+    if(showReadMe){
+      setShowReadMe(false);
+    }
+
+    /**
+     * Animation
+     */
+    setIsToggled([...isToggled, targetWordID]);
+
+    setTimeout(() => {
+      setIsToggled(isToggled.filter((targetString: string) => targetString !== targetWordID));
+    }, 300);
+  };
+
   return (
-    <div className={`w-full min-h-24 flex flex-grow items-center justify-center ${theme.block.text} p-4 bg-gradient-to-tr from-transparent to-white5 rounded-lg`}>
-      <div className='h-full flex flex-col items-center mr-4'>
-        <div className='h-full flex flex-col justify-around'>
+    <div
+      className={`relative w-full md:h-96 flex flex-grow items-center p-4 rounded-xl ${theme.block.text} ${heroIsActive ? 'bg-black50' : ''}`}>
+      
+      {/* READ ICON */}
+      <div
+        id='read-icon'
+        className='absolute top-1 right-1 w-auto h-auto transition-all duration-500 ease-in-out text-gray-200 hover:text-white'
+        onClick={toggleHeroDescription}>
+        <IconContext.Provider value={{ size: '2rem', style: { width: 'auto', cursor: 'pointer' } }}>
+          <AiOutlineRead
+            className={`${isToggled.includes('read-icon') && 'animate-jiggle'} hover:animate-jiggle`}
+            style={{
+              MozUserSelect: 'none',
+              WebkitUserSelect: 'none',
+              msUserSelect: 'none',
+            }}
+          />
+        </IconContext.Provider>
+      </div>
 
-          <div className="h-4.5/10 my-auto flex flex-col justify-center">
-            <div className="w-40 text-2xl flex text-left justify-center items-center">
-              Featured Artist:
-            </div>
-            <div className='w-full text-center text-4.5xl leading-none font-light'>{artistName}</div>
+      {/* READ ICON - RIGHT TEXT */}
+      <div className={`${showReadMe ? 'visible' : 'hidden'} absolute w-auto overflow-x-hidden top-1 right-0 transform translate-x-full`}>
+        <p className='animate-bounce ml-2'>&larr; Read Me!</p>
+      </div>
+
+      <div className='h-full text-left flex flex-col mr-8 items-start'>
+        {/* BIO */}
+        <div
+          className={`${
+            heroIsActive ? 'visible overflow-y-auto' : 'hidden'
+          } h-96 w-full flex flex-col justify-start transition-all duration-500 ease-in-out animate-fadeIn overflow-hidden`}>
+          {typeof artistBio !== 'undefined'
+            ? artistBio.map((paragraph: string, i: number) => (
+                <p key={`paraBio${i}`} className='mb-2 text-blue-100 text-opacity-75'>
+                  {paragraph}
+                </p>
+              ))
+            : ''}
+        </div>
+
+        {/* STANDARD HERO TEXT */}
+        <div
+          className={`${
+            heroIsActive ? 'hidden' : 'visible'
+          } h-full flex flex-col justify-end transition-all duration-500 ease-in-out animate-fadeIn`}
+          >
+          <div className='absolute bottom-0 left-0 p-2 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-xl'>
+            <div className='text-xl header-font font-open font-light'>Featured Artist:</div>
+            <div className='w-full text-4.5xl leading-none font-light'>{artistName}</div>
+            <div className='text-xl header-font font-open font-light'>"{quote.text}"</div>
           </div>
 
-          <div className="h-4.8/10 my-auto flex flex-col justify-end items-center">
-            <div className='h-full quote flex flex-col justify-around items-center py-2 px-4 bg-gradient-to-l from-transparent to-black80'>
-              <div className='h-full relative'>
-                <div className='absolute w-16' style={{ top: '-30px', left: '-5px' }}>
-                  <IconContext.Provider value={{ size: '7rem', style: { opacity: '40%' } }}>
-                    <GoQuote />
-                  </IconContext.Provider>
-                </div>
-                <div className='h-full absolute overflow-y-auto header-font text-base font-open font-light pl-8 pr-2 md:pl-12 ' style={{ textIndent: '-16px' }}>
-                  <div>
-                  {quote.text}
-                  </div>
-                  <div className='text-right pr-4 mt-2'>- {quote.source}</div>
-                </div>
-                
-              </div>
-              
-            </div>
-          </div>
         </div>
       </div>
-      <PhotoBlock />
+      {/* <PhotoBlock /> */}
     </div>
-
-
-
-
-
-    // <div className={`w-full min-h-24 flex flex-col items-between justify-between ${theme.block.text} p-4 bg-gradient-to-tr from-transparent to-white5 rounded-lg`}>
-    //   <div className="h-8.5/10 p-2 flex flex-grow items-center justify-center">
-    //     <div className='h-full flex flex-col items-center mr-4'>
-    //       <div className=''>
-    //         <div className='w-full text-center text-4xl font-light flex items-center'>
-    //           <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
-    //             <div className={`bg-dark-red h-8 w-8 flex flex-col items-center justify-center z-20 rounded-lg`}>
-    //               <FaPenFancy />
-    //             </div>
-    //           </IconContext.Provider>
-    //           <div className="w-auto pl-3 h-full text-3xl flex justify-center items-center">
-    //             Featured Artist
-    //           </div>
-    //         </div>
-    //         <div className="h-4/10 leading-extra-tight text-6xl text-center flex items-center">
-    //             {artistName}
-    //         </div>
-    //         <div className='h-auto mt-2 quote flex flex-col justify-around items-center py-1 px-3 bg-gradient-to-l from-transparent to-black80'>
-    //           <div className='relative'>
-    //             <div className='absolute w-16' style={{ top: '-30px', left: '-5px' }}>
-    //               <IconContext.Provider value={{ size: '7rem', style: { opacity: '40%' } }}>
-    //                 <GoQuote />
-    //               </IconContext.Provider>
-    //             </div>
-    //             <div className='header-font text-xl font-open font-light pl-8 md:pl-12 ' style={{ textIndent: '-16px' }}>
-    //               {quote.text}
-    //             </div>
-    //           </div>
-
-    //           <div className='text-gray-500 self-end text-right'>- {quote.source}</div>
-    //         </div>
-    //       </div>
-    //     </div>
-    //     <PhotoBlock />
-    //   </div>
-
-    //   <div className="h-1.5/10 text-3xl flex flex-row-reverse text-bold pr-4 tracking-wider" style={{backgroundColor: '#1d2d42b3'}}>
-    //     {title}
-    //   </div>
-      
-    // </div>
   );
 };
 

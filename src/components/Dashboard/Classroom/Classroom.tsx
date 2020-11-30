@@ -13,6 +13,8 @@ import SurveyCard from './SurveyCard';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 import queryString from 'query-string';
 
+import useDeviceDetect from '../../../customHooks/deviceDetect';
+
 interface Artist {
   id: string;
   images: [];
@@ -39,7 +41,7 @@ const Classroom: React.FC = () => {
     display: false,
     data: null,
   });
-  
+
   const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
   const [status, setStatus] = useState('');
 
@@ -62,7 +64,7 @@ const Classroom: React.FC = () => {
 
   // async function getClassroom(id: string) {
   //   let queryParams = queryString.parse(location.search)
-    
+
   //   try {
   //       // this any needs to be changed once a solution is found!!!
   //       const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: id }))
@@ -105,8 +107,18 @@ const Classroom: React.FC = () => {
     }
   };
 
+  /**
+   * 
+   * 
+   * AUTO-PUSH TO SPECIFIC LESSON
+   * 
+   * 
+   */
+
   useEffect(() => {
     getCourse('1');
+
+    // history.push('/lesson?id=2');
   }, []);
 
   useEffect(() => {
@@ -115,9 +127,7 @@ const Classroom: React.FC = () => {
     }
 
     if (state.user.onBoardSurvey) {
-      // console.log('user', state.user);
       setSurvey(() => {
-        // console.log('setFalse');
         return {
           ...survey,
           display: false,
@@ -126,16 +136,14 @@ const Classroom: React.FC = () => {
     }
 
     if (!state.user.onBoardSurvey) {
-      // console.log('user', state.user);
       setSurvey(() => {
-        // console.log('setTrue');
         return {
           ...survey,
           display: true,
         };
       });
     }
-    
+
   }, [state]);
 
   const handleLink = () => {
@@ -147,28 +155,30 @@ const Classroom: React.FC = () => {
   }
   {
     return (
-      <div
-        className={`h-9.28/10 md:h-auto flex flex-col justify-center items-center overflow-scroll md:overflow-auto `}>
-        <p className='md:hidden text-xl text-center flex justify-center mb-4' style={{ top: '0' }}>
-          * lessons are available on PC or laptop *
-        </p>
-        <div className='w-full bg-opacity-10'>
-          {survey.display ? (
-            <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
-              Welcome to Iconoclast Artists
-            </h2>
-          ) : (
+      <div className='transform translate-y-12'>
+        {survey.display ? (
+          <div className={` bg-opacity-10`} >
+            <div className={`${theme.section} p-4`}>
+              <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>
+                Welcome to Iconoclast Artists
+              </h2>
+            </div>
+          </div>
+        ) : (
             ''
           )}
-        </div>
 
         {survey.display ? (
-          <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum} />
+          <div>
+            <div className={`${theme.section} p-4`}>
+              <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum} />
+            </div>
+          </div>
         ) : null}
 
-        <div className='w-full bg-opacity-10'>
-          <div className='w-64rem text-xl m-auto'>
-            <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
+        <div className={`bg-opacity-10`}>
+          <div className={`${theme.section} p-4 text-xl m-auto`}>
+            <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>
               Today's Lesson
             </h2>
 
@@ -176,9 +186,9 @@ const Classroom: React.FC = () => {
           </div>
         </div>
 
-        <div className='w-full bg-grayscale-light bg-opacity-10'>
-          <div className='w-64rem text-xl m-auto'>
-            <h2 className={`w-64rem text-xl m-auto ${theme.dashboard.sectionTitle}`}>
+        <div className={`bg-grayscale-light bg-opacity-10`}>
+          <div className={`${theme.section} p-4 text-xl m-auto`}>
+            <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>
               Upcoming Lessons
             </h2>
 

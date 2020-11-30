@@ -17,37 +17,38 @@ const Banner = (props: BannerProps) => {
   return (
     <>
       {display === 'SELF' ? (
-        <div className={`w-full h-1/10 ${theme.banner} flex flex-row justify-center items-center`}>
-          <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem' }}>
-            <div className='bg-dark-red h-16 w-16 flex flex-col items-center rounded-lg justify-center z-20 shadow-2'>
-              <FaPenFancy />
-            </div>
-          </IconContext.Provider>
-          <div className={`h-full text-gray-200 font-medium text-xl md:text-5xl z-10 flex justify-center items-center`}>
-            {title}
-          </div>
-        </div>
-      ) : display === 'COOP' ? ( 
-        <div className={`w-full h-full ${theme.banner} flex flex-row justify-center items-center`}>
-          <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem' }}>
-            <div className='bg-dark-red h-12 w-12 flex flex-col items-center rounded-lg justify-center z-20 shadow-2'>
-              <FaPenFancy />
-            </div>
-          </IconContext.Provider>
-            <div className={`${fullscreen ? 'text-4xl' : 'text-3xl'} text-gray-200 h-full bg-dark-blue w-full flex flex-row justify-center items-center text-center rounded-lg z-10`}>
-                { title }
-            </div>
-        </div>
-      ) : (
-        <div className={`w-full h-1/10 ${theme.banner} flex flex-row justify-center items-center`}>
-          <IconContext.Provider value={{ color: '#EDF2F7', size: '2rem' }}>
-            <div className='bg-dark-red h-12 w-12 flex flex-col items-center rounded-lg justify-center z-20 shadow-2'>
+        <div className={`w-full h-1/10 text-4xl ${theme.banner}`}>
+          <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
+            <div className='w-auto h-auto mr-2'>
               <FaPenFancy />
             </div>
           </IconContext.Provider>
           <div
-            className={`text-3xl h-full text-gray-200 z-10 flex justify-center items-center`}>
-            {title}
+            className={``}>
+            {typeof title !== 'undefined' ? title : 'Your Poem Title :)'}
+          </div>
+        </div>
+      ) : display === 'COOP' ? (
+        <div className={`w-full h-1/10 text-4xl ${theme.banner}`}>
+          <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
+            <div className='w-auto h-auto mr-2'>
+              <FaPenFancy />
+            </div>
+          </IconContext.Provider>
+          <div
+            className={``}>
+            {typeof title !== 'undefined' ? title : 'Your Poem Title :)'}
+          </div>
+        </div>
+      ) : (
+        <div className={`w-full h-1/10 text-4xl ${theme.banner}`}>
+          <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
+            <div className='w-auto h-auto mr-2'>
+              <FaPenFancy />
+            </div>
+          </IconContext.Provider>
+          <div className={``}>
+            {typeof title !== 'undefined' ? title : 'Your Poem Title :)'}
           </div>
         </div>
       )}

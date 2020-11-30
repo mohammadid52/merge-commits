@@ -30,7 +30,7 @@ const InstructionsBlock = () => {
           {/* {!videoMode ? ( */}
             <div className='h-full overflow-y-auto overflow-x-hidden'>
               {text.map((inst: string, key: number) => (
-                <p key={key} className='mb-2'>
+                <p key={key} className='mb-1'>
                   {inst}
                 </p>
               ))}

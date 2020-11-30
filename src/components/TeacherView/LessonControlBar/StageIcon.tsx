@@ -65,7 +65,7 @@ const StageIcon = (props: StageIconProps) => {
     const iconLabel = (): ReactElement => {
         return (
           <div
-            className={`absolute w-20 transform translate-y-8 mt-3 text-center font-light text-dark text-sm`}>
+            className={`absolute w-20 transform translate-y-6 mt-3 text-center font-light text-dark text-sm`}>
             {
                 <FooterLabels label=
                 {props.stage.charAt(0).toUpperCase()+props.stage.slice(1)} />
@@ -106,12 +106,14 @@ const StageIcon = (props: StageIconProps) => {
 
     if ( type === 'breakdown' ) {
         return (
-            <div className={`relative h-12 w-12 flex flex-col justify-center items-center rounded-full shadow-elem-light`} onClick={() => {handleOpenMenu(stage)}}>
+            <div className={`h-12 w-12 flex flex-col justify-center items-center rounded-full border border-light-gray`} onClick={() => {handleOpenMenu(stage)}}>
                 <IconContext.Provider value={{ color: iconColor, size: '1.5rem' }}>
                     <div className={`${ coinColor } h-10 w-10 flex justify-center items-center rounded-full `}>
                         { iconSwitch(type) }
                     </div>
+                    <div className="absolute bottom-0 transform -translate-y-8 w-20 mt-1">
                     {iconLabel()}
+                    </div>
                 </IconContext.Provider>
                 {
                     menuOpen ? 
@@ -141,13 +143,13 @@ const StageIcon = (props: StageIconProps) => {
     }
 
     return (
-        <div className={`relative ${ breakdown ? 'flex-grow' : 'flex-grow-0'} w-auto flex flex-col justify-around items-center`}>
-            <div className={`bg-gray-200 h-16 w-16 rounded-full flex items-center justify-center shadow-elem-light`} onClick={() => {handleOpenMenu(stage)}}>
+        <div className={`${ breakdown ? 'flex-grow' : 'flex-grow-0'} w-auto flex flex-col justify-around items-center`}>
+            <div className={`bg-gray-200 h-16 w-16 rounded-full flex items-center justify-center border border-light-gray`} onClick={() => {handleOpenMenu(stage)}}>
                  <IconContext.Provider value={{ color: iconColor, size: '2rem' }}>
                     <div className={`h-14 w-14 rounded-full flex flex-col justify-center items-center ${ coinColor }`}>
                         { iconSwitch(type) }
                     </div>
-                    <div className="w-20 mt-1 absolute">
+                    <div className="absolute bottom-0 transform -translate-y-8 w-20 mt-1">
                     {iconLabel()}
                     </div>
                 </IconContext.Provider>

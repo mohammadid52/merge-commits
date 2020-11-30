@@ -1,57 +1,101 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
+import { NavLink } from 'react-router-dom';
 import { LessonContext } from '../../../contexts/LessonContext';
-import { 
-    useHistory,
-    useRouteMatch,
-} from 'react-router-dom';
-import ProgressBar from './ProgressBar/ProgressBar';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
-const Foot = () => {
-    const { state, dispatch, theme } = useContext(LessonContext);
-    const history = useHistory();
-    const match = useRouteMatch();
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { AiOutlineInstagram, AiOutlineFacebook } from 'react-icons/ai';
 
-    useEffect(() => {
-        if ( state.pages[state.currentPage + 1] ){
-            if ( state.pages[state.currentPage + 1].open ) {
-                // console.log(state.pages);
-                return dispatch({ type: 'CAN_CONTINUE' })
-            } return dispatch({ type: 'NO_CONTINUE' })
-        } return dispatch({ type: 'NO_CONTINUE' })
-    }, [state.pages, state.currentPage])
+import BottomMenu from './BottomMenu';
 
-    const handleForward = () => {
-        if ( state.canContinue && state.currentPage < state.pages.length - 1 ) {
-            history.push(`${match.url}/${state.pages[state.currentPage + 1].stage}`);
-            dispatch({type: 'PAGE_FORWARD'});
-        }
+const Branding: React.FC = () => {
+  const { state, theme, dispatch } = useContext(LessonContext);
+  const history = useHistory();
+  const match = useRouteMatch();
+
+  useEffect(() => {
+    if (state.pages[state.currentPage + 1]) {
+      if (state.pages[state.currentPage + 1].open) {
+        // console.log(state.pages);
+        return dispatch({ type: 'CAN_CONTINUE' });
+      }
+      return dispatch({ type: 'NO_CONTINUE' });
+    }
+    return dispatch({ type: 'NO_CONTINUE' });
+  }, [state.pages, state.currentPage]);
+
+  useEffect(() => {
+    console.log('match url: ', history.location.pathname);
+  }, []);
+
+  const handleForward = () => {
+    if (state.canContinue && state.currentPage < state.pages.length - 1) {
+      history.push(`${match.url}/${state.pages[state.currentPage + 1].stage}`);
+      dispatch({ type: 'PAGE_FORWARD' });
+    }
+  };
+
+  const handleBack = () => {
+    if (state.currentPage === 1) {
+      history.push(`/lesson`);
+      dispatch({ type: 'PAGE_BACK' });
     }
 
-    const handleBack = () => {
-        if (state.currentPage === 1) {
-            history.push(`/lesson`);
-            dispatch({type: 'PAGE_BACK'});
-        }
-
-        if (state.currentPage > 1) {
-            history.push(`${match.url}/${state.pages[state.currentPage - 1].stage}`);
-            dispatch({type: 'PAGE_BACK'});
-        }
+    if (state.currentPage > 1) {
+      history.push(`${match.url}/${state.pages[state.currentPage - 1].stage}`);
+      dispatch({ type: 'PAGE_BACK' });
     }
+  };
 
-    return (
-        <div className={`flex-grow-0 ${theme.footer.bg} shadow-1 h-1.1/10 w-full flex justify-center items-center content-center py-4 px-6`}>
-            <div className="w-full flex flex-row items-center justify-around md:mx-8">
-                <div className={`flex-grow-0 ${state.currentPage > 0 ? 'bg-dark-red text-gray-300 cursor-pointer' : 'bg-gray-500 text-gray-600 cursor-default'} text-xl font-open font-bold flex justify-center items-center w-32 h-8 rounded-lg z-30 transform -translate-y-2`} onClick={handleBack}>
-                    Back
-                </div>
-                <ProgressBar />
-                <div className={`flex-grow-0 ${state.canContinue ? 'bg-green-600 text-gray-300 cursor-pointer' : 'bg-gray-500 text-gray-600 cursor-default'} text-xl font-open font-bold flex justify-center items-center w-32 h-8 rounded-lg z-30 transform -translate-y-2`} onClick={handleForward}>
-                    Continue
-                </div> 
-            </div>
+  return (
+    <>
+      <div className='mt-auto mb-0 bg-darker-gray flex-row justify-center items-center'>
+        {/* <BottomMenu /> */}
+
+        <div
+          className={`w-256 h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}>
+          {/* BACK */}
+          <div className='w-3.3/10 flex justify-center items-center'>
+            {!history.location.pathname.includes('corelesson') ? (
+              <div
+                className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
+                  state.currentPage > 0
+                    ? 'cursor-pointer bg-dark-red'
+                    : 'cursor-default bg-darker-gray'
+                } }`}
+                onClick={handleBack}>
+                <div className='w-auto h-auto text-white'>Back</div>
+              </div>
+            ) : null}
+          </div>
+
+          {/* LOGO */}
+          <div className='w-3.3/10 flex justify-center items-center'>
+            <NavLink to='/dashboard'>
+              <img
+                className='h-12 px-4'
+                src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-WHITE.svg'
+                alt='Iconoclast Artists'
+              />
+            </NavLink>
+          </div>
+
+          {/* CONTINUE */}
+          <div className='w-3.3/10 flex justify-center items-center'>
+            {!history.location.pathname.includes('corelesson') ? (
+              <div
+                className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
+                  state.canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark-gray cursor-default'
+                } `}
+                onClick={handleForward}>
+                <div className='w-auto h-auto text-white'>Continue</div>
+              </div>
+            ) : null}
+          </div>
         </div>
-    )
-}
+      </div>
+    </>
+  );
+};
 
-export default Foot;
+export default Branding;

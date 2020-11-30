@@ -1,45 +1,67 @@
 import React, { useState, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 
 const ReflectionQuestions = () => {
-    const [ question, setQuestion ] = useState(0);
-    const { state, theme } = useContext(LessonContext);
-    const questArr = state.data.lesson.coreLesson.breakdown.reflectionQuestions;
+  const [question, setQuestion] = useState(0);
+  const { state, theme } = useContext(LessonContext);
+  const questArr = state.data.lesson.coreLesson.breakdown.reflectionQuestions;
 
-    const nextQuestion = () => {
-        if (question < questArr.length - 1) {
-            setQuestion(question + 1);
-        } else if (question === questArr.length - 1) {
-            setQuestion(0);
-        }
+  const nextQuestion = () => {
+    if (question < questArr.length - 1) {
+      setQuestion(question + 1);
+    } else if (question === questArr.length - 1) {
+      setQuestion(0);
     }
+  };
 
-    const prevQuestion = () => {
-        if (question > 0) {
-            setQuestion(question - 1);
-        } else if (question === 0) {
-            setQuestion(questArr.length - 1);
-        }
+  const prevQuestion = () => {
+    if (question > 0) {
+      setQuestion(question - 1);
+    } else if (question === 0) {
+      setQuestion(questArr.length - 1);
     }
+  };
 
-    return (
-        <div className="reflection w-full h-1.5/10 flex flex-row text-gray-200">
-            <div className={`w-1/10 h-full flex justify-center items-center ${theme.gradient.cardBase} mr-2 md:mr-4 rounded-lg cursor-pointer`} onClick={prevQuestion}>
-                <div className="w-6 h-6 border-dark border-t-8 border-l-8 transform -rotate-45 ml-2"></div>
-            </div>
-            <div className={`w-8/10 ${theme.gradient.cardBase} flex-grow rounded-lg px-4 py-2 flex flex-col`}>
-                <div className="font-open font-light">
-                    Discussion Questions
-                </div>
-                <div className="question w-full flex-grow text-xs md:text-xl text-gray-200 font-light flex justify-center px-4">
-                    <p className="text-center">{ questArr[question] }</p>
-                </div>
-            </div>
-            <div className={`w-1/10 h-full flex justify-center items-center ${theme.gradient.cardBase} ml-2 md:ml-4 rounded-lg cursor-pointer`} onClick={nextQuestion}>
-                <div className="w-6 h-6 border-dark border-t-8 border-r-8 transform rotate-45 mr-2"></div>
-            </div>
+  return (
+    <div className={`${theme.elem.text} ${theme.elem.card} p-2 reflection w-full flex flex-col`}>
+      <div className={`w-full`}>
+        <div className={`w-full flex flex-row text-xl ${theme.banner} border-b-4 border-sea-green`}>
+          <h3>Classroom Discussion:</h3>
+          <div
+            className={`text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 cursor-pointer`}
+            onClick={prevQuestion}>
+            <IconContext.Provider
+              value={{
+                size: '1.5rem',
+                style: { width: '32px' },
+                className: `text-white`,
+              }}>
+              <AiOutlineArrowLeft />
+            </IconContext.Provider>
+          </div>
+
+          <div
+            className={`text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 cursor-pointer`}
+            onClick={nextQuestion}>
+            <IconContext.Provider
+              value={{
+                size: '1.5rem',
+                style: { width: '32px' },
+                className: `text-white`,
+              }}>
+              <AiOutlineArrowRight />
+            </IconContext.Provider>
+          </div>
         </div>
-    )
-}
+      </div>
+
+      <div className='question w-full flex-grow text-sm md:text-xl font-light text-gray-200 flex justify-center md:px-4'>
+        <p className='text-center'>{questArr[question]}</p>
+      </div>
+    </div>
+  );
+};
 
 export default ReflectionQuestions;

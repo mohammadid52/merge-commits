@@ -39,9 +39,6 @@ const Login = () => {
       history.push('/dashboard');
     } catch (error) {
       console.error('error signing in', error);
-      if (error.code === 'UserNotConfirmedException') {
-        return history.push('/confirm');
-      }
 
       setMessage(() => {
         if (!username) {
@@ -78,8 +75,14 @@ const Login = () => {
               type: 'error',
               message: 'The email or password you entered was not correct',
             };
-          // case "UserNotConfirmedException":
-          //         return history.push('/confirm')
+          case "UserNotConfirmedException":
+            return {
+              show: true,
+              type: 'error',
+              message: 'You need to confirm registered email id, Please check your email.',
+            }
+          // shows valid error message for confirmation error instead of redirecting to confirm-code rout.
+
           default:
             return {
               show: true,
@@ -88,15 +91,12 @@ const Login = () => {
             };
         }
       });
+      toggleLoading(false)
     }
   }
 
-  const toggleLoading = () => {
-    setIsToggled(true);
-
-    setTimeout(() => {
-      setIsToggled(true);
-    }, 5000);
+  const toggleLoading = (state: boolean) => {
+    setIsToggled(state);
   };
 
   const handleChange = (e: { target: { id: any; value: any } }) => {
@@ -125,7 +125,7 @@ const Login = () => {
 
   const handleSubmit = () => {
     SignIn();
-    toggleLoading();
+    toggleLoading(true);
   };
 
   return (
@@ -158,9 +158,9 @@ const Login = () => {
                       message.type === 'success'
                         ? 'text-green-500'
                         : message.type === 'error'
-                        ? 'text-red-500'
-                        : null
-                    }`}>
+                          ? 'text-red-500'
+                          : null
+                      }`}>
                     {message.message}
                   </p>
                 ) : null}
@@ -196,10 +196,10 @@ const Login = () => {
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
-                      <IconContext.Provider value={{ size: '1.5rem' }}>
-                        <AiOutlineEyeInvisible />
-                      </IconContext.Provider>
-                    )}
+                        <IconContext.Provider value={{ size: '1.5rem' }}>
+                          <AiOutlineEyeInvisible />
+                        </IconContext.Provider>
+                      )}
                   </div>
                 </div>
 

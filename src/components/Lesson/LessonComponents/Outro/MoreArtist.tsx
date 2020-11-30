@@ -47,9 +47,8 @@ const MoreArtist = () => {
   const img = '../../../../../public/instagram.svg';
 
   return (
-    // <div className="w-full h-full bg-dark-blue text-gray-200 p-4 flex flex-col justify-between items-center rounded-lg">
-    <div className={`h-4/10 ${theme.gradient.cardBase} bg-dark-blue w-full text-gray-200 py-3 px-6 flex flex-col justify-between items-center rounded-lg`}>
-        <h3 className='w-full text-gray-200 text-2xl font-medium border-b border-white border-opacity-50 mr-4'>
+    <div className={`w-full h-full ${theme.underline}`}>
+        <h3 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
           Learn more about {state.data.lesson.artist.name}
         </h3>
       <div className='h-full w-full flex flex-col items-center rounded-lg'>

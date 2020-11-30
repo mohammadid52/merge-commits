@@ -14,7 +14,7 @@ interface EditBlockProps {
 
 const EditBlock = (props: EditBlockProps) => {
     const { editMode, fullscreen, displayStudentData } = props;
-    const { state, dispatch } = useContext(LessonControlContext);
+    const { state, theme, dispatch } = useContext(LessonControlContext);
     // const [ cookies, setCookie ] = useCookies(['poem']);
     const [ editInput, setEditInput ] = useState<{title: string, text: string}>({
         title: '',
@@ -76,7 +76,7 @@ const EditBlock = (props: EditBlockProps) => {
     // }, [editInput.title])
 
     const handleChange = (e: { target: { id: string; value: string; }; }) => {
-        const {id, value} = e.target
+        const { id, value } = e.target
         setEditInput(editInput => {
             return {
                 ...editInput,
@@ -86,38 +86,21 @@ const EditBlock = (props: EditBlockProps) => {
     }
 
     return (
-        <div className={`${fullscreen ? 'px-4 md:px-8 py-6' : 'p-3'} bg-dark-blue w-full md:h-full flex flex-col justify-between rounded-lg`}>
-            <h3 className="text-xl text-gray-200 font-open font-light mb-1 pb-1 border-b border-white border-opacity-10">
+        <div className={theme.section}>
+            <h3 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
                 Final Edits
             </h3>
-            <div className="w-full md:h-9/10 flex flex-col justify-center">
-                <label className="w-7/10 text-gray-200 text-lg font-open font-light mb-2" htmlFor="title">
+            <div className='w-full flex flex-col'>
+                <label className={`w-full text-xl ${theme.banner}`} htmlFor="title">
                     Your poem's title
                 </label>
-                <input id="title" name="title" className="bg-gray-300 w-7/10 h-4 text-lg font-light md:h-12 mb-4 rounded-lg px-2 md:px-4 shadow-2" type="text" 
-                value={editInput.title} onChange={handleChange} 
-                placeholder="Choose a title"/>
-                <textarea id="text" className={`${fullscreen ? 'px-4 py-2 text-xl' : 'px-2 py-2 text-base '} bg-gray-300 w-full h-18 md:h-8/10 font-light text-gray-800 rounded-lg shadow-2`} 
-                value={editInput.text} onChange={handleChange}/>
+                <input id="title" name="title" className={` rounded-xl mb-2 ${theme.elem.textInput}`} type="text"
+                    value={editInput.title} onChange={handleChange}
+                    placeholder="Choose a title" />
+                <textarea id="text" className={`h-64 rounded-xl mb-2 ${theme.elem.textInput}`}
+                    value={editInput.text} onChange={handleChange} />
             </div>
         </div>
-
-
-        // <div className={`${fullscreen ? 'px-4 md:px-8 py-6' : 'p-3'} bg-dark-blue w-full md:h-full flex flex-col justify-between rounded-lg shadow-2 `}>
-        //     <h3 className="text-xl text-gray-200 font-open font-bold mb-3 border-b border-white">
-        //         Final Edits
-        //     </h3>
-        //     <div className="w-full md:h-9/10 flex flex-col justify-center">
-        //         <label className="w-7/10 text-gray-200 text-lg font-open font-bold mb-2" htmlFor="title">
-        //             Your poem's title
-        //         </label>
-        //         <input id="title" name="title" className="bg-gray-300 w-7/10 h-4 md:h-12 mb-4 rounded-lg px-2 md:px-4 shadow-2" type="text" 
-        //         value={editInput.title} onChange={handleChange} 
-        //         placeholder="Choose a title"/>
-        //         <textarea id="text" className={`${fullscreen ? 'p-8 text-2xl' : 'p-4 text-lg '} bg-gray-300 w-full h-8/10 text-gray-800 rounded-lg shadow-2`} 
-        //         value={editInput.text} onChange={handleChange}/>
-        //     </div>
-        // </div>
     )
 }
 

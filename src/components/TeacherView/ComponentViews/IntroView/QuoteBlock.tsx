@@ -1,61 +1,107 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { IconContext } from "react-icons/lib/esm/iconContext";
-import { GoQuote } from 'react-icons/go';
-import { FaQuoteLeft } from 'react-icons/fa';
-import PhotoBlock from './PhotoBlock';
+import { AiOutlineRead } from 'react-icons/ai';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
-interface props {
-        fullscreen: boolean
+interface props {
+  fullscreen: boolean
+}
+
+const QuoteBlock = (props: props) => {
+  const { fullscreen } = props;
+  const [heroIsActive, setHeroIsActive] = useState<boolean>(false);
+  const [isToggled, setIsToggled] = useState<string[]>(['']);
+
+  const { state, theme } = useContext(LessonControlContext);
+  const quoteArray = state.data.lesson.artist.quotes;
+  const artistName = state.data.lesson.artist.name;
+  const artistBio = state.data.lesson.artist.bio;
+
+
+  const randomQuote = () => {
+    let quote = quoteArray[Math.floor(Math.random() * quoteArray.length)];
+    return quote
+  }
+
+  const quote = randomQuote();
+
+  /**
+ * Function for toggling hero description hover
+ * @param e - Hover/click over hero image
+ */
+  const toggleHeroDescription = (e: React.MouseEvent) => {
+    const t = e.currentTarget as HTMLElement;
+    const targetWordID = t.id || '';
+
+    if (!heroIsActive) {
+      setHeroIsActive(true);
+    } else {
+      setHeroIsActive(false);
     }
 
-const QuoteBlock = (props: props) => { 
-    const {  fullscreen } = props
-    const { state, theme } = useContext(LessonControlContext);
-    const quoteArray = state.data.lesson.artist.quotes;
-    const artistName = state.data.lesson.artist.name;
-    
+    /**
+     * Animation
+     */
+    setIsToggled([...isToggled, targetWordID]);
 
-    const randomQuote = () => {
-        let quote = quoteArray[Math.floor(Math.random() * quoteArray.length)];
-        return quote
-    }
+    setTimeout(() => {
+      setIsToggled(isToggled.filter((targetString: string) => targetString !== targetWordID));
+    }, 300);
+  };
 
-    const quote = randomQuote();
-
-    return (
-
-    <div className={`w-full min-h-24 flex flex-grow items-center justify-center ${theme.block.text} ${fullscreen ? 'p-4' : 'p-2'} bg-gradient-to-tr from-transparent to-white5 rounded-lg`}>
-        <div className='h-full flex flex-col items-center mr-4'>
-          <div className='h-full flex flex-col justify-around'>
-  
-            <div className="h-4.5/10 my-auto flex flex-col justify-center">
-              <div className={`w-40 ${fullscreen ? 'text-2xl' : 'text-base'} flex text-left justify-center items-center`}>
-                Featured Artist:
-              </div>
-              <div className={`w-full text-center ${fullscreen ? 'text-3xl' : 'text-lg'} leading-none font-light`}>{artistName}</div>
-            </div>
-  
-            <div className="h-4.8/10 my-auto flex flex-col justify-end items-center">
-              <div className={`h-auto quote flex flex-col justify-around items-center py-2 ${fullscreen ? 'px-4' : 'px-0'} bg-gradient-to-l from-transparent to-black80`}>
-                <div className='relative'>
-                  <div className='absolute w-16' style={{ top: '-30px', left: '-5px' }}>
-                    <IconContext.Provider value={{ size: '7rem', style: { opacity: '40%' } }}>
-                      <GoQuote />
-                    </IconContext.Provider>
-                  </div>
-                  <div className={`header-font ${fullscreen ? 'text-lg' : 'text-sm'} font-open font-light pl-8 md:pl-12`} style={{ textIndent: '-16px' }}>
-                    {quote.text}
-                  </div>
-                </div>
-                <div className={`${fullscreen ? 'text-sm' : 'text-xs'} text-gray-500 text-sm self-end text-right mt-2`}>- {quote.source}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <PhotoBlock />
+  return (
+    <div
+      className={`relative w-full md:h-96 flex flex-grow items-center p-4 rounded-xl ${theme.block.text} ${heroIsActive ? 'bg-black50' : ''}`}>
+      {/* READ ICON */}
+      <div
+        id='read-icon'
+        className='absolute top-1 right-1 w-auto h-auto transition-all duration-500 ease-in-out text-gray-200 hover:text-white'
+        onClick={toggleHeroDescription}>
+        <IconContext.Provider value={{ size: '2rem', style: { width: 'auto', cursor: 'pointer' } }}>
+          <AiOutlineRead
+            className={`${isToggled.includes('read-icon') && 'animate-jiggle'} hover:animate-jiggle`}
+            style={{
+              MozUserSelect: 'none',
+              WebkitUserSelect: 'none',
+              msUserSelect: 'none',
+            }}
+          />
+        </IconContext.Provider>
       </div>
-    )
+
+      <div className='h-full text-left flex flex-col items-start'>
+        {/* BIO */}
+        <div
+          className={`${
+            heroIsActive ? 'visible overflow-y-auto' : 'hidden'
+          } h-96 w-9/10 flex flex-col justify-start transition-all duration-500 ease-in-out animate-fadeIn overflow-hidden`}>
+          {typeof artistBio !== 'undefined'
+            ? artistBio.map((paragraph: string, i: number) => (
+                <p key={`paraBio${i}`} className='mb-2 text-blue-100 text-opacity-75'>
+                  {paragraph}
+                </p>
+              ))
+            : ''}
+        </div>
+
+        {/* STANDARD HERO TEXT */}
+        <div
+          className={`${
+            heroIsActive ? 'hidden' : 'visible'
+          } h-full flex flex-col justify-end transition-all duration-500 ease-in-out animate-fadeIn`}
+          >
+          <div className='absolute bottom-0 left-0 p-2 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-xl'>
+            <div className='text-xl header-font font-open font-light'>Featured Artist:</div>
+            <div className='w-full text-4.5xl leading-none font-light'>{artistName}</div>
+            <div className='text-xl header-font font-open font-light'>"{quote.text}"</div>
+          </div>
+
+        </div>
+      </div>
+      
+      {/* <PhotoBlock /> */}
+    </div>
+  );
 }
 
 export default QuoteBlock;

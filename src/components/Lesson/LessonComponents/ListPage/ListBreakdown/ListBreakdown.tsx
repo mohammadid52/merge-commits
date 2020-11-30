@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import ReflectionQuestions from './ReflectionQuestions';
-import Modules from './Modules';
-import Banner from './Banner';
+// import ReflectionQuestions from './ReflectionQuestions';
+// import Modules from './Modules';
+// import Banner from './Banner';
 import SelfDisplay from './SelfDisplay';
 import CoopDisplay from './CoopDisplay';
 
