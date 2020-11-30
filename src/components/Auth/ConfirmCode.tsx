@@ -1,17 +1,19 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaKey } from 'react-icons/fa';
-import { FaUnlockAlt } from 'react-icons/fa';
 import { AiOutlineEye } from 'react-icons/ai';
 import { AiOutlineEyeInvisible } from 'react-icons/ai';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { MdEmail } from 'react-icons/md';
-import { useHistory, Link, NavLink } from 'react-router-dom';
+import { useHistory, useLocation, Link, NavLink } from 'react-router-dom';
 // import { Auth } from 'aws-amplify';
 import { Auth } from '@aws-amplify/auth';
 
 const ConfirmCode = () => {
     const history = useHistory();
+    const location = useLocation();
+    
     const { dispatch } = useContext(GlobalContext);
     const [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
       show: false,
@@ -27,12 +29,36 @@ const ConfirmCode = () => {
         match: '',
     })
     const [passToggle, setPassToggle] = useState(false);
+    const [isLoading,setIsLoading] = useState(false);
     const [newPassToggle, setNewPassToggle] = useState(false);
+
+    useEffect(() => {
+      populateConfirmationCode();
+    }, []);
+
+    const populateConfirmationCode = () =>{
+      const pathName = location.pathname.replace(/\/$/, "");                     // removed trailing slashes from the pathname.
+      const confirmCode = pathName.substring(pathName.lastIndexOf('/') + 1);     
+      const isValid = /^\d{6}$/gm.test(confirmCode)                              // validate element to have 6 digit number. e.g. 234567
+      if(isValid){
+        setConfirmInput({
+          ...confirmInput,
+          code:confirmCode
+        })
+      }else{
+        setMessage({
+          show: true,
+          type: 'error',
+          message: 'Invalid account confirmation URL. Please check your email',
+        })
+      }
+    };
 
     const resetPassword = async () => {
         let username = confirmInput.email;
         let password = passwordInput.password;
         let code = confirmInput.code;
+        toggleLoading(true);
 
         try {
             const forgot = await Auth.forgotPasswordSubmit(username, code, password);
@@ -67,7 +93,7 @@ const ConfirmCode = () => {
                     return {
                         show: true,
                         type: 'error',
-                        message: 'The confirmation code you provided is not correct',
+                        message: 'Invalid account confirmation URL. Please check your email',
                     };
                     default:
                     return {
@@ -77,6 +103,7 @@ const ConfirmCode = () => {
                     };
                 }
             });
+            toggleLoading(false)
         }
     }
 
@@ -85,7 +112,7 @@ const ConfirmCode = () => {
         let tempPassword = 'xIconoclast.5x';
         let password = passwordInput.password;
         let code = confirmInput.code;
-
+        toggleLoading(true)
         try {
             const confirmRes = await Auth.confirmSignUp(username, code);
             console.log(confirmRes);
@@ -98,13 +125,30 @@ const ConfirmCode = () => {
 
             history.push('/dashboard');
         } catch (error) {
-            console.error(error)
-            let errorMessage = 'User cannot be confirmed. Current status is CONFIRMED'
 
-            if ( error.message === errorMessage ) {
-                console.log('matched messages');
-                resetPassword()
-            } 
+          // Handle code mismatch and code expiration errors.
+
+          if(error.code === 'NotAuthorizedException'){
+            resetPassword();
+          }else{            
+            setMessage(()=>{
+              switch(error.code){
+                case 'CodeMismatchException':
+                  return {
+                    show: true,
+                    type: 'error',
+                    message: 'Invalid account confirmation URL. Please check your email or try again.',
+                  };
+                case 'UserNotFoundException':
+                  return {
+                    show: true,
+                    type: 'error',
+                    message: 'Please enter registered email id',
+                  }
+              }
+            });
+            toggleLoading(false);
+          }
         }
     }
   
@@ -196,7 +240,7 @@ const ConfirmCode = () => {
           return {
             show: true,
             type: 'error',
-            message: 'Please enter your confirmation code',
+            message: 'Invalid account confirmation URL. Please check your email',
           };
         }
         if (!password) {
@@ -257,6 +301,11 @@ const ConfirmCode = () => {
                 [id]: value,
             };
         });
+    };
+
+    // Added loading state.
+    const toggleLoading = (state: boolean) => {
+      setIsLoading(state);
     };
   
     const handleEnter = (e: any) => {
@@ -329,27 +378,6 @@ const ConfirmCode = () => {
                     id='email'
                     name='email'
                     value={confirmInput.email}
-                    onChange={handleConfirmChange}
-                    onKeyDown={handleEnter}
-                  />
-                </div>
-  
-                <div className='input'>
-                  <div className='icon'>
-                    <IconContext.Provider value={{ size: '1.5rem' }}>
-                      <FaUnlockAlt />
-                    </IconContext.Provider>
-                  </div>
-                  <label className='hidden' htmlFor='code'>
-                    Confirmation Code
-                  </label>
-                  <input
-                    className='w-full bg-off-white px-2 py-1 ml-2'
-                    placeholder='Confirmation Code'
-                    type='text'
-                    id='code'
-                    name='code'
-                    value={confirmInput.code}
                     onChange={handleConfirmChange}
                     onKeyDown={handleEnter}
                   />
@@ -436,8 +464,14 @@ const ConfirmCode = () => {
                   style={{ borderRadius: '2rem', padding: '.75rem' }}
                   onKeyPress={handleEnter}
                   onClick={handleSubmit}>
-                      Confirm Code
+                      Enter Iconoclast Artists
                 </div>
+                {isLoading && (
+                <IconContext.Provider
+                  value={{ size: '1.5rem', color: '#488AC7', className: 'relative animate-spin' }}>
+                  <AiOutlineLoading3Quarters />
+                </IconContext.Provider>
+              )}
                 <NavLink to='/login'>
                   <div className='text-bold text-center text-blueberry hover:text-blue-500'>
                     Back to login
