@@ -79,6 +79,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
         <div className='h-full  w-4/10 min-w-100 max-w-160 border-r border-white bg-light-gray bg-opacity-10 pl-2 flex flex-row justify-between '>
           <div className='w-full flex flex-col my-auto'>
             
+            <p className='text-xs'>Students Online: {state.roster.length}</p>
             <p className='text-xs'>Topic: Identity</p>
             <p className='text-xs'>Start Date: {state.expectedStartDate}</p>
             <p className='text-xs'>Estimated Time: 1 hr 15 mins</p>

@@ -7,7 +7,7 @@ const LessonLoading = () => {
           <div
             className={`w-64 h-48 p-8 text-lg text-center text-blue-100 flex flex-col justify-center items-center font-light bg-gray-300 rounded-t-lg`}>
             <img
-              src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color_notext.svg'
+              src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-COLOR.svg'
               alt='Iconoclast Artists Logo'
             />
           </div>

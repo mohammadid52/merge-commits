@@ -358,7 +358,7 @@ const LessonControl = () => {
             } w-4/10 min-w-100 max-w-160 h-full flex flex-col items-center `}>
             <div className={`h-full w-full flex flex-col justify-between items-center`}>
               
-              <ClassRosterTitleBar handleResetDoneCounter={handleResetDoneCounter} />
+              {/* <ClassRosterTitleBar handleResetDoneCounter={handleResetDoneCounter} /> */}
 
               <div className={`h-full`}>
                 <ClassRoster

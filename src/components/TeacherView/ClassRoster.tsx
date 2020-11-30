@@ -141,13 +141,13 @@ const ClassRoster = (props: classRosterProps) => {
 
   return (
     <div
-      className={`w-full h-full bg-light-gray bg-opacity-20 overflow-y-auto overflow-x-hidden border-r-2 border-t-2 border-black`}>
+      className={`w-full h-full bg-light-gray bg-opacity-20 overflow-y-auto overflow-x-hidden`}>
       {/* TABLE HEAD */}
-      <div className={`w-full h-8 flex py-2 pl-2 pr-1 text-white bg-darker-gray bg-opacity-80`}>
+      <div className={`w-full h-8 flex py-2 pl-2 pr-1 text-white bg-darker-gray bg-opacity-40`}>
         {/* <div className={`w-1/10 text-center text-xs flex`}></div> */}
         <div className={`w-3.5/10 overflow-hidden mx-2 flex items-center hover:underline cursor-pointer text-xs`}
           
-        >Students <span className='font-bold'>( {state.roster.length} )</span></div>
+        >Student Name</div>
         <div className={`w-3.5/10 mx-2 flex items-center overflow-hidden text-center text-xs `}
           
         >Current Page</div>

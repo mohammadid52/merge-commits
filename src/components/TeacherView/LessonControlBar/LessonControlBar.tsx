@@ -22,8 +22,8 @@ const LessonControlBar: React.FC<LessonControlBarProps> = (props: LessonControlB
 
   return (
     <div className='relative w-full h-full md:flex flex-col items-center justify-center content-center px-2 z-0'>
-      <ol className='relative w-full cursor-pointer 
-      bg-white rounded-md shadow px-2 flex justify-between'>
+      <ol className='relative w-full h-8 cursor-pointer bg-white bg-opacity-60
+      rounded-lg px-2 flex justify-between'>
         {state.pages.map(
           (
             page: {

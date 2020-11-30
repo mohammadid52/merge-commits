@@ -67,9 +67,13 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
         {/**
          *
          * TITLEBAR LESSON CONTROL
+         * 
+         * open/close & enable/disable buttons are only
+         * visible when teacher is NOT on the intro,
+         * and when you're NOT currently viewing a studento
          *
          */}
-        {pageViewed.pageID !== 0 ? (
+        {pageViewed.pageID !== 0 && !state.studentViewing.live ? (
           getCurrentPage().open ? (
             <span
               className='mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-red-600 hover:bg-red-500 hover:text-underline p-1 rounded-lg cursor-pointer'
@@ -85,7 +89,7 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
           )
         ) : null}
 
-        {pageViewed.pageID !== 0 ? (
+        {pageViewed.pageID !== 0 && !state.studentViewing.live ? (
           getCurrentPage().disabled ? (
             <span
               className='mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-sea-green hover:bg-green-500 hover:text-underline p-1 rounded-lg cursor-pointer'

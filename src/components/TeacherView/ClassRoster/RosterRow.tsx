@@ -174,7 +174,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
         <div
           id={`${id}`}
           className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-light-gray text-sm`}>
-          <span>n/a</span>
+          <span>N/A</span>
         </div>
       )}
     </div>

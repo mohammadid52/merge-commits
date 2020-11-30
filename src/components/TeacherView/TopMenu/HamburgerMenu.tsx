@@ -30,30 +30,31 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = (props: HamburgerMenuProps) 
           <div
             className={`${
               hamburgerOpen ? 'visible animate-fadeIn shadow-xl' : 'hidden'
-            } absolute w-32 h-auto transform right-0 flex  flex-col bg-gray-200 p-1 rounded-lg border-light-gray overflow-hidden z-100`}>
+            } absolute w-32 h-auto transform right-0 flex  flex-col bg-gray-200 p-1 rounded-lg border border-light-gray border-opacity-40 overflow-hidden z-100`}
+            onPointerLeave={()=>setHamburgerOpen(false)}>
             <div className='flex flex-col w-full h-full bg-gray-400 rounded-lg z-100'>
               
 
               <div
-                className='h-12 w-full flex justify-center items-center bg-gray-200 hover:bg-white text-gray-600 text-xs rounded-t-lg border border-light-gray active:shadow-none cursor-pointer'
+                className='h-8 w-full flex justify-center items-center bg-gray-200 hover:bg-white text-gray-600 text-xs rounded-t-lg border-b border-light-gray border-opacity-20 active:shadow-none cursor-pointer'
                 onClick={handleHomePopup}>
                 {/* <IconContext.Provider value={{ size: '1.5rem' }}>
                   <span className='w-12'>
                     <FaHome />
                   </span>
                 </IconContext.Provider> */}
-                <span className='w-full text-center'>Home</span>
+                <span className='w-full text-left pl-2'>Home</span>
               </div>
               
               <div
-                className='h-12 w-full flex justify-center items-center bg-gray-200 hover:bg-white text-gray-600 text-xs rounded-b-lg border-l border-r border-b border-light-gray active:shadow-none cursor-pointer'
+                className='h-8 w-full flex justify-center items-center bg-gray-200 hover:bg-white text-gray-600 text-xs rounded-b-lg active:shadow-none cursor-pointer'
                 onClick={handleClick}>
                 {/* <IconContext.Provider value={{ size: '1.5rem' }}>
                   <span className='w-12'>
                     <FiUsers />
                   </span>
                 </IconContext.Provider> */}
-                <span className='w-full text-center'>User Management</span>
+                <span className='w-full text-left pl-2'>User Management</span>
               </div>
               
 

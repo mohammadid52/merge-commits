@@ -92,7 +92,7 @@ const StageButton = (props: StageButtonProps) => {
       return (
         <div className='flex items-center'>
           <svg
-            className='flex-shrink-0 w-4 h-12 text-light-gray'
+            className='flex-shrink-0 w-2 h-6 text-light-gray'
             viewBox='0 0 24 44'
             preserveAspectRatio='none'
             fill='currentColor'
@@ -122,7 +122,7 @@ const StageButton = (props: StageButtonProps) => {
       return (
         <div className='flex items-center'>
           <svg
-            className='flex-shrink-0 w-4 h-12 text-light-gray'
+            className='flex-shrink-0 w-2 h-6 text-light-gray'
             viewBox='0 0 24 44'
             preserveAspectRatio='none'
             fill='currentColor'
@@ -152,7 +152,7 @@ const StageButton = (props: StageButtonProps) => {
   };
 
   return (
-    <li className='relative flex w-full h-12'>{stageButtonChoice()}</li>
+    <li className='relative flex w-full'>{stageButtonChoice()}</li>
     // </div>
   );
 };

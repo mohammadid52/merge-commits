@@ -7,12 +7,12 @@ const ComponentLoading = () => {
         <div
           className={`w-64 h-48 p-8 text-lg text-center text-blue-100 flex flex-col justify-center items-center font-light bg-white rounded-t-lg`}>
           <img
-            src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color_notext.svg'
+            src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-COLOR.svg'
             alt='Iconoclast Artists Logo'
           />
         </div>
         <div
-          className={`w-64 h-16 p-8 text-lg text-center text-blue-100 flex flex-col justify-center items-center font-light bg-dark-blue  shadow-xl rounded-b-lg`}>
+          className={`w-64 h-16 p-8 text-lg text-center text-blue-100 flex flex-col justify-center items-center font-light bg-darker-gray  shadow-xl rounded-b-lg`}>
           <p>Give us one second, this section is loading... </p>
         </div>
       </div>

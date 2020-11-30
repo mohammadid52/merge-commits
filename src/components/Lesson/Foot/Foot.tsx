@@ -73,8 +73,8 @@ const Branding: React.FC = () => {
           <div className='w-3.3/10 flex justify-center items-center'>
             <NavLink to='/dashboard'>
               <img
-                className='h-6 px-4'
-                src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg'
+                className='h-12 px-4'
+                src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-WHITE.svg'
                 alt='Iconoclast Artists'
               />
             </NavLink>

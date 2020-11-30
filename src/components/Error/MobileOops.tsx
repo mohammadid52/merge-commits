@@ -13,8 +13,8 @@ const MobileOops: React.FC<MobileOops> = (props: MobileOops) => {
         <div className='h-2.5/10 bg-dark-gray border-b border-dark-red p-4 rounded-t-xl'>
           <img
             id='dashboard'
-            className='mx-auto'
-            src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg'
+            className='h-full mx-auto'
+            src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-WHITE.svg'
             alt='Iconoclast Artists'
           />
         </div>
