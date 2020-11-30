@@ -5,7 +5,7 @@ import {
     useRouteMatch,
 } from "react-router-dom";
 import TChartActivity from './TChartModules/TChartActivity';
-import TChartBreakdown from './TChartBreakdown/ListBreakdown';
+import TChartBreakdown from './TChartBreakdown/TChartBreakdown';
 // import ErrorPage from '../../Error/ErrorPage';
 import { LessonContext } from '../../../../contexts/LessonContext';
 

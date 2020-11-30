@@ -5,6 +5,7 @@ import Modules from './Modules';
 import Banner from './Banner';
 import SelfDisplay from './SelfDisplay';
 import CoopDisplay from './CoopDisplay';
+import CoopDisplaycopy from './CoopDisplaycopy';
 
 
 const StoryBreakdown = () => {
@@ -28,7 +29,7 @@ if (displayMode === 'SELF') {
         <SelfDisplay />
     )} if (displayMode === 'COOP') {
         return (
-            <CoopDisplay />
+            <CoopDisplaycopy />
         )
     }
 }

@@ -61,7 +61,7 @@ const Modules = (props: any) => {
           'h-auto'} 
             ${theme.gradient.cardBase} font-open font-light h-16 rounded-lg px-4 py-2 ${
               key === additional.length - 1 ? '' : ''
-            }`}>{console.log(length, 'length')}{console.log(displayMode, 'displayMode')}
+            }`}>
             <h3>{keywordCapitilizer(item.name)}:</h3>
             <div className='w-full px-2 overflow-y-auto overflow-x-hidden'>
               {item.input

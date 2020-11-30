@@ -22,7 +22,7 @@ interface teacherData {
 
 const CoopDisplay = () => {
     const { state, dispatch } = useContext(LessonContext);
-    const displayProps = state.componentState.story;
+    const displayProps = state.componentState.poll;
     const [fullscreen, setFullscreen] = useState(false);
 
     const [ teacherData, setTeacherData ] = useState<teacherData>();
@@ -67,7 +67,17 @@ const CoopDisplay = () => {
                             <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${displayProps.additional ? 'md:w-full' : 'w-full'} md:mb-0 overflow-y-auto overflow-x-hidden h-7.83/10 p-4 md:p-6 items-center text-md md:text-xl text-gray-200 rounded-lg`}>
                                 {/* bg-lighter-blue shadow-inner-box  */}
                                 <div className={`h-full rounded-lg font-light text-xl`}>
-                                    { displayProps.story }
+                                    {displayProps ? displayProps.pollArray.map((item: {id: string, question: string, option: any}, key: number) => {
+                                        return ( <div className={`py-4`}>
+                                                <div className={`text-xl mb-4`}>
+                                                    {`${item.question}:`} 
+                                                </div>
+                                                {/* <div className={`text-lg text-center`}>
+                                                    {item.option}
+                                                </div> */}
+                                            </div>
+                                        )
+                                    }) : null }
                                 </div>
                             </div>
                             <Modules 
@@ -91,7 +101,9 @@ const CoopDisplay = () => {
 
                                 <div className="absolute w-auto z-50" style={{bottom: '-15px', right: 0, }}>
                                     <div className="bg-yellow-300 text-gray-800 font-light text-center flex flex-col justify-center items-center h-auto w-auto py-1 px-2 font-medium rounded-xl shadow-elem-dark z-50">
-                                    <p>by: { student ? student.preferredName ? student.preferredName : student.firstName : null } { student ? firstInitialFunc(student.lastName) : null}</p>
+                                    <p> Class Result
+                                        {/* { student ? student.preferredName ? student.preferredName : student.firstName : null } { student ? firstInitialFunc(student.lastName) : null} */}
+                                    </p>
                                     </div>
                                 </div>
 
@@ -102,7 +114,7 @@ const CoopDisplay = () => {
                                 <div className={`bg-gradient-to-tl from-dark-blue to-med-dark-blue ${ teacherData &&teacherData.warmUpData && teacherData.warmUpData.additional ? 'md:h-7.85/10' : 'h-full'} ${fullscreen ? 'text-lg md:text-2xl' : 'text-md md:text-xl'} md:mb-0 overflow-y-auto overflow-x-hidden w-full p-4 md:p-6 items-center text-gray-200 rounded-lg shadow-2`}>
                                     {/* bg-lighter-blue shadow-inner-box  */}
                                     <div className={`${fullscreen ? 'text-3xl' : 'text-xl'} h-full rounded-lg font-light`}>
-                                        { teacherData && teacherData.warmUpData && teacherData.warmUpData.story }
+                                        { teacherData && teacherData.warmUpData && teacherData.warmUpData.poll }
                                     </div>
                                 </div>
                                 <Modules 
