@@ -121,19 +121,22 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
 
       {/* STUDENT NAME */}
 
-      <div
-        id={`${id}`}
-        className={`w-3.5/10 overflow-hidden mx-2 flex items-center hover:underline cursor-pointer text-sm whitespace-pre`}
-        onClick={handleSelect}>
-        {preferredName ? preferredName : firstName} {lastName}
-      </div>
+      <div id={`${id}`} className='w-8/10 flex flex-row hover:font-semibold cursor-pointer' onClick={handleSelect}>
+          <div
+          id={`${id}`}
+            className={`w-1/2 overflow-hidden mx-2 flex items-center hover:font-semibold cursor-pointer text-sm whitespace-pre`}
+            >
+            {preferredName ? preferredName : firstName} {lastName}
+          </div>
 
-      {/* LESSON PROGRESS */}
+          {/* LESSON PROGRESS */}
 
-      <div
-        id={`${id}`}
-        className={`w-3.5/10 mx-2 flex justify-center items-center overflow-hidden text-sm text-left`}>
-        <ProgressSwitch label={currentLocation ? currentLocation : lessonProgress} id={id} />
+          <div
+          id={`${id}`}
+            className={`w-1/2 mx-2 flex justify-center items-center hover:font-semibold cursor-pointer overflow-hidden text-sm text-left`}
+            >
+            <ProgressSwitch label={currentLocation ? currentLocation : lessonProgress} id={id} />
+          </div>
       </div>
 
       {/* STUDENT ROLEY */}

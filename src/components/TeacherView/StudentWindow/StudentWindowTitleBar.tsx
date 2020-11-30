@@ -73,7 +73,7 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
          * and when you're NOT currently viewing a studento
          *
          */}
-        {pageViewed.pageID !== 0 && !state.studentViewing.live ? (
+        {pageViewed.pageID !== 0 && !state.studentViewing.live && getCurrentPage().disabled === false ? (
           getCurrentPage().open ? (
             <span
               className='mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-red-600 hover:bg-red-500 hover:text-underline p-1 rounded-lg cursor-pointer'
