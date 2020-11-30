@@ -35,7 +35,6 @@ const Classroom: React.FC = () => {
   const history = useHistory();
   const { state, theme } = useContext(GlobalContext);
   const [curriculum, setCurriculum] = useState<CurriculumInfo>();
-  const [today, setToday] = useState<any>();
   const [survey, setSurvey] = useState<any>({
     display: false,
     data: null,
@@ -45,28 +44,21 @@ const Classroom: React.FC = () => {
   const [status, setStatus] = useState('');
 
   async function getCourse(id: string) {
-    let limit = 2;
     try {
       const course: any = await API.graphql(
         graphqlOperation(customQueries.getCourse, { id: id })
       );
-      console.log(course, 'courses main fetch')
-      const lesson = course.data.getCourse.classrooms.items.slice(1, 3)
-      const nextLesson = lesson.lesson;
-      
       const lessonsInfo = course.data.getCourse.classrooms.items;
-      console.log(lessonsInfo, 'courses')
-      setToday(lesson);
+      const nextLesson = lessonsInfo.lesson;
       setCurriculum(nextLesson);
       setListCurriculum(lessonsInfo);
       if (state.user.onBoardSurvey) setStatus('done');
-      // console.log(lessonsInfo, 'list');
     } catch (error) {
       console.error(error);
     }
   }
 
-  // const [ open, setOpen ] = useState<any>();
+
 
   // async function getClassroom(id: string) {
   //   let queryParams = queryString.parse(location.search)
@@ -89,12 +81,6 @@ const Classroom: React.FC = () => {
   //       console.error(error)
   //   }
   // }
-
-  // console.log(open, 'lesson')
-
-  // useEffect(() => {
-  //   getClassroom('1')
-  // }, [])
 
 
   const getSurvey = async () => {
@@ -121,8 +107,6 @@ const Classroom: React.FC = () => {
 
   useEffect(() => {
     getCourse('1');
-
-    // history.push('/lesson?id=1');
   }, []);
 
   useEffect(() => {
@@ -188,7 +172,7 @@ const Classroom: React.FC = () => {
               Today's Lesson
             </h2>
 
-            <Today display={survey.display} link={'/lesson?id=1'} curriculums={today} />
+            <Today display={survey.display} link={'/lesson?id=1'} curriculums={listCurriculum} />
           </div>
         </div>
 

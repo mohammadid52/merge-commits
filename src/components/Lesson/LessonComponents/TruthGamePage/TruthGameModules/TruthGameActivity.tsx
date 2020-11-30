@@ -5,36 +5,48 @@ import InstructionsBlock from './InstructionBlock';
 import Banner from './Banner';
 import Modules from './Modules';
 import InstructionsPopup from '../../../Popup/InstructionsPopup';
-import ListForm from './TruthGameForm';
-import { string } from 'prop-types';
+import TruthGameForm from './TruthGameForm';
 
-export interface StoryState {
-    story: string,
-    title?: string,
-    additional?: {
-        name: string,
-        text: string | [],
-    }[]
+export interface TruthInput {
+    id: string,
+    label: string,
+    isLie: boolean,
+    text: string
 }
 
-const List = () => {
+export type TruthInputState = Array<TruthInput>
+
+const TruthGame = () => {
     const { state, dispatch } = useContext(LessonContext);
-    const [ cookies, setCookie ] = useCookies(['story']);
+    const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
     const inputs = state.data.lesson.warmUp.inputs;
     const video = state.data.lesson.warmUp.instructions.link
     const [ openPopup, setOpenPopup ] = useState(false)
 
-    
-    
-
     useEffect(() => {
-        if ( !cookies.story && !state.componentState.story ) {
-           let tempObj: StoryState = {
-                story: '',
-            }
-            if ( inputs.title ) {
-                tempObj.title = '';
-            }
+        if ( !cookies[`lesson-${state.classroomID}`].truthGame && !state.componentState.truthGame ) {
+             
+            let tempObj : {
+               truthGameArray: TruthInputState
+               additional?: Array<{name: string, text: string | []}>
+           }
+
+           tempObj = {
+               truthGameArray: []
+           };
+
+           let tempArr = inputs.truthGameInputs.map((item: {id: string, label: string}, ) => {  
+            let storageObj = {
+                    id: item.id,
+                    label: item.label,
+                    isLie: false, 
+                    text: ''
+                }
+                return storageObj
+                
+           } ) 
+
+           tempObj.truthGameArray = tempArr
 
             if (inputs.additionalInputs.length > 0) {
                 let additional:Array<{name: string, text: string | []}>= [];
@@ -53,20 +65,20 @@ const List = () => {
             dispatch({
                 type: 'SET_INITIAL_COMPONENT_STATE',
                 payload: {
-                    name: 'story',
+                    name: 'truthGame',
                     content: tempObj
                 }
             })
 
-            setCookie('story', tempObj)
+            setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], truthGame: tempObj })
         }
         
-        if ( cookies.story ) {
+        if ( cookies[`lesson-${state.classroomID}`].truthGame ) {
             dispatch({
                 type: 'SET_INITIAL_COMPONENT_STATE',
                 payload: {
-                    name: 'story',
-                    content: cookies.story
+                    name: 'truthGame',
+                    content: cookies[`lesson-${state.classroomID}`].truthGame
                 }
             })
         }
@@ -93,7 +105,7 @@ const List = () => {
                         }
                     </div>
                     <div className="md:w-5.9/10 h-full flex flex-col items-center">
-                        <ListForm />
+                        <TruthGameForm />
                     </div>
                 </div>
             </div>
@@ -101,4 +113,4 @@ const List = () => {
     )
 }
 
-export default List;
+export default TruthGame;

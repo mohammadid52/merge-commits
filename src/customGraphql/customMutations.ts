@@ -43,6 +43,7 @@ export const createStudentData = /* GraphQL */ `
         preferredName
         lastName
         language
+        role
       }
       warmupData {
         story
@@ -128,6 +129,7 @@ export const updateStudentData = /* GraphQL */ `
         preferredName
         lastName
         language
+        role
       }
       warmupData {
         story
@@ -181,6 +183,7 @@ export const updateClassroom = /* GraphQL */ `
       open
       lessonID
       roster
+      complete
       viewing
       displayData {
         breakdownComponent
@@ -227,6 +230,34 @@ export const updateClassroom = /* GraphQL */ `
           title
         }
       }
+      lessonPlan {
+        id
+        disabled
+        open
+        active
+        stage
+        type
+        displayMode
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const updateClassroomDate = /* GraphQL */ `
+  mutation UpdateClassroom(
+    $input: UpdateClassroomInput!
+    $condition: ModelClassroomConditionInput
+  ) {
+    updateClassroom(input: $input, condition: $condition) {
+      id
+      open
+      lessonID
+      roster
+      complete
+      expectedStartDate
+      expectedEndDate
       lessonPlan {
         id
         disabled

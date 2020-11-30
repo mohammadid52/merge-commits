@@ -25,12 +25,25 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
 
   const handleLink = (key: any) => {
     if (accessible) {
-        history.push((`${`/lesson-control?id=${key + 1}`}`));
+        history.push((`${`/lesson-control?id=${key}`}`));
     }
 
     // For testing: enables clickthrough survey
     // history.push(link);
   };
+
+  const Lessons = curriculums
+  ? curriculums.filter((value: any, index: number, array: CurriculumInfo[]) => {
+    if (value.SELStructure !== null) {
+      return value
+    }}
+      )  
+  : [];
+
+  const sortDates = Lessons.sort((a: any, b: any) => {
+    return (a.expectedStartDate > b.expectedStartDate) ? 1 : -1;
+  })
+
 
   useEffect(() => {
     if (display) {
@@ -44,7 +57,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
 
   return (
     <div>
-      { curriculums.map((curriculum: any, key: number) => {
+      { Lessons.map((curriculum: any, key: number) => {
         return (
           <div key={key}>
           <div className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} h-auto flex mb-8`}>
@@ -74,8 +87,13 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
       </div>
       <div className='w-7.5/10 flex flex-col '>
         <div className='h-44 p-4 flex flex-col justify-start items-center'>
-          <h1 className={`text-2xl text-black font-open text-left`}>
-            {curriculum && curriculum.lesson.title ? curriculum.lesson.title : null}
+          <h1 className={`text-2xl text-black font-open text-left flex justify-between`}>
+            <div>
+              {curriculum && curriculum.lesson.title ? curriculum.lesson.title : null}
+            </div>
+            <div className="text-xl text-right">
+              expected start date: <span className="font-semibold">{curriculum && curriculum.expectedStartDate ? curriculum.expectedStartDate : null}</span>
+            </div>
           </h1>
           <p className='text-sm text-left'>
             {curriculum && curriculum.lesson.summary ? curriculum.lesson.summary : null}
@@ -103,7 +121,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
           <div className='flex w-3.3/10'>
             <button
               type='submit'
-              onClick={() => handleLink(key)}
+              onClick={() => handleLink(curriculum.lessonID)}
               className={`${
                 accessible
                   ? 'bg-ketchup hover:bg-red-300 focus:border-red-700 focus:shadow-outline-red active:bg-red-500 text-white'

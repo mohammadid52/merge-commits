@@ -1579,6 +1579,10 @@ export const getWarmUp = /* GraphQL */ `
         example
         titleExample
         textExample
+        truthGameInputs {
+          id
+          label
+        }
         additionalInputs {
           id
           name

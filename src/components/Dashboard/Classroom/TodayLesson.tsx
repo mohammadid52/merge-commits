@@ -10,15 +10,12 @@ import ToolTip from '../../General/ToolTip/ToolTip';
 import * as customQueries from '../../../customGraphql/customQueries';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { start } from 'repl';
 import Start from './Start';
 
 interface ClassProps {
   link: string;
   display?: boolean;
   curriculums: any;
-  // open: boolean
-  // getClassroom: any
 }
 
 const Today: React.FC<ClassProps> = (props: ClassProps) => {
@@ -26,14 +23,22 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
   const [accessible, setAccessible] = useState<boolean>(true);
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
+  const [lessons, setLessons] = useState<Array<CurriculumInfo>>();
 
-  const handleLink = (key: number) => {
-    if (accessible) {
-      history.push(`${`/lesson?id=${key + 1}`}`);
-    }
-    // For testing: enables clickthrough survey
-    // history.push(link);
-  };
+  const todayLesson = curriculums
+  ? curriculums.filter((value: any, index: number, array: CurriculumInfo[]) => {
+      if(new Date(value.expectedStartDate) <= new Date )  {
+          if (!value.complete && value.SELStructure !== null){
+            return value.lesson;
+          }
+      }
+    })
+  : [];
+
+
+  useEffect(() => {
+    setLessons(todayLesson);
+  }, [props]);
 
   useEffect(() => {
     if (display) {
@@ -47,8 +52,8 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
 
   return (
     <div className={``}>
-      {curriculums
-        ? curriculums.map((curriculum: any, key: number, i: string) => {
+      {lessons
+        ? lessons.map((value: any, key: number) => {
             return (
               <div key={key}>
                 <div
@@ -57,8 +62,8 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                     className={`w-2.5/10 ${theme.dashboard.bg} rounded-tl-xl rounded-bl-xl`}
                     style={{
                       backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${
-                        curriculum && curriculum.lesson.artist.images
-                          ? curriculum.lesson.artist.images
+                        value && value.lesson.artist.images
+                          ? value.lesson.artist.images
                           : null
                       })`,
                       backgroundSize: 'cover',
@@ -75,8 +80,8 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                       <h2
                         className={`first w-full text-2xl text-right font-open font-medium tracking-widest mt-2 mr-1 text-gray-200`}
                         style={{ textShadow: '1px 1px black' }}>
-                        {curriculum && curriculum.lesson.artist.name
-                          ? curriculum.lesson.artist.name
+                        {value && value.lesson.artist.name
+                          ? value.lesson.artist.name
                           : null}
                       </h2>
                     </div>
@@ -84,10 +89,10 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                   <div className='w-7.5/10 flex flex-col '>
                     <div className='h-44 p-4 flex flex-col justify-start items-center'>
                       <h1 className={`text-2xl text-black font-open text-left`}>
-                        {curriculum && curriculum.lesson.title ? curriculum.lesson.title : null}
+                        {value && value.lesson.title ? value.lesson.title : null}
                       </h1>
                       <p className='text-sm text-left'>
-                        {curriculum && curriculum.lesson.summary ? curriculum.lesson.summary : null}
+                        {value && value.lesson.summary ? value.lesson.summary : null}
                       </p>
                     </div>
                     <div
@@ -111,8 +116,8 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                         </div>
                         <div className={`w-auto mx-4 text-gray-200`}>Marlon</div>
                       </div>
-                      <div className='flex w-3.3/10'>
-                        <Start lessonKey={curriculum ? curriculum.lessonID : null} />
+                      <div className='flex w-3.3/10'> 
+                        <Start lessonKey={value ? value.lessonID : null} open={value ? value.open : null} accessible={accessible}/>
                       </div>
                     </div>
                   </div>

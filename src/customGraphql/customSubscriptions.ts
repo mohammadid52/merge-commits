@@ -85,6 +85,7 @@ export const onChangeStudentData = /* GraphQL */ `
             preferredName
             lastName
             language
+            role
         }
         warmupData {
             story
