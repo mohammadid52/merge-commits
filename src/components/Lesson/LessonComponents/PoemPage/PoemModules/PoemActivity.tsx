@@ -86,14 +86,7 @@ const PoemActivity = () => {
         title: '',
         editMode: false,
         editInput: '',
-        lines: [
-          {
-            id: 0,
-            text: '',
-            example: '',
-            menuOpen: false,
-          },
-        ],
+        lines: [],
       };
 
       dispatch({

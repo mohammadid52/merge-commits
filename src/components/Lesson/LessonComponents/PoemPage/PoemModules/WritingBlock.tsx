@@ -194,7 +194,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                     if (line.id == id) {
                         return {
                             ...line,
-                            menuOpen: !line.menuOpen,
+                            menuOpen: !line?.menuOpen,
                         }
                     }
                     return {
@@ -338,7 +338,7 @@ const WritingBlock = (props: WritingBlockProps) => {
             
             
             
-            <div className={`w-full flex flex-col border-2 border-white border-opacity-20 rounded-lg ${(lineState.lines[lineNo - 1].menuOpen) ? 'pt-4 pl-4 pr-4 pb-52' : 'p-4'}`}>
+            <div className={`w-full flex flex-col border-2 border-white border-opacity-20 rounded-lg ${(lineState.lines[lineNo - 1]?.menuOpen) ? 'pt-4 pl-4 pr-4 pb-52' : 'p-4'}`}>
 
                 {/* MAP THE LINE PROMPTS */}
                 {lineState.lines.length > 1
@@ -363,7 +363,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                                             <div className='relative w-full'>
                                                 <input
                                                     id={id}
-                                                    className={` ${line.menuOpen && menuToggled ? 'rounded-tl-xl border-t border-l border-r border-white' : 'rounded-l-xl'}  ${theme.elem.textInput}`}
+                                                    className={` ${line?.menuOpen && menuToggled ? 'rounded-tl-xl border-t border-l border-r border-white' : 'rounded-l-xl'}  ${theme.elem.textInput}`}
                                                     name={id}
                                                     type='text'
                                                     value={line.text}
@@ -372,7 +372,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                                                 />
 
                                             {/* MAP AVAILABLE LINE PROMPTS */}
-                                                {line.menuOpen && menuToggled ? (
+                                                {line?.menuOpen && menuToggled ? (
                                                     <div className={`absolute left-0 h-48 overflow-y-scroll w-full rounded-b-xl z-50 shadow-xlwhite border-b border-l border-r border-white ${theme.elem.textInput}`}>
                                                         {lineState.prompts.map((prompt: any, key: number) => (
                                                             <div
