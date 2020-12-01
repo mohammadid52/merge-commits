@@ -61,30 +61,6 @@ const Classroom: React.FC = () => {
   }
 
 
-
-  // async function getClassroom(id: string) {
-  //   let queryParams = queryString.parse(location.search)
-
-  //   try {
-  //       // this any needs to be changed once a solution is found!!!
-  //       const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: id }))
-  //       // console.log('classroom data', classroom);
-  //       console.log(classroom.data.getClassroom, 'classroom')
-  //       setOpen(classroom.data.getClassroom.open)
-  //       // dispatch({
-  //       //   type: 'INITIAL_LESSON_SETUP', 
-  //       //   payload: { 
-  //       //     pages: classroom.data.getClassroom.lessonPlan, 
-  //       //     data: classroom.data.getClassroom,
-  //       //     students: classroom.data.getClassroom.data.items
-  //       // }})
-  //       // subscription = subscribeToStudentData()
-  //   } catch (error) {
-  //       console.error(error)
-  //   }
-  // }
-
-
   const getSurvey = async () => {
     try {
       const surveyData: any = await API.graphql(
@@ -121,30 +97,38 @@ const Classroom: React.FC = () => {
     // history.push('/lesson?id=2');
   }, []);
 
-  useEffect(() => {
-    if (!state.user.onBoardSurvey && !survey.data) {
-      getSurvey();
-    }
+  /**
+   * 
+   * 
+   * ssSSSssHOW SURVEY IF IT HAS NOT BEEN COMPLETED
+   * 
+   * 
+   */
 
-    if (state.user.onBoardSurvey) {
-      setSurvey(() => {
-        return {
-          ...survey,
-          display: false,
-        };
-      });
-    }
+  // useEffect(() => {
+  //   if (!state.user.onBoardSurvey && !survey.data) {
+  //     getSurvey();
+  //   }
 
-    if (!state.user.onBoardSurvey) {
-      setSurvey(() => {
-        return {
-          ...survey,
-          display: true,
-        };
-      });
-    }
+  //   if (state.user.onBoardSurvey) {
+  //     setSurvey(() => {
+  //       return {
+  //         ...survey,
+  //         display: false,
+  //       };
+  //     });
+  //   }
 
-  }, [state]);
+  //   if (!state.user.onBoardSurvey) {
+  //     setSurvey(() => {
+  //       return {
+  //         ...survey,
+  //         display: true,
+  //       };
+  //     });
+  //   }
+
+  // }, [state]);
 
   const handleLink = () => {
     history.push('/lesson');
