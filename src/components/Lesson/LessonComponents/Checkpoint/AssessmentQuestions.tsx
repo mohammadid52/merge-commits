@@ -31,7 +31,7 @@ interface CheckpointQuestionsProps {
 
 const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const { handleSetTitle } = props;
-  const { state, dispatch } = useContext(LessonContext);
+  const { state, theme, dispatch } = useContext(LessonContext);
   const checkpoints = state.data.lesson.assessment.checkpoints.items;
 
   // console.log(state, "state");
@@ -282,47 +282,47 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   if (status !== "loaded") return null;
 
   return (
-      <div className="relative h-full w-full text-gray-200">
-      <h4
-        className={`w-full text-2xl font-open font-bold text-gray-200 ${
-          checkpoint.checkpoint.subtitle ? 'border-b-2 border-gray-200 mb-2' : ''
-        }`}>
-        { checkpoint.checkpoint.subtitle ? checkpoint.checkpoint.subtitle : null }
-      </h4>
-      <h4 className={`w-full text-2xl font-open font-semibold text-gray-200 mb-1`}>{checkpoint.checkpoint.instructions}</h4>
+    <div className="relative h-full w-full text-gray-200">
+    <h4
+      className={`w-full text-2xl font-open font-bold text-gray-200 ${
+        checkpoint.checkpoint.subtitle ? 'border-b-2 border-gray-200 mb-2' : ''
+      }`}>
+      { checkpoint.checkpoint.subtitle ? checkpoint.checkpoint.subtitle : null }
+    </h4>
+    <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>{checkpoint.checkpoint.instructions}</div>
 
-      <div className={`h-8/10 w-full flex flex-col text-gray-200`}>
-      {currentData.map(
-        (value: {
-          position: any;
-          checkpoint: {
-            id: string;
-            instructions: string;
-            questions: { items: any };
-          };
-        }, key: number) => {
-          return (
-            <div className="flex flex-col h-full w-full justify-around items-center" key={key}>
-              {value.checkpoint.questions.items.map(
-                (item: any, key: number) => {
-                  return (
-                    <div className="w-7/10 " key={key}> {inputSwitch(item.question, key)} </div>
-                  );
-                }
-              )}
-            </div>
-          );
-        }
-      )}
-      
-    </div>
-    <Pagination
-        data={checkpoints}
-        dataPerPage={dataPerPage}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
-    </div>
+    <div className={`${theme.elem.text}`}>
+    {currentData.map(
+      (value: {
+        position: any;
+        checkpoint: {
+          id: string;
+          instructions: string;
+          questions: { items: any };
+        };
+      }, key: number) => {
+        return (
+          <div className="flex flex-col h-full w-full justify-around items-center" key={key}>
+            {value.checkpoint.questions.items.map(
+              (item: any, key: number) => {
+                return (
+                  <div className="w-5/10 " key={key}> {inputSwitch(item.question, key)} </div>
+                );
+              }
+            )}
+          </div>
+        );
+      }
+    )}
+    
+  </div>
+  <Pagination
+      data={checkpoints}
+      dataPerPage={dataPerPage}
+      currentPage={currentPage}
+      setCurrentPage={setCurrentPage}
+    />
+  </div>
   );
 };
 

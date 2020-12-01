@@ -30,17 +30,18 @@ export interface FinalText {
 }
 
 interface props {
-    fullscreen: boolean
+    fullscreen: boolean;
+    fullscreenInstructions: boolean;
 }
 
 const Body = (props: props) => {
-    const { fullscreen } = props
-    const { state, dispatch } = useContext(LessonControlContext)
-    const [ color, setColor ] = useState('')
-    const [ selected, setSelected ] = useState<Array<SelectObject>>([])
-    const [ fullscreenLyrics, setFullscreenLyrics ] = useState(false)
+    const { fullscreen, fullscreenInstructions } = props
+    const { state, theme, dispatch } = useContext(LessonControlContext)
+    const [color, setColor] = useState('')
+    const [selected, setSelected] = useState<Array<SelectObject>>([])
+    const [fullscreenLyrics, setFullscreenLyrics] = useState(false)
     const { video, link } = state.data.lesson.coreLesson.instructions
-    const [ openPopup, setOpenPopup ] = useState(false)
+    const [openPopup, setOpenPopup] = useState(false)
 
     const [finalText, setFinalText] = useState<FinalText>({});
     const [initialSelectedText, setInitialSelectedText] = useState<SelectedTextGroup>({});
@@ -60,7 +61,7 @@ const Body = (props: props) => {
 
     useEffect(() => {
         if (displayStudentData) {
-            if ( state.studentViewing.studentInfo.corelessonData && state.studentViewing.studentInfo.corelessonData.selected ) {
+            if (state.studentViewing.studentInfo.corelessonData && state.studentViewing.studentInfo.corelessonData.selected) {
                 return setSelected(state.studentViewing.studentInfo.corelessonData.selected)
             } return setSelected([])
         }
@@ -81,20 +82,39 @@ const Body = (props: props) => {
        
     }, [initialSelectedText])
 
+    const colorPicker = (colorName: string): string => {
+        switch (colorName) {
+          case 'dark-red':
+            return '#CA2222';
+          case 'blueberry':
+            return '#488AC7';
+          case 'sea-green':
+            return '#17A589';
+          case 'fire-orange':
+            return '#FF5733';
+          case 'erase':
+          default:
+            return '';
+        }
+      };
+
     return (
         <>
-            {/* <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/>  */}
-            <div className="w-full h-full flex flex-col justify-between items-center">
-                <Banner fullscreen={fullscreen}/>
-                <div className="w-full md:h-8.8/10 flex flex-col-reverse md:flex-row justify-between items-center content-center">
-                    <div className="h-full flex flex-col justify-between md:w-4.8/10 text-gray-200">
-                        <InstructionBlock fullscreen={fullscreen}/>
-                        <VideoBlock link={state.data.lesson.coreLesson.content.link} fullscreenLyrics={fullscreenLyrics}/> 
-                    </div>
-                    <div className="h-full md:w-5.1/10 flex flex-col justify-between items-center">
-                        <Toolbar setColor={setColor} fullscreen={fullscreen}/>
-                        <LyricsBlock
+            <div className={`${(fullscreenInstructions) ? 'absolute w-5/10 h-5/10 left-1/2 transform -translate-x-1/2 translate-y-1/2 mx-auto my-auto shadow-xl text-lg bg-light-gray p-4 rounded-xl animate-fadeIn z-50' : 'hidden'}`}>
+                <InstructionBlock fullscreen={fullscreen}/>
+            </div>
+
+            
+            <div className={`${(fullscreenInstructions) ? 'opacity-10' : ''} transition ease-in-out duration-500 w-full h-full max-w-256 flex flex-col mx-auto z-50`}>
+               
+
+                
+               
+                <Toolbar setColor={setColor} color={color} colorPicker={colorPicker} fullscreen={fullscreen} />
+
+                <LyricsBlock
                             color={color}
+                            colorPicker={colorPicker}
                             selected={selected}
                             setSelected={setSelected}
                             fullscreen={fullscreen}
@@ -109,9 +129,9 @@ const Body = (props: props) => {
                             selectGroup={selectGroup}
                             setSelectGroup={setSelectGroup}
                         />
+                <div className='overflow-y-scroll  rounded-xl bg-darker-gray text-gray-200'>
                     </div>
                 </div>
-            </div>
         </>
     )
 }

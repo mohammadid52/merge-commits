@@ -127,15 +127,15 @@ const handleInputTest = (e: KeyboardEvent<HTMLTextAreaElement>, event: ChangeEve
 
 
   return (
-    <div className='bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600'>
+    <div className='w-full h-full rounded-xl'>
       <h3
-        className={`text-xl text-gray-200 font-open font-light ${theme.underline}`}>
+        className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
         List{' '}
       </h3>
-      <div className='text-gray-800 rounded-lg relative h-full flex flex-col items-center mb-5 mt-2'>
+      <div className='relative h-full flex flex-col mb-5 mt-2'>
         <textarea
           id='story'
-          className=' w-9/10 h-full px-4 py-2 rounded-lg text-xl '
+          className={`w-full h-64 py-2 px-4 text-gray-800 rounded-xl ${theme.elem.textInput}`}
           name='list'
           placeholder={`${bullet} ${state.data.lesson.warmUp.inputs.textExample}`}
           defaultValue={`${input.story}`}

@@ -41,13 +41,13 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
   }, [props]);
 
   useEffect(() => {
-    if (display) {
-      setAccessible(false);
-    }
+    // if (display) {
+    //   setAccessible(false);
+    // }
 
-    if (!display) {
+    // if (!display) {
       setAccessible(true);
-    }
+    // }
   }, [props]);
 
   return (
@@ -67,6 +67,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
                           : null
                       })`,
                       backgroundSize: 'cover',
+                      backgroundPosition: 'center'
                     }}>
                     <div className='h-6/10 flex justify-center items-center'></div>
                     <div className='h-1/10 pl-6'>

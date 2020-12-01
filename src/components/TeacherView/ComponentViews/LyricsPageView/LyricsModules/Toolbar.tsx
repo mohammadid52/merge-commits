@@ -1,98 +1,149 @@
-import React, { useContext, useState } from 'react';
-import { IconContext } from "react-icons/lib/esm/iconContext";
-import { FaEraser } from 'react-icons/fa';
+import React, { useRef, useContext, useState } from 'react';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { FaEraser, FaHighlighter } from 'react-icons/fa';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
+import ToolTip from '../../../../General/ToolTip/ToolTip';
+
 interface ToolbarProps {
-    setColor: React.Dispatch<React.SetStateAction<string>>,
-    fullscreen: boolean
+  color: string;
+  setColor: React.Dispatch<React.SetStateAction<string>>;
+  fullscreen: boolean;
+  colorPicker: (color: string) => string;
 }
 
 const ToolBar = (props: ToolbarProps) => {
-    const { setColor, fullscreen } = props;
-    const { state, dispatch } = useContext(LessonControlContext);
-    const [ search, setSearch ] = useState('');
-    const buttons = state.data.lesson.coreLesson.tools;
+  const { color, setColor, fullscreen, colorPicker } = props;
+  const { state, theme, dispatch } = useContext(LessonControlContext);
+  const [search, setSearch] = useState('');
 
-    const handleClick = (e: any) => {
-        setColor(e.target.id);
+  const [isSticky, setSticky] = useState(false);
+  const ref = useRef(null);
+
+  const buttons = state.data.lesson.coreLesson.tools;
+  const handleClick = (e: any) => {
+    setColor(e.target.id);
+  };
+
+  const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => {
+    setSearch(e.target.value);
+  };
+
+  const handleDrop = (e: {
+    preventDefault: () => void;
+    dataTransfer: { getData: (arg0: string) => string };
+  }) => {
+    e.preventDefault();
+
+    const wordId = e.dataTransfer.getData('wordId');
+    const word = document.getElementById(wordId).innerText;
+
+    if (state.word_bank.indexOf(word) < 0) {
+      dispatch({ type: 'ADD_WORD', payload: word });
     }
+  };
 
-    const handleChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-        setSearch(e.target.value)
-    }
+  const handleDragOver = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+  };
 
-    const handleDrop = (e: { preventDefault: () => void; dataTransfer: { getData: (arg0: string) => string; }; }) => {
-        e.preventDefault();
+  return (
+    <div className='h-auto z-50'>
+      {/* <div className={`w-full rounded-xl`}>
+        <h3 className={`w-auto text-xl ${theme.banner} ${theme.underline} flex flex-row`}>
+          Highlighters{' '}
+          <ToolTip
+            width='w-40'
+            position='bottom'
+            header='Highlighters'
+            content='You really gotta click & drag those highlighters across the words!'
+          />
+        </h3>
+      </div> */}
 
-        const wordId = e.dataTransfer.getData('wordId');
-        const word = document.getElementById(wordId).innerText;
-        
-        if (state.word_bank.indexOf(word) < 0) {
-            dispatch({type: 'ADD_WORD', payload: word})
-        }
-    }
-
-    const handleDragOver = (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
-    }
-
-
-    return (
-
-        <div className={`${fullscreen ? 'p-4' : 'p-2'} bg-medium-blue h-2.5/10 w-full p-4 rounded-lg flex flex-col items-center justify-around`}>
-        <div className='relative flex flex-row justify-center items-center border-b border-white border-opacity-10 pb-1 mb-1'>
-          <h3 className={`${fullscreen ? 'text-xl' : 'text-lg'} absolute text-xl text-gray-200 font-open font-light pb-1`} style={{left: '0'}}>
-            Highlighters
-          </h3>
-          <p className={`${fullscreen ? 'text-sm text-center' : 'text-xs text-right'} text-gray-600`}>
-            (click a color and drag over words!)
-          </p>
+      <div
+        ref={ref}
+        className={`w-full rounded-xl flex flex-row w-auto text-xl ${theme.banner} flex flex-row`}
+        style={{ marginTop: '0', paddingBottom: '0' }}>
+        <div className='w-3.3/10 h-16 flex flex-col justify-center items-center'>
+          <span>Highlighters:</span>
         </div>
-        <div className='w-auto cursor-pointer flex flex-row justify-center items-center pt-2'>
-          {buttons.map((button: { color: string; icon: string }, key: number) => (
-            <div
-              key={key}
-              id={button.color}
-              className={`bg-${button.color} ${fullscreen ? 'h-12 w-12 text-3xl' : 'h-8 w-8 text-md'} rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center animate-fadeIn`}
-              onClick={handleClick}>
-              {button.icon}
-            </div>
-          ))}
+        <div className={`w-3.3/10 h-16 flex  justify-center items-center pt-2 z-50`}>
           <div
-            id='erase'
-            className={`${fullscreen ? 'h-12 w-12 text-3xl' : 'h-8 w-8 text-md'} bg-gray-200 rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center`}
-            onClick={handleClick}>
-            <IconContext.Provider value={{ color: 'darkgray', size: fullscreen ? '2rem' : '1rem' }}>
-              <FaEraser />
-            </IconContext.Provider>
+            className={`${
+              isSticky
+                ? 'fixed top-0 w-full flex flex-row justify-center items-center bg-dark-gray translate-y-full z-50'
+                : ''
+            } w-auto cursor-pointer flex flex-row`}>
+            {buttons.map((button: { color: string; icon: string; name: string }, key: number) => (
+              <div
+                key={key}
+                id={button.color}
+                className={`${color === button.color ? 'border-2 border-white' : ''} 
+                  bg-${button.color} 
+                  relative h-12 w-12 text-3xl rounded-lg mb-2 mx-4 flex flex-row justify-center items-center animate-fadeIn
+                  `}
+                onClick={handleClick}>
+                <ToolTip
+                  position='bottom'
+                  id={button.color}
+                  cursor
+                  header=''
+                  width='w-24 px-1 flex justify-center items-center'
+                  content={
+                    <div className='flex text-center justify-center w-24'>{button.name}</div>
+                  }
+                  display='none'
+                  fontSize='text-xs'
+                />
+                {button.icon}
+              </div>
+            ))}
+
+            <div
+              id='erase'
+              className={`relative bg-gray-200 h-12 w-12 text-3xl rounded-lg mb-2 mx-4 flex flex-row justify-center items-center`}
+              onClick={handleClick}>
+              <ToolTip
+                position='bottom'
+                id={'erase'}
+                cursor
+                header=''
+                width='w-24 px-1 flex justify-center items-center'
+                content={<div className='flex text-center justify-center w-24'>{'erase'}</div>}
+                display='none'
+                fontSize='text-xs'
+              />
+              <IconContext.Provider value={{ color: 'darkgray', size: '2rem' }}>
+                <FaEraser style={{ pointerEvents: 'none' }} />
+              </IconContext.Provider>
+            </div>
           </div>
         </div>
-  
+        <div className='hidden w-3.3/10 h-16 w-16 flex items-center'>
+          <IconContext.Provider
+            value={{
+              className: 'ml-auto mr-0',
+              color: `${props.colorPicker(color) === '' ? 'white' : props.colorPicker(color)}`,
+              size: '2rem',
+              style: { width: 'auto' },
+            }}>
+            <FaHighlighter />
+          </IconContext.Provider>
+        </div>
       </div>
 
-        // <div className={`${fullscreen ? 'p-2' : 'p-1'} bg-gray-500 h-1.8/10 w-full shadow-2 rounded-lg flex flex-col items-center justify-around`}>
-        //     <h3 className={`${fullscreen ? 'text-xl' : 'text-lg'} w-auto text-gray-200 font-open font-bold border-b border-white`}>Highlighters</h3>
-        //     <div className="w-auto cursor-pointer flex flex-row justify-center items-center pt-2">
-               
-        //         {
-
-        //             buttons.map((button: {color: string, icon: string}, key: number) => (
-        //                     <div key={key} id={button.color} className={`bg-${button.color} ${fullscreen ? 'h-12 w-12 text-3xl' : 'h-8 w-8 text-md'} rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center`} onClick={handleClick}>
-        //                         {button.icon}
-        //                     </div>
-        //             ))
-        //         }
-        //             <div id="" className={`${fullscreen ? 'h-12 w-12 text-3xl' : 'h-8 w-8 text-md'} bg-gray-200 rounded-lg mb-2 mx-4 shadow-elem-dark flex flex-row justify-center items-center`} onClick={handleClick}>
-        //                 <IconContext.Provider value={{ color: 'darkgray', size: '1rem'}}>
-        //                     <FaEraser />
-        //                 </IconContext.Provider>
-        //             </div>
-        //     </div>
-
-        // </div>
-    )
-}
+      <div className='w-full leading-6 border-b border-t border-white border-opacity-10 mb-4'>
+        <p className='pl-2 text-sm text-left  text-white '>
+          1. To select a <b>sentence/phrase</b>, click the 'first word' and the 'last word'.
+        </p>
+        <p className='pl-2 text-sm text-left  text-white '>
+          2. To select <b>one</b> word, double click the word.
+        </p>
+      </div>
+    </div>
+  );
+};
 
 export default ToolBar;

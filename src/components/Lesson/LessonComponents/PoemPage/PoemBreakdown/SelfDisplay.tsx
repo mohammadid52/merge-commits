@@ -2,29 +2,24 @@ import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import Banner from './Banner';
 import ReflectionQuestions from './ReflectionQuestions';
-
+import PoemOutput from './PoemOutput';
 
 const SelfDisplay = () => {
-    const { state, dispatch } = useContext(LessonContext);
-    const displayProps = state.componentState.poem;
-    const [fullscreen, setFullscreen] = useState(false);
-    
-    useEffect(() => {
-        dispatch({type: 'ACTIVATE_LESSON', payload: 'activity/breakdown'})
-    }, [])
+  const { state, theme, dispatch } = useContext(LessonContext);
+  const displayProps = state.componentState.poem;
+  const [fullscreen, setFullscreen] = useState(false);
 
-    return (
-        <div className="w-full h-full flex flex-row justify-center items-center">
-            <div className="w-full h-full flex flex-col justify-between items-center">
-                <Banner title={displayProps ? displayProps.title : null} 
-                display="SELF" fullscreen={fullscreen} />
-                <div className="bg-dark-blue w-full h-112 md:h-7/10 font-light p-8 flex flex-col items-center text-3xl text-gray-200 rounded-lg whitespace-pre-wrap overflow-y-auto overflow-x-hidden">
-                    { displayProps ? displayProps.editInput : null}
-                </div>
-                <ReflectionQuestions />
-            </div>
-        </div>
-    )
+  useEffect(() => {
+    dispatch({ type: 'ACTIVATE_LESSON', payload: 'activity/breakdown' });
+  }, []);
+
+  return (
+    <div className={theme.section}>
+      <ReflectionQuestions />
+      <Banner title={typeof displayProps !== 'undefined' ? displayProps.title : 'Your Poem Title :)'} display='SELF' fullscreen={fullscreen} />    
+      <PoemOutput poem={typeof displayProps !== 'undefined' ? displayProps.editInput : 'Your Poem :)'} />
+    </div>
+  );
 };
 
 export default SelfDisplay;

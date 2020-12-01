@@ -20,7 +20,17 @@ const LessonError = lazy(() => import('./../Error/LessonError'));
 const Checkpoint = lazy(() => import('./ComponentViews/Checkpoint/Checkpoint'));
 // const Assessments = lazy(() => import('./ComponentViews/Checkpoint/Assessments'));
 
-const Body = () => {
+
+
+interface BodyProps {
+    fullscreenInstructions: boolean;
+}
+
+
+
+const Body: React.FC<BodyProps> = (props: BodyProps) => {
+    const {fullscreenInstructions} = props;
+
     const { state, dispatch } = useContext(LessonControlContext);
     const location = useLocation();
     const match = useRouteMatch();
@@ -31,7 +41,7 @@ const Body = () => {
             case 'story':
                 return <StoryView fullscreen={fullscreen}/>;
             case 'lyrics':
-                return <LyricsView fullscreen={fullscreen}/>;
+                return <LyricsView fullscreen={fullscreen} fullscreenInstructions={fullscreenInstructions}/>;
             case 'poem':
                 return <PoemView fullscreen={fullscreen}/>;
             case 'list':

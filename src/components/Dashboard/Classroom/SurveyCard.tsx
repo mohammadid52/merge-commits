@@ -23,7 +23,7 @@ const SurveyCard: React.FC<ClassProps> = (props: ClassProps) => {
 
   return (
     <div
-      className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} w-64rem h-auto flex`}>
+      className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} w-256 h-auto flex`}>
       <div className='w-full flex flex-col '>
         <div className='h-8.7/10 p-4 flex flex-col justify-center items-center'>
           <h1 className={`text-2xl text-black font-open text-left`}>Onboarding Survey</h1>

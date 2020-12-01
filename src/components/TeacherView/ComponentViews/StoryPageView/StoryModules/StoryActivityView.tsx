@@ -24,7 +24,7 @@ interface props {
 
 const Story = (props: props) => {
     const { fullscreen } = props;
-    const { state } = useContext(LessonControlContext);
+    const { state, theme } = useContext(LessonControlContext);
     const inputs = state.data.lesson.warmUp.inputs;
     const video = state.data.lesson.warmUp.instructions.link
     const [ openPopup, setOpenPopup ] = useState(false)
@@ -34,7 +34,7 @@ const Story = (props: props) => {
 
     useEffect(() => {
         if (displayStudentData) {
-            if ( state.studentViewing.studentInfo.warmupData ) {
+            if (state.studentViewing.studentInfo.warmupData) {
                 return setDataProps(state.studentViewing.studentInfo.warmupData)
             } return setDataProps(null)
         }
@@ -42,29 +42,31 @@ const Story = (props: props) => {
 
 
     return (
-       <>
-            <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/>
-            <div className="w-full h-full flex flex-col justify-between items-center">
-                <Banner fullscreen={fullscreen}/>
-                <div className="w-full h-8.8/10 flex flex-col items-center md:flex-row md:justify-between">
-                    <div className="md:w-4/10 h-full flex flex-col justify-between items-center">
-                        <InstructionsBlock fullscreen={fullscreen}/>
-                        { inputs.additionalInputs.length > 0 ?
-                            <Modules 
-                                dataProps={dataProps}
-                                inputs={inputs.additionalInputs}
-                                fullscreen={fullscreen}
-                            />
-                            :
-                            null
-                        }
-                    </div>
-                    <div className="md:w-5.9/10 h-full flex flex-col items-center">
-                        <StoryForm dataProps={dataProps} fullscreen={fullscreen} />
-                    </div>
+        <>
+            {/* <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/> */}
+            <div className={theme.section}>
+                <Banner fullscreen={fullscreen} />
+
+                <div className='flex flex-col justify-between items-center'>
+                    <InstructionsBlock fullscreen={fullscreen} />
+
+                    <StoryForm dataProps={dataProps} fullscreen={fullscreen} />
+
+                    {inputs.additionalInputs.length > 0 ?
+                        <Modules
+                            dataProps={dataProps}
+                            inputs={inputs.additionalInputs}
+                            fullscreen={fullscreen}
+                        />
+                        :
+                        null
+                    }
                 </div>
+
+                
             </div>
-       </>
+
+        </>
     )
 }
 

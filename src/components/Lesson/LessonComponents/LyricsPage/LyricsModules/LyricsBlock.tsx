@@ -1,5 +1,5 @@
 // import { access } from 'fs';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useRef, useState, useEffect, useContext, ReactNode } from 'react';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaHighlighter, FaExpand } from 'react-icons/fa';
 // import { isMainThread } from 'worker_threads';
@@ -8,6 +8,7 @@ import { SelectedTextGroup, FinalText } from './LyricsActivity';
 
 interface LyricsBlockProps {
   color: string;
+  colorPicker: (color:string) => string;
   selected: any;
   fullscreen: boolean;
   setSelected: React.Dispatch<React.SetStateAction<any[]>>;
@@ -20,11 +21,13 @@ interface LyricsBlockProps {
   setFinalText: React.Dispatch<React.SetStateAction<FinalText>>;
   selectGroup: number;
   setSelectGroup: React.Dispatch<React.SetStateAction<number>>;
+  children?: ReactNode;
 }
 
 const LyricsBlock = (props: LyricsBlockProps) => {
   const {
     color,
+    colorPicker,
     selected,
     setSelected,
     fullscreen,
@@ -35,6 +38,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     setSelectGroup,
     finalText,
     setFinalText,
+    children
   } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
   const rawText = state.data.lesson.coreLesson.content.text;
@@ -44,20 +48,6 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   //  mouse
   const [mouseTarget, setMouseTarget] = useState<string>('');
 
-  const colorPicker = (colorName: string): string => {
-    switch (colorName) {
-      case 'dark-red':
-        return '#CA2222';
-      case 'blueberry':
-        return '#488AC7';
-      case 'sea-green':
-        return '#17A589';
-      case 'fire-orange':
-        return '#FF5733';
-      case 'erase':
-        return '';
-    }
-  };
 
   /**
    * Function to check if selected textID is already somewhere in the initialSelectedText state
@@ -321,31 +311,25 @@ const LyricsBlock = (props: LyricsBlockProps) => {
 
   return (
     <>
-      <div
-        className={`md:h-7.2/10 relative ${theme.gradient.cardBase} ${
-          fullscreen ? 'md:h-120' : 'h-68'
-        } mt-4 md:mb-0 w-full px-6 py-4 flex flex-col justify-between rounded-lg text-gray-400 text-lg border-l-4 border-orange-600`}>
-        <div className='w-full flex flex-row justify-between mb-1 pb-1'>
-          <div className='w-9/10 flex flex-row justify-between border-b border-white border-opacity-10 mr-4 md:mr-0'>
-            <h3 className='w-auto font-open font-light'>Lyrics</h3>
-          </div>
+      {/* <div className={`relative w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
+        <h3 className='w-auto'>Lyrics</h3>
 
-          <div className='w-auto'>
-            <IconContext.Provider
-              value={{
-                color: `${colorPicker(color) === '' ? 'white' : colorPicker(color)}`,
-                size: '2rem',
-                style: { width: 'auto' },
-              }}>
-              <FaHighlighter />
-            </IconContext.Provider>
-          </div>
+        <div className='absolute w-auto right-0 top-0'>
+          <IconContext.Provider
+            value={{
+              color: `${props.colorPicker(color) === '' ? 'white' : props.colorPicker(color)}`,
+              size: '2rem',
+              style: { width: 'auto' },
+            }}>
+            <FaHighlighter />
+          </IconContext.Provider>
         </div>
+        </div> */}
 
         {/* JUST A HARMLESS DIV WITH INSTRUCTIONS */}
         {/* @ANDREW -- TO BE REVISED */}
-        <div className='w-full flex flex-row justify-between mb-1 pb-1'>
-          <div className='w-9/10 flex flex-col justify-between border-b border-white border-opacity-10 mr-4 md:mr-0'>
+        {/* <div className='w-full flex flex-row justify-between mb-1 pb-1'>
+          <div className='w-full flex flex-col justify-between border-b border-white border-opacity-10 mr-4 md:mr-0'>
             <p className='text-gray-600 text-sm text-left'>
               - Double click a word to select <b>one</b> word
             </p>
@@ -353,18 +337,19 @@ const LyricsBlock = (props: LyricsBlockProps) => {
               - To select a sentence/phrase, click the <b>'first word'</b> and the <b>'last word'</b> of the sentence
             </p>
           </div>
-        </div>
-        <div
-          className='h-9/10 leading-8 text-gray-200 text-sm overflow-y-auto overflow-x-hidden p-4'
-          onClick={handleSelection} // Clickhandler on the parent...nice!
-          style={{
-            MozUserSelect: 'none',
-            WebkitUserSelect: 'none',
-            msUserSelect: 'none',
-          }}>
-          {mapStrToSpan(combineLyrics)}
-        </div>
-      </div>
+        </div> */}
+
+          <div
+            className={`leading-6 text-sm px-4`}
+            onClick={handleSelection} // Clickhandler on the parent...nice!
+            style={{
+              MozUserSelect: 'none',
+              WebkitUserSelect: 'none',
+              msUserSelect: 'none',
+            }}>
+            {mapStrToSpan(combineLyrics)}
+          </div>
+
     </>
   );
 };

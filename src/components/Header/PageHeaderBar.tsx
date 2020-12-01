@@ -39,7 +39,7 @@ const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
   return (
     <div
-      className={`w-full h-.72/10 md:h-12 ${theme.dashboard.bg} text-gray-200 flex justify-center md:justify-end`}>
+      className={`z-40 fixed right-0 w-full h-12 min-h-12 ${theme.dashboard.bg} text-gray-200 flex justify-center md:justify-end`}>
       <div
         className={`w-full md:hidden h-full md:h-12 ${theme.dashboard.bg} flex justify-center items-center text-2xl font-bold z-50 ml-4`}>
         <NavLink to='/dashboard' id='dashboard' onClick={handleLink}>
@@ -55,14 +55,14 @@ const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
       {/* <div className={`hidden md:block md:flex w-48`}>
                 <button className={`w-24 h-full flex justify-center items-center text-lg py-2`} onClick={lightSwitch}></button> */}
 
-      <div className={`w-full md:w-32 h-full md:flex flex-row justify-end bg-dark-gray`}>
+      <div className={`w-full md:w-32 h-12 md:flex flex-row justify-end bg-dark-gray`}>
         {/* <button className={`h-full flex justify-center items-center text-lg py-2`} onClick={lightSwitch}>
                     Lights
                 </button> */}
         {state.isAuthenticated ? (
-          <div className={`h-full flex align-center justify-center ${theme.sidemenu.bg}`} onClick={handleSignOut}>
+          <div className={`h-full text-sm flex align-center justify-center ${theme.sidemenu.bg}`} onClick={handleSignOut}>
             <span className='relative mr-1 w-auto h-full flex items-center justify-center'>
-              <IconContext.Provider value={{ size: '1.5rem', className: 'self-center' }}>
+              <IconContext.Provider value={{ size: '1.25rem', className: 'self-center' }}>
                 <AiOutlineLogout />
               </IconContext.Provider>
             </span>

@@ -4,15 +4,15 @@ import { AiOutlineInfoCircle } from 'react-icons/ai';
 interface ToolTipProps {
   children?: React.ReactNode;
   position:
-    | 'left'
-    | 'right'
-    | 'top'
-    | 'bottom'
-    | 'top-left'
-    | 'top-right'
-    | 'hidden-bottom'
-    | 'bottom-left'
-    | 'bottom-right';
+  | 'left'
+  | 'right'
+  | 'top'
+  | 'bottom'
+  | 'top-left'
+  | 'top-right'
+  | 'bottom'
+  | 'bottom-left'
+  | 'bottom-right';
   color?: string;
   header: string;
   content?: React.ReactNode;
@@ -38,13 +38,10 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
         return 'transform -translate-y-4';
         break;
       case 'bottom':
-        return 'transform translate-y-6';
-        break;
-      case 'hidden-bottom':
-        return 'transform translate-y-12';
+        return 'transform translate-y-14';
         break;
       case 'top-left':
-        return 'transform -translate-y-4 right-1/2';
+        return 'transform -translate-y-full right-1/2';
         break;
       case 'top-right':
         return 'transform -translate-y-4 left-1/2';
@@ -76,27 +73,26 @@ const ToolTip: React.FC<ToolTipProps> = (toolTipProps: ToolTipProps) => {
       /* pointerEvents: 'none' */
     }} id={toolTipProps.id ? toolTipProps.id : null}>
       <div
-        className={`${toolTipProps.display === 'none' ? 'w-full h-full' : 'w-8 h-8'} ${toolTipProps.cursor ? 'cursor-pointer' : 'cursor-help' } relative flex justify-center z-10 `}
+        className={`${toolTipProps.display === 'none' ? 'w-full h-full' : 'w-8 h-8'} ${toolTipProps.cursor ? 'cursor-pointer' : 'cursor-help'} relative flex justify-center z-10 `}
         onMouseOver={handleToolTipHover}
         onMouseOut={handleToolTipHover}
         id={toolTipProps.id ? toolTipProps.id : null}>
-        <IconContext.Provider value={{ size: '1.2rem', color: toolTipProps.color || 'white', style: {display: toolTipProps.display}  }}>
+        <IconContext.Provider value={{ size: '1.2rem', color: toolTipProps.color || 'white', style: { display: toolTipProps.display } }}>
           <div className='animate-pulse flex justify-center items-center' id={toolTipProps.id ? toolTipProps.id : null}>
             <AiOutlineInfoCircle />
           </div>
         </IconContext.Provider>
         <span
           id={toolTipProps.id ? toolTipProps.id : null}
-          className={`absolute ${
-            visible ? 'block' : 'hidden'
-          } ${positionString()} text-dark p-1 ${toolTipProps.width ? toolTipProps.width : 'w-auto'} bg-white rounded-lg shadow-elem-semi-dark z-50 border border-blueberry flex flex-col justify-center items-center`}>
-          <p id={toolTipProps.id ? toolTipProps.id : null} className={`${toolTipProps.fontSize ? toolTipProps.fontSize : 'text-sm'} ${toolTipProps.header === '' ? 'hidden' : '' } text-left font-bold font-blue-300`}>{toolTipProps.header}</p>
-          <div id={toolTipProps.id ? toolTipProps.id : null} className={`${toolTipProps.fontSize ? toolTipProps.fontSize : 'text-sm'} flex text-center font-light font-blue-300`}>
+          className={`absolute ${visible ? 'block' : 'hidden'
+            } ${positionString()} text-dark p-1 ${toolTipProps.width ? toolTipProps.width : 'w-auto'} bg-light-gray rounded-lg shadow-lg z-50 flex flex-col justify-center items-center`}>
+          <p id={toolTipProps.id ? toolTipProps.id : null} className={`text-sm ${toolTipProps.header === '' ? 'hidden' : ''} text-left text-white font-medium`}>{toolTipProps.header}</p>
+          <div id={toolTipProps.id ? toolTipProps.id : null} className={`text-sm flex text-center font-medium text-white `}>
             {toolTipProps.content}
           </div>
         </span>
       </div>
     </div>
-    );
-  };
+  );
+};
 export default ToolTip;

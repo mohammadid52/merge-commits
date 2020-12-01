@@ -67,31 +67,31 @@ const StoryForm = () => {
   };
 
   return (
-    <div className='bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600'>
+    <div className='w-full h-full rounded-xl'>
       <h3
-        className={`text-xl text-gray-200 font-open font-light ${theme.underline}`}>
-        Song{' '}
+        className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
+        Story{' '}
       </h3>
       <div className='relative h-full flex flex-col mb-5 mt-2'>
         <label
-          className='w-auto text-lg font-light text-base text-blue-100 text-opacity-70 mb-2'
+          className={`${theme.elem.text}`}
           htmlFor='title'>
           Title 
         </label>
         
         <input
           id='title'
-          className='md:w-88 px-4 py-1 mb-4 rounded-lg text-lg text-gray-700 bg-gray-300'
+          className={`w-full py-2 px-4 text-gray-800 rounded-xl ${theme.elem.textInput}`}
           name='title'
           type='text'
           placeholder={state.data.lesson.warmUp.inputs.titleExample}
           value={input.title}
           onChange={handleInputChange}
         />
-        <div className='py-2 border-t border-white border-opacity-10'></div>
+        <div className='py-2'></div>
         <textarea
           id='story'
-          className='w-full h-9/10 px-4 py-2 rounded-lg text-xl text-gray-700 bg-gray-300'
+          className={`w-full h-64 py-2 px-4 text-gray-800 rounded-xl ${theme.elem.textInput}`}
           name='story'
           placeholder={state.data.lesson.warmUp.inputs.textExample}
           value={input.story}

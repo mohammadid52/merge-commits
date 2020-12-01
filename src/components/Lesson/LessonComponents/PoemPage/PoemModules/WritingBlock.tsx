@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import {useOutsideAlerter} from '../../../../General/hooks/outsideAlerter';
+import { useOutsideAlerter } from '../../../../General/hooks/outsideAlerter';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { IconContext } from "react-icons/lib/esm/iconContext";
-import { FaPlus } from 'react-icons/fa';
+import { AiOutlineArrowDown, AiOutlinePlus, AiOutlineClose } from 'react-icons/ai';
 import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 import PositiveAlert from '../../../../General/Popup';
@@ -20,12 +20,12 @@ interface WritingBlockProps {
 
 const WritingBlock = (props: WritingBlockProps) => {
     const { editMode, setEditMode } = props;
-    const { state, dispatch } = useContext(LessonContext);
-    const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
+    const { state, theme, dispatch } = useContext(LessonContext);
+    const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
     const lineNo = state.data.lesson.activity.lineNumber;
     const promptArray = state.data.lesson.activity.writingPrompts;
     const initialLines = [];
-    for(let i = 0; i < lineNo; i++) {
+    for (let i = 0; i < lineNo; i++) {
         let tempObj = {
             id: i,
             text: '',
@@ -34,14 +34,17 @@ const WritingBlock = (props: WritingBlockProps) => {
         }
         initialLines.push(tempObj)
     }
-    const [ lineState, setLineState ] = useState({
+    const [lineState, setLineState] = useState({
         focused: null,
         prompts: promptArray,
         lines: state.componentState.poem && state.componentState.poem.lines ? state.componentState.poem.lines : initialLines,
     });
 
+    const [menuToggled,  setMenuToggled] = useState<boolean>(false);
+
     useEffect(() => {
-        if ( cookies[`lesson-${state.classroomID}`]?.poem?.lines && cookies[`lesson-${state.classroomID}`]?.poem?.lines?.length >= lineNo ) {
+        
+        if (cookies[`lesson-${state.classroomID}`]?.poem?.lines && cookies[`lesson-${state.classroomID}`]?.poem?.lines?.length >= lineNo) {
             setLineState(prev => {
                 return {
                     ...prev,
@@ -49,6 +52,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                 }
             })
         }
+
     }, [])
 
     useEffect(() => {
@@ -61,15 +65,15 @@ const WritingBlock = (props: WritingBlockProps) => {
             return content = content + line + '\n'
         });
 
-        
+
         setEditMode(editInput => {
             return {
-                ...editInput, 
+                ...editInput,
                 input: content,
             }
         })
 
-        if ( state.componentState.poem ) {
+        if (state.componentState.poem) {
             dispatch({
                 type: 'UPDATE_COMPONENT_STATE',
                 payload: {
@@ -97,7 +101,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                 }
             })
         }
-        
+
     }, [lineState])
 
     const closeMenus = () => {
@@ -118,16 +122,17 @@ const WritingBlock = (props: WritingBlockProps) => {
         let length = lineState.lines.length;
         if (length < (lineNo * 2)) {
             setLineState(lineState => {
-            return {
-                ...lineState,
-                lines: lineState.lines.concat({
-                    id: length,
-                    text: '',
-                    menuOpen: false,
-                    example: '',
-                })
-            }
-        })}
+                return {
+                    ...lineState,
+                    lines: lineState.lines.concat({
+                        id: length,
+                        text: '',
+                        menuOpen: false,
+                        example: '',
+                    })
+                }
+            })
+        }
     }
 
     const handleDeleteInput = (e: any) => {
@@ -154,17 +159,17 @@ const WritingBlock = (props: WritingBlockProps) => {
     const handleSelectPrompt = (e: { currentTarget: any; }) => {
         const current = e.currentTarget;
         let selectedId = current.querySelector('span').id;
-        let selectedPrompt = lineState.prompts.filter((item: { id: number}) => {
+        let selectedPrompt = lineState.prompts.filter((item: { id: number }) => {
             return item.id == selectedId
         }).pop();
 
         setLineState(lineState => {
             return {
-                ...lineState, 
+                ...lineState,
                 lines: lineState.lines.map((line: { id: string }, key: number) => {
                     if (line.id == current.id) {
                         return {
-                            ...line, 
+                            ...line,
                             text: selectedPrompt.prompt,
                             example: selectedPrompt.example,
                         }
@@ -179,6 +184,9 @@ const WritingBlock = (props: WritingBlockProps) => {
 
     const handleMenuToggle = (e: any) => {
         const { id } = e.target;
+
+        setMenuToggled(true);
+
         setLineState(lineState => {
             return {
                 ...lineState,
@@ -186,11 +194,11 @@ const WritingBlock = (props: WritingBlockProps) => {
                     if (line.id == id) {
                         return {
                             ...line,
-                            menuOpen: !line.menuOpen,
+                            menuOpen: !line?.menuOpen,
                         }
                     }
                     return {
-                        ...line, 
+                        ...line,
                         menuOpen: false,
                     }
                 })
@@ -198,7 +206,7 @@ const WritingBlock = (props: WritingBlockProps) => {
         })
     }
 
-    const {visible, setVisible, ref} = useOutsideAlerter(false);
+    const { visible, setVisible, ref } = useOutsideAlerter(false);
 
     const handlePopup = () => {
         setVisible((prevState: any) => !prevState)
@@ -225,7 +233,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                             ...line,
                             text: value,
                         }
-                    } 
+                    }
                     return line
                 })
             }
@@ -240,7 +248,7 @@ const WritingBlock = (props: WritingBlockProps) => {
         e.preventDefault();
         const { id } = e.currentTarget;
         const addWord = e.dataTransfer.getData('addWord');
-        
+
         setLineState(lineState => {
             return {
                 ...lineState,
@@ -255,82 +263,194 @@ const WritingBlock = (props: WritingBlockProps) => {
                 })
             }
         })
- 
+
     }
 
-    console.log(state, 'state')
+    // console.log(state, 'state')
 
     return (
-        <div ref={ref} className="relative bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600" >
-            {/* { visible &&  */}
-            <div className={`${visible ? 'absolute z-100' : 'hidden'} max-w-sm`} style={{top: '0', right: '-100px'}} onClick={handlePopup}>
-                <PositiveAlert 
-                    alert={visible}
-                    setAlert={setVisible}
-                    header='Are you ready to edit your poem?' 
-                    content="Once you go to 'Final Edits' you will not be able to come back to these line prompts" 
-                    button1='Go to Final Edits' 
-                    button2='Cancel' 
-                    svg='question' 
-                    handleButton1={handleSubmit} 
-                    handleButton2={() => handlePopup}
-                    />
-            </div>
-            
-            <div className="w-full flex flex-row justify-between mb-2">
-                <h3 className='w-3/10 mr-2 flex text-xl text-gray-200 font-open font-light animate-bounce z-100'>
-                    Line Prompts <ToolTip width='w-40' position='bottom' header='Instructions' content='Make sure you are finished with the line prompts before you click "Save and Edit"' />
+        <div className='w-full flex flex-col'>
+
+
+            {/* POPUPPY VISIBILIBITY */}
+            {
+                (visible
+                    ?
+                    (<div
+                        className={`${alert ? 'absolute z-100 w-full h-full' : 'hidden z-0'}`} onClick={handlePopup}>
+                        <PositiveAlert
+                            alert={visible}
+                            setAlert={setVisible}
+                            header='Are you ready to edit your poem?'
+                            content="Once you go to 'Final Edits' you will not be able to come back to these line prompts"
+                            button1='Go to Final Edits'
+                            button2='Cancel'
+                            svg='question'
+                            handleButton1={handleSubmit}
+                            handleButton2={() => handlePopup}
+                            fill='section'
+                        />
+                    </div>)
+                    : null
+                )
+            }
+
+
+
+            <div className={`w-full h-full rounded-xl z-10`}>
+                <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
+                    Line Prompts{' '}
+                    {/* <ToolTip
+                        width='w-40'
+                        position='bottom'
+                        header='Instructions'
+                        content='Make sure you are finished with the line prompts before you click "Save and Edit"'
+                    /> */}
                 </h3>
-                <IconContext.Provider value={{ color: '#E2E8F0', size: '1.5rem', style: { opacity: `${lineState.lines.length < (lineNo * 2) ? '100%' : '10%'}`}}}>
-                    <div className="w-8 cursor-pointer" onClick={handleAddInput}>
-                        <FaPlus/>
-                    </div>
-                </IconContext.Provider>
-            </div>
-            <div className="w-full h-full overflow-y-auto overflow-x-hidden flex flex-col ml-2">
-                {   lineState.lines.length > 1 ? 
-                    lineState.lines.map((line: { id: string, text: string, example: string, menuOpen: boolean }, key: number) => {
-                        let id = line.id.toString()
-                        return (
-                        <div key={key} className="relative bg-transparent flex flex-col items-center animate-fadeIn">
-                            <div key={key} id={id} className="w-full h-12 flex flex-row items-center rounded-lg" onDragOver={handleDragOver} onDrop={handleDrop}>
-                                <input id={id} className="w-full h-10 px-4 py-2 rounded-l-lg text-gray-700 bg-gray-300 " name={id} type="text" value={line.text} onChange={handleInputChange} onDoubleClick={handleMenuToggle}/>
-                                <div id={id} className="w-10 h-10 bg-gray-300 rounded-r-lg  flex justify-center items-center cursor-pointer" onClick={handleMenuToggle}>
-                                    <div id={id} className="w-4 h-4 border-dark-blue border-b-8 border-r-8 transform rotate-45 mb-1"></div>
-                                </div>
-                                <div id={id} className={`w-8 h-8 ml-2 flex justify-center items-center ${lineState.lines.length > lineNo ? 'cursor-pointer' : ''}`} onClick={handleDeleteInput}>
-                                    <IconContext.Provider value={{color: '#E2E8F0', size: '1.5rem', style: { transform: 'rotate(45deg)', opacity: `${lineState.lines.length > lineNo ? '100%' : '10%'}` }}}>
-                                        <FaPlus/>
-                                    </IconContext.Provider>
-                                </div>
-                            </div>
-                            <label className={`${line.example ? 'visible' : 'invisible'} w-9/10 font-light self-end flex justify-end text-gray-400 text-sm mr-12`} htmlFor={id}>
-                                ( ex. {line.example} )
-                            </label>
-                            {   line.menuOpen ?
-                                    <div className="absolute left-0 w-9.5/10 shadow-3 h-32 bg-gray-300 rounded-lg p-4 transform translate-y-12 overflow-y-auto overflow-x-hidden z-20">
-                                        { 
-                                            lineState.prompts.map((prompt: any, key: string) => (
-                                                <div key={key} id={id} className="w-full mb-2 font-light cursor-pointer" onClick={handleSelectPrompt}>
-                                                    <span id={prompt.id}>{ prompt.prompt }</span>
-                                                </div>
-                                            ))
-                                            
-                                        }
-                                    </div>
-                                :
-                                null
-                            }
+
+
+                {/* ADD LINE PROMPS BUTTON */}
+
+                <button
+                    className={`mx-auto w-auto px-3 h-8 bg-sea-green text-gray-900 flex justify-center items-center rounded-xl mt-2 ${theme.elem.text}`}
+                    onClick={handleAddInput}>
+
+                    Add Line
+
+                    <IconContext.Provider
+                        value={{
+                            size: '1.5rem',
+                            style: { width: '32px' },
+                            className: `text-white`,
+                        }}>
+                        <div className='w-8 cursor-pointer'>
+                            <AiOutlinePlus />
                         </div>
-                    )}) : null
-                }
+                    </IconContext.Provider>
+
+                </button>
+
+
+
+
+
             </div>
-            <button className="self-start w-auto px-3 h-8 text-xl font-open font-light bg-yellow-500 text-gray-900 flex justify-center items-center rounded-lg mt-2" onClick={handlePopup}>
-                Save and Edit
-            </button>
             
+            
+            
+            <div className={`w-full flex flex-col border-2 border-white border-opacity-20 rounded-lg ${(lineState.lines[lineNo - 1]?.menuOpen) ? 'pt-4 pl-4 pr-4 pb-52' : 'p-4'}`}>
+
+                {/* MAP THE LINE PROMPTS */}
+                {lineState.lines.length > 1
+                    ? lineState.lines.map(
+                        (
+                            line: { id: string; text: string; example: string; menuOpen: boolean },
+                            key: number
+                        ) => {
+                            let id = line.id.toString();
+                            return (
+                                <div key={key} className='relative flex flex-col'>
+                                    <div className='relative'>
+                                        <div
+                                            key={key}
+                                            id={id}
+                                            className={`relative w-full h-12 flex flex-row items-center rounded-xl`}
+                                            onDragOver={handleDragOver}
+                                            onDrop={handleDrop}>
+                                            
+                                            
+                                            {/* PROMPTS INPUT FIELD */}
+                                            <div className='relative w-full'>
+                                                <input
+                                                    id={id}
+                                                    className={` ${line?.menuOpen && menuToggled ? 'rounded-tl-xl border-t border-l border-r border-white' : 'rounded-l-xl'}  ${theme.elem.textInput}`}
+                                                    name={id}
+                                                    type='text'
+                                                    value={line.text}
+                                                    onChange={handleInputChange}
+                                                    onDoubleClick={handleMenuToggle}
+                                                />
+
+                                            {/* MAP AVAILABLE LINE PROMPTS */}
+                                                {line?.menuOpen && menuToggled ? (
+                                                    <div className={`absolute left-0 h-48 overflow-y-scroll w-full rounded-b-xl z-50 shadow-xlwhite border-b border-l border-r border-white ${theme.elem.textInput}`}>
+                                                        {lineState.prompts.map((prompt: any, key: number) => (
+                                                            <div
+                                                                key={key}
+                                                                id={id}
+                                                                className={`w-full mb-2 font-light cursor-pointer border-t border-white border-opacity-20`}
+                                                                onClick={handleSelectPrompt}>
+                                                                <span id={prompt.id}>{prompt.prompt}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ) : null}
+
+                                            </div>
+
+
+                                            {/* MENU TOGGLE BUTTON */}
+                                            <div
+                                                id={id}
+                                                className='w-10 h-10 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-r-xl flex justify-center items-center cursor-pointer'
+                                                onClick={handleMenuToggle}>
+                                                <IconContext.Provider
+                                                    value={{
+                                                        size: '1.5rem',
+                                                        style: { width: '32px', pointerEvents: 'none' },
+                                                        className: `text-white`,
+                                                    }}>
+                                                    <div id={id} className='w-8 cursor-pointer'>
+                                                        <AiOutlineArrowDown />
+                                                    </div>
+                                                </IconContext.Provider>
+                                            </div>
+
+
+                                            {/* REMOVE LINE PROMPT */}
+                                            <div
+                                                id={id}
+                                                className={`w-10 h-10 ml-2 flex justify-center items-center ${lineState.lines.length > lineNo ? 'cursor-pointer' : ''
+                                                    }`}
+                                                onClick={handleDeleteInput}>
+                                                <IconContext.Provider
+                                                    value={{
+                                                        size: '1.5rem',
+                                                        style: {
+                                                            width: '32px',
+                                                            opacity: `${lineState.lines.length > lineNo ? '100%' : '50%'}`,
+                                                        },
+                                                        className: `text-white`,
+                                                    }}>
+                                                    <AiOutlineClose />
+                                                </IconContext.Provider>
+                                            </div>
+
+
+                                        </div>
+
+                                        {/* EXAMPLE LINE PROMPT */}
+                                        <label
+                                            className={`${line.example ? 'visible' : 'invisible'
+                                                } font-light self-end flex justify-start text-gray-400 text-sm mr-12`}
+                                            htmlFor={id}>
+                                            ( ex. {line.example} )
+                                        </label>
+
+                                    </div>
+                                </div>
+                            );
+                        }
+                    )
+                    : null}
+            </div>
+            <button
+                className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 flex justify-center items-center rounded-xl mt-2 ${theme.elem.text}`}
+                onClick={handlePopup}>
+                Save and Edit Your Poem
+        </button>
         </div>
-    )
+    );
 }
 
 export default WritingBlock;

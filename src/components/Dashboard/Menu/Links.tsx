@@ -137,24 +137,20 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const getClassStyle = (label: string) => {
     switch (label) {
       case 'User Management':
-        return `${
-          linkProps.currentPage === 'manage-users' && 'bg-grayscale'
-        } border-l-4 border-mustard-yellow`;
+        return `${linkProps.currentPage === 'manage-users' && 'bg-grayscale'
+          } border-l-4 border-mustard-yellow`;
         break;
       case 'Registration':
-        return `${
-          linkProps.currentPage === 'registration' && 'bg-grayscale'
-        } border-l-4 border-ketchup`;
+        return `${linkProps.currentPage === 'registration' && 'bg-grayscale'
+          } border-l-4 border-ketchup`;
         break;
       case 'Classroom':
-        return `${
-          linkProps.currentPage === 'classroom' && 'bg-grayscale'
-        } border-l-4 border-blueberry`;
+        return `${linkProps.currentPage === 'classroom' && 'bg-grayscale'
+          } border-l-4 border-blueberry`;
         break;
       case 'Lesson Planner':
-        return `${
-          linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'
-        } border-l-4 border-sea-green`;
+        return `${linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'
+          } border-l-4 border-sea-green`;
         break;
       default:
         return '';
@@ -162,9 +158,11 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   };
 
   return (
-    <div className='link  w-full h-12 py-4 z-40'>
+    <div className='link  w-full h-12 z-40'>
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
+          <>
+            
             <div
               id={link.path}
               key={key}
@@ -172,6 +170,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                 link.name
               )}`}
               onClick={handleLink}>
+
               <div id={link.path} className='w-full text-center'>
                 <IconContext.Provider value={{ size: '1.5rem' }}>
                   {getMenuIcon(link.name, link.path)}
@@ -179,7 +178,11 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               </div>
               {link.name}
             </div>
-          ))
+
+            <div className={`w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent`}></div>
+
+          </>
+        ))
         : null}
     </div>
   );

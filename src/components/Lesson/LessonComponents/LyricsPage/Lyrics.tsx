@@ -26,13 +26,7 @@ const Lyrics = () => {
             <Route exact path={`${match.url}`}>
                 <LyricsActivity />
             </Route>
-            {/* <Route>
-                <ErrorPage />
-            </Route> */}
         </Switch>
-        // <div className="h-full w-screen flex flex-col justify-center items-center">
-        //     {lessonSteps[lessonStep]}
-        // </div>
     )
 }
 

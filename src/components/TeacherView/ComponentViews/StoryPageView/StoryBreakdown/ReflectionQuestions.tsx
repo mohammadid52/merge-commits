@@ -1,5 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 
 interface props {
         fullscreen: boolean
@@ -8,7 +10,7 @@ interface props {
 const ReflectionQuestions = (props: props) => {
     const {  fullscreen } = props;
     const [ question, setQuestion ] = useState(0);
-    const { state } = useContext(LessonControlContext);
+    const { state, theme } = useContext(LessonControlContext);
     const questArr = state.data.lesson.warmUp.breakdown.reflectionQuestions;
 
     const nextQuestion = () => {
@@ -28,24 +30,42 @@ const ReflectionQuestions = (props: props) => {
     }
 
     return (
-
-        <div className="reflection w-full h-1.5/10 flex flex-row text-gray-200 mx-8">
-            <div className="w-1/10 h-full flex justify-center items-center bg-gradient-to-tl from-dark-blue to-med-dark-blue mr-2 md:mr-4 rounded-lg cursor-pointer" onClick={prevQuestion}>
-                <div className="w-6 h-6 border-dark border-t-8 border-l-8 transform -rotate-45 ml-2 cursor-pointer"></div>
+        <div className={`${theme.elem.text} ${theme.elem.card} p-2 reflection w-full flex flex-col`}>
+        <div className={`w-full`}>
+          <div className={`w-full flex flex-row text-xl ${theme.banner} border-b-4 border-sea-green`}>
+            <h3>Discussion Questions:</h3>
+            <div
+              className={`text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 cursor-pointer`}
+              onClick={prevQuestion}>
+              <IconContext.Provider
+                value={{
+                  size: '1.5rem',
+                  style: { width: '32px' },
+                  className: `text-white`,
+                }}>
+                <AiOutlineArrowLeft />
+              </IconContext.Provider>
             </div>
-            <div className="w-8/10 bg-gradient-to-tl from-dark-blue to-med-dark-blue flex-grow rounded-lg px-2 md:px-4 py-1 md:py-2 flex flex-col">
-                <h3 className={`${fullscreen ? 'text-base ' : 'text-xs'} font-open font-light`}>
-                Discussion Questions
-                </h3>
-                <div className={`${fullscreen ? 'text-lg' : 'text-sm'} question w-full flex-grow font-light text-gray-200 flex justify-center md:px-4`}>
-                    <p className="text-center">{ questArr[question] }</p>
-                </div>
+  
+            <div
+              className={`text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 cursor-pointer`}
+              onClick={nextQuestion}>
+              <IconContext.Provider
+                value={{
+                  size: '1.5rem',
+                  style: { width: '32px' },
+                  className: `text-white`,
+                }}>
+                <AiOutlineArrowRight />
+              </IconContext.Provider>
             </div>
-            <div className="w-1/10 h-full flex justify-center items-center bg-gradient-to-tl from-dark-blue to-med-dark-blue ml-2 md:ml-4 rounded-lg cursor-pointer" onClick={nextQuestion}>
-                <div className="w-6 h-6 border-dark border-t-8 border-r-8 transform rotate-45 mr-2 cursor-pointer"></div>
-            </div>
-        </div> 
-    
+          </div>
+        </div>
+  
+        <div className='question w-full flex-grow text-sm md:text-xl font-light text-gray-200 flex justify-center md:px-4'>
+          <p className='text-center'>{questArr[question]}</p>
+        </div>
+      </div>
     )
 }
 

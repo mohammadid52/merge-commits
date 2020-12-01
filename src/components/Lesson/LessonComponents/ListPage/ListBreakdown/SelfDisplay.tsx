@@ -3,6 +3,7 @@ import { LessonContext } from '../../../../../contexts/LessonContext';
 import ReflectionQuestions from './ReflectionQuestions';
 import Modules from './Modules';
 import Banner from './Banner';
+import ListOutput from './ListOutput';
 
 
 const SelfDisplay = () => {
@@ -12,23 +13,16 @@ const SelfDisplay = () => {
     console.log(state, 'props')
 
     useEffect(() => {
-        dispatch({type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown'})
+        dispatch({ type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown' })
     }, [])
 
     const [fullscreen, setFullscreen] = useState(false);
     return (
-        <div className="w-full h-full flex flex-col justify-between items-center">
-            <Banner title={displayProps.title} 
-                display='SELF' fullscreen={fullscreen}/>
-            <div className="w-full h-7/10 flex flex-col md:flex-row justify-between">
-                <div style={{'whiteSpace' : 'pre-line'}} className={`${theme.gradient.cardBase} ${displayProps.tempDisplayProps ? 'md:w-7.85/10' : 'w-full'} mb-4 md:mb-0 overflow-y-auto overflow-x-hidden h-full px-4 md:px-12 py-4 md:py-8 items-center text-md md:text-3xl font-light text-gray-200 rounded-lg shadow-2`}>
-                    { displayProps.story }
-                </div>
-                <Modules 
-                    additional={displayProps.additional} 
-                    displayMode = 'SELF'/>
-            </div>
+        <div className={theme.section}>
             <ReflectionQuestions />
+            <Banner title={typeof displayProps !== 'undefined' ? displayProps.title : 'Your List Title :)'} display='SELF' fullscreen={fullscreen} />
+            <ListOutput list={typeof displayProps !== 'undefined' ? displayProps.story : 'Your List :)'} />            
+            {<Modules additional={typeof displayProps !== 'undefined' ? displayProps.additional : 'Your Poem Title :)'} displayMode='SELF' />           }
         </div>
     )
 }

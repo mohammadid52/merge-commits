@@ -1,31 +1,27 @@
 import React, { useContext } from 'react';
-import { IconContext } from "react-icons/lib/esm/iconContext";
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaTrophy } from 'react-icons/fa';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
 const keywordCapitilizer = (str: string) => {
-    let capitalizedStr = str.replace(/^\w/, char => char.toUpperCase());
-    return capitalizedStr;
-}
+  let capitalizedStr = str.replace(/^\w/, (char) => char.toUpperCase());
+  return capitalizedStr;
+};
 
 const Banner = () => {
-    const { state } = useContext(LessonContext);
-    const { theme } = useContext(LessonContext);
-    
-    return (
+  const { state, theme } = useContext(LessonContext);
 
-        <div className={`w-full h-1/10  ${theme.banner} flex flex-row justify-center items-center`}>
-            <IconContext.Provider value={{ color: '#EDF2F7', size: '3rem'}}>
-                <div className="bg-dark-red h-16 w-16 flex flex-col items-center rounded-lg justify-center z-20 shadow-2">
-                    <FaTrophy />
-                </div>
-            </IconContext.Provider>
-            <div className={`title w-full flex flex-row justify-center items-center text-5xl text-center font-open font-medium px-4 py-2 ${theme.block.text} z-10`}>
-                <p>Congrats! You've completed '{state.data.lesson.title}'!</p>
-            </div>
+  return (
+    <div className={`w-full h-1/10 text-4xl ${theme.banner}`}>
+      <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
+        <div className='w-auto h-auto mr-2'>
+          <FaTrophy />
         </div>
+      </IconContext.Provider>
 
-    )
-}
+      <p>Congrats! You've completed '{state.data.lesson.title}'!</p>
+    </div>
+  );
+};
 
 export default Banner;

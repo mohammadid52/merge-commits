@@ -1,9 +1,11 @@
 const common = require('./webpack.common.js');
 const {merge} = require('webpack-merge');
-// const path = require('path');
 const webpack = require('webpack');
 
-module.exports = merge(common, {
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const smp = new SpeedMeasurePlugin();
+
+module.exports = smp.wrap(merge(common, {
   mode: 'development',
   plugins: [
     new webpack.DefinePlugin({
@@ -16,9 +18,10 @@ module.exports = merge(common, {
   devServer: {
     watchContentBase: true
   },
-  watchOptions: {
-    ignored: /node_modules/,
-    aggregateTimeout: 200,
-    poll: 1000
-  }
-});
+  watch: true,
+     watchOptions: {
+         aggregateTimeout: 1000,
+         poll: 2000,
+         ignored: [/node_modules/, 'node_modules']
+     }
+}));

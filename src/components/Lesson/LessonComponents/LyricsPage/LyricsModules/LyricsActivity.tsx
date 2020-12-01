@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
 import Banner from './Banner';
@@ -7,6 +7,8 @@ import LyricsBlock from './LyricsBlock';
 import InstructionBlock from './InstructionBlock';
 import VideoBlock from './VideoBlock';
 import InstructionsPopup from '../../../Popup/InstructionsPopup';
+
+import { useWindowSize } from '../../../../../customHooks/windowSize';
 
 /**
  * interfaces
@@ -31,36 +33,53 @@ export interface FinalText {
 }
 
 const Body = () => {
-  const { state, dispatch } = useContext(LessonContext);
+  const { state, theme, dispatch } = useContext(LessonContext);
   const [color, setColor] = useState('');
   const [selected, setSelected] = useState<Array<SelectObject>>(
     state.componentState.lyrics && state.componentState.lyrics.selected
       ? state.componentState.lyrics.selected
       : []
   );
-  const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
   const [fullscreen, setFullscreen] = useState(false);
   const { video, link } = state.data.lesson.coreLesson.instructions;
   const [openPopup, setOpenPopup] = useState(false);
   //  text
-  // const [firstLastSelected, setFirstLastSelected] = useState<string[]>([]);
   const [finalText, setFinalText] = useState<FinalText>({});
   const [initialSelectedText, setInitialSelectedText] = useState<SelectedTextGroup>({});
   const [selectGroup, setSelectGroup] = useState<number>(0);
 
+  const [toptop, setTopTop] = useState<number>(0);
+
+  /**
+   *
+   *
+   * REF USAGE FOR UNRESPONSIVE HIGHLIGHT BOX
+   *
+   *
+   */
+  const ref = useRef(null);
+  const winSize = useWindowSize();
+
   const initialSelectedObjectToArray = (obj: any) => {
-    if ( typeof obj === 'object' ) {
-      let selectionArray: Array<{color: string, selected: string[]}> = [];
-      let keyArray = Object.keys(obj)
+    if (typeof obj === 'object') {
+      let selectionArray: Array<{ color: string; selected: string[] }> = [];
+      let keyArray = Object.keys(obj);
       keyArray.forEach((key: string) => {
-        selectionArray.push(obj[key])
-      })
-      return selectionArray
+        selectionArray.push(obj[key]);
+      });
+      return selectionArray;
     }
-  }
-  
+  };
+
   useEffect(() => {
-    if ( cookies[`lesson-${state.classroomID}`].lyrics ) {
+    if (ref.current) {
+      setTopTop(ref.current.getBoundingClientRect().top);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (cookies[`lesson-${state.classroomID}`].lyrics) {
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
         payload: {
@@ -76,8 +95,7 @@ const Body = () => {
       setSelectGroup(parseInt(cookies[`lesson-${state.classroomID}`].lyrics.selectGroup));
     }
 
-    if ( !cookies[`lesson-${state.classroomID}`].lyrics && !state.componentState.lyrics ) {
-      
+    if (!cookies[`lesson-${state.classroomID}`].lyrics && !state.componentState.lyrics) {
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
         payload: {
@@ -85,7 +103,7 @@ const Body = () => {
           content: {
             selected: [],
             selectGroup: 0,
-            rawSelected: {}
+            rawSelected: {},
           },
         },
       });
@@ -95,8 +113,8 @@ const Body = () => {
         lyrics: {
           selected: [],
           selectGroup: 0,
-          rawSelected: {}
-        }
+          rawSelected: {},
+        },
       });
     }
   }, []);
@@ -126,8 +144,8 @@ const Body = () => {
         lyrics: {
           ...cookies[`lesson-${state.classroomID}`].lyrics,
           selected: selected,
-        }
-      })
+        },
+      });
 
       setCookie(`lesson-${state.classroomID}`, {
         ...cookies[`lesson-${state.classroomID}`],
@@ -135,11 +153,26 @@ const Body = () => {
           ...cookies[`lesson-${state.classroomID}`].lyrics,
           rawSelected: initialSelectedText,
           selectGroup: selectGroup,
-        }
-      })
-
+        },
+      });
     }
   }, [selected]);
+
+  const colorPicker = (colorName: string): string => {
+    switch (colorName) {
+      case 'dark-red':
+        return '#CA2222';
+      case 'blueberry':
+        return '#488AC7';
+      case 'sea-green':
+        return '#17A589';
+      case 'fire-orange':
+        return '#FF5733';
+      case 'erase':
+      default:
+        return '';
+    }
+  };
 
   /**
    * COOKIE loading for previously highlighted text WOOO!!!
@@ -147,31 +180,39 @@ const Body = () => {
 
   return (
     <>
-      <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup} />
-      <div className='w-full h-full flex flex-col justify-between items-center'>
+      <div className='relative max-w-256 h-full flex flex-col overflow-hidden mx-auto'>
         <Banner />
-        <div className='w-full md:h-8.8/10 flex flex-col-reverse md:flex-row justify-between items-center content-center'>
-          <div className='h-full flex flex-col justify-between md:w-4.8/10 text-gray-200'>
-            <InstructionBlock />
+
+        <div className='flex flex-row'>
+          <div className='w-3/10 h-full  max-h-192 mr-4'>
+            <div className='z-50 flex flex-col justify-between items-center'>
+              <InstructionBlock />
+            </div>
+            {/* <Toolbar setColor={setColor} color={color} /> */}
             <VideoBlock link={state.data.lesson.coreLesson.content.link} fullscreen={fullscreen} />
           </div>
-          <div className='h-full md:w-5.1/10 flex flex-col justify-between items-center'>
-            <Toolbar setColor={setColor} />
-            <LyricsBlock
-              color={color}
-              selected={selected}
-              setSelected={setSelected}
-              fullscreen={fullscreen}
-              setFullscreen={setFullscreen}
-              // firstLastSelected={firstLastSelected}
-              // setFirstLastSelected={setFirstLastSelected}
-              initialSelectedText={initialSelectedText}
-              setInitialSelectedText={setInitialSelectedText}
-              finalText={finalText}
-              setFinalText={setFinalText}
-              selectGroup={selectGroup}
-              setSelectGroup={setSelectGroup}
-            />
+
+          <div className='w-7/10 h-full max-w-256 flex flex-col items-start z-50'>
+            <Toolbar setColor={setColor} color={color} colorPicker={colorPicker} />
+
+            <div
+              ref={ref}
+              className='overflow-y-scroll overflow-x-hidden rounded-xl bg-darker-gray text-gray-200'
+              style={{ height: `${winSize.height - toptop - 12}px` }}>
+              <LyricsBlock
+                color={color}
+                colorPicker={colorPicker}
+                selected={selected}
+                setSelected={setSelected}
+                fullscreen={fullscreen}
+                setFullscreen={setFullscreen}
+                initialSelectedText={initialSelectedText}
+                setInitialSelectedText={setInitialSelectedText}
+                finalText={finalText}
+                setFinalText={setFinalText}
+                selectGroup={selectGroup}
+                setSelectGroup={setSelectGroup}></LyricsBlock>
+            </div>
           </div>
         </div>
       </div>

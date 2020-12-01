@@ -14,17 +14,6 @@ const LyricsBreakdown = () => {
 
     const [displayMode, setDisplayMode] = useState(state.data.lessonPlan[state.currentPage].displayMode);
 
-    // const arrayParseToString = (arr: Array<Array<{[key: string]: any}>>) => {
-    //     let resultArray = arr.map((item: Array<{ text: string, [key: string]: any}>) => {
-    //         let parsedString = ''
-    //         item.forEach((item: { text: string, [key: string]: any}) => {
-    //             parsedString = parsedString + item.text
-    //         })
-    //         return parsedString
-    //     })
-    //     return resultArray
-    // }
-
     useEffect(() => {
         if ( state.pages[state.currentPage].displayMode !== displayMode ) {
             setDisplayMode(state.pages[state.currentPage].displayMode)
@@ -32,26 +21,6 @@ const LyricsBreakdown = () => {
     }, [state.pages])
 
     useEffect(() => {
-        // if (displayProps) {
-        //     let modulesArray = moduleTypes.map((item: {[key: string]: any}) => {
-        //         let contentArray = displayProps.filter((selection: { color: string, content: any }) => {
-        //             return item.color === selection.color
-        //         })
-        //         .map((selection: { content: any}) => {
-        //             return selection.content
-        //         });
-
-        //         return {
-        //             name: item.name,
-        //             label: item.icon,
-        //             color: item.color,
-        //             content: arrayParseToString(contentArray)
-        //         }
-        //     })
-
-        //     setModules(modulesArray)
-        // }
-
         dispatch({type: 'ACTIVATE_LESSON', payload: 'corelesson/breakdown'})
     }, [])
 
