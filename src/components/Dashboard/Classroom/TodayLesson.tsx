@@ -41,13 +41,13 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
   }, [props]);
 
   useEffect(() => {
-    if (display) {
-      setAccessible(false);
-    }
+    // if (display) {
+    //   setAccessible(false);
+    // }
 
-    if (!display) {
+    // if (!display) {
       setAccessible(true);
-    }
+    // }
   }, [props]);
 
   return (

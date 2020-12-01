@@ -105,30 +105,30 @@ const Classroom: React.FC = () => {
    * 
    */
 
-  // useEffect(() => {
-  //   if (!state.user.onBoardSurvey && !survey.data) {
-  //     getSurvey();
-  //   }
+  useEffect(() => {
+    if (!state.user.onBoardSurvey && !survey.data) {
+      getSurvey();
+    }
 
-  //   if (state.user.onBoardSurvey) {
-  //     setSurvey(() => {
-  //       return {
-  //         ...survey,
-  //         display: false,
-  //       };
-  //     });
-  //   }
+    if (true) {
+      setSurvey(() => {
+        return {
+          ...survey,
+          display: false,
+        };
+      });
+    }
 
-  //   if (!state.user.onBoardSurvey) {
-  //     setSurvey(() => {
-  //       return {
-  //         ...survey,
-  //         display: true,
-  //       };
-  //     });
-  //   }
+    // if (!state.user.onBoardSurvey) {
+    //   setSurvey(() => {
+    //     return {
+    //       ...survey,
+    //       display: true,
+    //     };
+    //   });
+    // }
 
-  // }, [state]);
+  }, [state]);
 
   const handleLink = () => {
     history.push('/lesson');
@@ -166,7 +166,7 @@ const Classroom: React.FC = () => {
               Today's Lesson
             </h2>
 
-            <Today display={survey.display} link={'/lesson?id=1'} curriculums={listCurriculum} />
+            <Today link={'/lesson?id=1'} curriculums={listCurriculum} />
           </div>
         </div>
 
