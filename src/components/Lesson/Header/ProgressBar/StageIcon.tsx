@@ -18,20 +18,20 @@ import {
 import {
   AiOutlineCustomerService
 } from 'react-icons/ai';
-import FooterLabels from '../../../General/LabelSwitch';
+import StageLabels from '../../../General/LabelSwitch';
 
 interface StageIconProps {
-  isHovered: boolean;
   iconID: string | number;
   stage: string;
   type: string;
   active: boolean;
   open: boolean;
   disabled: boolean;
+  counter?: number;
 }
 
 const StageIcon = (props: StageIconProps) => {
-  const { isHovered, iconID, stage, type, active, disabled, open } = props;
+  const { iconID, stage, type, active, disabled, open, counter } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
   const match = useRouteMatch();
   const history = useHistory();
@@ -71,18 +71,23 @@ const StageIcon = (props: StageIconProps) => {
     return (
       <div
         className={`
-        absolute transform translate-y-12 text-center z-50 w-24 transition-all duration-500 ease-in-out
+        absolute transform translate-y-12 text-center z-50 w-20 flex flex-row
         ${theme.elem.text}
-        ${isHovered ? 'opacity-100' : 'opacity-0'}
         ${centerFix === 'center' && 'left-1/2 -translate-x-1/2'} 
         ${centerFix === 'noCenter' && '-translate-x-1/2'} 
         ${state.currentPage === iconID ? 'text-opacity-100' : ''}
         ${state.currentPage !== iconID ? 'text-opacity-50' : ''}
         `}>
+        
+          <StageLabels label={props.stage.charAt(0).toUpperCase() + props.stage.slice(1)} />
+     
+
         {
-          /* Capitalize the first letter */
-          <FooterLabels label={props.type.charAt(0).toUpperCase() + props.type.slice(1)} />
+          (counter !== null)
+          ? <span>{counter}</span>
+          : null
         }
+        
       </div>
     );
   };
@@ -103,8 +108,8 @@ const StageIcon = (props: StageIconProps) => {
   };
 
   const iconColor = open || active ? '#EDF2F7' : ' gray';
-  const iconBackgroundColor = active ? '#38A169' : open || active ? '#cbd5e0' : '#54575c';
-  const iconBorder = open || active ? '#cbd5e0' : '#54575c';
+  // const iconBackgroundColor = active ? '#38A169' : open || active ? '#cbd5e0' : '#54575c';
+  // const iconBorder = open || active ? '#cbd5e0' : '#54575c';
 
   if (disabled) return null;
 

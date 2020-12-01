@@ -24,53 +24,70 @@ const PoemActivity = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
   const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
   const [editMode, setEditMode] = useState({
-    open: state.componentState.poem && state.componentState.poem.editMode ? state.componentState.poem.editMode : false,
-    input: state.componentState.poem && state.componentState.poem.editInput ? state.componentState.poem.editInput : '',
-  })
-  const { video, link, text } = state.data.lesson.activity.instructions
+    open:
+      state.componentState.poem && state.componentState.poem.editMode
+        ? state.componentState.poem.editMode
+        : false,
+    input:
+      state.componentState.poem && state.componentState.poem.editInput
+        ? state.componentState.poem.editInput
+        : '',
+  });
+  const { video, link, text } = state.data.lesson.activity.instructions;
   const [openPopup, setOpenPopup] = useState(false);
 
-
   useEffect(() => {
+     /**
+     * 
+     * 
+     * IF YES COOKIE SET
+     * 
+     * 
+     */
     if (cookies[`lesson-${state.classroomID}`]?.poem) {
       if (!cookies[`lesson-${state.classroomID}`]?.poem?.editMode) {
         dispatch({
           type: 'SET_INITIAL_COMPONENT_STATE',
           payload: {
             name: 'poem',
-            content: cookies[`lesson-${state.classroomID}`].poem
-          }
-        })
+            content: cookies[`lesson-${state.classroomID}`].poem,
+          },
+        });
       }
 
       if (cookies[`lesson-${state.classroomID}`]?.poem?.editMode) {
-        setEditMode(prev => {
+        setEditMode((prev) => {
           return {
             ...prev,
             editMode: true,
-            input: cookies[`lesson-${state.classroomID}`].poem.editInput
-          }
-        })
+            input: cookies[`lesson-${state.classroomID}`].poem.editInput,
+          };
+        });
 
         dispatch({
           type: 'SET_INITIAL_COMPONENT_STATE',
           payload: {
             name: 'poem',
-            content: cookies[`lesson-${state.classroomID}`]?.poem
-          }
-        })
+            content: cookies[`lesson-${state.classroomID}`]?.poem,
+          },
+        });
       }
     }
 
-    if (
-      !cookies[`lesson-${state.classroomID}`]?.poem &&
-      !state.componentState.poem) {
+    /**
+     * 
+     * 
+     * IF NO COOKIE SET
+     * 
+     * 
+     */
+    if (!cookies[`lesson-${state.classroomID}`]?.poem && !state.componentState.poem) {
       let storageObj: storageObject = {
         title: '',
         editMode: false,
         editInput: '',
         lines: [],
-      }
+      };
 
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
@@ -80,34 +97,33 @@ const PoemActivity = () => {
         },
       });
 
-      setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], poem: storageObj })
+      setCookie(`lesson-${state.classroomID}`, {
+        ...cookies[`lesson-${state.classroomID}`],
+        poem: storageObj,
+      });
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-
     if (state.componentState.poem && editMode.open === true) {
-
       dispatch({
         type: 'UPDATE_COMPONENT_STATE',
         payload: {
           componentName: 'poem',
           inputName: 'editMode',
-          content: true
-        }
-      })
+          content: true,
+        },
+      });
 
       setCookie(`lesson-${state.classroomID}`, {
         ...cookies[`lesson-${state.classroomID}`],
         poem: {
           ...cookies[`lesson-${state.classroomID}`].poem,
-          editMode: true
-        }
-      })
-
+          editMode: true,
+        },
+      });
     }
-
-  }, [editMode.open])
+  }, [editMode.open]);
 
   useEffect(() => {
     if (state.componentState.poem) {
@@ -116,11 +132,11 @@ const PoemActivity = () => {
         payload: {
           componentName: 'poem',
           inputName: 'editInput',
-          content: editMode.input
-        }
-      })
+          content: editMode.input,
+        },
+      });
     }
-  }, [editMode.input])
+  }, [editMode.input]);
 
   return (
     <>
@@ -132,8 +148,8 @@ const PoemActivity = () => {
           {!editMode.open ? (
             <WritingBlock editMode={editMode} setEditMode={setEditMode} />
           ) : (
-              <EditBlock editMode={editMode} />
-            )}
+            <EditBlock editMode={editMode} />
+          )}
 
           {/* <ToolBar editMode={editMode} setEditMode={setEditMode} /> */}
         </div>

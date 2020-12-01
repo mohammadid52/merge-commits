@@ -2,12 +2,78 @@ import React, { useContext } from 'react';
 import StageIcon from './StageIcon';
 import { LessonContext } from '../../../../contexts/LessonContext';
 
-interface ProgressBarProps {
-  isHovered: boolean;
-}
-
-const ProgressBar = (props: ProgressBarProps) => {
+const ProgressBar = () => {
   const { state, theme } = useContext(LessonContext);
+
+  /**
+   *
+   * filter multiple stages
+   * map over multiple stages
+   * use this map as stage name e.g. Breakdown 1, Breakdown 2, Breakdown 3...
+   *
+   * THIS CODE NEEDS TO BE REWRITTEN, SUPER UNCLEAR AT THE MOMENT
+   * 
+   * Duplicated in:
+   * 
+   * - ProgressBar.tsx
+   * - LessonControlBar.tsx
+   *
+   */
+
+  const mapStages = state.pages.map(
+    (page: { stage: string; type: string; open: boolean; disabled: boolean }, stageNr: number) => ({
+      ...page,
+      stageNr: stageNr,
+    })
+  );
+
+  const checkIfMultipleStages = (type: string) => {
+    return (
+      state.pages.filter(
+        (page: { stage: string; type: string; open: boolean; disabled: boolean }) =>
+          page.type === type
+      ).length > 1
+    );
+  };
+
+  const mapMultipleStages = (type: string) => {
+    const out = mapStages
+      .filter(
+        (page: {
+          stage: string;
+          type: string;
+          open: boolean;
+          disabled: boolean;
+          stageNr: number;
+        }) => page.type === type
+      )
+      .map(
+        (
+          page: { stage: string; type: string; open: boolean; disabled: boolean; stageNr: number },
+          i: number
+        ) => ({
+          ...page,
+          multipleCounter: i+1,
+        })
+      );
+
+    return out;
+  };
+
+  const getSpecificStage = (type: string, stageNr: number) => {
+    const out = mapMultipleStages(type).filter(
+      (page: {
+        stage: string;
+        type: string;
+        open: boolean;
+        disabled: boolean;
+        stageNr: number;
+        multipleCounter: number;
+      }) => page.stageNr === stageNr
+    );
+
+    return out[0];
+  };
 
   /**
    * Explanation
@@ -32,10 +98,9 @@ const ProgressBar = (props: ProgressBarProps) => {
                   className={`${
                     key < state.pages.length - 1 ? 'w-full' : 'w-auto'
                   } flex justify-center items-center`}>
-                  
-                  
+                  {/* {console.log('checkIfMultipleStages : ', checkIfMultipleStages(page.type))} */}
+
                   <StageIcon
-                    isHovered={props.isHovered}
                     iconID={key}
                     key={key}
                     stage={page.stage}
@@ -43,6 +108,11 @@ const ProgressBar = (props: ProgressBarProps) => {
                     active={state.pages[key].active}
                     open={page.open}
                     disabled={page.disabled}
+                    counter={
+                      checkIfMultipleStages(page.type)
+                        ? getSpecificStage(page.type, key).multipleCounter
+                        : null
+                    }
                   />
 
                   {/* PROGRESS BAR */}
