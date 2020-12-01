@@ -33,13 +33,13 @@ const TopMenu = () => {
 
 
 
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
+  // useEffect(() => {
+  //   window.addEventListener('scroll', handleScroll);
 
-    return () => {
-      window.removeEventListener('scroll', () => handleScroll);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('scroll', () => handleScroll);
+  //   };
+  // }, []);
 
 
 
@@ -65,21 +65,18 @@ const TopMenu = () => {
     }
   };
 
-  const handleScroll = () => {
-    if (ref.current) {
-      setSticky(ref.current.getBoundingClientRect().top <= 0);
-    }
-  };
+  // const handleScroll = () => {
+  //   if (ref.current) {
+  //     setSticky(ref.current.getBoundingClientRect().top <= 0);
+  //   }
+  // };
 
 
 
   return (
     <>
       <div
-        className={` ${theme.toolbar.bg} shadow-1 h-1.1/10 w-full flex justify-center items-center content-center py-4 px-6`}
-        onPointerEnter={() => setIsHovered(true)}
-        onPointerLeave={() => setIsHovered(false)}
-      >
+        className={` ${theme.toolbar.bg} shadow-1 h-1.1/10 w-full flex justify-center items-center content-center py-4 px-6`}>
         <div className='w-full flex flex-row items-center justify-between'>
 
 
@@ -87,7 +84,7 @@ const TopMenu = () => {
 
 
 
-          <div ref={ref} className='flex flex-row justify-center'>
+          <div className='flex flex-row justify-center'>
 
             {/* BACK BUTTON */}
 
@@ -109,7 +106,7 @@ const TopMenu = () => {
 
             {/* PROGRESS BAR */}
 
-            <ProgressBar isHovered={isHovered} />
+            <ProgressBar />
 
 
 
@@ -143,38 +140,9 @@ const TopMenu = () => {
       </div>
 
       {/* ICON LABEL HOVER BAR */}
-      <div className={`${isHovered ? 'opacity-100' : 'opacity-0'} w-full h-6 bg-darker-gray`}></div>
+      <div className={`w-full h-6 bg-darker-gray`}></div>
 
 
-
-      {/* FLOATING NAV BUTTONS */}
-{/* 
-      {
-        (isSticky
-          ?
-          (
-            <>
-
-              <div className='fixed h-16 bottom-1/2 w-full'>
-                <div
-                  className={`absolute right-0 w-24 h-8 text-center transform -translate-x-1/2 leading-relaxed rounded-full z-30 ${state.canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark-gray cursor-default'
-                    } `}
-                  onClick={handleForward}>Continue</div>
-
-                <div className='max-w-256 w-full' style={{pointerEvents: 'none'}}></div>
-
-                <div
-                  className={`absolute left-0 w-24 h-8 text-center transform translate-x-1/2 leading-relaxed rounded-full z-30 ${state.currentPage > 0 ? 'cursor-pointer bg-dark-red' : 'cursor-default bg-darker-gray'
-                    } }`}
-                  onClick={handleBack}>Back</div>
-              </div>
-
-            </>
-          )
-          : null
-
-        )
-      } */}
 
 
     </>

@@ -17,7 +17,7 @@ const Keyword = () => {
       }
     }
 
-    console.log('XXX: ', lastRow.filter((obj: any) => obj['wordID'] === n).length === 1)
+    // console.log('XXX: ', lastRow.filter((obj: any) => obj['wordID'] === n).length === 1)
 
     return lastRow.filter((obj: any) => obj['wordID'] === n).length === 1;
   }

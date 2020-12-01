@@ -11,7 +11,7 @@ import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import ClassRoster from './ClassRoster';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
 import ToolTip from '../General/ToolTip/ToolTip';
-import FooterLabels from '../General/LabelSwitch';
+// import FooterLabels from '../General/LabelSwitch';
 import PositiveAlert from '../General/Popup';
 import { useOutsideAlerter } from '../General/hooks/outsideAlerter';
 import Body from './Body';

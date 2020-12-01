@@ -2,7 +2,7 @@ import React, { useContext, ReactNode, useState, ReactElement } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 
-import FooterLabels from '../../General/LabelSwitch';
+import StageLabels from '../../General/LabelSwitch';
 
 interface StageButtonProps {
   iconID: number;
@@ -16,6 +16,7 @@ interface StageButtonProps {
   handleOpenMenu: (stage: string) => void;
   pageViewed: { pageID: number; stage: string };
   setPageViewed: React.Dispatch<React.SetStateAction<object>>;
+  counter?: number;
 }
 
 const StageButton = (props: StageButtonProps) => {
@@ -31,6 +32,7 @@ const StageButton = (props: StageButtonProps) => {
     disabled,
     pageViewed,
     setPageViewed,
+    counter,
   } = props;
   const { state, dispatch } = useContext(LessonControlContext);
   const match = useRouteMatch();
@@ -82,8 +84,9 @@ const StageButton = (props: StageButtonProps) => {
                 ? null
                 : 'hover:font-bold hover:underline hover:text-sea-green'
             } ${stageIsViewed ? 'font-bold' : null}`}>
-            <div className='text-blueberry text-center'>
-              <FooterLabels label={buttonLabel()} />
+            <div className='text-blueberry text-center flex flex-row'>
+              <StageLabels label={buttonLabel()} />
+              {counter !== null ? <span>{counter}</span> : null}
             </div>
           </a>
         </div>
@@ -110,10 +113,11 @@ const StageButton = (props: StageButtonProps) => {
                 : 'hover:font-bold hover:underline hover:text-sea-green'
             } ${stageIsViewed ? 'font-bold text-sea-green underline' : null}`}>
             <div
-              className={`pl-2 text-center ${
+              className={`pl-2 text-center flex flex-row${
                 state.pages[iconID].disabled === true ? 'line-through' : null
               }`}>
-              <FooterLabels label={buttonLabel()} />
+              <StageLabels label={buttonLabel()} />
+              {counter !== null ? <span>{counter}</span> : null}
             </div>
           </a>
         </div>
@@ -140,10 +144,11 @@ const StageButton = (props: StageButtonProps) => {
                 : 'hover:font-bold hover:underline hover:text-sea-green'
             } ${stageIsViewed ? 'font-bold' : null}`}>
             <div
-              className={`text-ketchup pl-2 text-center ${
+              className={`text-ketchup pl-2 text-center  flex flex-row${
                 state.pages[iconID].disabled === true ? 'line-through' : null
               }`}>
-              <FooterLabels label={buttonLabel()} />
+              <StageLabels label={buttonLabel()} />
+              {counter !== null ? <span>{counter}</span> : null}
             </div>
           </a>
         </div>
