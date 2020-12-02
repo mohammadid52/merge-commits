@@ -1,10 +1,12 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, Fragment } from 'react';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
+import Amplify from 'aws-amplify';
 import * as queries from '../../../graphql/queries';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaUserCircle } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 import ProfileInfo from './ProfileInfo';
 import AboutMe from './AboutMe';
 import ChangePassword from './ChangePassword';
@@ -18,6 +20,7 @@ import {
     NavLink
 } from 'react-router-dom';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
+import ProfileCropModal from './ProfileCropModal';
 export interface UserInfo {
     authId: string
     courses?: string
@@ -68,6 +71,8 @@ const Profile: React.FC = () => {
     const { state, theme } = useContext(GlobalContext);
     const [status, setStatus] = useState('');
     const [select, setSelect] = useState('Profile');
+    const [showCropper, setShowCropper] = useState(false);
+    const [upImage, setUpImage] = useState(null);
 
     const initials = (firstName: string, lastName: string) => {
         let firstInitial = firstName.charAt(0).toUpperCase()
@@ -85,6 +90,28 @@ const Profile: React.FC = () => {
         let h = hash % 360;
         return 'hsl(' + h + ', 70%, 72%)';
     }
+
+    // TODO: 
+    // Set type for file instead of any
+
+    const uploadImageToS3 = (result: any) => {
+        console.log("Amplify storage", Amplify.Storage)
+        console.log("results in uploadImageToS3", result)
+    }
+    
+    const cropSelecetedImage = (e: any) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0]
+            const reader = new FileReader();
+            const setImageReader = function () {
+                setUpImage(reader.result);
+            }
+            reader.onload = setImageReader;
+            reader.readAsDataURL(file);
+            setShowCropper(true);
+        }
+    }
+
 
     async function getUser() {
         try {
@@ -114,17 +141,30 @@ const Profile: React.FC = () => {
                         <div className="h-9/10 flex flex-col md:flex-row">
 
                             <div className="w-auto p-4 flex flex-col text-center items-center">
-                                <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
-                                    <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{
-                                        background: `${stringToHslColor(person.firstName + ' ' + person.lastName)}`,
-                                        textShadow: '0.2rem 0.2rem 3px #423939b3'
-                                    }}>
-                                        {initials(person.preferredName ? person.preferredName : person.firstName, person.lastName)}
-                                    </div>
-                                    {/* <IconContext.Provider value={{ size: '8rem', color: '#4a5568' }}>
-                                    <FaUserCircle />
-                                </IconContext.Provider> */}
-                                </div>
+                                {person.image ?
+                                    (
+                                        <Fragment>
+                                            <img
+                                                className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border border-gray-400 shadow-elem-light`}
+                                                src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/iconoclast_frontpage_bg.jpg"
+                                            />
+
+                                        </Fragment>
+                                    ) :
+                                    (
+                                        <Fragment>
+                                            <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+                                                <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
+                                                    <FaPlus />
+                                                </IconContext.Provider>
+                                                <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
+                                            </label>
+                                            {showCropper && (
+                                                <ProfileCropModal upImg={upImage} />
+                                            )}
+                                        </Fragment>
+                                    )
+                                }
                                 <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
                                     {`${person.preferredName ? person.preferredName : person.firstName} ${person.lastName}`}
                                     <p className="text-md md:text-lg">{person.institution}</p>
