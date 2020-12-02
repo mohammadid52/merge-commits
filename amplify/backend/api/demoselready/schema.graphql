@@ -62,7 +62,6 @@ type Institution @model @key(fields: ["id"]) {
 }
 
 type Person @model
-@searchable
 @key(fields: ["email", "authId"]) 
 @key(name: "byContributor", fields: ["id"])
 @key(name: "byUserId", fields: ["id"], queryField: "userById")
@@ -92,19 +91,44 @@ type Person @model
 
 type Curriculum @model @key(fields: ["id"]) {
   id: ID!
-  name: String
-  contributors: [Person] @connection(keyName: "byContributor", fields: ["id"])
-  grade: [Int]
+  name: String!
+  description: String
+  objectives: [String]
+  # contributors: [Person] @connection(keyName: "byContributor", fields: ["id"])
+  # grade: [Int]
   languages: [Language]
-  lessons: [CurriculumLessons] @connection(keyName: "byCurriculum", fields: ["id"])
+  units: [Unit] @connection(keyName: "byCurriculum", fields: ["id"])
+  # lessons: [CurriculumLessons] @connection(keyName: "byCurriculum", fields: ["id"])
 }
 
-type CurriculumLessons @model(queries: null)
-@key(name: "byCurriculum", fields: ["curriculumID", "lessonID"]) {
+type Unit @model @key(fields: ["id"])
+@key(name: "byCurriculum", fields: ["curriculumID"])
+{
   id: ID!
+  name: String!
+  description: String
+  objectives: [String]
   curriculumID: ID!
+  languages: [Language]
+  lessons: [LessonUnit] @connection(keyName: "lessonByUnit", fields: ["id"])
+}
+
+# type CurriculumLessons @model(queries: null)
+# @key(name: "byCurriculum", fields: ["curriculumID", "lessonID"]) {
+#   id: ID!
+#   curriculumID: ID!
+#   lessonID: ID!
+#   curriculum: Curriculum @connection(fields: ["curriculumID"])
+#   lesson: Lesson @connection(fields: ["lessonID"])
+# }
+
+type LessonUnit @model(queries: null)
+@key(name: "lessonByUnit", fields: ["unitID", "lessonID"])
+{
+  id: ID!
+  unitID: ID!
   lessonID: ID!
-  curriculum: Curriculum @connection(fields: ["curriculumID"])
+  unit: Unit @connection(fields: ["unitID"])
   lesson: Lesson @connection(fields: ["lessonID"])
 }
 
@@ -243,6 +267,7 @@ type ComponentSummary {
 }
 
 type Quote {
+  id: String
   source: String
   text: String!
 }
@@ -322,19 +347,44 @@ type SELStructure @model {
   description: String
 }
 
+type ThemeTemplate @model {
+  id: ID!
+  type: String
+  name: String!
+  summary: [String!]!
+  summaryLabel: String!
+  quote: [Quote]
+  keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
+  connection: String
+  images: [String!]!
+  additionalContent: AdditionalContent
+}
+
+type Theme {
+  type: String
+  name: String!
+  summary: [String!]!
+  summaryLabel: String!
+  quote: [Quote]
+  # keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
+  connection: String
+  images: [String!]!
+  additionalContent: AdditionalContent
+}
 
 type Lesson @model @key(fields: ["id"]) {
   id: ID!
   title: String! 
   type: String
   instructions: [String]
+  theme: Theme
   contributors: [Person]! @connection(keyName: "byContributor", fields: ["id"])
   grades: [Int]
   artistID: ID!
   artist: Artist! @connection(fields: ["artistID"])
   language: Language!
-  SELStructureID: ID!
-  SELStructure: SELStructure @connection(fields: ["SELStructureID"])
+  # SELStructureID: ID!
+  # SELStructure: SELStructure @connection(fields: ["SELStructureID"])
   keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
   connection: String
   summary: String!
@@ -351,6 +401,7 @@ type Lesson @model @key(fields: ["id"]) {
   activity: Activity @connection(fields: ["activityId"])
   assessmentID: ID!
   assessment: Assessment @connection(fields: ["assessmentID"])
+  filters: [LessonFilter] @connection(keyName: "filterByLesson", fields: ["id"])
 }
 
 type LessonCheckpoint @model(queries: null)
@@ -435,6 +486,7 @@ type Content {
 }
 
 type Tool {
+  id: String
   name: String!
   color: String!
   icon: String!
@@ -573,4 +625,28 @@ type StudentWord @model(queries: null)
   studentAuthID: String!
   word: Word @connection(fields: ["wordID"])
   student: Person @connection(fields: ["studentID", "studentAuthID"])
+}
+
+type FilterOptions {
+  id: ID!
+  text: String!
+}
+
+type Filter @model {
+  id: ID!
+  name: String!
+  description: String
+  options: [FilterOptions!]!
+}
+
+type LessonFilter @model 
+@key(fields: ["id"])
+@key(name: "filterByLesson", fields: ["lessonID", "filterID"])
+{
+  id: ID!
+  lessonID: ID!
+  filterID: ID!
+  optionID: ID!
+  lesson: Lesson @connection (fields: ["lessonID"])
+  filter: Filter @connection(fields: ["filterID"])
 }
