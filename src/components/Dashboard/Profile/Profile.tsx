@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import Amplify from 'aws-amplify';
+import Storage from '@aws-amplify/storage';
 import * as queries from '../../../graphql/queries';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
@@ -20,7 +20,9 @@ import {
     NavLink
 } from 'react-router-dom';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
-import ProfileCropModal from './ProfileCropModal';
+import * as customMutations from '../../../customGraphql/customMutations';
+// import ProfileCropModal from './ProfileCropModal';
+
 export interface UserInfo {
     authId: string
     courses?: string
@@ -93,22 +95,76 @@ const Profile: React.FC = () => {
 
     // TODO: 
     // Set type for file instead of any
+    // Need to remove unnecessary logs.
+    // Image crop feature.
 
-    const uploadImageToS3 = (result: any) => {
-        console.log("Amplify storage", Amplify.Storage)
-        console.log("results in uploadImageToS3", result)
+    const uploadImageToS3 = (file: any, id: string) => {
+        // Upload file to s3 bucket
+
+        return new Promise((resolve, reject) => {
+            Storage.put(`profile_image_${id}`, file).then(result => {
+                console.log('File successfully uploaded to s3', result)
+                resolve(true)
+            }).catch(err => {
+                console.log('Error in uploading file to s3', err)
+                reject(err)
+            })
+        });
     }
-    
-    const cropSelecetedImage = (e: any) => {
+
+    const getImageFromS3 = (key: string) => {
+        // Read file from bucket 
+        return new Promise((resolve, reject) => {
+            Storage.get(key).then(result => {
+                console.log('File successfully fetched from s3')
+                resolve(result)
+            }).catch(err => {
+                console.log('Error in fetching file to s3', err)
+                reject(err)
+            })
+        });
+    }
+
+    const cropSelecetedImage = async (e: any) => {
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0]
-            const reader = new FileReader();
-            const setImageReader = function () {
-                setUpImage(reader.result);
-            }
-            reader.onload = setImageReader;
-            reader.readAsDataURL(file);
-            setShowCropper(true);
+            await uploadImageToS3(file, person.id)
+            const userImage: any = await getImageFromS3(`profile_image_${person.id}`)
+            console.log(userImage)
+            setPerson({ ...person, image: userImage })
+            updateImageParam(person.image);
+        }
+    }
+
+
+    async function updateImageParam(img: string) {
+
+        // TODO: 
+        // Need to check for update only required input values. 
+
+        const input = {
+            id: person.id,
+            image: img,
+            authId: person.authId,
+            grade: person.grade,
+            language: person.language,
+            lastName: person.lastName,
+            preferredName: person.preferredName,
+            role: person.role,
+            status: person.status,
+            phone: person.phone,
+            birthdate: person.birthdate,
+            email: person.email,
+            firstName: person.firstName
+        }
+        try {
+            const update: any = await API.graphql(graphqlOperation(customMutations.updatePerson, { input: input }))
+            setPerson({
+                ...person,
+                ...update.data.updatePerson
+            })
+        } catch (error) {
+            console.error("Error updating image on graphql", error)
         }
     }
 
@@ -146,7 +202,7 @@ const Profile: React.FC = () => {
                                         <Fragment>
                                             <img
                                                 className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border border-gray-400 shadow-elem-light`}
-                                                src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/iconoclast_frontpage_bg.jpg"
+                                                src={person.image}
                                             />
 
                                         </Fragment>
@@ -159,9 +215,9 @@ const Profile: React.FC = () => {
                                                 </IconContext.Provider>
                                                 <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
                                             </label>
-                                            {showCropper && (
+                                            {/* {showCropper && (
                                                 <ProfileCropModal upImg={upImage} />
-                                            )}
+                                            )} */}
                                         </Fragment>
                                     )
                                 }
