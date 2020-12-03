@@ -4,7 +4,7 @@ import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaUserCircle } from 'react-icons/fa';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 
-import {LinkProps} from './Links';
+import { LinkProps } from './Links';
 
 const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const { state } = useContext(GlobalContext);
@@ -53,7 +53,7 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
                 state.user.firstName
                   ? stringToHslColor(state.user.firstName + ' ' + state.user.lastName)
                   : '#272730'
-              }`,
+                }`,
               textShadow: '0.1rem 0.1rem 2px #423939b3',
             }}>
             {`${initials(state.user.firstName, state.user.lastName)}`}
