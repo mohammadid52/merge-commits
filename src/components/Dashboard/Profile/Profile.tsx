@@ -132,7 +132,18 @@ const Profile: React.FC = () => {
     const cropSelecetedImage = async (e: any) => {
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0]
-            await uploadImageToS3(file, person.id)
+            
+            // -----cropper----
+            const fileReader = new FileReader();
+            fileReader.onload = function () {
+                setUpImage(fileReader.result)
+            }
+            fileReader.readAsDataURL(file);
+            toggleCropper()
+            // -----
+            
+            const type = file.type;
+            await uploadImageToS3(file, person.id, type)
             const userImage: any = await getImageFromS3(`profile_image_${person.id}`)
             console.log(userImage)
             setPerson({ ...person, image: userImage })
@@ -140,7 +151,14 @@ const Profile: React.FC = () => {
         }
     }
 
+    const toggleCropper = () => {
+        setShowCropper(!showCropper)
+    }
+    const saveCroppedImage = () => {
+        toggleCropper();
+        // Will upload s3 file here.
 
+    }
     async function updateImageParam(img: string) {
 
         // TODO: 
@@ -219,9 +237,7 @@ const Profile: React.FC = () => {
                                                 </IconContext.Provider>
                                                 <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
                                             </label>
-                                            {/* {showCropper && (
-                                                <ProfileCropModal upImg={upImage} />
-                                            )} */}
+
                                         </Fragment>
                                     )
                                 }
@@ -339,6 +355,9 @@ const Profile: React.FC = () => {
                                         )}
                                     />
                                 </Switch>
+                                {showCropper && (
+                                    <ProfileCropModal upImg={upImage} />
+                                )}
                             </div>
                         </div>
 
