@@ -47,6 +47,7 @@ const Dashboard: React.FC = () => {
                 language: user.language,
                 onBoardSurvey: user.onBoardSurvey ? user.onBoardSurvey : false,
                 role: user.role,
+                image:user.image
             }
         })
 
