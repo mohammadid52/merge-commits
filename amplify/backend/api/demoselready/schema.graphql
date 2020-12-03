@@ -260,7 +260,6 @@ type StudentData @model(subscriptions: null)
   saveType: String
   classroomID: ID!
   classroom: Classroom @connection(fields: ["classroomID"])
-  # studentDataClassroomId: String
   studentID: String!
   studentAuthID: String!
   student: Person! @connection(fields: ["studentID", "studentAuthID"])
