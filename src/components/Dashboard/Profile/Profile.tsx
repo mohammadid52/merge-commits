@@ -28,7 +28,7 @@ import {
     grade?: string
     id: string
     image?: string
-    institution?: string
+    institution?: any
     language: string
     lastName: string
     preferredName?: string
@@ -125,7 +125,7 @@ const Profile: React.FC = () => {
                             </div>
                             <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
                                 {`${ person.preferredName ? person.preferredName : person.firstName } ${ person.lastName }`} 
-                                <p className="text-md md:text-lg">{person.institution}</p>
+                                <p className="text-md md:text-lg">{person?.institution?.name}</p>
                             </div>
                             <span className="flex w-full inline-flex rounded-md shadow-sm mt-3">
                                 <NavLink to={`${match.url}/password`}>
