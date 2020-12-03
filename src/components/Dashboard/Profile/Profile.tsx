@@ -5,8 +5,9 @@ import Storage from '@aws-amplify/storage';
 import * as queries from '../../../graphql/queries';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaUserCircle } from 'react-icons/fa';
+import { RiLockPasswordFill } from "react-icons/ri";
 import { FaPlus } from 'react-icons/fa';
+import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import ProfileInfo from './ProfileInfo';
 import AboutMe from './AboutMe';
 import ChangePassword from './ChangePassword';
@@ -21,7 +22,8 @@ import {
 } from 'react-router-dom';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import * as customMutations from '../../../customGraphql/customMutations';
-// import ProfileCropModal from './ProfileCropModal';
+import ToolTip from '../../General/ToolTip/ToolTip'
+import ProfileCropModal from './ProfileCropModal';
 
 export interface UserInfo {
     authId: string
@@ -98,11 +100,13 @@ const Profile: React.FC = () => {
     // Need to remove unnecessary logs.
     // Image crop feature.
 
-    const uploadImageToS3 = (file: any, id: string) => {
+    const uploadImageToS3 = (file: any, id: string, type: string) => {
         // Upload file to s3 bucket
 
         return new Promise((resolve, reject) => {
-            Storage.put(`profile_image_${id}`, file).then(result => {
+            Storage.put(`profile_image_${id}`, file, {
+                contentType: type,
+            }).then(result => {
                 console.log('File successfully uploaded to s3', result)
                 resolve(true)
             }).catch(err => {
@@ -225,11 +229,26 @@ const Profile: React.FC = () => {
                                     {`${person.preferredName ? person.preferredName : person.firstName} ${person.lastName}`}
                                     <p className="text-md md:text-lg">{person.institution}</p>
                                 </div>
-                                <span className="flex w-full inline-flex rounded-md shadow-sm mt-3">
+                                <span className="flex w-full rounded-md shadow-sm mt-3 relative top-2">
                                     <NavLink to={`${match.url}/password`}>
-                                        <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                                        <button type="submit" className="inline-flex justify-center pb-2 pt-3 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
                                             Change Password
-                                </button>
+                                            <span className="w-8 pl-3 h-4 flex items-center">
+                                                <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
+                                                    <RiLockPasswordFill />
+                                                </IconContext.Provider>
+                                            </span>
+                                            <ToolTip
+                                                position='bottom'
+                                                header=''
+                                                display='none'
+                                                content='Change Password'
+                                                id={'change-password'}
+                                                cursor
+                                                width='w-24 px-1 flex justify-center items-center'
+                                                fontSize='text-xs'
+                                            />
+                                        </button>
                                     </NavLink>
                                 </span>
                             </div>
@@ -258,9 +277,24 @@ const Profile: React.FC = () => {
 
                                 <div className="absolute w-auto" style={{ right: '0', top: '0' }}>
                                     <NavLink to={`/dashboard`}>
-                                        <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                                        <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
                                             Go Back
-                                    </button>
+                                            <span className="w-8 pl-3 h-4 flex items-center">
+                                                <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
+                                                    <IoArrowUndoCircleOutline />
+                                                </IconContext.Provider>
+                                            </span>
+                                            <ToolTip
+                                                position='bottom'
+                                                header=''
+                                                display='none'
+                                                content='Return to Classroom'
+                                                id={'goBack'}
+                                                cursor
+                                                width='w-24 px-1 flex justify-center items-center'
+                                                fontSize='text-xs'
+                                            />
+                                        </button>
                                     </NavLink>
                                 </div>
 

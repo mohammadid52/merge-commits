@@ -1,9 +1,12 @@
 import React, { useContext } from 'react';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { FaEdit } from 'react-icons/fa';
 import Dropdown from './Dropdown';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { NavLink, useRouteMatch } from 'react-router-dom';
 import { UserInfo } from './Profile';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
+import ToolTip from '../../General/ToolTip/ToolTip'
 
 interface UserInfoProps {
     user: UserInfo
@@ -22,6 +25,13 @@ const ProfileInfo = (props: UserInfoProps) => {
         } else if (user.language === 'ES') {
             return 'Spanish'
         }
+    }
+
+    let changeToUsFormat = (actualDate: string) => {
+        let date = new Date(actualDate);
+        return (
+            (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear()
+        )
     }
 
     if (status !== 'done') {
@@ -58,7 +68,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                                     Nickname
                                 </dt>
                                 <dd className="mt-1 text-sm leading-5 text-gray-900">
-                                    {`${user.preferredName ? user.preferredName : 'not set'}`}
+                                    {`${user.preferredName ? user.preferredName : '--'}`}
                                 </dd>
                             </div>
                             <div className="sm:col-span-1 p-2">
@@ -66,7 +76,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                                     Birthday
                                 </dt>
                                 <dd className="mt-1 text-sm leading-5 text-gray-900">
-                                    {`${user.birthdate ? user.birthdate : 'not set'}`}
+                                    {`${user.birthdate ? changeToUsFormat(user.birthdate) : 'not set'}`}
                                 </dd>
                             </div>
                             <div className="sm:col-span-1 p-2">
@@ -90,7 +100,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                                     Contact Number
                                 </dt>
                                 <dd className="mt-1 text-sm leading-5 text-gray-900">
-                                    {`${user.phone ? user.phone : 'not set'}`}
+                                    {`${user.phone ? user.phone : '--'}`}
                                 </dd>
                             </div>
                         </dl>
@@ -125,11 +135,26 @@ const ProfileInfo = (props: UserInfoProps) => {
                     </div>
                 </div>
 
-                <div className="px-4 pt-4 w-full flex justify-end">
-                    <span className="flex w-32 ml-3 inline-flex rounded-md shadow-sm">
+                <div className="px-4 w-auto pt-4 flex justify-end">
+                    <span className="flex w-32 ml-3 rounded-md shadow-sm relative">
                         <NavLink to={`${match.url}/edit`}>
                             <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
                                 Edit
+                                <span className="w-8 pl-3 h-4 flex items-center">
+                                    <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
+                                        <FaEdit />
+                                    </IconContext.Provider>
+                                </span>
+                                <ToolTip
+                                    position='bottom'
+                                    header=''
+                                    display='none'
+                                    content='Edit Profile'
+                                    id={'edit-profile'}
+                                    cursor
+                                    width='w-24 px-1 flex justify-center items-center'
+                                    fontSize='text-xs'
+                                />
                             </button>
                         </NavLink>
                     </span>
