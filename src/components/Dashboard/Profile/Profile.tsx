@@ -6,7 +6,7 @@ import * as queries from '../../../graphql/queries';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { RiLockPasswordFill } from "react-icons/ri";
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTrashAlt } from 'react-icons/fa';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import ProfileInfo from './ProfileInfo';
 import AboutMe from './AboutMe';
@@ -77,6 +77,7 @@ const Profile: React.FC = () => {
   const [select, setSelect] = useState('Profile');
   const [showCropper, setShowCropper] = useState(false);
   const [upImage, setUpImage] = useState(null);
+  const [imageUrl,setImageUrl] = useState('')
 
   const initials = (firstName: string, lastName: string) => {
     let firstInitial = firstName.charAt(0).toUpperCase()
@@ -97,15 +98,14 @@ const Profile: React.FC = () => {
 
   // TODO: 
   // Set type for file instead of any
-  // Need to remove unnecessary logs.
-  // Image crop feature.
 
-  const uploadImageToS3 = (file: any, id: string, type: string) => {
+  const uploadImageToS3 = async(file: any, id: string, type: string) => {
     // Upload file to s3 bucket
 
     return new Promise((resolve, reject) => {
       Storage.put(`profile_image_${id}`, file, {
         contentType: type,
+        ContentEncoding: 'base64',
       }).then(result => {
         console.log('File successfully uploaded to s3', result)
         resolve(true)
@@ -119,8 +119,9 @@ const Profile: React.FC = () => {
   const getImageFromS3 = (key: string) => {
     // Read file from bucket 
     return new Promise((resolve, reject) => {
-      Storage.get(key).then(result => {
+      Storage.get(key).then((result:string) => {
         console.log('File successfully fetched from s3')
+        setImageUrl(result);
         resolve(result)
       }).catch(err => {
         console.log('Error in fetching file to s3', err)
@@ -129,44 +130,56 @@ const Profile: React.FC = () => {
     });
   }
 
+  const deletImageFromS3 = (key: string) => {
+    // Remove image from bucket
+
+    return new Promise((resolve, reject) => {
+      Storage.remove(key).then(result => {
+        console.log('File successfully deleted from s3')
+        resolve(result)
+      }).catch(err => {
+        console.log('Error in deleting file from s3', err)
+        reject(err)
+      })
+    });
+  }
+
   const cropSelecetedImage = async (e: any) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0]
-
-      // -----cropper----
       const fileReader = new FileReader();
       fileReader.onload = function () {
         setUpImage(fileReader.result)
       }
       fileReader.readAsDataURL(file);
-      toggleCropper()
-      // -----
-
-      const type = file.type;
-      await uploadImageToS3(file, person.id, type)
-      const userImage: any = await getImageFromS3(`profile_image_${person.id}`)
-      console.log(userImage)
-      setPerson({ ...person, image: userImage })
-      updateImageParam(person.image);
+      toggleCropper()     
     }
   }
 
   const toggleCropper = () => {
     setShowCropper(!showCropper)
   }
-  const saveCroppedImage = () => {
+
+  const saveCroppedImage = async(image:string) => {
     toggleCropper();
-    // Will upload s3 file here.
+    // Upload file to s3 here.
+    await uploadImageToS3(image, person.id, 'image/jpeg')
+    await getImageFromS3(`profile_image_${person.id}`)
+      setPerson({ ...person, image: `profile_image_${person.id}` })
+      if (!person.image) {
+        updateImageParam(`profile_image_${person.id}`);
+      }
+      toggleCropper();
 
   }
-  async function updateImageParam(img: string) {
+  async function updateImageParam(imgKey: string) {
 
     // TODO: 
     // Need to check for update only required input values. 
 
     const input = {
       id: person.id,
-      image: img,
+      image: imgKey,
       authId: person.authId,
       grade: person.grade,
       language: person.language,
@@ -190,6 +203,38 @@ const Profile: React.FC = () => {
     }
   }
 
+  const deletUserProfile = async () => {
+    await deletImageFromS3(`profile_image_${person.id}`)
+    await removeImageUrlFromDb();
+  }
+
+
+  const removeImageUrlFromDb = async () => {
+    const input = {
+      id: person.id,
+      image: '',
+      authId: person.authId,
+      grade: person.grade,
+      language: person.language,
+      lastName: person.lastName,
+      preferredName: person.preferredName,
+      role: person.role,
+      status: person.status,
+      phone: person.phone,
+      birthdate: person.birthdate,
+      email: person.email,
+      firstName: person.firstName
+    }
+    try {
+      const update: any = await API.graphql(graphqlOperation(customMutations.updatePerson, { input: input }))
+      setPerson({
+        ...person,
+        ...update.data.updatePerson
+      })
+    } catch (error) {
+      console.error("Error Deleting image on graphql", error)
+    }
+  }
 
   async function getUser() {
     try {
@@ -204,6 +249,10 @@ const Profile: React.FC = () => {
   useEffect(() => {
     getUser()
   }, [])
+
+  useEffect(() => {
+    getImageFromS3(person.image)
+  }, [person.image])
 
   if (status !== 'done') {
     return (
@@ -224,8 +273,21 @@ const Profile: React.FC = () => {
                     <Fragment>
                       <img
                         className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border border-gray-400 shadow-elem-light`}
-                        src={person.image}
+                        src={imageUrl}
                       />
+                      <span className="flex justify-around mt-6">
+                        <label className="w-8 cursor-pointer">
+                          <IconContext.Provider value={{ size: '2rem', color: '#5a67d8' }}>
+                            <FaEdit />
+                          </IconContext.Provider>
+                          <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
+                        </label>
+                        <span className="w-8 cursor-pointer" onClick={deletUserProfile}>
+                          <IconContext.Provider value={{ size: '2rem', color: '#5a67d8' }}>
+                            <FaTrashAlt />
+                          </IconContext.Provider>
+                        </span>
+                      </span>
 
                     </Fragment>
                   ) :
@@ -249,7 +311,7 @@ const Profile: React.FC = () => {
                   <NavLink to={`${match.url}/password`}>
                     <button type="submit" className="inline-flex justify-center pb-2 pt-3 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
                       Change Password
-                                            <span className="w-8 pl-3 h-4 flex items-center">
+                      <span className="w-8 pl-3 h-4 flex items-center">
                         <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
                           <RiLockPasswordFill />
                         </IconContext.Provider>
@@ -274,19 +336,19 @@ const Profile: React.FC = () => {
                   <div onClick={() => setSelect('Profile')} className={` ${select === 'Profile' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
                     <NavLink to={`${match.url}`}>
                       My Profile
-                                    </NavLink>
+                    </NavLink>
                   </div>
 
                   <div onClick={() => setSelect('AboutMe')} className={` ${select === 'AboutMe' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
                     <NavLink to={`${match.url}/about`}>
                       About Me
-                                    </NavLink>
+                    </NavLink>
                   </div>
 
                   <div onClick={() => setSelect('Vault')} className={` ${select === 'Vault' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
                     <NavLink to={`${match.url}/vault`}>
                       Vault
-                                    </NavLink>
+                    </NavLink>
                   </div>
 
                 </div>
@@ -356,7 +418,7 @@ const Profile: React.FC = () => {
                   />
                 </Switch>
                 {showCropper && (
-                  <ProfileCropModal upImg={upImage} />
+                  <ProfileCropModal upImg={upImage} saveCroppedImage={(img:string)=>saveCroppedImage(img)}/>
                 )}
               </div>
             </div>
