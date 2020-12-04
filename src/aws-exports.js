@@ -12,7 +12,7 @@ const awsmobile = {
     "aws_appsync_region": "us-east-1",
     "aws_appsync_authenticationType": "API_KEY",
     "aws_appsync_apiKey": "da2-6smjv3ukrndjbculzwsxwzdy6m",
-    "aws_user_files_s3_bucket": "iconoclast-images141704-uat",
+    "aws_user_files_s3_bucket": "iconoclaststorage141704-uat",
     "aws_user_files_s3_bucket_region": "us-east-1"
 };
 
