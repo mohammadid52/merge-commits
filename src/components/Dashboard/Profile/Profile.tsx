@@ -14,11 +14,11 @@ import ChangePassword from './ChangePassword';
 import ProfileVault from './ProfileVault';
 import ProfileEdit from './ProfileEdit';
 import {
-    Switch,
-    Route,
-    useRouteMatch,
-    Link,
-    NavLink
+  Switch,
+  Route,
+  useRouteMatch,
+  Link,
+  NavLink
 } from 'react-router-dom';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import * as customMutations from '../../../customGraphql/customMutations';
@@ -26,346 +26,346 @@ import ToolTip from '../../General/ToolTip/ToolTip'
 import ProfileCropModal from './ProfileCropModal';
 
 export interface UserInfo {
-    authId: string
-    courses?: string
-    createdAt: string
-    email: string
-    externalId?: string
-    firstName: string
-    grade?: string
-    id: string
-    image?: string
-    institution?: string
-    language: string
-    lastName: string
-    preferredName?: string
-    role: string
-    status: string
-    phone: string
-    updatedAt: string
-    birthdate?: string
+  authId: string
+  courses?: string
+  createdAt: string
+  email: string
+  externalId?: string
+  firstName: string
+  grade?: string
+  id: string
+  image?: string
+  institution?: string
+  language: string
+  lastName: string
+  preferredName?: string
+  role: string
+  status: string
+  phone: string
+  updatedAt: string
+  birthdate?: string
 }
 
 const Profile: React.FC = () => {
 
-    const [person, setPerson] = useState<UserInfo>(
-        {
-            id: '',
-            authId: '',
-            courses: '',
-            createdAt: '',
-            email: '',
-            externalId: '',
-            firstName: '',
-            grade: null,
-            image: null,
-            institution: null,
-            language: '',
-            lastName: '',
-            preferredName: null,
-            role: '',
-            status: '',
-            phone: '',
-            updatedAt: '',
-            birthdate: null,
-        }
-    );
+  const [person, setPerson] = useState<UserInfo>(
+    {
+      id: '',
+      authId: '',
+      courses: '',
+      createdAt: '',
+      email: '',
+      externalId: '',
+      firstName: '',
+      grade: null,
+      image: null,
+      institution: null,
+      language: '',
+      lastName: '',
+      preferredName: null,
+      role: '',
+      status: '',
+      phone: '',
+      updatedAt: '',
+      birthdate: null,
+    }
+  );
 
-    const match = useRouteMatch();
-    const { state, theme } = useContext(GlobalContext);
-    const [status, setStatus] = useState('');
-    const [select, setSelect] = useState('Profile');
-    const [showCropper, setShowCropper] = useState(false);
-    const [upImage, setUpImage] = useState(null);
+  const match = useRouteMatch();
+  const { state, theme } = useContext(GlobalContext);
+  const [status, setStatus] = useState('');
+  const [select, setSelect] = useState('Profile');
+  const [showCropper, setShowCropper] = useState(false);
+  const [upImage, setUpImage] = useState(null);
 
-    const initials = (firstName: string, lastName: string) => {
-        let firstInitial = firstName.charAt(0).toUpperCase()
-        let lastInitial = lastName.charAt(0).toUpperCase()
-        return firstInitial + lastInitial;
+  const initials = (firstName: string, lastName: string) => {
+    let firstInitial = firstName.charAt(0).toUpperCase()
+    let lastInitial = lastName.charAt(0).toUpperCase()
+    return firstInitial + lastInitial;
+  }
+
+  const stringToHslColor = (str: string) => {
+    let hash = 0;
+    let i;
+    for (i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
 
-    const stringToHslColor = (str: string) => {
-        let hash = 0;
-        let i;
-        for (i = 0; i < str.length; i++) {
-            hash = str.charCodeAt(i) + ((hash << 5) - hash);
-        }
+    let h = hash % 360;
+    return 'hsl(' + h + ', 70%, 72%)';
+  }
 
-        let h = hash % 360;
-        return 'hsl(' + h + ', 70%, 72%)';
+  // TODO: 
+  // Set type for file instead of any
+  // Need to remove unnecessary logs.
+  // Image crop feature.
+
+  const uploadImageToS3 = (file: any, id: string, type: string) => {
+    // Upload file to s3 bucket
+
+    return new Promise((resolve, reject) => {
+      Storage.put(`profile_image_${id}`, file, {
+        contentType: type,
+      }).then(result => {
+        console.log('File successfully uploaded to s3', result)
+        resolve(true)
+      }).catch(err => {
+        console.log('Error in uploading file to s3', err)
+        reject(err)
+      })
+    });
+  }
+
+  const getImageFromS3 = (key: string) => {
+    // Read file from bucket 
+    return new Promise((resolve, reject) => {
+      Storage.get(key).then(result => {
+        console.log('File successfully fetched from s3')
+        resolve(result)
+      }).catch(err => {
+        console.log('Error in fetching file to s3', err)
+        reject(err)
+      })
+    });
+  }
+
+  const cropSelecetedImage = async (e: any) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0]
+
+      // -----cropper----
+      const fileReader = new FileReader();
+      fileReader.onload = function () {
+        setUpImage(fileReader.result)
+      }
+      fileReader.readAsDataURL(file);
+      toggleCropper()
+      // -----
+
+      const type = file.type;
+      await uploadImageToS3(file, person.id, type)
+      const userImage: any = await getImageFromS3(`profile_image_${person.id}`)
+      console.log(userImage)
+      setPerson({ ...person, image: userImage })
+      updateImageParam(person.image);
     }
+  }
+
+  const toggleCropper = () => {
+    setShowCropper(!showCropper)
+  }
+  const saveCroppedImage = () => {
+    toggleCropper();
+    // Will upload s3 file here.
+
+  }
+  async function updateImageParam(img: string) {
 
     // TODO: 
-    // Set type for file instead of any
-    // Need to remove unnecessary logs.
-    // Image crop feature.
+    // Need to check for update only required input values. 
 
-    const uploadImageToS3 = (file: any, id: string, type: string) => {
-        // Upload file to s3 bucket
-
-        return new Promise((resolve, reject) => {
-            Storage.put(`profile_image_${id}`, file, {
-                contentType: type,
-            }).then(result => {
-                console.log('File successfully uploaded to s3', result)
-                resolve(true)
-            }).catch(err => {
-                console.log('Error in uploading file to s3', err)
-                reject(err)
-            })
-        });
+    const input = {
+      id: person.id,
+      image: img,
+      authId: person.authId,
+      grade: person.grade,
+      language: person.language,
+      lastName: person.lastName,
+      preferredName: person.preferredName,
+      role: person.role,
+      status: person.status,
+      phone: person.phone,
+      birthdate: person.birthdate,
+      email: person.email,
+      firstName: person.firstName
     }
-
-    const getImageFromS3 = (key: string) => {
-        // Read file from bucket 
-        return new Promise((resolve, reject) => {
-            Storage.get(key).then(result => {
-                console.log('File successfully fetched from s3')
-                resolve(result)
-            }).catch(err => {
-                console.log('Error in fetching file to s3', err)
-                reject(err)
-            })
-        });
+    try {
+      const update: any = await API.graphql(graphqlOperation(customMutations.updatePerson, { input: input }))
+      setPerson({
+        ...person,
+        ...update.data.updatePerson
+      })
+    } catch (error) {
+      console.error("Error updating image on graphql", error)
     }
+  }
 
-    const cropSelecetedImage = async (e: any) => {
-        if (e.target.files && e.target.files.length > 0) {
-            const file = e.target.files[0]
-            
-            // -----cropper----
-            const fileReader = new FileReader();
-            fileReader.onload = function () {
-                setUpImage(fileReader.result)
-            }
-            fileReader.readAsDataURL(file);
-            toggleCropper()
-            // -----
-            
-            const type = file.type;
-            await uploadImageToS3(file, person.id, type)
-            const userImage: any = await getImageFromS3(`profile_image_${person.id}`)
-            console.log(userImage)
-            setPerson({ ...person, image: userImage })
-            updateImageParam(person.image);
-        }
+
+  async function getUser() {
+    try {
+      const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: state.user.email, authId: state.user.authId }))
+      setPerson(user.data.getPerson);
+      setStatus('done');
+    } catch (error) {
+      console.error(error)
     }
+  }
 
-    const toggleCropper = () => {
-        setShowCropper(!showCropper)
-    }
-    const saveCroppedImage = () => {
-        toggleCropper();
-        // Will upload s3 file here.
+  useEffect(() => {
+    getUser()
+  }, [])
 
-    }
-    async function updateImageParam(img: string) {
+  if (status !== 'done') {
+    return (
+      <LessonLoading />
+    )
+  }
+  {
+    return (
+      <div className="w-full h-9.28/10 md:h-full flex items-center justify-center">
+        <div className={`w-9/10 h-full main_container`}>
+          <div className={`w-full h-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
 
-        // TODO: 
-        // Need to check for update only required input values. 
+            <div className="h-9/10 flex flex-col md:flex-row">
 
-        const input = {
-            id: person.id,
-            image: img,
-            authId: person.authId,
-            grade: person.grade,
-            language: person.language,
-            lastName: person.lastName,
-            preferredName: person.preferredName,
-            role: person.role,
-            status: person.status,
-            phone: person.phone,
-            birthdate: person.birthdate,
-            email: person.email,
-            firstName: person.firstName
-        }
-        try {
-            const update: any = await API.graphql(graphqlOperation(customMutations.updatePerson, { input: input }))
-            setPerson({
-                ...person,
-                ...update.data.updatePerson
-            })
-        } catch (error) {
-            console.error("Error updating image on graphql", error)
-        }
-    }
+              <div className="w-auto p-4 flex flex-col text-center items-center">
+                {person.image ?
+                  (
+                    <Fragment>
+                      <img
+                        className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border border-gray-400 shadow-elem-light`}
+                        src={person.image}
+                      />
 
+                    </Fragment>
+                  ) :
+                  (
+                    <Fragment>
+                      <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+                        <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
+                          <FaPlus />
+                        </IconContext.Provider>
+                        <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
+                      </label>
 
-    async function getUser() {
-        try {
-            const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: state.user.email, authId: state.user.authId }))
-            setPerson(user.data.getPerson);
-            setStatus('done');
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
-    useEffect(() => {
-        getUser()
-    }, [])
-
-    if (status !== 'done') {
-        return (
-            <LessonLoading />
-        )
-    }
-    {
-        return (
-            <div className="w-full h-9.28/10 md:h-full flex items-center justify-center">
-                <div className={`w-9/10 h-full main_container`}>
-                    <div className={`w-full h-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
-
-                        <div className="h-9/10 flex flex-col md:flex-row">
-
-                            <div className="w-auto p-4 flex flex-col text-center items-center">
-                                {person.image ?
-                                    (
-                                        <Fragment>
-                                            <img
-                                                className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border border-gray-400 shadow-elem-light`}
-                                                src={person.image}
-                                            />
-
-                                        </Fragment>
-                                    ) :
-                                    (
-                                        <Fragment>
-                                            <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
-                                                <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
-                                                    <FaPlus />
-                                                </IconContext.Provider>
-                                                <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
-                                            </label>
-
-                                        </Fragment>
-                                    )
-                                }
-                                <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
-                                    {`${person.preferredName ? person.preferredName : person.firstName} ${person.lastName}`}
-                                    <p className="text-md md:text-lg">{person.institution}</p>
-                                </div>
-                                <span className="flex w-full rounded-md shadow-sm mt-3 relative top-2">
-                                    <NavLink to={`${match.url}/password`}>
-                                        <button type="submit" className="inline-flex justify-center pb-2 pt-3 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
-                                            Change Password
-                                            <span className="w-8 pl-3 h-4 flex items-center">
-                                                <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
-                                                    <RiLockPasswordFill />
-                                                </IconContext.Provider>
-                                            </span>
-                                            <ToolTip
-                                                position='bottom'
-                                                header=''
-                                                display='none'
-                                                content='Change Password'
-                                                id={'change-password'}
-                                                cursor
-                                                width='w-24 px-1 flex justify-center items-center'
-                                                fontSize='text-xs'
-                                            />
-                                        </button>
-                                    </NavLink>
-                                </span>
-                            </div>
-
-                            <div className="relative w-full">
-                                <div className="w-9/10 md:w-6/10 h-8 pl-6 flex justify-between">
-                                    <div onClick={() => setSelect('Profile')} className={` ${select === 'Profile' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
-                                        <NavLink to={`${match.url}`}>
-                                            My Profile
-                                    </NavLink>
-                                    </div>
-
-                                    <div onClick={() => setSelect('AboutMe')} className={` ${select === 'AboutMe' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
-                                        <NavLink to={`${match.url}/about`}>
-                                            About Me
-                                    </NavLink>
-                                    </div>
-
-                                    <div onClick={() => setSelect('Vault')} className={` ${select === 'Vault' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
-                                        <NavLink to={`${match.url}/vault`}>
-                                            Vault
-                                    </NavLink>
-                                    </div>
-
-                                </div>
-
-                                <div className="absolute w-auto" style={{ right: '0', top: '0' }}>
-                                    <NavLink to={`/dashboard`}>
-                                        <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
-                                            Go Back
-                                            <span className="w-8 pl-3 h-4 flex items-center">
-                                                <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
-                                                    <IoArrowUndoCircleOutline />
-                                                </IconContext.Provider>
-                                            </span>
-                                            <ToolTip
-                                                position='bottom'
-                                                header=''
-                                                display='none'
-                                                content='Return to Classroom'
-                                                id={'goBack'}
-                                                cursor
-                                                width='w-24 px-1 flex justify-center items-center'
-                                                fontSize='text-xs'
-                                            />
-                                        </button>
-                                    </NavLink>
-                                </div>
-
-                                <Switch>
-                                    <Route
-                                        exact
-                                        path={`${match.url}/`}
-                                        render={() => (
-                                            <ProfileInfo
-                                                user={person}
-                                                status={status}
-                                            />
-                                        )}
-                                    />
-                                    <Route
-                                        path={`${match.url}/about`}
-                                        render={() => (
-                                            <AboutMe />
-                                        )}
-                                    />
-                                    <Route
-                                        path={`${match.url}/edit`}
-                                        render={() => (
-                                            <ProfileEdit
-                                                user={person}
-                                                status={status}
-                                                setStatus={setStatus}
-                                                getUser={getUser}
-                                            />
-                                        )}
-                                    />
-                                    <Route
-                                        path={`${match.url}/vault`}
-                                        render={() => (
-                                            <ProfileVault />
-                                        )}
-                                    />
-                                    <Route
-                                        path={`${match.url}/password`}
-                                        render={() => (
-                                            <ChangePassword />
-                                        )}
-                                    />
-                                </Switch>
-                                {showCropper && (
-                                    <ProfileCropModal upImg={upImage} />
-                                )}
-                            </div>
-                        </div>
-
-                    </div>
+                    </Fragment>
+                  )
+                }
+                <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
+                  {`${person.preferredName ? person.preferredName : person.firstName} ${person.lastName}`}
+                  <p className="text-md md:text-lg">{person.institution}</p>
                 </div>
+                <span className="flex w-full rounded-md shadow-sm mt-3 relative top-2">
+                  <NavLink to={`${match.url}/password`}>
+                    <button type="submit" className="inline-flex justify-center pb-2 pt-3 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
+                      Change Password
+                                            <span className="w-8 pl-3 h-4 flex items-center">
+                        <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
+                          <RiLockPasswordFill />
+                        </IconContext.Provider>
+                      </span>
+                      <ToolTip
+                        position='bottom'
+                        header=''
+                        display='none'
+                        content='Change Password'
+                        id={'change-password'}
+                        cursor
+                        width='w-24 px-1 flex justify-center items-center'
+                        fontSize='text-xs'
+                      />
+                    </button>
+                  </NavLink>
+                </span>
+              </div>
+
+              <div className="relative w-full">
+                <div className="w-9/10 md:w-6/10 h-8 pl-6 flex justify-between">
+                  <div onClick={() => setSelect('Profile')} className={` ${select === 'Profile' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
+                    <NavLink to={`${match.url}`}>
+                      My Profile
+                                    </NavLink>
+                  </div>
+
+                  <div onClick={() => setSelect('AboutMe')} className={` ${select === 'AboutMe' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
+                    <NavLink to={`${match.url}/about`}>
+                      About Me
+                                    </NavLink>
+                  </div>
+
+                  <div onClick={() => setSelect('Vault')} className={` ${select === 'Vault' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
+                    <NavLink to={`${match.url}/vault`}>
+                      Vault
+                                    </NavLink>
+                  </div>
+
+                </div>
+
+                <div className="absolute w-auto" style={{ right: '0', top: '0' }}>
+                  <NavLink to={`/dashboard`}>
+                    <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
+                      Go Back
+                                            <span className="w-8 pl-3 h-4 flex items-center">
+                        <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
+                          <IoArrowUndoCircleOutline />
+                        </IconContext.Provider>
+                      </span>
+                      <ToolTip
+                        position='bottom'
+                        header=''
+                        display='none'
+                        content='Return to Classroom'
+                        id={'goBack'}
+                        cursor
+                        width='w-24 px-1 flex justify-center items-center'
+                        fontSize='text-xs'
+                      />
+                    </button>
+                  </NavLink>
+                </div>
+
+                <Switch>
+                  <Route
+                    exact
+                    path={`${match.url}/`}
+                    render={() => (
+                      <ProfileInfo
+                        user={person}
+                        status={status}
+                      />
+                    )}
+                  />
+                  <Route
+                    path={`${match.url}/about`}
+                    render={() => (
+                      <AboutMe />
+                    )}
+                  />
+                  <Route
+                    path={`${match.url}/edit`}
+                    render={() => (
+                      <ProfileEdit
+                        user={person}
+                        status={status}
+                        setStatus={setStatus}
+                        getUser={getUser}
+                      />
+                    )}
+                  />
+                  <Route
+                    path={`${match.url}/vault`}
+                    render={() => (
+                      <ProfileVault />
+                    )}
+                  />
+                  <Route
+                    path={`${match.url}/password`}
+                    render={() => (
+                      <ChangePassword />
+                    )}
+                  />
+                </Switch>
+                {showCropper && (
+                  <ProfileCropModal upImg={upImage} />
+                )}
+              </div>
             </div>
-        )
-    }
+
+          </div>
+        </div>
+      </div>
+    )
+  }
 }
 
 
