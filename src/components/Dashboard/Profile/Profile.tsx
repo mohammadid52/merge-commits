@@ -72,12 +72,12 @@ const Profile: React.FC = () => {
   );
 
   const match = useRouteMatch();
-  const { state, theme } = useContext(GlobalContext);
+  const { state, theme, dispatch } = useContext(GlobalContext);
   const [status, setStatus] = useState('');
   const [select, setSelect] = useState('Profile');
   const [showCropper, setShowCropper] = useState(false);
   const [upImage, setUpImage] = useState(null);
-  const [imageUrl,setImageUrl] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
 
   const initials = (firstName: string, lastName: string) => {
     let firstInitial = firstName.charAt(0).toUpperCase()
@@ -99,7 +99,7 @@ const Profile: React.FC = () => {
   // TODO: 
   // Set type for file instead of any
 
-  const uploadImageToS3 = async(file: any, id: string, type: string) => {
+  const uploadImageToS3 = async (file: any, id: string, type: string) => {
     // Upload file to s3 bucket
 
     return new Promise((resolve, reject) => {
@@ -119,7 +119,7 @@ const Profile: React.FC = () => {
   const getImageFromS3 = (key: string) => {
     // Read file from bucket 
     return new Promise((resolve, reject) => {
-      Storage.get(key).then((result:string) => {
+      Storage.get(key).then((result: string) => {
         console.log('File successfully fetched from s3')
         setImageUrl(result);
         resolve(result)
@@ -152,7 +152,7 @@ const Profile: React.FC = () => {
         setUpImage(fileReader.result)
       }
       fileReader.readAsDataURL(file);
-      toggleCropper()     
+      toggleCropper()
     }
   }
 
@@ -160,26 +160,35 @@ const Profile: React.FC = () => {
     setShowCropper(!showCropper)
   }
 
-  const saveCroppedImage = async(image:string) => {
+  const saveCroppedImage = async (image: string) => {
     toggleCropper();
-    // Upload file to s3 here.
     await uploadImageToS3(image, person.id, 'image/jpeg')
-    await getImageFromS3(`profile_image_${person.id}`)
-      setPerson({ ...person, image: `profile_image_${person.id}` })
-      if (!person.image) {
-        updateImageParam(`profile_image_${person.id}`);
+    const imageUrl: any = await getImageFromS3(`profile_image_${person.id}`)
+    setPerson({ ...person, image: imageUrl })
+    updateImageParam(imageUrl);
+    toggleCropper();
+    dispatch({
+      type: 'SET_USER',
+      payload: {
+        id: state.user.id,
+        firstName: state.user.firstName,
+        lastName: state.user.lastName,
+        language: state.user.language,
+        onBoardSurvey: state.user.onBoardSurvey ? state.user.onBoardSurvey : false,
+        role: state.user.role,
+        image: imageUrl
       }
-      toggleCropper();
+    })
 
   }
-  async function updateImageParam(imgKey: string) {
+  async function updateImageParam(imageUrl: string) {
 
     // TODO: 
     // Need to check for update only required input values. 
 
     const input = {
       id: person.id,
-      image: imgKey,
+      image: imageUrl,
       authId: person.authId,
       grade: person.grade,
       language: person.language,
@@ -273,7 +282,7 @@ const Profile: React.FC = () => {
                     <Fragment>
                       <img
                         className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border border-gray-400 shadow-elem-light`}
-                        src={imageUrl}
+                        src={person.image}
                       />
                       <span className="flex justify-around mt-6">
                         <label className="w-8 cursor-pointer">
@@ -418,7 +427,7 @@ const Profile: React.FC = () => {
                   />
                 </Switch>
                 {showCropper && (
-                  <ProfileCropModal upImg={upImage} saveCroppedImage={(img:string)=>saveCroppedImage(img)}/>
+                  <ProfileCropModal upImg={upImage} saveCroppedImage={(img: string) => saveCroppedImage(img)} />
                 )}
               </div>
             </div>
