@@ -24,6 +24,7 @@ import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import * as customMutations from '../../../customGraphql/customMutations';
 import ToolTip from '../../General/ToolTip/ToolTip'
 import ProfileCropModal from './ProfileCropModal';
+import { getImageFromS3 } from '../../../utilities/services';
 
 export interface UserInfo {
   authId: string
@@ -116,19 +117,6 @@ const Profile: React.FC = () => {
     });
   }
 
-  const getImageFromS3 = (key: string) => {
-    // Read file from bucket 
-    return new Promise((resolve, reject) => {
-      Storage.get(key).then((result: string) => {
-        console.log('File successfully fetched from s3')
-        setImageUrl(result);
-        resolve(result)
-      }).catch(err => {
-        console.log('Error in fetching file to s3', err)
-        reject(err)
-      })
-    });
-  }
 
   const deletImageFromS3 = (key: string) => {
     // Remove image from bucket
@@ -164,8 +152,9 @@ const Profile: React.FC = () => {
     toggleCropper();
     await uploadImageToS3(image, person.id, 'image/jpeg')
     const imageUrl: any = await getImageFromS3(`profile_image_${person.id}`)
-    setPerson({ ...person, image: imageUrl })
-    updateImageParam(imageUrl);
+    setImageUrl(imageUrl);
+    setPerson({ ...person, image: `profile_image_${person.id}` })
+    updateImageParam(`profile_image_${person.id}`);
     toggleCropper();
     dispatch({
       type: 'SET_USER',
@@ -176,19 +165,19 @@ const Profile: React.FC = () => {
         language: state.user.language,
         onBoardSurvey: state.user.onBoardSurvey ? state.user.onBoardSurvey : false,
         role: state.user.role,
-        image: imageUrl
+        image: `profile_image_${person.id}`
       }
     })
-
   }
-  async function updateImageParam(imageUrl: string) {
+
+  async function updateImageParam(imageKey: string) {
 
     // TODO: 
     // Need to check for update only required input values. 
 
     const input = {
       id: person.id,
-      image: imageUrl,
+      image: imageKey,
       authId: person.authId,
       grade: person.grade,
       language: person.language,
@@ -260,7 +249,11 @@ const Profile: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    getImageFromS3(person.image)
+    async function getUrl() {
+      const imageUrl: any = await getImageFromS3(person.image);
+      setImageUrl(imageUrl);
+    }
+    getUrl();
   }, [person.image])
 
   if (status !== 'done') {
@@ -282,7 +275,7 @@ const Profile: React.FC = () => {
                     <Fragment>
                       <img
                         className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border border-gray-400 shadow-elem-light`}
-                        src={person.image}
+                        src={imageUrl}
                       />
                       <span className="flex justify-around mt-6">
                         <label className="w-8 cursor-pointer">

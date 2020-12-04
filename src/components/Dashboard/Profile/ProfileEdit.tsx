@@ -6,6 +6,7 @@ import { NavLink, useHistory } from 'react-router-dom';
 import DropdownForm from './DropdownForm';
 import { UserInfo } from './Profile';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 
 interface UserInfoProps {
     user: UserInfo
@@ -18,6 +19,7 @@ const ProfileEdit = (props: UserInfoProps) => {
     const history = useHistory();
     const {user, getUser, status, setStatus} = props;
     const [editUser, setEditUser] = useState(user);
+    const { state, dispatch } = useContext(GlobalContext);
 
     async function updatePerson() {
         const input = {
@@ -40,6 +42,18 @@ const ProfileEdit = (props: UserInfoProps) => {
             const update: any = await API.graphql(graphqlOperation(customMutations.updatePerson, { input: input }))
             setEditUser(update.data.updatePerson);
             setStatus('loading');
+            dispatch({
+                type: 'SET_USER',
+                payload: {
+                  id: state.user.id,
+                  firstName: editUser.firstName,
+                  lastName: editUser.lastName,
+                  language: state.user.language,
+                  onBoardSurvey: state.user.onBoardSurvey ? state.user.onBoardSurvey : false,
+                  role: state.user.role,
+                  image: state.user.image
+                }
+              })
             history.push('/dashboard/profile');
         } catch (error) {
             console.error(error)
