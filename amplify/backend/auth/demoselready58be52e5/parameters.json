@@ -1,6 +1,6 @@
 {
     "identityPoolName": "demoselready58be52e5_identitypool_58be52e5",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "demose58be52e5",
     "userPoolName": "demoselready58be52e5_userpool_58be52e5",
     "autoVerifiedAttributes": [
