@@ -413,7 +413,7 @@ type Lesson @model @key(fields: ["id"]) {
   activity: Activity @connection(fields: ["activityId"])
   assessmentID: ID!
   assessment: Assessment @connection(fields: ["assessmentID"])
-  testFilter: [String]
+  filters: [String]
 }
 
 type LessonCheckpoint @model(queries: null)
@@ -639,14 +639,19 @@ type StudentWord @model(queries: null)
   student: Person @connection(fields: ["studentID", "studentAuthID"])
 }
 
-type FilterOptions {
-  id: ID!
-  text: String!
-}
-
 type Filter @model {
   id: ID!
   name: String!
   description: String
-  options: [FilterOptions!]!
+  options: [FilterOption!]! @connection(keyName: "byFilter", fields: ["id"])
+}
+
+type FilterOption @model 
+@key(fields: ["id"])
+@key(name: "byFilter", fields: ["filterID"])
+{
+  id: ID!
+  filterID: ID!
+  text: String!
+  filter: Filter @connection(fields: ["filterID"])
 }

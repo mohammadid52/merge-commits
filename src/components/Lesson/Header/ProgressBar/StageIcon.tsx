@@ -79,15 +79,8 @@ const StageIcon = (props: StageIconProps) => {
         ${state.currentPage !== iconID ? 'text-opacity-50' : ''}
         `}>
         
-          <StageLabels label={props.stage.charAt(0).toUpperCase() + props.stage.slice(1)} />
-     
-
-        {
-          (counter !== null)
-          ? <span>{counter}</span>
-          : null
-        }
-        
+          <StageLabels label={props.stage.charAt(0).toUpperCase() + props.stage.slice(1)} counter={counter}/>
+          
       </div>
     );
   };

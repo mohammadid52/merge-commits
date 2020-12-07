@@ -106,14 +106,13 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
         ) : null}
       </div>
 
-      <div className='w-24 flex space-between'>
+      <div className='w-auto flex justify-between'>
         <div
-          className='w-auto cursor-pointer w-full text-xl z-50'
+          className='w-auto flex justify-center items-center cursor-pointer text-xl z-50 px-2 text-black hover:text-blueberry'
           onClick={() => setFullscreenInstructions(!fullscreenInstructions)}>
           <IconContext.Provider
             value={{
-              color: '#E2E8F0',
-              size: '2rem',
+              size: '1.5rem',
               style: {
                 zIndex: 50,
               },
@@ -122,11 +121,10 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
           </IconContext.Provider>
         </div>
 
-        <div className='w-auto cursor-pointer w-full text-xl z-50' onClick={handleFullscreen}>
+        <div className='w-auto flex justify-center items-center cursor-pointer text-xl z-50 px-2 text-black hover:text-blueberry' onClick={handleFullscreen}>
           <IconContext.Provider
             value={{
-              color: '#E2E8F0',
-              size: '2rem',
+              size: '1.5rem',
               style: {
                 zIndex: 50,
               },
