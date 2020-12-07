@@ -7,39 +7,42 @@ import * as mutations from '../../graphql/mutations';
 import DropdownForm from '../../components/Dashboard/Admin/UserManagement/DropdownForm';
 
 interface newUserInput {
-  key: number;
-  authId: string;
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  birthdate: string;
-  grade: string;
-  role: string;
-  externalId: string;
+  key: number
+  authId: string
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  phone: string
+  birthdate: string
+  grade: string
+  role: string
+  externalId: string
   message: {
-    show: boolean;
-    text: string;
-    type: string;
-  };
+      show: boolean 
+      text: string
+      type: string
+  }
 }
 
-const initialState = {
-  id: '',
+const initialState: newUserInput = {   
+  key: 0,
+  authId: '',
   email: '',
-  password: '',
+  password: 'xIconoclast.5x',
   firstName: '',
   lastName: '',
   phone: '',
-  dob: '',
-  test: '',
+  birthdate: '',
+  grade: '',
+  role: '',
+  externalId: '',
   message: {
-    show: false,
-    text: '',
-    type: '',
+      show: false,
+      text: '',
+      type: '',
   },
-};
+}
 
 const QuickRegister = () => {
   const history = useHistory();
@@ -73,43 +76,51 @@ const QuickRegister = () => {
 
   async function registerUser(authId: string) {
     let userData = {
-      authId: newUserInputs.id,
-      status: 'ACTIVE',
-      role: 'ST',
-      email: newUserInputs.email,
-      firstName: newUserInputs.firstName,
-      lastName: newUserInputs.lastName,
-      // insitution: '1',
-      phone: newUserInputs.phone,
-      // birthdate: input.dob,
-      language: 'EN',
-    };
+        authId: authId,
+        status: 'ACTIVE',
+        role: 'ST',
+        email: newUserInputs.email,
+        firstName: newUserInputs.firstName,
+        lastName: newUserInputs.lastName,
+        // insitution: '1',
+        phone: newUserInputs.phone,
+        birthdate: newUserInputs.birthdate,
+        externalId: newUserInputs.externalId,
+        grade: newUserInputs.grade,
+        language: 'EN',
+    }
 
     try {
-      const newPerson = await API.graphql(
-        graphqlOperation(mutations.createPerson, { input: userData })
-      );
-      handleMessage('success', 'User registered successfully');
-      setNewUserInputs((prev) => {
-        return {
-          ...prev,
-          authId: newUserInputs.id,
-          status: 'ACTIVE',
-          role: 'ST',
-          email: newUserInputs.email,
-          firstName: newUserInputs.firstName,
-          lastName: newUserInputs.lastName,
-          // insitution: '1',
-          phone: newUserInputs.phone,
-          // birthdate: input.dob,
-          language: 'EN',
-        };
-      });
+      const newPerson = await API.graphql(graphqlOperation(mutations.createPerson, { input: userData }))
+            handleMessage('success', 'User registered successfully')
+            setNewUserInputs(prev => {
+                return {
+                    ...prev,
+                    key: 0,
+                    authId: '',
+                    email: '',
+                    password: 'xIconoclast.5x',
+                    firstName: '',
+                    lastName: '',
+                    phone: '',
+                    birthdate: '',
+                    grade: '',
+                    role: '',
+                    externalId: '',
+                }
+            })
     } catch (error) {
-      console.error('error registering user:', error);
-      handleMessage('error', error.message);
+
+      if(error.errors[0].message.includes('coerced')){
+        handleMessage('success', 'User registered successfully');
+      } else {
+        handleMessage('error', error.message)
+      }
+      
     } finally {
-      setNewUserInputs(initialState);
+      setTimeout(()=>{
+        setNewUserInputs(initialState)
+      }, 1000)
     }
   }
 
@@ -249,8 +260,9 @@ const QuickRegister = () => {
         </div>
 
         {newUserInputs.message.type === 'success' ? (
-          <>Congrats</>
-        ) : (
+          <>Registration succeeded!</>
+        ) : null}
+
           <form>
             <div>
               <div className='border border-gray-300 py-2 px-4 my-2  rounded-xl shadow-sm'>
@@ -303,7 +315,7 @@ const QuickRegister = () => {
               </span>
             </div>
           </form>
-        )}
+        
         <span className={'text-xs text-dark-red'}>
           {message.type === 'error' && message.field === 'lastName' ? message.message : null}
         </span>
