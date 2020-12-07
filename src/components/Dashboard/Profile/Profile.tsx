@@ -6,7 +6,7 @@ import * as queries from '../../../graphql/queries';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { RiLockPasswordFill } from "react-icons/ri";
-import { FaPlus, FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTrashAlt, FaImage } from 'react-icons/fa';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import ProfileInfo from './ProfileInfo';
 import AboutMe from './AboutMe';
@@ -270,6 +270,7 @@ const Profile: React.FC = () => {
   }
   {
     return (
+      
       <div className="w-full h-9.28/10 md:h-full flex items-center justify-center">
         <div className={`w-9/10 h-full main_container`}>
           <div className={`w-full h-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
@@ -284,27 +285,31 @@ const Profile: React.FC = () => {
                         className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border border-gray-400 shadow-elem-light`}
                         src={person.image}
                       />
-                      <span className="flex justify-around mt-6">
+                      <span className="flex justify-center mt-4">
                         <label className="w-8 cursor-pointer">
-                          <IconContext.Provider value={{ size: '2rem', color: '#5a67d8' }}>
+                          <IconContext.Provider value={{ size: '1.5rem', color: '#5a67d8' }}>
                             <FaEdit />
+
+                            
                           </IconContext.Provider>
                           <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
                         </label>
                         <span className="w-8 cursor-pointer" onClick={deletUserProfile}>
-                          <IconContext.Provider value={{ size: '2rem', color: '#5a67d8' }}>
+                          <IconContext.Provider value={{ size: '1.5rem', color: '#5a67d8' }}>
                             <FaTrashAlt />
+
                           </IconContext.Provider>
                         </span>
+ 
                       </span>
 
                     </Fragment>
                   ) :
                   (
                     <Fragment>
-                      <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
-                        <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
-                          <FaPlus />
+                      <label className={`w-15 h-15 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+                        <IconContext.Provider value={{ size: '3rem', color: '#a0aec0' }}>
+                          <FaImage />
                         </IconContext.Provider>
                         <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
                       </label>
@@ -312,7 +317,7 @@ const Profile: React.FC = () => {
                     </Fragment>
                   )
                 }
-                <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
+                <div className={`text-lg md:text-4xl font-bold font-open text-gray-900 mt-4`}>
                   {`${person.preferredName ? person.preferredName : person.firstName} ${person.lastName}`}
                   <p className="text-md md:text-lg">{person.institution}</p>
                 </div>
@@ -364,9 +369,9 @@ const Profile: React.FC = () => {
 
                 <div className="absolute w-auto" style={{ right: '0', top: '0' }}>
                   <NavLink to={`/dashboard`}>
-                    <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
+                    <button type="submit" className="inline-flex justify-center py-4 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
                       Go Back
-                                            <span className="w-8 pl-3 h-4 flex items-center">
+                                            <span className="w-8 h-4 flex items-center">
                         <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
                           <IoArrowUndoCircleOutline />
                         </IconContext.Provider>
