@@ -1,30 +1,20 @@
-import React, { useContext, useState, useEffect, Suspense, lazy } from "react";
-import {
-  Switch,
-  Route,
-  Redirect,
-  useRouteMatch,
-  useHistory,
-  useLocation
-} from "react-router-dom";
+import React, { lazy, Suspense, useContext, useEffect, useState } from "react";
+import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import { LessonControlContext } from "../../contexts/LessonControlContext";
 // import { IconContext } from 'react-icons/lib/esm/iconContext';
 // import { FaExpand, FaCompress, FaHome, FaRegThumbsUp, FaInfoCircle } from 'react-icons/fa';
-import Checkpoint from "./ComponentViews/Checkpoint/Checkpoint";
 import * as customMutations from "../../customGraphql/customMutations";
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from "@aws-amplify/api";
 import ComponentLoading from "../Lesson/Loading/ComponentLoading";
 import ClassRoster from "./ClassRoster";
-import LessonControlBar from "./LessonControlBar/LessonControlBar";
-import ToolTip from "../General/ToolTip/ToolTip";
 // import FooterLabels from '../General/LabelSwitch';
-import PositiveAlert from "../General/Popup";
+import PositiveAlert, { WritingAlertProps } from "../General/Popup";
 import { useOutsideAlerter } from "../General/hooks/outsideAlerter";
 import Body from "./Body";
 import TopMenu from "./TopMenu";
-import ClassRosterTitleBar from "./ClassRoster/ClassRosterTitleBar";
 import StudentWindowTitleBar from "./StudentWindow/StudentWindowTitleBar";
+import QuickRegister from "../Auth/QuickRegister";
 
 const IntroView = lazy(() => import("./ComponentViews/IntroView/IntroView"));
 const StoryView = lazy(() =>
@@ -35,6 +25,8 @@ const LyricsView = lazy(() =>
 );
 const OutroView = lazy(() => import("./ComponentViews/OutroView/OutroView"));
 const PoemView = lazy(() => import("./ComponentViews/PoemPageView/PoemView"));
+
+import QuickRegister from "../Auth/QuickRegister";
 
 const LessonControl = () => {
   const { state, theme, dispatch } = useContext(LessonControlContext);
@@ -268,8 +260,29 @@ const LessonControl = () => {
 
   const { visible, setVisible, ref } = useOutsideAlerter(false);
 
+const [quickRegister, setQuickRegister] = useState(false);
   const [homePopup, setHomePopup] = useState(false);
   const [lessonButton, setLessonButton] = useState(false);
+
+  // const handleQuickRegister = () => {
+  //   setPopup({
+  //     children: <QuickRegister />,
+  //     identifier: "quickRegister",
+  //     alert: false,
+  //     setAlert: null,
+  //     handleButton1: null,
+  //     handleButton2: null,
+  //     header: "",
+  //     content: "",
+  //     button1: "",
+  //     button1Color: "",
+  //     button2: "",
+  //     button2Color: "",
+  //     svg: "",
+  //     theme: "dark",
+  //     fill: "screen"
+  //   });
+  // };
 
   const handleClick = () => {
     setVisible((prevState: any) => !prevState);
@@ -298,12 +311,36 @@ const LessonControl = () => {
   return (
     <div className={`w-full h-screen bg-gray-200 overflow-hidden`}>
       <div className={`relative w-full h-full flex flex-col`}>
+        {/* QUICK REGISTER */}
+
+
+
+        <PositiveAlert
+       
+          identifier={""}
+          alert={quickRegister}
+          setAlert={setQuickRegister}
+          header=""
+          content=""
+          button1=""
+          button2=""
+          svg=""
+          theme="light"
+          fill="screen"
+        ><QuickRegister/></PositiveAlert>
+
+
+        {/* POPUP IMPLEMENTATIONS BELOW NEED REFACTORING
+              see above for optimized
+        */}
+
         {/* USER MANAGEMENT */}
         <div
           className={`${visible ? "absolute z-100 h-full" : "hidden"}`}
           onClick={handleClick}
         >
           <PositiveAlert
+            identifier={""}
             alert={visible}
             setAlert={setVisible}
             header="Are you sure you want to leave the Teacher View?"
@@ -322,6 +359,7 @@ const LessonControl = () => {
           onClick={handleHomePopup}
         >
           <PositiveAlert
+            identifier={""}
             alert={homePopup}
             setAlert={setHomePopup}
             header="Are you sure you want to leave the Teacher View?"
@@ -339,6 +377,7 @@ const LessonControl = () => {
           onClick={handleLessonButton}
         >
           <PositiveAlert
+            identifier={""}
             alert={lessonButton}
             setAlert={setLessonButton}
             header="Are you sure you want to close this lesson?"
@@ -366,6 +405,7 @@ const LessonControl = () => {
           handleHomePopup={handleHomePopup}
           pageViewed={pageViewed}
           setPageViewed={setPageViewed}
+          setQuickRegister={setQuickRegister}
         />
         {/* END TOP MENU */}
 

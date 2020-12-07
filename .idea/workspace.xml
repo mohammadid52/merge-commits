@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="3" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="46ddc4de-cba7-4996-b0b2-b2bf25cdfc31" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/Dashboard/TestPages/TestForm.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/General/Form/FormElements.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Auth/QuickRegister.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Dashboard/Classroom/Classroom.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Dashboard/Classroom/Classroom.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Lesson/Header/ProgressBar/ProgressBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/Header/ProgressBar/ProgressBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/General/Popup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/General/Popup.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/TeacherView/LessonControl.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TeacherView/LessonControl.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TeacherView/LessonControlBar/LessonControlBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TeacherView/LessonControlBar/LessonControlBar.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/TeacherView/TopMenu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TeacherView/TopMenu.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/TeacherView/TopMenu/HamburgerMenu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TeacherView/TopMenu/HamburgerMenu.tsx" afterDir="false" />
     </list>
@@ -32,7 +34,7 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="prettierjs.PrettierConfiguration.Package" value="C:\web\IconoclastArtistsReact_Base\node_modules\prettier" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="settings.javascript.prettier" />
+    <property name="settings.editor.selected.configurable" value="styled-components" />
     <property name="ts.external.directory.path" value="C:\web\IconoclastArtistsReact_Base\node_modules\typescript\lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -46,7 +48,7 @@
       <updated>1607290664616</updated>
       <workItem from="1607290666368" duration="9838000" />
       <workItem from="1607336556722" duration="206000" />
-      <workItem from="1607337979958" duration="4156000" />
+      <workItem from="1607337979958" duration="20008000" />
     </task>
     <servers />
   </component>
@@ -64,6 +66,18 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/TeacherView/TopMenu/HamburgerMenu.tsx</url>
+          <line>26</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

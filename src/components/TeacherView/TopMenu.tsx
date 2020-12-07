@@ -6,7 +6,7 @@ import LessonControlBar from "./LessonControlBar/LessonControlBar";
 import PlayComplete from "./TopMenu/PlayComplete";
 
 import HamburgerMenu from "./TopMenu/HamburgerMenu";
-
+import { WritingAlertProps } from "../General/Popup";
 /**
  * IMPORT FUNCTIONS
  */
@@ -22,10 +22,10 @@ interface TopMenuControlProps {
   handleShareStudentData: () => void;
   handleQuitShare: () => void;
   handleClick: () => void;
-  handleQuickRegister: () => void;
   handleHomePopup: () => void;
   pageViewed: { pageID: number; stage: string };
   setPageViewed: React.Dispatch<React.SetStateAction<object>>;
+  setQuickRegister: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TopMenuControl: React.FC<TopMenuControlProps> = (
@@ -43,7 +43,8 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
     handleClick,
     handleHomePopup,
     pageViewed,
-    setPageViewed
+    setPageViewed,
+    setQuickRegister
   } = props;
 
   const { state, theme, dispatch } = useContext(LessonControlContext);
@@ -69,7 +70,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
 
           <HamburgerMenu
             handleClick={handleClick}
-            handleQuickRegister={handleQuickRegister}
+            setQuickRegister={setQuickRegister}
             handleHomePopup={handleHomePopup}
           />
         </div>
