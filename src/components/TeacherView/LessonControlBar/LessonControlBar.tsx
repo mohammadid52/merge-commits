@@ -115,7 +115,7 @@ const LessonControlBar: React.FC<LessonControlBarProps> = (props: LessonControlB
               disabled={page.disabled}
               active={state.pages[key].active}
               breakdown={page.breakdown ? page.breakdown : null}
-              menuOpen={menuOpen === page.stage ? true : false}
+              menuOpen={menuOpen === page.stage}
               handleOpenMenu={handleOpenMenu}
               pageViewed={pageViewed}
               setPageViewed={setPageViewed}
