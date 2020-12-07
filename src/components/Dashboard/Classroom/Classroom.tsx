@@ -15,6 +15,8 @@ import queryString from 'query-string';
 
 import useDeviceDetect from '../../../customHooks/deviceDetect';
 
+import TestForm from '../TestPages/TestForm';
+
 interface Artist {
   id: string;
   images: [];
@@ -159,6 +161,10 @@ const Classroom: React.FC = () => {
             </div>
           </div>
         ) : null}
+
+        {/* LETS GET THE TEST FORM HERE */}
+          <TestForm/>
+
 
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} p-4 text-xl m-auto`}>

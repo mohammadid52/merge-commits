@@ -6,11 +6,12 @@ import { FiUsers, FiMenu } from 'react-icons/fi';
 
 interface HamburgerMenuProps {
   handleClick: () => void;
+  handleQuickRegister: () => void;
   handleHomePopup: () => void;
 }
 
 const HamburgerMenu: React.FC<HamburgerMenuProps> = (props: HamburgerMenuProps) => {
-  const { handleClick, handleHomePopup } = props;
+  const { handleClick, handleQuickRegister, handleHomePopup } = props;
   const [hamburgerOpen, setHamburgerOpen] = useState<boolean>(false);
 
   return (
@@ -32,9 +33,11 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = (props: HamburgerMenuProps) 
               hamburgerOpen ? 'visible animate-fadeIn shadow-xl' : 'hidden'
             } absolute w-32 h-auto transform right-0 flex  flex-col bg-gray-200 p-1 rounded-lg border border-light-gray border-opacity-40 overflow-hidden z-100`}
             onPointerLeave={()=>setHamburgerOpen(false)}>
+
+
             <div className='flex flex-col w-full h-full bg-gray-400 rounded-lg z-100'>
               
-
+              {/* HOME BUTTON */}
               <div
                 className='h-8 w-full flex justify-center items-center bg-gray-200 hover:bg-white text-gray-600 text-xs rounded-t-lg border-b border-light-gray border-opacity-20 active:shadow-none cursor-pointer'
                 onClick={handleHomePopup}>
@@ -46,6 +49,19 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = (props: HamburgerMenuProps) 
                 <span className='w-full text-left pl-2'>Home</span>
               </div>
               
+              {/* QUICK REGISTER */}
+              <div
+                className='h-8 w-full flex justify-center items-center bg-gray-200 hover:bg-white text-gray-600 text-xs active:shadow-none cursor-pointer'
+                onClick={handleQuickRegister}>
+                {/* <IconContext.Provider value={{ size: '1.5rem' }}>
+                  <span className='w-12'>
+                    <FaHome />
+                  </span>
+                </IconContext.Provider> */}
+                <span className='w-full text-left pl-2'>Quick Register</span>
+              </div>
+              
+              {/* USER MANAGEMENT */}
               <div
                 className='h-8 w-full flex justify-center items-center bg-gray-200 hover:bg-white text-gray-600 text-xs rounded-b-lg active:shadow-none cursor-pointer'
                 onClick={handleClick}>
@@ -56,9 +72,11 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = (props: HamburgerMenuProps) 
                 </IconContext.Provider> */}
                 <span className='w-full text-left pl-2'>User Management</span>
               </div>
-              
-
             </div>
+
+
+
+
           </div>
 
 
