@@ -24,6 +24,47 @@
   width: 16rem;
 }
 
+/* This contains custom class names for the reusable components. */
+
+.pagetitle-container {
+  @apply my-4;
+  @apply p-4;
+}
+
+.page-heading {
+  @apply text-lg;
+  @apply border-l-6;
+  @apply border-indigo-700;
+  @apply pl-4;
+}
+
+.purpule-button {
+  @apply font-medium;
+  @apply rounded-md;
+  @apply text-white;
+  @apply bg-indigo-600;
+  @apply transition;
+  @apply duration-150;
+  @apply ease-in-out;
+  @apply w-auto;
+  @apply p-4;
+}
+
+.purpule-button:focus {
+  @apply outline-none;
+  @apply border-indigo-700;
+  @apply shadow-outline;
+  @apply shadow-outline;
+}
+.purpule-button:hover {
+  @apply border-indigo-500;
+}
+.purpule-button:active {
+  @apply border-indigo-700;
+}
+
+/* ----- */
+
 @media screen and (max-width: 767px) {
   .main {
     height: auto;
