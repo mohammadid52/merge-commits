@@ -359,7 +359,7 @@ const Profile: React.FC = () => {
                   <NavLink to={`/dashboard`}>
                     <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
                       Go Back
-                                            <span className="w-8 pl-3 h-4 flex items-center">
+                      <span className="w-8 pl-3 h-4 flex items-center">
                         <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
                           <IoArrowUndoCircleOutline />
                         </IconContext.Provider>

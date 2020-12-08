@@ -94,7 +94,7 @@ const List = (props: ListProps) => {
                         </div>
                     </div>
                     <div className="w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleLink} >
-                        <div id={item.id} className="text-indigo-600 hover:text-indigo-900">View</div>
+                        <div id={item.id} className="text-indigo-600 hover:text-indigo-900">Edit</div>
                     </div>
 
 

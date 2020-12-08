@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
+import { IoAdd } from 'react-icons/io5';
+
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import * as queries from '../../../../graphql/queries';
 import UserSearch from './UserSearch';
@@ -37,13 +40,8 @@ const UserLookup = () => {
 		listUsers();
 	}, [])
 
-	// const handleSubmit = () => {
-	//     listUsers()
-	// }
-
-	const handleLink = (e: any) => {
-		const { id } = e.target
-		history.push(`${match.url}/user?id=${id}`)
+	const handleLink = () => {
+		history.push(`/dashboard/registration`)
 	}
 
 	const initials = (firstName: string, lastName: string) => {
@@ -73,7 +71,7 @@ const UserLookup = () => {
 	{
 
 		return (
-			<div className={`w-full h-full`}>
+			<div className={`w-full h-full mt-4`}>
 				{/* <div className="w-full flex justify-end mb-1">
                 <span className="w-20 flex inline-flex rounded-md shadow-sm">
                     <button type="submit" onClick={history.goBack} className="
@@ -123,7 +121,22 @@ const UserLookup = () => {
                     <div className="w-32 cursor-pointer inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700" onClick={handleSubmit}>Submit</div>
                 </div>
             </div> */}
-				<div className="flex flex-col">
+
+				<div className="pagetitle-container">
+					<p className="page-heading">PEOPLE MANAGEMENT</p>
+				</div>
+				<div className="w-auto flex justify-end mr-4">
+					<button className="purpule-button flex" onClick={handleLink}>
+						<span className="w-12 pr-3 h-6 flex items-center">
+							<IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
+								<IoAdd />
+							</IconContext.Provider>
+						</span>
+           Add Person
+        </button>
+				</div>
+
+				<div className="flex flex-col mt-4">
 					<div className="-my-2 py-2">
 						<div className="white_back py-4 px-8 mt-2 align-middle rounded-lg border-b border-gray-200">
 							<div className="h-8/10 px-4">
