@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useHistory, NavLink, useRouteMatch } from 'react-router-dom';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaUserCircle } from 'react-icons/fa';
 import { GlobalContext } from '../../../contexts/GlobalContext';
+import { getImageFromS3 } from '../../../utilities/services';
 
 import { LinkProps } from './Links';
 
@@ -10,6 +11,7 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const { state } = useContext(GlobalContext);
   const match = useRouteMatch();
   const history = useHistory();
+  const [imageUrl, setImageUrl] = useState('')
 
   const initials = (firstName: string, lastName: string) => {
     let firstInitial = firstName.charAt(0).toUpperCase();
@@ -42,6 +44,15 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
     linkProps.setCurrentPage(id);
   };
 
+  useEffect(() => {
+    async function getUrl() {
+      const imageUrl: any = await getImageFromS3(state.user.image)
+      setImageUrl(imageUrl);
+    }
+    getUrl();
+
+  }, [state.user])
+
   return (
     <NavLink id='profile' to={`${match.url}/profile`} onClick={handleLink}>
       <div className='size flex flex-col text-center justify-center items-center py-4 border-b border-t border-white20'>
@@ -50,8 +61,8 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
             state.user.image ?
               <img
                 className="w-8 h-8 rounded-full"
-                src={state.user.image} 
-                /> :
+                src={imageUrl}
+              /> :
               <div
                 className='w-8 h-8 rounded-full flex justify-center items-center text-sm font-bold text-white font-sans'
                 style={{

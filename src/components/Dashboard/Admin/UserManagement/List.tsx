@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import UserRole from './UserRole';
 import UserStatus from './UserStatus';
+import { getImageFromS3 } from '../../../../utilities/services';
 
 interface ListProps {
     item: any
@@ -12,6 +13,8 @@ const List = (props: ListProps) => {
     const { item, listUsers } = props;
     const match = useRouteMatch();
     const history = useHistory();
+    const [imageUrl, setImageUrl] = useState('')
+
     const initials = (firstName: string, lastName: string) => {
         if (listUsers) {
             let firstInitial = firstName.charAt(0).toUpperCase()
@@ -36,6 +39,15 @@ const List = (props: ListProps) => {
         return 'hsl(' + h + ', 70%, 72%)';
     }
 
+    useEffect(() => {
+        async function getUrl() {
+            const imageUrl:any = await getImageFromS3(item.image);
+            setImageUrl(imageUrl);
+        }
+        getUrl();
+
+    }, [item.image])
+
     return (
         ///change INFO, MARGIN and WIDTH if needed
         <div id={item.id} className="flex justify-between bg-white w-full border-b border-gray-200">
@@ -45,7 +57,7 @@ const List = (props: ListProps) => {
                     <div className="flex-shrink-0 h-10 w-10">
                         {item.image ?
                             (<img
-                                src={item.image}
+                                src={imageUrl}
                                 className="h-8 w-8 rounded-full" />) :
                             <div className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold" style={{ background: `${stringToHslColor(item.firstName + ' ' + item.lastName)}`, textShadow: '0.1rem 0.1rem 2px #423939b3' }} >
                                 {initials(item.preferredName ? item.preferredName : item.firstName, item.lastName)}

@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useCookies } from 'react-cookie';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaKey } from 'react-icons/fa';
@@ -14,6 +15,7 @@ const ConfirmCode = () => {
   const location = useLocation();
 
   const { dispatch } = useContext(GlobalContext);
+  const [cookies, setCookie, removeCookie] = useCookies();
   const [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
     show: false,
     type: '',
@@ -29,9 +31,20 @@ const ConfirmCode = () => {
   })
   const [isLoading, setIsLoading] = useState(false);
   const [newPassToggle, setNewPassToggle] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
+
+
+  const checkLoginCred = () => {
+
+    const auth = cookies.cred;
+    if (auth?.isChecked) {
+      setIsChecked(auth.isChecked);
+    }
+  }
 
   useEffect(() => {
     populateCodeAndEmail();
+    checkLoginCred();
   }, []);
 
   const useQuery = () => {
@@ -128,7 +141,15 @@ const ConfirmCode = () => {
       console.log(changePasswordRes);
 
       dispatch({ type: 'LOG_IN', payload: { email: username, authId: user.username } });
-
+      if (isChecked) {
+        setCookie('cred', {
+          email: username,
+          isChecked: isChecked,
+          password: password
+        });
+      } else {
+        removeCookie('cred');
+      }
       history.push('/dashboard');
     } catch (error) {
 
@@ -206,6 +227,10 @@ const ConfirmCode = () => {
   const handleSubmit = () => {
     validation();
   };
+
+  const toggleCheckBox = () => {
+    setIsChecked(!isChecked);
+  }
 
   return (
     <div className='w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm'>
@@ -290,6 +315,12 @@ const ConfirmCode = () => {
                   onChange={handlePasswordChange}
                   onKeyDown={handleEnter}
                 />
+              </div>
+              <div className="my-3">
+                <label className="flex items-center justify-end">
+                  <input type="checkbox" className="form-checkbox w-4 h-10" checked={isChecked} onChange={toggleCheckBox} />
+                  <span className="ml-2 w-auto">Remember Me</span>
+                </label>
               </div>
             </div>
 

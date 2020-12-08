@@ -1,9 +1,54 @@
-import React, { useContext } from 'react';
-import StageIcon from './StageIcon';
-import { LessonContext } from '../../../../contexts/LessonContext';
+import React, { useContext, useEffect, useState } from "react";
+import StageIcon from "./StageIcon";
+import { LessonContext } from "../../../../contexts/LessonContext";
+
+interface Page {
+  active: boolean;
+  stage: string;
+  type: string;
+  open: boolean;
+  disabled: boolean;
+}
 
 const ProgressBar = () => {
   const { state, theme } = useContext(LessonContext);
+  const [clickable, setClickable] = useState<number>();
+
+  useEffect(() => {
+    /**
+     *
+     *
+     * STOPPING POINTS
+     * any circle should be clickable up until 1 before
+     * the next closed component, or breakdown which is not active
+     *
+     */
+
+    const stoppingPoints = state.pages.reduce(
+      (acc: [], page: Page, i: number) => {
+        const pageBefore = state.pages[i - 1];
+        const isBreakdown = page.type === "breakdown";
+        const isDisabled = page.disabled;
+        const isClosed = !page.open;
+
+        //  Disabled or closed = don't go
+        if ((i !== 0 && isDisabled) || (i !== 0 && isClosed)) {
+          return [...acc, i];
+        }
+
+        //  If breakdown exercise not completed, don't go because crash
+        if (isBreakdown && !pageBefore.active) {
+          return [...acc, i];
+        }
+
+        return acc;
+      },
+      []
+    );
+
+    const earliestStoppingPoint = Math.min(...stoppingPoints);
+    setClickable(earliestStoppingPoint);
+  }, [state.pages]);
 
   /**
    *
@@ -12,26 +57,33 @@ const ProgressBar = () => {
    * use this map as stage name e.g. Breakdown 1, Breakdown 2, Breakdown 3...
    *
    * THIS CODE NEEDS TO BE REWRITTEN, SUPER UNCLEAR AT THE MOMENT
-   * 
+   *
    * Duplicated in:
-   * 
+   *
    * - ProgressBar.tsx
    * - LessonControlBar.tsx
    *
    */
 
   const mapStages = state.pages.map(
-    (page: { stage: string; type: string; open: boolean; disabled: boolean }, stageNr: number) => ({
+    (
+      page: { stage: string; type: string; open: boolean; disabled: boolean },
+      stageNr: number
+    ) => ({
       ...page,
-      stageNr: stageNr,
+      stageNr: stageNr
     })
   );
 
   const checkIfMultipleStages = (type: string) => {
     return (
       state.pages.filter(
-        (page: { stage: string; type: string; open: boolean; disabled: boolean }) =>
-          page.type === type
+        (page: {
+          stage: string;
+          type: string;
+          open: boolean;
+          disabled: boolean;
+        }) => page.type === type
       ).length > 1
     );
   };
@@ -49,11 +101,17 @@ const ProgressBar = () => {
       )
       .map(
         (
-          page: { stage: string; type: string; open: boolean; disabled: boolean; stageNr: number },
+          page: {
+            stage: string;
+            type: string;
+            open: boolean;
+            disabled: boolean;
+            stageNr: number;
+          },
           i: number
         ) => ({
           ...page,
-          multipleCounter: i+1,
+          multipleCounter: i + 1
         })
       );
 
@@ -85,19 +143,25 @@ const ProgressBar = () => {
 
   return (
     <>
-      <div className='hidden max-w-256 md:flex flex-col flex-grow items-center justify-center content-center z-0'>
-        <div className='w-full max-w-256 flex items-center justify-between'>
-          <div className='w-full flex flex-row items-center justify-between'>
+      <div className="hidden max-w-256 md:flex flex-col flex-grow items-center justify-center content-center z-0">
+        <div className="w-full max-w-256 flex items-center justify-between">
+          <div className="w-full flex flex-row items-center justify-between">
             {/* ICON */}
             {state.pages.map(
               (
-                page: { stage: string; type: string; open: boolean; disabled: boolean },
+                page: {
+                  stage: string;
+                  type: string;
+                  open: boolean;
+                  disabled: boolean;
+                },
                 key: number
               ) => (
                 <div
                   className={`${
-                    key < state.pages.length - 1 ? 'w-full' : 'w-auto'
-                  } flex justify-center items-center`}>
+                    key < state.pages.length - 1 ? "w-full" : "w-auto"
+                  } flex justify-center items-center`}
+                >
                   {/* {console.log('checkIfMultipleStages : ', checkIfMultipleStages(page.type))} */}
 
                   <StageIcon
@@ -113,17 +177,22 @@ const ProgressBar = () => {
                         ? getSpecificStage(page.type, key).multipleCounter
                         : null
                     }
+                    clickable={key < clickable}
                   />
 
                   {/* PROGRESS BAR */}
                   {key < state.pages.length - 1 && (
                     <div
-                      key={key + 'bar'}
-                      className='relative h-2 w-full bg-dark-gray z-10 flex items-center justify-center transform scale-x-125 '>
+                      key={key + "bar"}
+                      className="relative h-2 w-full bg-dark-gray z-10 flex items-center justify-center transform scale-x-125 "
+                    >
                       <div
                         className={`h-2 w-full ${
-                          state.pages[key + 1].active ? 'bg-blueberry' : 'bg-dark-gray'
-                        }`}></div>
+                          state.pages[key + 1].active
+                            ? "bg-blueberry"
+                            : "bg-dark-gray"
+                        }`}
+                      />
                     </div>
                   )}
                 </div>
