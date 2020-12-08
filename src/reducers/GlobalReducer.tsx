@@ -11,6 +11,7 @@ type globalActions =
             language: string,
             onBoardSurvey: boolean,
             role: string,
+            image: string
         }
     }
 |   {
@@ -45,6 +46,7 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
                     language: action.payload.language,
                     role: action.payload.role,
                     onBoardSurvey: action.payload.onBoardSurvey,
+                    image: action.payload.image
                 }
             }
         case 'LOG_IN': 

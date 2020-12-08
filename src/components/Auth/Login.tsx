@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
@@ -14,7 +14,7 @@ import Forgot from './Forgot';
 
 const Login = () => {
   const [isToggled, setIsToggled] = useState<boolean>(false);
-  const [cookies, setCookie] = useCookies(['auth']);
+  const [cookies, setCookie, removeCookie] = useCookies();
   const history = useHistory();
   const { theme, state, dispatch } = useContext(GlobalContext);
   let [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
@@ -27,6 +27,7 @@ const Login = () => {
     password: '',
   });
   const [passToggle, setPassToggle] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
   async function SignIn() {
     let username = input.email;
@@ -35,6 +36,15 @@ const Login = () => {
     try {
       const user = await Auth.signIn(username, password);
       dispatch({ type: 'LOG_IN', payload: { email: username, authId: user.username } });
+      if (isChecked) {
+        setCookie('cred', {
+          email: username,
+          isChecked: isChecked,
+          password: password
+        });
+      } else {
+        removeCookie('cred');
+      }
       setCookie('auth', { email: username, authId: user.username }, { secure: false });
       history.push('/dashboard');
     } catch (error) {
@@ -127,6 +137,26 @@ const Login = () => {
     SignIn();
     toggleLoading(true);
   };
+  const checkLoginCred = () => {
+
+    const auth = cookies.cred;
+    if (auth?.isChecked) {
+      setIsChecked(auth.isChecked);
+      setInput({
+        ...input,
+        email: auth.email,
+        password: auth.password
+      })
+    }
+  }
+
+  const toggleCheckBox = () => {
+    setIsChecked(!isChecked);
+  }
+
+  useEffect(() => {
+    checkLoginCred()
+  }, [])
 
   return (
     <div className='w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm'>
@@ -223,6 +253,14 @@ const Login = () => {
                   onKeyDown={handleEnter}
                 />
               </div>
+
+              <div className="my-3">
+                <label className="flex items-center justify-end">
+                  <input type="checkbox" className="form-checkbox w-4 h-10" checked={isChecked} onChange={toggleCheckBox} />
+                  <span className="ml-2 w-auto">Remember Me</span>
+                </label>
+              </div>
+
             </div>
 
             {/* <Link to="/register">Register</Link> */}
@@ -244,11 +282,11 @@ const Login = () => {
                   Forgot your password?
                 </div>
               </NavLink>
-              <NavLink to='/confirm-code'>
+              {/* <NavLink to='/confirm-code'>
                 <div className='text-bold text-center text-blueberry hover:text-blue-500 mb-2'>
                   Have a confirmation code?
                 </div>
-              </NavLink>
+              </NavLink> */}
             </div>
           </div>
         </div>

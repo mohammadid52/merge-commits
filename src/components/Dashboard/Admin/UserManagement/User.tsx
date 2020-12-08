@@ -10,15 +10,15 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import UserInformation from './UserInformation';
 import UserEdit from './UserEdit';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import { 
-    Switch, 
+import {
+    Switch,
     Route,
     useRouteMatch,
     Link,
     NavLink
 } from 'react-router-dom';
 
- export interface UserInfo {
+export interface UserInfo {
     authId: string
     courses?: string
     createdAt: string
@@ -44,7 +44,7 @@ const User = () => {
     const match = useRouteMatch();
     const { theme, state, dispatch } = useContext(GlobalContext);
     const [status, setStatus] = useState('');
-    const [ user, setUser ] = useState<UserInfo>(
+    const [user, setUser] = useState<UserInfo>(
         {
             id: '',
             authId: '',
@@ -68,26 +68,26 @@ const User = () => {
     );
     const location = useLocation();
     const queryParams = queryString.parse(location.search)
-    
+
     async function getUserById(id: string) {
         try {
             const result: any = await API.graphql(graphqlOperation(queries.userById, { id: id }))
             const userData = result.data.userById.items.pop();
             setStatus('done');
             setUser(() => {
-                if ( typeof userData === 'object') {
+                if (typeof userData === 'object') {
                     return userData
                 }
                 return user
             });
-            
+
         } catch (error) {
-            console.error(error);  
+            console.error(error);
         }
     }
 
     const initials = (firstName: string, lastName: string) => {
-        let firstInitial = firstName.charAt(0).toUpperCase() 
+        let firstInitial = firstName.charAt(0).toUpperCase()
         let lastInitial = lastName.charAt(0).toUpperCase()
         return firstInitial + lastInitial;
     }
@@ -95,19 +95,19 @@ const User = () => {
     const stringToHslColor = (str: string) => {
         let hash = 0;
         let i;
-        for (i = 0; i < str.length; i ++) {
+        for (i = 0; i < str.length; i++) {
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
 
         let h = hash % 360;
-        return 'hsl('+h+', 70%, 72%)';
+        return 'hsl(' + h + ', 70%, 72%)';
     }
 
     useEffect(() => {
         let id = queryParams.id;
-        if ( typeof id === 'string') {
+        if (typeof id === 'string') {
             getUserById(id);
-            
+
         }
     }, [])
 
@@ -120,53 +120,59 @@ const User = () => {
 
     // }
 
-    if ( status !== 'done') {
+    if (status !== 'done') {
         return (
             <LessonLoading />
         )
     }
-{ 
-    return (
-            <div className={`w-9/10 h-full`}> 
+    {
+        return (
+            <div className={`w-9/10 h-full`}>
                 <div className={`w-full h-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
                     <div className="h-9/10 flex flex-col md:flex-row">
                         <div className="w-auto p-4 flex flex-col text-center items-center">
-                            <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
-                                <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{background: `${stringToHslColor(user.firstName + ' ' + user.lastName)}`, textShadow: '0.2rem 0.2rem 3px #423939b3'}}>
-                                    {initials(user.preferredName ? user.preferredName : user.firstName, user.lastName)}
-                                </div>
-                                {/* <IconContext.Provider value={{ size: '8rem', color: '#4a5568' }}>
+                            {
+                                user.image ? (
+                                    <img
+                                        src={user.image}
+                                        className="w-20 h-20 md:w-40 md:h-40 rounded-full" />) :
+                                    <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+                                        <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{ background: `${stringToHslColor(user.firstName + ' ' + user.lastName)}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
+                                            {initials(user.preferredName ? user.preferredName : user.firstName, user.lastName)}
+                                        </div>
+                                    </div>
+                            }
+                            {/* <IconContext.Provider value={{ size: '8rem', color: '#4a5568' }}>
                                     <FaUserCircle />
                                 </IconContext.Provider> */}
-                            </div>
                             <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
-                                {`${ user.preferredName ? user.preferredName : user.firstName } ${ user.lastName }`}
+                                {`${user.preferredName ? user.preferredName : user.firstName} ${user.lastName}`}
                                 <p className="text-md md:text-lg">
-                                {`${ user.institution ? user.institution : '' }`}
+                                    {`${user.institution ? user.institution : ''}`}
                                 </p>
                             </div>
                         </div>
 
                         <Switch>
-                            <Route 
+                            <Route
                                 path={`${match.url}/edit`}
                                 render={() => (
-                                    <UserEdit 
+                                    <UserEdit
                                         user={user}
-                                        status = {status}
-                                        setStatus = {setStatus}
-                                        getUserById = {getUserById}
-                                    />  
-                                )} 
+                                        status={status}
+                                        setStatus={setStatus}
+                                        getUserById={getUserById}
+                                    />
+                                )}
                             />
-                            <Route 
+                            <Route
                                 path={`${match.url}/`}
                                 render={() => (
-                                    <UserInformation 
+                                    <UserInformation
                                         user={user}
-                                        status = {status} 
-                                        />
-                                 )}
+                                        status={status}
+                                    />
+                                )}
                             />
                         </Switch>
 
@@ -176,8 +182,8 @@ const User = () => {
                 </div>
             </div>
 
-    )
-}
+        )
+    }
 }
 
 export default User;

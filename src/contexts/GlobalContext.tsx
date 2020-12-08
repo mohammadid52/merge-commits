@@ -28,7 +28,7 @@ export const pageThemes = {
     },
     dashboard: {
       sectionTitle: 'w-auto text-black pb-2 font-medium mt-4 mb-1 text-left',
-      bg: 'bg-dark-gray',
+      bg: 'bg-darker-gray',
     },
     sidemenu: {
       bg: 'bg-darker-gray',
@@ -68,7 +68,7 @@ export const pageThemes = {
     },
     dashboard: {
       sectionTitle: 'w-auto text-black pb-2 font-medium mt-4 mb-1 text-left',
-      bg: 'bg-dark-gray',
+      bg: 'bg-darker-gray',
     },
     sidemenu: {
       bg: 'bg-darker-gray',
