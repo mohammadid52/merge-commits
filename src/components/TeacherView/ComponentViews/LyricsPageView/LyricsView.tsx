@@ -1,31 +1,26 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { LessonContext } from '../../../../contexts/LessonContext';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    useRouteMatch,
-} from "react-router-dom";
+import React from 'react';
+import {Route, Switch, useRouteMatch,} from "react-router-dom";
 import LyricsActivityView from './LyricsModules/LyricsActivityView';
 import LyricsBreakdownView from './LyricsBreakdown/LyricsBreakdownView';
-import { LessonControlContext } from '../../../../contexts/LessonControlContext';
-import { studentObject } from '../../../../state/LessonControlState';
+
 // import ErrorPage from '../../Error/ErrorPage';
-interface props {
-        fullscreen: boolean;
-        fullscreenInstructions: boolean;
-    }
+interface props {
+    fullscreen: boolean;
+    fullscreenInstructions: boolean;
+    setInstructions: React.Dispatch<React.SetStateAction<{visible: boolean, available: boolean, content: any}>>
+}
+
 const Lyrics = (props: props) => {
-    const { fullscreen, fullscreenInstructions } = props;
+    const {fullscreen, fullscreenInstructions, setInstructions} = props;
     const match = useRouteMatch();
 
     return (
         <Switch>
             <Route path={`${match.url}/breakdown`}>
-                <LyricsBreakdownView fullscreen={fullscreen} />
+                <LyricsBreakdownView fullscreen={fullscreen}/>
             </Route>
             <Route exact path={`${match.url}`}>
-                <LyricsActivityView fullscreen={fullscreen} fullscreenInstructions={fullscreenInstructions}/>
+                <LyricsActivityView fullscreen={fullscreen} fullscreenInstructions={fullscreenInstructions} setInstructions={setInstructions}/>
             </Route>
         </Switch>
     )
