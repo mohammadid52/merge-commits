@@ -26,7 +26,6 @@ const LyricsView = lazy(() =>
 const OutroView = lazy(() => import("./ComponentViews/OutroView/OutroView"));
 const PoemView = lazy(() => import("./ComponentViews/PoemPageView/PoemView"));
 
-import QuickRegister from "../Auth/QuickRegister";
 
 const LessonControl = () => {
   const { state, theme, dispatch } = useContext(LessonControlContext);
