@@ -5,9 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46ddc4de-cba7-4996-b0b2-b2bf25cdfc31" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/customHooks/pageLabel.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Auth/QuickRegister.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Auth/QuickRegister.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TeacherView/TopMenu/HamburgerMenu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TeacherView/TopMenu/HamburgerMenu.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/ListPage/ListBreakdown/ReflectionQuestions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/ListPage/ListBreakdown/ReflectionQuestions.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/LyricsPage/LyricsBreakdown/ReflectionQuestions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/LyricsPage/LyricsBreakdown/ReflectionQuestions.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PoemPage/PoemBreakdown/ReflectionQuestions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PoemPage/PoemBreakdown/ReflectionQuestions.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/customHooks/timeAndDate.tsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +55,7 @@
       <workItem from="1607337979958" duration="20008000" />
       <workItem from="1607438839039" duration="647000" />
       <workItem from="1607446521827" duration="9473000" />
-      <workItem from="1607479879750" duration="21256000" />
+      <workItem from="1607479879750" duration="25005000" />
     </task>
     <servers />
   </component>
