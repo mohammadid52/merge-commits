@@ -11,7 +11,7 @@ interface ButtonProps {
 
 const ActionButton: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
   return (
-    <p>
+    <p className="flex">
       <br />
       <button
         type={btnPrps.type}

@@ -82,10 +82,10 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         return setLinks((links) => {
           return [
             ...links,
-            {
-              name: 'Registration',
-              path: 'registration',
-            },
+            // {
+            //   name: 'Registration',
+            //   path: 'registration',
+            // },
             {
               name: 'People',
               path: 'manage-users',
