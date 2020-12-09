@@ -103,6 +103,7 @@ type Person @model
   birthdate: AWSDate
   image: String
   language: Language!
+  filters: [String]
 }
 
 type Curriculum @model @key(fields: ["id"]) {
@@ -653,5 +654,38 @@ type FilterOption @model
   id: ID!
   filterID: ID!
   text: String!
+  filter: Filter @connection(fields: ["filterID"])
+}
+
+type Client @model
+{
+  id: ID!
+  name: String!
+  # architecture: Architecture @connection
+}
+
+type Architecture @model
+{
+  id: ID!
+  name: String!
+  # clientID: ID!
+  # client: Client @connection 
+  # types: [Type] @connection 
+}
+
+type Type @model
+{
+  id: ID!
+  name: String!
+  filters: [FilterType] @connection(keyName: "filtersByType", fields: ["id"])
+}
+
+type FilterType @model(queries: null)
+@key(name: "filtersByType", fields: ["typeID", "filterID"])
+{
+  id: ID!
+  typeID: ID!
+  filterID: ID!
+  type: Type @connection(fields: ["typeID"])
   filter: Filter @connection(fields: ["filterID"])
 }
