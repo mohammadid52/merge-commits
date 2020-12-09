@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46ddc4de-cba7-4996-b0b2-b2bf25cdfc31" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TeacherView/ClassRoster/RosterRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TeacherView/ClassRoster/RosterRow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/Foot/ProgressBar/ProgressBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/Foot/ProgressBar/ProgressBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/Header/ProgressBar/ProgressBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/Header/ProgressBar/ProgressBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/Header/ProgressBar/StageIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/Header/ProgressBar/StageIcon.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reducers/LessonReducer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/reducers/LessonReducer.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +17,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1lIhlQv0mye80xkZDs7PU0MsDlN" />
@@ -47,6 +54,7 @@
       <workItem from="1607337979958" duration="20008000" />
       <workItem from="1607438839039" duration="647000" />
       <workItem from="1607446521827" duration="9473000" />
+      <workItem from="1607479879750" duration="12064000" />
     </task>
     <servers />
   </component>

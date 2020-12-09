@@ -1,128 +1,131 @@
-import { LessonStateType, PagesType, lessonState } from '../state/LessonState';
-import { Stats } from 'fs';
+import {lessonState, LessonStateType, PagesType} from '../state/LessonState';
 // import { useStudentTimer } from '../customHooks/timer'
 
 
-export type LessonActions = 
-|   {
-        type: 'SET_INITIAL_STATE';
-        payload: {
-            classroomID: string,
-            data?: any;
-            pages: PagesType
-            displayData?: any;
-            word_bank?: any;
-            subscribeFunc: () => any,
+export type LessonActions =
+    | {
+    type: 'SET_INITIAL_STATE';
+    payload: {
+        classroomID: string,
+        data?: any;
+        pages: PagesType
+        displayData?: any;
+        word_bank?: any;
+        subscribeFunc: () => any,
+    }
+}
+    | {
+    type: 'UPDATE_LESSON_PLAN';
+    payload: {
+        pages: PagesType;
+        displayData?: any;
+        viewing?: string
+    }
+}
+    | {
+    type: 'UPDATE_STUDENT_STATUS';
+    payload: string
+}
+    | {
+    type: 'SET_SAVE_FUNCTION';
+    payload: Promise<void>
+}
+    | {
+    type: 'SET_CURRENT_PAGE';
+    payload: number;
+}
+    | {
+    type: 'SET_PROGRESS';
+    payload: number;
+}
+    | {
+    type: 'SET_INITIAL_COMPONENT_STATE';
+    payload: {
+        [key: string]: any,
+    };
+}
+    | {
+    type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB';
+    payload: {
+        [key: string]: any,
+    };
+}
+    | {
+    type: 'UPDATE_COMPONENT_STATE';
+    payload: {
+        componentName: string,
+        inputName: string
+        content: any,
+    };
+}
+    | {
+    type: 'SET_QUESTION_DATA';
+    payload: {
+        key: string
+        data: {
+            [key: string]: any
         }
     }
-|   {
-        type: 'UPDATE_LESSON_PLAN';
-        payload: {
-            pages: PagesType;
-            displayData?: any;
-            viewing?: string
-        }
+}
+    | {
+    type: 'ERROR';
+    payload: string;
+}
+    | {
+    type: 'ADD_WORD';
+    payload: string;
+}
+    | {
+    type: 'OPEN_LESSON';
+    payload: string;
+}
+    | {
+    type: 'ACTIVATE_LESSON';
+    payload: string;
+}
+    | {
+    type: 'ACTIVATE_CHECKPOINT';
+    payload: string;
+}
+    | {
+    type: 'SET_PAGE';
+    payload: number;
+} | {
+    type: 'JUMP_PAGE';
+    payload: number;
+}
+    | {
+    type: 'SET_SUBSCRIPTION';
+    payload: {
+        subscription: any,
     }
-|   {
-        type: 'UPDATE_STUDENT_STATUS';
-        payload: string
-    }
-|   {
-        type: 'SET_SAVE_FUNCTION';
-        payload: Promise<void>
-    }
-|   {
-        type: 'SET_CURRENT_PAGE';
-        payload: number;
-    } 
-|   {
-        type: 'SET_PROGRESS';
-        payload: number;
-    } 
-|   {
-        type: 'SET_INITIAL_COMPONENT_STATE';
-        payload: {
-            [key: string]: any,
-        };
-    } 
-|   {
-        type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB';
-        payload: {
-            [key: string]: any,
-        };
-    } 
-|   {
-        type: 'UPDATE_COMPONENT_STATE';
-        payload: {
-            componentName: string,
-            inputName: string
-            content: any,
-        };
-    } 
-|   {
-        type: 'SET_QUESTION_DATA';
-        payload: {
-            key: string
-            data: {
-                [key: string]: any
-            }
-        }
-    } 
-|   {
-        type: 'ERROR';
-        payload: string;
-    } 
-|   {
-        type: 'ADD_WORD';
-        payload: string;
-    } 
-|   {
-        type: 'OPEN_LESSON';
-        payload: string;
-    } 
-|   {
-        type: 'ACTIVATE_LESSON';
-        payload: string;
-    } 
-|   {
-        type: 'ACTIVATE_CHECKPOINT';
-        payload: string;
-    } 
-|   {
-        type: 'SET_PAGE';
-        payload: number;
-    } 
-|   {
-        type: 'SET_SUBSCRIPTION';
-        payload: {
-            subscription: any,
-        }
-    } 
-|   {
-        type: 'SET_STUDENT_INFO';
-        payload: {
-            studentDataID: string
-            studentUsername: string
-            studentAuthID: string
-        };
-    } 
-|   {
-        type: 'SET_LESSON_PROGRESS';
-        payload: string;
-    } 
-|   {
-        type: 'CLEANUP';
-    } 
-|   {
-        type: 'TEST' | 'PAGE_FORWARD' |  'PAGE_BACK' | 'CAN_CONTINUE' | 'NO_CONTINUE' | 'FINISH' | 'SAVED_CHANGES' | 'SET_LOADING' | 'INCREMENT_SAVE_COUNT';
-    } 
+}
+    | {
+    type: 'SET_STUDENT_INFO';
+    payload: {
+        studentDataID: string
+        studentUsername: string
+        studentAuthID: string
+    };
+}
+    | {
+    type: 'SET_LESSON_PROGRESS';
+    payload: string;
+}
+    | {
+    type: 'CLEANUP';
+}
+    | {
+    type: 'TEST' | 'PAGE_FORWARD' | 'PAGE_BACK' | 'CAN_CONTINUE' | 'NO_CONTINUE' | 'FINISH' | 'SAVED_CHANGES' | 'SET_LOADING' | 'INCREMENT_SAVE_COUNT';
+}
+
 
 export const lessonReducer = (state: LessonStateType, action: LessonActions) => {
-    switch(action.type) {
+    switch (action.type) {
         case 'TEST':
             // console.log('done')
             break
-        case 'SET_INITIAL_STATE': 
+        case 'SET_INITIAL_STATE':
             return {
                 ...state,
                 status: 'loaded',
@@ -138,7 +141,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             return {
                 ...state,
                 currentPage: action.payload,
-                lessonProgress: action.payload, 
+                lessonProgress: action.payload,
                 pages: state.pages.map((page: {}, key: number) => {
                     if (key <= action.payload) {
                         return {
@@ -152,7 +155,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             }
         case 'SET_PROGRESS':
             return {
-                ...state, 
+                ...state,
                 pages: state.pages.map((page: {}, key: number) => {
                     if (key <= action.payload) {
                         return {
@@ -168,13 +171,13 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             return {
                 ...state,
                 subscription: action.payload.subscription,
-                
+
             }
         case 'ERROR':
             return {
-                ...state, 
+                ...state,
                 error: action.payload
-            } 
+            }
         case 'UPDATE_STUDENT_STATUS':
             // console.log('status', action.payload);
             return {
@@ -188,17 +191,17 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             }
         case 'SET_STUDENT_INFO':
             return {
-                ...state, 
+                ...state,
                 studentDataID: action.payload.studentDataID,
                 studentUsername:
                 action.payload.studentUsername,
                 studentAuthID: action.payload.studentAuthID
-            } 
+            }
         case 'SET_LOADING':
             return {
-                ...state, 
+                ...state,
                 status: 'loading',
-            } 
+            }
         case 'ADD_WORD':
             return {
                 ...state,
@@ -234,7 +237,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             };
         case 'UPDATE_LESSON_PLAN':
             // console.log('this', action.payload, state.studentAuthID, action.payload.viewing === state.studentAuthID);
-            
+
             return {
                 ...state,
                 status: 'loaded',
@@ -267,7 +270,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                 ...state,
                 unsavedChanges: false,
             }
-        case 'OPEN_LESSON': 
+        case 'OPEN_LESSON':
             return {
                 ...state,
                 pages: state.pages.map(page => {
@@ -285,7 +288,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             let payloadKeys = Object.keys(action.payload.data);
             let updatedQuestionData: any = state.questionData;
 
-            if ( !updatedQuestionData[action.payload.key] ) {
+            if (!updatedQuestionData[action.payload.key]) {
                 updatedQuestionData[action.payload.key] = action.payload.data;
                 return {
                     ...state,
@@ -296,13 +299,13 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
             let updatedQuestionDataObject = updatedQuestionData[action.payload.key]
 
             payloadKeys.forEach((key: string) => {
-                if ( action.payload.data[key] !== '' && action.payload.data[key] !== null && action.payload.data[key] !== undefined ) {
+                if (action.payload.data[key] !== '' && action.payload.data[key] !== null && action.payload.data[key] !== undefined) {
                     updatedQuestionDataObject[key] = action.payload.data[key]
                 }
             })
 
             // console.log('here', updatedQuestionDataObject);
-            
+
             return {
                 ...state,
                 studentStatus: 'ACTIVE',
@@ -332,7 +335,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                     if (page.stage !== 'checkpoint') {
                         return page
                     } else {
-                        if ( action.payload !== page.type ) {
+                        if (action.payload !== page.type) {
                             return page
                         } else {
                             return {
@@ -346,6 +349,23 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
         case 'SET_PAGE':
             return {
                 ...state,
+                currentPage: action.payload,
+            }
+        case 'JUMP_PAGE':
+            return {
+                ...state,
+                pages: state.pages.map((page: {}, key: number) => {
+                    if (key <= action.payload) {
+                        return {
+                            ...page,
+                            active: true,
+                        }
+                    } else {
+                        return page
+                    }
+                }),
+                studentStatus: 'ACTIVE',
+                lessonProgress: action.payload,
                 currentPage: action.payload,
             }
         case 'PAGE_FORWARD':
