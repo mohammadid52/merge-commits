@@ -134,9 +134,10 @@ const StageIcon = (props: StageIconProps) => {
                 >
                     <IconContext.Provider value={{color: iconColor}}>
                         <div
-                            className={`${
-                                active || iconID <= state.currentPage ? "bg-blueberry" : "bg-darker-gray"
-                            } h-6 w-6 flex justify-center items-center rounded-full z-30`}
+                            className={`
+                            ${open || active || iconID <= state.currentPage ? "bg-blueberry" : ""}
+                                ${!active ? "bg-darker-gray" : ""}
+                                h-6 w-6 flex justify-center items-center rounded-full z-30`}
                         >
                             {iconSwitch(type)}
                         </div>
