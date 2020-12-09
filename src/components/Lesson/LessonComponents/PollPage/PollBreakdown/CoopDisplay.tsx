@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import ReflectionQuestions from './ReflectionQuestions';
+import ReflectionQuestions from '../../ReflectionQuestions';
 import Modules from './Modules';
 import Banner from './Banner';
 import { IconContext } from "react-icons/lib/esm/iconContext";
@@ -125,7 +125,7 @@ const CoopDisplay = () => {
                     </div>
 
                 </div>
-                <ReflectionQuestions />
+                <ReflectionQuestions questions={state.data.lesson.warmUp.breakdown.reflectionQuestions}  />
             </div>
         )
     }

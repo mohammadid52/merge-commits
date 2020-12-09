@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import ReflectionQuestions from './ReflectionQuestions';
+import ReflectionQuestions from '../../ReflectionQuestions';
 import Banner from './Banner';
 import LyricsOutput from './LyricsOutput';
 import { LessonContext } from '../../../../../contexts/LessonContext';
@@ -53,7 +53,7 @@ const SelfDisplay = () => {
 
   return (
     <div className={theme.section}>
-      <ReflectionQuestions />
+      <ReflectionQuestions questions={state.data.lesson.coreLesson.breakdown.reflectionQuestions}  />
       <Banner title={title} artist={artist} />
       <LyricsOutput modules={modules}/>
     </div>

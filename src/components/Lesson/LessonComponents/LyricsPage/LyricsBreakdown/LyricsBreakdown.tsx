@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import ReflectionQuestions from './ReflectionQuestions';
+import ReflectionQuestions from '../../ReflectionQuestions';
 import Banner from './Banner';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import SelfDisplay from './SelfDisplay';

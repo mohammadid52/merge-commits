@@ -1,15 +1,20 @@
 import React, { useState, useContext } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
+import { LessonContext } from '../../../contexts/LessonContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
+import usePageLabel from "../../../customHooks/pageLabel";
 
-import usePageLabel from "../../../../../customHooks/pageLabel";
+interface ReflectionQuestionProps {
+    questions: string[];
+}
 
-const ReflectionQuestions = () => {
+const ReflectionQuestions = (props: ReflectionQuestionProps) => {
     const pageLabel = usePageLabel();
   const [question, setQuestion] = useState(0);
   const { state, theme } = useContext(LessonContext);
-  const questArr = state.data.lesson.coreLesson.breakdown.reflectionQuestions;
+  const questArr = props.questions;
+
+
 
   const nextQuestion = () => {
     if (question < questArr.length - 1) {

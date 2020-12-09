@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import ReflectionQuestions from './ReflectionQuestions';
+import ReflectionQuestions from '../../ReflectionQuestions';
 import Modules from './Modules';
 import Banner from './Banner';
 
@@ -40,7 +40,7 @@ const SelfDisplay = () => {
                     additional={displayProps.additional} 
                     displayMode = 'SELF'/>
             </div>
-            <ReflectionQuestions />
+            <ReflectionQuestions questions={state.data.lesson.warmUp.breakdown.reflectionQuestions}  />
         </div>
     )
 }
