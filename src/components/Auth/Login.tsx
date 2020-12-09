@@ -282,11 +282,11 @@ const Login = () => {
                   Forgot your password?
                 </div>
               </NavLink>
-              <NavLink to='/confirm-code'>
+              {/* <NavLink to='/confirm-code'>
                 <div className='text-bold text-center text-blueberry hover:text-blue-500 mb-2'>
                   Have a confirmation code?
                 </div>
-              </NavLink>
+              </NavLink> */}
             </div>
           </div>
         </div>

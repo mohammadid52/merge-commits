@@ -255,8 +255,8 @@ const ConfirmCode = () => {
             </div>
 
             <div className='w-full h-1/10 flex flex-col justify-around'>
-              <div className='text-center text-base mb-4 text-gray-800 font-bold'>
-                Creat New Password
+              <div className='text-3xl text-xl text-center text-base mb-4 text-gray-800 font-bold'>
+                Create A New Password
               </div>
             </div>
             <div className='w-full h-1/10 flex flex-col justify-around'>
@@ -330,7 +330,7 @@ const ConfirmCode = () => {
                 style={{ borderRadius: '2rem', padding: '.75rem' }}
                 onKeyPress={handleEnter}
                 onClick={handleSubmit}>
-                Enter Iconoclast Artists
+                Log In
                 </div>
               {isLoading && (
                 <IconContext.Provider
@@ -338,11 +338,11 @@ const ConfirmCode = () => {
                   <AiOutlineLoading3Quarters />
                 </IconContext.Provider>
               )}
-              <NavLink to='/login'>
+              {/* <NavLink to='/login'>
                 <div className='text-bold text-center text-blueberry hover:text-blue-500'>
                   Back to login
                   </div>
-              </NavLink>
+              </NavLink> */}
             </div>
           </div>
         </div>
