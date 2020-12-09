@@ -5,13 +5,46 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46ddc4de-cba7-4996-b0b2-b2bf25cdfc31" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/Auth/QuickRegister.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/ReflectionQuestions.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Dashboard/Classroom/Classroom.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Dashboard/Classroom/Classroom.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/General/Popup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/General/Popup.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TeacherView/LessonControl.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TeacherView/LessonControl.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TeacherView/TopMenu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TeacherView/TopMenu.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TeacherView/TopMenu/HamburgerMenu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TeacherView/TopMenu/HamburgerMenu.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/AdventurePage/AdventureBreakdown/AdventureBreakdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/AdventurePage/AdventureBreakdown/AdventureBreakdown.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/AdventurePage/AdventureBreakdown/CoopDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/AdventurePage/AdventureBreakdown/CoopDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/AdventurePage/AdventureBreakdown/ReflectionQuestions.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/AdventurePage/AdventureBreakdown/SelfDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/AdventurePage/AdventureBreakdown/SelfDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/ListPage/ListBreakdown/CoopDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/ListPage/ListBreakdown/CoopDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/ListPage/ListBreakdown/ListBreakdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/ListPage/ListBreakdown/ListBreakdown.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/ListPage/ListBreakdown/ReflectionQuestions.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/ListPage/ListBreakdown/SelfDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/ListPage/ListBreakdown/SelfDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/LyricsPage/LyricsBreakdown/CoopDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/LyricsPage/LyricsBreakdown/CoopDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/LyricsPage/LyricsBreakdown/LyricsBreakdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/LyricsPage/LyricsBreakdown/LyricsBreakdown.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/LyricsPage/LyricsBreakdown/ReflectionQuestions.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/LyricsPage/LyricsBreakdown/SelfDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/LyricsPage/LyricsBreakdown/SelfDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/MultiListPage/MultiListBreakdown/CoopDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/MultiListPage/MultiListBreakdown/CoopDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/MultiListPage/MultiListBreakdown/MultiListBreakdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/MultiListPage/MultiListBreakdown/MultiListBreakdown.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/MultiListPage/MultiListBreakdown/ReflectionQuestions.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/MultiListPage/MultiListBreakdown/SelfDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/MultiListPage/MultiListBreakdown/SelfDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PoemPage/PoemBreakdown/CoopDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PoemPage/PoemBreakdown/CoopDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PoemPage/PoemBreakdown/PoemBreakdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PoemPage/PoemBreakdown/PoemBreakdown.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PoemPage/PoemBreakdown/ReflectionQuestions.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PoemPage/PoemBreakdown/SelfDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PoemPage/PoemBreakdown/SelfDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PollPage/PollBreakdown/CoopDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PollPage/PollBreakdown/CoopDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PollPage/PollBreakdown/CoopDisplaycopy.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PollPage/PollBreakdown/CoopDisplaycopy.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PollPage/PollBreakdown/PollBreakdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PollPage/PollBreakdown/PollBreakdown.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PollPage/PollBreakdown/ReflectionQuestions.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PollPage/PollBreakdown/SelfDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/PollPage/PollBreakdown/SelfDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/StoryPage/StoryBreakdown/CoopDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/StoryPage/StoryBreakdown/CoopDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/StoryPage/StoryBreakdown/ReflectionQuestions.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/StoryPage/StoryBreakdown/SelfDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/StoryPage/StoryBreakdown/SelfDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/StoryPage/StoryBreakdown/StoryBreakdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/StoryPage/StoryBreakdown/StoryBreakdown.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TChartPage/TChartBreakdown/CoopDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TChartPage/TChartBreakdown/CoopDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TChartPage/TChartBreakdown/ReflectionQuestions.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TChartPage/TChartBreakdown/SelfDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TChartPage/TChartBreakdown/SelfDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TChartPage/TChartBreakdown/TChartBreakdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TChartPage/TChartBreakdown/TChartBreakdown.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TruthGamePage/TruthGameBreakdown/CoopDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TruthGamePage/TruthGameBreakdown/CoopDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TruthGamePage/TruthGameBreakdown/CoopDisplaycopy.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TruthGamePage/TruthGameBreakdown/CoopDisplaycopy.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TruthGamePage/TruthGameBreakdown/ReflectionQuestions.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TruthGamePage/TruthGameBreakdown/SelfDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TruthGamePage/TruthGameBreakdown/SelfDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TruthGamePage/TruthGameBreakdown/TruthGameBreakdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/TruthGamePage/TruthGameBreakdown/TruthGameBreakdown.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,6 +52,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1lIhlQv0mye80xkZDs7PU0MsDlN" />
@@ -30,13 +68,18 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/components/Lesson/LessonComponents" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="prettierjs.PrettierConfiguration.Package" value="C:\web\IconoclastArtistsReact_Base\node_modules\prettier" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="styled-components" />
     <property name="ts.external.directory.path" value="C:\web\IconoclastArtistsReact_Base\node_modules\typescript\lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\web\IconoclastArtistsReact_Base\src\components\Lesson\LessonComponents" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -49,6 +92,10 @@
       <workItem from="1607290666368" duration="9838000" />
       <workItem from="1607336556722" duration="206000" />
       <workItem from="1607337979958" duration="20008000" />
+      <workItem from="1607438839039" duration="647000" />
+      <workItem from="1607446521827" duration="9473000" />
+      <workItem from="1607479879750" duration="27591000" />
+      <workItem from="1607524678349" duration="48000" />
     </task>
     <servers />
   </component>
@@ -72,8 +119,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/TeacherView/TopMenu/HamburgerMenu.tsx</url>
-          <line>26</line>
-          <properties lambdaOrdinal="-1" />
+          <line>32</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

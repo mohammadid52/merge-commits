@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import Banner from './Banner';
-import ReflectionQuestions from './ReflectionQuestions';
+import ReflectionQuestions from '../../ReflectionQuestions';
 import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaExpand, FaCompress } from 'react-icons/fa';
 import PoemOutput from './PoemOutput';
@@ -59,7 +59,7 @@ const CoopDisplay = () => {
             
 
 
-                <ReflectionQuestions />
+                <ReflectionQuestions questions={state.data.lesson.activity.breakdown.reflectionQuestions}  />
                
 
                 {/* teacher display */}

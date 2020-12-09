@@ -1,12 +1,20 @@
 import React, { useState, useContext } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
+import { LessonContext } from '../../../contexts/LessonContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
+import usePageLabel from "../../../customHooks/pageLabel";
 
-const ReflectionQuestions = () => {
+interface ReflectionQuestionProps {
+    questions: string[];
+}
+
+const ReflectionQuestions = (props: ReflectionQuestionProps) => {
+    const pageLabel = usePageLabel();
   const [question, setQuestion] = useState(0);
   const { state, theme } = useContext(LessonContext);
-  const questArr = state.data.lesson.activity.breakdown.reflectionQuestions;
+  const questArr = props.questions;
+
+
 
   const nextQuestion = () => {
     if (question < questArr.length - 1) {
@@ -28,7 +36,7 @@ const ReflectionQuestions = () => {
     <div className={`${theme.elem.text} ${theme.elem.card} p-2 reflection w-full flex flex-col`}>
       <div className={`w-full`}>
         <div className={`w-full flex flex-row text-xl ${theme.banner} border-b-4 border-sea-green`}>
-          <h3>Classroom Discussion:</h3>
+          <h3>{pageLabel.prev} Discussion:</h3>
           <div
             className={`text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 cursor-pointer`}
             onClick={prevQuestion}>

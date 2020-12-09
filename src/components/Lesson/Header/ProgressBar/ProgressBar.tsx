@@ -188,7 +188,7 @@ const ProgressBar = () => {
                     >
                       <div
                         className={`h-2 w-full ${
-                          state.pages[key + 1].active
+                          key < state.lessonProgress
                             ? "bg-blueberry"
                             : "bg-dark-gray"
                         }`}

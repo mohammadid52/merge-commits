@@ -1,3 +1,29 @@
+interface PatternObject {
+  [key: string]: string;
+}
+
+/**
+ * Function to rearrange strings based on a pattern/separator
+ * @param pattern
+ * @param separator
+ * @param inputPattern
+ * @param outputPattern
+ */
+export const formatPattern = (pattern: string, separator: string, inputPattern: string, outputPattern: string) => {
+  const patternStringObject = pattern.split(separator);
+  const originalTime = inputPattern.split(separator).reduce((acc:PatternObject, val:string, i:number)=>{
+    return {...acc, [`${val}`]:patternStringObject[i]}
+  },{})
+  const outputTime = outputPattern.split(separator).map((val: string, i: number) => originalTime[val])
+
+  // console.log('formatpattern', patternStringObject);
+  // console.log('formatpattern', originalTime);
+  // console.log('formatpattern', outputTime);
+
+  // The final; string
+  return outputTime.join(separator);
+}
+
 /**
  * Parses linebreak characters \n and 
  * replaces them with a html break <br>

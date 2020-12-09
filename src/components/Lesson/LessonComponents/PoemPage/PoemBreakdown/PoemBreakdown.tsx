@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import Banner from './Banner';
-import ReflectionQuestions from './ReflectionQuestions';
+import ReflectionQuestions from '../../ReflectionQuestions';
 import SelfDisplay from './SelfDisplay';
 import CoopDisplay from './CoopDisplay';
 

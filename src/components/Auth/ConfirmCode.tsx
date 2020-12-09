@@ -256,7 +256,7 @@ const ConfirmCode = () => {
 
             <div className='w-full h-1/10 flex flex-col justify-around'>
               <div className='text-3xl text-xl text-center text-base mb-4 text-gray-800 font-bold'>
-                Create A New Password
+                Enter New Password
               </div>
             </div>
             <div className='w-full h-1/10 flex flex-col justify-around'>
@@ -330,7 +330,7 @@ const ConfirmCode = () => {
                 style={{ borderRadius: '2rem', padding: '.75rem' }}
                 onKeyPress={handleEnter}
                 onClick={handleSubmit}>
-                Log In
+                Login
                 </div>
               {isLoading && (
                 <IconContext.Provider

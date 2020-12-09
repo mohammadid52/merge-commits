@@ -40,7 +40,7 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = (
 
           <div
             className={`${
-              hamburgerOpen ? "visible animate-fadeIn shadow-xl" : "hidden"
+              hamburgerOpen ? "visible" : "hidden"
             } absolute w-32 h-auto transform right-0 flex  flex-col bg-gray-200 p-1 rounded-lg border border-light-gray border-opacity-40 overflow-hidden z-100`}
             onPointerLeave={() => setHamburgerOpen(false)}
           >
