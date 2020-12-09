@@ -175,7 +175,7 @@ const PosAlert = (props: WritingAlertProps) => {
       <div
         className={`${!alert ? 'hidden' : 'display'} ${
           fill === 'screen' ? 'fixed' : ''
-        } z-50 w-full h-full flex flex-col justify-center items-center bg-black bg-opacity-50`}>
+        } z-100 w-full h-full flex flex-col justify-center items-center bg-black bg-opacity-50`}>
         <div
           className='absolute w-auto cursor-pointer p-2 hover:text-gray-300'
           style={{ top: 0, right: 0, color: '#828282' }}
@@ -184,7 +184,7 @@ const PosAlert = (props: WritingAlertProps) => {
         </div>
 
         <div
-          className={`${!alert ? 'hidden' : 'display'} text-center font-bold text-white`}
+          className={`${!alert ? 'hidden' : 'display'} text-center font-bold text-white hover:text-lg hover:cursor-pointer`}
           onClick={() => setAlert(!alert)}>
           Close
         </div>
@@ -197,7 +197,7 @@ const PosAlert = (props: WritingAlertProps) => {
         <div
           className={`${!alert ? 'hidden' : 'display'} ${
             fill === 'screen' ? 'fixed' : ''
-          } z-50 w-full h-full flex justify-center items-center bg-black bg-opacity-50`}>
+          } z-100 w-full h-full flex justify-center items-center bg-black bg-opacity-50`}>
           <div
             className={`${switchTheme.bg} w-128 p-2 overflow-hidden shadow-xl rounded-lg`}
             role='dialog'

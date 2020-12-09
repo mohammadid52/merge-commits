@@ -54,7 +54,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
       {/* LABELS */}
 
       <div
-        className={`relative  h-0.5/10 h-8 top-0 font-medium bg-light-gray bg-opacity-10 border-b border-gray-400 flex flex-row items-center z-100`}
+        className={`relative  h-0.5/10 h-8 top-0 font-medium bg-light-gray bg-opacity-10 border-b border-gray-400 flex flex-row items-center`}
       >
         {/* LEFT */}
         <LessonInfoTitleBar
