@@ -365,7 +365,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
                     }
                 }),
                 studentStatus: 'ACTIVE',
-                lessonProgress: action.payload,
+                lessonProgress: state.lessonProgress >= action.payload ? state.lessonProgress : action.payload,
                 currentPage: action.payload,
             }
         case 'PAGE_FORWARD':
