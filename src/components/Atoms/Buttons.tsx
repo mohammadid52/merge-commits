@@ -9,6 +9,7 @@ interface ButtonProps {
   btnClass?: string;
   labelClass?: string
 }
+// TODO : MAke icons work.
 
 const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
 
@@ -21,7 +22,7 @@ const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
       onClick={onClick}
     >
       {label ? <span className={`mx-2 ${labelClass ? labelClass : ''}`}>{label}</span> : null}
-      <i className="icon-heart font-bold" />
+      {icon ? <i className="icon-heart font-bold" /> : null}
     </button>
   )
 }
