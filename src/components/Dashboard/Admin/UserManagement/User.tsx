@@ -10,6 +10,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import UserInformation from './UserInformation';
 import UserEdit from './UserEdit';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
+import { getImageFromS3 } from '../../../../utilities/services';
 import {
     Switch,
     Route,
@@ -66,6 +67,7 @@ const User = () => {
             birthdate: null,
         }
     );
+    const [imageUrl, setImageUrl] = useState('')
     const location = useLocation();
     const queryParams = queryString.parse(location.search)
 
@@ -111,6 +113,15 @@ const User = () => {
         }
     }, [])
 
+    useEffect(() => {
+        async function getUrl() {
+            const imageUrl:any = await getImageFromS3(user.image);
+            setImageUrl(imageUrl);
+        }
+        getUrl();
+
+    }, [user.image])
+
     // const language = () => {
     //     if (user.language === 'EN') {
     //         return 'English'
@@ -134,7 +145,7 @@ const User = () => {
                             {
                                 user.image ? (
                                     <img
-                                        src={user.image}
+                                        src={imageUrl}
                                         className="w-20 h-20 md:w-40 md:h-40 rounded-full" />) :
                                     <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
                                         <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{ background: `${stringToHslColor(user.firstName + ' ' + user.lastName)}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
