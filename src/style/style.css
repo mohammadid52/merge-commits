@@ -28,6 +28,20 @@
 
 /* This contains custom class names for the reusable components. */
 
+/* Text colors */
+
+.text-default {
+  @apply text-black80;
+}
+
+.text-secondary {
+  @apply text-gray-500;
+}
+
+.text-active {
+  @apply text-indigo-500;
+}
+
 .pagetitle-container {
   @apply my-4 p-4;
 }
