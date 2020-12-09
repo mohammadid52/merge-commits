@@ -1,4 +1,4 @@
-import React, {ReactElement, ReactNode, useContext} from "react";
+import React, {ReactElement, ReactNode, useContext, useEffect, useState} from "react";
 import {LessonContext} from "../../../../contexts/LessonContext";
 import {useHistory, useRouteMatch} from "react-router-dom";
 import {IconContext} from "react-icons/lib/esm/iconContext";
@@ -39,8 +39,20 @@ const StageIcon = (props: StageIconProps) => {
         clickable
     } = props;
     const {state, theme, dispatch} = useContext(LessonContext);
+    const [openAnim, setOpenAnim] = useState<string>('');
     const match = useRouteMatch();
     const history = useHistory();
+
+/*
+    useEffect(() => {
+        if (open) {
+            setOpenAnim('animate-fadeIn');
+            setTimeout(() => {
+                setOpenAnim('');
+            }, 2000)
+        }
+    }, [open])*/
+
 
     const iconSwitch = (type: string): ReactNode => {
         switch (type) {
@@ -120,7 +132,7 @@ const StageIcon = (props: StageIconProps) => {
     }
 
 
-    const iconColor = open || active ? "#EDF2F7" : " gray";
+    const iconColor = (open || active) ? `EDF2F7` : "000000";
 
     if (disabled) return null;
 
@@ -164,7 +176,10 @@ const StageIcon = (props: StageIconProps) => {
                     <IconContext.Provider value={{color: iconColor, size: "0.9rem"}}>
                         <div
                             className={`h-8 w-8 rounded-full flex flex-col justify-center items-center 
-              ${active || iconID <= state.currentPage ? "bg-blueberry" : "bg-darker-gray"} z-30`}
+              ${active || iconID <= state.currentPage ? "bg-blueberry" : "bg-darker-gray"} 
+               
+              
+              z-30`}
                         >
                             {iconSwitch(type)}
                         </div>
