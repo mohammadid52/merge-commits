@@ -57,7 +57,7 @@ const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
       onPointerLeave={handleStarLeave}
       onClick={handleStarRate}
     >
-      <div id={`1`}>
+      <div id={`1`} className={`w-auto`}>
         <IconContext.Provider value={{ color: '#ffffff', size: '1.5rem' }}>
           {whichStarHovered >= 1 || (isRated && rating >= 1) ? (
             <AiFillStar id="1" style={{ pointerEvents: 'none' }} />
@@ -67,7 +67,7 @@ const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
         </IconContext.Provider>
       </div>
 
-      <div id={`2`}>
+      <div id={`2`} className={`w-auto`}>
         <IconContext.Provider value={{ color: '#ffffff', size: '1.5rem' }}>
           {whichStarHovered >= 2 || (isRated && rating >= 2) ? (
             <AiFillStar id="2" style={{ pointerEvents: 'none' }} />
@@ -77,7 +77,7 @@ const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
         </IconContext.Provider>
       </div>
 
-      <div id={`3`}>
+      <div id={`3`} className={`w-auto`}>
         <IconContext.Provider value={{ color: '#ffffff', size: '1.5rem' }}>
           {whichStarHovered >= 3 || (isRated && rating >= 3) ? (
             <AiFillStar id="3" style={{ pointerEvents: 'none' }} />
@@ -87,7 +87,7 @@ const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
         </IconContext.Provider>
       </div>
 
-      <div id={`4`}>
+      <div id={`4`} className={`w-auto`}>
         <IconContext.Provider value={{ color: '#ffffff', size: '1.5rem' }}>
           {whichStarHovered >= 4 || (isRated && rating >= 4) ? (
             <AiFillStar id="4" style={{ pointerEvents: 'none' }} />
@@ -97,7 +97,7 @@ const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
         </IconContext.Provider>
       </div>
 
-      <div id={`5`}>
+      <div id={`5`} className={`w-auto`}>
         <IconContext.Provider value={{ color: '#ffffff', size: '1.5rem' }}>
           {whichStarHovered >= 5 || (isRated && rating >= 5) ? (
             <AiFillStar id="5" style={{ pointerEvents: 'none' }} />
