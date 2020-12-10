@@ -1,23 +1,20 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaUserCircle } from 'react-icons/fa'
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import * as queries from '../../../../graphql/queries';
-// import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
+import { FaEdit } from 'react-icons/fa';
+import { IoArrowUndoCircleOutline } from 'react-icons/io5';
+import { Switch, Route, useRouteMatch, useHistory } from 'react-router-dom';
+
+import * as queries from '../../../../graphql/queries';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 import UserInformation from './UserInformation';
 import UserEdit from './UserEdit';
+import BreadCrums from '../../../Atoms/BreadCrums';
+import SectionTitle from '../../../Atoms/SectionTitle';
+import Buttons from '../../../Atoms/Buttons';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import { getImageFromS3 } from '../../../../utilities/services';
-import {
-    Switch,
-    Route,
-    useRouteMatch,
-    Link,
-    NavLink
-} from 'react-router-dom';
 
 export interface UserInfo {
     authId: string
@@ -42,8 +39,9 @@ export interface UserInfo {
 
 
 const User = () => {
+    const history = useHistory();
     const match = useRouteMatch();
-    const { theme, state, dispatch } = useContext(GlobalContext);
+    const { theme } = useContext(GlobalContext);
     const [status, setStatus] = useState('');
     const [user, setUser] = useState<UserInfo>(
         {
@@ -69,7 +67,14 @@ const User = () => {
     );
     const [imageUrl, setImageUrl] = useState('')
     const location = useLocation();
+    const pathName = location.pathname.replace(/\/$/, "");
+    const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
     const queryParams = queryString.parse(location.search)
+    const breadCrumsList = [
+        { title: 'Home', url: '/', last: false },
+        { title: 'People', url: '/dashboard/manage-users', last: false },
+        { title: 'User Information', url: `${location.pathname}${location.search}`, last: true }
+    ]
 
     async function getUserById(id: string) {
         try {
@@ -88,6 +93,8 @@ const User = () => {
         }
     }
 
+    // TODO: Make below functions global(initials, stringToHslColor)
+
     const initials = (firstName: string, lastName: string) => {
         let firstInitial = firstName.charAt(0).toUpperCase()
         let lastInitial = lastName.charAt(0).toUpperCase()
@@ -100,7 +107,6 @@ const User = () => {
         for (i = 0; i < str.length; i++) {
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
-
         let h = hash % 360;
         return 'hsl(' + h + ', 70%, 72%)';
     }
@@ -115,31 +121,32 @@ const User = () => {
 
     useEffect(() => {
         async function getUrl() {
-            const imageUrl:any = await getImageFromS3(user.image);
+            const imageUrl: any = await getImageFromS3(user.image);
             setImageUrl(imageUrl);
         }
         getUrl();
 
     }, [user.image])
 
-    // const language = () => {
-    //     if (user.language === 'EN') {
-    //         return 'English'
-    //     } else if (user.language === 'ES') {
-    //         return 'Spanish'
-    //     }
-
-    // }
-
     if (status !== 'done') {
-        return (
-            <LessonLoading />
-        )
+        return (<LessonLoading />)
     }
     {
         return (
-            <div className={`w-9/10 h-full`}>
-                <div className={`w-full h-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
+            <div className={`w-9/10 h-full mt-4`}>
+                <BreadCrums items={breadCrumsList} />
+                <div className="flex justify-between">
+                    <SectionTitle title="USER INFORMATION" />
+
+                    <div className="flex justify-end py-4 mb-4 w-5/10">
+                        <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+                        {currentPath !== 'edit' ? (
+                            <Buttons btnClass="mr-4" onClick={() => history.push(`${match.url}/edit`)} Icon={FaEdit} />
+                        ) : null
+                        }
+                    </div>
+                </div>
+                <div className={`w-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
                     <div className="h-9/10 flex flex-col md:flex-row">
                         <div className="w-auto p-4 flex flex-col text-center items-center">
                             {
@@ -153,9 +160,6 @@ const User = () => {
                                         </div>
                                     </div>
                             }
-                            {/* <IconContext.Provider value={{ size: '8rem', color: '#4a5568' }}>
-                                    <FaUserCircle />
-                                </IconContext.Provider> */}
                             <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
                                 {`${user.preferredName ? user.preferredName : user.firstName} ${user.lastName}`}
                                 <p className="text-md md:text-lg">
@@ -163,7 +167,6 @@ const User = () => {
                                 </p>
                             </div>
                         </div>
-
                         <Switch>
                             <Route
                                 path={`${match.url}/edit`}
@@ -186,13 +189,9 @@ const User = () => {
                                 )}
                             />
                         </Switch>
-
-
                     </div>
-
                 </div>
             </div>
-
         )
     }
 }
