@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { IoAdd } from 'react-icons/io5';
+import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import * as queries from '../../../../graphql/queries';
@@ -28,9 +27,8 @@ const UserLookup = () => {
 	const [currentPage, setCurrentPage] = useState(0);
 	const [totalPages, setTotalPages] = useState(1);
 	const breadCrumsList = [
-		{ title: 'Home', url: '/', last: false },
-		{ title: 'People', url: '/dashboard/manage-users', last: false },
-		{ title: 'User Management', url: '/dashboard/manage-users', last: true }
+		{ title: 'Home', url: '/dashboard', last: false },
+		{ title: 'People', url: '/dashboard/manage-users', last: true },
 	]
 
 	async function listUsers() {
@@ -91,20 +89,13 @@ const UserLookup = () => {
 				<div className="flex justify-between">
 					<SectionTitle title="USER MANAGEMENT" subtitle="People's List" />
 					<div className="flex justify-end py-4 mb-4 w-5/10">
-						<Buttons label="Add New Person" onClick={handleLink} btnClass="mr-4" />
+						<Buttons label="Add New Person" onClick={handleLink} btnClass="mr-4" Icon={AiOutlineUsergroupAdd} />
 						<PageCountSelector pageSize={userCount} setPageSize={(c: number) => setUserCount(c)} />
 					</div>
 				</div>
-				{/* 
-						<IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
-								<IoAdd />
-							</IconContext.Provider>
-							
-						TODO: Need to add this in buttons group*/}
-
 				<div className="flex flex-col">
 					<div className="-my-2 py-2">
-						<div className="white_back py-4 px-8 mt-2 align-middle rounded-lg border-b border-gray-200">
+						<div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b border-gray-200">
 							<div className="h-8/10 px-4">
 								<div className="w-full flex justify-between border-b border-gray-200 ">
 									<div className="w-3.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">

@@ -134,33 +134,6 @@ const ProfileInfo = (props: UserInfoProps) => {
                         </dl>
                     </div>
                 </div>
-
-                <div className="px-4 w-auto pt-4 flex justify-end">
-                    <span className="flex w-32 ml-3 rounded-md shadow-sm relative">
-                        <NavLink to={`${match.url}/edit`}>
-                            <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
-                                Edit
-                                <span className="w-8 pl-3 h-4 flex items-center">
-                                    <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
-                                        <FaEdit />
-                                    </IconContext.Provider>
-                                </span>
-                                <ToolTip
-                                    position='bottom'
-                                    header=''
-                                    display='none'
-                                    content='Edit Profile'
-                                    id={'edit-profile'}
-                                    cursor
-                                    width='w-24 px-1 flex justify-center items-center'
-                                    fontSize='text-xs'
-                                />
-                            </button>
-                        </NavLink>
-                    </span>
-                </div>
-
-
             </div>
         )
     }

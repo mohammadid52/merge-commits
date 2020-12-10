@@ -71,7 +71,7 @@ const User = () => {
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const queryParams = queryString.parse(location.search)
   const breadCrumsList = [
-    { title: 'Home', url: '/', last: false },
+    { title: 'Home', url: '/dashboard', last: false },
     { title: 'People', url: '/dashboard/manage-users', last: false },
     { title: 'User Information', url: `${location.pathname}${location.search}`, last: true }
   ]
