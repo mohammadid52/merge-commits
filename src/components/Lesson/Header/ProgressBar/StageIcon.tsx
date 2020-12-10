@@ -1,6 +1,7 @@
-import React, {ReactElement, ReactNode, useContext, useState} from "react";
+import React, {ReactElement, ReactNode, useContext, useEffect, useState} from "react";
 import {LessonContext} from "../../../../contexts/LessonContext";
 import {useHistory, useRouteMatch} from "react-router-dom";
+import usePrevious from '../../../../customHooks/previousProps';
 import {IconContext} from "react-icons/lib/esm/iconContext";
 import {
     FaCheck,
@@ -39,19 +40,22 @@ const StageIcon = (props: StageIconProps) => {
         clickable
     } = props;
     const {state, theme, dispatch} = useContext(LessonContext);
-    const [openAnim, setOpenAnim] = useState<string>('');
+    const previousProps = usePrevious(open);
+    const [recentOpened, setRecentOpened] = useState<boolean>(false);
     const match = useRouteMatch();
     const history = useHistory();
 
-/*
     useEffect(() => {
+        const wasClosed = previousProps === false;
         if (open) {
-            setOpenAnim('animate-fadeIn');
-            setTimeout(() => {
-                setOpenAnim('');
-            }, 2000)
+            if (wasClosed && open) {
+                setRecentOpened(true);
+                setTimeout(() => {
+                    setRecentOpened(false)
+                }, 1000)
+            }
         }
-    }, [open])*/
+    }, [open])
 
 
     const iconSwitch = (type: string): ReactNode => {
@@ -132,7 +136,19 @@ const StageIcon = (props: StageIconProps) => {
     }
 
 
-    const iconColor = (open || active) ? `EDF2F7` : "000000";
+    const iconColor = () => {
+        if (open && active) {
+            return 'EDF2F7';
+        }
+
+        if (open && !active) {
+            return '4DEDF2F7';
+        }
+
+        if (!open && !active) {
+            return '4DEDF2F7';
+        }
+    }
 
     if (disabled) return null;
 
@@ -140,18 +156,22 @@ const StageIcon = (props: StageIconProps) => {
         return (
             <>
                 <div
-                    className={`relative h-8 w-8 flex justify-center items-center rounded-full z-50
+                    className={`relative h-8 w-8 origin-center flex justify-center items-center rounded-full z-50
           ${clickable ? "cursor-pointer" : "cursor-default"}`}
                     onClick={handleLink}
                 >
-                    <IconContext.Provider value={{color: iconColor}}>
-                        <div
-                            className={`
-                            ${open || active || iconID <= state.currentPage ? "bg-blueberry" : ""}
-                                ${!active ? "bg-darker-gray" : ""}
-                                h-6 w-6 flex justify-center items-center rounded-full z-30`}
-                        >
-                            {iconSwitch(type)}
+                    <IconContext.Provider value={{color: iconColor()}}>
+                        <div className={`h-6 w-6 origin-center rounded-full bg-black
+                            
+                        `}>
+                            <div
+                                className={` 
+                                ${recentOpened ? 'animate-activation' : ''}
+                                ${!open ? 'opacity-60 border border-white border-opacity-20' : ''}
+                                ${open || active || iconID <= state.currentPage ? "bg-blueberry" : ""} 
+                                ${open && !active ? "bg-darker-gray" : ""} h-6 w-6 flex justify-center items-center rounded-full z-30`}>
+                                {iconSwitch(type)}
+                            </div>
                         </div>
                         {/* ICON LABEL */}
                         {iconLabel("center")}
@@ -168,20 +188,23 @@ const StageIcon = (props: StageIconProps) => {
                 className={`flex-grow-0 w-auto flex flex-row justify-around items-center z-50`}
             >
                 <div
-                    className={`relative h-8 w-8 rounded-full flex items-center justify-center 
-          ${clickable ? "cursor-pointer" : "cursor-default"}
-          `}
+                    className={`relative h-8 w-8 origin-center rounded-full flex items-center justify-center 
+                    ${clickable ? "cursor-pointer" : "cursor-default"}
+                    ${recentOpened ? 'animate-activation' : ''}`}
                     onClick={handleLink}
                 >
-                    <IconContext.Provider value={{color: iconColor, size: "0.9rem"}}>
-                        <div
-                            className={`h-8 w-8 rounded-full flex flex-col justify-center items-center 
-              ${active || iconID <= state.currentPage ? "bg-blueberry" : "bg-darker-gray"} 
-               
-              
-              z-30`}
-                        >
-                            {iconSwitch(type)}
+                    <IconContext.Provider value={{color: iconColor(), size: "0.9rem"}}>
+                        <div className={`h-8 w-8 origin-center rounded-full bg-black
+                            
+                        `}>
+                            <div
+                                className={` 
+                                ${recentOpened ? 'animate-activation' : ''}
+                                ${!open ? 'opacity-60 border border-white border-opacity-20' : ''}
+                                ${open || active || iconID <= state.currentPage ? "bg-blueberry" : ""} 
+                                ${open && !active ? "bg-darker-gray" : ""} h-8 w-8 flex justify-center items-center rounded-full z-30`}>
+                                {iconSwitch(type)}
+                            </div>
                         </div>
                     </IconContext.Provider>
 
