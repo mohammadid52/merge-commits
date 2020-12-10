@@ -2,10 +2,12 @@ import React from 'react'
 import { NavLink } from 'react-router-dom';
 
 interface BreadCrumProps {
-
+  items: { title: string, url: string, last: boolean }[]
 }
 
 const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
+
+  const { items } = brdPrps;
 
   return (
     <div className="flex flex-row my-4 py-4">
@@ -44,11 +46,3 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
 }
 
 export default BreadCrums
-
-// Will be replaced with actual data
-
-const items = [
-  { title: 'Home', url: '/', last: false },
-  { title: 'Second level', url: '/', last: false },
-  { title: 'Third level', url: '/', last: true }
-]

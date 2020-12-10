@@ -1,3 +1,4 @@
 /* Atoms style imports */
 @import "./atoms/buttons.css";
 @import "./atoms/breadcrums.css";
+@import "./atoms/pagination.css";

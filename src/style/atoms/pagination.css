@@ -1,0 +1,37 @@
+/* page counter */
+
+.page-count {
+  @apply w-auto py-2 px-4 rounded-full;
+}
+
+.page-count-default:hover,
+.page-count-default:focus {
+  @apply outline-none bg-gray-400;
+}
+
+.isBack {
+  transform: rotate(180deg);
+}
+
+.page-arrow,
+.page-arrow:hover,
+.page-arrow:focus,
+.page-arrow:active {
+  @apply outline-none;
+}
+
+/* Form selector */
+
+.form-select {
+  @apply bg-white border-gray-200 text-gray-900 w-auto py-3 px-4 border-2 rounded;
+}
+
+.form-select::placeholder {
+  color: #1a202c;
+}
+
+.form-select:hover,
+.form-select:active,
+.form-select:focus {
+  @apply outline-none;
+}

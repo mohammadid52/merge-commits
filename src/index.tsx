@@ -18,3 +18,5 @@ const Page: React.FC = () => {
 }
 
 ReactDOM.render(<Page />, document.getElementById('app'));
+
+// TODO merge atoms generals and stanards directory.

@@ -6,21 +6,18 @@ import { getImageFromS3 } from '../../../../utilities/services';
 
 interface ListProps {
     item: any
-    listUsers: () => void
 }
 
 const List = (props: ListProps) => {
-    const { item, listUsers } = props;
+    const { item } = props;
     const match = useRouteMatch();
     const history = useHistory();
     const [imageUrl, setImageUrl] = useState('')
 
     const initials = (firstName: string, lastName: string) => {
-        if (listUsers) {
-            let firstInitial = firstName.charAt(0).toUpperCase()
-            let lastInitial = lastName.charAt(0).toUpperCase()
-            return firstInitial + lastInitial;
-        }
+        let firstInitial = firstName.charAt(0).toUpperCase()
+        let lastInitial = lastName.charAt(0).toUpperCase()
+        return firstInitial + lastInitial;
     }
 
     const handleLink = (e: any) => {
@@ -92,7 +89,7 @@ const List = (props: ListProps) => {
                 </div>
             </div>
             <div className="w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleLink} >
-                <div id={item.id} className="text-indigo-600 hover:text-indigo-900">Edit</div>
+                <div id={item.id} className="flex justify-center text-indigo-600 hover:text-indigo-900">Edit</div>
             </div>
 
 

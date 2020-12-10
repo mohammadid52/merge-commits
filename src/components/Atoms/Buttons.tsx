@@ -5,7 +5,7 @@ interface ButtonProps {
   label: string;
   onClick?: () => void;
   transparent?: boolean;
-  icon?: string;
+  Icon?: any;
   btnClass?: string;
   labelClass?: string
 }
@@ -13,7 +13,7 @@ interface ButtonProps {
 
 const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
 
-  const { label, icon, transparent, type, onClick, btnClass, labelClass } = btnPrps;
+  const { label, Icon, transparent, type, onClick, btnClass, labelClass } = btnPrps;
 
   return (
     <button
@@ -22,7 +22,7 @@ const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
       onClick={onClick}
     >
       {label ? <span className={`mx-2 ${labelClass ? labelClass : ''}`}>{label}</span> : null}
-      {icon ? <i className="icon-heart font-bold" /> : null}
+      {Icon ? <span className=""><Icon /></span> : null}
     </button>
   )
 }
