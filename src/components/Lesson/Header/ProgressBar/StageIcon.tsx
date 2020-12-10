@@ -1,4 +1,4 @@
-import React, {ReactElement, ReactNode, useContext, useEffect, useState} from "react";
+import React, {ReactElement, ReactNode, useContext, useState} from "react";
 import {LessonContext} from "../../../../contexts/LessonContext";
 import {useHistory, useRouteMatch} from "react-router-dom";
 import {IconContext} from "react-icons/lib/esm/iconContext";

@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46ddc4de-cba7-4996-b0b2-b2bf25cdfc31" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Lesson/Header/ProgressBar/StageIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/Header/ProgressBar/StageIcon.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/Checkpoint/CheckpointQuestions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Lesson/LessonComponents/Checkpoint/CheckpointQuestions.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,6 +21,11 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <hideBySeverity>
+      <option value="15" />
+    </hideBySeverity>
   </component>
   <component name="ProjectId" id="1lIhlQv0mye80xkZDs7PU0MsDlN" />
   <component name="ProjectViewState">
@@ -58,6 +65,7 @@
       <workItem from="1607479879750" duration="27591000" />
       <workItem from="1607524678349" duration="48000" />
       <workItem from="1607525694335" duration="499000" />
+      <workItem from="1607599572896" duration="1305000" />
     </task>
     <servers />
   </component>
@@ -69,7 +77,34 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="fix/unclickable-multiselect" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="fix/unclickable-multiselect" />
+                </option>
+              </RecentGroup>
+            </list>
           </value>
         </entry>
       </map>
