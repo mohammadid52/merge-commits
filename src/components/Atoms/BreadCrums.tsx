@@ -16,7 +16,7 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
               <li className="children-x-2" key={i}>
                 <NavLink to={item.url}>
                   <span className={`${item.last ? 'text-secondary' : 'text-default'}`}>
-                    {item.title}
+                    {i === 0 ? item.title.toUpperCase() : item.title}
                   </span>
                 </NavLink>
                 {!item.last && (
