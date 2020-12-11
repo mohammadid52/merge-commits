@@ -40,6 +40,17 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (props: Stud
       return state.pages[pageViewed.pageID];
     }
   };
+  const getPreviousPage = () => {
+    if (pageViewed.pageID !== null) {
+      return state.pages[pageViewed.pageID - 1];
+    }
+  };
+
+  const beforeBreakdownDisabled = () => {
+    if (pageViewed.pageID !== null) {
+      return getCurrentPage().type === 'breakdown' && state.pages[pageViewed.pageID - 1].disabled;
+    }
+  };
 
   /**
    * Variable referring to ^ function above
@@ -79,7 +90,10 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (props: Stud
          * and when you're NOT currently viewing a studento
          *
          */}
-        {pageViewed.pageID !== 0 && !state.studentViewing.live && getCurrentPage().disabled === false ? (
+        {!beforeBreakdownDisabled() &&
+        pageViewed.pageID !== 0 &&
+        !state.studentViewing.live &&
+        getCurrentPage().disabled === false ? (
           getCurrentPage().open ? (
             <span
               className="mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-red-600 hover:bg-red-500 hover:text-underline p-1 rounded-lg cursor-pointer"
@@ -95,7 +109,7 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (props: Stud
           )
         ) : null}
 
-        {pageViewed.pageID !== 0 && !state.studentViewing.live ? (
+        {!beforeBreakdownDisabled() && pageViewed.pageID !== 0 && !state.studentViewing.live ? (
           getCurrentPage().disabled ? (
             <span
               className="mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-sea-green hover:bg-green-500 hover:text-underline p-1 rounded-lg cursor-pointer"

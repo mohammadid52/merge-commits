@@ -77,11 +77,23 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         ...state,
         unsavedChanges: true,
         pages: state.pages.map((page, pageID: number) => {
-          if (
-            action.payload.stage === page.stage ||
-            (page.type === 'breakdown' && page.stage.includes(action.payload.stage))
-          ) {
-            return { ...page, disabled: !page.disabled };
+          const pageBefore = state.pages[pageID - 1];
+
+          if (page.stage.includes(action.payload.stage)) {
+            if (page.type === 'breakdown' && !pageBefore.disabled) {
+              return { ...page, disabled: true };
+            }
+            if (page.type === 'breakdown' && pageBefore.disabled) {
+              return { ...page, disabled: false };
+            }
+
+            if (page.type !== 'breakdown' && page.stage === action.payload.stage) {
+              return { ...page, disabled: !page.disabled };
+            }
+
+            if (page.type === 'breakdown' && page.stage === action.payload.stage) {
+              return { ...page, disabled: !page.disabled };
+            }
           } else {
             return page;
           }
