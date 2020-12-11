@@ -76,14 +76,14 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
       return {
         ...state,
         unsavedChanges: true,
-        pages: state.pages.map((page) => {
-          if (action.payload.stage !== page.stage) {
-            return page;
+        pages: state.pages.map((page, pageID: number) => {
+          if (
+            action.payload.stage === page.stage ||
+            (page.type === 'breakdown' && page.stage.includes(action.payload.stage))
+          ) {
+            return { ...page, disabled: !page.disabled };
           } else {
-            return {
-              ...page,
-              disabled: !page.disabled,
-            };
+            return page;
           }
         }),
       };
