@@ -69,6 +69,7 @@ const UserLookup = () => {
 	}, [userList.length, userCount, currentPage])
 
 	useEffect(() => {
+		setCurrentPage(0);
 		const totalListPages = Math.floor(totalCount / userCount);
 		if (userCount * totalListPages === totalCount) {
 			setTotalPages(totalListPages);
