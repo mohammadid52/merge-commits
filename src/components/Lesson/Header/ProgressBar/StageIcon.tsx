@@ -43,7 +43,7 @@ const StageIcon = (props: StageIconProps) => {
         setRecentOpened(true);
         setTimeout(() => {
           setRecentOpened(false);
-        }, 1000);
+        }, 2000);
       }
     }
   }, [open]);
@@ -144,7 +144,7 @@ const StageIcon = (props: StageIconProps) => {
           onClick={handleLink}>
           <IconContext.Provider value={{ color: iconColor() }}>
             <div
-              className={`h-6 w-6 origin-center rounded-full bg-black
+              className={`h-8 w-8 origin-center rounded-full bg-black
                             
                         `}>
               <div
@@ -154,7 +154,7 @@ const StageIcon = (props: StageIconProps) => {
                                 ${open || active || iconID <= state.currentPage ? 'bg-blueberry' : ''} 
                                 ${
                                   open && !active ? 'bg-darker-gray' : ''
-                                } h-6 w-6 flex justify-center items-center rounded-full z-30`}>
+                                } h-8 w-8 flex justify-center items-center rounded-full z-30`}>
                 {iconSwitch(type)}
               </div>
             </div>

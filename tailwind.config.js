@@ -168,7 +168,7 @@ module.exports = {
         ping: 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
         fadeIn: 'fadeIn 1s ease-in-out',
         spin: 'spin 1s linear infinite',
-        activation: 'activation 0.8s ease-in-out infinite',
+        activation: 'activation 1s ease-in-out infinite',
       },
       keyframes: {
         bounce: {
