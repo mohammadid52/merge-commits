@@ -156,7 +156,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
           <div
             aria-label={`asd`}
             id={`${id}`}
-            className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-red hover:bg-red-500 text-sm`}
+            className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white cursor-pointer bg-dark-red hover:bg-red-500 text-sm`}
             onClick={handleQuitShare}>
             <span id={`${id}`}>Unshare</span>
           </div>
@@ -164,19 +164,21 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
           <div
             aria-label={`asd`}
             id={`${id}`}
-            className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-sea-green hover:bg-green-400 text-sm`}
+            className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white cursor-pointer bg-sea-green hover:bg-green-400 text-sm`}
             onClick={handleShareStudentData}>
             <span id={`${id}`}>Share</span>
           </div>
         ) : (
           <div
             id={`${id}`}
-            className={`w-2/10 mx-2 flex items-center text-center rounded-lg font-semibold text-sea-green text-sm`}>
+            className={`w-2/10 mx-2 flex items-center text-center rounded-lg font-semibold cursor-pointer text-sea-green text-sm`}>
             <span id={`${id}`}>Shareable</span>
           </div>
         )
       ) : (
-        <div id={`${id}`} className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-light-gray text-sm`}>
+        <div
+          id={`${id}`}
+          className={`w-2/10 mx-2 flex items-center text-center rounded-lg cursor-pointer text-light-gray text-sm`}>
           <span id={`${id}`}>N/A</span>
         </div>
       )}
