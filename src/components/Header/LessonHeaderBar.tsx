@@ -79,7 +79,7 @@ const LessonHeaderBar = () => {
 
       <TopMenu />
 
-      <NotificationBar />
+      {/*<NotificationBar />*/}
 
       {/**
        *
