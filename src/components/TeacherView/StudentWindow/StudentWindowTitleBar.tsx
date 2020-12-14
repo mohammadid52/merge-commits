@@ -77,7 +77,7 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (props: Stud
   };
 
   return (
-    <div className={`w-full h-8 top-0 flex space-between font-medium bg-light-gray bg-opacity-10 z-100`}>
+    <div className={`w-full h-8 top-0 flex space-between font-medium bg-light-gray bg-opacity-10`}>
       <div className="h-8 pl-2 align-middle font-bold text-xs leading-8 ">
         <span className="mr-2">Workspace:</span>
 

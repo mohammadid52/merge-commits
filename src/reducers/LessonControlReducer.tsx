@@ -79,12 +79,28 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         pages: state.pages.map((page, pageID: number) => {
           const pageBefore = state.pages[pageID - 1];
 
+          /*
+           *
+           * Conditions for disabling activities
+           * and disabling associated breakdowns
+           *
+           * */
+
+          if (page.type === 'breakdown' && pageBefore.disabled) {
+            return { ...page, disabled: false };
+          }
+
+          if (
+            page.stage === action.payload.stage &&
+            action.payload.stage.includes('breakdown') &&
+            !pageBefore.disabled
+          ) {
+            return { ...page, disabled: !page.disabled };
+          }
+
           if (page.stage.includes(action.payload.stage)) {
             if (page.type === 'breakdown' && !pageBefore.disabled) {
               return { ...page, disabled: true };
-            }
-            if (page.type === 'breakdown' && pageBefore.disabled) {
-              return { ...page, disabled: false };
             }
 
             if (page.type !== 'breakdown' && page.stage === action.payload.stage) {
