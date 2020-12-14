@@ -1,5 +1,5 @@
 .now {
-    width: 47%;
+  width: 47%;
 }
 
 // .first {
@@ -14,7 +14,7 @@
 //     .block3 {
 //         .flex_column {
 //             display: flex;
-//             flex-direction: column; 
+//             flex-direction: column;
 //             align-items: center;
 //         }
 //     }
@@ -31,105 +31,103 @@
 // }
 
 .quote {
-    border-left: 7px solid #CA2222;
+  border-left: 7px solid #ca2222;
 
-    @media screen and (max-width: 767px) {
-
-        svg {
-            width: 1.5rem;
-            margin-left: 1rem; 
-        }
+  @media screen and (max-width: 767px) {
+    svg {
+      width: 1.5rem;
+      margin-left: 1rem;
     }
-
-
+  }
 }
 
 .col {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-
 .picture {
-    background-position: center;
-    background-repeat: no-repeat; 
-    background-color: black;
-    box-shadow: none;
-    background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: black;
+  box-shadow: none;
+  background-size: contain;
 }
 
 @media screen and (max-width: 767px) {
-    .classroom {
-        height: 90%;
-        padding: 1rem;
+  .classroom {
+    height: 90%;
+    padding: 1rem;
 
-        h1 {
-            height: 3rem;
-            font-size: 1.75rem;
-        }
-
-        .block1 {
-            flex-direction: column;
-            width: 100%;
-            text-align: center;
-            margin-top: .5rem;
-            margin-bottom: .5rem;
-            height: 8rem;
-
-            h2 {
-                font-size: 1.5rem;
-                margin-bottom: 0;
-            }
-          img {
-              height: 7rem;
-              width: 7rem;
-              background-position: center;
-              background-repeat: no-repeat; 
-          }
-        }
-        .block2 {
-            height: 10rem;
-            flex-direction: column;
-            width: 100%;
-            margin: 0;
-            margin-top: 1rem;
-            p {
-                font-size: .85rem;
-                overflow: scroll;
-            }
-
-        }
-        .block3{
-            height: 12%;
-            flex-direction: row-reverse;
-            width: 100%;
-            font-size: 13px;
-            margin-top: 0;
-            .flex_column {
-                display: flex;
-                flex-direction: column-reverse;
-                height: 100%;
-                align-items: center;
-            }
-
-            svg {
-                height: 1rem;
-            }
-
-            button {
-                border-radius: 2rem;
-            }
-        }
+    h1 {
+      height: 3rem;
+      font-size: 1.75rem;
     }
+
+    .block1 {
+      flex-direction: column;
+      width: 100%;
+      text-align: center;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      height: 8rem;
+
+      h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0;
+      }
+
+      img {
+        height: 7rem;
+        width: 7rem;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+    }
+
+    .block2 {
+      height: 10rem;
+      flex-direction: column;
+      width: 100%;
+      margin: 0;
+      margin-top: 1rem;
+
+      p {
+        font-size: 0.85rem;
+        overflow: scroll;
+      }
+    }
+
+    .block3 {
+      height: 12%;
+      flex-direction: row-reverse;
+      width: 100%;
+      font-size: 13px;
+      margin-top: 0;
+
+      .flex_column {
+        display: flex;
+        flex-direction: column-reverse;
+        height: 100%;
+        align-items: center;
+      }
+
+      svg {
+        height: 1rem;
+      }
+
+      button {
+        border-radius: 2rem;
+      }
+    }
+  }
 }
 
 .arrow-up {
-    width: 0;
-    height: 0;
-    
-    border-right: 16px solid transparent;
-    border-left: 16px solid transparent;
-    
-    border-bottom: 20px solid #CBD5E0;
+  width: 0;
+  height: 0;
+  border-right: 16px solid transparent;
+  border-left: 16px solid transparent;
+  border-bottom: 20px solid #cbd5e0;
 }

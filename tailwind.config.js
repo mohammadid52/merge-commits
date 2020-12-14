@@ -551,6 +551,7 @@ module.exports = {
     minHeight: ['responsive', 'hover', 'focus'],
     zIndex: ['responsive', 'hover', 'focus'],
     position: ['responsive', 'hover', 'focus'],
+    display: ['group-hover', 'responsive', 'group-focus']
   },
   plugins: [],
 };
