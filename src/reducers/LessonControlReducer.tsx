@@ -87,6 +87,13 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
               return { ...page, disabled: false };
             }
 
+            /*
+             *
+             * If action.payload.type === breakdown, and page before
+             * is not closed, toggle
+             *
+             * */
+
             if (page.type !== 'breakdown' && page.stage === action.payload.stage) {
               return { ...page, disabled: !page.disabled };
             }
