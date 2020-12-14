@@ -39,7 +39,7 @@ const NotificationBar: React.FC = () => {
     ) {
       setNotifications([
         ...notifications,
-        { message: 'The teacher is sharing on the breakdown, please save your work and go there!', type: 'breakdown' },
+        { message: 'The teacher is requesting you to come to the breakdown!', type: 'breakdown' },
       ]);
     } else if (
       state.displayData.breakdownComponent === null ||
