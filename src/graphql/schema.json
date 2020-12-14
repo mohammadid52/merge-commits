@@ -200,8 +200,8 @@
             "name" : "email",
             "description" : null,
             "type" : {
-              "kind" : "SCALAR",
-              "name" : "String",
+              "kind" : "INPUT_OBJECT",
+              "name" : "ModelStringInput",
               "ofType" : null
             },
             "defaultValue" : null
