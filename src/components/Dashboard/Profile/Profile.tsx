@@ -22,6 +22,7 @@ import { getImageFromS3 } from '../../../utilities/services';
 import BreadCrums from '../../Atoms/BreadCrums';
 import SectionTitle from '../../Atoms/SectionTitle';
 import Buttons from '../../Atoms/Buttons';
+import Loader from '../../Atoms/Loader';
 
 export interface UserInfo {
   authId: string
@@ -77,6 +78,7 @@ const Profile: React.FC = () => {
   const [status, setStatus] = useState('');
   const [select, setSelect] = useState('Profile');
   const [showCropper, setShowCropper] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
   const [upImage, setUpImage] = useState(null);
   const [imageUrl, setImageUrl] = useState('')
   const breadCrumsList = [
@@ -153,6 +155,7 @@ const Profile: React.FC = () => {
   }
 
   const saveCroppedImage = async (image: string) => {
+    setImageLoading(true);
     toggleCropper();
     await uploadImageToS3(image, person.id, 'image/jpeg')
     const imageUrl: any = await getImageFromS3(`profile_image_${person.id}`)
@@ -172,6 +175,7 @@ const Profile: React.FC = () => {
         image: `profile_image_${person.id}`
       }
     })
+    setImageLoading(false);
   }
 
   async function updateImageParam(imageKey: string) {
@@ -285,13 +289,17 @@ const Profile: React.FC = () => {
                   {person.image ?
                     (
                       <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
-                        <img
+                        {!imageLoading ? <img
                           className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border border-gray-400 shadow-elem-light`}
                           src={imageUrl}
-                        />
+                        /> :
+                          <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-lightI">
+                            <Loader />
+                          </div>
+                        }
                         <span className="hidden group-focus:flex justify-around mt-6">
                           <label className="w-8 cursor-pointer">
-                            <IconContext.Provider value={{ size: '1.6rem', color: '#00ff00' }}>
+                            <IconContext.Provider value={{ size: '1.6rem', color: '#667eea' }}>
                               <FaEdit />
                             </IconContext.Provider>
                             <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
@@ -305,9 +313,9 @@ const Profile: React.FC = () => {
                       </button>) :
                     (
                       <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
-                        <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
+                        {!imageLoading ? <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
                           <FaPlus />
-                        </IconContext.Provider>
+                        </IconContext.Provider> : <Loader />}
                         <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
                       </label>
 
@@ -420,7 +428,7 @@ const Profile: React.FC = () => {
                   />
                 </Switch>
                 {showCropper && (
-                  <ProfileCropModal upImg={upImage} saveCroppedImage={(img: string) => saveCroppedImage(img)} />
+                  <ProfileCropModal upImg={upImage} saveCroppedImage={(img: string) => saveCroppedImage(img)} closeAction={toggleCropper} />
                 )}
               </div>
             </div>
