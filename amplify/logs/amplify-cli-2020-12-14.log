@@ -1,0 +1,15 @@
+2020-12-14T13:01:13.561Z|info : amplify pull core  
+2020-12-14T13:01:26.701Z|info : amplify-provider-awscloudformation.zip-util.downloadZip.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip"},null])
+2020-12-14T13:01:26.704Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T13:01:28.926Z|info : amplify-provider-awscloudformation.initialize-env.run.cfn.updateamplifyMetaFileWithStackOutputs([{"StackName":"[***]ify-[***]ready-[***]at-[***]704"}])
+2020-12-14T13:01:29.926Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]ify-[***]json","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T13:13:24.302Z|info : amplify pull core  
+2020-12-14T13:13:30.752Z|info : amplify-provider-awscloudformation.zip-util.downloadZip.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip"},null])
+2020-12-14T13:13:30.755Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T13:13:32.850Z|info : amplify-provider-awscloudformation.initialize-env.run.cfn.updateamplifyMetaFileWithStackOutputs([{"StackName":"[***]ify-[***]ready-[***]at-[***]704"}])
+2020-12-14T13:13:33.829Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]ify-[***]json","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T13:18:05.300Z|info : amplify pull core  
+2020-12-14T13:18:11.722Z|info : amplify-provider-awscloudformation.zip-util.downloadZip.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip"},null])
+2020-12-14T13:18:11.725Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T13:18:13.895Z|info : amplify-provider-awscloudformation.initialize-env.run.cfn.updateamplifyMetaFileWithStackOutputs([{"StackName":"[***]ify-[***]ready-[***]at-[***]704"}])
+2020-12-14T13:18:14.890Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]ify-[***]json","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])

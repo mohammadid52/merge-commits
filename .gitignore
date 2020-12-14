@@ -6,6 +6,7 @@ public
 package-lock.json
 zjunk
 inspiration
+workspace.xml
 
 #amplify
 amplify/\#current-cloud-backend
