@@ -16,6 +16,8 @@ const NotificationBar: React.FC = () => {
    * useEffect FOR SETTING NOTIFICATIONS
    *
    * */
+
+  //TODO: fix the viewing message...
   // useEffect(() => {
   //   const containsViewingMessage =
   //     notifications.filter((notification: Notification) => notification.type.includes('viewing')).length > 0;
