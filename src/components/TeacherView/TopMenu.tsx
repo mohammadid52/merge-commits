@@ -11,6 +11,7 @@ import { WritingAlertProps } from "../General/Popup";
  * IMPORT FUNCTIONS
  */
 import { firstInitialFunc } from "../../utilities/strings";
+import {formatPattern} from '../../utilities/strings';
 
 interface TopMenuControlProps {
   shareable: boolean;
@@ -54,7 +55,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
       {/* LABELS */}
 
       <div
-        className={`relative  h-0.5/10 h-8 top-0 font-medium bg-light-gray bg-opacity-10 border-b border-gray-400 flex flex-row items-center z-100`}
+        className={`relative  h-0.5/10 h-8 top-0 font-medium bg-light-gray bg-opacity-10 border-b border-gray-400 flex flex-row items-center`}
       >
         {/* LEFT */}
         <LessonInfoTitleBar
@@ -86,7 +87,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
           <div className="w-full flex flex-col my-auto">
             <p className="text-xs">Students Online: {state.roster.length}</p>
             <p className="text-xs">Topic: Identity</p>
-            <p className="text-xs">Start Date: {state.expectedStartDate}</p>
+            <p className="text-xs">Start Date: {formatPattern(state.expectedStartDate, '-','aaaa-bb-cc','bb-cc-aaaa')}</p>
             <p className="text-xs">Estimated Time: 1 hr 15 mins</p>
           </div>
         </div>

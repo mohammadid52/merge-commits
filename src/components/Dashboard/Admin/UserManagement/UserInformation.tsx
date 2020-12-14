@@ -33,6 +33,14 @@ const UserInformation = (props: UserInfoProps) => {
         )
         }
 
+
+        let changeToUsFormat = (actualDate: string) => {
+            let date = new Date(actualDate);
+            return (
+                (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear()
+            )
+        }
+
     
     if ( status !== 'done') {
         return (
@@ -40,6 +48,10 @@ const UserInformation = (props: UserInfoProps) => {
         )
         }
     {  
+
+
+
+
     return (
 
             <div className="w-full md:px-2 pt-2">
@@ -101,7 +113,7 @@ const UserInformation = (props: UserInfoProps) => {
                                 Birthday
                                 </dt>
                                 <dd className="mt-2 text-base leading-5 text-gray-900">
-                                {`${ user.birthdate ? user.birthdate : 'not set' }`}
+                                 {`${user.birthdate ? changeToUsFormat(user.birthdate) : 'not set'}`}
                                 </dd>
                             </div>
                             <div className="sm:col-span-1 p-2">

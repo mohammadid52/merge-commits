@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import ReflectionQuestions from './ReflectionQuestions';
+import ReflectionQuestions from '../../ReflectionQuestions';
 import Banner from './Banner';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
@@ -124,7 +124,7 @@ const CoopDisplay = () => {
 
   return (
     <div className={theme.section}>
-      <ReflectionQuestions />
+      <ReflectionQuestions questions={state.data.lesson.coreLesson.breakdown.reflectionQuestions}  />
 
       <Banner title={title} artist={artist} />
 

@@ -1,14 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
+import React, {useContext, useEffect, useState} from 'react';
 // import { useCookies } from 'react-cookie';
-import Banner from './Banner';
 import Toolbar from './Toolbar';
 import LyricsBlock from './LyricsBlock';
-import InstructionBlock from './InstructionBlock';
 import VideoBlock from './VideoBlock';
-import InstructionsPopup from '../../../../Lesson/Popup/InstructionsPopup';
-import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
-import { studentObject } from '../../../../../state/LessonControlState';
+import {LessonControlContext} from '../../../../../contexts/LessonControlContext';
+import InstructionBlock from "./InstructionBlock";
 
 type SelectObject = {
   id?: string | number;
@@ -32,11 +28,21 @@ export interface FinalText {
 interface props {
   fullscreen: boolean;
   fullscreenInstructions: boolean;
+  setInstructions: React.Dispatch<React.SetStateAction<{visible: boolean, available: boolean, content: any}>>
 }
 
 const Body = (props: props) => {
-  const { fullscreen, fullscreenInstructions } = props;
-  const { state, theme, dispatch } = useContext(LessonControlContext);
+  const {fullscreen, fullscreenInstructions, setInstructions} = props;
+  const {state, theme, dispatch} = useContext(LessonControlContext);
+
+
+
+  //  In the future, other components should load instructions from the server or whatever
+  const instructions = <InstructionBlock fullscreen={fullscreen} />;
+
+
+
+
   const [color, setColor] = useState('');
   const [selected, setSelected] = useState<Array<SelectObject>>([]);
   const [fullscreenLyrics, setFullscreenLyrics] = useState(false);
@@ -58,16 +64,45 @@ const Body = (props: props) => {
   };
 
   let displayStudentData = state.studentViewing.live
-    ? state.studentViewing.studentInfo.currentLocation
-      ? state.studentViewing.studentInfo.currentLocation === 'corelesson'
-      : state.studentViewing.studentInfo.lessonProgress === 'corelesson'
-    : false;
+      ? state.studentViewing.studentInfo.currentLocation
+          ? state.studentViewing.studentInfo.currentLocation === 'corelesson'
+          : state.studentViewing.studentInfo.lessonProgress === 'corelesson'
+      : false;
+
+
+  /*
+  *
+  * Function to make presence of instructions known to parent component
+  * should really be put into a custom hook
+  *
+  * */
+  useEffect(() => {
+    const instructionsPresent = instructions !== null && typeof instructions !== 'undefined';
+
+    if(instructionsPresent){
+      setInstructions({
+        visible: false,
+        available: true,
+        content: instructions
+      })
+    }
+
+    return ()=>setInstructions(
+        {
+          visible: false,
+          available: false,
+          content: null
+        }
+    )
+
+  }, [])
+
 
   useEffect(() => {
     if (displayStudentData) {
       if (
-        state.studentViewing.studentInfo.corelessonData &&
-        state.studentViewing.studentInfo.corelessonData.selected
+          state.studentViewing.studentInfo.corelessonData &&
+          state.studentViewing.studentInfo.corelessonData.selected
       ) {
         return setSelected(state.studentViewing.studentInfo.corelessonData.selected);
       }
@@ -113,14 +148,7 @@ const Body = (props: props) => {
 
   return (
     <>
-      <div
-        className={`${
-          fullscreenInstructions
-            ? 'absolute w-5/10 h-5/10 left-1/2 transform -translate-x-1/2 translate-y-1/2 mx-auto my-auto shadow-xl text-lg bg-light-gray p-4 rounded-xl animate-fadeIn z-50'
-            : 'hidden'
-        }`}>
-        <InstructionBlock fullscreen={fullscreen} />
-      </div>
+
 
       <div
         className={`${

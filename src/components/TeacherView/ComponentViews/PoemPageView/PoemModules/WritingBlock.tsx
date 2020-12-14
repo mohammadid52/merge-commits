@@ -270,15 +270,15 @@ const WritingBlock = (props: WritingBlockProps) => {
 
 
 
-            <div className={`w-full h-full rounded-xl z-10`}>
-                <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
-                    Line Prompts{' '}
-                    <ToolTip
+            <div className={`w-full h-full rounded-xl z-10 text-left p-3`}>
+                <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green text-left`}>
+                    Line Prompts
+                    {/* <ToolTip
                         width='w-40'
                         position='bottom'
-                        header='Instructions'
+                        header=''
                         content='Make sure you are finished with the line prompts before you click "Save and Edit"'
-                    />
+                    /> */}
                 </h3>
 
 

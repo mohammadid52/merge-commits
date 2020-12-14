@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import ReflectionQuestions from './ReflectionQuestions';
+import ReflectionQuestions from '../../ReflectionQuestions';
 import Modules from './Modules';
 import Banner from './Banner';
 import ListOutput from './ListOutput';
@@ -59,7 +59,7 @@ const CoopDisplay = () => {
     return (
         <div className={theme.section}>
 
-            <ReflectionQuestions />
+            <ReflectionQuestions questions={state.data.lesson.warmUp.breakdown.reflectionQuestions}  />
 
             {/* teacher display */}
             <div className={`relative ${fullscreen ? 'w-full' : ''} h-full flex flex-col justify-between items-center rounded-lg border p-2 my-4 bg-white bg-opacity-20`}>
