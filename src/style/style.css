@@ -1,122 +1,170 @@
+@import "./components.css";
+
 @tailwind base;
-
 @tailwind components;
-
 @tailwind utilities;
 
 * {
-    width: 100%;
-    /* height: 100%; */
-    
+  width: 100%;
+
+  /* height: 100%; */
 }
 
 .reg {
-    height: 80vh;
+  height: 80vh;
 }
 
 .main {
-    height: 100vh; 
+  height: 100vh;
 }
 
 .instruction {
-    padding: 2rem;
-}
-.icon {
-    width: 16rem;
+  padding: 2rem;
 }
 
+.icon {
+  width: 16rem;
+}
+
+/* This contains custom class names for the reusable components. */
+
+/* Text colors */
+
+.text-default {
+  @apply text-black80;
+}
+
+.text-secondary {
+  @apply text-gray-500;
+}
+
+.text-active {
+  @apply text-indigo-500;
+}
+
+.pagetitle-container {
+  @apply my-4 p-4;
+}
+
+.page-heading {
+  @apply text-lg border-l-6 border-indigo-700 pl-4;
+}
+
+.purpule-button {
+  @apply font-medium rounded-md text-white bg-indigo-600 transition duration-150 ease-in-out w-auto p-4;
+}
+
+.purpule-button:focus {
+  @apply outline-none border-indigo-700 shadow-outline;
+}
+
+.purpule-button:hover {
+  @apply border-indigo-500;
+}
+
+.purpule-button:active {
+  @apply border-indigo-700;
+}
+
+/* ----- */
 
 @media screen and (max-width: 767px) {
-    .main {
-        height: auto;
-    }
-    
-    .reflection {
-        height: 6rem;
-        width: 100%;
-        font-size: 14px;
-        
-    }
-    .question {
-        font-size: 12px;
-        padding-left: .5rem;
-        padding-right: .5rem;
-        overflow: scroll;
-    }
+  .main {
+    height: auto;
+  }
 
-    .instruction {
-        padding: 1rem;
-    }
+  .reflection {
+    height: 6rem;
+    width: 100%;
+    font-size: 14px;
+  }
 
-    .icon-font {
-        font-size: .5rem;
-    }
-    .header-font {
-        font-size: 1.5rem;
-    }
-    .sidebar {
-        position: absolute;
-        bottom: 0;
-        height: 10%;
-        width: 100vw;
-        display: flex;
-        font-size: 12px;
-        align-items: center;
-    }
-    .sidebar a {
-        width: 10rem;
-    }
-    .link {
-        display: flex;
-        margin-bottom: 0rem;
-        font-size: 12px;
-        padding-left: 1rem;
-    }
+  .question {
+    font-size: 12px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    overflow: scroll;
+  }
 
-    #Registration{
-        font-size: 12px;
-    }
+  .instruction {
+    padding: 1rem;
+  }
 
-    #Classroom {
-        font-size: 12px;
-    }
-    .center {
-        display: flex;
-        justify-content: center;
-    }
+  .icon-font {
+    font-size: 0.5rem;
+  }
 
-    .picture {
-        background-size: 22rem;
-    }
+  .header-font {
+    font-size: 1.5rem;
+  }
 
-    .column-center {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+  .sidebar {
+    position: absolute;
+    bottom: 0;
+    height: 10%;
+    width: 100vw;
+    display: flex;
+    font-size: 12px;
+    align-items: center;
+  }
+
+  .sidebar a {
+    width: 10rem;
+  }
+
+  .link {
+    display: flex;
+    margin-bottom: 0;
+    font-size: 12px;
+    padding-left: 1rem;
+  }
+
+  #Registration {
+    font-size: 12px;
+  }
+
+  #Classroom {
+    font-size: 12px;
+  }
+
+  .center {
+    display: flex;
+    justify-content: center;
+  }
+
+  .picture {
+    background-size: 22rem;
+  }
+
+  .column-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
-@media screen and (min-width:768px) and (max-width: 1023px)  {
-    .banner {
-        margin-top: .5rem;
-        margin-bottom: 1rem;
-        width: 100%;
-        height: 4rem;
-    }
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .banner {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    height: 4rem;
+  }
 
-    .red {
-        color: red;
-        height: 4rem;
-        width: 4rem;
-    }
-    svg{
-        height: 2rem;
-        width: 2rem;
-    }
+  .red {
+    color: red;
+    height: 4rem;
+    width: 4rem;
+  }
 
-    .title {
-        font-size: 2rem;
-        padding: .5rem;
-        height: 4rem;
-    }
+  svg {
+    height: 2rem;
+    width: 2rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    padding: 0.5rem;
+    height: 4rem;
+  }
 }

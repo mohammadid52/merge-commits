@@ -1,32 +1,20 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ReactCrop from 'react-image-crop';
+import Modal from '../../Atoms/Modal';
 
 
 interface ProfileCropModalProps {
-  upImg?: any;
-  saveCroppedImage?:any
+  upImg?: string;
+  saveCroppedImage: (img: any) => void
+  closeAction: () => void
 }
-
-interface Crop {
-  unit: string
-  width: number
-  aspect: number
-}
-
-// TODO:
-// Specify field type insted of any
 
 const ProfileCropModal: React.FC<ProfileCropModalProps> = (props: ProfileCropModalProps) => {
-  const { upImg, saveCroppedImage } = props
+  const { upImg, saveCroppedImage, closeAction } = props
   const [crop, setCrop] = useState<any>({ unit: '%', width: 30, aspect: 1 });
   const [completedCrop, setCompletedCrop] = useState(null);
   const imgRef = useRef(null);
 
-  
-  useEffect(() => {
-    document.getElementById('abcd').scrollIntoView();
-  }, []);
-  
   const onLoad = useCallback((img) => {
     imgRef.current = img;
   }, []);
@@ -59,7 +47,7 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (props: ProfileCropMod
     );
 
     return new Promise((resolve, reject) => {
-      canvas.toBlob((file:any) => {
+      canvas.toBlob((file: any) => {
         file.name = 'fileName';
         resolve(file);
       }, 'image/jpeg');
@@ -68,8 +56,8 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (props: ProfileCropMod
 
 
   return (
-    <div>
-      <div className="mx-auto my-5 max-h-120 max-w-120 overflow-hidden" id="abcd">
+    <Modal showHeader={true} title="Crop Avatar" showFooter={false} saveAction={saveCroped} closeAction={closeAction}>
+      <div className="mx-auto my-5 max-w-112 w-112 max-h-100 overflow-hidden">
         <ReactCrop
           src={upImg}
           onImageLoaded={onLoad}
@@ -83,7 +71,7 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (props: ProfileCropMod
           Save
         </button>
       </div>
-    </div>
+    </Modal>
   )
 
 }

@@ -1,30 +1,28 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
-// import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { RiLock2Fill } from "react-icons/ri";
+import { FaPlus, FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { IoArrowUndoCircleOutline } from 'react-icons/io5';
+import { Switch, useHistory, Route, useRouteMatch, Link, NavLink } from 'react-router-dom';
+
 import * as queries from '../../../graphql/queries';
 import { GlobalContext } from '../../../contexts/GlobalContext';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { RiLockPasswordFill } from "react-icons/ri";
-import { FaPlus, FaEdit, FaTrashAlt, FaImage } from 'react-icons/fa';
-import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import ProfileInfo from './ProfileInfo';
 import AboutMe from './AboutMe';
 import ChangePassword from './ChangePassword';
 import ProfileVault from './ProfileVault';
 import ProfileEdit from './ProfileEdit';
-import {
-  Switch,
-  Route,
-  useRouteMatch,
-  Link,
-  NavLink
-} from 'react-router-dom';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import * as customMutations from '../../../customGraphql/customMutations';
 import ToolTip from '../../General/ToolTip/ToolTip'
 import ProfileCropModal from './ProfileCropModal';
 import { getImageFromS3 } from '../../../utilities/services';
+import BreadCrums from '../../Atoms/BreadCrums';
+import SectionTitle from '../../Atoms/SectionTitle';
+import Buttons from '../../Atoms/Buttons';
+import Loader from '../../Atoms/Loader';
 
 export interface UserInfo {
   authId: string
@@ -73,12 +71,20 @@ const Profile: React.FC = () => {
   );
 
   const match = useRouteMatch();
+  const history = useHistory();
+  const pathName = location.pathname.replace(/\/$/, "");
+  const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const { state, theme, dispatch } = useContext(GlobalContext);
   const [status, setStatus] = useState('');
   const [select, setSelect] = useState('Profile');
   const [showCropper, setShowCropper] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
   const [upImage, setUpImage] = useState(null);
   const [imageUrl, setImageUrl] = useState('')
+  const breadCrumsList = [
+    { title: 'Home', url: '/dashboard', last: false },
+    { title: 'Profile', url: '/dashboard/profile', last: true },
+  ]
 
   const initials = (firstName: string, lastName: string) => {
     let firstInitial = firstName.charAt(0).toUpperCase()
@@ -149,6 +155,7 @@ const Profile: React.FC = () => {
   }
 
   const saveCroppedImage = async (image: string) => {
+    setImageLoading(true);
     toggleCropper();
     await uploadImageToS3(image, person.id, 'image/jpeg')
     const imageUrl: any = await getImageFromS3(`profile_image_${person.id}`)
@@ -168,6 +175,7 @@ const Profile: React.FC = () => {
         image: `profile_image_${person.id}`
       }
     })
+    setImageLoading(false);
   }
 
   async function updateImageParam(imageKey: string) {
@@ -257,89 +265,84 @@ const Profile: React.FC = () => {
   }, [person.image])
 
   if (status !== 'done') {
-    return (
-      <LessonLoading />
-    )
+    return (<LessonLoading />)
   }
   {
     return (
-      
       <div className="w-full h-9.28/10 md:h-full flex items-center justify-center">
-        <div className={`w-9/10 h-full main_container`}>
-          <div className={`w-full h-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
-
+        <div className={`w-9/10 h-full main_container mt-4`}>
+          <BreadCrums items={breadCrumsList} />
+          <div className="flex justify-between">
+            <SectionTitle title="USER PROFILE" subtitle="This contains your profile information." />
+            <div className="flex justify-end py-4 mb-4 w-5/10">
+              <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+              {currentPath !== 'edit' ? (
+                <Buttons btnClass="mr-4" onClick={() => history.push(`${match.url}/edit`)} Icon={FaEdit} />
+              ) : null
+              }
+            </div>
+          </div>
+          <div className={`w-full white_back p-8 mb-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
             <div className="h-9/10 flex flex-col md:flex-row">
-
               <div className="w-auto p-4 flex flex-col text-center items-center">
-                {person.image ?
-                  (
-                    <Fragment>
-                      <img
-                        className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border border-gray-400 shadow-elem-light`}
-                        src={imageUrl}
-                      />
-                      <span className="flex justify-center mt-4">
-                        <label className="w-8 cursor-pointer">
-                          <IconContext.Provider value={{ size: '1.5rem', color: '#5a67d8' }}>
-                            <FaEdit />
-
-                            
-                          </IconContext.Provider>
-                          <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
-                        </label>
-                        <span className="w-8 cursor-pointer" onClick={deletUserProfile}>
-                          <IconContext.Provider value={{ size: '1.5rem', color: '#5a67d8' }}>
-                            <FaTrashAlt />
-
-                          </IconContext.Provider>
+                <div className='relative' >
+                  {person.image ?
+                    (
+                      <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
+                        {!imageLoading ? <img
+                          className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border border-gray-400 shadow-elem-light`}
+                          src={imageUrl}
+                        /> :
+                          <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-lightI">
+                            <Loader />
+                          </div>
+                        }
+                        <span className="hidden group-focus:flex justify-around mt-6">
+                          <label className="w-8 cursor-pointer">
+                            <IconContext.Provider value={{ size: '1.6rem', color: '#667eea' }}>
+                              <FaEdit />
+                            </IconContext.Provider>
+                            <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
+                          </label>
+                          <span className="w-8 cursor-pointer" onClick={deletUserProfile}>
+                            <IconContext.Provider value={{ size: '1.6rem', color: '#fa0000' }}>
+                              <FaTrashAlt />
+                            </IconContext.Provider>
+                          </span>
                         </span>
- 
-                      </span>
-
-                    </Fragment>
-                  ) :
-                  (
-                    <Fragment>
-                      <label className={`w-15 h-15 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
-                        <IconContext.Provider value={{ size: '3rem', color: '#a0aec0' }}>
-                          <FaImage />
-                        </IconContext.Provider>
+                      </button>) :
+                    (
+                      <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+                        {!imageLoading ? <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
+                          <FaPlus />
+                        </IconContext.Provider> : <Loader />}
                         <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
                       </label>
 
-                    </Fragment>
-                  )
-                }
-                <div className={`text-lg md:text-4xl font-bold font-open text-gray-900 mt-4`}>
+                    )
+                  }
+                  <span className="absolute top-7 left-8 w-8 h-8">
+                    <NavLink to={`${match.url}/password`}>
+                      <IconContext.Provider value={{ size: '2rem', color: '#000000' }}>
+                        <RiLock2Fill />
+                      </IconContext.Provider>
+                    </NavLink>
+                  </span>
+                </div>
+
+                <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
                   {`${person.preferredName ? person.preferredName : person.firstName} ${person.lastName}`}
                   <p className="text-md md:text-lg">{person.institution}</p>
                 </div>
-                <span className="flex w-full rounded-md shadow-sm mt-3 relative top-2">
-                  <NavLink to={`${match.url}/password`}>
-                    <button type="submit" className="inline-flex justify-center pb-2 pt-3 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
-                      Change Password
-                      <span className="w-8 pl-3 h-4 flex items-center">
-                        <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
-                          <RiLockPasswordFill />
-                        </IconContext.Provider>
-                      </span>
-                      <ToolTip
-                        position='bottom'
-                        header=''
-                        display='none'
-                        content='Change Password'
-                        id={'change-password'}
-                        cursor
-                        width='w-24 px-1 flex justify-center items-center'
-                        fontSize='text-xs'
-                      />
-                    </button>
-                  </NavLink>
-                </span>
               </div>
 
               <div className="relative w-full">
-                <div className="w-9/10 md:w-6/10 h-8 pl-6 flex justify-between">
+
+                {/* TODO : Need to convert this into tabs instead of buttons. 
+                    Currently we have only single tab so hiding this.
+                */}
+
+                {/* <div className="w-9/10 md:w-6/10 h-8 pl-6 flex justify-between">
                   <div onClick={() => setSelect('Profile')} className={` ${select === 'Profile' ? `${theme.toolbar.bg} text-gray-200 shadow-2 ` : 'bg-gray-200 text-gray-400 shadow-5 hover:shadow-2 hover:text-gray-600 '} w-1/3 uppercase p-2 md:p-0 flex justify-center items-center bg-gray-200 text-gray-400 rounded-lg text-center text-xs md:text-md hover:shadow-2 hover:text-gray-600 cursor-pointer`}>
                     <NavLink to={`${match.url}`}>
                       My Profile
@@ -358,13 +361,13 @@ const Profile: React.FC = () => {
                     </NavLink>
                   </div>
 
-                </div>
+                </div> */}
 
-                <div className="absolute w-auto" style={{ right: '0', top: '0' }}>
+                {/* <div className="absolute w-auto" style={{ right: '0', top: '0' }}>
                   <NavLink to={`/dashboard`}>
-                    <button type="submit" className="inline-flex justify-center py-4 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
+                    <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
                       Go Back
-                                            <span className="w-8 h-4 flex items-center">
+                      <span className="w-8 pl-3 h-4 flex items-center">
                         <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
                           <IoArrowUndoCircleOutline />
                         </IconContext.Provider>
@@ -381,7 +384,7 @@ const Profile: React.FC = () => {
                       />
                     </button>
                   </NavLink>
-                </div>
+                </div> */}
 
                 <Switch>
                   <Route
@@ -425,7 +428,7 @@ const Profile: React.FC = () => {
                   />
                 </Switch>
                 {showCropper && (
-                  <ProfileCropModal upImg={upImage} saveCroppedImage={(img: string) => saveCroppedImage(img)} />
+                  <ProfileCropModal upImg={upImage} saveCroppedImage={(img: string) => saveCroppedImage(img)} closeAction={toggleCropper} />
                 )}
               </div>
             </div>

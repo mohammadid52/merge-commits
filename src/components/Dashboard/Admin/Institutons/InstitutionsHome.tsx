@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import InstitutionLookup from './InstitutionLookup';
 import Institution from './Institution';
+import InstitutionAdd from './InstitutionAdd';
 
 const InstitutionsHome = () => {
   const match = useRouteMatch();
@@ -13,6 +14,10 @@ const InstitutionsHome = () => {
           exact
           path={`${match.url}`}
           render={() => <InstitutionLookup />}
+        />
+        <Route
+          path={`${match.url}/add`}
+          render={() => <InstitutionAdd />}
         />
         <Route
           path={`${match.url}/institution`}

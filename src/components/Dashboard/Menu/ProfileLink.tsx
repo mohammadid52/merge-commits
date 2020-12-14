@@ -53,6 +53,15 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
   }, [state.user])
 
+  // useEffect(() => {
+  //   async function getUrl() {
+  //     const imageUrl: any = await getImageFromS3(state.user.image)
+  //     setImageUrl(imageUrl);
+  //   }
+  //   getUrl();
+
+  // }, [linkProps.image])
+
   return (
     <NavLink id='profile' to={`${match.url}/profile`} onClick={handleLink}>
       <div className='size flex flex-col text-center justify-center items-center py-4 border-b border-t border-white20'>
