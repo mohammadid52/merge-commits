@@ -91,7 +91,6 @@ const UserLookup = () => {
 					<SectionTitle title="USER MANAGEMENT" subtitle="People's List" />
 					<div className="flex justify-end py-4 mb-4 w-5/10">
 						<Buttons label="Add New Person" onClick={handleLink} btnClass="mr-4" Icon={AiOutlineUsergroupAdd} />
-						<PageCountSelector pageSize={userCount} setPageSize={(c: number) => setUserCount(c)} />
 					</div>
 				</div>
 				<div className="flex flex-col">
@@ -131,11 +130,11 @@ const UserLookup = () => {
 							</div>
 							<div className="flex justify-center my-8">
 								<Pagination currentPage={currentPage} totalPages={totalPages} setPage={(c: number) => setCurrentPage(c)} />
+								<PageCountSelector pageSize={userCount} setPageSize={(c: number) => setUserCount(c)} />
 							</div>
 						</div>
 					</div>
 				</div>
-
 			</div>
 		)
 	}
