@@ -16,6 +16,8 @@ export interface LinkProps {
   children?: React.ReactNode;
   setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
   currentPage: string;
+  image?: string;
+  role?: string
 };
 
 const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
@@ -105,6 +107,10 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     userLinks(state.user.role);
   }, [state.user.role]);
 
+  // useEffect(() => {
+  //   userLinks(state.user?.role);
+  // }, []);
+
   const handleLink = (e: any) => {
     const id = e.target.id.toLowerCase();
     const lastCharacter = match.url.charAt(match.url.length - 1);
@@ -179,7 +185,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
           <>
-
             <div
               id={link.path}
               key={key}

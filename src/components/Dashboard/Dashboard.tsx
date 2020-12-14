@@ -33,6 +33,10 @@ type userObject = {
 const Dashboard: React.FC = () => {
   const match = useRouteMatch();
   const [cookies, setCookie] = useCookies(['auth']);
+  const [userData, setUserData] = useState({
+    role: '',
+    image: ''
+  })
   const { state, dispatch } = useContext(GlobalContext);
   const [currentPage, setCurrentPage] = useState<string>('');
 
@@ -65,10 +69,6 @@ const Dashboard: React.FC = () => {
     }
   }
 
-  if (state.user.role === 'FLW') {
-
-  }
-
   useEffect(() => {
     if (!state.user.firstName) {
       getUser()
@@ -78,8 +78,8 @@ const Dashboard: React.FC = () => {
   return (
     <div className={`w-screen md:w-full h-screen md:h-full flex`}>
       <SideMenu setCurrentPage={setCurrentPage} currentPage={currentPage}>
-        <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage} />
-        <Links setCurrentPage={setCurrentPage} currentPage={currentPage} />
+        <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage} image={userData.image} />
+        <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
       </SideMenu>
       <PageHeaderBar setCurrentPage={setCurrentPage} currentPage={currentPage} />
       <div className={`height h-full overflow-x-hidden overflow-y-scroll flex flex-col`}>
