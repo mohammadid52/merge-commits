@@ -29,6 +29,10 @@
     "demoselreadysstorage3c20bd4c6": {
       "service": "S3",
       "providerPlugin": "awscloudformation"
+    },
+    "demoselreadystorage": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
     }
   }
 }
