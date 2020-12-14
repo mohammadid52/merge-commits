@@ -92,8 +92,6 @@ type Person @model
   firstName: String!
   preferredName: String
   lastName: String!
-  institutionID: ID!
-  institution: Institution @connection(fields: ["institutionID"])
   externalId: String
   grade: String
   #courses

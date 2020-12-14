@@ -299,7 +299,7 @@ const Profile: React.FC = () => {
                         }
                         <span className="hidden group-focus:flex justify-around mt-6">
                           <label className="w-8 cursor-pointer">
-                            <IconContext.Provider value={{ size: '1.6rem', color: '#667eea' }}>
+                            <IconContext.Provider value={{ size: '1.6rem', color: '#B22222' }}>
                               <FaEdit />
                             </IconContext.Provider>
                             <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
@@ -323,7 +323,7 @@ const Profile: React.FC = () => {
                   }
                   <span className="absolute top-7 left-8 w-8 h-8">
                     <NavLink to={`${match.url}/password`}>
-                      <IconContext.Provider value={{ size: '2rem', color: '#000000' }}>
+                      <IconContext.Provider value={{ size: '2rem', color: '#B22222' }}>
                         <RiLock2Fill />
                       </IconContext.Provider>
                     </NavLink>
