@@ -396,46 +396,56 @@ const LessonControl = () => {
               setInstructions={setInstructions}
             />
 
-            {instructions.visible && instructions.available ? (
-              <div
-                className={`
-                                  ${fullscreen ? 'h-full' : 'h-full'}
-                                  ${theme.bg} 
-                                  relative w-full
-                                  border-t-2 border-black
-                                  overflow-y-scroll overflow-x-hidden`}>
-                <div
-                  className={`absolute w-full h-full shadow-xl text-lg flex justify-center items-center animate-fadeIn z-50`}>
-                  <div className={` w-5/10 h-5/10  mx-auto my-auto bg-light-gray p-4 rounded-xl`}>
-                    {instructions.content}
-                  </div>
-                </div>
-              </div>
-            ) : null}
-
             <div
               className={`
-                                  ${fullscreen ? 'h-full' : 'h-full'}
-                                  ${instructions.visible ? 'hidden' : 'visible'}
-                                  ${theme.bg} 
-                                  relative w-full p-4 
-                                  border-t-2 border-black
-                                  overflow-y-scroll overflow-x-hidden`}>
-              <Suspense
-                fallback={
-                  <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                    <ComponentLoading />
+                          ${fullscreen ? 'h-full' : 'h-full'}
+                          ${theme.bg} 
+                          relative w-full  
+                          border-t-2 border-black
+                          overflow-y-scroll overflow-x-hidden`}>
+              {/**
+               *
+               * INSTRUCTIONS
+               *
+               * */}
+              {instructions.visible && instructions.available ? (
+                <div
+                  className={`
+                            ${fullscreen ? 'h-full' : 'h-full'}
+                            absolute w-full
+                            border-t-2 border-black
+                            overflow-hidden bg-black bg-opacity-40 z-100`}>
+                  <div
+                    className={`absolute w-full h-full shadow-xl text-lg flex justify-center items-center animate-fadeIn`}>
+                    <div className={` w-5/10 h-5/10  mx-auto my-auto bg-light-gray p-4 rounded-xl`}>
+                      {instructions.content}
+                    </div>
                   </div>
-                }>
-                {/**
-                 *
-                 *
-                 * THIS LOADS THE LESSON COMPONENT
-                 *
-                 *
-                 */}
-                <Body fullscreenInstructions={fullscreenInstructions} setInstructions={setInstructions} />
-              </Suspense>
+                </div>
+              ) : null}
+
+              {/**
+               *
+               * COMPONENT
+               *
+               * */}
+              <div className={`h-full p-4`}>
+                <Suspense
+                  fallback={
+                    <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                      <ComponentLoading />
+                    </div>
+                  }>
+                  {/**
+                   *
+                   *
+                   * THIS LOADS THE LESSON COMPONENT
+                   *
+                   *
+                   */}
+                  <Body fullscreenInstructions={fullscreenInstructions} setInstructions={setInstructions} />
+                </Suspense>
+              </div>
             </div>
           </div>
         </div>

@@ -11,6 +11,11 @@ const NotificationBar: React.FC = () => {
   const { state, theme } = useContext(LessonContext);
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
+  /*
+   *
+   * useEffect FOR SETTING NOTIFICATIONS
+   *
+   * */
   useEffect(() => {
     //  FOR VIEWING NOTIFICATION
     if (state.viewing) {
@@ -19,9 +24,7 @@ const NotificationBar: React.FC = () => {
     if (!state.viewing) {
       setNotifications(notifications.filter((notification: Notification) => notification.type !== 'viewing'));
     }
-  }, [state.viewing]);
 
-  useEffect(() => {
     //  FOR BREAKDOWN SHARING NOTIFICATION
     if (state.displayData.breakdownComponent !== null && state.displayData.breakdownComponent !== '') {
       setNotifications([
@@ -31,7 +34,7 @@ const NotificationBar: React.FC = () => {
     } else if (state.displayData.breakdownComponent === null || state.displayData.breakdownComponent === '') {
       setNotifications(notifications.filter((notification: Notification) => notification.type !== 'breakdown'));
     }
-  }, [state.displayData.breakdownComponent]);
+  }, [state.viewing, state.displayData.breakdownComponent]);
 
   return (
     <div className={`w-full mt-8`}>
