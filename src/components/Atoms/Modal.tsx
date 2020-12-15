@@ -3,16 +3,17 @@ import React, { useState } from 'react'
 interface ModalProps {
   showHeader: boolean
   title?: string
+  showHeaderBorder?: boolean
   showFooter: boolean
   children: React.ReactNode
   saveAction?: () => void
   closeAction?: () => void
 }
 
-const ModalHeader = (headerProps: { title?: string, onClick?: () => void }) => {
-  const { title, onClick } = headerProps;
+const ModalHeader = (headerProps: { title?: string, onClick?: () => void, showBorder?: boolean }) => {
+  const { title, onClick, showBorder } = headerProps;
   return (
-    <div className="modal-header">
+    <div className={`modal-header ${showBorder ? 'border-b' : ''}`}>
       <h3 className="text-xl font-semibold">{title && title}</h3>
       <button
         className="modal-close w-auto btn"
@@ -64,7 +65,7 @@ const ModalFooter = (footerProps: { onSave?: () => void, onClose?: () => void })
 }
 
 const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
-  const { showHeader, title, showFooter, children, closeAction, saveAction } = modalProps
+  const { showHeader, title, showHeaderBorder, showFooter, children, closeAction, saveAction } = modalProps
 
   return (
     <>
@@ -72,7 +73,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
       <div className="modal show justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-4 mx-auto max-w-lg">
           <div className="modal-content">
-            {showHeader && <ModalHeader title={title} onClick={closeAction} />}
+            {showHeader && <ModalHeader title={title} onClick={closeAction} showBorder={showHeaderBorder} />}
             <ModalBody>{children}</ModalBody>
             {showFooter && <ModalFooter onSave={saveAction} onClose={closeAction} />}
           </div>

@@ -4,7 +4,7 @@ interface CountProps {
   pageSize: number;
   setPageSize: (c: number) => void;
 }
-const pageCountSelector: React.FC<CountProps> = (countProps: CountProps) => {
+const PageCountSelector: React.FC<CountProps> = (countProps: CountProps) => {
   const { pageSize, setPageSize } = countProps;
   return (
     <select
@@ -22,4 +22,4 @@ const pageCountSelector: React.FC<CountProps> = (countProps: CountProps) => {
   )
 }
 
-export default pageCountSelector
+export default PageCountSelector;

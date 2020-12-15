@@ -302,7 +302,7 @@ const Profile: React.FC = () => {
                             <IconContext.Provider value={{ size: '1.6rem', color: '#667eea' }}>
                               <FaEdit />
                             </IconContext.Provider>
-                            <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
+                            <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
                           </label>
                           <span className="w-8 cursor-pointer" onClick={deletUserProfile}>
                             <IconContext.Provider value={{ size: '1.6rem', color: '#fa0000' }}>
@@ -316,7 +316,7 @@ const Profile: React.FC = () => {
                         {!imageLoading ? <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
                           <FaPlus />
                         </IconContext.Provider> : <Loader />}
-                        <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
+                        <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
                       </label>
 
                     )
