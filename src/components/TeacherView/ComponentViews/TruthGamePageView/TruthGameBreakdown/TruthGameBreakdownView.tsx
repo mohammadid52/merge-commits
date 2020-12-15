@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 import ReflectionQuestions from './ReflectionQuestions';
+import TruthGameOutput from './TruthGameOutput';
 import Modules from './Modules';
 import Banner from './Banner';
-import TruthGameOutput from './TruthGameOutput';
 
 interface props {
   fullscreen: boolean;
