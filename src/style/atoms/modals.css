@@ -27,7 +27,7 @@
 }
 
 .modal .modal-header {
-  @apply flex items-center justify-between p-4 border-b border-solid rounded-t bg-white text-gray-900 border-gray-200;
+  @apply flex items-center justify-between p-4 border-solid rounded-t bg-white text-gray-900 border-gray-200;
 }
 
 .modal .modal-header .modal-close {

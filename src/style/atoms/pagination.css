@@ -19,19 +19,3 @@
 .page-arrow:active {
   @apply outline-none;
 }
-
-/* Form selector */
-
-.form-select {
-  @apply bg-white border-gray-200 text-gray-900 w-auto py-3 px-4 border-2 rounded;
-}
-
-.form-select::placeholder {
-  color: #1a202c;
-}
-
-.form-select:hover,
-.form-select:active,
-.form-select:focus {
-  @apply outline-none;
-}
