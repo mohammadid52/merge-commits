@@ -202,10 +202,18 @@ type AdditionalInputs {
   input: String
 }
 
+type TruthGameInputs {
+  id: String
+  label: String
+  isLie: Boolean
+  text: String
+}
+
 type WarmUpData {
   story: String
   title: String
   additional: [AdditionalInputs]
+  truthGame: [TruthGameInputs]
 }
 
 type SelectedWord {
