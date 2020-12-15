@@ -88,6 +88,7 @@ type Person @model
   status: PersonStatus!
   email: String!
   role: Role!
+  type: String
   firstName: String!
   preferredName: String
   lastName: String!
@@ -103,11 +104,13 @@ type Person @model
   birthdate: AWSDate
   image: String
   language: Language!
+  filters: [String]
 }
 
 type Curriculum @model @key(fields: ["id"]) {
   id: ID!
   name: String!
+  type: String
   description: String
   objectives: [String]
   # contributors: [Person]
@@ -121,6 +124,7 @@ type Unit @model @key(fields: ["id"])
 {
   id: ID!
   name: String!
+  type: String
   description: String
   objectives: [String]
   curriculumID: ID!
@@ -173,6 +177,7 @@ type Course @model {
 
 type Class @model {
   id: ID!
+  type: String
   name: String!
   students: [ClassStudent]! @connection(keyName: "byClass", fields: ["id"])
 }
@@ -287,6 +292,7 @@ type Quote {
 }
 
 type Link {
+  id: String
   type: String
   text: String
   link: String
@@ -413,7 +419,7 @@ type Lesson @model @key(fields: ["id"]) {
   activity: Activity @connection(fields: ["activityId"])
   assessmentID: ID!
   assessment: Assessment @connection(fields: ["assessmentID"])
-  testFilter: [String]
+  filters: [String]
 }
 
 type LessonCheckpoint @model(queries: null)
@@ -639,14 +645,72 @@ type StudentWord @model(queries: null)
   student: Person @connection(fields: ["studentID", "studentAuthID"])
 }
 
-type FilterOptions {
-  id: ID!
-  text: String!
-}
-
 type Filter @model {
   id: ID!
   name: String!
   description: String
-  options: [FilterOptions!]!
+  editable: Boolean
+  options: [FilterOption!]! @connection(keyName: "byFilter", fields: ["id"])
+}
+
+type FilterOption @model 
+@key(fields: ["id"])
+@key(name: "byFilter", fields: ["filterID"])
+{
+  id: ID!
+  filterID: ID!
+  text: String!
+  filter: Filter @connection(fields: ["filterID"])
+}
+
+type Client @model
+{
+  id: ID!
+  name: String!
+  architecture: [Architecture] @connection(name: "architectureByClient", fields: ["id"])
+}
+
+type Architecture @model
+@key(name: "architecturesByClient", fields: ["clientID", "id"])
+@key(name: "architectureByClient", fields: ["clientID"])
+{
+  id: ID!
+  name: String!
+  clientID: ID!
+  client: Client @connection(fields: ["clientID"])
+  types: [Type] @connection(keyName: "typeByArchitecture", fields: ["id"]) 
+  filters: [ArchitectureFilter] @connection(keyName: "filtersByArchitecture", fields: ["id"])
+}
+
+type Type @model
+@key(name: "typesByArchitecture", fields: ["architectureID", "id"])
+@key(name: "typeByArchitecture", fields: ["architectureID"])
+{
+  id: ID!
+  name: String!
+  architectureID: ID!
+  architecture: Architecture @connection(fields: ["architectureID"])
+  filters: [FilterType] @connection(keyName: "filtersByType", fields: ["id"])
+}
+
+type FilterType @model(queries: null)
+@key(name: "filtersByType", fields: ["typeID", "filterID"])
+{
+  id: ID!
+  typeID: ID!
+  filterID: ID!
+  multiselect: Boolean
+  type: Type @connection(fields: ["typeID"])
+  filter: Filter @connection(fields: ["filterID"])
+}
+
+type ArchitectureFilter @model(queries: null)
+@key(name: "filtersByArchitecture", fields: ["architectureID", "filterID"])
+{
+  id: ID!
+  architectureID: ID!
+  filterID: ID!
+  multiselect: Boolean
+  architecture: Architecture @connection(fields: ["architectureID"])
+  filter: Filter @connection(fields: ["filterID"])
 }
