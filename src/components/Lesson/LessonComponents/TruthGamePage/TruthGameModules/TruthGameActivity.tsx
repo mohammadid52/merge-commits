@@ -20,8 +20,8 @@ const TruthGame = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
   const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
   const inputs = state.data.lesson.warmUp.inputs;
-  const video = state.data.lesson.warmUp.instructions.link;
-  const [openPopup, setOpenPopup] = useState(false);
+  // const video = state.data.lesson.warmUp.instructions.link;
+  // const [openPopup, setOpenPopup] = useState(false);
 
   useEffect(() => {
     if (!cookies[`lesson-${state.classroomID}`].truthGame && !state.componentState.truthGame) {

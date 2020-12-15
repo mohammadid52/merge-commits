@@ -44,6 +44,8 @@ const TruthGameForm = () => {
 
       setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`] });
     }
+
+    // console.log('TruthGameForm: ', 'new truth game dispatch...');
   }, [truthGameInput]);
 
   const handleInputChange = (e: { target: { id: string; value: string } }) => {
