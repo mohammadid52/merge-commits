@@ -2,51 +2,15 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getInstitutionType = /* GraphQL */ `
-  query GetInstitutionType($id: ID!) {
-    getInstitutionType(id: $id) {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listInstitutionTypes = /* GraphQL */ `
-  query ListInstitutionTypes(
-    $filter: ModelInstitutionTypeFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listInstitutionTypes(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        name
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getInstitution = /* GraphQL */ `
   query GetInstitution($id: ID!) {
     getInstitution(id: $id) {
       id
       name
-      institutionTypeId
-      institutionType {
-        id
-        name
-        createdAt
-        updatedAt
-      }
+      type
       district
       address
+      addressLine2
       city
       state
       zip
@@ -57,12 +21,6 @@ export const getInstitution = /* GraphQL */ `
         email
       }
       website
-      type {
-        id
-        name
-        createdAt
-        updatedAt
-      }
       image
       createdAt
       updatedAt
@@ -87,15 +45,10 @@ export const listInstitutions = /* GraphQL */ `
       items {
         id
         name
-        institutionTypeId
-        institutionType {
-          id
-          name
-          createdAt
-          updatedAt
-        }
+        type
         district
         address
+        addressLine2
         city
         state
         zip
@@ -106,12 +59,6 @@ export const listInstitutions = /* GraphQL */ `
           email
         }
         website
-        type {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         image
         createdAt
         updatedAt
@@ -128,6 +75,7 @@ export const getPerson = /* GraphQL */ `
       status
       email
       role
+      type
       firstName
       preferredName
       lastName
@@ -150,6 +98,7 @@ export const getPerson = /* GraphQL */ `
       birthdate
       image
       language
+      filters
       createdAt
       updatedAt
     }
@@ -178,6 +127,7 @@ export const listPersons = /* GraphQL */ `
         status
         email
         role
+        type
         firstName
         preferredName
         lastName
@@ -192,6 +142,7 @@ export const listPersons = /* GraphQL */ `
         birthdate
         image
         language
+        filters
         createdAt
         updatedAt
       }
@@ -204,36 +155,19 @@ export const getCurriculum = /* GraphQL */ `
     getCurriculum(id: $id) {
       id
       name
-      contributors {
-        items {
-          id
-          authId
-          status
-          email
-          role
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      grade
+      type
+      description
+      objectives
       languages
-      lessons {
+      units {
         items {
           id
+          name
+          type
+          description
+          objectives
           curriculumID
-          lessonID
+          languages
           createdAt
           updatedAt
         }
@@ -262,10 +196,67 @@ export const listCurriculums = /* GraphQL */ `
       items {
         id
         name
-        contributors {
+        type
+        description
+        objectives
+        languages
+        units {
           nextToken
         }
-        grade
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getUnit = /* GraphQL */ `
+  query GetUnit($id: ID!) {
+    getUnit(id: $id) {
+      id
+      name
+      type
+      description
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          unitID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUnits = /* GraphQL */ `
+  query ListUnits(
+    $id: ID
+    $filter: ModelUnitFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUnits(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        type
+        description
+        objectives
+        curriculumID
         languages
         lessons {
           nextToken
@@ -282,19 +273,14 @@ export const getCourse = /* GraphQL */ `
     getCourse(id: $id) {
       id
       name
-      courseTypeID
+      type
       institution {
         id
         name
-        institutionTypeId
-        institutionType {
-          id
-          name
-          createdAt
-          updatedAt
-        }
+        type
         district
         address
+        addressLine2
         city
         state
         zip
@@ -305,12 +291,6 @@ export const getCourse = /* GraphQL */ `
           email
         }
         website
-        type {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         image
         createdAt
         updatedAt
@@ -318,6 +298,7 @@ export const getCourse = /* GraphQL */ `
       classID
       class {
         id
+        type
         name
         students {
           nextToken
@@ -329,12 +310,11 @@ export const getCourse = /* GraphQL */ `
       curriculum {
         id
         name
-        contributors {
-          nextToken
-        }
-        grade
+        type
+        description
+        objectives
         languages
-        lessons {
+        units {
           nextToken
         }
         createdAt
@@ -378,13 +358,14 @@ export const listCourses = /* GraphQL */ `
       items {
         id
         name
-        courseTypeID
+        type
         institution {
           id
           name
-          institutionTypeId
+          type
           district
           address
+          addressLine2
           city
           state
           zip
@@ -397,6 +378,7 @@ export const listCourses = /* GraphQL */ `
         classID
         class {
           id
+          type
           name
           createdAt
           updatedAt
@@ -405,7 +387,9 @@ export const listCourses = /* GraphQL */ `
         curriculum {
           id
           name
-          grade
+          type
+          description
+          objectives
           languages
           createdAt
           updatedAt
@@ -428,6 +412,7 @@ export const getClass = /* GraphQL */ `
   query GetClass($id: ID!) {
     getClass(id: $id) {
       id
+      type
       name
       students {
         items {
@@ -455,6 +440,7 @@ export const listClasss = /* GraphQL */ `
     listClasss(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        type
         name
         students {
           nextToken
@@ -493,7 +479,7 @@ export const getStudentData = /* GraphQL */ `
         course {
           id
           name
-          courseTypeID
+          type
           classID
           curriculumID
           location
@@ -512,7 +498,7 @@ export const getStudentData = /* GraphQL */ `
           grades
           artistID
           language
-          SELStructureID
+          SELStructure
           connection
           summary
           objectives
@@ -521,6 +507,7 @@ export const getStudentData = /* GraphQL */ `
           coreLessonId
           activityId
           assessmentID
+          filters
           createdAt
           updatedAt
         }
@@ -550,6 +537,7 @@ export const getStudentData = /* GraphQL */ `
         status
         email
         role
+        type
         firstName
         preferredName
         lastName
@@ -564,6 +552,7 @@ export const getStudentData = /* GraphQL */ `
         birthdate
         image
         language
+        filters
         createdAt
         updatedAt
       }
@@ -573,6 +562,12 @@ export const getStudentData = /* GraphQL */ `
         additional {
           name
           input
+        }
+        truthGame {
+          id
+          label
+          isLie
+          text
         }
       }
       corelessonData {
@@ -672,6 +667,7 @@ export const listStudentDatas = /* GraphQL */ `
           status
           email
           role
+          type
           firstName
           preferredName
           lastName
@@ -683,6 +679,7 @@ export const listStudentDatas = /* GraphQL */ `
           birthdate
           image
           language
+          filters
           createdAt
           updatedAt
         }
@@ -720,12 +717,14 @@ export const getArtist = /* GraphQL */ `
       type
       bio
       quotes {
+        id
         source
         text
       }
       additionalContent {
         video
         links {
+          id
           type
           text
           link
@@ -750,6 +749,7 @@ export const listArtists = /* GraphQL */ `
         type
         bio
         quotes {
+          id
           source
           text
         }
@@ -801,13 +801,14 @@ export const getClassroom = /* GraphQL */ `
       course {
         id
         name
-        courseTypeID
+        type
         institution {
           id
           name
-          institutionTypeId
+          type
           district
           address
+          addressLine2
           city
           state
           zip
@@ -820,6 +821,7 @@ export const getClassroom = /* GraphQL */ `
         classID
         class {
           id
+          type
           name
           createdAt
           updatedAt
@@ -828,7 +830,9 @@ export const getClassroom = /* GraphQL */ `
         curriculum {
           id
           name
-          grade
+          type
+          description
+          objectives
           languages
           createdAt
           updatedAt
@@ -849,6 +853,14 @@ export const getClassroom = /* GraphQL */ `
         title
         type
         instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
         contributors {
           nextToken
         }
@@ -864,14 +876,7 @@ export const getClassroom = /* GraphQL */ `
           updatedAt
         }
         language
-        SELStructureID
-        SELStructure {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
+        SELStructure
         keywords {
           nextToken
         }
@@ -936,6 +941,7 @@ export const getClassroom = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        filters
         createdAt
         updatedAt
       }
@@ -1004,7 +1010,7 @@ export const listClassrooms = /* GraphQL */ `
         course {
           id
           name
-          courseTypeID
+          type
           classID
           curriculumID
           location
@@ -1023,7 +1029,7 @@ export const listClassrooms = /* GraphQL */ `
           grades
           artistID
           language
-          SELStructureID
+          SELStructure
           connection
           summary
           objectives
@@ -1032,6 +1038,7 @@ export const listClassrooms = /* GraphQL */ `
           coreLessonId
           activityId
           assessmentID
+          filters
           createdAt
           updatedAt
         }
@@ -1082,7 +1089,7 @@ export const getFeedback = /* GraphQL */ `
         course {
           id
           name
-          courseTypeID
+          type
           classID
           curriculumID
           location
@@ -1101,7 +1108,7 @@ export const getFeedback = /* GraphQL */ `
           grades
           artistID
           language
-          SELStructureID
+          SELStructure
           connection
           summary
           objectives
@@ -1110,6 +1117,7 @@ export const getFeedback = /* GraphQL */ `
           coreLessonId
           activityId
           assessmentID
+          filters
           createdAt
           updatedAt
         }
@@ -1200,6 +1208,78 @@ export const listSelStructures = /* GraphQL */ `
     }
   }
 `;
+export const getThemeTemplate = /* GraphQL */ `
+  query GetThemeTemplate($id: ID!) {
+    getThemeTemplate(id: $id) {
+      id
+      type
+      name
+      summary
+      summaryLabel
+      quote {
+        id
+        source
+        text
+      }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
+      images
+      additionalContent {
+        video
+        links {
+          id
+          type
+          text
+          link
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listThemeTemplates = /* GraphQL */ `
+  query ListThemeTemplates(
+    $filter: ModelThemeTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listThemeTemplates(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        name
+        summary
+        summaryLabel
+        quote {
+          id
+          source
+          text
+        }
+        keywords {
+          nextToken
+        }
+        connection
+        images
+        additionalContent {
+          video
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getLesson = /* GraphQL */ `
   query GetLesson($id: ID!) {
     getLesson(id: $id) {
@@ -1207,6 +1287,22 @@ export const getLesson = /* GraphQL */ `
       title
       type
       instructions
+      theme {
+        type
+        name
+        summary
+        summaryLabel
+        quote {
+          id
+          source
+          text
+        }
+        connection
+        images
+        additionalContent {
+          video
+        }
+      }
       contributors {
         items {
           id
@@ -1214,6 +1310,7 @@ export const getLesson = /* GraphQL */ `
           status
           email
           role
+          type
           firstName
           preferredName
           lastName
@@ -1225,6 +1322,7 @@ export const getLesson = /* GraphQL */ `
           birthdate
           image
           language
+          filters
           createdAt
           updatedAt
         }
@@ -1239,6 +1337,7 @@ export const getLesson = /* GraphQL */ `
         type
         bio
         quotes {
+          id
           source
           text
         }
@@ -1249,14 +1348,7 @@ export const getLesson = /* GraphQL */ `
         updatedAt
       }
       language
-      SELStructureID
-      SELStructure {
-        id
-        name
-        description
-        createdAt
-        updatedAt
-      }
+      SELStructure
       keywords {
         items {
           id
@@ -1341,6 +1433,7 @@ export const getLesson = /* GraphQL */ `
           text
         }
         tools {
+          id
           name
           color
           icon
@@ -1393,6 +1486,7 @@ export const getLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      filters
       createdAt
       updatedAt
     }
@@ -1418,6 +1512,14 @@ export const listLessons = /* GraphQL */ `
         title
         type
         instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
         contributors {
           nextToken
         }
@@ -1433,14 +1535,7 @@ export const listLessons = /* GraphQL */ `
           updatedAt
         }
         language
-        SELStructureID
-        SELStructure {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
+        SELStructure
         keywords {
           nextToken
         }
@@ -1505,6 +1600,7 @@ export const listLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        filters
         createdAt
         updatedAt
       }
@@ -1654,6 +1750,7 @@ export const getCoreLesson = /* GraphQL */ `
         text
       }
       tools {
+        id
         name
         color
         icon
@@ -1695,6 +1792,7 @@ export const listCoreLessons = /* GraphQL */ `
           text
         }
         tools {
+          id
           name
           color
           icon
@@ -2020,7 +2118,7 @@ export const getQuestionData = /* GraphQL */ `
         course {
           id
           name
-          courseTypeID
+          type
           classID
           curriculumID
           location
@@ -2039,7 +2137,7 @@ export const getQuestionData = /* GraphQL */ `
           grades
           artistID
           language
-          SELStructureID
+          SELStructure
           connection
           summary
           objectives
@@ -2048,6 +2146,7 @@ export const getQuestionData = /* GraphQL */ `
           coreLessonId
           activityId
           assessmentID
+          filters
           createdAt
           updatedAt
         }
@@ -2089,6 +2188,7 @@ export const getQuestionData = /* GraphQL */ `
         status
         email
         role
+        type
         firstName
         preferredName
         lastName
@@ -2103,6 +2203,7 @@ export const getQuestionData = /* GraphQL */ `
         birthdate
         image
         language
+        filters
         createdAt
         updatedAt
       }
@@ -2155,6 +2256,7 @@ export const listQuestionDatas = /* GraphQL */ `
           status
           email
           role
+          type
           firstName
           preferredName
           lastName
@@ -2166,6 +2268,7 @@ export const listQuestionDatas = /* GraphQL */ `
           birthdate
           image
           language
+          filters
           createdAt
           updatedAt
         }
@@ -2206,6 +2309,288 @@ export const listWords = /* GraphQL */ `
     }
   }
 `;
+export const getFilter = /* GraphQL */ `
+  query GetFilter($id: ID!) {
+    getFilter(id: $id) {
+      id
+      name
+      description
+      editable
+      options {
+        items {
+          id
+          filterID
+          text
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listFilters = /* GraphQL */ `
+  query ListFilters(
+    $filter: ModelFilterFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFilters(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        description
+        editable
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getFilterOption = /* GraphQL */ `
+  query GetFilterOption($id: ID!) {
+    getFilterOption(id: $id) {
+      id
+      filterID
+      text
+      filter {
+        id
+        name
+        description
+        editable
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listFilterOptions = /* GraphQL */ `
+  query ListFilterOptions(
+    $id: ID
+    $filter: ModelFilterOptionFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listFilterOptions(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        filterID
+        text
+        filter {
+          id
+          name
+          description
+          editable
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getClient = /* GraphQL */ `
+  query GetClient($id: ID!) {
+    getClient(id: $id) {
+      id
+      name
+      architecture {
+        items {
+          id
+          name
+          clientID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listClients = /* GraphQL */ `
+  query ListClients(
+    $filter: ModelClientFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClients(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        architecture {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getArchitecture = /* GraphQL */ `
+  query GetArchitecture($id: ID!) {
+    getArchitecture(id: $id) {
+      id
+      name
+      clientID
+      client {
+        id
+        name
+        architecture {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      types {
+        items {
+          id
+          name
+          architectureID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters {
+        items {
+          id
+          architectureID
+          filterID
+          multiselect
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listArchitectures = /* GraphQL */ `
+  query ListArchitectures(
+    $filter: ModelArchitectureFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listArchitectures(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        clientID
+        client {
+          id
+          name
+          createdAt
+          updatedAt
+        }
+        types {
+          nextToken
+        }
+        filters {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getType = /* GraphQL */ `
+  query GetType($id: ID!) {
+    getType(id: $id) {
+      id
+      name
+      architectureID
+      architecture {
+        id
+        name
+        clientID
+        client {
+          id
+          name
+          createdAt
+          updatedAt
+        }
+        types {
+          nextToken
+        }
+        filters {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      filters {
+        items {
+          id
+          typeID
+          filterID
+          multiselect
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listTypes = /* GraphQL */ `
+  query ListTypes(
+    $filter: ModelTypeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTypes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        architectureID
+        architecture {
+          id
+          name
+          clientID
+          createdAt
+          updatedAt
+        }
+        filters {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID
@@ -2227,6 +2612,7 @@ export const userById = /* GraphQL */ `
         status
         email
         role
+        type
         firstName
         preferredName
         lastName
@@ -2241,6 +2627,7 @@ export const userById = /* GraphQL */ `
         birthdate
         image
         language
+        filters
         createdAt
         updatedAt
       }
@@ -2269,6 +2656,7 @@ export const usersByRole = /* GraphQL */ `
         status
         email
         role
+        type
         firstName
         preferredName
         lastName
@@ -2283,6 +2671,7 @@ export const usersByRole = /* GraphQL */ `
         birthdate
         image
         language
+        filters
         createdAt
         updatedAt
       }
@@ -2313,47 +2702,6 @@ export const searchByWord = /* GraphQL */ `
         updatedAt
       }
       nextToken
-    }
-  }
-`;
-export const searchPersons = /* GraphQL */ `
-  query SearchPersons(
-    $filter: SearchablePersonFilterInput
-    $sort: SearchablePersonSortInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    searchPersons(
-      filter: $filter
-      sort: $sort
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        authId
-        status
-        email
-        role
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        createdAt
-        updatedAt
-      }
-      nextToken
-      total
     }
   }
 `;
