@@ -24,12 +24,13 @@ const Checkpoint = lazy(() => import('./ComponentViews/Checkpoint/Checkpoint'));
 
 interface BodyProps {
     fullscreenInstructions: boolean;
+    setInstructions: React.Dispatch<React.SetStateAction<{visible: boolean, available: boolean, content: any}>>
 }
 
 
 
 const Body: React.FC<BodyProps> = (props: BodyProps) => {
-    const {fullscreenInstructions} = props;
+    const {fullscreenInstructions, setInstructions} = props;
 
     const { state, dispatch } = useContext(LessonControlContext);
     const location = useLocation();
@@ -41,7 +42,7 @@ const Body: React.FC<BodyProps> = (props: BodyProps) => {
             case 'story':
                 return <StoryView fullscreen={fullscreen}/>;
             case 'lyrics':
-                return <LyricsView fullscreen={fullscreen} fullscreenInstructions={fullscreenInstructions}/>;
+                return <LyricsView fullscreen={fullscreen} fullscreenInstructions={fullscreenInstructions} setInstructions={setInstructions}/>;
             case 'poem':
                 return <PoemView fullscreen={fullscreen}/>;
             case 'list':
@@ -83,17 +84,7 @@ const Body: React.FC<BodyProps> = (props: BodyProps) => {
         return temp
     }
 
-    // useEffect(() => {
-    //     const pageStage = urlParser(location.pathname);
-    //     let pageNumber = 0;
-    //     if (pageStage !== '') {
-    //         pageNumber = state.pages.indexOf(state.pages.filter((page: { stage: string; }) => {
-    //             return page.stage === pageStage
-    //         }).pop())
-    //     }
-        
-    //     dispatch({ type: 'SET_CURRENT_PAGE', payload: pageNumber})
-    // }, [])
+
 
     useEffect(() => {
         if (state.currentPage < state.pages.length - 1) {

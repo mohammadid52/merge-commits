@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import Banner from './Banner';
-import ReflectionQuestions from './ReflectionQuestions';
+import ReflectionQuestions from '../../ReflectionQuestions';
 import PoemOutput from './PoemOutput';
 
 const SelfDisplay = () => {
@@ -15,7 +15,7 @@ const SelfDisplay = () => {
 
   return (
     <div className={theme.section}>
-      <ReflectionQuestions />
+      <ReflectionQuestions questions={state.data.lesson.activity.breakdown.reflectionQuestions}  />
       <Banner title={typeof displayProps !== 'undefined' ? displayProps.title : 'Your Poem Title :)'} display='SELF' fullscreen={fullscreen} />    
       <PoemOutput poem={typeof displayProps !== 'undefined' ? displayProps.editInput : 'Your Poem :)'} />
     </div>

@@ -15,8 +15,8 @@ import OutroText from './OutroText';
 
 const Outro = () => {
   const { state, dispatch, theme } = useContext(LessonContext);
-  const [ fullscreen, setFullscreen ] = useState(false);
-  const [ feedback, setFeedback ] = useState({
+  const [fullscreen, setFullscreen] = useState(false);
+  const [feedback, setFeedback] = useState({
     like: '',
     text: '',
   });
@@ -28,25 +28,20 @@ const Outro = () => {
 
   return (
     <div className={theme.section}>
-      { state.data.lesson.type !== 'survey' ?
-        <Banner />
-        : null
-      }
+      {state.data.lesson.type !== 'survey' ? <Banner /> : null}
       <div className={theme.section}>
-          {
-            state.data.lesson.type !== 'survey' ?
-            <div className="flex flex-col justify-between items-center">
-              <Feedback setFeedback={setFeedback} />
-              <MoreArtist/>
-              <SaveQuit id={state.data.lesson.id} feedback={feedback}/>
-            </div>
-            :
-            <div className="flex flex-col justify-between items-center">
-              <OutroText />
-              <SaveQuit id={state.data.lesson.id}/>
-            </div>
-          }
-
+        {state.data.lesson.type !== 'survey' ? (
+          <div className="flex flex-col justify-between items-center">
+            <Feedback setFeedback={setFeedback} />
+            <MoreArtist />
+            <SaveQuit id={state.data.lesson.id} feedback={feedback} />
+          </div>
+        ) : (
+          <div className="flex flex-col justify-between items-center">
+            <OutroText />
+            <SaveQuit id={state.data.lesson.id} />
+          </div>
+        )}
       </div>
     </div>
   );

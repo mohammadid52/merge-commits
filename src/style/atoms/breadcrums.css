@@ -1,0 +1,21 @@
+.breadcrumbs {
+  @apply w-full flex;
+}
+
+.breadcrumbs > ol {
+  @apply list-none flex flex-row items-center justify-start;
+}
+
+.breadcrumbs > ol > li {
+  @apply flex items-center;
+
+  min-width: fit-content;
+}
+
+.vertical-border {
+  @apply border-l-6 border-indigo-700 pl-4;
+}
+
+.children-x-2 > * {
+  margin-right: 0.5rem;
+}

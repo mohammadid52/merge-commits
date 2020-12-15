@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaGraduationCap } from 'react-icons/fa';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
-// import { API, graphqlOperation } from 'aws-amplify';
+import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useLocation } from 'react-router-dom';
-import * as queries from '../../../../graphql/queries';
 import queryString from 'query-string';
 import { useHistory } from 'react-router-dom';
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
+
+import { GlobalContext } from '../../../../contexts/GlobalContext';
+import * as queries from '../../../../graphql/queries';
 import ActionButton from '../Actions/ActionButton';
 import InstitutionInfo from './InstitutionInfo';
 import InstitutionEdit from './InstitutionEdit';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+
+// saperate absolute and relative imports.
 
 export interface InstitutionInfo {
   id: string;
@@ -85,13 +88,14 @@ const Institution: React.FC = () => {
   }, []);
 
   return (
-    <div className={`w-9/10 h-full`}>
+    <div className={`w-9/10 h-full mt-4`}>
+      <div className="pagetitle-container">
+        <p className="page-heading">{institutionData.name ? institutionData.name : ''}</p>
+      </div>
       <div
         className={`w-full h-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
         <div className='h-9/10 flex flex-row flex-end'>
-          {/* 
-            Info side section
-          */}
+
           <div className='w-auto p-4 flex flex-col text-center items-center'>
             <div
               className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
@@ -108,15 +112,16 @@ const Institution: React.FC = () => {
           </div>
           <div className='w-full md:px-2 pt-2 flex flex-col'>
             <div className='mb-4 w-full flex justify-end'>
-              {/* 
-              Back btn
-              */}
-              <ActionButton
-                func={history.goBack}
-                label='Back'
-                compClass='w-20 text-white bg-indigo-600 hover:bg-indigo-500 focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700
-          inline-flex justify-center py-2 px-4 border border-transparent text-m leading-5 font-medium rounded-md focus:outline-none transition duration-150 ease-in-out'
-              />
+              <div className="w-auto">
+                <button type="button" onClick={() => history.goBack} className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
+                  Back
+                  <span className="w-8 pl-3 h-4 flex items-center">
+                    <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>
+                      <IoArrowUndoCircleOutline />
+                    </IconContext.Provider>
+                  </span>
+                </button>
+              </div>
             </div>
             {/* 
               INFO/edit switch
@@ -125,25 +130,6 @@ const Institution: React.FC = () => {
               <Route
                 path={`${match.url}/edit`}
                 render={() => (
-                  // <InstitutionEdit
-                  //   id={institutionData.id}
-                  //   name={institutionData.name}
-                  //   website={institutionData.website}
-                  //   contact={institutionData.contact}
-                  //   phone={institutionData.phone}
-                  //   state={institutionData.state}
-                  //   address={institutionData.address}
-                  //   city={institutionData.city}
-                  //   zip={institutionData.zip}
-                  // />
-
-                  /**
-                   *
-                   * REFACTORED TO ONELINE BELOW
-                   *
-                   * BOOYA !
-                   *
-                   */
                   <InstitutionEdit institute={institutionData} />
                 )}
               />
@@ -151,23 +137,6 @@ const Institution: React.FC = () => {
               <Route
                 path={`${match.url}/`}
                 render={() => (
-                  // <InstitutionInfo
-                  //   id={institutionData.id}
-                  //   name={institutionData.name}
-                  //   website={institutionData.website}
-                  //   contact={institutionData.contact}
-                  //   phone={institutionData.phone}
-                  //   state={institutionData.state}
-                  //   address={institutionData.address}
-                  // />
-
-                  /**
-                   *
-                   * REFACTORED TO ONELINE BELOW
-                   *
-                   * BOOYA !
-                   *
-                   */
                   <InstitutionInfo institute={institutionData} />
                 )}
               />

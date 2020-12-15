@@ -1,10 +1,10 @@
 import React, { useContext, useState, useEffect, SetStateAction } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import ToolTip from '../../General/ToolTip/ToolTip';
 // Iconz
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FiUsers } from 'react-icons/fi';
+import { FaUniversity, FaRulerVertical } from 'react-icons/fa';
 import { AiOutlineSchedule, AiOutlineAudit, AiOutlineUsergroupAdd } from 'react-icons/ai';
 
 type LinkObject = {
@@ -16,6 +16,8 @@ export interface LinkProps {
   children?: React.ReactNode;
   setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
   currentPage: string;
+  image?: string;
+  role?: string
 };
 
 const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
@@ -35,7 +37,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               path: 'registration',
             },
             {
-              name: 'User Management',
+              name: 'People',
               path: 'manage-users',
             },
             {
@@ -57,20 +59,24 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
-              name: 'Registration',
-              path: 'registration',
+              name: 'Institutions',
+              path: 'manage-institutions',
             },
             {
-              name: 'User Management',
+              name: 'People',
               path: 'manage-users',
+            },
+            // {
+            //   name: 'Lesson Builder',
+            //   path: 'lesson-planner',
+            // },
+            {
+              name: 'Lesson Planner',
+              path: 'lesson-planner',
             },
             {
               name: 'Classroom',
               path: 'classroom',
-            },
-            {
-              name: 'Lesson Planner',
-              path: 'lesson-planner',
             },
           ];
         });
@@ -78,12 +84,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         return setLinks((links) => {
           return [
             ...links,
+            // {
+            //   name: 'Registration',
+            //   path: 'registration',
+            // },
             {
-              name: 'Registration',
-              path: 'registration',
-            },
-            {
-              name: 'User Management',
+              name: 'People',
               path: 'manage-users',
             },
             {
@@ -99,8 +105,11 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
   useEffect(() => {
     userLinks(state.user.role);
-    // console.log(state.user.role);
   }, [state.user.role]);
+
+  // useEffect(() => {
+  //   userLinks(state.user?.role);
+  // }, []);
 
   const handleLink = (e: any) => {
     const id = e.target.id.toLowerCase();
@@ -118,7 +127,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
   const getMenuIcon = (label: string, url: string) => {
     switch (label) {
-      case 'User Management':
+      case 'People':
         return <FiUsers id={url} />;
         break;
       case 'Registration':
@@ -130,13 +139,19 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       case 'Lesson Planner':
         return <AiOutlineSchedule id={url} />;
         break;
+      case 'Lesson Builder':
+        return <FaRulerVertical id={url} />;
+        break;
+      case 'Institutions':
+        return <FaUniversity id={url} />;
+        break;
       default:
         return '';
     }
   };
   const getClassStyle = (label: string) => {
     switch (label) {
-      case 'User Management':
+      case 'People':
         return `${linkProps.currentPage === 'manage-users' && 'bg-grayscale'
           } border-l-4 border-mustard-yellow`;
         break;
@@ -152,6 +167,14 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         return `${linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'
           } border-l-4 border-sea-green`;
         break;
+      case 'Lesson Builder':
+        return `${linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'
+          } border-l-4 border-sea-green`;
+        break;
+      case 'Institutions':
+        return `${linkProps.currentPage === 'manage-institutions' && 'bg-grayscale'
+          } border-l-4 border-ketchup`;
+        break;
       default:
         return '';
     }
@@ -162,7 +185,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
           <>
-            
             <div
               id={link.path}
               key={key}

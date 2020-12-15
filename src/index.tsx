@@ -9,6 +9,7 @@ Amplify.configure(awsconfig);
 import './style/style.css';
 import './index.html';
 import './style/style.scss';
+import 'react-image-crop/lib/ReactCrop.scss';
 
 const Page: React.FC = () => {
     return (
@@ -17,3 +18,5 @@ const Page: React.FC = () => {
 }
 
 ReactDOM.render(<Page />, document.getElementById('app'));
+
+// TODO merge atoms generals and stanards directory.

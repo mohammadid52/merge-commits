@@ -773,3 +773,217 @@ export const getCourse = /* GraphQL */ `
     }
   }
 `;
+
+export const listCurriculums = /* GraphQL */ `
+  query ListCurriculums(
+    $id: ID
+    $filter: ModelCurriculumFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCurriculums(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        description
+        objectives
+        languages
+        units {
+          items {
+            id
+            name
+            description
+          }
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listWarmUps = /* GraphQL */ `
+  query ListWarmUps(
+    $filter: ModelWarmUpFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listWarmUps(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        label
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listCoreLessons = /* GraphQL */ `
+  query ListCoreLessons(
+    $filter: ModelCoreLessonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCoreLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        label
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listActivitys = /* GraphQL */ `
+  query ListActivitys(
+    $filter: ModelActivityFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listActivitys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        label
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listQuestions = /* GraphQL */ `
+  query ListQuestions(
+    $filter: ModelQuestionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listQuestions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        label
+        type
+        question
+        options {
+          text
+          label
+          icon
+          color
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listLessons = /* GraphQL */ `
+  query ListLessons(
+    $id: ID
+    $filter: ModelLessonFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listLessons(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        title
+        type
+        instructions
+        artistID
+        language
+        connection
+        summary
+        objectives
+        doFirstID
+        warmUpId
+        coreLessonId
+        activityId
+        assessmentID
+        filters {
+          filterID
+          option
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listFilters = /* GraphQL */ `
+  query ListFilters(
+    $filter: ModelFilterFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFilters(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        description
+        options {
+          id
+          text
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listLessonFilters = /* GraphQL */ `
+  query ListLessonFilters(
+    $id: ID
+    $filter: ModelLessonFilterFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listLessonFilters(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        lessonID
+        filterID
+        optionID
+        lesson {
+          id
+          title
+        }
+        filter {
+          id
+          name
+          description
+          options {
+            id
+            text
+          }
+        }
+      }
+      nextToken
+    }
+  }
+`;

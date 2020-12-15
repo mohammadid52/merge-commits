@@ -272,7 +272,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
 
                           <IconContext.Provider  value={{ color: '#EDF2F7', size: '1.25rem', className: 'w-auto mr-2'}}>
                             
-                              <ImCheckboxChecked />
+                              <ImCheckboxChecked style={{ pointerEvents: 'none' }} />
                           
                           </IconContext.Provider>
 
@@ -288,7 +288,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
 
                             <IconContext.Provider value={{ color: '#000', size: '1.25rem', className: 'w-auto mr-2' }}>
                              
-                                <ImCheckboxUnchecked />
+                                <ImCheckboxUnchecked style={{ pointerEvents: 'none' }} />
                               
                             </IconContext.Provider>
 

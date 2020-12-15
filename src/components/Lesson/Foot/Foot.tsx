@@ -56,7 +56,7 @@ const Branding: React.FC = () => {
           className={`w-256 h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}>
           {/* BACK */}
           <div className='w-3.3/10 flex justify-center items-center'>
-            {!history.location.pathname.includes('corelesson') ? (
+
               <div
                 className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
                   state.currentPage > 0
@@ -66,7 +66,7 @@ const Branding: React.FC = () => {
                 onClick={handleBack}>
                 <div className='w-auto h-auto text-white'>Back</div>
               </div>
-            ) : null}
+
           </div>
 
           {/* LOGO */}
