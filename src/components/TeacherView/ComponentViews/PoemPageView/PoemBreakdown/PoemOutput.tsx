@@ -6,7 +6,7 @@ import { LessonControlContext } from '../../../../../contexts/LessonControlConte
 /**
  * Module imports
  */
-import {parseBlankLines} from '../../../../../utilities/strings';
+import { parseBlankLines } from '../../../../../utilities/strings';
 
 interface PoemOutputProps {
   poem?: string;
@@ -17,12 +17,14 @@ const PoemOutput = (props: PoemOutputProps) => {
 
   return (
     <>
-      <div className='w-full h-48 flex flex-col'>
-        {
-          props.poem !== ''
-          ? <div className={`${theme.elem.text} align-middle text-left`} dangerouslySetInnerHTML={{__html: parseBlankLines(props.poem)}}></div>
-          : <div className={`${theme.elem.text} align-middle text-center`}>You didn't write a poem :)</div>
-        }
+      <div className={`w-full h-48 flex flex-col ${theme.blockQuote}`}>
+        {props.poem !== '' ? (
+          <div
+            className={`${theme.elem.text} align-middle text-left`}
+            dangerouslySetInnerHTML={{ __html: parseBlankLines(props.poem) }}></div>
+        ) : (
+          <div className={`${theme.elem.text} align-middle text-center`}>You didn't write a poem :)</div>
+        )}
       </div>
     </>
   );
