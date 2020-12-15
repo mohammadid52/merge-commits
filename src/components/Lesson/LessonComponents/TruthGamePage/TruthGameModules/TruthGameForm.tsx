@@ -97,9 +97,7 @@ const TruthGameForm = () => {
               return (
                 <div id={item.id} key={key} className="flex flex-col px-4 items-center justify-between">
                   <div id={item.id} className="flex items-center justify-start py-4">
-                    <label
-                      id={item.id}
-                      className="h-8 w-full cursor-pointer font-light text-gray-400 text-sm flex flex-row-reverse justify-between items-center px-2">
+                    <label id={item.id} className={`${theme.elem.text}`}>
                       <button
                         key={key}
                         id={item.id}
