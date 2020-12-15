@@ -15,6 +15,7 @@ import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageCountSelector from '../../../Atoms/PageCountSelector';
 import SearchInput from '../../../Atoms/Form/SearchInput';
+import Selector from '../../../Atoms/Form/Selector';
 
 const UserLookup = () => {
 	const { state } = useContext(GlobalContext);
@@ -35,10 +36,21 @@ const UserLookup = () => {
 		value: '',
 		isActive: false
 	});
+	const [sortingType, setSortingType] = useState({
+		value: '',
+		isActive: false
+	});
 
 	const breadCrumsList = [
 		{ title: 'Home', url: '/dashboard', last: false },
 		{ title: 'People', url: '/dashboard/manage-users', last: true },
+	]
+
+	const sortByList = [
+		{ id: 1, name: 'Name' },
+		{ id: 2, name: 'Role' },
+		{ id: 3, name: 'Institution' },
+		{ id: 4, name: 'Status' },
 	]
 
 	async function listUsers(currToken?: string, isPrev?: boolean, isTokenStored?: boolean) {
@@ -133,6 +145,13 @@ const UserLookup = () => {
 		})
 	}
 
+	const setSortingValue = (str: string) => {
+		setSortingType({
+			...sortingType,
+			value: str
+		})
+	}
+
 	const removeSearchAction = () => {
 		setSearchInput({ value: '', isActive: false })
 		listUsers(null)
@@ -165,8 +184,9 @@ const UserLookup = () => {
 				<BreadCrums items={breadCrumsList} />
 				<div className="flex justify-between">
 					<SectionTitle title="USER MANAGEMENT" subtitle="People's List" />
-					<div className="flex justify-end py-4 mb-4 w-5/10">
-						<SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchUserFromList} closeAction={removeSearchAction} style="mr-4" />
+					<div className="flex justify-end py-4 mb-4 w-6/10">
+						<SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchUserFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
+						<Selector list={sortByList} selectedItem={sortingType.value} onChange={setSortingValue} />
 						<Buttons label="Add New Person" onClick={handleLink} btnClass="mr-4" Icon={AiOutlineUsergroupAdd} />
 					</div>
 				</div>
