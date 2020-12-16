@@ -33,6 +33,7 @@ const TruthGame = (props: props) => {
   const video = state.data.lesson.warmUp.instructions.link;
   const [openPopup, setOpenPopup] = useState(false);
   const [dataProps, setDataProps] = useState<{ truthGameArray: Array<TruthInput>; [key: string]: any }>();
+
   let displayStudentData = state.studentViewing.live
     ? state.studentViewing.studentInfo.currentLocation
       ? state.studentViewing.studentInfo.currentLocation === 'warmup'
