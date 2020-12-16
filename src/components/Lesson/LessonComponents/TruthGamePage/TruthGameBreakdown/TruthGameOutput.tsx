@@ -11,7 +11,7 @@ const TruthGameOutput: React.FC<TruthGameOutputProps> = (props: TruthGameOutputP
 
   return (
     <div className={`w-full flex flex-col`}>
-      {console.log('truthGame output: ', truthGameData ? truthGameData : '')}
+      {/*{console.log('truthGame output: ', truthGameData ? truthGameData : '')}*/}
 
       {truthGameData
         ? truthGameData.map((item: { id: string; label: string; isLie: boolean; text: string }, key: number) => {

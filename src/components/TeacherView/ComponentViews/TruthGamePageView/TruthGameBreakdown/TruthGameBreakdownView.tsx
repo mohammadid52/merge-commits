@@ -40,9 +40,12 @@ const TruthGameBreakdown = (props: props) => {
     <div className={theme.section}>
       <ReflectionQuestions fullscreen={fullscreen} />
       <Banner title={title} fullscreen={fullscreen} />
-      <TruthGameOutput fullscreen={fullscreen} truthGameData={dataProps && dataProps.truthGameArray ? dataProps : ''} />
+      <TruthGameOutput
+        fullscreen={fullscreen}
+        truthGameData={dataProps && dataProps.truthGame ? dataProps.truthGame : ''}
+      />
 
-      {inputs.additionalInputs.length > 0 ? <Modules dataProps={dataProps} fullscreen={fullscreen} /> : null}
+      {/*{inputs.additionalInputs.length > 0 ? <Modules dataProps={dataProps} fullscreen={fullscreen} /> : null}*/}
     </div>
   );
 };
