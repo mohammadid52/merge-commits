@@ -16,13 +16,15 @@ const PrivateRoute = ({ children, path }: PrivateRouteProps) => {
   const [cookies] = useCookies();
 
   // TODO: Delay in state updating in the global 
-  // context redirect everything to '/login' Need to fix this.(In progress...)
+  // context redirect everything to '/login' Need to fix this.
+  // Dashboard is setting auth cookies multiple times need to fix that.(In progress...)
 
   return (
     <Route
       path={path}
       render={({ location }) =>
-        state.isAuthenticated ? (
+      cookies.auth ? (
+          // state.isAuthenticated ? (
           children
         ) : (
             <Redirect

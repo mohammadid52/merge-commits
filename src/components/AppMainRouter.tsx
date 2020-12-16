@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, Suspense, lazy } from 'react';
-import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
-import { Auth } from '@aws-amplify/auth';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import { Auth } from '@aws-amplify/auth';
 
 import { GlobalContext } from '../contexts/GlobalContext';
 import Login from './Auth/Login';
@@ -10,6 +10,7 @@ import Dashboard from './Dashboard/Dashboard';
 import useDeviceDetect from '../customHooks/deviceDetect';
 import MobileOops from '../components/Error/MobileOops';
 import PrivateRoute from './Auth/PrivateRoute';
+import PublicRoute from './Auth/PublicRoute';
 import ComponentLoading from './Lesson/Loading/ComponentLoading';
 
 const ConfirmCode = lazy(() => import('./Auth/ConfirmCode'));
@@ -18,12 +19,10 @@ const Registration = lazy(() => import('./Auth/Register'));
 const Lesson = lazy(() => import('./Lesson/Lesson'));
 const TeacherView = lazy(() => import('./TeacherView/TeacherView'));
 
-
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
-  const { theme, state, dispatch } = useContext(GlobalContext);
-  const history = useHistory();
-  const [cookies] = useCookies(['auth']);
+  const { theme, dispatch } = useContext(GlobalContext);
+  const [cookies, setCookie, removeCookie] = useCookies();
 
   const checkUserAuthenticated = () => {
     Auth.currentAuthenticatedUser()
@@ -36,7 +35,6 @@ const MainRouter: React.FC = () => {
             authId: user.attributes.sub,
           },
         });
-        history.push('/dashboard');
       })
       .catch((err) => console.error(err));
   };
@@ -59,8 +57,21 @@ const MainRouter: React.FC = () => {
               </div>
             }>
             <Switch>
-              <Route path='/login' render={() => <Login />} />
-              <Route path='/register' render={() => <Registration />} />
+              <PublicRoute path='/login' restricted={true} >
+                <Login />
+              </PublicRoute>
+              <PublicRoute path='/register' restricted={true} >
+                <Registration />
+              </PublicRoute>
+              <PublicRoute path='/confirm-code' restricted={true} >
+                <ConfirmCode />
+              </PublicRoute>
+              <PublicRoute path='/forgot-password' restricted={true}>
+                <Forgot />
+              </PublicRoute>
+              <PublicRoute path='/privacy-policy' restricted={true}>
+                <PrivacyPolicy />
+              </PublicRoute>
               <Route
                 path='/confirm'
                 render={({ location }) => (
@@ -72,19 +83,15 @@ const MainRouter: React.FC = () => {
                   />
                 )}
               />
-              <Route path='/confirm-code' render={() => <ConfirmCode />} />
-              <Route
-                path='/new-password'
-                render={({ location }) => (
-                  <Redirect
-                    to={{
-                      pathname: '/confirm-code',
-                      state: { from: location },
-                    }}
-                  />
-                )}
+              <Route path='/new-password' render={({ location }) => (
+                <Redirect
+                  to={{
+                    pathname: '/confirm-code',
+                    state: { from: location },
+                  }}
+                />
+              )}
               />
-              <Route path='/forgot-password' render={() => <Forgot />} />
               <Route
                 path='/reset-password'
                 render={({ location }) => (
@@ -96,7 +103,6 @@ const MainRouter: React.FC = () => {
                   />
                 )}
               />
-              <Route path='/privacy-policy' render={() => <PrivacyPolicy />} />
               <PrivateRoute path='/dashboard'>
                 <Dashboard />
               </PrivateRoute>

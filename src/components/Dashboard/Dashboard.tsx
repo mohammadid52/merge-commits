@@ -41,6 +41,10 @@ const Dashboard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<string>('');
 
   const setUser = (user: userObject) => {
+    setUserData({
+      role: user.role,
+      image: user.image
+    })
     let firstName = user.preferredName ? user.preferredName : user.firstName
     dispatch({
       type: 'SET_USER',
@@ -61,10 +65,11 @@ const Dashboard: React.FC = () => {
   async function getUser() {
     try {
       // this any needs to be changed once a solution is found!!!
-      const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: state.user.email, authId: state.user.authId }))
+      const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: cookies.auth.email, authId: cookies.auth.authId }))
       // console.log(user)
       setUser(user.data.getPerson);
     } catch (error) {
+      console.log("Error while fetching the person's data", error)
       console.error(error)
     }
   }
@@ -72,6 +77,11 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     if (!state.user.firstName) {
       getUser()
+    } else {
+      setUserData({
+        role: state.user?.role,
+        image: state.user?.image
+      })
     }
   }, [])
 

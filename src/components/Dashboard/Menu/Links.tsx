@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, SetStateAction } from 'react';
-import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 // Iconz
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FiUsers } from 'react-icons/fi';
@@ -24,6 +24,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const history = useHistory();
   const match = useRouteMatch();
   const { state } = useContext(GlobalContext);
+  const { role } = linkProps;
   const [links, setLinks] = useState<Array<LinkObject>>([]);
 
   const userLinks = (role: string): void => {
@@ -103,13 +104,18 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     }
   };
 
+  // useEffect(() => {
+  //   userLinks(state.user.role);
+  // }, [state.user.role]);
+
   useEffect(() => {
-    userLinks(state.user.role);
-  }, [state.user.role]);
+    userLinks(role);
+  }, [role]);
 
   // useEffect(() => {
-  //   userLinks(state.user?.role);
-  // }, []);
+  //   console.log("initial useeffect in links has been called", role)
+  //   userLinks(role);
+  // }, [])
 
   const handleLink = (e: any) => {
     const id = e.target.id.toLowerCase();
@@ -182,7 +188,8 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
   return (
     <div className='link  w-full h-12 z-40'>
-      {state.user.role && links.length > 0
+      {/* {state.user.role && links.length > 0 */}
+      {role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
           <>
             <div
