@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { IconContext } from 'react-icons';
 import { IoSearchSharp, IoClose } from 'react-icons/io5';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 
 interface SearchProps {
   value?: string
@@ -12,13 +13,15 @@ interface SearchProps {
 
 const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
   const { value, onChange, onKeyDown, closeAction, style } = searchProps;
+  const { theme } = useContext(GlobalContext);
+
   const search = (code: number) => {
     if (code === 13) {
       onKeyDown()
     }
   }
   return (
-    <div className={`flex form-select rounded border-gray-400 ${style ? style : ''}`}>
+    <div className={`flex w-auto py-3 px-4 rounded  ${theme.formSelect} ${theme.outlineNone} ${style ? style : ''}`}>
       <span className="w-6 mr-4 cursor-pointer" onClick={onKeyDown}>
         <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
           <IoSearchSharp />
@@ -30,7 +33,7 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
         value={value ? value : ''}
         onChange={(e: any) => onChange(e.target.value)}
         onKeyDown={(e: any) => search(e.keyCode)}
-        className="search-input" />
+        className={`${theme.outlineNone}`} />
       {value !== '' && <span className="w-6 ml-4 cursor-pointer" onClick={closeAction}>
         <IconContext.Provider value={{ size: '1.5rem', color: '#000000' }}>
           <IoClose />

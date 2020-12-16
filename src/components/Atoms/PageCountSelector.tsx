@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { GlobalContext } from '../../contexts/GlobalContext';
 
 interface CountProps {
   pageSize: number;
@@ -6,9 +7,11 @@ interface CountProps {
 }
 const PageCountSelector: React.FC<CountProps> = (countProps: CountProps) => {
   const { pageSize, setPageSize } = countProps;
+  const { theme } = useContext(GlobalContext);
+
   return (
     <select
-      className="form-select text-sm"
+      className={`text-sm ${theme.formSelect} ${theme.outlineNone} w-auto py-3 px-4 my-5 rounded`}
       value={pageSize}
       onChange={e => {
         setPageSize(Number(e.target.value))

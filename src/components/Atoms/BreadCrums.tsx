@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom';
+import { GlobalContext } from '../../contexts/GlobalContext';
 
 interface BreadCrumProps {
   items: { title: string, url: string, last: boolean }[]
@@ -8,16 +9,18 @@ interface BreadCrumProps {
 const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
 
   const { items } = brdPrps;
+  const { theme } = useContext(GlobalContext);
+
 
   return (
     <div className="flex flex-row my-4 py-4">
-      <div className="w-auto vertical-border">
-        <nav className="breadcrumbs" >
-          <ol>
+      <div className={`w-auto ${theme.verticalBorder}`}>
+        <nav className="w-full flex" >
+          <ol className="list-none flex items-center justify-start">
             {items.map((item, i) => (
-              <li className="children-x-2" key={i}>
+              <li className="flex items-center mr-2" style={{ minWidth: 'fit-content' }} key={i}>
                 <NavLink to={item.url}>
-                  <span className={`${item.last ? 'text-secondary' : 'text-default'}`}>
+                  <span className={`mr-2 ${item.last ? theme.text.secondary : theme.text.default}`}>
                     {i === 0 ? item.title.toUpperCase() : item.title}
                   </span>
                 </NavLink>
@@ -32,7 +35,7 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className={`breadcrumb-arrow text-default stroke-current inline-block h-4 w-4`}>
+                    className={`${theme.text.default} stroke-current inline-block h-4 w-4`}>
                     <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
                 )}
