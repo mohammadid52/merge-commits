@@ -58,9 +58,9 @@ const TruthGame = (props: props) => {
           {/*<InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/>*/}
 
           <InstructionsBlock fullscreen={fullscreen} />
-          {inputs.additionalInputs.length > 0 ? (
-            <Modules dataProps={dataProps} inputs={inputs.additionalInputs} fullscreen={fullscreen} />
-          ) : null}
+          {/*{inputs.additionalInputs.length > 0 ? (*/}
+          {/*  <Modules dataProps={dataProps} inputs={inputs.additionalInputs} fullscreen={fullscreen} />*/}
+          {/*) : null}*/}
 
           <TruthGameForm dataProps={dataProps} fullscreen={fullscreen} />
         </div>

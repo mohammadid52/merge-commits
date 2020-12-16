@@ -21,6 +21,12 @@ export const onUpdateClassroom = /* GraphQL */ `
             name
             input
           }
+          truthGame {
+            id
+            label
+            isLie
+            text
+          }
         }
         corelessonData {
           selected {

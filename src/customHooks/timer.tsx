@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LessonActions } from '../reducers/LessonReducer';
 // import { LessonStateType } from '../state/LessonState';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../customGraphql/customMutations';
+
 // import { FaSatellite } from 'react-icons/fa';
 
 interface inputs {
@@ -98,8 +99,6 @@ const useStudentTimer = (inputs?: inputs) => {
         ? 'intro'
         : params.state.pages[params.state.currentPage].stage;
 
-    // console.log( 'thisone', params.state )
-
     let data = {
       id: state.studentDataID,
       lessonProgress: lessonProgress,
@@ -109,16 +108,19 @@ const useStudentTimer = (inputs?: inputs) => {
       classroomID: params.state.classroomID,
       studentID: params.state.studentUsername,
       studentAuthID: params.state.studentAuthID,
-      warmupData: params.state.componentState.story ? params.state.componentState.story : null, // If story === false, send truthGame array
+      warmupData: params.state.componentState.story
+        ? params.state.componentState.story
+        : typeof params.state.componentState.truthGame?.truthGameArray !== 'undefined'
+        ? { truthGame: params.state.componentState.truthGame.truthGameArray }
+        : null, // If story === false, send truthGame array
       corelessonData: params.state.componentState.lyrics ? params.state.componentState.lyrics : null,
       activityData: params.state.componentState.poem ? params.state.componentState.poem : null,
     };
 
-    // console.log('update', data);
-
     try {
+      console.log(' timer save: ', data);
       const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
-      // console.log(dataObject)
+
       dispatch({ type: 'SAVED_CHANGES' });
       // console.log('state', state)
     } catch (error) {
