@@ -11,18 +11,18 @@ const TruthGameOutput: React.FC<TruthGameOutputProps> = (props: TruthGameOutputP
 
   return (
     <div className={`w-full flex flex-col`}>
+      {console.log('truthGame output: ', truthGameData ? truthGameData : '')}
+
       {truthGameData
-        ? truthGameData.truthGameArray.map(
-            (item: { id: string; label: string; isLie: boolean; text: string }, key: number) => {
-              return (
-                <div className={`p-4`}>
-                  <div className={`${theme.elem.text} align-middle text-left`}>{`${item.label}:`}</div>
-                  <span className={`${item.isLie ? 'text-lg' : 'hidden'}`}> (this is your lie 🤥)</span>
-                  <div className={`${theme.elem.text} align-middle text-left`}>{item.text}</div>
-                </div>
-              );
-            }
-          )
+        ? truthGameData.map((item: { id: string; label: string; isLie: boolean; text: string }, key: number) => {
+            return (
+              <div className={`p-4`}>
+                <div className={`${theme.elem.text} align-middle text-left`}>{`${item.label}:`}</div>
+                <span className={`${item.isLie ? 'text-lg' : 'hidden'}`}> (this is your lie 🤥)</span>
+                <div className={`${theme.elem.text} align-middle text-left`}>{item.text}</div>
+              </div>
+            );
+          })
         : null}
     </div>
   );
