@@ -92,8 +92,6 @@ type Person @model
   firstName: String!
   preferredName: String
   lastName: String!
-  institutionID: ID!
-  institution: Institution @connection(fields: ["institutionID"])
   externalId: String
   grade: String
   #courses
@@ -204,10 +202,18 @@ type AdditionalInputs {
   input: String
 }
 
+type TruthGameInputs {
+  id: String
+  label: String
+  isLie: Boolean
+  text: String
+}
+
 type WarmUpData {
   story: String
   title: String
   additional: [AdditionalInputs]
+  truthGame: [TruthGameInputs]
 }
 
 type SelectedWord {
@@ -700,6 +706,7 @@ type FilterType @model(queries: null)
   typeID: ID!
   filterID: ID!
   multiselect: Boolean
+  required: Boolean
   type: Type @connection(fields: ["typeID"])
   filter: Filter @connection(fields: ["filterID"])
 }
@@ -711,6 +718,7 @@ type ArchitectureFilter @model(queries: null)
   architectureID: ID!
   filterID: ID!
   multiselect: Boolean
+  required: Boolean
   architecture: Architecture @connection(fields: ["architectureID"])
   filter: Filter @connection(fields: ["filterID"])
 }

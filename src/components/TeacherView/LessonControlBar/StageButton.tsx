@@ -39,6 +39,8 @@ const StageButton = (props: StageButtonProps) => {
   const history = useHistory();
 
   const stageIsViewed = pageViewed.pageID === iconID;
+  const stageIsDisabled = state.pages[iconID].disabled === true;
+  const stageIsClosed = state.pages[iconID].open === false;
 
   const handleView = () => {
     dispatch({ type: 'QUIT_STUDENT_VIEWING' });
@@ -66,27 +68,15 @@ const StageButton = (props: StageButtonProps) => {
     if (iconID === 0) {
       return (
         <div className='flex items-center'>
-          {/* <svg
-              className='flex-shrink-0 w-4 h-8 text-light-gray'
-              viewBox='0 0 24 44'
-              preserveAspectRatio='none'
-              fill='currentColor'
-              xmlns='http://www.w3.org/2000/svg'
-              aria-hidden='true'>
-              <path d='M.293 0l22 22-22 22h1.414l22-22-22-22H.293z' />
-            </svg> */}
           <a
             onClick={() => {
               handleView();
             }}
-            className={`text-sm font-medium text-gray-500 ${
-              state.pages[iconID].disabled === true
-                ? null
-                : 'hover:font-bold hover:underline hover:text-sea-green'
-            } ${stageIsViewed ? 'font-bold' : null}`}>
+            className={`text-sm font-medium text-gray-500 
+            ${stageIsDisabled ? null : 'hover:font-bold hover:underline hover:text-sea-green'} 
+            ${stageIsViewed && !stageIsClosed && !stageIsDisabled ? 'font-bold' : null}`}>
             <div className='text-blueberry text-center flex flex-row'>
-              <StageLabels label={buttonLabel()} />
-              {counter !== null ? <span>{counter}</span> : null}
+              <StageLabels label={buttonLabel()} counter={counter}/>
             </div>
           </a>
         </div>
@@ -107,17 +97,15 @@ const StageButton = (props: StageButtonProps) => {
             onClick={() => {
               handleView();
             }}
-            className={`text-sm font-medium text-gray-500 ${
-              state.pages[iconID].disabled === true
-                ? null
-                : 'hover:font-bold hover:underline hover:text-sea-green'
-            } ${stageIsViewed ? 'font-bold text-sea-green underline' : null}`}>
-            <div
-              className={`pl-2 text-center flex flex-row${
-                state.pages[iconID].disabled === true ? 'line-through' : null
-              }`}>
-              <StageLabels label={buttonLabel()} />
-              {counter !== null ? <span>{counter}</span> : null}
+            className={`text-sm font-medium 
+            ${stageIsDisabled ? 'line-through' : null }
+            ${stageIsClosed || stageIsDisabled ? 'text-gray-500':null}
+            ${stageIsClosed ? 'hover:underline' : null}
+            ${stageIsViewed && stageIsClosed ? 'font-bold underline' : null}
+            ${!stageIsClosed && !stageIsDisabled ? 'hover:text-sea-green hover:underline' : null}
+            ${stageIsViewed && !stageIsClosed && !stageIsDisabled ? 'font-bold text-sea-green underline' : null}`}>
+            <div className={`pl-2 text-center flex flex-row`}>
+              <StageLabels label={buttonLabel()} counter={counter}/>
             </div>
           </a>
         </div>
@@ -138,17 +126,14 @@ const StageButton = (props: StageButtonProps) => {
             onClick={() => {
               handleView();
             }}
-            className={`text-sm font-medium text-gray-500 ${
-              state.pages[iconID].disabled === true
-                ? null
-                : 'hover:font-bold hover:underline hover:text-sea-green'
-            } ${stageIsViewed ? 'font-bold' : null}`}>
+            className={`text-sm font-medium text-gray-500 
+            ${stageIsDisabled ? null : 'hover:font-bold hover:underline hover:text-sea-green'} 
+            ${stageIsViewed && !stageIsClosed && !stageIsDisabled ? 'font-bold' : null}`}>
             <div
-              className={`text-ketchup pl-2 text-center  flex flex-row${
-                state.pages[iconID].disabled === true ? 'line-through' : null
+              className={`text-ketchup pl-2 text-center  flex flex-row ${
+                stageIsDisabled ? 'line-through text-gray-500' : null
               }`}>
-              <StageLabels label={buttonLabel()} />
-              {counter !== null ? <span>{counter}</span> : null}
+              <StageLabels label={buttonLabel()} counter={counter}/>
             </div>
           </a>
         </div>

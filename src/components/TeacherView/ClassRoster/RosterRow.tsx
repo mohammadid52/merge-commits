@@ -1,12 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
-import { studentObject } from '../../../state/LessonControlState';
 import ProgressSwitch from '../../General/LessonProgressSwitch';
-import ToolTip from '../../General/ToolTip/ToolTip';
-
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 interface RosterRowProps {
   keyProp: number;
@@ -72,8 +67,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
   const studentIsShared = () => {
     if (/* state.studentViewing.live &&  */ state.sharing) {
       return (
-        state.displayData.studentInfo.firstName === firstName &&
-        state.displayData.studentInfo.lastName === lastName
+        state.displayData.studentInfo.firstName === firstName && state.displayData.studentInfo.lastName === lastName
       );
     }
   };
@@ -81,6 +75,15 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
   const studentIsViewed = () => {
     if (state.studentViewing.live) {
       return state.studentViewing.studentInfo.id === id;
+    }
+  };
+
+  const handleRowSelection = (e: React.MouseEvent) => {
+    const t = e.target as HTMLElement;
+    const button = t.hasAttribute('aria-label');
+
+    if (!studentIsViewed() && !button) {
+      handleSelect(e);
     }
   };
 
@@ -95,12 +98,11 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     <div
       key={keyProp}
       id={`${id}`}
-      className={`w-full flex h-10 py-2 pl-2 pr-1 
+      onClick={handleRowSelection}
+      className={`w-full flex h-10 py-2 pl-2 pr-1 hover:font-semibold
                     ${number % 2 === 0 ? 'bg-white bg-opacity-20' : null} 
                     ${studentIsViewed() ? 'bg-blueberry bg-opacity-30' : null}
                     `}>
-     
-     
       {/* STUDENT STATUS */}
 
       {/* <div id={`${id}`} className={`w-1/10 text-center text-xs flex`}>
@@ -121,22 +123,20 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
 
       {/* STUDENT NAME */}
 
-      <div id={`${id}`} className='w-8/10 flex flex-row hover:font-semibold cursor-pointer' onClick={handleSelect}>
-          <div
+      <div id={`${id}`} className="w-8/10 flex flex-row hover:font-semibold cursor-pointer">
+        <div
           id={`${id}`}
-            className={`w-1/2 overflow-hidden mx-2 flex items-center hover:font-semibold cursor-pointer text-sm whitespace-pre`}
-            >
-            {preferredName ? preferredName : firstName} {lastName}
-          </div>
+          className={`w-1/2 overflow-hidden mx-2 flex items-center hover:font-semibold cursor-pointer text-sm whitespace-pre`}>
+          {preferredName ? preferredName : firstName} {lastName}
+        </div>
 
-          {/* LESSON PROGRESS */}
+        {/* LESSON PROGRESS */}
 
-          <div
+        <div
           id={`${id}`}
-            className={`w-1/2 mx-2 flex justify-center items-center hover:font-semibold cursor-pointer overflow-hidden text-sm text-left`}
-            >
-            <ProgressSwitch label={currentLocation ? currentLocation : lessonProgress} id={id} />
-          </div>
+          className={`w-1/2 mx-2 flex justify-center items-center hover:font-semibold cursor-pointer overflow-hidden text-sm text-left`}>
+          <ProgressSwitch label={currentLocation ? currentLocation : lessonProgress} id={id} />
+        </div>
       </div>
 
       {/* STUDENT ROLEY */}
@@ -154,30 +154,32 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
       {shareable ? (
         studentIsShared() ? (
           <div
+            aria-label={`asd`}
             id={`${id}`}
-            className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-red hover:bg-red-500 text-sm`}
+            className={`w-2/10 mx-2 flex items-center text-center rounded-lg hover:font-semibold cursor-pointer text-white bg-dark-red hover:bg-red-500 text-sm`}
             onClick={handleQuitShare}>
-            <span>Unshare</span>
+            <span id={`${id}`}>Unshare</span>
           </div>
         ) : studentIsViewed() ? (
           <div
+            aria-label={`asd`}
             id={`${id}`}
-            className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-sea-green hover:bg-green-400 text-sm`}
+            className={` w-2/10 mx-2 flex items-center text-center rounded-lg hover:font-semibold cursor-pointer text-white bg-sea-green hover:bg-green-400 text-sm`}
             onClick={handleShareStudentData}>
-            <span>Share</span>
+            <span id={`${id}`}>Share</span>
           </div>
         ) : (
           <div
             id={`${id}`}
-            className={`w-2/10 mx-2 flex items-center text-center rounded-lg font-semibold text-sea-green text-sm`}>
-            <span>Shareable</span>
+            className={`w-2/10 mx-2 flex items-center text-center rounded-lg hover:font-semibold cursor-pointer text-sea-green text-sm`}>
+            <span id={`${id}`}>Shareable</span>
           </div>
         )
       ) : (
         <div
           id={`${id}`}
-          className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-light-gray text-sm`}>
-          <span>N/A</span>
+          className={`w-2/10 mx-2 flex items-center text-center rounded-lg cursor-pointer text-light-gray text-sm`}>
+          <span id={`${id}`}>N/A</span>
         </div>
       )}
     </div>

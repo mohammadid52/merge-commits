@@ -1,30 +1,26 @@
-import React, { useContext, useState, useEffect, Suspense, lazy } from 'react';
-import { Switch, Route, Redirect, useRouteMatch, useHistory, useLocation } from 'react-router-dom';
+import React, { lazy, Suspense, useContext, useEffect, useState } from 'react';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 // import { IconContext } from 'react-icons/lib/esm/iconContext';
 // import { FaExpand, FaCompress, FaHome, FaRegThumbsUp, FaInfoCircle } from 'react-icons/fa';
-import Checkpoint from './ComponentViews/Checkpoint/Checkpoint';
 import * as customMutations from '../../customGraphql/customMutations';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import ClassRoster from './ClassRoster';
-import LessonControlBar from './LessonControlBar/LessonControlBar';
-import ToolTip from '../General/ToolTip/ToolTip';
 // import FooterLabels from '../General/LabelSwitch';
 import PositiveAlert from '../General/Popup';
 import { useOutsideAlerter } from '../General/hooks/outsideAlerter';
 import Body from './Body';
 import TopMenu from './TopMenu';
-import ClassRosterTitleBar from './ClassRoster/ClassRosterTitleBar';
 import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
+import QuickRegister from '../Auth/QuickRegister';
 
 const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
 const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
 const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
 const OutroView = lazy(() => import('./ComponentViews/OutroView/OutroView'));
 const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'));
-
 
 const LessonControl = () => {
   const { state, theme, dispatch } = useContext(LessonControlContext);
@@ -40,7 +36,7 @@ const LessonControl = () => {
   const [open, setOpen] = useState(state.open);
   const [pageViewed, setPageViewed] = useState({
     pageID: 0,
-    stage: 'intro'
+    stage: 'intro',
   });
 
   const handleFullscreen = () => {
@@ -48,7 +44,6 @@ const LessonControl = () => {
       return !fullscreen;
     });
   };
-
 
   const handleUpdateClassroom = async () => {
     let updatedClassroomData: any = {
@@ -64,7 +59,9 @@ const LessonControl = () => {
 
     try {
       const updatedClassroom = await API.graphql(
-        graphqlOperation(customMutations.updateClassroom, { input: updatedClassroomData })
+        graphqlOperation(customMutations.updateClassroom, {
+          input: updatedClassroomData,
+        })
       );
       dispatch({ type: 'SAVED_CHANGES' });
       // console.log(updatedClassroom);
@@ -85,7 +82,9 @@ const LessonControl = () => {
 
     try {
       const updatedClassroomDate = await API.graphql(
-        graphqlOperation(customMutations.updateClassroomDate, { input: updatedClassroomDateData })
+        graphqlOperation(customMutations.updateClassroomDate, {
+          input: updatedClassroomDateData,
+        })
       );
       dispatch({ type: 'SAVED_CHANGES' });
       // console.log(updatedClassroom);
@@ -108,9 +107,7 @@ const LessonControl = () => {
             : null,
           lastName: state.studentViewing.studentInfo.student.lastName,
         },
-        warmUpData: state.studentViewing.studentInfo.warmupData
-          ? state.studentViewing.studentInfo.warmupData
-          : null,
+        warmUpData: state.studentViewing.studentInfo.warmupData ? state.studentViewing.studentInfo.warmupData : null,
         corelessonData: state.studentViewing.studentInfo.corelessonData
           ? state.studentViewing.studentInfo.corelessonData
           : null,
@@ -177,7 +174,6 @@ const LessonControl = () => {
 
   useEffect(() => {
     let result = /.+\/(breakdown)\/*.*/.test(location.pathname);
-    // console.log('breakdown?', result, location.pathname)
 
     if (result) {
       setShareable(true);
@@ -206,16 +202,12 @@ const LessonControl = () => {
   }, [state.studentViewing]);
 
   useEffect(() => {
-    // console.log('change', state);
-
     if (
       !state.displayData ||
       !state.displayData.studentInfo ||
       !state.studentViewing.studentInfo ||
       !state.studentViewing.studentInfo.student
     ) {
-      // console.log('same student false outer');
-
       setIsSameStudentShared(false);
     }
 
@@ -226,14 +218,10 @@ const LessonControl = () => {
       state.studentViewing.studentInfo.student
     ) {
       if (state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id) {
-        // console.log('same student true');
-
         setIsSameStudentShared(true);
       }
 
       if (state.displayData.studentInfo.id !== state.studentViewing.studentInfo.student.id) {
-        // console.log('same student false inner');
-
         setIsSameStudentShared(false);
       }
 
@@ -241,20 +229,24 @@ const LessonControl = () => {
         state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id &&
         !state.studentViewing.live
       ) {
-        // console.log('live false');
-
         setIsSameStudentShared(false);
       }
-
-      // if (handleQuitShare) {
-      //     console.log('not being displayed')
-
-      //     setIsSameStudentShared(false)
-      // }
     }
   }, [state.displayData, state.studentViewing]);
 
   const { visible, setVisible, ref } = useOutsideAlerter(false);
+
+  /*
+   *
+   * Passing components upwards as popups
+   *
+   * */
+  const [quickRegister, setQuickRegister] = useState(false);
+  const [instructions, setInstructions] = useState({
+    visible: false,
+    available: false,
+    content: null,
+  });
 
   const [homePopup, setHomePopup] = useState(false);
   const [lessonButton, setLessonButton] = useState(false);
@@ -271,7 +263,7 @@ const LessonControl = () => {
     setLessonButton((prevState: any) => !prevState);
   };
 
-  const handleSubmit = () => {
+  const handleGoToUserManagement = () => {
     history.push('/dashboard/manage-users');
   };
 
@@ -286,50 +278,67 @@ const LessonControl = () => {
   return (
     <div className={`w-full h-screen bg-gray-200 overflow-hidden`}>
       <div className={`relative w-full h-full flex flex-col`}>
+        {/**
+         *
+         *
+         * POPUPS SECTION:
+         * DEFINITELY NEEDS SOME RESTRUCTURING AND OPTIMIZATION
+         *
+         * /}
+
+        {/* QUICK REGISTER */}
+
+        <QuickRegister active={quickRegister} setQuickRegister={setQuickRegister} />
+
+        {/* POPUP IMPLEMENTATIONS BELOW NEED REFACTORING
+              see above for optimized
+        */}
+
+        {/* USER MANAGEMENT */}
         <div className={`${visible ? 'absolute z-100 h-full' : 'hidden'}`} onClick={handleClick}>
           <PositiveAlert
+            identifier={''}
             alert={visible}
             setAlert={setVisible}
-            header='Are you sure you want to leave the Teacher View?'
-            button1='Go to student management'
-            button2='Cancel'
-            svg='question'
-            handleButton1={handleSubmit}
+            header="Are you sure you want to leave the Teacher View?"
+            button1="Go to student management"
+            button2="Cancel"
+            svg="question"
+            handleButton1={handleGoToUserManagement}
             handleButton2={() => handleClick}
-            theme='light'
-            fill='screen'
+            theme="light"
+            fill="screen"
           />
         </div>
-        <div
-          className={`${homePopup ? 'absolute z-100 h-full' : 'hidden'}`}
-          onClick={handleHomePopup}>
+        {/* HANDLE GO  HOME */}
+        <div className={`${homePopup ? 'absolute z-100 h-full' : 'hidden'}`} onClick={handleHomePopup}>
           <PositiveAlert
+            identifier={''}
             alert={homePopup}
             setAlert={setHomePopup}
-            header='Are you sure you want to leave the Teacher View?'
-            button1='Go to the dashboard'
-            button2='Cancel'
-            svg='question'
+            header="Are you sure you want to leave the Teacher View?"
+            button1="Go to the dashboard"
+            button2="Cancel"
+            svg="question"
             handleButton1={handleHome}
             handleButton2={() => handleHomePopup}
-            theme='light'
-            fill='screen'
+            theme="light"
+            fill="screen"
           />
         </div>
-        <div
-          className={`${lessonButton ? 'absolute z-100 h-full' : 'hidden'}`}
-          onClick={handleLessonButton}>
+        <div className={`${lessonButton ? 'absolute z-100 h-full' : 'hidden'}`} onClick={handleLessonButton}>
           <PositiveAlert
+            identifier={''}
             alert={lessonButton}
             setAlert={setLessonButton}
-            header='Are you sure you want to close this lesson?'
-            button1='Complete lesson'
-            button2='Cancel'
-            svg='question'
+            header="Are you sure you want to close this lesson?"
+            button1="Complete lesson"
+            button2="Cancel"
+            svg="question"
             handleButton1={handleHome}
             handleButton2={() => handleLessonButton}
-            theme='light'
-            fill='screen'
+            theme="light"
+            fill="screen"
           />
         </div>
 
@@ -347,17 +356,15 @@ const LessonControl = () => {
           handleHomePopup={handleHomePopup}
           pageViewed={pageViewed}
           setPageViewed={setPageViewed}
+          setQuickRegister={setQuickRegister}
         />
         {/* END TOP MENU */}
 
         <div className={`w-full h-8.5/10 flex rounded-lg`}>
           {/* LEFT SECTION */}
           <div
-            className={`${
-              fullscreen ? 'hidden' : ''
-            } w-4/10 min-w-100 max-w-160 h-full flex flex-col items-center `}>
+            className={`${fullscreen ? 'hidden' : ''} w-4/10 min-w-100 max-w-160 h-full flex flex-col items-center `}>
             <div className={`h-full w-full flex flex-col justify-between items-center`}>
-              
               {/* <ClassRosterTitleBar handleResetDoneCounter={handleResetDoneCounter} /> */}
 
               <div className={`h-full`}>
@@ -378,47 +385,68 @@ const LessonControl = () => {
             className={`relative 
             ${fullscreen ? 'w-full' : 'w-6/10'} relative 
             w-6/10 lg:w-full h-full flex flex-col items-center`}>
-
-            <StudentWindowTitleBar 
+            <StudentWindowTitleBar
               setFullscreenInstructions={setFullscreenInstructions}
               fullscreenInstructions={fullscreenInstructions}
               handleFullscreen={handleFullscreen}
               fullscreen={fullscreen}
               pageViewed={pageViewed}
               setPageViewed={setPageViewed}
+              instructions={instructions}
+              setInstructions={setInstructions}
             />
 
             <div
               className={`
-              ${fullscreen ? 'h-full' : 'h-full'}
-              ${theme.bg} 
-              relative w-full p-4 
-              border-t-2 border-black
-              overflow-y-scroll overflow-x-hidden`}>
-              <Suspense
-                fallback={
-                  <div className='min-h-screen w-full flex flex-col justify-center items-center'>
-                    <ComponentLoading />
+                          ${fullscreen ? 'h-full' : 'h-full'}
+                          ${theme.bg} 
+                          relative w-full  
+                          border-t-2 border-black
+                          overflow-y-scroll overflow-x-hidden`}>
+              {/**
+               *
+               * INSTRUCTIONS
+               *
+               * */}
+              {instructions.visible && instructions.available ? (
+                <div
+                  className={`
+                            ${fullscreen ? 'h-full' : 'h-full'}
+                            absolute w-full
+                            border-t-2 border-black
+                            overflow-hidden bg-black bg-opacity-40 z-100`}>
+                  <div
+                    className={`absolute w-full h-full shadow-xl text-lg flex justify-center items-center animate-fadeIn`}>
+                    <div className={` w-5/10 h-5/10  mx-auto my-auto bg-light-gray p-4 rounded-xl`}>
+                      {instructions.content}
+                    </div>
                   </div>
-                }>
+                </div>
+              ) : null}
 
-
-
-                {/**
-                 * 
-                 * 
-                 * THIS LOADS THE LESSON COMPONENTO
-                 * 
-                 * 
-                */}
-                <Body fullscreenInstructions={fullscreenInstructions}/>
-
-
-
-
-              </Suspense>
+              {/**
+               *
+               * COMPONENT
+               *
+               * */}
+              <div className={`h-full p-4`}>
+                <Suspense
+                  fallback={
+                    <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                      <ComponentLoading />
+                    </div>
+                  }>
+                  {/**
+                   *
+                   *
+                   * THIS LOADS THE LESSON COMPONENT
+                   *
+                   *
+                   */}
+                  <Body fullscreenInstructions={fullscreenInstructions} setInstructions={setInstructions} />
+                </Suspense>
+              </div>
             </div>
-        
           </div>
         </div>
       </div>

@@ -138,11 +138,11 @@ const Registration = () => {
                     password: 'xIconoclast.5x',
                     firstName: '',
                     lastName: '',
-                    phone: '',
-                    birthdate: '',
-                    grade: '',
-                    role: '',
-                    externalId: '',
+                    phone: '00',
+                    birthdate: '10-10-2020',
+                    grade: '1',
+                    role: 'ST',
+                    externalId: '3',
                 }
             })
         } catch (error) {
