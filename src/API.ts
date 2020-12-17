@@ -133,6 +133,39 @@ export type DeleteServiceProviderInput = {
   id?: string | null,
 };
 
+export type CreateStaffInput = {
+  id?: string | null,
+  institutionID: string,
+  staffAuthID: string,
+  staffEmail: string,
+  status?: string | null,
+  statusChangeDate?: string | null,
+};
+
+export type ModelStaffConditionInput = {
+  institutionID?: ModelIDInput | null,
+  staffAuthID?: ModelStringInput | null,
+  staffEmail?: ModelStringInput | null,
+  status?: ModelStringInput | null,
+  statusChangeDate?: ModelStringInput | null,
+  and?: Array< ModelStaffConditionInput | null > | null,
+  or?: Array< ModelStaffConditionInput | null > | null,
+  not?: ModelStaffConditionInput | null,
+};
+
+export type UpdateStaffInput = {
+  id: string,
+  institutionID?: string | null,
+  staffAuthID?: string | null,
+  staffEmail?: string | null,
+  status?: string | null,
+  statusChangeDate?: string | null,
+};
+
+export type DeleteStaffInput = {
+  id?: string | null,
+};
+
 export type CreatePersonInput = {
   id?: string | null,
   authId: string,
@@ -1602,6 +1635,18 @@ export enum ModelSortDirection {
 }
 
 
+export type ModelStaffFilterInput = {
+  id?: ModelIDInput | null,
+  institutionID?: ModelIDInput | null,
+  staffAuthID?: ModelStringInput | null,
+  staffEmail?: ModelStringInput | null,
+  status?: ModelStringInput | null,
+  statusChangeDate?: ModelStringInput | null,
+  and?: Array< ModelStaffFilterInput | null > | null,
+  or?: Array< ModelStaffFilterInput | null > | null,
+  not?: ModelStaffFilterInput | null,
+};
+
 export type ModelStringKeyConditionInput = {
   eq?: string | null,
   le?: string | null,
@@ -2162,6 +2207,63 @@ export type DeleteServiceProviderMutation = {
   } | null,
 };
 
+export type CreateStaffMutationVariables = {
+  input: CreateStaffInput,
+  condition?: ModelStaffConditionInput | null,
+};
+
+export type CreateStaffMutation = {
+  createStaff:  {
+    __typename: "Staff",
+    id: string,
+    institutionID: string,
+    staffAuthID: string,
+    staffEmail: string,
+    status: string | null,
+    statusChangeDate: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateStaffMutationVariables = {
+  input: UpdateStaffInput,
+  condition?: ModelStaffConditionInput | null,
+};
+
+export type UpdateStaffMutation = {
+  updateStaff:  {
+    __typename: "Staff",
+    id: string,
+    institutionID: string,
+    staffAuthID: string,
+    staffEmail: string,
+    status: string | null,
+    statusChangeDate: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteStaffMutationVariables = {
+  input: DeleteStaffInput,
+  condition?: ModelStaffConditionInput | null,
+};
+
+export type DeleteStaffMutation = {
+  deleteStaff:  {
+    __typename: "Staff",
+    id: string,
+    institutionID: string,
+    staffAuthID: string,
+    staffEmail: string,
+    status: string | null,
+    statusChangeDate: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreatePersonMutationVariables = {
   input: CreatePersonInput,
   condition?: ModelPersonConditionInput | null,
@@ -2537,10 +2639,6 @@ export type CreateLessonUnitMutation = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -2677,10 +2775,6 @@ export type UpdateLessonUnitMutation = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -2816,10 +2910,6 @@ export type DeleteLessonUnitMutation = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -4248,10 +4338,6 @@ export type CreateClassroomMutation = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -4501,10 +4587,6 @@ export type UpdateClassroomMutation = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -4753,10 +4835,6 @@ export type DeleteClassroomMutation = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -5394,33 +5472,6 @@ export type CreateLessonMutation = {
         video: string | null,
       } | null,
     } | null,
-    contributors:  {
-      __typename: "ModelPersonConnection",
-      items:  Array< {
-        __typename: "Person",
-        id: string,
-        authId: string,
-        status: PersonStatus,
-        email: string,
-        role: Role,
-        type: string | null,
-        firstName: string,
-        preferredName: string | null,
-        lastName: string,
-        externalId: string | null,
-        grade: string | null,
-        onBoardSurvey: boolean | null,
-        offBoardSurvey: boolean | null,
-        phone: string | null,
-        birthdate: string | null,
-        image: string | null,
-        language: Language,
-        filters: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
     grades: Array< number | null > | null,
     artistID: string,
     artist:  {
@@ -5640,33 +5691,6 @@ export type UpdateLessonMutation = {
         __typename: "AdditionalContent",
         video: string | null,
       } | null,
-    } | null,
-    contributors:  {
-      __typename: "ModelPersonConnection",
-      items:  Array< {
-        __typename: "Person",
-        id: string,
-        authId: string,
-        status: PersonStatus,
-        email: string,
-        role: Role,
-        type: string | null,
-        firstName: string,
-        preferredName: string | null,
-        lastName: string,
-        externalId: string | null,
-        grade: string | null,
-        onBoardSurvey: boolean | null,
-        offBoardSurvey: boolean | null,
-        phone: string | null,
-        birthdate: string | null,
-        image: string | null,
-        language: Language,
-        filters: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
     } | null,
     grades: Array< number | null > | null,
     artistID: string,
@@ -5888,33 +5912,6 @@ export type DeleteLessonMutation = {
         video: string | null,
       } | null,
     } | null,
-    contributors:  {
-      __typename: "ModelPersonConnection",
-      items:  Array< {
-        __typename: "Person",
-        id: string,
-        authId: string,
-        status: PersonStatus,
-        email: string,
-        role: Role,
-        type: string | null,
-        firstName: string,
-        preferredName: string | null,
-        lastName: string,
-        externalId: string | null,
-        grade: string | null,
-        onBoardSurvey: boolean | null,
-        offBoardSurvey: boolean | null,
-        phone: string | null,
-        birthdate: string | null,
-        image: string | null,
-        language: Language,
-        filters: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
     grades: Array< number | null > | null,
     artistID: string,
     artist:  {
@@ -6131,10 +6128,6 @@ export type CreateLessonCheckpointMutation = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -6271,10 +6264,6 @@ export type UpdateLessonCheckpointMutation = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -6410,10 +6399,6 @@ export type DeleteLessonCheckpointMutation = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -8634,10 +8619,6 @@ export type CreateLessonKeyWordMutation = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -8766,10 +8747,6 @@ export type UpdateLessonKeyWordMutation = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -8897,10 +8874,6 @@ export type DeleteLessonKeyWordMutation = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -10112,6 +10085,48 @@ export type ListInstitutionsQuery = {
   } | null,
 };
 
+export type GetStaffQueryVariables = {
+  id: string,
+};
+
+export type GetStaffQuery = {
+  getStaff:  {
+    __typename: "Staff",
+    id: string,
+    institutionID: string,
+    staffAuthID: string,
+    staffEmail: string,
+    status: string | null,
+    statusChangeDate: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListStaffsQueryVariables = {
+  filter?: ModelStaffFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListStaffsQuery = {
+  listStaffs:  {
+    __typename: "ModelStaffConnection",
+    items:  Array< {
+      __typename: "Staff",
+      id: string,
+      institutionID: string,
+      staffAuthID: string,
+      staffEmail: string,
+      status: string | null,
+      statusChangeDate: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
 export type GetPersonQueryVariables = {
   email: string,
   authId: string,
@@ -11002,10 +11017,6 @@ export type GetClassroomQuery = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -11511,33 +11522,6 @@ export type GetLessonQuery = {
         video: string | null,
       } | null,
     } | null,
-    contributors:  {
-      __typename: "ModelPersonConnection",
-      items:  Array< {
-        __typename: "Person",
-        id: string,
-        authId: string,
-        status: PersonStatus,
-        email: string,
-        role: Role,
-        type: string | null,
-        firstName: string,
-        preferredName: string | null,
-        lastName: string,
-        externalId: string | null,
-        grade: string | null,
-        onBoardSurvey: boolean | null,
-        offBoardSurvey: boolean | null,
-        phone: string | null,
-        birthdate: string | null,
-        image: string | null,
-        language: Language,
-        filters: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
     grades: Array< number | null > | null,
     artistID: string,
     artist:  {
@@ -11752,10 +11736,6 @@ export type ListLessonsQuery = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -13230,10 +13210,6 @@ export type OnUpdateClassroomSubscription = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -13752,6 +13728,48 @@ export type OnDeleteServiceProviderSubscription = {
   } | null,
 };
 
+export type OnCreateStaffSubscription = {
+  onCreateStaff:  {
+    __typename: "Staff",
+    id: string,
+    institutionID: string,
+    staffAuthID: string,
+    staffEmail: string,
+    status: string | null,
+    statusChangeDate: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateStaffSubscription = {
+  onUpdateStaff:  {
+    __typename: "Staff",
+    id: string,
+    institutionID: string,
+    staffAuthID: string,
+    staffEmail: string,
+    status: string | null,
+    statusChangeDate: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteStaffSubscription = {
+  onDeleteStaff:  {
+    __typename: "Staff",
+    id: string,
+    institutionID: string,
+    staffAuthID: string,
+    staffEmail: string,
+    status: string | null,
+    statusChangeDate: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreatePersonSubscription = {
   onCreatePerson:  {
     __typename: "Person",
@@ -14077,10 +14095,6 @@ export type OnCreateLessonUnitSubscription = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -14212,10 +14226,6 @@ export type OnUpdateLessonUnitSubscription = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -14346,10 +14356,6 @@ export type OnDeleteLessonUnitSubscription = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -15476,33 +15482,6 @@ export type OnCreateLessonSubscription = {
         video: string | null,
       } | null,
     } | null,
-    contributors:  {
-      __typename: "ModelPersonConnection",
-      items:  Array< {
-        __typename: "Person",
-        id: string,
-        authId: string,
-        status: PersonStatus,
-        email: string,
-        role: Role,
-        type: string | null,
-        firstName: string,
-        preferredName: string | null,
-        lastName: string,
-        externalId: string | null,
-        grade: string | null,
-        onBoardSurvey: boolean | null,
-        offBoardSurvey: boolean | null,
-        phone: string | null,
-        birthdate: string | null,
-        image: string | null,
-        language: Language,
-        filters: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
     grades: Array< number | null > | null,
     artistID: string,
     artist:  {
@@ -15717,33 +15696,6 @@ export type OnUpdateLessonSubscription = {
         __typename: "AdditionalContent",
         video: string | null,
       } | null,
-    } | null,
-    contributors:  {
-      __typename: "ModelPersonConnection",
-      items:  Array< {
-        __typename: "Person",
-        id: string,
-        authId: string,
-        status: PersonStatus,
-        email: string,
-        role: Role,
-        type: string | null,
-        firstName: string,
-        preferredName: string | null,
-        lastName: string,
-        externalId: string | null,
-        grade: string | null,
-        onBoardSurvey: boolean | null,
-        offBoardSurvey: boolean | null,
-        phone: string | null,
-        birthdate: string | null,
-        image: string | null,
-        language: Language,
-        filters: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
     } | null,
     grades: Array< number | null > | null,
     artistID: string,
@@ -15960,33 +15912,6 @@ export type OnDeleteLessonSubscription = {
         video: string | null,
       } | null,
     } | null,
-    contributors:  {
-      __typename: "ModelPersonConnection",
-      items:  Array< {
-        __typename: "Person",
-        id: string,
-        authId: string,
-        status: PersonStatus,
-        email: string,
-        role: Role,
-        type: string | null,
-        firstName: string,
-        preferredName: string | null,
-        lastName: string,
-        externalId: string | null,
-        grade: string | null,
-        onBoardSurvey: boolean | null,
-        offBoardSurvey: boolean | null,
-        phone: string | null,
-        birthdate: string | null,
-        image: string | null,
-        language: Language,
-        filters: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
     grades: Array< number | null > | null,
     artistID: string,
     artist:  {
@@ -16198,10 +16123,6 @@ export type OnCreateLessonCheckpointSubscription = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -16333,10 +16254,6 @@ export type OnUpdateLessonCheckpointSubscription = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -16467,10 +16384,6 @@ export type OnDeleteLessonCheckpointSubscription = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -18491,10 +18404,6 @@ export type OnCreateLessonKeyWordSubscription = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -18618,10 +18527,6 @@ export type OnUpdateLessonKeyWordSubscription = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -18744,10 +18649,6 @@ export type OnDeleteLessonKeyWordSubscription = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,

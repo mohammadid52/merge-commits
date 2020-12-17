@@ -59,6 +59,9 @@ type Institution
   website: String
   image: String
   serviceProviders: [ServiceProvider] @connection(keyName: "providersByPartner", fields: ["id"])
+  # rooms
+  # curricula
+  # classes
 }
 
 type ServiceProvider 
@@ -69,6 +72,19 @@ type ServiceProvider
   partnerID: ID!
   providerID: ID!
   providerInstitution: Institution @connection(fields: ["providerID"])
+}
+
+type Staff
+@model
+@key(name: "staffByInstitution", fields: ["institutionID", "staffEmail"])
+{
+  id: ID!
+  institutionID: ID!
+  staffAuthID: String!
+  staffEmail: String!
+  status: String
+  statusChangeDate: AWSDate
+  # curricula
 }
 
 ## Person
@@ -124,8 +140,6 @@ type Curriculum @model @key(fields: ["id"]) {
   type: String
   description: String
   objectives: [String]
-  # contributors: [Person]
-  # grade: [Int]
   languages: [Language]
   units: [Unit] @connection(keyName: "byCurriculum", fields: ["id"])
 }
@@ -139,6 +153,21 @@ type Unit @model @key(fields: ["id"]) @key(name: "byCurriculum", fields: ["curri
   curriculumID: ID!
   languages: [Language]
   lessons: [LessonUnit] @connection(keyName: "lessonByUnit", fields: ["id"])
+}
+
+type Syllabus
+@model
+@key(fields: ["id"])
+@key(name: "syllabusByCurriculum", fields: ["curriculumID"])
+{
+  id: ID!
+  name: String!
+  type: String
+  description: String
+  objectives: [String]
+  curriculumID: ID!
+  languages: [Language]
+  # lessons: [LessonUnit] @connection(keyName: "lessonByUnit", fields: ["id"])
 }
 
 # type CurriculumLessons @model(queries: null)
@@ -408,7 +437,6 @@ type Lesson @model @key(fields: ["id"]) {
   type: String
   instructions: [String]
   theme: Theme
-  contributors: [Person]! @connection(keyName: "byContributor", fields: ["id"])
   grades: [Int]
   artistID: ID!
   artist: Artist! @connection(fields: ["artistID"])
