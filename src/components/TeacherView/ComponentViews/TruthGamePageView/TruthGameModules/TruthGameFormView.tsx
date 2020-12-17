@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect, SyntheticEvent } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 import { useCookies } from 'react-cookie';
-import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 export interface TruthInput {
   id: string;
@@ -24,12 +23,12 @@ const TruthGameForm = (props: props) => {
   const gameInputs = state.data.lesson.warmUp.inputs.truthGameInputs;
   const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
   const [input, setInput] = useState({
-    truthGameArray: [],
+    truthGame: [],
   });
 
   useEffect(() => {
     setInput({
-      truthGameArray: dataProps && dataProps.truthGameArray ? dataProps.truthGameArray : [],
+      truthGame: dataProps && dataProps.truthGame ? dataProps.truthGame : [],
     });
   }, [dataProps]);
 
@@ -47,8 +46,8 @@ const TruthGameForm = (props: props) => {
                   id={item.id}
                   className="h-8 w-full cursor-pointer font-light text-gray-400 text-sm flex flex-row-reverse justify-between items-center px-2">
                   <button key={key} id={item.id} name="lie" className={`${item.isLie ? 'text-2xl' : ''} w-auto mx-4`}>
-                    {' '}
-                    {item.isLie ? '🤥' : '⚪️'}
+                    {/*{item.isLie ? '🤥' : '⚪'}*/}
+                    {input.truthGame !== [] ? (input.truthGame[key]?.isLie ? '🤥' : '⚪') : item.isLie ? '🤥' : '⚪'}
                   </button>
                   {item.label}
                 </label>
@@ -60,6 +59,7 @@ const TruthGameForm = (props: props) => {
                 name="list"
                 type="text"
                 // placeholder={`${state.data.lesson.warmUp.inputs.textExample}`}
+                value={input.truthGame !== [] ? input.truthGame[key]?.text : ''}
                 defaultValue={item.text}
               />
             </div>
