@@ -87,21 +87,14 @@ const Body = () => {
   }, [state.currentPage, state.pages]);
 
   return (
-    // <div className="p-4 md:px-8 md:h-8.3/10">
-    <div className={`z-0 px-4 pb-4 ${theme.bg}`}>
+    <div className={`z-0 px-4 pb-4 pt-4 ${theme.bg}`}>
       <Switch>
         <Route exact path={`${match.url}/`}>
           <Intro />
         </Route>
-        {/* <Route path='/icebreaker'>
-                    {pageFetch('icebreaker')}
-                </Route> */}
         <Route path={`${match.url}/warmup`}>{pageFetch('warmup')}</Route>
         <Route path={`${match.url}/corelesson`}>{pageFetch('corelesson')}</Route>
         <Route path={`${match.url}/activity`}>{pageFetch('activity')}</Route>
-        {/* <Route path='/wrap-up'>
-                    {pageFetch('wrap-up')}
-                </Route> */}
         <Route path={`${match.url}/outro`}>
           <Outro />
         </Route>
@@ -122,9 +115,6 @@ const Body = () => {
             />
           )}
         />
-        {/* <Route>
-                    <ErrorPage />
-                </Route> */}
       </Switch>
     </div>
   );
