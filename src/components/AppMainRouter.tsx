@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, Suspense, lazy } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import { Auth } from '@aws-amplify/auth';
+import { useCookies } from 'react-cookie';
 
 import { GlobalContext } from '../contexts/GlobalContext';
 import Login from './Auth/Login';
@@ -22,12 +22,12 @@ const TeacherView = lazy(() => import('./TeacherView/TeacherView'));
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
   const { theme, dispatch } = useContext(GlobalContext);
-  const [cookies, setCookie, removeCookie] = useCookies();
+  const [, , removeCookie] = useCookies();
+  const history = useHistory();
 
   const checkUserAuthenticated = () => {
     Auth.currentAuthenticatedUser()
       .then((user) => {
-        console.log(user);
         dispatch({
           type: 'PREV_LOG_IN',
           payload: {
@@ -39,7 +39,35 @@ const MainRouter: React.FC = () => {
       .catch((err) => console.error(err));
   };
 
+  const checkForUserInactivity = () => {
+    let idelTime = 0;
+    let timer: any;
+
+    window.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === 'visible') {
+        clearTimeout(timer);        //  Clear timer if user comes back to the app.
+      } else {
+        idelTime = 30 * 60 * 1000;  // Timer for 30 mins to count if user not using the app.
+
+        const autoLogout = async () => {
+          try {
+            await Auth.signOut();
+            removeCookie('auth', { path: '/' });
+            dispatch({ type: 'CLEANUP' });
+            sessionStorage.removeItem('accessToken');
+            history.push('/login');
+          } catch (error) {
+            console.log('error signing out: ', error);
+          }
+        }
+
+        timer = setTimeout(autoLogout, idelTime)
+      }
+    });
+
+  }
   useEffect(() => {
+    checkForUserInactivity();
     checkUserAuthenticated();
   }, []);
 

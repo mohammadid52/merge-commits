@@ -6,7 +6,8 @@ import {
   useRouteMatch,
   Switch,
   Route,
-  Redirect
+  Redirect,
+  useHistory
 } from 'react-router-dom';
 // import PageHeaderBar from '../Header/PageHeaderBar';
 import SideMenu from './Menu/SideMenu';
@@ -32,6 +33,7 @@ type userObject = {
 
 const Dashboard: React.FC = () => {
   const match = useRouteMatch();
+  const history = useHistory();
   const [cookies, setCookie] = useCookies(['auth']);
   const [userData, setUserData] = useState({
     role: '',
@@ -59,17 +61,21 @@ const Dashboard: React.FC = () => {
       }
     })
 
-    setCookie('auth', { ...cookies.auth, role: user.role, firstName: firstName, id: user.id })
+    setCookie('auth', { ...cookies.auth, role: user.role, firstName: firstName, id: user.id }, { path: '/' })
   }
 
   async function getUser() {
+    const userEmail = (state.user?.email) ? (state.user?.email) : (cookies.auth?.email);
+    const userAuthId = (state.user?.authId) ? (state.user?.authId) : (cookies.auth?.authId);
     try {
       // this any needs to be changed once a solution is found!!!
-      const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: cookies.auth.email, authId: cookies.auth.authId }))
+      const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: userEmail, authId: userAuthId }))
       // console.log(user)
       setUser(user.data.getPerson);
     } catch (error) {
-      console.log("Error while fetching the person's data", error)
+      if (!userEmail && !userAuthId) {
+        history.push('/login');
+      }
       console.error(error)
     }
   }

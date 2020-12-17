@@ -3,7 +3,7 @@ import { GlobalContext } from '../../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
 import { NavLink, useHistory, useLocation } from 'react-router-dom';
 
-import {LinkProps} from '../Dashboard/Menu/Links';
+import { LinkProps } from '../Dashboard/Menu/Links';
 
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineLogout } from 'react-icons/ai';
@@ -11,7 +11,7 @@ import { AiOutlineLogout } from 'react-icons/ai';
 import { Auth } from '@aws-amplify/auth';
 
 const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
-  const [, , removeCookie] = useCookies(['auth']);
+  const [cookies, , removeCookie] = useCookies();
   const location = useLocation();
   const history = useHistory();
   const { theme, lightSwitch, forceTheme, state, dispatch } = useContext(GlobalContext);
@@ -19,7 +19,8 @@ const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
   async function SignOut() {
     try {
       await Auth.signOut();
-      removeCookie('auth');
+      removeCookie('auth', { path: '/' });
+      sessionStorage.removeItem('accessToken');
       dispatch({ type: 'CLEANUP' });
       history.push('/');
     } catch (error) {

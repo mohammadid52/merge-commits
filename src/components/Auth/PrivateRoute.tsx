@@ -1,6 +1,4 @@
-import React, { useContext } from 'react';
-import { useCookies } from 'react-cookie';
-import { GlobalContext } from '../../contexts/GlobalContext';
+import React from 'react';
 import {
   Route,
   Redirect,
@@ -12,19 +10,13 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute = ({ children, path }: PrivateRouteProps) => {
-  const { state } = useContext(GlobalContext);
-  const [cookies] = useCookies();
-
-  // TODO: Delay in state updating in the global 
-  // context redirect everything to '/login' Need to fix this.
-  // Dashboard is setting auth cookies multiple times need to fix that.(In progress...)
+  const accessToken = sessionStorage.getItem('accessToken');
 
   return (
     <Route
       path={path}
       render={({ location }) =>
-      cookies.auth ? (
-          // state.isAuthenticated ? (
+        accessToken ? (
           children
         ) : (
             <Redirect

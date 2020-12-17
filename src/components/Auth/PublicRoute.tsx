@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import { useCookies } from 'react-cookie';
+import React from 'react';
 import { Route, Redirect } from "react-router-dom";
 
 interface PublicRouteProps {
@@ -9,13 +8,15 @@ interface PublicRouteProps {
 }
 
 const PublicRoute = ({ children, path, restricted }: PublicRouteProps) => {
-  const [cookies] = useCookies();
+  const accessToken = sessionStorage.getItem('accessToken');
+
+  // restricted will identify if need to hide this route from authenticated users.
 
   return (
     <Route
       path={path}
       render={({ location }) =>
-        (cookies.auth && restricted) ? (
+        (accessToken && restricted) ? (
           <Redirect
             to={{
               pathname: "/dashboard",

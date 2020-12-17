@@ -41,11 +41,12 @@ const Login = () => {
           email: username,
           isChecked: isChecked,
           password: password
-        });
+        }, { path: '/' });
       } else {
         removeCookie('cred');
       }
-      setCookie('auth', { email: username, authId: user.username }, { secure: false });
+      sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken)
+      setCookie('auth', { email: username, authId: user.username }, { secure: false, path: '/' });
       history.push('/dashboard');
     } catch (error) {
       console.error('error signing in', error);
