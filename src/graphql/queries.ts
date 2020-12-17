@@ -15,13 +15,18 @@ export const getInstitution = /* GraphQL */ `
       state
       zip
       phone
-      contact {
-        name
-        phone
-        email
-      }
       website
       image
+      serviceProviders {
+        items {
+          id
+          partnerID
+          providerID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -53,13 +58,11 @@ export const listInstitutions = /* GraphQL */ `
         state
         zip
         phone
-        contact {
-          name
-          phone
-          email
-        }
         website
         image
+        serviceProviders {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -285,13 +288,11 @@ export const getCourse = /* GraphQL */ `
         state
         zip
         phone
-        contact {
-          name
-          phone
-          email
-        }
         website
         image
+        serviceProviders {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1403,6 +1404,7 @@ export const getLesson = /* GraphQL */ `
           example
           titleExample
           textExample
+          listInputNumber
         }
         breakdown {
           included
@@ -1670,6 +1672,7 @@ export const getWarmUp = /* GraphQL */ `
         example
         titleExample
         textExample
+        listInputNumber
         truthGameInputs {
           id
           label
@@ -1715,6 +1718,7 @@ export const listWarmUps = /* GraphQL */ `
           example
           titleExample
           textExample
+          listInputNumber
         }
         breakdown {
           included

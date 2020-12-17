@@ -23,10 +23,17 @@ enum Role {
   ST
 }
 
-## Institution:
-# Main table for definition of an institution. This table is connected to Person (has-many) and Class (has-many). Has nested type of Contact.
+### Institution:
+## A query at the Institution level includes basic insitution information, as well as:
+# an array of ServiceProvider entries and their connecting Institution entries
+# an array of Staff entries and their connected Person entries
+# an array of Room's (with access to data from all connecting tables to Room)
+# an array of Curriculum's (with access to data from all connecting tables to Curriculum)
+# an array of Class's (with access to data from all connecting tables to Class)
+
 ## Keys:
 # primary — id
+
 ## Required fields:
 # id
 # name
@@ -34,9 +41,11 @@ enum Role {
 # address
 # city
 # zip
-# contact ( name, phone, email )
 
-type Institution @model @key(fields: ["id"]) {
+type Institution 
+@model 
+@key(fields: ["id"]) 
+{
   id: ID!
   name: String!
   type: String!
@@ -47,26 +56,31 @@ type Institution @model @key(fields: ["id"]) {
   state: String
   zip: String!
   phone: String
-  contact: Contact!
-  # coordinator: [Person]
   website: String
   image: String
+  serviceProviders: [ServiceProvider] @connection(keyName: "providersByPartner", fields: ["id"])
 }
 
-type Contact {
-  name: String!
-  phone: String!
-  email: String!
+type ServiceProvider 
+@model(queries: null)
+@key(name: "providersByPartner", fields: ["partnerID", "providerID"]) 
+{
+  id: ID!
+  partnerID: ID!
+  providerID: ID!
+  providerInstitution: Institution @connection(fields: ["providerID"])
 }
 
 ## Person
 # Main table for user information. This table ıs connected to Institution (belongs-to), Class (has-many), ......... Has ENUM types Language, Role, and PersonStatus.
+
 ## Keys:
 # primary — email
 # secondary — authId
 # byContributor ** IGNORE **
 # byUserId — allows for queries by userID
 # byRole — allows for queries by role
+
 ## Required fields:
 # id
 # authId
@@ -94,7 +108,6 @@ type Person
   lastName: String!
   externalId: String
   grade: String
-  #courses
   wordbank: [StudentWord] @connection(keyName: "wordsByStudent", fields: ["email"])
   onBoardSurvey: Boolean
   offBoardSurvey: Boolean
@@ -464,6 +477,7 @@ type Inputs {
   example: String
   titleExample: String
   textExample: String
+  listInputNumber: Int
   truthGameInputs: [TruthGameInput]
   additionalInputs: [WritingPrompts!]
 }

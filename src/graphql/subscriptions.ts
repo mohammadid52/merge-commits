@@ -404,13 +404,18 @@ export const onCreateInstitution = /* GraphQL */ `
       state
       zip
       phone
-      contact {
-        name
-        phone
-        email
-      }
       website
       image
+      serviceProviders {
+        items {
+          id
+          partnerID
+          providerID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -429,13 +434,18 @@ export const onUpdateInstitution = /* GraphQL */ `
       state
       zip
       phone
-      contact {
-        name
-        phone
-        email
-      }
       website
       image
+      serviceProviders {
+        items {
+          id
+          partnerID
+          providerID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -454,13 +464,108 @@ export const onDeleteInstitution = /* GraphQL */ `
       state
       zip
       phone
-      contact {
-        name
-        phone
-        email
-      }
       website
       image
+      serviceProviders {
+        items {
+          id
+          partnerID
+          providerID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateServiceProvider = /* GraphQL */ `
+  subscription OnCreateServiceProvider {
+    onCreateServiceProvider {
+      id
+      partnerID
+      providerID
+      providerInstitution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        serviceProviders {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateServiceProvider = /* GraphQL */ `
+  subscription OnUpdateServiceProvider {
+    onUpdateServiceProvider {
+      id
+      partnerID
+      providerID
+      providerInstitution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        serviceProviders {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteServiceProvider = /* GraphQL */ `
+  subscription OnDeleteServiceProvider {
+    onDeleteServiceProvider {
+      id
+      partnerID
+      providerID
+      providerInstitution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        serviceProviders {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -1119,13 +1224,11 @@ export const onCreateCourse = /* GraphQL */ `
         state
         zip
         phone
-        contact {
-          name
-          phone
-          email
-        }
         website
         image
+        serviceProviders {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1199,13 +1302,11 @@ export const onUpdateCourse = /* GraphQL */ `
         state
         zip
         phone
-        contact {
-          name
-          phone
-          email
-        }
         website
         image
+        serviceProviders {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1279,13 +1380,11 @@ export const onDeleteCourse = /* GraphQL */ `
         state
         zip
         phone
-        contact {
-          name
-          phone
-          email
-        }
         website
         image
+        serviceProviders {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -2149,6 +2248,7 @@ export const onCreateLesson = /* GraphQL */ `
           example
           titleExample
           textExample
+          listInputNumber
         }
         breakdown {
           included
@@ -2361,6 +2461,7 @@ export const onUpdateLesson = /* GraphQL */ `
           example
           titleExample
           textExample
+          listInputNumber
         }
         breakdown {
           included
@@ -2573,6 +2674,7 @@ export const onDeleteLesson = /* GraphQL */ `
           example
           titleExample
           textExample
+          listInputNumber
         }
         breakdown {
           included
@@ -3216,6 +3318,7 @@ export const onCreateWarmUp = /* GraphQL */ `
         example
         titleExample
         textExample
+        listInputNumber
         truthGameInputs {
           id
           label
@@ -3256,6 +3359,7 @@ export const onUpdateWarmUp = /* GraphQL */ `
         example
         titleExample
         textExample
+        listInputNumber
         truthGameInputs {
           id
           label
@@ -3296,6 +3400,7 @@ export const onDeleteWarmUp = /* GraphQL */ `
         example
         titleExample
         textExample
+        listInputNumber
         truthGameInputs {
           id
           label

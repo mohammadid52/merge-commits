@@ -13,15 +13,8 @@ export type CreateInstitutionInput = {
   state?: string | null,
   zip: string,
   phone?: string | null,
-  contact: ContactInput,
   website?: string | null,
   image?: string | null,
-};
-
-export type ContactInput = {
-  name: string,
-  phone: string,
-  email: string,
 };
 
 export type ModelInstitutionConditionInput = {
@@ -92,13 +85,52 @@ export type UpdateInstitutionInput = {
   state?: string | null,
   zip?: string | null,
   phone?: string | null,
-  contact?: ContactInput | null,
   website?: string | null,
   image?: string | null,
 };
 
 export type DeleteInstitutionInput = {
   id: string,
+};
+
+export type CreateServiceProviderInput = {
+  id?: string | null,
+  partnerID: string,
+  providerID: string,
+};
+
+export type ModelServiceProviderConditionInput = {
+  partnerID?: ModelIDInput | null,
+  providerID?: ModelIDInput | null,
+  and?: Array< ModelServiceProviderConditionInput | null > | null,
+  or?: Array< ModelServiceProviderConditionInput | null > | null,
+  not?: ModelServiceProviderConditionInput | null,
+};
+
+export type ModelIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
+};
+
+export type UpdateServiceProviderInput = {
+  id: string,
+  partnerID?: string | null,
+  providerID?: string | null,
+};
+
+export type DeleteServiceProviderInput = {
+  id?: string | null,
 };
 
 export type CreatePersonInput = {
@@ -279,22 +311,6 @@ export type ModelUnitConditionInput = {
   and?: Array< ModelUnitConditionInput | null > | null,
   or?: Array< ModelUnitConditionInput | null > | null,
   not?: ModelUnitConditionInput | null,
-};
-
-export type ModelIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
 };
 
 export type UpdateUnitInput = {
@@ -945,6 +961,7 @@ export type InputsInput = {
   example?: string | null,
   titleExample?: string | null,
   textExample?: string | null,
+  listInputNumber?: number | null,
   truthGameInputs?: Array< TruthGameInputInput | null > | null,
   additionalInputs?: Array< WritingPromptsInput > | null,
 };
@@ -1941,14 +1958,20 @@ export type CreateInstitutionMutation = {
     state: string | null,
     zip: string,
     phone: string | null,
-    contact:  {
-      __typename: "Contact",
-      name: string,
-      phone: string,
-      email: string,
-    },
     website: string | null,
     image: string | null,
+    serviceProviders:  {
+      __typename: "ModelServiceProviderConnection",
+      items:  Array< {
+        __typename: "ServiceProvider",
+        id: string,
+        partnerID: string,
+        providerID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1972,14 +1995,20 @@ export type UpdateInstitutionMutation = {
     state: string | null,
     zip: string,
     phone: string | null,
-    contact:  {
-      __typename: "Contact",
-      name: string,
-      phone: string,
-      email: string,
-    },
     website: string | null,
     image: string | null,
+    serviceProviders:  {
+      __typename: "ModelServiceProviderConnection",
+      items:  Array< {
+        __typename: "ServiceProvider",
+        id: string,
+        partnerID: string,
+        providerID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2003,14 +2032,131 @@ export type DeleteInstitutionMutation = {
     state: string | null,
     zip: string,
     phone: string | null,
-    contact:  {
-      __typename: "Contact",
-      name: string,
-      phone: string,
-      email: string,
-    },
     website: string | null,
     image: string | null,
+    serviceProviders:  {
+      __typename: "ModelServiceProviderConnection",
+      items:  Array< {
+        __typename: "ServiceProvider",
+        id: string,
+        partnerID: string,
+        providerID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateServiceProviderMutationVariables = {
+  input: CreateServiceProviderInput,
+  condition?: ModelServiceProviderConditionInput | null,
+};
+
+export type CreateServiceProviderMutation = {
+  createServiceProvider:  {
+    __typename: "ServiceProvider",
+    id: string,
+    partnerID: string,
+    providerID: string,
+    providerInstitution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateServiceProviderMutationVariables = {
+  input: UpdateServiceProviderInput,
+  condition?: ModelServiceProviderConditionInput | null,
+};
+
+export type UpdateServiceProviderMutation = {
+  updateServiceProvider:  {
+    __typename: "ServiceProvider",
+    id: string,
+    partnerID: string,
+    providerID: string,
+    providerInstitution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteServiceProviderMutationVariables = {
+  input: DeleteServiceProviderInput,
+  condition?: ModelServiceProviderConditionInput | null,
+};
+
+export type DeleteServiceProviderMutation = {
+  deleteServiceProvider:  {
+    __typename: "ServiceProvider",
+    id: string,
+    partnerID: string,
+    providerID: string,
+    providerInstitution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2792,14 +2938,12 @@ export type CreateCourseMutation = {
       state: string | null,
       zip: string,
       phone: string | null,
-      contact:  {
-        __typename: "Contact",
-        name: string,
-        phone: string,
-        email: string,
-      },
       website: string | null,
       image: string | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -2885,14 +3029,12 @@ export type UpdateCourseMutation = {
       state: string | null,
       zip: string,
       phone: string | null,
-      contact:  {
-        __typename: "Contact",
-        name: string,
-        phone: string,
-        email: string,
-      },
       website: string | null,
       image: string | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -2978,14 +3120,12 @@ export type DeleteCourseMutation = {
       state: string | null,
       zip: string,
       phone: string | null,
-      contact:  {
-        __typename: "Contact",
-        name: string,
-        phone: string,
-        email: string,
-      },
       website: string | null,
       image: string | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5368,6 +5508,7 @@ export type CreateLessonMutation = {
         example: string | null,
         titleExample: string | null,
         textExample: string | null,
+        listInputNumber: number | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -5614,6 +5755,7 @@ export type UpdateLessonMutation = {
         example: string | null,
         titleExample: string | null,
         textExample: string | null,
+        listInputNumber: number | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -5860,6 +6002,7 @@ export type DeleteLessonMutation = {
         example: string | null,
         titleExample: string | null,
         textExample: string | null,
+        listInputNumber: number | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -6624,6 +6767,7 @@ export type CreateWarmUpMutation = {
       example: string | null,
       titleExample: string | null,
       textExample: string | null,
+      listInputNumber: number | null,
       truthGameInputs:  Array< {
         __typename: "TruthGameInput",
         id: string | null,
@@ -6674,6 +6818,7 @@ export type UpdateWarmUpMutation = {
       example: string | null,
       titleExample: string | null,
       textExample: string | null,
+      listInputNumber: number | null,
       truthGameInputs:  Array< {
         __typename: "TruthGameInput",
         id: string | null,
@@ -6724,6 +6869,7 @@ export type DeleteWarmUpMutation = {
       example: string | null,
       titleExample: string | null,
       textExample: string | null,
+      listInputNumber: number | null,
       truthGameInputs:  Array< {
         __typename: "TruthGameInput",
         id: string | null,
@@ -9911,14 +10057,20 @@ export type GetInstitutionQuery = {
     state: string | null,
     zip: string,
     phone: string | null,
-    contact:  {
-      __typename: "Contact",
-      name: string,
-      phone: string,
-      email: string,
-    },
     website: string | null,
     image: string | null,
+    serviceProviders:  {
+      __typename: "ModelServiceProviderConnection",
+      items:  Array< {
+        __typename: "ServiceProvider",
+        id: string,
+        partnerID: string,
+        providerID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -9947,14 +10099,12 @@ export type ListInstitutionsQuery = {
       state: string | null,
       zip: string,
       phone: string | null,
-      contact:  {
-        __typename: "Contact",
-        name: string,
-        phone: string,
-        email: string,
-      },
       website: string | null,
       image: string | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -10197,14 +10347,12 @@ export type GetCourseQuery = {
       state: string | null,
       zip: string,
       phone: string | null,
-      contact:  {
-        __typename: "Contact",
-        name: string,
-        phone: string,
-        email: string,
-      },
       website: string | null,
       image: string | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11477,6 +11625,7 @@ export type GetLessonQuery = {
         example: string | null,
         titleExample: string | null,
         textExample: string | null,
+        listInputNumber: number | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -11779,6 +11928,7 @@ export type GetWarmUpQuery = {
       example: string | null,
       titleExample: string | null,
       textExample: string | null,
+      listInputNumber: number | null,
       truthGameInputs:  Array< {
         __typename: "TruthGameInput",
         id: string | null,
@@ -11832,6 +11982,7 @@ export type ListWarmUpsQuery = {
         example: string | null,
         titleExample: string | null,
         textExample: string | null,
+        listInputNumber: number | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -13422,14 +13573,20 @@ export type OnCreateInstitutionSubscription = {
     state: string | null,
     zip: string,
     phone: string | null,
-    contact:  {
-      __typename: "Contact",
-      name: string,
-      phone: string,
-      email: string,
-    },
     website: string | null,
     image: string | null,
+    serviceProviders:  {
+      __typename: "ModelServiceProviderConnection",
+      items:  Array< {
+        __typename: "ServiceProvider",
+        id: string,
+        partnerID: string,
+        providerID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -13448,14 +13605,20 @@ export type OnUpdateInstitutionSubscription = {
     state: string | null,
     zip: string,
     phone: string | null,
-    contact:  {
-      __typename: "Contact",
-      name: string,
-      phone: string,
-      email: string,
-    },
     website: string | null,
     image: string | null,
+    serviceProviders:  {
+      __typename: "ModelServiceProviderConnection",
+      items:  Array< {
+        __typename: "ServiceProvider",
+        id: string,
+        partnerID: string,
+        providerID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -13474,14 +13637,116 @@ export type OnDeleteInstitutionSubscription = {
     state: string | null,
     zip: string,
     phone: string | null,
-    contact:  {
-      __typename: "Contact",
-      name: string,
-      phone: string,
-      email: string,
-    },
     website: string | null,
     image: string | null,
+    serviceProviders:  {
+      __typename: "ModelServiceProviderConnection",
+      items:  Array< {
+        __typename: "ServiceProvider",
+        id: string,
+        partnerID: string,
+        providerID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateServiceProviderSubscription = {
+  onCreateServiceProvider:  {
+    __typename: "ServiceProvider",
+    id: string,
+    partnerID: string,
+    providerID: string,
+    providerInstitution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateServiceProviderSubscription = {
+  onUpdateServiceProvider:  {
+    __typename: "ServiceProvider",
+    id: string,
+    partnerID: string,
+    providerID: string,
+    providerInstitution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteServiceProviderSubscription = {
+  onDeleteServiceProvider:  {
+    __typename: "ServiceProvider",
+    id: string,
+    partnerID: string,
+    providerID: string,
+    providerInstitution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -14198,14 +14463,12 @@ export type OnCreateCourseSubscription = {
       state: string | null,
       zip: string,
       phone: string | null,
-      contact:  {
-        __typename: "Contact",
-        name: string,
-        phone: string,
-        email: string,
-      },
       website: string | null,
       image: string | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -14286,14 +14549,12 @@ export type OnUpdateCourseSubscription = {
       state: string | null,
       zip: string,
       phone: string | null,
-      contact:  {
-        __typename: "Contact",
-        name: string,
-        phone: string,
-        email: string,
-      },
       website: string | null,
       image: string | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -14374,14 +14635,12 @@ export type OnDeleteCourseSubscription = {
       state: string | null,
       zip: string,
       phone: string | null,
-      contact:  {
-        __typename: "Contact",
-        name: string,
-        phone: string,
-        email: string,
-      },
       website: string | null,
       image: string | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -15331,6 +15590,7 @@ export type OnCreateLessonSubscription = {
         example: string | null,
         titleExample: string | null,
         textExample: string | null,
+        listInputNumber: number | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -15572,6 +15832,7 @@ export type OnUpdateLessonSubscription = {
         example: string | null,
         titleExample: string | null,
         textExample: string | null,
+        listInputNumber: number | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -15813,6 +16074,7 @@ export type OnDeleteLessonSubscription = {
         example: string | null,
         titleExample: string | null,
         textExample: string | null,
+        listInputNumber: number | null,
       },
       breakdown:  {
         __typename: "Breakdown",
@@ -16527,6 +16789,7 @@ export type OnCreateWarmUpSubscription = {
       example: string | null,
       titleExample: string | null,
       textExample: string | null,
+      listInputNumber: number | null,
       truthGameInputs:  Array< {
         __typename: "TruthGameInput",
         id: string | null,
@@ -16572,6 +16835,7 @@ export type OnUpdateWarmUpSubscription = {
       example: string | null,
       titleExample: string | null,
       textExample: string | null,
+      listInputNumber: number | null,
       truthGameInputs:  Array< {
         __typename: "TruthGameInput",
         id: string | null,
@@ -16617,6 +16881,7 @@ export type OnDeleteWarmUpSubscription = {
       example: string | null,
       titleExample: string | null,
       textExample: string | null,
+      listInputNumber: number | null,
       truthGameInputs:  Array< {
         __typename: "TruthGameInput",
         id: string | null,
