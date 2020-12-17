@@ -38,6 +38,7 @@ const TruthGameForm = (props: props) => {
 
       <div className="relative h-full flex flex-col items-center mb-5 mt-2">
         <div className="text-gray-200">{state ? state.data.lesson.warmUp.inputs.textExample : null}</div>
+
         {gameInputs.map((item: { id: string; label: string; text: string; isLie: boolean }, key: number) => {
           return (
             <div id={item.id} key={key} className="flex flex-col px-4 items-center justify-between">
