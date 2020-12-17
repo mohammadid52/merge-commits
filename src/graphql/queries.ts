@@ -211,6 +211,20 @@ export const getCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      syllabi {
+        items {
+          id
+          name
+          type
+          description
+          objectives
+          curriculumID
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -239,6 +253,9 @@ export const listCurriculums = /* GraphQL */ `
         objectives
         languages
         units {
+          nextToken
+        }
+        syllabi {
           nextToken
         }
         createdAt
@@ -282,6 +299,66 @@ export const listUnits = /* GraphQL */ `
     $sortDirection: ModelSortDirection
   ) {
     listUnits(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        type
+        description
+        objectives
+        curriculumID
+        languages
+        lessons {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getSyllabus = /* GraphQL */ `
+  query GetSyllabus($id: ID!) {
+    getSyllabus(id: $id) {
+      id
+      name
+      type
+      description
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listSyllabuss = /* GraphQL */ `
+  query ListSyllabuss(
+    $id: ID
+    $filter: ModelSyllabusFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listSyllabuss(
       id: $id
       filter: $filter
       limit: $limit
@@ -351,6 +428,9 @@ export const getCourse = /* GraphQL */ `
         objectives
         languages
         units {
+          nextToken
+        }
+        syllabi {
           nextToken
         }
         createdAt

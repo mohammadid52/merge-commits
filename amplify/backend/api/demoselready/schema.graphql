@@ -142,6 +142,7 @@ type Curriculum @model @key(fields: ["id"]) {
   objectives: [String]
   languages: [Language]
   units: [Unit] @connection(keyName: "byCurriculum", fields: ["id"])
+  syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
 }
 
 type Unit @model @key(fields: ["id"]) @key(name: "byCurriculum", fields: ["curriculumID"]) {
@@ -167,17 +168,20 @@ type Syllabus
   objectives: [String]
   curriculumID: ID!
   languages: [Language]
-  # lessons: [LessonUnit] @connection(keyName: "lessonByUnit", fields: ["id"])
+  lessons: [SyllabusLesson] @connection(keyName: "lessonBySyllabus", fields: ["id"])
 }
 
-# type CurriculumLessons @model(queries: null)
-# @key(name: "byCurriculum", fields: ["curriculumID", "lessonID"]) {
-#   id: ID!
-#   curriculumID: ID!
-#   lessonID: ID!
-#   curriculum: Curriculum @connection(fields: ["curriculumID"])
-#   lesson: Lesson @connection(fields: ["lessonID"])
-# }
+type SyllabusLesson
+@model(queries: null)
+@key(name: "lessonBySyllabus", fields: ["syllabusID", "lessonID"])
+{
+  id: ID!
+  syllabusID: ID!
+  lessonID: ID!
+  unit: String
+  sequence: Int
+  lesson: Lesson @connection(fields: ["lessonID"])
+}
 
 type LessonUnit @model(queries: null) @key(name: "lessonByUnit", fields: ["unitID", "lessonID"]) {
   id: ID!
@@ -186,12 +190,6 @@ type LessonUnit @model(queries: null) @key(name: "lessonByUnit", fields: ["unitI
   unit: Unit @connection(fields: ["unitID"])
   lesson: Lesson @connection(fields: ["lessonID"])
 }
-
-# enum CourseType {
-#   CLASS
-#   EXCURR
-#   DIST
-# }
 
 type Course @model {
   id: ID!
