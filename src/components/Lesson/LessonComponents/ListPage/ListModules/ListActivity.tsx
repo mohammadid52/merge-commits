@@ -9,81 +9,76 @@ import ListForm from './ListForm';
 import { string } from 'prop-types';
 
 export interface StoryState {
-    story: string,
-    title?: string,
-    additional?: {
-        name: string,
-        text: string | [],
-    }[]
+  story: string[];
+  title?: string;
+  additional?: {
+    name: string;
+    text: string | [];
+  }[];
 }
 
 const List = () => {
-    const { state, theme, dispatch } = useContext(LessonContext);
-    const [cookies, setCookie] = useCookies(['story']);
-    const inputs = state.data.lesson.warmUp.inputs;
-    const video = state.data.lesson.warmUp.instructions.link
-    const [openPopup, setOpenPopup] = useState(false)
+  const { state, theme, dispatch } = useContext(LessonContext);
+  const [cookies, setCookie] = useCookies(['story']);
+  const inputs = state.data.lesson.warmUp.inputs;
+  const video = state.data.lesson.warmUp.instructions.link;
+  const [openPopup, setOpenPopup] = useState(false);
 
+  useEffect(() => {
+    if (!cookies.story && !state.componentState.story) {
+      let tempObj: StoryState = {
+        story: [''],
+      };
+      if (inputs.title) {
+        tempObj.title = '';
+      }
 
+      if (inputs.additionalInputs.length > 0) {
+        let additional: Array<{ name: string; text: string | [] }> = [];
+        inputs.additionalInputs.forEach((input: { name: string }) => {
+          let newInput = {
+            name: input.name,
+            text: '',
+          };
 
+          additional.push(newInput);
+        });
 
-    useEffect(() => {
-        if (!cookies.story && !state.componentState.story) {
-            let tempObj: StoryState = {
-                story: '',
-            }
-            if (inputs.title) {
-                tempObj.title = '';
-            }
+        tempObj.additional = additional;
+      }
 
-            if (inputs.additionalInputs.length > 0) {
-                let additional: Array<{ name: string, text: string | [] }> = [];
-                inputs.additionalInputs.forEach((input: { name: string; }) => {
-                    let newInput = {
-                        name: input.name,
-                        text: '',
-                    }
+      dispatch({
+        type: 'SET_INITIAL_COMPONENT_STATE',
+        payload: {
+          name: 'story',
+          content: tempObj,
+        },
+      });
 
-                    additional.push(newInput);
-                })
+      setCookie('story', tempObj);
+    }
 
-                tempObj.additional = additional;
-            }
+    if (cookies.story) {
+      dispatch({
+        type: 'SET_INITIAL_COMPONENT_STATE',
+        payload: {
+          name: 'story',
+          content: cookies.story,
+        },
+      });
+    }
+  }, []);
 
-            dispatch({
-                type: 'SET_INITIAL_COMPONENT_STATE',
-                payload: {
-                    name: 'story',
-                    content: tempObj
-                }
-            })
+  return (
+    <>
+      <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup} />
+      <div className={theme.section}>
+        <Banner />
 
-            setCookie('story', tempObj)
-        }
+        <div className="flex flex-col justify-between items-center">
+          <InstructionsBlock />
 
-        if (cookies.story) {
-            dispatch({
-                type: 'SET_INITIAL_COMPONENT_STATE',
-                payload: {
-                    name: 'story',
-                    content: cookies.story
-                }
-            })
-        }
-
-    }, []);
-
-
-    return (
-        <>
-            <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup} />
-            <div className={theme.section}>
-                <Banner />
-
-                <div className='flex flex-col justify-between items-center'>
-                    <InstructionsBlock />
-
-                    {/* {inputs.additionalInputs.length > 0 ?
+          {/* {inputs.additionalInputs.length > 0 ?
                         <Modules
                             inputs={inputs.additionalInputs}
                         />
@@ -91,11 +86,11 @@ const List = () => {
                         null
                     } */}
 
-                    <ListForm />
-                </div>
-            </div>
-        </>
-    )
-}
+          <ListForm />
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default List;

@@ -15,6 +15,8 @@ export type CreateInstitutionInput = {
   phone?: string | null,
   website?: string | null,
   image?: string | null,
+  isServiceProvider?: boolean | null,
+  filters?: Array< string | null > | null,
 };
 
 export type ModelInstitutionConditionInput = {
@@ -29,6 +31,8 @@ export type ModelInstitutionConditionInput = {
   phone?: ModelStringInput | null,
   website?: ModelStringInput | null,
   image?: ModelStringInput | null,
+  isServiceProvider?: ModelBooleanInput | null,
+  filters?: ModelStringInput | null,
   and?: Array< ModelInstitutionConditionInput | null > | null,
   or?: Array< ModelInstitutionConditionInput | null > | null,
   not?: ModelInstitutionConditionInput | null,
@@ -74,6 +78,22 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export enum Language {
+  EN = "EN",
+  ES = "ES",
+  VT = "VT",
+  TR = "TR",
+  CZ = "CZ",
+}
+
+
 export type UpdateInstitutionInput = {
   id: string,
   name?: string | null,
@@ -87,6 +107,8 @@ export type UpdateInstitutionInput = {
   phone?: string | null,
   website?: string | null,
   image?: string | null,
+  isServiceProvider?: boolean | null,
+  filters?: Array< string | null > | null,
 };
 
 export type DeleteInstitutionInput = {
@@ -133,6 +155,39 @@ export type DeleteServiceProviderInput = {
   id?: string | null,
 };
 
+export type CreateStaffInput = {
+  id?: string | null,
+  institutionID: string,
+  staffAuthID: string,
+  staffEmail: string,
+  status?: string | null,
+  statusChangeDate?: string | null,
+};
+
+export type ModelStaffConditionInput = {
+  institutionID?: ModelIDInput | null,
+  staffAuthID?: ModelStringInput | null,
+  staffEmail?: ModelStringInput | null,
+  status?: ModelStringInput | null,
+  statusChangeDate?: ModelStringInput | null,
+  and?: Array< ModelStaffConditionInput | null > | null,
+  or?: Array< ModelStaffConditionInput | null > | null,
+  not?: ModelStaffConditionInput | null,
+};
+
+export type UpdateStaffInput = {
+  id: string,
+  institutionID?: string | null,
+  staffAuthID?: string | null,
+  staffEmail?: string | null,
+  status?: string | null,
+  statusChangeDate?: string | null,
+};
+
+export type DeleteStaffInput = {
+  id?: string | null,
+};
+
 export type CreatePersonInput = {
   id?: string | null,
   authId: string,
@@ -173,15 +228,6 @@ export enum Role {
 }
 
 
-export enum Language {
-  EN = "EN",
-  ES = "ES",
-  VT = "VT",
-  TR = "TR",
-  CZ = "CZ",
-}
-
-
 export type ModelPersonConditionInput = {
   status?: ModelPersonStatusInput | null,
   role?: ModelRoleInput | null,
@@ -211,13 +257,6 @@ export type ModelPersonStatusInput = {
 export type ModelRoleInput = {
   eq?: Role | null,
   ne?: Role | null,
-};
-
-export type ModelBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
 };
 
 export type ModelLanguageInput = {
@@ -251,130 +290,24 @@ export type DeletePersonInput = {
   authId: string,
 };
 
-export type CreateCurriculumInput = {
+export type CreateRoomInput = {
   id?: string | null,
-  name: string,
-  type?: string | null,
-  description?: string | null,
-  objectives?: Array< string | null > | null,
-  languages?: Array< Language | null > | null,
-};
-
-export type ModelCurriculumConditionInput = {
-  name?: ModelStringInput | null,
-  type?: ModelStringInput | null,
-  description?: ModelStringInput | null,
-  objectives?: ModelStringInput | null,
-  languages?: ModelLanguageListInput | null,
-  and?: Array< ModelCurriculumConditionInput | null > | null,
-  or?: Array< ModelCurriculumConditionInput | null > | null,
-  not?: ModelCurriculumConditionInput | null,
-};
-
-export type ModelLanguageListInput = {
-  eq?: Array< Language | null > | null,
-  ne?: Array< Language | null > | null,
-  contains?: Language | null,
-  notContains?: Language | null,
-};
-
-export type UpdateCurriculumInput = {
-  id: string,
-  name?: string | null,
-  type?: string | null,
-  description?: string | null,
-  objectives?: Array< string | null > | null,
-  languages?: Array< Language | null > | null,
-};
-
-export type DeleteCurriculumInput = {
-  id: string,
-};
-
-export type CreateUnitInput = {
-  id?: string | null,
-  name: string,
-  type?: string | null,
-  description?: string | null,
-  objectives?: Array< string | null > | null,
-  curriculumID: string,
-  languages?: Array< Language | null > | null,
-};
-
-export type ModelUnitConditionInput = {
-  name?: ModelStringInput | null,
-  type?: ModelStringInput | null,
-  description?: ModelStringInput | null,
-  objectives?: ModelStringInput | null,
-  curriculumID?: ModelIDInput | null,
-  languages?: ModelLanguageListInput | null,
-  and?: Array< ModelUnitConditionInput | null > | null,
-  or?: Array< ModelUnitConditionInput | null > | null,
-  not?: ModelUnitConditionInput | null,
-};
-
-export type UpdateUnitInput = {
-  id: string,
-  name?: string | null,
-  type?: string | null,
-  description?: string | null,
-  objectives?: Array< string | null > | null,
-  curriculumID?: string | null,
-  languages?: Array< Language | null > | null,
-};
-
-export type DeleteUnitInput = {
-  id: string,
-};
-
-export type CreateLessonUnitInput = {
-  id?: string | null,
-  unitID: string,
-  lessonID: string,
-};
-
-export type ModelLessonUnitConditionInput = {
-  unitID?: ModelIDInput | null,
-  lessonID?: ModelIDInput | null,
-  and?: Array< ModelLessonUnitConditionInput | null > | null,
-  or?: Array< ModelLessonUnitConditionInput | null > | null,
-  not?: ModelLessonUnitConditionInput | null,
-};
-
-export type UpdateLessonUnitInput = {
-  id: string,
-  unitID?: string | null,
-  lessonID?: string | null,
-};
-
-export type DeleteLessonUnitInput = {
-  id?: string | null,
-};
-
-export type CreateCourseInput = {
-  id?: string | null,
-  name: string,
-  type?: string | null,
+  institutionID: string,
   classID: string,
-  curriculumID: string,
-  location?: string | null,
-  startDate?: string | null,
-  endDate?: string | null,
-  duration?: number | null,
+  teacherID: string,
+  name: string,
+  maxPersons: number,
 };
 
-export type ModelCourseConditionInput = {
-  name?: ModelStringInput | null,
-  type?: ModelStringInput | null,
+export type ModelRoomConditionInput = {
+  institutionID?: ModelIDInput | null,
   classID?: ModelIDInput | null,
-  curriculumID?: ModelIDInput | null,
-  location?: ModelStringInput | null,
-  startDate?: ModelStringInput | null,
-  endDate?: ModelStringInput | null,
-  duration?: ModelIntInput | null,
-  and?: Array< ModelCourseConditionInput | null > | null,
-  or?: Array< ModelCourseConditionInput | null > | null,
-  not?: ModelCourseConditionInput | null,
+  teacherID?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  maxPersons?: ModelIntInput | null,
+  and?: Array< ModelRoomConditionInput | null > | null,
+  or?: Array< ModelRoomConditionInput | null > | null,
+  not?: ModelRoomConditionInput | null,
 };
 
 export type ModelIntInput = {
@@ -389,29 +322,28 @@ export type ModelIntInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
-export type UpdateCourseInput = {
+export type UpdateRoomInput = {
   id: string,
-  name?: string | null,
-  type?: string | null,
+  institutionID?: string | null,
   classID?: string | null,
-  curriculumID?: string | null,
-  location?: string | null,
-  startDate?: string | null,
-  endDate?: string | null,
-  duration?: number | null,
+  teacherID?: string | null,
+  name?: string | null,
+  maxPersons?: number | null,
 };
 
-export type DeleteCourseInput = {
+export type DeleteRoomInput = {
   id?: string | null,
 };
 
 export type CreateClassInput = {
   id?: string | null,
+  institutionID: string,
   type?: string | null,
   name: string,
 };
 
 export type ModelClassConditionInput = {
+  institutionID?: ModelIDInput | null,
   type?: ModelStringInput | null,
   name?: ModelStringInput | null,
   and?: Array< ModelClassConditionInput | null > | null,
@@ -421,6 +353,7 @@ export type ModelClassConditionInput = {
 
 export type UpdateClassInput = {
   id: string,
+  institutionID?: string | null,
   type?: string | null,
   name?: string | null,
 };
@@ -456,6 +389,145 @@ export type UpdateClassStudentInput = {
 };
 
 export type DeleteClassStudentInput = {
+  id?: string | null,
+};
+
+export type CreateCurriculumInput = {
+  id?: string | null,
+  institutionID: string,
+  name: string,
+  type?: string | null,
+  description?: string | null,
+  objectives?: Array< string | null > | null,
+  languages?: Array< Language | null > | null,
+};
+
+export type ModelCurriculumConditionInput = {
+  institutionID?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  objectives?: ModelStringInput | null,
+  languages?: ModelLanguageListInput | null,
+  and?: Array< ModelCurriculumConditionInput | null > | null,
+  or?: Array< ModelCurriculumConditionInput | null > | null,
+  not?: ModelCurriculumConditionInput | null,
+};
+
+export type ModelLanguageListInput = {
+  eq?: Array< Language | null > | null,
+  ne?: Array< Language | null > | null,
+  contains?: Language | null,
+  notContains?: Language | null,
+};
+
+export type UpdateCurriculumInput = {
+  id: string,
+  institutionID?: string | null,
+  name?: string | null,
+  type?: string | null,
+  description?: string | null,
+  objectives?: Array< string | null > | null,
+  languages?: Array< Language | null > | null,
+};
+
+export type DeleteCurriculumInput = {
+  id: string,
+};
+
+export type CreateSyllabusInput = {
+  id?: string | null,
+  name: string,
+  type?: string | null,
+  description?: string | null,
+  objectives?: Array< string | null > | null,
+  curriculumID: string,
+  languages?: Array< Language | null > | null,
+};
+
+export type ModelSyllabusConditionInput = {
+  name?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  objectives?: ModelStringInput | null,
+  curriculumID?: ModelIDInput | null,
+  languages?: ModelLanguageListInput | null,
+  and?: Array< ModelSyllabusConditionInput | null > | null,
+  or?: Array< ModelSyllabusConditionInput | null > | null,
+  not?: ModelSyllabusConditionInput | null,
+};
+
+export type UpdateSyllabusInput = {
+  id: string,
+  name?: string | null,
+  type?: string | null,
+  description?: string | null,
+  objectives?: Array< string | null > | null,
+  curriculumID?: string | null,
+  languages?: Array< Language | null > | null,
+};
+
+export type DeleteSyllabusInput = {
+  id: string,
+};
+
+export type CreateSyllabusLessonInput = {
+  id?: string | null,
+  syllabusID: string,
+  lessonID: string,
+  unit?: string | null,
+  sequence?: number | null,
+};
+
+export type ModelSyllabusLessonConditionInput = {
+  syllabusID?: ModelIDInput | null,
+  lessonID?: ModelIDInput | null,
+  unit?: ModelStringInput | null,
+  sequence?: ModelIntInput | null,
+  and?: Array< ModelSyllabusLessonConditionInput | null > | null,
+  or?: Array< ModelSyllabusLessonConditionInput | null > | null,
+  not?: ModelSyllabusLessonConditionInput | null,
+};
+
+export type UpdateSyllabusLessonInput = {
+  id: string,
+  syllabusID?: string | null,
+  lessonID?: string | null,
+  unit?: string | null,
+  sequence?: number | null,
+};
+
+export type DeleteSyllabusLessonInput = {
+  id?: string | null,
+};
+
+export type CreateCourseInput = {
+  id?: string | null,
+  name: string,
+  type?: string | null,
+  startDate?: string | null,
+  duration?: number | null,
+};
+
+export type ModelCourseConditionInput = {
+  name?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  startDate?: ModelStringInput | null,
+  duration?: ModelIntInput | null,
+  and?: Array< ModelCourseConditionInput | null > | null,
+  or?: Array< ModelCourseConditionInput | null > | null,
+  not?: ModelCourseConditionInput | null,
+};
+
+export type UpdateCourseInput = {
+  id: string,
+  name?: string | null,
+  type?: string | null,
+  startDate?: string | null,
+  duration?: number | null,
+};
+
+export type DeleteCourseInput = {
   id?: string | null,
 };
 
@@ -1591,6 +1663,8 @@ export type ModelInstitutionFilterInput = {
   phone?: ModelStringInput | null,
   website?: ModelStringInput | null,
   image?: ModelStringInput | null,
+  isServiceProvider?: ModelBooleanInput | null,
+  filters?: ModelStringInput | null,
   and?: Array< ModelInstitutionFilterInput | null > | null,
   or?: Array< ModelInstitutionFilterInput | null > | null,
   not?: ModelInstitutionFilterInput | null,
@@ -1601,6 +1675,18 @@ export enum ModelSortDirection {
   DESC = "DESC",
 }
 
+
+export type ModelStaffFilterInput = {
+  id?: ModelIDInput | null,
+  institutionID?: ModelIDInput | null,
+  staffAuthID?: ModelStringInput | null,
+  staffEmail?: ModelStringInput | null,
+  status?: ModelStringInput | null,
+  statusChangeDate?: ModelStringInput | null,
+  and?: Array< ModelStaffFilterInput | null > | null,
+  or?: Array< ModelStaffFilterInput | null > | null,
+  not?: ModelStaffFilterInput | null,
+};
 
 export type ModelStringKeyConditionInput = {
   eq?: string | null,
@@ -1636,8 +1722,31 @@ export type ModelPersonFilterInput = {
   not?: ModelPersonFilterInput | null,
 };
 
+export type ModelRoomFilterInput = {
+  id?: ModelIDInput | null,
+  institutionID?: ModelIDInput | null,
+  classID?: ModelIDInput | null,
+  teacherID?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  maxPersons?: ModelIntInput | null,
+  and?: Array< ModelRoomFilterInput | null > | null,
+  or?: Array< ModelRoomFilterInput | null > | null,
+  not?: ModelRoomFilterInput | null,
+};
+
+export type ModelClassFilterInput = {
+  id?: ModelIDInput | null,
+  institutionID?: ModelIDInput | null,
+  type?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  and?: Array< ModelClassFilterInput | null > | null,
+  or?: Array< ModelClassFilterInput | null > | null,
+  not?: ModelClassFilterInput | null,
+};
+
 export type ModelCurriculumFilterInput = {
   id?: ModelIDInput | null,
+  institutionID?: ModelIDInput | null,
   name?: ModelStringInput | null,
   type?: ModelStringInput | null,
   description?: ModelStringInput | null,
@@ -1648,7 +1757,7 @@ export type ModelCurriculumFilterInput = {
   not?: ModelCurriculumFilterInput | null,
 };
 
-export type ModelUnitFilterInput = {
+export type ModelSyllabusFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
   type?: ModelStringInput | null,
@@ -1656,33 +1765,20 @@ export type ModelUnitFilterInput = {
   objectives?: ModelStringInput | null,
   curriculumID?: ModelIDInput | null,
   languages?: ModelLanguageListInput | null,
-  and?: Array< ModelUnitFilterInput | null > | null,
-  or?: Array< ModelUnitFilterInput | null > | null,
-  not?: ModelUnitFilterInput | null,
+  and?: Array< ModelSyllabusFilterInput | null > | null,
+  or?: Array< ModelSyllabusFilterInput | null > | null,
+  not?: ModelSyllabusFilterInput | null,
 };
 
 export type ModelCourseFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
   type?: ModelStringInput | null,
-  classID?: ModelIDInput | null,
-  curriculumID?: ModelIDInput | null,
-  location?: ModelStringInput | null,
   startDate?: ModelStringInput | null,
-  endDate?: ModelStringInput | null,
   duration?: ModelIntInput | null,
   and?: Array< ModelCourseFilterInput | null > | null,
   or?: Array< ModelCourseFilterInput | null > | null,
   not?: ModelCourseFilterInput | null,
-};
-
-export type ModelClassFilterInput = {
-  id?: ModelIDInput | null,
-  type?: ModelStringInput | null,
-  name?: ModelStringInput | null,
-  and?: Array< ModelClassFilterInput | null > | null,
-  or?: Array< ModelClassFilterInput | null > | null,
-  not?: ModelClassFilterInput | null,
 };
 
 export type ModelStudentDataFilterInput = {
@@ -1960,6 +2056,7 @@ export type CreateInstitutionMutation = {
     phone: string | null,
     website: string | null,
     image: string | null,
+    isServiceProvider: boolean | null,
     serviceProviders:  {
       __typename: "ModelServiceProviderConnection",
       items:  Array< {
@@ -1972,6 +2069,66 @@ export type CreateInstitutionMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    staff:  {
+      __typename: "ModelStaffConnection",
+      items:  Array< {
+        __typename: "Staff",
+        id: string,
+        institutionID: string,
+        staffAuthID: string,
+        staffEmail: string,
+        status: string | null,
+        statusChangeDate: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    rooms:  {
+      __typename: "ModelRoomConnection",
+      items:  Array< {
+        __typename: "Room",
+        id: string,
+        institutionID: string,
+        classID: string,
+        teacherID: string,
+        name: string,
+        maxPersons: number,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    curricula:  {
+      __typename: "ModelCurriculumConnection",
+      items:  Array< {
+        __typename: "Curriculum",
+        id: string,
+        institutionID: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    classes:  {
+      __typename: "ModelClassConnection",
+      items:  Array< {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type: string | null,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    filters: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1997,6 +2154,7 @@ export type UpdateInstitutionMutation = {
     phone: string | null,
     website: string | null,
     image: string | null,
+    isServiceProvider: boolean | null,
     serviceProviders:  {
       __typename: "ModelServiceProviderConnection",
       items:  Array< {
@@ -2009,6 +2167,66 @@ export type UpdateInstitutionMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    staff:  {
+      __typename: "ModelStaffConnection",
+      items:  Array< {
+        __typename: "Staff",
+        id: string,
+        institutionID: string,
+        staffAuthID: string,
+        staffEmail: string,
+        status: string | null,
+        statusChangeDate: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    rooms:  {
+      __typename: "ModelRoomConnection",
+      items:  Array< {
+        __typename: "Room",
+        id: string,
+        institutionID: string,
+        classID: string,
+        teacherID: string,
+        name: string,
+        maxPersons: number,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    curricula:  {
+      __typename: "ModelCurriculumConnection",
+      items:  Array< {
+        __typename: "Curriculum",
+        id: string,
+        institutionID: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    classes:  {
+      __typename: "ModelClassConnection",
+      items:  Array< {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type: string | null,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    filters: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2034,6 +2252,7 @@ export type DeleteInstitutionMutation = {
     phone: string | null,
     website: string | null,
     image: string | null,
+    isServiceProvider: boolean | null,
     serviceProviders:  {
       __typename: "ModelServiceProviderConnection",
       items:  Array< {
@@ -2046,6 +2265,66 @@ export type DeleteInstitutionMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    staff:  {
+      __typename: "ModelStaffConnection",
+      items:  Array< {
+        __typename: "Staff",
+        id: string,
+        institutionID: string,
+        staffAuthID: string,
+        staffEmail: string,
+        status: string | null,
+        statusChangeDate: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    rooms:  {
+      __typename: "ModelRoomConnection",
+      items:  Array< {
+        __typename: "Room",
+        id: string,
+        institutionID: string,
+        classID: string,
+        teacherID: string,
+        name: string,
+        maxPersons: number,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    curricula:  {
+      __typename: "ModelCurriculumConnection",
+      items:  Array< {
+        __typename: "Curriculum",
+        id: string,
+        institutionID: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    classes:  {
+      __typename: "ModelClassConnection",
+      items:  Array< {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type: string | null,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    filters: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2076,10 +2355,28 @@ export type CreateServiceProviderMutation = {
       phone: string | null,
       website: string | null,
       image: string | null,
+      isServiceProvider: boolean | null,
       serviceProviders:  {
         __typename: "ModelServiceProviderConnection",
         nextToken: string | null,
       } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -2113,10 +2410,28 @@ export type UpdateServiceProviderMutation = {
       phone: string | null,
       website: string | null,
       image: string | null,
+      isServiceProvider: boolean | null,
       serviceProviders:  {
         __typename: "ModelServiceProviderConnection",
         nextToken: string | null,
       } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -2150,13 +2465,88 @@ export type DeleteServiceProviderMutation = {
       phone: string | null,
       website: string | null,
       image: string | null,
+      isServiceProvider: boolean | null,
       serviceProviders:  {
         __typename: "ModelServiceProviderConnection",
         nextToken: string | null,
       } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateStaffMutationVariables = {
+  input: CreateStaffInput,
+  condition?: ModelStaffConditionInput | null,
+};
+
+export type CreateStaffMutation = {
+  createStaff:  {
+    __typename: "Staff",
+    id: string,
+    institutionID: string,
+    staffAuthID: string,
+    staffEmail: string,
+    status: string | null,
+    statusChangeDate: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateStaffMutationVariables = {
+  input: UpdateStaffInput,
+  condition?: ModelStaffConditionInput | null,
+};
+
+export type UpdateStaffMutation = {
+  updateStaff:  {
+    __typename: "Staff",
+    id: string,
+    institutionID: string,
+    staffAuthID: string,
+    staffEmail: string,
+    status: string | null,
+    statusChangeDate: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteStaffMutationVariables = {
+  input: DeleteStaffInput,
+  condition?: ModelStaffConditionInput | null,
+};
+
+export type DeleteStaffMutation = {
+  deleteStaff:  {
+    __typename: "Staff",
+    id: string,
+    institutionID: string,
+    staffAuthID: string,
+    staffEmail: string,
+    status: string | null,
+    statusChangeDate: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2294,6 +2684,621 @@ export type DeletePersonMutation = {
   } | null,
 };
 
+export type CreateRoomMutationVariables = {
+  input: CreateRoomInput,
+  condition?: ModelRoomConditionInput | null,
+};
+
+export type CreateRoomMutation = {
+  createRoom:  {
+    __typename: "Room",
+    id: string,
+    institutionID: string,
+    classID: string,
+    teacherID: string,
+    name: string,
+    maxPersons: number,
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateRoomMutationVariables = {
+  input: UpdateRoomInput,
+  condition?: ModelRoomConditionInput | null,
+};
+
+export type UpdateRoomMutation = {
+  updateRoom:  {
+    __typename: "Room",
+    id: string,
+    institutionID: string,
+    classID: string,
+    teacherID: string,
+    name: string,
+    maxPersons: number,
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteRoomMutationVariables = {
+  input: DeleteRoomInput,
+  condition?: ModelRoomConditionInput | null,
+};
+
+export type DeleteRoomMutation = {
+  deleteRoom:  {
+    __typename: "Room",
+    id: string,
+    institutionID: string,
+    classID: string,
+    teacherID: string,
+    name: string,
+    maxPersons: number,
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateClassMutationVariables = {
+  input: CreateClassInput,
+  condition?: ModelClassConditionInput | null,
+};
+
+export type CreateClassMutation = {
+  createClass:  {
+    __typename: "Class",
+    id: string,
+    institutionID: string,
+    type: string | null,
+    name: string,
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    students:  {
+      __typename: "ModelClassStudentConnection",
+      items:  Array< {
+        __typename: "ClassStudent",
+        id: string,
+        classID: string,
+        studentID: string,
+        studentEmail: string,
+        studentAuth: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateClassMutationVariables = {
+  input: UpdateClassInput,
+  condition?: ModelClassConditionInput | null,
+};
+
+export type UpdateClassMutation = {
+  updateClass:  {
+    __typename: "Class",
+    id: string,
+    institutionID: string,
+    type: string | null,
+    name: string,
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    students:  {
+      __typename: "ModelClassStudentConnection",
+      items:  Array< {
+        __typename: "ClassStudent",
+        id: string,
+        classID: string,
+        studentID: string,
+        studentEmail: string,
+        studentAuth: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteClassMutationVariables = {
+  input: DeleteClassInput,
+  condition?: ModelClassConditionInput | null,
+};
+
+export type DeleteClassMutation = {
+  deleteClass:  {
+    __typename: "Class",
+    id: string,
+    institutionID: string,
+    type: string | null,
+    name: string,
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    students:  {
+      __typename: "ModelClassStudentConnection",
+      items:  Array< {
+        __typename: "ClassStudent",
+        id: string,
+        classID: string,
+        studentID: string,
+        studentEmail: string,
+        studentAuth: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateClassStudentMutationVariables = {
+  input: CreateClassStudentInput,
+  condition?: ModelClassStudentConditionInput | null,
+};
+
+export type CreateClassStudentMutation = {
+  createClassStudent:  {
+    __typename: "ClassStudent",
+    id: string,
+    classID: string,
+    studentID: string,
+    studentEmail: string,
+    studentAuth: string,
+    class:  {
+      __typename: "Class",
+      id: string,
+      institutionID: string,
+      type: string | null,
+      name: string,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      students:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    student:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateClassStudentMutationVariables = {
+  input: UpdateClassStudentInput,
+  condition?: ModelClassStudentConditionInput | null,
+};
+
+export type UpdateClassStudentMutation = {
+  updateClassStudent:  {
+    __typename: "ClassStudent",
+    id: string,
+    classID: string,
+    studentID: string,
+    studentEmail: string,
+    studentAuth: string,
+    class:  {
+      __typename: "Class",
+      id: string,
+      institutionID: string,
+      type: string | null,
+      name: string,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      students:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    student:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteClassStudentMutationVariables = {
+  input: DeleteClassStudentInput,
+  condition?: ModelClassStudentConditionInput | null,
+};
+
+export type DeleteClassStudentMutation = {
+  deleteClassStudent:  {
+    __typename: "ClassStudent",
+    id: string,
+    classID: string,
+    studentID: string,
+    studentEmail: string,
+    studentAuth: string,
+    class:  {
+      __typename: "Class",
+      id: string,
+      institutionID: string,
+      type: string | null,
+      name: string,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      students:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    student:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateCurriculumMutationVariables = {
   input: CreateCurriculumInput,
   condition?: ModelCurriculumConditionInput | null,
@@ -2303,15 +3308,55 @@ export type CreateCurriculumMutation = {
   createCurriculum:  {
     __typename: "Curriculum",
     id: string,
+    institutionID: string,
     name: string,
     type: string | null,
     description: string | null,
     objectives: Array< string | null > | null,
     languages: Array< Language | null > | null,
-    units:  {
-      __typename: "ModelUnitConnection",
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    syllabi:  {
+      __typename: "ModelSyllabusConnection",
       items:  Array< {
-        __typename: "Unit",
+        __typename: "Syllabus",
         id: string,
         name: string,
         type: string | null,
@@ -2338,15 +3383,55 @@ export type UpdateCurriculumMutation = {
   updateCurriculum:  {
     __typename: "Curriculum",
     id: string,
+    institutionID: string,
     name: string,
     type: string | null,
     description: string | null,
     objectives: Array< string | null > | null,
     languages: Array< Language | null > | null,
-    units:  {
-      __typename: "ModelUnitConnection",
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    syllabi:  {
+      __typename: "ModelSyllabusConnection",
       items:  Array< {
-        __typename: "Unit",
+        __typename: "Syllabus",
         id: string,
         name: string,
         type: string | null,
@@ -2373,15 +3458,55 @@ export type DeleteCurriculumMutation = {
   deleteCurriculum:  {
     __typename: "Curriculum",
     id: string,
+    institutionID: string,
     name: string,
     type: string | null,
     description: string | null,
     objectives: Array< string | null > | null,
     languages: Array< Language | null > | null,
-    units:  {
-      __typename: "ModelUnitConnection",
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    syllabi:  {
+      __typename: "ModelSyllabusConnection",
       items:  Array< {
-        __typename: "Unit",
+        __typename: "Syllabus",
         id: string,
         name: string,
         type: string | null,
@@ -2399,14 +3524,14 @@ export type DeleteCurriculumMutation = {
   } | null,
 };
 
-export type CreateUnitMutationVariables = {
-  input: CreateUnitInput,
-  condition?: ModelUnitConditionInput | null,
+export type CreateSyllabusMutationVariables = {
+  input: CreateSyllabusInput,
+  condition?: ModelSyllabusConditionInput | null,
 };
 
-export type CreateUnitMutation = {
-  createUnit:  {
-    __typename: "Unit",
+export type CreateSyllabusMutation = {
+  createSyllabus:  {
+    __typename: "Syllabus",
     id: string,
     name: string,
     type: string | null,
@@ -2415,12 +3540,14 @@ export type CreateUnitMutation = {
     curriculumID: string,
     languages: Array< Language | null > | null,
     lessons:  {
-      __typename: "ModelLessonUnitConnection",
+      __typename: "ModelSyllabusLessonConnection",
       items:  Array< {
-        __typename: "LessonUnit",
+        __typename: "SyllabusLesson",
         id: string,
-        unitID: string,
+        syllabusID: string,
         lessonID: string,
+        unit: string | null,
+        sequence: number | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -2431,14 +3558,14 @@ export type CreateUnitMutation = {
   } | null,
 };
 
-export type UpdateUnitMutationVariables = {
-  input: UpdateUnitInput,
-  condition?: ModelUnitConditionInput | null,
+export type UpdateSyllabusMutationVariables = {
+  input: UpdateSyllabusInput,
+  condition?: ModelSyllabusConditionInput | null,
 };
 
-export type UpdateUnitMutation = {
-  updateUnit:  {
-    __typename: "Unit",
+export type UpdateSyllabusMutation = {
+  updateSyllabus:  {
+    __typename: "Syllabus",
     id: string,
     name: string,
     type: string | null,
@@ -2447,12 +3574,14 @@ export type UpdateUnitMutation = {
     curriculumID: string,
     languages: Array< Language | null > | null,
     lessons:  {
-      __typename: "ModelLessonUnitConnection",
+      __typename: "ModelSyllabusLessonConnection",
       items:  Array< {
-        __typename: "LessonUnit",
+        __typename: "SyllabusLesson",
         id: string,
-        unitID: string,
+        syllabusID: string,
         lessonID: string,
+        unit: string | null,
+        sequence: number | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -2463,14 +3592,14 @@ export type UpdateUnitMutation = {
   } | null,
 };
 
-export type DeleteUnitMutationVariables = {
-  input: DeleteUnitInput,
-  condition?: ModelUnitConditionInput | null,
+export type DeleteSyllabusMutationVariables = {
+  input: DeleteSyllabusInput,
+  condition?: ModelSyllabusConditionInput | null,
 };
 
-export type DeleteUnitMutation = {
-  deleteUnit:  {
-    __typename: "Unit",
+export type DeleteSyllabusMutation = {
+  deleteSyllabus:  {
+    __typename: "Syllabus",
     id: string,
     name: string,
     type: string | null,
@@ -2479,12 +3608,14 @@ export type DeleteUnitMutation = {
     curriculumID: string,
     languages: Array< Language | null > | null,
     lessons:  {
-      __typename: "ModelLessonUnitConnection",
+      __typename: "ModelSyllabusLessonConnection",
       items:  Array< {
-        __typename: "LessonUnit",
+        __typename: "SyllabusLesson",
         id: string,
-        unitID: string,
+        syllabusID: string,
         lessonID: string,
+        unit: string | null,
+        sequence: number | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -2495,33 +3626,19 @@ export type DeleteUnitMutation = {
   } | null,
 };
 
-export type CreateLessonUnitMutationVariables = {
-  input: CreateLessonUnitInput,
-  condition?: ModelLessonUnitConditionInput | null,
+export type CreateSyllabusLessonMutationVariables = {
+  input: CreateSyllabusLessonInput,
+  condition?: ModelSyllabusLessonConditionInput | null,
 };
 
-export type CreateLessonUnitMutation = {
-  createLessonUnit:  {
-    __typename: "LessonUnit",
+export type CreateSyllabusLessonMutation = {
+  createSyllabusLesson:  {
+    __typename: "SyllabusLesson",
     id: string,
-    unitID: string,
+    syllabusID: string,
     lessonID: string,
-    unit:  {
-      __typename: "Unit",
-      id: string,
-      name: string,
-      type: string | null,
-      description: string | null,
-      objectives: Array< string | null > | null,
-      curriculumID: string,
-      languages: Array< Language | null > | null,
-      lessons:  {
-        __typename: "ModelLessonUnitConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
+    unit: string | null,
+    sequence: number | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -2536,10 +3653,6 @@ export type CreateLessonUnitMutation = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -2635,33 +3748,19 @@ export type CreateLessonUnitMutation = {
   } | null,
 };
 
-export type UpdateLessonUnitMutationVariables = {
-  input: UpdateLessonUnitInput,
-  condition?: ModelLessonUnitConditionInput | null,
+export type UpdateSyllabusLessonMutationVariables = {
+  input: UpdateSyllabusLessonInput,
+  condition?: ModelSyllabusLessonConditionInput | null,
 };
 
-export type UpdateLessonUnitMutation = {
-  updateLessonUnit:  {
-    __typename: "LessonUnit",
+export type UpdateSyllabusLessonMutation = {
+  updateSyllabusLesson:  {
+    __typename: "SyllabusLesson",
     id: string,
-    unitID: string,
+    syllabusID: string,
     lessonID: string,
-    unit:  {
-      __typename: "Unit",
-      id: string,
-      name: string,
-      type: string | null,
-      description: string | null,
-      objectives: Array< string | null > | null,
-      curriculumID: string,
-      languages: Array< Language | null > | null,
-      lessons:  {
-        __typename: "ModelLessonUnitConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
+    unit: string | null,
+    sequence: number | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -2676,10 +3775,6 @@ export type UpdateLessonUnitMutation = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -2775,33 +3870,19 @@ export type UpdateLessonUnitMutation = {
   } | null,
 };
 
-export type DeleteLessonUnitMutationVariables = {
-  input: DeleteLessonUnitInput,
-  condition?: ModelLessonUnitConditionInput | null,
+export type DeleteSyllabusLessonMutationVariables = {
+  input: DeleteSyllabusLessonInput,
+  condition?: ModelSyllabusLessonConditionInput | null,
 };
 
-export type DeleteLessonUnitMutation = {
-  deleteLessonUnit:  {
-    __typename: "LessonUnit",
+export type DeleteSyllabusLessonMutation = {
+  deleteSyllabusLesson:  {
+    __typename: "SyllabusLesson",
     id: string,
-    unitID: string,
+    syllabusID: string,
     lessonID: string,
-    unit:  {
-      __typename: "Unit",
-      id: string,
-      name: string,
-      type: string | null,
-      description: string | null,
-      objectives: Array< string | null > | null,
-      curriculumID: string,
-      languages: Array< Language | null > | null,
-      lessons:  {
-        __typename: "ModelLessonUnitConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
+    unit: string | null,
+    sequence: number | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -2816,10 +3897,6 @@ export type DeleteLessonUnitMutation = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -2926,56 +4003,6 @@ export type CreateCourseMutation = {
     id: string,
     name: string,
     type: string | null,
-    institution:  {
-      __typename: "Institution",
-      id: string,
-      name: string,
-      type: string,
-      district: string | null,
-      address: string,
-      addressLine2: string | null,
-      city: string,
-      state: string | null,
-      zip: string,
-      phone: string | null,
-      website: string | null,
-      image: string | null,
-      serviceProviders:  {
-        __typename: "ModelServiceProviderConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    classID: string,
-    class:  {
-      __typename: "Class",
-      id: string,
-      type: string | null,
-      name: string,
-      students:  {
-        __typename: "ModelClassStudentConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    curriculumID: string,
-    curriculum:  {
-      __typename: "Curriculum",
-      id: string,
-      name: string,
-      type: string | null,
-      description: string | null,
-      objectives: Array< string | null > | null,
-      languages: Array< Language | null > | null,
-      units:  {
-        __typename: "ModelUnitConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     classrooms:  {
       __typename: "ModelClassroomConnection",
       items:  Array< {
@@ -2997,9 +4024,7 @@ export type CreateCourseMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    location: string | null,
     startDate: string | null,
-    endDate: string | null,
     duration: number | null,
     createdAt: string,
     updatedAt: string,
@@ -3017,56 +4042,6 @@ export type UpdateCourseMutation = {
     id: string,
     name: string,
     type: string | null,
-    institution:  {
-      __typename: "Institution",
-      id: string,
-      name: string,
-      type: string,
-      district: string | null,
-      address: string,
-      addressLine2: string | null,
-      city: string,
-      state: string | null,
-      zip: string,
-      phone: string | null,
-      website: string | null,
-      image: string | null,
-      serviceProviders:  {
-        __typename: "ModelServiceProviderConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    classID: string,
-    class:  {
-      __typename: "Class",
-      id: string,
-      type: string | null,
-      name: string,
-      students:  {
-        __typename: "ModelClassStudentConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    curriculumID: string,
-    curriculum:  {
-      __typename: "Curriculum",
-      id: string,
-      name: string,
-      type: string | null,
-      description: string | null,
-      objectives: Array< string | null > | null,
-      languages: Array< Language | null > | null,
-      units:  {
-        __typename: "ModelUnitConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     classrooms:  {
       __typename: "ModelClassroomConnection",
       items:  Array< {
@@ -3088,9 +4063,7 @@ export type UpdateCourseMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    location: string | null,
     startDate: string | null,
-    endDate: string | null,
     duration: number | null,
     createdAt: string,
     updatedAt: string,
@@ -3108,56 +4081,6 @@ export type DeleteCourseMutation = {
     id: string,
     name: string,
     type: string | null,
-    institution:  {
-      __typename: "Institution",
-      id: string,
-      name: string,
-      type: string,
-      district: string | null,
-      address: string,
-      addressLine2: string | null,
-      city: string,
-      state: string | null,
-      zip: string,
-      phone: string | null,
-      website: string | null,
-      image: string | null,
-      serviceProviders:  {
-        __typename: "ModelServiceProviderConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    classID: string,
-    class:  {
-      __typename: "Class",
-      id: string,
-      type: string | null,
-      name: string,
-      students:  {
-        __typename: "ModelClassStudentConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    curriculumID: string,
-    curriculum:  {
-      __typename: "Curriculum",
-      id: string,
-      name: string,
-      type: string | null,
-      description: string | null,
-      objectives: Array< string | null > | null,
-      languages: Array< Language | null > | null,
-      units:  {
-        __typename: "ModelUnitConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     classrooms:  {
       __typename: "ModelClassroomConnection",
       items:  Array< {
@@ -3179,271 +4102,8 @@ export type DeleteCourseMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    location: string | null,
     startDate: string | null,
-    endDate: string | null,
     duration: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateClassMutationVariables = {
-  input: CreateClassInput,
-  condition?: ModelClassConditionInput | null,
-};
-
-export type CreateClassMutation = {
-  createClass:  {
-    __typename: "Class",
-    id: string,
-    type: string | null,
-    name: string,
-    students:  {
-      __typename: "ModelClassStudentConnection",
-      items:  Array< {
-        __typename: "ClassStudent",
-        id: string,
-        classID: string,
-        studentID: string,
-        studentEmail: string,
-        studentAuth: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateClassMutationVariables = {
-  input: UpdateClassInput,
-  condition?: ModelClassConditionInput | null,
-};
-
-export type UpdateClassMutation = {
-  updateClass:  {
-    __typename: "Class",
-    id: string,
-    type: string | null,
-    name: string,
-    students:  {
-      __typename: "ModelClassStudentConnection",
-      items:  Array< {
-        __typename: "ClassStudent",
-        id: string,
-        classID: string,
-        studentID: string,
-        studentEmail: string,
-        studentAuth: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteClassMutationVariables = {
-  input: DeleteClassInput,
-  condition?: ModelClassConditionInput | null,
-};
-
-export type DeleteClassMutation = {
-  deleteClass:  {
-    __typename: "Class",
-    id: string,
-    type: string | null,
-    name: string,
-    students:  {
-      __typename: "ModelClassStudentConnection",
-      items:  Array< {
-        __typename: "ClassStudent",
-        id: string,
-        classID: string,
-        studentID: string,
-        studentEmail: string,
-        studentAuth: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateClassStudentMutationVariables = {
-  input: CreateClassStudentInput,
-  condition?: ModelClassStudentConditionInput | null,
-};
-
-export type CreateClassStudentMutation = {
-  createClassStudent:  {
-    __typename: "ClassStudent",
-    id: string,
-    classID: string,
-    studentID: string,
-    studentEmail: string,
-    studentAuth: string,
-    class:  {
-      __typename: "Class",
-      id: string,
-      type: string | null,
-      name: string,
-      students:  {
-        __typename: "ModelClassStudentConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    student:  {
-      __typename: "Person",
-      id: string,
-      authId: string,
-      status: PersonStatus,
-      email: string,
-      role: Role,
-      type: string | null,
-      firstName: string,
-      preferredName: string | null,
-      lastName: string,
-      externalId: string | null,
-      grade: string | null,
-      wordbank:  {
-        __typename: "ModelStudentWordConnection",
-        nextToken: string | null,
-      } | null,
-      onBoardSurvey: boolean | null,
-      offBoardSurvey: boolean | null,
-      phone: string | null,
-      birthdate: string | null,
-      image: string | null,
-      language: Language,
-      filters: Array< string | null > | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateClassStudentMutationVariables = {
-  input: UpdateClassStudentInput,
-  condition?: ModelClassStudentConditionInput | null,
-};
-
-export type UpdateClassStudentMutation = {
-  updateClassStudent:  {
-    __typename: "ClassStudent",
-    id: string,
-    classID: string,
-    studentID: string,
-    studentEmail: string,
-    studentAuth: string,
-    class:  {
-      __typename: "Class",
-      id: string,
-      type: string | null,
-      name: string,
-      students:  {
-        __typename: "ModelClassStudentConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    student:  {
-      __typename: "Person",
-      id: string,
-      authId: string,
-      status: PersonStatus,
-      email: string,
-      role: Role,
-      type: string | null,
-      firstName: string,
-      preferredName: string | null,
-      lastName: string,
-      externalId: string | null,
-      grade: string | null,
-      wordbank:  {
-        __typename: "ModelStudentWordConnection",
-        nextToken: string | null,
-      } | null,
-      onBoardSurvey: boolean | null,
-      offBoardSurvey: boolean | null,
-      phone: string | null,
-      birthdate: string | null,
-      image: string | null,
-      language: Language,
-      filters: Array< string | null > | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteClassStudentMutationVariables = {
-  input: DeleteClassStudentInput,
-  condition?: ModelClassStudentConditionInput | null,
-};
-
-export type DeleteClassStudentMutation = {
-  deleteClassStudent:  {
-    __typename: "ClassStudent",
-    id: string,
-    classID: string,
-    studentID: string,
-    studentEmail: string,
-    studentAuth: string,
-    class:  {
-      __typename: "Class",
-      id: string,
-      type: string | null,
-      name: string,
-      students:  {
-        __typename: "ModelClassStudentConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    student:  {
-      __typename: "Person",
-      id: string,
-      authId: string,
-      status: PersonStatus,
-      email: string,
-      role: Role,
-      type: string | null,
-      firstName: string,
-      preferredName: string | null,
-      lastName: string,
-      externalId: string | null,
-      grade: string | null,
-      wordbank:  {
-        __typename: "ModelStudentWordConnection",
-        nextToken: string | null,
-      } | null,
-      onBoardSurvey: boolean | null,
-      offBoardSurvey: boolean | null,
-      phone: string | null,
-      birthdate: string | null,
-      image: string | null,
-      language: Language,
-      filters: Array< string | null > | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3483,13 +4143,10 @@ export type CreateStudentDataMutation = {
       course:  {
         __typename: "Course",
         id: string,
+        type: string | null,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -3678,11 +4335,7 @@ export type UpdateStudentDataMutation = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -3871,11 +4524,7 @@ export type DeleteStudentDataMutation = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -4183,51 +4832,11 @@ export type CreateClassroomMutation = {
       id: string,
       name: string,
       type: string | null,
-      institution:  {
-        __typename: "Institution",
-        id: string,
-        name: string,
-        type: string,
-        district: string | null,
-        address: string,
-        addressLine2: string | null,
-        city: string,
-        state: string | null,
-        zip: string,
-        phone: string | null,
-        website: string | null,
-        image: string | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      classID: string,
-      class:  {
-        __typename: "Class",
-        id: string,
-        type: string | null,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      curriculumID: string,
-      curriculum:  {
-        __typename: "Curriculum",
-        id: string,
-        name: string,
-        type: string | null,
-        description: string | null,
-        objectives: Array< string | null > | null,
-        languages: Array< Language | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
       classrooms:  {
         __typename: "ModelClassroomConnection",
         nextToken: string | null,
       } | null,
-      location: string | null,
       startDate: string | null,
-      endDate: string | null,
       duration: number | null,
       createdAt: string,
       updatedAt: string,
@@ -4247,10 +4856,6 @@ export type CreateClassroomMutation = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -4436,51 +5041,11 @@ export type UpdateClassroomMutation = {
       id: string,
       name: string,
       type: string | null,
-      institution:  {
-        __typename: "Institution",
-        id: string,
-        name: string,
-        type: string,
-        district: string | null,
-        address: string,
-        addressLine2: string | null,
-        city: string,
-        state: string | null,
-        zip: string,
-        phone: string | null,
-        website: string | null,
-        image: string | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      classID: string,
-      class:  {
-        __typename: "Class",
-        id: string,
-        type: string | null,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      curriculumID: string,
-      curriculum:  {
-        __typename: "Curriculum",
-        id: string,
-        name: string,
-        type: string | null,
-        description: string | null,
-        objectives: Array< string | null > | null,
-        languages: Array< Language | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
       classrooms:  {
         __typename: "ModelClassroomConnection",
         nextToken: string | null,
       } | null,
-      location: string | null,
       startDate: string | null,
-      endDate: string | null,
       duration: number | null,
       createdAt: string,
       updatedAt: string,
@@ -4500,10 +5065,6 @@ export type UpdateClassroomMutation = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -4689,51 +5250,11 @@ export type DeleteClassroomMutation = {
       id: string,
       name: string,
       type: string | null,
-      institution:  {
-        __typename: "Institution",
-        id: string,
-        name: string,
-        type: string,
-        district: string | null,
-        address: string,
-        addressLine2: string | null,
-        city: string,
-        state: string | null,
-        zip: string,
-        phone: string | null,
-        website: string | null,
-        image: string | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      classID: string,
-      class:  {
-        __typename: "Class",
-        id: string,
-        type: string | null,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      curriculumID: string,
-      curriculum:  {
-        __typename: "Curriculum",
-        id: string,
-        name: string,
-        type: string | null,
-        description: string | null,
-        objectives: Array< string | null > | null,
-        languages: Array< Language | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
       classrooms:  {
         __typename: "ModelClassroomConnection",
         nextToken: string | null,
       } | null,
-      location: string | null,
       startDate: string | null,
-      endDate: string | null,
       duration: number | null,
       createdAt: string,
       updatedAt: string,
@@ -4753,10 +5274,6 @@ export type DeleteClassroomMutation = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -4926,11 +5443,7 @@ export type CreateFeedbackMutation = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -5018,11 +5531,7 @@ export type UpdateFeedbackMutation = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -5110,11 +5619,7 @@ export type DeleteFeedbackMutation = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -5394,33 +5899,6 @@ export type CreateLessonMutation = {
         video: string | null,
       } | null,
     } | null,
-    contributors:  {
-      __typename: "ModelPersonConnection",
-      items:  Array< {
-        __typename: "Person",
-        id: string,
-        authId: string,
-        status: PersonStatus,
-        email: string,
-        role: Role,
-        type: string | null,
-        firstName: string,
-        preferredName: string | null,
-        lastName: string,
-        externalId: string | null,
-        grade: string | null,
-        onBoardSurvey: boolean | null,
-        offBoardSurvey: boolean | null,
-        phone: string | null,
-        birthdate: string | null,
-        image: string | null,
-        language: Language,
-        filters: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
     grades: Array< number | null > | null,
     artistID: string,
     artist:  {
@@ -5640,33 +6118,6 @@ export type UpdateLessonMutation = {
         __typename: "AdditionalContent",
         video: string | null,
       } | null,
-    } | null,
-    contributors:  {
-      __typename: "ModelPersonConnection",
-      items:  Array< {
-        __typename: "Person",
-        id: string,
-        authId: string,
-        status: PersonStatus,
-        email: string,
-        role: Role,
-        type: string | null,
-        firstName: string,
-        preferredName: string | null,
-        lastName: string,
-        externalId: string | null,
-        grade: string | null,
-        onBoardSurvey: boolean | null,
-        offBoardSurvey: boolean | null,
-        phone: string | null,
-        birthdate: string | null,
-        image: string | null,
-        language: Language,
-        filters: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
     } | null,
     grades: Array< number | null > | null,
     artistID: string,
@@ -5888,33 +6339,6 @@ export type DeleteLessonMutation = {
         video: string | null,
       } | null,
     } | null,
-    contributors:  {
-      __typename: "ModelPersonConnection",
-      items:  Array< {
-        __typename: "Person",
-        id: string,
-        authId: string,
-        status: PersonStatus,
-        email: string,
-        role: Role,
-        type: string | null,
-        firstName: string,
-        preferredName: string | null,
-        lastName: string,
-        externalId: string | null,
-        grade: string | null,
-        onBoardSurvey: boolean | null,
-        offBoardSurvey: boolean | null,
-        phone: string | null,
-        birthdate: string | null,
-        image: string | null,
-        language: Language,
-        filters: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
     grades: Array< number | null > | null,
     artistID: string,
     artist:  {
@@ -6131,10 +6555,6 @@ export type CreateLessonCheckpointMutation = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -6271,10 +6691,6 @@ export type UpdateLessonCheckpointMutation = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -6410,10 +6826,6 @@ export type DeleteLessonCheckpointMutation = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -7720,11 +8132,7 @@ export type CreateQuestionDataMutation = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -7857,11 +8265,7 @@ export type UpdateQuestionDataMutation = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -7994,11 +8398,7 @@ export type DeleteQuestionDataMutation = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -8117,17 +8517,10 @@ export type CreateQuestionDataStudentDataMutation = {
       classroom:  {
         __typename: "Classroom",
         id: string,
-        open: boolean,
-        openedAt: string | null,
-        closedAt: string | null,
-        complete: boolean | null,
-        roster: Array< string >,
-        viewing: string | null,
-        expectedStartDate: string | null,
-        expectedEndDate: string | null,
-        SELStructure: string | null,
-        courseID: string,
-        lessonID: string,
+        typeID: string,
+        filterID: string,
+        multiselect: boolean | null,
+        required: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -8261,32 +8654,10 @@ export type UpdateQuestionDataStudentDataMutation = {
     studentData:  {
       __typename: "StudentData",
       id: string,
-      lessonProgress: string,
-      currentLocation: string | null,
-      status: string,
-      saveType: string | null,
-      classroomID: string,
-      classroom:  {
-        __typename: "Classroom",
-        id: string,
-        open: boolean,
-        openedAt: string | null,
-        closedAt: string | null,
-        complete: boolean | null,
-        roster: Array< string >,
-        viewing: string | null,
-        expectedStartDate: string | null,
-        expectedEndDate: string | null,
-        SELStructure: string | null,
-        courseID: string,
-        lessonID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      studentID: string,
-      studentAuthID: string,
-      student:  {
-        __typename: "Person",
+      name: string,
+      architectureID: string,
+      architecture:  {
+        __typename: "Architecture",
         id: string,
         authId: string,
         status: PersonStatus,
@@ -8307,28 +8678,22 @@ export type UpdateQuestionDataStudentDataMutation = {
         filters: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
-      },
-      warmupData:  {
-        __typename: "WarmUpData",
-        story: string | null,
-        title: string | null,
       } | null,
-      corelessonData:  {
-        __typename: "CoreLessonData",
-        selectGroup: number | null,
-      } | null,
-      activityData:  {
-        __typename: "ActivityData",
-        editInput: string | null,
-        editMode: boolean | null,
-        title: string | null,
-      } | null,
-      doFirstData:  {
-        __typename: "ModelQuestionDataStudentDataConnection",
+      filters:  {
+        __typename: "ModelFilterTypeConnection",
         nextToken: string | null,
       } | null,
-      checkpointData:  {
-        __typename: "ModelQuestionDataStudentDataConnection",
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    filter:  {
+      __typename: "Filter",
+      id: string,
+      name: string,
+      description: string | null,
+      editable: boolean | null,
+      options:  {
+        __typename: "ModelFilterOptionConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -8634,10 +8999,6 @@ export type CreateLessonKeyWordMutation = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -8685,43 +9046,78 @@ export type CreateLessonKeyWordMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
-      coreLessonId: string,
-      coreLesson:  {
-        __typename: "CoreLesson",
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type GetInstitutionQueryVariables = {
+  id: string,
+};
+
+export type GetInstitutionQuery = {
+  getInstitution:  {
+    __typename: "Institution",
+    id: string,
+    name: string,
+    type: string,
+    district: string | null,
+    address: string,
+    addressLine2: string | null,
+    city: string,
+    state: string | null,
+    zip: string,
+    phone: string | null,
+    website: string | null,
+    image: string | null,
+    serviceProviders:  {
+      __typename: "ModelServiceProviderConnection",
+      items:  Array< {
+        __typename: "ServiceProvider",
         id: string,
-        title: string,
-        label: string,
-        stage: string,
-        type: string,
-        language: Language,
-        SELTypes: Array< string > | null,
+        partnerID: string,
+        providerID: string,
         createdAt: string,
         updatedAt: string,
-      } | null,
-      activityId: string,
-      activity:  {
-        __typename: "Activity",
-        id: string,
-        title: string,
-        label: string,
-        stage: string,
-        type: string,
-        language: Language,
-        SELTypes: Array< string > | null,
-        lineNumber: number | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      assessmentID: string,
-      assessment:  {
-        __typename: "Assessment",
-        id: string,
-        title: string,
-        type: string,
-        openingMessage: Array< string | null > | null,
-        closingMessage: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListInstitutionsQueryVariables = {
+  id?: string | null,
+  filter?: ModelInstitutionFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListInstitutionsQuery = {
+  listInstitutions:  {
+    __typename: "ModelInstitutionConnection",
+    items:  Array< {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
       } | null,
       filters: Array< string | null > | null,
       createdAt: string,
@@ -8765,10 +9161,6 @@ export type UpdateLessonKeyWordMutation = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -8897,10 +9289,6 @@ export type DeleteLessonKeyWordMutation = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -9638,10 +10026,7 @@ export type UpdateTypeMutation = {
       client:  {
         __typename: "Client",
         id: string,
-        typeID: string,
-        filterID: string,
-        multiselect: boolean | null,
-        required: boolean | null,
+        name: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -9720,26 +10105,8 @@ export type DeleteTypeMutation = {
         required: boolean | null,
         createdAt: string,
         updatedAt: string,
-      } | null,
-      filters:  {
-        __typename: "ModelFilterTypeConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
@@ -10080,6 +10447,7 @@ export type GetInstitutionQuery = {
     phone: string | null,
     website: string | null,
     image: string | null,
+    isServiceProvider: boolean | null,
     serviceProviders:  {
       __typename: "ModelServiceProviderConnection",
       items:  Array< {
@@ -10092,6 +10460,66 @@ export type GetInstitutionQuery = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    staff:  {
+      __typename: "ModelStaffConnection",
+      items:  Array< {
+        __typename: "Staff",
+        id: string,
+        institutionID: string,
+        staffAuthID: string,
+        staffEmail: string,
+        status: string | null,
+        statusChangeDate: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    rooms:  {
+      __typename: "ModelRoomConnection",
+      items:  Array< {
+        __typename: "Room",
+        id: string,
+        institutionID: string,
+        classID: string,
+        teacherID: string,
+        name: string,
+        maxPersons: number,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    curricula:  {
+      __typename: "ModelCurriculumConnection",
+      items:  Array< {
+        __typename: "Curriculum",
+        id: string,
+        institutionID: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    classes:  {
+      __typename: "ModelClassConnection",
+      items:  Array< {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type: string | null,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    filters: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -10122,17 +10550,70 @@ export type ListInstitutionsQuery = {
       phone: string | null,
       website: string | null,
       image: string | null,
+      isServiceProvider: boolean | null,
       serviceProviders:  {
         __typename: "ModelServiceProviderConnection",
         nextToken: string | null,
       } | null,
-      onBoardSurvey: boolean | null,
-      offBoardSurvey: boolean | null,
-      phone: string | null,
-      birthdate: string | null,
-      image: string | null,
-      language: Language,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetStaffQueryVariables = {
+  id: string,
+};
+
+export type GetStaffQuery = {
+  getStaff:  {
+    __typename: "Staff",
+    id: string,
+    institutionID: string,
+    staffAuthID: string,
+    staffEmail: string,
+    status: string | null,
+    statusChangeDate: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListStaffsQueryVariables = {
+  filter?: ModelStaffFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListStaffsQuery = {
+  listStaffs:  {
+    __typename: "ModelStaffConnection",
+    items:  Array< {
+      __typename: "Staff",
+      id: string,
+      institutionID: string,
+      staffAuthID: string,
+      staffEmail: string,
+      status: string | null,
+      statusChangeDate: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -10227,142 +10708,19 @@ export type ListPersonsQuery = {
   } | null,
 };
 
-export type GetCurriculumQueryVariables = {
+export type GetRoomQueryVariables = {
   id: string,
 };
 
-export type GetCurriculumQuery = {
-  getCurriculum:  {
-    __typename: "Curriculum",
+export type GetRoomQuery = {
+  getRoom:  {
+    __typename: "Room",
     id: string,
+    institutionID: string,
+    classID: string,
+    teacherID: string,
     name: string,
-    type: string | null,
-    description: string | null,
-    objectives: Array< string | null > | null,
-    languages: Array< Language | null > | null,
-    units:  {
-      __typename: "ModelUnitConnection",
-      items:  Array< {
-        __typename: "Unit",
-        id: string,
-        name: string,
-        type: string | null,
-        description: string | null,
-        objectives: Array< string | null > | null,
-        curriculumID: string,
-        languages: Array< Language | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListCurriculumsQueryVariables = {
-  id?: string | null,
-  filter?: ModelCurriculumFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListCurriculumsQuery = {
-  listCurriculums:  {
-    __typename: "ModelCurriculumConnection",
-    items:  Array< {
-      __typename: "Curriculum",
-      id: string,
-      name: string,
-      type: string | null,
-      description: string | null,
-      objectives: Array< string | null > | null,
-      languages: Array< Language | null > | null,
-      units:  {
-        __typename: "ModelUnitConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken: string | null,
-  } | null,
-};
-
-export type GetUnitQueryVariables = {
-  id: string,
-};
-
-export type GetUnitQuery = {
-  getUnit:  {
-    __typename: "Unit",
-    id: string,
-    name: string,
-    type: string | null,
-    description: string | null,
-    objectives: Array< string | null > | null,
-    curriculumID: string,
-    languages: Array< Language | null > | null,
-    lessons:  {
-      __typename: "ModelLessonUnitConnection",
-      items:  Array< {
-        __typename: "LessonUnit",
-        id: string,
-        unitID: string,
-        lessonID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListUnitsQueryVariables = {
-  id?: string | null,
-  filter?: ModelUnitFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListUnitsQuery = {
-  listUnits:  {
-    __typename: "ModelUnitConnection",
-    items:  Array< {
-      __typename: "Unit",
-      id: string,
-      name: string,
-      type: string | null,
-      description: string | null,
-      objectives: Array< string | null > | null,
-      curriculumID: string,
-      languages: Array< Language | null > | null,
-      lessons:  {
-        __typename: "ModelLessonUnitConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken: string | null,
-  } | null,
-};
-
-export type GetCourseQueryVariables = {
-  id: string,
-};
-
-export type GetCourseQuery = {
-  getCourse:  {
-    __typename: "Course",
-    id: string,
-    name: string,
-    type: string | null,
+    maxPersons: number,
     institution:  {
       __typename: "Institution",
       id: string,
@@ -10377,86 +10735,53 @@ export type GetCourseQuery = {
       phone: string | null,
       website: string | null,
       image: string | null,
+      isServiceProvider: boolean | null,
       serviceProviders:  {
         __typename: "ModelServiceProviderConnection",
         nextToken: string | null,
       } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    classID: string,
-    class:  {
-      __typename: "Class",
-      id: string,
-      type: string | null,
-      name: string,
-      students:  {
-        __typename: "ModelClassStudentConnection",
+      staff:  {
+        __typename: "ModelStaffConnection",
         nextToken: string | null,
       } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    curriculumID: string,
-    curriculum:  {
-      __typename: "Curriculum",
-      id: string,
-      name: string,
-      type: string | null,
-      description: string | null,
-      objectives: Array< string | null > | null,
-      languages: Array< Language | null > | null,
-      units:  {
-        __typename: "ModelUnitConnection",
+      rooms:  {
+        __typename: "ModelRoomConnection",
         nextToken: string | null,
       } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
-    classrooms:  {
-      __typename: "ModelClassroomConnection",
-      items:  Array< {
-        __typename: "Classroom",
-        id: string,
-        open: boolean,
-        openedAt: string | null,
-        closedAt: string | null,
-        complete: boolean | null,
-        roster: Array< string >,
-        viewing: string | null,
-        expectedStartDate: string | null,
-        expectedEndDate: string | null,
-        SELStructure: string | null,
-        courseID: string,
-        lessonID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    location: string | null,
-    startDate: string | null,
-    endDate: string | null,
-    duration: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListCoursesQueryVariables = {
-  filter?: ModelCourseFilterInput | null,
+export type ListRoomsQueryVariables = {
+  filter?: ModelRoomFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListCoursesQuery = {
-  listCourses:  {
-    __typename: "ModelCourseConnection",
+export type ListRoomsQuery = {
+  listRooms:  {
+    __typename: "ModelRoomConnection",
     items:  Array< {
-      __typename: "Course",
+      __typename: "Room",
       id: string,
+      institutionID: string,
+      classID: string,
+      teacherID: string,
       name: string,
-      type: string | null,
+      maxPersons: number,
       institution:  {
         __typename: "Institution",
         id: string,
@@ -10471,38 +10796,11 @@ export type ListCoursesQuery = {
         phone: string | null,
         website: string | null,
         image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
-      classID: string,
-      class:  {
-        __typename: "Class",
-        id: string,
-        type: string | null,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      curriculumID: string,
-      curriculum:  {
-        __typename: "Curriculum",
-        id: string,
-        name: string,
-        type: string | null,
-        description: string | null,
-        objectives: Array< string | null > | null,
-        languages: Array< Language | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      classrooms:  {
-        __typename: "ModelClassroomConnection",
-        nextToken: string | null,
-      } | null,
-      location: string | null,
-      startDate: string | null,
-      endDate: string | null,
-      duration: number | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -10518,8 +10816,48 @@ export type GetClassQuery = {
   getClass:  {
     __typename: "Class",
     id: string,
+    institutionID: string,
     type: string | null,
     name: string,
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     students:  {
       __typename: "ModelClassStudentConnection",
       items:  Array< {
@@ -10551,12 +10889,285 @@ export type ListClasssQuery = {
     items:  Array< {
       __typename: "Class",
       id: string,
+      institutionID: string,
       type: string | null,
       name: string,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       students:  {
         __typename: "ModelClassStudentConnection",
         nextToken: string | null,
       } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetCurriculumQueryVariables = {
+  id: string,
+};
+
+export type GetCurriculumQuery = {
+  getCurriculum:  {
+    __typename: "Curriculum",
+    id: string,
+    institutionID: string,
+    name: string,
+    type: string | null,
+    description: string | null,
+    objectives: Array< string | null > | null,
+    languages: Array< Language | null > | null,
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    syllabi:  {
+      __typename: "ModelSyllabusConnection",
+      items:  Array< {
+        __typename: "Syllabus",
+        id: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        curriculumID: string,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListCurriculumsQueryVariables = {
+  id?: string | null,
+  filter?: ModelCurriculumFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListCurriculumsQuery = {
+  listCurriculums:  {
+    __typename: "ModelCurriculumConnection",
+    items:  Array< {
+      __typename: "Curriculum",
+      id: string,
+      institutionID: string,
+      name: string,
+      type: string | null,
+      description: string | null,
+      objectives: Array< string | null > | null,
+      languages: Array< Language | null > | null,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      syllabi:  {
+        __typename: "ModelSyllabusConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetSyllabusQueryVariables = {
+  id: string,
+};
+
+export type GetSyllabusQuery = {
+  getSyllabus:  {
+    __typename: "Syllabus",
+    id: string,
+    name: string,
+    type: string | null,
+    description: string | null,
+    objectives: Array< string | null > | null,
+    curriculumID: string,
+    languages: Array< Language | null > | null,
+    lessons:  {
+      __typename: "ModelSyllabusLessonConnection",
+      items:  Array< {
+        __typename: "SyllabusLesson",
+        id: string,
+        syllabusID: string,
+        lessonID: string,
+        unit: string | null,
+        sequence: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListSyllabussQueryVariables = {
+  id?: string | null,
+  filter?: ModelSyllabusFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListSyllabussQuery = {
+  listSyllabuss:  {
+    __typename: "ModelSyllabusConnection",
+    items:  Array< {
+      __typename: "Syllabus",
+      id: string,
+      name: string,
+      type: string | null,
+      description: string | null,
+      objectives: Array< string | null > | null,
+      curriculumID: string,
+      languages: Array< Language | null > | null,
+      lessons:  {
+        __typename: "ModelSyllabusLessonConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetCourseQueryVariables = {
+  id: string,
+};
+
+export type GetCourseQuery = {
+  getCourse:  {
+    __typename: "Course",
+    id: string,
+    name: string,
+    type: string | null,
+    classrooms:  {
+      __typename: "ModelClassroomConnection",
+      items:  Array< {
+        __typename: "Classroom",
+        id: string,
+        open: boolean,
+        openedAt: string | null,
+        closedAt: string | null,
+        complete: boolean | null,
+        roster: Array< string >,
+        viewing: string | null,
+        expectedStartDate: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
+        courseID: string,
+        lessonID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    startDate: string | null,
+    duration: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListCoursesQueryVariables = {
+  filter?: ModelCourseFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListCoursesQuery = {
+  listCourses:  {
+    __typename: "ModelCourseConnection",
+    items:  Array< {
+      __typename: "Course",
+      id: string,
+      name: string,
+      type: string | null,
+      classrooms:  {
+        __typename: "ModelClassroomConnection",
+        nextToken: string | null,
+      } | null,
+      startDate: string | null,
+      duration: number | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -10600,11 +11211,7 @@ export type GetStudentDataQuery = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -10887,7 +11494,6 @@ export type ListArtistsQueryVariables = {
   filter?: ModelArtistFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
 };
 
 export type ListArtistsQuery = {
@@ -10966,51 +11572,11 @@ export type GetClassroomQuery = {
       id: string,
       name: string,
       type: string | null,
-      institution:  {
-        __typename: "Institution",
-        id: string,
-        name: string,
-        type: string,
-        district: string | null,
-        address: string,
-        addressLine2: string | null,
-        city: string,
-        state: string | null,
-        zip: string,
-        phone: string | null,
-        website: string | null,
-        image: string | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      classID: string,
-      class:  {
-        __typename: "Class",
-        id: string,
-        type: string | null,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      curriculumID: string,
-      curriculum:  {
-        __typename: "Curriculum",
-        id: string,
-        name: string,
-        type: string | null,
-        description: string | null,
-        objectives: Array< string | null > | null,
-        languages: Array< Language | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
       classrooms:  {
         __typename: "ModelClassroomConnection",
         nextToken: string | null,
       } | null,
-      location: string | null,
       startDate: string | null,
-      endDate: string | null,
       duration: number | null,
       createdAt: string,
       updatedAt: string,
@@ -11030,10 +11596,6 @@ export type GetClassroomQuery = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -11082,43 +11644,46 @@ export type GetClassroomQuery = {
         createdAt: string,
         updatedAt: string,
       } | null,
-      coreLessonId: string,
-      coreLesson:  {
-        __typename: "CoreLesson",
+      lessonID: string,
+      lesson:  {
+        __typename: "Lesson",
         id: string,
         title: string,
-        label: string,
-        stage: string,
-        type: string,
+        type: string | null,
+        instructions: Array< string | null > | null,
+        grades: Array< number | null > | null,
+        artistID: string,
         language: Language,
-        SELTypes: Array< string > | null,
+        SELStructure: string | null,
+        connection: string | null,
+        summary: string,
+        objectives: Array< string | null >,
+        doFirstID: string,
+        warmUpId: string,
+        coreLessonId: string,
+        activityId: string,
+        assessmentID: string,
+        filters: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
-      activityId: string,
-      activity:  {
-        __typename: "Activity",
-        id: string,
-        title: string,
-        label: string,
+      lessonPlan:  Array< {
+        __typename: "ComponentSummary",
+        id: string | null,
+        disabled: boolean,
+        open: boolean,
+        active: boolean,
         stage: string,
         type: string,
-        language: Language,
-        SELTypes: Array< string > | null,
-        lineNumber: number | null,
-        createdAt: string,
-        updatedAt: string,
+        displayMode: string | null,
+      } >,
+      data:  {
+        __typename: "ModelStudentDataConnection",
+        nextToken: string | null,
       } | null,
-      assessmentID: string,
-      assessment:  {
-        __typename: "Assessment",
-        id: string,
-        title: string,
-        type: string,
-        openingMessage: Array< string | null > | null,
-        closingMessage: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
+      feedback:  {
+        __typename: "ModelFeedbackConnection",
+        nextToken: string | null,
       } | null,
       filters: Array< string | null > | null,
       createdAt: string,
@@ -11198,23 +11763,18 @@ export type ListClassroomsQuery = {
       course:  {
         __typename: "Course",
         id: string,
-        type: string | null,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
-      curriculumID: string,
-      curriculum:  {
-        __typename: "Curriculum",
+      lessonID: string,
+      lesson:  {
+        __typename: "Lesson",
         id: string,
-        name: string,
+        title: string,
         type: string | null,
         instructions: Array< string | null > | null,
         grades: Array< number | null > | null,
@@ -11233,14 +11793,24 @@ export type ListClassroomsQuery = {
         createdAt: string,
         updatedAt: string,
       } | null,
-      classrooms:  {
-        __typename: "ModelClassroomConnection",
+      lessonPlan:  Array< {
+        __typename: "ComponentSummary",
+        id: string | null,
+        disabled: boolean,
+        open: boolean,
+        active: boolean,
+        stage: string,
+        type: string,
+        displayMode: string | null,
+      } >,
+      data:  {
+        __typename: "ModelStudentDataConnection",
         nextToken: string | null,
       } | null,
-      location: string | null,
-      startDate: string | null,
-      endDate: string | null,
-      duration: number | null,
+      feedback:  {
+        __typename: "ModelFeedbackConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -11281,11 +11851,7 @@ export type GetFeedbackQuery = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -11357,8 +11923,17 @@ export type ListFeedbacksQuery = {
       classroom:  {
         __typename: "Classroom",
         id: string,
-        type: string,
-        required: boolean,
+        open: boolean,
+        openedAt: string | null,
+        closedAt: string | null,
+        complete: boolean | null,
+        roster: Array< string >,
+        viewing: string | null,
+        expectedStartDate: string | null,
+        expectedEndDate: string | null,
+        SELStructure: string | null,
+        courseID: string,
+        lessonID: string,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -11485,6 +12060,13 @@ export type ListThemeTemplatesQuery = {
         __typename: "AdditionalContent",
         video: string | null,
       } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -11521,33 +12103,6 @@ export type GetLessonQuery = {
         __typename: "AdditionalContent",
         video: string | null,
       } | null,
-    } | null,
-    contributors:  {
-      __typename: "ModelPersonConnection",
-      items:  Array< {
-        __typename: "Person",
-        id: string,
-        authId: string,
-        status: PersonStatus,
-        email: string,
-        role: Role,
-        type: string | null,
-        firstName: string,
-        preferredName: string | null,
-        lastName: string,
-        externalId: string | null,
-        grade: string | null,
-        onBoardSurvey: boolean | null,
-        offBoardSurvey: boolean | null,
-        phone: string | null,
-        birthdate: string | null,
-        image: string | null,
-        language: Language,
-        filters: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
     } | null,
     grades: Array< number | null > | null,
     artistID: string,
@@ -11598,8 +12153,48 @@ export type GetLessonQuery = {
         position: number,
         createdAt: string,
         updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
+      } | null,
+      coreLessonId: string,
+      coreLesson:  {
+        __typename: "CoreLesson",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      activityId: string,
+      activity:  {
+        __typename: "Activity",
+        id: string,
+        title: string,
+        label: string,
+        stage: string,
+        type: string,
+        language: Language,
+        SELTypes: Array< string > | null,
+        lineNumber: number | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      assessmentID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     doFirstID: string,
     doFirst:  {
@@ -11763,10 +12358,6 @@ export type ListLessonsQuery = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -12472,11 +13063,7 @@ export type GetQuestionDataQuery = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -12751,6 +13338,7 @@ export type GetFilterOptionQuery = {
       __typename: "Filter",
       id: string,
       name: string,
+      type: string | null,
       description: string | null,
       editable: boolean | null,
       options:  {
@@ -13176,51 +13764,11 @@ export type OnUpdateClassroomSubscription = {
       id: string,
       name: string,
       type: string | null,
-      institution:  {
-        __typename: "Institution",
-        id: string,
-        name: string,
-        type: string,
-        district: string | null,
-        address: string,
-        addressLine2: string | null,
-        city: string,
-        state: string | null,
-        zip: string,
-        phone: string | null,
-        website: string | null,
-        image: string | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      classID: string,
-      class:  {
-        __typename: "Class",
-        id: string,
-        type: string | null,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      curriculumID: string,
-      curriculum:  {
-        __typename: "Curriculum",
-        id: string,
-        name: string,
-        type: string | null,
-        description: string | null,
-        objectives: Array< string | null > | null,
-        languages: Array< Language | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
       classrooms:  {
         __typename: "ModelClassroomConnection",
         nextToken: string | null,
       } | null,
-      location: string | null,
       startDate: string | null,
-      endDate: string | null,
       duration: number | null,
       createdAt: string,
       updatedAt: string,
@@ -13240,10 +13788,6 @@ export type OnUpdateClassroomSubscription = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -13414,11 +13958,7 @@ export type OnChangeStudentDataSubscription = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -13586,6 +14126,7 @@ export type OnCreateInstitutionSubscription = {
     phone: string | null,
     website: string | null,
     image: string | null,
+    isServiceProvider: boolean | null,
     serviceProviders:  {
       __typename: "ModelServiceProviderConnection",
       items:  Array< {
@@ -13598,6 +14139,66 @@ export type OnCreateInstitutionSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    staff:  {
+      __typename: "ModelStaffConnection",
+      items:  Array< {
+        __typename: "Staff",
+        id: string,
+        institutionID: string,
+        staffAuthID: string,
+        staffEmail: string,
+        status: string | null,
+        statusChangeDate: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    rooms:  {
+      __typename: "ModelRoomConnection",
+      items:  Array< {
+        __typename: "Room",
+        id: string,
+        institutionID: string,
+        classID: string,
+        teacherID: string,
+        name: string,
+        maxPersons: number,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    curricula:  {
+      __typename: "ModelCurriculumConnection",
+      items:  Array< {
+        __typename: "Curriculum",
+        id: string,
+        institutionID: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    classes:  {
+      __typename: "ModelClassConnection",
+      items:  Array< {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type: string | null,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    filters: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -13618,6 +14219,7 @@ export type OnUpdateInstitutionSubscription = {
     phone: string | null,
     website: string | null,
     image: string | null,
+    isServiceProvider: boolean | null,
     serviceProviders:  {
       __typename: "ModelServiceProviderConnection",
       items:  Array< {
@@ -13630,6 +14232,66 @@ export type OnUpdateInstitutionSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    staff:  {
+      __typename: "ModelStaffConnection",
+      items:  Array< {
+        __typename: "Staff",
+        id: string,
+        institutionID: string,
+        staffAuthID: string,
+        staffEmail: string,
+        status: string | null,
+        statusChangeDate: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    rooms:  {
+      __typename: "ModelRoomConnection",
+      items:  Array< {
+        __typename: "Room",
+        id: string,
+        institutionID: string,
+        classID: string,
+        teacherID: string,
+        name: string,
+        maxPersons: number,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    curricula:  {
+      __typename: "ModelCurriculumConnection",
+      items:  Array< {
+        __typename: "Curriculum",
+        id: string,
+        institutionID: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    classes:  {
+      __typename: "ModelClassConnection",
+      items:  Array< {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type: string | null,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    filters: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -13650,6 +14312,7 @@ export type OnDeleteInstitutionSubscription = {
     phone: string | null,
     website: string | null,
     image: string | null,
+    isServiceProvider: boolean | null,
     serviceProviders:  {
       __typename: "ModelServiceProviderConnection",
       items:  Array< {
@@ -13662,6 +14325,66 @@ export type OnDeleteInstitutionSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    staff:  {
+      __typename: "ModelStaffConnection",
+      items:  Array< {
+        __typename: "Staff",
+        id: string,
+        institutionID: string,
+        staffAuthID: string,
+        staffEmail: string,
+        status: string | null,
+        statusChangeDate: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    rooms:  {
+      __typename: "ModelRoomConnection",
+      items:  Array< {
+        __typename: "Room",
+        id: string,
+        institutionID: string,
+        classID: string,
+        teacherID: string,
+        name: string,
+        maxPersons: number,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    curricula:  {
+      __typename: "ModelCurriculumConnection",
+      items:  Array< {
+        __typename: "Curriculum",
+        id: string,
+        institutionID: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    classes:  {
+      __typename: "ModelClassConnection",
+      items:  Array< {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type: string | null,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    filters: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -13687,10 +14410,28 @@ export type OnCreateServiceProviderSubscription = {
       phone: string | null,
       website: string | null,
       image: string | null,
+      isServiceProvider: boolean | null,
       serviceProviders:  {
         __typename: "ModelServiceProviderConnection",
         nextToken: string | null,
       } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -13719,10 +14460,28 @@ export type OnUpdateServiceProviderSubscription = {
       phone: string | null,
       website: string | null,
       image: string | null,
+      isServiceProvider: boolean | null,
       serviceProviders:  {
         __typename: "ModelServiceProviderConnection",
         nextToken: string | null,
       } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -13751,13 +14510,73 @@ export type OnDeleteServiceProviderSubscription = {
       phone: string | null,
       website: string | null,
       image: string | null,
+      isServiceProvider: boolean | null,
       serviceProviders:  {
         __typename: "ModelServiceProviderConnection",
         nextToken: string | null,
       } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateStaffSubscription = {
+  onCreateStaff:  {
+    __typename: "Staff",
+    id: string,
+    institutionID: string,
+    staffAuthID: string,
+    staffEmail: string,
+    status: string | null,
+    statusChangeDate: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateStaffSubscription = {
+  onUpdateStaff:  {
+    __typename: "Staff",
+    id: string,
+    institutionID: string,
+    staffAuthID: string,
+    staffEmail: string,
+    status: string | null,
+    statusChangeDate: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteStaffSubscription = {
+  onDeleteStaff:  {
+    __typename: "Staff",
+    id: string,
+    institutionID: string,
+    staffAuthID: string,
+    staffEmail: string,
+    status: string | null,
+    statusChangeDate: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -13880,19 +14699,629 @@ export type OnDeletePersonSubscription = {
   } | null,
 };
 
+export type OnCreateRoomSubscription = {
+  onCreateRoom:  {
+    __typename: "Room",
+    id: string,
+    institutionID: string,
+    classID: string,
+    teacherID: string,
+    name: string,
+    maxPersons: number,
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateRoomSubscription = {
+  onUpdateRoom:  {
+    __typename: "Room",
+    id: string,
+    institutionID: string,
+    classID: string,
+    teacherID: string,
+    name: string,
+    maxPersons: number,
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteRoomSubscription = {
+  onDeleteRoom:  {
+    __typename: "Room",
+    id: string,
+    institutionID: string,
+    classID: string,
+    teacherID: string,
+    name: string,
+    maxPersons: number,
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateClassSubscription = {
+  onCreateClass:  {
+    __typename: "Class",
+    id: string,
+    institutionID: string,
+    type: string | null,
+    name: string,
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    students:  {
+      __typename: "ModelClassStudentConnection",
+      items:  Array< {
+        __typename: "ClassStudent",
+        id: string,
+        classID: string,
+        studentID: string,
+        studentEmail: string,
+        studentAuth: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateClassSubscription = {
+  onUpdateClass:  {
+    __typename: "Class",
+    id: string,
+    institutionID: string,
+    type: string | null,
+    name: string,
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    students:  {
+      __typename: "ModelClassStudentConnection",
+      items:  Array< {
+        __typename: "ClassStudent",
+        id: string,
+        classID: string,
+        studentID: string,
+        studentEmail: string,
+        studentAuth: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteClassSubscription = {
+  onDeleteClass:  {
+    __typename: "Class",
+    id: string,
+    institutionID: string,
+    type: string | null,
+    name: string,
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    students:  {
+      __typename: "ModelClassStudentConnection",
+      items:  Array< {
+        __typename: "ClassStudent",
+        id: string,
+        classID: string,
+        studentID: string,
+        studentEmail: string,
+        studentAuth: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateClassStudentSubscription = {
+  onCreateClassStudent:  {
+    __typename: "ClassStudent",
+    id: string,
+    classID: string,
+    studentID: string,
+    studentEmail: string,
+    studentAuth: string,
+    class:  {
+      __typename: "Class",
+      id: string,
+      institutionID: string,
+      type: string | null,
+      name: string,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      students:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    student:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateClassStudentSubscription = {
+  onUpdateClassStudent:  {
+    __typename: "ClassStudent",
+    id: string,
+    classID: string,
+    studentID: string,
+    studentEmail: string,
+    studentAuth: string,
+    class:  {
+      __typename: "Class",
+      id: string,
+      institutionID: string,
+      type: string | null,
+      name: string,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      students:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    student:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteClassStudentSubscription = {
+  onDeleteClassStudent:  {
+    __typename: "ClassStudent",
+    id: string,
+    classID: string,
+    studentID: string,
+    studentEmail: string,
+    studentAuth: string,
+    class:  {
+      __typename: "Class",
+      id: string,
+      institutionID: string,
+      type: string | null,
+      name: string,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      students:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    student:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreateCurriculumSubscription = {
   onCreateCurriculum:  {
     __typename: "Curriculum",
     id: string,
+    institutionID: string,
     name: string,
     type: string | null,
     description: string | null,
     objectives: Array< string | null > | null,
     languages: Array< Language | null > | null,
-    units:  {
-      __typename: "ModelUnitConnection",
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    syllabi:  {
+      __typename: "ModelSyllabusConnection",
       items:  Array< {
-        __typename: "Unit",
+        __typename: "Syllabus",
         id: string,
         name: string,
         type: string | null,
@@ -13914,15 +15343,55 @@ export type OnUpdateCurriculumSubscription = {
   onUpdateCurriculum:  {
     __typename: "Curriculum",
     id: string,
+    institutionID: string,
     name: string,
     type: string | null,
     description: string | null,
     objectives: Array< string | null > | null,
     languages: Array< Language | null > | null,
-    units:  {
-      __typename: "ModelUnitConnection",
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    syllabi:  {
+      __typename: "ModelSyllabusConnection",
       items:  Array< {
-        __typename: "Unit",
+        __typename: "Syllabus",
         id: string,
         name: string,
         type: string | null,
@@ -13944,15 +15413,55 @@ export type OnDeleteCurriculumSubscription = {
   onDeleteCurriculum:  {
     __typename: "Curriculum",
     id: string,
+    institutionID: string,
     name: string,
     type: string | null,
     description: string | null,
     objectives: Array< string | null > | null,
     languages: Array< Language | null > | null,
-    units:  {
-      __typename: "ModelUnitConnection",
+    institution:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district: string | null,
+      address: string,
+      addressLine2: string | null,
+      city: string,
+      state: string | null,
+      zip: string,
+      phone: string | null,
+      website: string | null,
+      image: string | null,
+      isServiceProvider: boolean | null,
+      serviceProviders:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken: string | null,
+      } | null,
+      staff:  {
+        __typename: "ModelStaffConnection",
+        nextToken: string | null,
+      } | null,
+      rooms:  {
+        __typename: "ModelRoomConnection",
+        nextToken: string | null,
+      } | null,
+      curricula:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      classes:  {
+        __typename: "ModelClassConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    syllabi:  {
+      __typename: "ModelSyllabusConnection",
       items:  Array< {
-        __typename: "Unit",
+        __typename: "Syllabus",
         id: string,
         name: string,
         type: string | null,
@@ -13970,9 +15479,9 @@ export type OnDeleteCurriculumSubscription = {
   } | null,
 };
 
-export type OnCreateUnitSubscription = {
-  onCreateUnit:  {
-    __typename: "Unit",
+export type OnCreateSyllabusSubscription = {
+  onCreateSyllabus:  {
+    __typename: "Syllabus",
     id: string,
     name: string,
     type: string | null,
@@ -13981,12 +15490,14 @@ export type OnCreateUnitSubscription = {
     curriculumID: string,
     languages: Array< Language | null > | null,
     lessons:  {
-      __typename: "ModelLessonUnitConnection",
+      __typename: "ModelSyllabusLessonConnection",
       items:  Array< {
-        __typename: "LessonUnit",
+        __typename: "SyllabusLesson",
         id: string,
-        unitID: string,
+        syllabusID: string,
         lessonID: string,
+        unit: string | null,
+        sequence: number | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -13997,9 +15508,9 @@ export type OnCreateUnitSubscription = {
   } | null,
 };
 
-export type OnUpdateUnitSubscription = {
-  onUpdateUnit:  {
-    __typename: "Unit",
+export type OnUpdateSyllabusSubscription = {
+  onUpdateSyllabus:  {
+    __typename: "Syllabus",
     id: string,
     name: string,
     type: string | null,
@@ -14008,12 +15519,14 @@ export type OnUpdateUnitSubscription = {
     curriculumID: string,
     languages: Array< Language | null > | null,
     lessons:  {
-      __typename: "ModelLessonUnitConnection",
+      __typename: "ModelSyllabusLessonConnection",
       items:  Array< {
-        __typename: "LessonUnit",
+        __typename: "SyllabusLesson",
         id: string,
-        unitID: string,
+        syllabusID: string,
         lessonID: string,
+        unit: string | null,
+        sequence: number | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -14024,9 +15537,9 @@ export type OnUpdateUnitSubscription = {
   } | null,
 };
 
-export type OnDeleteUnitSubscription = {
-  onDeleteUnit:  {
-    __typename: "Unit",
+export type OnDeleteSyllabusSubscription = {
+  onDeleteSyllabus:  {
+    __typename: "Syllabus",
     id: string,
     name: string,
     type: string | null,
@@ -14035,12 +15548,14 @@ export type OnDeleteUnitSubscription = {
     curriculumID: string,
     languages: Array< Language | null > | null,
     lessons:  {
-      __typename: "ModelLessonUnitConnection",
+      __typename: "ModelSyllabusLessonConnection",
       items:  Array< {
-        __typename: "LessonUnit",
+        __typename: "SyllabusLesson",
         id: string,
-        unitID: string,
+        syllabusID: string,
         lessonID: string,
+        unit: string | null,
+        sequence: number | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -14051,28 +15566,14 @@ export type OnDeleteUnitSubscription = {
   } | null,
 };
 
-export type OnCreateLessonUnitSubscription = {
-  onCreateLessonUnit:  {
-    __typename: "LessonUnit",
+export type OnCreateSyllabusLessonSubscription = {
+  onCreateSyllabusLesson:  {
+    __typename: "SyllabusLesson",
     id: string,
-    unitID: string,
+    syllabusID: string,
     lessonID: string,
-    unit:  {
-      __typename: "Unit",
-      id: string,
-      name: string,
-      type: string | null,
-      description: string | null,
-      objectives: Array< string | null > | null,
-      curriculumID: string,
-      languages: Array< Language | null > | null,
-      lessons:  {
-        __typename: "ModelLessonUnitConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
+    unit: string | null,
+    sequence: number | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -14087,10 +15588,6 @@ export type OnCreateLessonUnitSubscription = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -14186,28 +15683,14 @@ export type OnCreateLessonUnitSubscription = {
   } | null,
 };
 
-export type OnUpdateLessonUnitSubscription = {
-  onUpdateLessonUnit:  {
-    __typename: "LessonUnit",
+export type OnUpdateSyllabusLessonSubscription = {
+  onUpdateSyllabusLesson:  {
+    __typename: "SyllabusLesson",
     id: string,
-    unitID: string,
+    syllabusID: string,
     lessonID: string,
-    unit:  {
-      __typename: "Unit",
-      id: string,
-      name: string,
-      type: string | null,
-      description: string | null,
-      objectives: Array< string | null > | null,
-      curriculumID: string,
-      languages: Array< Language | null > | null,
-      lessons:  {
-        __typename: "ModelLessonUnitConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
+    unit: string | null,
+    sequence: number | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -14222,10 +15705,6 @@ export type OnUpdateLessonUnitSubscription = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -14321,28 +15800,14 @@ export type OnUpdateLessonUnitSubscription = {
   } | null,
 };
 
-export type OnDeleteLessonUnitSubscription = {
-  onDeleteLessonUnit:  {
-    __typename: "LessonUnit",
+export type OnDeleteSyllabusLessonSubscription = {
+  onDeleteSyllabusLesson:  {
+    __typename: "SyllabusLesson",
     id: string,
-    unitID: string,
+    syllabusID: string,
     lessonID: string,
-    unit:  {
-      __typename: "Unit",
-      id: string,
-      name: string,
-      type: string | null,
-      description: string | null,
-      objectives: Array< string | null > | null,
-      curriculumID: string,
-      languages: Array< Language | null > | null,
-      lessons:  {
-        __typename: "ModelLessonUnitConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
+    unit: string | null,
+    sequence: number | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -14357,10 +15822,6 @@ export type OnDeleteLessonUnitSubscription = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -14462,56 +15923,6 @@ export type OnCreateCourseSubscription = {
     id: string,
     name: string,
     type: string | null,
-    institution:  {
-      __typename: "Institution",
-      id: string,
-      name: string,
-      type: string,
-      district: string | null,
-      address: string,
-      addressLine2: string | null,
-      city: string,
-      state: string | null,
-      zip: string,
-      phone: string | null,
-      website: string | null,
-      image: string | null,
-      serviceProviders:  {
-        __typename: "ModelServiceProviderConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    classID: string,
-    class:  {
-      __typename: "Class",
-      id: string,
-      type: string | null,
-      name: string,
-      students:  {
-        __typename: "ModelClassStudentConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    curriculumID: string,
-    curriculum:  {
-      __typename: "Curriculum",
-      id: string,
-      name: string,
-      type: string | null,
-      description: string | null,
-      objectives: Array< string | null > | null,
-      languages: Array< Language | null > | null,
-      units:  {
-        __typename: "ModelUnitConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     classrooms:  {
       __typename: "ModelClassroomConnection",
       items:  Array< {
@@ -14533,9 +15944,7 @@ export type OnCreateCourseSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    location: string | null,
     startDate: string | null,
-    endDate: string | null,
     duration: number | null,
     createdAt: string,
     updatedAt: string,
@@ -14548,56 +15957,6 @@ export type OnUpdateCourseSubscription = {
     id: string,
     name: string,
     type: string | null,
-    institution:  {
-      __typename: "Institution",
-      id: string,
-      name: string,
-      type: string,
-      district: string | null,
-      address: string,
-      addressLine2: string | null,
-      city: string,
-      state: string | null,
-      zip: string,
-      phone: string | null,
-      website: string | null,
-      image: string | null,
-      serviceProviders:  {
-        __typename: "ModelServiceProviderConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    classID: string,
-    class:  {
-      __typename: "Class",
-      id: string,
-      type: string | null,
-      name: string,
-      students:  {
-        __typename: "ModelClassStudentConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    curriculumID: string,
-    curriculum:  {
-      __typename: "Curriculum",
-      id: string,
-      name: string,
-      type: string | null,
-      description: string | null,
-      objectives: Array< string | null > | null,
-      languages: Array< Language | null > | null,
-      units:  {
-        __typename: "ModelUnitConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     classrooms:  {
       __typename: "ModelClassroomConnection",
       items:  Array< {
@@ -14619,9 +15978,7 @@ export type OnUpdateCourseSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    location: string | null,
     startDate: string | null,
-    endDate: string | null,
     duration: number | null,
     createdAt: string,
     updatedAt: string,
@@ -14634,56 +15991,6 @@ export type OnDeleteCourseSubscription = {
     id: string,
     name: string,
     type: string | null,
-    institution:  {
-      __typename: "Institution",
-      id: string,
-      name: string,
-      type: string,
-      district: string | null,
-      address: string,
-      addressLine2: string | null,
-      city: string,
-      state: string | null,
-      zip: string,
-      phone: string | null,
-      website: string | null,
-      image: string | null,
-      serviceProviders:  {
-        __typename: "ModelServiceProviderConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    classID: string,
-    class:  {
-      __typename: "Class",
-      id: string,
-      type: string | null,
-      name: string,
-      students:  {
-        __typename: "ModelClassStudentConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    curriculumID: string,
-    curriculum:  {
-      __typename: "Curriculum",
-      id: string,
-      name: string,
-      type: string | null,
-      description: string | null,
-      objectives: Array< string | null > | null,
-      languages: Array< Language | null > | null,
-      units:  {
-        __typename: "ModelUnitConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     classrooms:  {
       __typename: "ModelClassroomConnection",
       items:  Array< {
@@ -14705,241 +16012,8 @@ export type OnDeleteCourseSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    location: string | null,
     startDate: string | null,
-    endDate: string | null,
     duration: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateClassSubscription = {
-  onCreateClass:  {
-    __typename: "Class",
-    id: string,
-    type: string | null,
-    name: string,
-    students:  {
-      __typename: "ModelClassStudentConnection",
-      items:  Array< {
-        __typename: "ClassStudent",
-        id: string,
-        classID: string,
-        studentID: string,
-        studentEmail: string,
-        studentAuth: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateClassSubscription = {
-  onUpdateClass:  {
-    __typename: "Class",
-    id: string,
-    type: string | null,
-    name: string,
-    students:  {
-      __typename: "ModelClassStudentConnection",
-      items:  Array< {
-        __typename: "ClassStudent",
-        id: string,
-        classID: string,
-        studentID: string,
-        studentEmail: string,
-        studentAuth: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteClassSubscription = {
-  onDeleteClass:  {
-    __typename: "Class",
-    id: string,
-    type: string | null,
-    name: string,
-    students:  {
-      __typename: "ModelClassStudentConnection",
-      items:  Array< {
-        __typename: "ClassStudent",
-        id: string,
-        classID: string,
-        studentID: string,
-        studentEmail: string,
-        studentAuth: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateClassStudentSubscription = {
-  onCreateClassStudent:  {
-    __typename: "ClassStudent",
-    id: string,
-    classID: string,
-    studentID: string,
-    studentEmail: string,
-    studentAuth: string,
-    class:  {
-      __typename: "Class",
-      id: string,
-      type: string | null,
-      name: string,
-      students:  {
-        __typename: "ModelClassStudentConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    student:  {
-      __typename: "Person",
-      id: string,
-      authId: string,
-      status: PersonStatus,
-      email: string,
-      role: Role,
-      type: string | null,
-      firstName: string,
-      preferredName: string | null,
-      lastName: string,
-      externalId: string | null,
-      grade: string | null,
-      wordbank:  {
-        __typename: "ModelStudentWordConnection",
-        nextToken: string | null,
-      } | null,
-      onBoardSurvey: boolean | null,
-      offBoardSurvey: boolean | null,
-      phone: string | null,
-      birthdate: string | null,
-      image: string | null,
-      language: Language,
-      filters: Array< string | null > | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateClassStudentSubscription = {
-  onUpdateClassStudent:  {
-    __typename: "ClassStudent",
-    id: string,
-    classID: string,
-    studentID: string,
-    studentEmail: string,
-    studentAuth: string,
-    class:  {
-      __typename: "Class",
-      id: string,
-      type: string | null,
-      name: string,
-      students:  {
-        __typename: "ModelClassStudentConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    student:  {
-      __typename: "Person",
-      id: string,
-      authId: string,
-      status: PersonStatus,
-      email: string,
-      role: Role,
-      type: string | null,
-      firstName: string,
-      preferredName: string | null,
-      lastName: string,
-      externalId: string | null,
-      grade: string | null,
-      wordbank:  {
-        __typename: "ModelStudentWordConnection",
-        nextToken: string | null,
-      } | null,
-      onBoardSurvey: boolean | null,
-      offBoardSurvey: boolean | null,
-      phone: string | null,
-      birthdate: string | null,
-      image: string | null,
-      language: Language,
-      filters: Array< string | null > | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteClassStudentSubscription = {
-  onDeleteClassStudent:  {
-    __typename: "ClassStudent",
-    id: string,
-    classID: string,
-    studentID: string,
-    studentEmail: string,
-    studentAuth: string,
-    class:  {
-      __typename: "Class",
-      id: string,
-      type: string | null,
-      name: string,
-      students:  {
-        __typename: "ModelClassStudentConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    student:  {
-      __typename: "Person",
-      id: string,
-      authId: string,
-      status: PersonStatus,
-      email: string,
-      role: Role,
-      type: string | null,
-      firstName: string,
-      preferredName: string | null,
-      lastName: string,
-      externalId: string | null,
-      grade: string | null,
-      wordbank:  {
-        __typename: "ModelStudentWordConnection",
-        nextToken: string | null,
-      } | null,
-      onBoardSurvey: boolean | null,
-      offBoardSurvey: boolean | null,
-      phone: string | null,
-      birthdate: string | null,
-      image: string | null,
-      language: Language,
-      filters: Array< string | null > | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -15064,11 +16138,7 @@ export type OnCreateFeedbackSubscription = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -15151,11 +16221,7 @@ export type OnUpdateFeedbackSubscription = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -15238,11 +16304,7 @@ export type OnDeleteFeedbackSubscription = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -15487,33 +16549,6 @@ export type OnCreateLessonSubscription = {
         video: string | null,
       } | null,
     } | null,
-    contributors:  {
-      __typename: "ModelPersonConnection",
-      items:  Array< {
-        __typename: "Person",
-        id: string,
-        authId: string,
-        status: PersonStatus,
-        email: string,
-        role: Role,
-        type: string | null,
-        firstName: string,
-        preferredName: string | null,
-        lastName: string,
-        externalId: string | null,
-        grade: string | null,
-        onBoardSurvey: boolean | null,
-        offBoardSurvey: boolean | null,
-        phone: string | null,
-        birthdate: string | null,
-        image: string | null,
-        language: Language,
-        filters: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
     grades: Array< number | null > | null,
     artistID: string,
     artist:  {
@@ -15728,33 +16763,6 @@ export type OnUpdateLessonSubscription = {
         __typename: "AdditionalContent",
         video: string | null,
       } | null,
-    } | null,
-    contributors:  {
-      __typename: "ModelPersonConnection",
-      items:  Array< {
-        __typename: "Person",
-        id: string,
-        authId: string,
-        status: PersonStatus,
-        email: string,
-        role: Role,
-        type: string | null,
-        firstName: string,
-        preferredName: string | null,
-        lastName: string,
-        externalId: string | null,
-        grade: string | null,
-        onBoardSurvey: boolean | null,
-        offBoardSurvey: boolean | null,
-        phone: string | null,
-        birthdate: string | null,
-        image: string | null,
-        language: Language,
-        filters: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
     } | null,
     grades: Array< number | null > | null,
     artistID: string,
@@ -15971,33 +16979,6 @@ export type OnDeleteLessonSubscription = {
         video: string | null,
       } | null,
     } | null,
-    contributors:  {
-      __typename: "ModelPersonConnection",
-      items:  Array< {
-        __typename: "Person",
-        id: string,
-        authId: string,
-        status: PersonStatus,
-        email: string,
-        role: Role,
-        type: string | null,
-        firstName: string,
-        preferredName: string | null,
-        lastName: string,
-        externalId: string | null,
-        grade: string | null,
-        onBoardSurvey: boolean | null,
-        offBoardSurvey: boolean | null,
-        phone: string | null,
-        birthdate: string | null,
-        image: string | null,
-        language: Language,
-        filters: Array< string | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
     grades: Array< number | null > | null,
     artistID: string,
     artist:  {
@@ -16209,10 +17190,6 @@ export type OnCreateLessonCheckpointSubscription = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -16344,10 +17321,6 @@ export type OnUpdateLessonCheckpointSubscription = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -16478,10 +17451,6 @@ export type OnDeleteLessonCheckpointSubscription = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
@@ -17163,6 +18132,10 @@ export type OnCreateCheckpointSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    location: string | null,
+    startDate: string | null,
+    endDate: string | null,
+    duration: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -17190,6 +18163,10 @@ export type OnUpdateCheckpointSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    location: string | null,
+    startDate: string | null,
+    endDate: string | null,
+    duration: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -17217,6 +18194,10 @@ export type OnDeleteCheckpointSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    location: string | null,
+    startDate: string | null,
+    endDate: string | null,
+    duration: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -17257,8 +18238,7 @@ export type OnCreateCheckpointQuestionsSubscription = {
         icon: string | null,
         color: string | null,
       } | null > | null,
-      createdAt: string,
-      updatedAt: string,
+      nextToken: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
@@ -17287,21 +18267,30 @@ export type OnUpdateCheckpointQuestionsSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    question:  {
-      __typename: "Question",
-      id: string,
-      label: string,
-      type: string,
-      question: string,
-      options:  Array< {
-        __typename: "Option",
-        text: string,
-        label: string | null,
-        icon: string | null,
-        color: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteClassSubscription = {
+  onDeleteClass:  {
+    __typename: "Class",
+    id: string,
+    type: string | null,
+    name: string,
+    students:  {
+      __typename: "ModelClassStudentConnection",
+      items:  Array< {
+        __typename: "ClassStudent",
+        id: string,
+        classID: string,
+        studentID: string,
+        studentEmail: string,
+        studentAuth: string,
+        createdAt: string,
+        updatedAt: string,
       } | null > | null,
-      createdAt: string,
-      updatedAt: string,
+      nextToken: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
@@ -17330,19 +18319,30 @@ export type OnDeleteCheckpointQuestionsSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    question:  {
-      __typename: "Question",
+    student:  {
+      __typename: "Person",
       id: string,
-      label: string,
-      type: string,
-      question: string,
-      options:  Array< {
-        __typename: "Option",
-        text: string,
-        label: string | null,
-        icon: string | null,
-        color: string | null,
-      } | null > | null,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -17633,11 +18633,7 @@ export type OnCreateQuestionDataSubscription = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -17765,11 +18761,7 @@ export type OnUpdateQuestionDataSubscription = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -17897,11 +18889,7 @@ export type OnDeleteQuestionDataSubscription = {
         id: string,
         name: string,
         type: string | null,
-        classID: string,
-        curriculumID: string,
-        location: string | null,
         startDate: string | null,
-        endDate: string | null,
         duration: number | null,
         createdAt: string,
         updatedAt: string,
@@ -18502,10 +19490,6 @@ export type OnCreateLessonKeyWordSubscription = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -18629,10 +19613,6 @@ export type OnUpdateLessonKeyWordSubscription = {
         connection: string | null,
         images: Array< string >,
       } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
-      } | null,
       grades: Array< number | null > | null,
       artistID: string,
       artist:  {
@@ -18666,6 +19646,12 @@ export type OnUpdateLessonKeyWordSubscription = {
         required: boolean,
         createdAt: string,
         updatedAt: string,
+      },
+      language: Language,
+      SELStructure: string | null,
+      keywords:  {
+        __typename: "ModelLessonKeyWordConnection",
+        nextToken: string | null,
       } | null,
       warmUpId: string,
       warmUp:  {
@@ -18755,10 +19741,6 @@ export type OnDeleteLessonKeyWordSubscription = {
         summaryLabel: string,
         connection: string | null,
         images: Array< string >,
-      } | null,
-      contributors:  {
-        __typename: "ModelPersonConnection",
-        nextToken: string | null,
       } | null,
       grades: Array< number | null > | null,
       artistID: string,
