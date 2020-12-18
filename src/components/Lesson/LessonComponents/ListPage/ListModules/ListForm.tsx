@@ -8,7 +8,7 @@ const ListForm = () => {
   // const [cookies, setCookie] = useCookies(['story']);
   const [input, setInput] = useState({
     title: state.componentState.story && state.componentState.story.title ? state.componentState.story.title : '',
-    story: state.componentState.story && state.componentState.story.story ? state.componentState.story.story : '',
+    story: state.componentState.story && state.componentState.story.story ? state.componentState.story.story : [''],
   });
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const ListForm = () => {
   const handleInputChange = (e: { target: { id: string; value: string } }) => {
     setInput({
       ...input,
-      [e.target.id]: e.target.value,
+      [e.target.id]: [e.target.value],
     });
   };
 
