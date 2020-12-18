@@ -4,10 +4,10 @@ import { LessonControlContext } from '../../../../../contexts/LessonControlConte
 /**
  * Module imports
  */
-import {parseBlankLines} from '../../../../../utilities/strings';
+import { parseBlankLines } from '../../../../../utilities/strings';
 
 interface StoryOutputProps {
-  story?: string;
+  story?: string[];
 }
 
 const StoryOutput = (props: StoryOutputProps) => {
@@ -16,11 +16,13 @@ const StoryOutput = (props: StoryOutputProps) => {
   return (
     <>
       <div className={`w-full flex flex-col ${theme.blockQuote}`}>
-        {
-          props.story !== '' 
-          ? <div className={`text-gray-200 mb-2 align-middle leading-7`} dangerouslySetInnerHTML={{__html: parseBlankLines(props.story)}}></div>
-          : <div className={`${theme.elem.text} align-middle text-center`}>You didn't write a story </div>
-        }
+        {props.story !== [''] ? (
+          <div
+            className={`text-gray-200 mb-2 align-middle leading-7`}
+            dangerouslySetInnerHTML={{ __html: parseBlankLines(props.story[0]) }}></div>
+        ) : (
+          <div className={`${theme.elem.text} align-middle text-center`}>You didn't write a story </div>
+        )}
       </div>
     </>
   );
