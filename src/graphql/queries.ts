@@ -70,6 +70,41 @@ export const listInstitutions = /* GraphQL */ `
     }
   }
 `;
+export const getStaff = /* GraphQL */ `
+  query GetStaff($id: ID!) {
+    getStaff(id: $id) {
+      id
+      institutionID
+      staffAuthID
+      staffEmail
+      status
+      statusChangeDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listStaffs = /* GraphQL */ `
+  query ListStaffs(
+    $filter: ModelStaffFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        staffAuthID
+        staffEmail
+        status
+        statusChangeDate
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getPerson = /* GraphQL */ `
   query GetPerson($email: String!, $authId: String!) {
     getPerson(email: $email, authId: $authId) {
@@ -176,6 +211,20 @@ export const getCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      syllabi {
+        items {
+          id
+          name
+          type
+          description
+          objectives
+          curriculumID
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -204,6 +253,9 @@ export const listCurriculums = /* GraphQL */ `
         objectives
         languages
         units {
+          nextToken
+        }
+        syllabi {
           nextToken
         }
         createdAt
@@ -247,6 +299,66 @@ export const listUnits = /* GraphQL */ `
     $sortDirection: ModelSortDirection
   ) {
     listUnits(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        type
+        description
+        objectives
+        curriculumID
+        languages
+        lessons {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getSyllabus = /* GraphQL */ `
+  query GetSyllabus($id: ID!) {
+    getSyllabus(id: $id) {
+      id
+      name
+      type
+      description
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listSyllabuss = /* GraphQL */ `
+  query ListSyllabuss(
+    $id: ID
+    $filter: ModelSyllabusFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listSyllabuss(
       id: $id
       filter: $filter
       limit: $limit
@@ -316,6 +428,9 @@ export const getCourse = /* GraphQL */ `
         objectives
         languages
         units {
+          nextToken
+        }
+        syllabi {
           nextToken
         }
         createdAt
@@ -862,9 +977,6 @@ export const getClassroom = /* GraphQL */ `
           connection
           images
         }
-        contributors {
-          nextToken
-        }
         grades
         artistID
         artist {
@@ -1304,31 +1416,6 @@ export const getLesson = /* GraphQL */ `
           video
         }
       }
-      contributors {
-        items {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       grades
       artistID
       artist {
@@ -1521,9 +1608,6 @@ export const listLessons = /* GraphQL */ `
           summaryLabel
           connection
           images
-        }
-        contributors {
-          nextToken
         }
         grades
         artistID

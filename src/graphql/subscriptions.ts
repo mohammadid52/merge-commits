@@ -100,9 +100,6 @@ export const onUpdateClassroom = /* GraphQL */ `
           connection
           images
         }
-        contributors {
-          nextToken
-        }
         grades
         artistID
         artist {
@@ -571,6 +568,48 @@ export const onDeleteServiceProvider = /* GraphQL */ `
     }
   }
 `;
+export const onCreateStaff = /* GraphQL */ `
+  subscription OnCreateStaff {
+    onCreateStaff {
+      id
+      institutionID
+      staffAuthID
+      staffEmail
+      status
+      statusChangeDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateStaff = /* GraphQL */ `
+  subscription OnUpdateStaff {
+    onUpdateStaff {
+      id
+      institutionID
+      staffAuthID
+      staffEmail
+      status
+      statusChangeDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteStaff = /* GraphQL */ `
+  subscription OnDeleteStaff {
+    onDeleteStaff {
+      id
+      institutionID
+      staffAuthID
+      staffEmail
+      status
+      statusChangeDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreatePerson = /* GraphQL */ `
   subscription OnCreatePerson {
     onCreatePerson {
@@ -705,6 +744,20 @@ export const onCreateCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      syllabi {
+        items {
+          id
+          name
+          type
+          description
+          objectives
+          curriculumID
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -733,6 +786,20 @@ export const onUpdateCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      syllabi {
+        items {
+          id
+          name
+          type
+          description
+          objectives
+          curriculumID
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -748,6 +815,20 @@ export const onDeleteCurriculum = /* GraphQL */ `
       objectives
       languages
       units {
+        items {
+          id
+          name
+          type
+          description
+          objectives
+          curriculumID
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      syllabi {
         items {
           id
           name
@@ -841,6 +922,408 @@ export const onDeleteUnit = /* GraphQL */ `
     }
   }
 `;
+export const onCreateSyllabus = /* GraphQL */ `
+  subscription OnCreateSyllabus {
+    onCreateSyllabus {
+      id
+      name
+      type
+      description
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateSyllabus = /* GraphQL */ `
+  subscription OnUpdateSyllabus {
+    onUpdateSyllabus {
+      id
+      name
+      type
+      description
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteSyllabus = /* GraphQL */ `
+  subscription OnDeleteSyllabus {
+    onDeleteSyllabus {
+      id
+      name
+      type
+      description
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateSyllabusLesson = /* GraphQL */ `
+  subscription OnCreateSyllabusLesson {
+    onCreateSyllabusLesson {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      lesson {
+        id
+        title
+        type
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateSyllabusLesson = /* GraphQL */ `
+  subscription OnUpdateSyllabusLesson {
+    onUpdateSyllabusLesson {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      lesson {
+        id
+        title
+        type
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteSyllabusLesson = /* GraphQL */ `
+  subscription OnDeleteSyllabusLesson {
+    onDeleteSyllabusLesson {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      lesson {
+        id
+        title
+        type
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateLessonUnit = /* GraphQL */ `
   subscription OnCreateLessonUnit {
     onCreateLessonUnit {
@@ -873,9 +1356,6 @@ export const onCreateLessonUnit = /* GraphQL */ `
           summaryLabel
           connection
           images
-        }
-        contributors {
-          nextToken
         }
         grades
         artistID
@@ -996,9 +1476,6 @@ export const onUpdateLessonUnit = /* GraphQL */ `
           connection
           images
         }
-        contributors {
-          nextToken
-        }
         grades
         artistID
         artist {
@@ -1117,9 +1594,6 @@ export const onDeleteLessonUnit = /* GraphQL */ `
           summaryLabel
           connection
           images
-        }
-        contributors {
-          nextToken
         }
         grades
         artistID
@@ -1254,6 +1728,9 @@ export const onCreateCourse = /* GraphQL */ `
         units {
           nextToken
         }
+        syllabi {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1332,6 +1809,9 @@ export const onUpdateCourse = /* GraphQL */ `
         units {
           nextToken
         }
+        syllabi {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1408,6 +1888,9 @@ export const onDeleteCourse = /* GraphQL */ `
         objectives
         languages
         units {
+          nextToken
+        }
+        syllabi {
           nextToken
         }
         createdAt
@@ -2148,31 +2631,6 @@ export const onCreateLesson = /* GraphQL */ `
           video
         }
       }
-      contributors {
-        items {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       grades
       artistID
       artist {
@@ -2360,31 +2818,6 @@ export const onUpdateLesson = /* GraphQL */ `
         additionalContent {
           video
         }
-      }
-      contributors {
-        items {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       grades
       artistID
@@ -2574,31 +3007,6 @@ export const onDeleteLesson = /* GraphQL */ `
           video
         }
       }
-      contributors {
-        items {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       grades
       artistID
       artist {
@@ -2784,9 +3192,6 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
           connection
           images
         }
-        contributors {
-          nextToken
-        }
         grades
         artistID
         artist {
@@ -2906,9 +3311,6 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
           connection
           images
         }
-        contributors {
-          nextToken
-        }
         grades
         artistID
         artist {
@@ -3027,9 +3429,6 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
           summaryLabel
           connection
           images
-        }
-        contributors {
-          nextToken
         }
         grades
         artistID
@@ -4875,9 +5274,6 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
           connection
           images
         }
-        contributors {
-          nextToken
-        }
         grades
         artistID
         artist {
@@ -4990,9 +5386,6 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
           connection
           images
         }
-        contributors {
-          nextToken
-        }
         grades
         artistID
         artist {
@@ -5104,9 +5497,6 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
           summaryLabel
           connection
           images
-        }
-        contributors {
-          nextToken
         }
         grades
         artistID

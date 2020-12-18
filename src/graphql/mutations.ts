@@ -200,6 +200,57 @@ export const deleteServiceProvider = /* GraphQL */ `
     }
   }
 `;
+export const createStaff = /* GraphQL */ `
+  mutation CreateStaff(
+    $input: CreateStaffInput!
+    $condition: ModelStaffConditionInput
+  ) {
+    createStaff(input: $input, condition: $condition) {
+      id
+      institutionID
+      staffAuthID
+      staffEmail
+      status
+      statusChangeDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateStaff = /* GraphQL */ `
+  mutation UpdateStaff(
+    $input: UpdateStaffInput!
+    $condition: ModelStaffConditionInput
+  ) {
+    updateStaff(input: $input, condition: $condition) {
+      id
+      institutionID
+      staffAuthID
+      staffEmail
+      status
+      statusChangeDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteStaff = /* GraphQL */ `
+  mutation DeleteStaff(
+    $input: DeleteStaffInput!
+    $condition: ModelStaffConditionInput
+  ) {
+    deleteStaff(input: $input, condition: $condition) {
+      id
+      institutionID
+      staffAuthID
+      staffEmail
+      status
+      statusChangeDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createPerson = /* GraphQL */ `
   mutation CreatePerson(
     $input: CreatePersonInput!
@@ -346,6 +397,20 @@ export const createCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      syllabi {
+        items {
+          id
+          name
+          type
+          description
+          objectives
+          curriculumID
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -377,6 +442,20 @@ export const updateCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      syllabi {
+        items {
+          id
+          name
+          type
+          description
+          objectives
+          curriculumID
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -395,6 +474,20 @@ export const deleteCurriculum = /* GraphQL */ `
       objectives
       languages
       units {
+        items {
+          id
+          name
+          type
+          description
+          objectives
+          curriculumID
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      syllabi {
         items {
           id
           name
@@ -497,6 +590,426 @@ export const deleteUnit = /* GraphQL */ `
     }
   }
 `;
+export const createSyllabus = /* GraphQL */ `
+  mutation CreateSyllabus(
+    $input: CreateSyllabusInput!
+    $condition: ModelSyllabusConditionInput
+  ) {
+    createSyllabus(input: $input, condition: $condition) {
+      id
+      name
+      type
+      description
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateSyllabus = /* GraphQL */ `
+  mutation UpdateSyllabus(
+    $input: UpdateSyllabusInput!
+    $condition: ModelSyllabusConditionInput
+  ) {
+    updateSyllabus(input: $input, condition: $condition) {
+      id
+      name
+      type
+      description
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteSyllabus = /* GraphQL */ `
+  mutation DeleteSyllabus(
+    $input: DeleteSyllabusInput!
+    $condition: ModelSyllabusConditionInput
+  ) {
+    deleteSyllabus(input: $input, condition: $condition) {
+      id
+      name
+      type
+      description
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createSyllabusLesson = /* GraphQL */ `
+  mutation CreateSyllabusLesson(
+    $input: CreateSyllabusLessonInput!
+    $condition: ModelSyllabusLessonConditionInput
+  ) {
+    createSyllabusLesson(input: $input, condition: $condition) {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      lesson {
+        id
+        title
+        type
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateSyllabusLesson = /* GraphQL */ `
+  mutation UpdateSyllabusLesson(
+    $input: UpdateSyllabusLessonInput!
+    $condition: ModelSyllabusLessonConditionInput
+  ) {
+    updateSyllabusLesson(input: $input, condition: $condition) {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      lesson {
+        id
+        title
+        type
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteSyllabusLesson = /* GraphQL */ `
+  mutation DeleteSyllabusLesson(
+    $input: DeleteSyllabusLessonInput!
+    $condition: ModelSyllabusLessonConditionInput
+  ) {
+    deleteSyllabusLesson(input: $input, condition: $condition) {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      lesson {
+        id
+        title
+        type
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createLessonUnit = /* GraphQL */ `
   mutation CreateLessonUnit(
     $input: CreateLessonUnitInput!
@@ -532,9 +1045,6 @@ export const createLessonUnit = /* GraphQL */ `
           summaryLabel
           connection
           images
-        }
-        contributors {
-          nextToken
         }
         grades
         artistID
@@ -658,9 +1168,6 @@ export const updateLessonUnit = /* GraphQL */ `
           connection
           images
         }
-        contributors {
-          nextToken
-        }
         grades
         artistID
         artist {
@@ -782,9 +1289,6 @@ export const deleteLessonUnit = /* GraphQL */ `
           summaryLabel
           connection
           images
-        }
-        contributors {
-          nextToken
         }
         grades
         artistID
@@ -922,6 +1426,9 @@ export const createCourse = /* GraphQL */ `
         units {
           nextToken
         }
+        syllabi {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1003,6 +1510,9 @@ export const updateCourse = /* GraphQL */ `
         units {
           nextToken
         }
+        syllabi {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1082,6 +1592,9 @@ export const deleteCourse = /* GraphQL */ `
         objectives
         languages
         units {
+          nextToken
+        }
+        syllabi {
           nextToken
         }
         createdAt
@@ -2047,9 +2560,6 @@ export const createClassroom = /* GraphQL */ `
           connection
           images
         }
-        contributors {
-          nextToken
-        }
         grades
         artistID
         artist {
@@ -2272,9 +2782,6 @@ export const updateClassroom = /* GraphQL */ `
           connection
           images
         }
-        contributors {
-          nextToken
-        }
         grades
         artistID
         artist {
@@ -2496,9 +3003,6 @@ export const deleteClassroom = /* GraphQL */ `
           summaryLabel
           connection
           images
-        }
-        contributors {
-          nextToken
         }
         grades
         artistID
@@ -3064,31 +3568,6 @@ export const createLesson = /* GraphQL */ `
           video
         }
       }
-      contributors {
-        items {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       grades
       artistID
       artist {
@@ -3279,31 +3758,6 @@ export const updateLesson = /* GraphQL */ `
         additionalContent {
           video
         }
-      }
-      contributors {
-        items {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       grades
       artistID
@@ -3496,31 +3950,6 @@ export const deleteLesson = /* GraphQL */ `
           video
         }
       }
-      contributors {
-        items {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       grades
       artistID
       artist {
@@ -3709,9 +4138,6 @@ export const createLessonCheckpoint = /* GraphQL */ `
           connection
           images
         }
-        contributors {
-          nextToken
-        }
         grades
         artistID
         artist {
@@ -3834,9 +4260,6 @@ export const updateLessonCheckpoint = /* GraphQL */ `
           connection
           images
         }
-        contributors {
-          nextToken
-        }
         grades
         artistID
         artist {
@@ -3958,9 +4381,6 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
           summaryLabel
           connection
           images
-        }
-        contributors {
-          nextToken
         }
         grades
         artistID
@@ -5926,9 +6346,6 @@ export const createLessonKeyWord = /* GraphQL */ `
           connection
           images
         }
-        contributors {
-          nextToken
-        }
         grades
         artistID
         artist {
@@ -6044,9 +6461,6 @@ export const updateLessonKeyWord = /* GraphQL */ `
           connection
           images
         }
-        contributors {
-          nextToken
-        }
         grades
         artistID
         artist {
@@ -6161,9 +6575,6 @@ export const deleteLessonKeyWord = /* GraphQL */ `
           summaryLabel
           connection
           images
-        }
-        contributors {
-          nextToken
         }
         grades
         artistID
