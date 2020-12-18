@@ -160,6 +160,7 @@ type Room
   name: String!
   maxPersons: Int!
   institution: Institution @connection(fields: ["institutionID"])
+  # teacher:
   # class:
   # curricula: 
 }
@@ -179,8 +180,10 @@ type Class
 {
   id: ID!
   institutionID: ID!
+  # roomID: ID!
   type: String
   name: String!
+  # room: Room @connection(fields: ["roomID"])
   institution: Institution @connection(fields: ["institutionID"])
   students: [ClassStudent]! @connection(keyName: "byClass", fields: ["id"])
 }
@@ -297,7 +300,7 @@ type TruthGameInputs {
 }
 
 type WarmUpData {
-  story: String
+  story: [String]
   title: String
   additional: [AdditionalInputs]
   truthGame: [TruthGameInputs]
