@@ -8,7 +8,7 @@ import Modules from './Modules';
 import InstructionsPopup from '../../../Popup/InstructionsPopup';
 
 export interface StoryState {
-  story: string;
+  story: string[];
   title?: string;
   additional?: {
     name: string;
@@ -26,7 +26,7 @@ const Story = () => {
   useEffect(() => {
     if (!cookies[`lesson-${state.classroomID}`].story && !state.componentState.story) {
       let tempObj: StoryState = {
-        story: '',
+        story: [''],
       };
       if (inputs.title) {
         tempObj.title = '';

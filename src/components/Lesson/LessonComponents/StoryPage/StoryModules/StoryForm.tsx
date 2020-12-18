@@ -7,18 +7,12 @@ const StoryForm = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
   const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
   const [input, setInput] = useState({
-    title:
-      state.componentState.story && state.componentState.story.title
-        ? state.componentState.story.title
-        : '',
-    story:
-      state.componentState.story && state.componentState.story.story
-        ? state.componentState.story.story
-        : '',
+    title: state.componentState.story && state.componentState.story.title ? state.componentState.story.title : '',
+    story: state.componentState.story && state.componentState.story.story ? state.componentState.story.story : [''],
   });
 
   useEffect(() => {
-    if ( cookies[`lesson-${state.classroomID}`]?.story ) {
+    if (cookies[`lesson-${state.classroomID}`]?.story) {
       setInput(() => {
         return {
           title: cookies[`lesson-${state.classroomID}`].story.title,
@@ -39,7 +33,10 @@ const StoryForm = () => {
         },
       });
 
-      setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], story: { ...cookies[`lesson-${state.classroomID}`].story, title: input.title }});
+      setCookie(`lesson-${state.classroomID}`, {
+        ...cookies[`lesson-${state.classroomID}`],
+        story: { ...cookies[`lesson-${state.classroomID}`].story, title: input.title },
+      });
     }
   }, [input.title]);
 
@@ -54,44 +51,42 @@ const StoryForm = () => {
         },
       });
 
-      setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], story: { ...cookies[`lesson-${state.classroomID}`].story, story: input.story }});
+      setCookie(`lesson-${state.classroomID}`, {
+        ...cookies[`lesson-${state.classroomID}`],
+        story: { ...cookies[`lesson-${state.classroomID}`].story, story: input.story },
+      });
     }
   }, [input.story]);
 
   const handleInputChange = (e: { target: { id: string; value: string } }) => {
     setInput({
       ...input,
-      [e.target.id]: e.target.value,
+      [e.target.id]: [e.target.value],
     });
   };
 
   return (
-    <div className='w-full h-full rounded-xl'>
-      <h3
-        className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
-        Story{' '}
-      </h3>
-      <div className='relative h-full flex flex-col mb-5 mt-2'>
-        <label
-          className={`${theme.elem.text}`}
-          htmlFor='title'>
-          Title 
+    <div className="w-full h-full rounded-xl">
+      <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>Story </h3>
+      <div className="relative h-full flex flex-col mb-5 mt-2">
+        <label className={`${theme.elem.text}`} htmlFor="title">
+          Title
         </label>
-        
+
         <input
-          id='title'
+          id="title"
           className={`w-full py-2 px-4 text-gray-800 rounded-xl ${theme.elem.textInput}`}
-          name='title'
-          type='text'
+          name="title"
+          type="text"
           placeholder={state.data.lesson.warmUp.inputs.titleExample}
           value={input.title}
           onChange={handleInputChange}
         />
-        <div className='py-2'></div>
+        <div className="py-2"></div>
         <textarea
-          id='story'
+          id="story"
           className={`w-full h-64 py-2 px-4 text-gray-800 rounded-xl ${theme.elem.textInput}`}
-          name='story'
+          name="story"
           placeholder={state.data.lesson.warmUp.inputs.textExample}
           value={input.story}
           onChange={handleInputChange}
