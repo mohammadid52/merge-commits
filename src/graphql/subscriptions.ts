@@ -40,44 +40,11 @@ export const onUpdateClassroom = /* GraphQL */ `
       course {
         id
         name
-        courseTypeID
-        institution {
-          id
-          name
-          institutionTypeId
-          district
-          address
-          city
-          state
-          zip
-          phone
-          website
-          image
-          createdAt
-          updatedAt
-        }
-        classID
-        class {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        curriculumID
-        curriculum {
-          id
-          name
-          grade
-          languages
-          createdAt
-          updatedAt
-        }
+        type
         classrooms {
           nextToken
         }
-        location
         startDate
-        endDate
         duration
         createdAt
         updatedAt
@@ -88,8 +55,13 @@ export const onUpdateClassroom = /* GraphQL */ `
         title
         type
         instructions
-        contributors {
-          nextToken
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
         }
         grades
         artistID
@@ -103,14 +75,7 @@ export const onUpdateClassroom = /* GraphQL */ `
           updatedAt
         }
         language
-        SELStructureID
-        SELStructure {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
+        SELStructure
         keywords {
           nextToken
         }
@@ -175,6 +140,7 @@ export const onUpdateClassroom = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        filters
         createdAt
         updatedAt
       }
@@ -245,12 +211,8 @@ export const onChangeStudentData = /* GraphQL */ `
         course {
           id
           name
-          courseTypeID
-          classID
-          curriculumID
-          location
+          type
           startDate
-          endDate
           duration
           createdAt
           updatedAt
@@ -264,7 +226,7 @@ export const onChangeStudentData = /* GraphQL */ `
           grades
           artistID
           language
-          SELStructureID
+          SELStructure
           connection
           summary
           objectives
@@ -273,6 +235,7 @@ export const onChangeStudentData = /* GraphQL */ `
           coreLessonId
           activityId
           assessmentID
+          filters
           createdAt
           updatedAt
         }
@@ -302,6 +265,7 @@ export const onChangeStudentData = /* GraphQL */ `
         status
         email
         role
+        type
         firstName
         preferredName
         lastName
@@ -316,6 +280,7 @@ export const onChangeStudentData = /* GraphQL */ `
         birthdate
         image
         language
+        filters
         createdAt
         updatedAt
       }
@@ -325,6 +290,12 @@ export const onChangeStudentData = /* GraphQL */ `
         additional {
           name
           input
+        }
+        truthGame {
+          id
+          label
+          isLie
+          text
         }
       }
       corelessonData {
@@ -376,67 +347,86 @@ export const onChangeStudentData = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInstitutionType = /* GraphQL */ `
-  subscription OnCreateInstitutionType {
-    onCreateInstitutionType {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateInstitutionType = /* GraphQL */ `
-  subscription OnUpdateInstitutionType {
-    onUpdateInstitutionType {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteInstitutionType = /* GraphQL */ `
-  subscription OnDeleteInstitutionType {
-    onDeleteInstitutionType {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateInstitution = /* GraphQL */ `
   subscription OnCreateInstitution {
     onCreateInstitution {
       id
       name
-      institutionTypeId
-      institutionType {
-        id
-        name
-        createdAt
-        updatedAt
-      }
+      type
       district
       address
+      addressLine2
       city
       state
       zip
       phone
-      contact {
-        name
-        phone
-        email
-      }
       website
-      type {
-        id
-        name
-        createdAt
-        updatedAt
-      }
       image
+      isServiceProvider
+      serviceProviders {
+        items {
+          id
+          partnerID
+          providerID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      staff {
+        items {
+          id
+          institutionID
+          staffAuthID
+          staffEmail
+          status
+          statusChangeDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      rooms {
+        items {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      curricula {
+        items {
+          id
+          institutionID
+          name
+          type
+          description
+          objectives
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      classes {
+        items {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters
       createdAt
       updatedAt
     }
@@ -447,32 +437,81 @@ export const onUpdateInstitution = /* GraphQL */ `
     onUpdateInstitution {
       id
       name
-      institutionTypeId
-      institutionType {
-        id
-        name
-        createdAt
-        updatedAt
-      }
+      type
       district
       address
+      addressLine2
       city
       state
       zip
       phone
-      contact {
-        name
-        phone
-        email
-      }
       website
-      type {
-        id
-        name
-        createdAt
-        updatedAt
-      }
       image
+      isServiceProvider
+      serviceProviders {
+        items {
+          id
+          partnerID
+          providerID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      staff {
+        items {
+          id
+          institutionID
+          staffAuthID
+          staffEmail
+          status
+          statusChangeDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      rooms {
+        items {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      curricula {
+        items {
+          id
+          institutionID
+          name
+          type
+          description
+          objectives
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      classes {
+        items {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters
       createdAt
       updatedAt
     }
@@ -483,32 +522,285 @@ export const onDeleteInstitution = /* GraphQL */ `
     onDeleteInstitution {
       id
       name
-      institutionTypeId
-      institutionType {
-        id
-        name
-        createdAt
-        updatedAt
-      }
+      type
       district
       address
+      addressLine2
       city
       state
       zip
       phone
-      contact {
-        name
-        phone
-        email
-      }
       website
-      type {
+      image
+      isServiceProvider
+      serviceProviders {
+        items {
+          id
+          partnerID
+          providerID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      staff {
+        items {
+          id
+          institutionID
+          staffAuthID
+          staffEmail
+          status
+          statusChangeDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      rooms {
+        items {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      curricula {
+        items {
+          id
+          institutionID
+          name
+          type
+          description
+          objectives
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      classes {
+        items {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateServiceProvider = /* GraphQL */ `
+  subscription OnCreateServiceProvider {
+    onCreateServiceProvider {
+      id
+      partnerID
+      providerID
+      providerInstitution {
         id
         name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
         createdAt
         updatedAt
       }
-      image
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateServiceProvider = /* GraphQL */ `
+  subscription OnUpdateServiceProvider {
+    onUpdateServiceProvider {
+      id
+      partnerID
+      providerID
+      providerInstitution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteServiceProvider = /* GraphQL */ `
+  subscription OnDeleteServiceProvider {
+    onDeleteServiceProvider {
+      id
+      partnerID
+      providerID
+      providerInstitution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateStaff = /* GraphQL */ `
+  subscription OnCreateStaff {
+    onCreateStaff {
+      id
+      institutionID
+      staffAuthID
+      staffEmail
+      status
+      statusChangeDate
+      curricula {
+        items {
+          id
+          staffID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateStaff = /* GraphQL */ `
+  subscription OnUpdateStaff {
+    onUpdateStaff {
+      id
+      institutionID
+      staffAuthID
+      staffEmail
+      status
+      statusChangeDate
+      curricula {
+        items {
+          id
+          staffID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteStaff = /* GraphQL */ `
+  subscription OnDeleteStaff {
+    onDeleteStaff {
+      id
+      institutionID
+      staffAuthID
+      staffEmail
+      status
+      statusChangeDate
+      curricula {
+        items {
+          id
+          staffID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -522,6 +814,7 @@ export const onCreatePerson = /* GraphQL */ `
       status
       email
       role
+      type
       firstName
       preferredName
       lastName
@@ -544,6 +837,7 @@ export const onCreatePerson = /* GraphQL */ `
       birthdate
       image
       language
+      filters
       createdAt
       updatedAt
     }
@@ -557,6 +851,7 @@ export const onUpdatePerson = /* GraphQL */ `
       status
       email
       role
+      type
       firstName
       preferredName
       lastName
@@ -579,6 +874,7 @@ export const onUpdatePerson = /* GraphQL */ `
       birthdate
       image
       language
+      filters
       createdAt
       updatedAt
     }
@@ -592,6 +888,7 @@ export const onDeletePerson = /* GraphQL */ `
       status
       email
       role
+      type
       firstName
       preferredName
       lastName
@@ -614,774 +911,355 @@ export const onDeletePerson = /* GraphQL */ `
       birthdate
       image
       language
+      filters
       createdAt
       updatedAt
     }
   }
 `;
-export const onCreateCurriculum = /* GraphQL */ `
-  subscription OnCreateCurriculum {
-    onCreateCurriculum {
+export const onCreateRoom = /* GraphQL */ `
+  subscription OnCreateRoom {
+    onCreateRoom {
       id
+      institutionID
+      classID
+      teacherAuthID
+      teacherEmail
       name
-      contributors {
-        items {
-          id
-          authId
-          status
-          email
-          role
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      grade
-      languages
-      lessons {
-        items {
-          id
-          curriculumID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateCurriculum = /* GraphQL */ `
-  subscription OnUpdateCurriculum {
-    onUpdateCurriculum {
-      id
-      name
-      contributors {
-        items {
-          id
-          authId
-          status
-          email
-          role
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      grade
-      languages
-      lessons {
-        items {
-          id
-          curriculumID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteCurriculum = /* GraphQL */ `
-  subscription OnDeleteCurriculum {
-    onDeleteCurriculum {
-      id
-      name
-      contributors {
-        items {
-          id
-          authId
-          status
-          email
-          role
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      grade
-      languages
-      lessons {
-        items {
-          id
-          curriculumID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateCurriculumLessons = /* GraphQL */ `
-  subscription OnCreateCurriculumLessons {
-    onCreateCurriculumLessons {
-      id
-      curriculumID
-      lessonID
-      curriculum {
-        id
-        name
-        contributors {
-          nextToken
-        }
-        grade
-        languages
-        lessons {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      lesson {
-        id
-        title
-        type
-        instructions
-        contributors {
-          nextToken
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        language
-        SELStructureID
-        SELStructure {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateCurriculumLessons = /* GraphQL */ `
-  subscription OnUpdateCurriculumLessons {
-    onUpdateCurriculumLessons {
-      id
-      curriculumID
-      lessonID
-      curriculum {
-        id
-        name
-        contributors {
-          nextToken
-        }
-        grade
-        languages
-        lessons {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      lesson {
-        id
-        title
-        type
-        instructions
-        contributors {
-          nextToken
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        language
-        SELStructureID
-        SELStructure {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteCurriculumLessons = /* GraphQL */ `
-  subscription OnDeleteCurriculumLessons {
-    onDeleteCurriculumLessons {
-      id
-      curriculumID
-      lessonID
-      curriculum {
-        id
-        name
-        contributors {
-          nextToken
-        }
-        grade
-        languages
-        lessons {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      lesson {
-        id
-        title
-        type
-        instructions
-        contributors {
-          nextToken
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        language
-        SELStructureID
-        SELStructure {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateCourse = /* GraphQL */ `
-  subscription OnCreateCourse {
-    onCreateCourse {
-      id
-      name
-      courseTypeID
+      maxPersons
       institution {
         id
         name
-        institutionTypeId
-        institutionType {
-          id
-          name
-          createdAt
-          updatedAt
-        }
+        type
         district
         address
+        addressLine2
         city
         state
         zip
         phone
-        contact {
-          name
-          phone
-          email
-        }
         website
-        type {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
         createdAt
         updatedAt
       }
-      classID
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        createdAt
+        updatedAt
+      }
       class {
         id
+        institutionID
+        type
         name
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        rooms {
+          nextToken
+        }
         students {
           nextToken
         }
         createdAt
         updatedAt
       }
-      curriculumID
-      curriculum {
-        id
-        name
-        contributors {
-          nextToken
-        }
-        grade
-        languages
-        lessons {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      classrooms {
+      curricula {
         items {
           id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
+          roomID
+          curriculumID
           createdAt
           updatedAt
         }
         nextToken
       }
-      location
-      startDate
-      endDate
-      duration
+      filters
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateCourse = /* GraphQL */ `
-  subscription OnUpdateCourse {
-    onUpdateCourse {
+export const onUpdateRoom = /* GraphQL */ `
+  subscription OnUpdateRoom {
+    onUpdateRoom {
       id
+      institutionID
+      classID
+      teacherAuthID
+      teacherEmail
       name
-      courseTypeID
+      maxPersons
       institution {
         id
         name
-        institutionTypeId
-        institutionType {
-          id
-          name
-          createdAt
-          updatedAt
-        }
+        type
         district
         address
+        addressLine2
         city
         state
         zip
         phone
-        contact {
-          name
-          phone
-          email
-        }
         website
-        type {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
         createdAt
         updatedAt
       }
-      classID
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        createdAt
+        updatedAt
+      }
       class {
         id
+        institutionID
+        type
         name
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        rooms {
+          nextToken
+        }
         students {
           nextToken
         }
         createdAt
         updatedAt
       }
-      curriculumID
-      curriculum {
-        id
-        name
-        contributors {
-          nextToken
-        }
-        grade
-        languages
-        lessons {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      classrooms {
+      curricula {
         items {
           id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
+          roomID
+          curriculumID
           createdAt
           updatedAt
         }
         nextToken
       }
-      location
-      startDate
-      endDate
-      duration
+      filters
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteCourse = /* GraphQL */ `
-  subscription OnDeleteCourse {
-    onDeleteCourse {
+export const onDeleteRoom = /* GraphQL */ `
+  subscription OnDeleteRoom {
+    onDeleteRoom {
       id
+      institutionID
+      classID
+      teacherAuthID
+      teacherEmail
       name
-      courseTypeID
+      maxPersons
       institution {
         id
         name
-        institutionTypeId
-        institutionType {
-          id
-          name
-          createdAt
-          updatedAt
-        }
+        type
         district
         address
+        addressLine2
         city
         state
         zip
         phone
-        contact {
-          name
-          phone
-          email
-        }
         website
-        type {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
         createdAt
         updatedAt
       }
-      classID
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        createdAt
+        updatedAt
+      }
       class {
         id
+        institutionID
+        type
         name
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        rooms {
+          nextToken
+        }
         students {
           nextToken
         }
         createdAt
         updatedAt
       }
-      curriculumID
-      curriculum {
-        id
-        name
-        contributors {
-          nextToken
-        }
-        grade
-        languages
-        lessons {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      classrooms {
+      curricula {
         items {
           id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
+          roomID
+          curriculumID
           createdAt
           updatedAt
         }
         nextToken
       }
-      location
-      startDate
-      endDate
-      duration
+      filters
       createdAt
       updatedAt
     }
@@ -1391,7 +1269,57 @@ export const onCreateClass = /* GraphQL */ `
   subscription OnCreateClass {
     onCreateClass {
       id
+      institutionID
+      type
       name
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      rooms {
+        items {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       students {
         items {
           id
@@ -1413,7 +1341,57 @@ export const onUpdateClass = /* GraphQL */ `
   subscription OnUpdateClass {
     onUpdateClass {
       id
+      institutionID
+      type
       name
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      rooms {
+        items {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       students {
         items {
           id
@@ -1435,7 +1413,57 @@ export const onDeleteClass = /* GraphQL */ `
   subscription OnDeleteClass {
     onDeleteClass {
       id
+      institutionID
+      type
       name
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      rooms {
+        items {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       students {
         items {
           id
@@ -1463,7 +1491,30 @@ export const onCreateClassStudent = /* GraphQL */ `
       studentAuth
       class {
         id
+        institutionID
+        type
         name
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        rooms {
+          nextToken
+        }
         students {
           nextToken
         }
@@ -1476,6 +1527,7 @@ export const onCreateClassStudent = /* GraphQL */ `
         status
         email
         role
+        type
         firstName
         preferredName
         lastName
@@ -1490,6 +1542,7 @@ export const onCreateClassStudent = /* GraphQL */ `
         birthdate
         image
         language
+        filters
         createdAt
         updatedAt
       }
@@ -1508,7 +1561,30 @@ export const onUpdateClassStudent = /* GraphQL */ `
       studentAuth
       class {
         id
+        institutionID
+        type
         name
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        rooms {
+          nextToken
+        }
         students {
           nextToken
         }
@@ -1521,6 +1597,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
         status
         email
         role
+        type
         firstName
         preferredName
         lastName
@@ -1535,6 +1612,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
         birthdate
         image
         language
+        filters
         createdAt
         updatedAt
       }
@@ -1553,7 +1631,30 @@ export const onDeleteClassStudent = /* GraphQL */ `
       studentAuth
       class {
         id
+        institutionID
+        type
         name
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        rooms {
+          nextToken
+        }
         students {
           nextToken
         }
@@ -1566,6 +1667,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
         status
         email
         role
+        type
         firstName
         preferredName
         lastName
@@ -1580,9 +1682,952 @@ export const onDeleteClassStudent = /* GraphQL */ `
         birthdate
         image
         language
+        filters
         createdAt
         updatedAt
       }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateCurriculum = /* GraphQL */ `
+  subscription OnCreateCurriculum {
+    onCreateCurriculum {
+      id
+      institutionID
+      name
+      type
+      description
+      objectives
+      languages
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      syllabi {
+        items {
+          id
+          name
+          type
+          description
+          objectives
+          curriculumID
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCurriculum = /* GraphQL */ `
+  subscription OnUpdateCurriculum {
+    onUpdateCurriculum {
+      id
+      institutionID
+      name
+      type
+      description
+      objectives
+      languages
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      syllabi {
+        items {
+          id
+          name
+          type
+          description
+          objectives
+          curriculumID
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCurriculum = /* GraphQL */ `
+  subscription OnDeleteCurriculum {
+    onDeleteCurriculum {
+      id
+      institutionID
+      name
+      type
+      description
+      objectives
+      languages
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      syllabi {
+        items {
+          id
+          name
+          type
+          description
+          objectives
+          curriculumID
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateTeacherCurriculum = /* GraphQL */ `
+  subscription OnCreateTeacherCurriculum {
+    onCreateTeacherCurriculum {
+      id
+      staffID
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateTeacherCurriculum = /* GraphQL */ `
+  subscription OnUpdateTeacherCurriculum {
+    onUpdateTeacherCurriculum {
+      id
+      staffID
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteTeacherCurriculum = /* GraphQL */ `
+  subscription OnDeleteTeacherCurriculum {
+    onDeleteTeacherCurriculum {
+      id
+      staffID
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateRoomCurriculum = /* GraphQL */ `
+  subscription OnCreateRoomCurriculum {
+    onCreateRoomCurriculum {
+      id
+      roomID
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateRoomCurriculum = /* GraphQL */ `
+  subscription OnUpdateRoomCurriculum {
+    onUpdateRoomCurriculum {
+      id
+      roomID
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteRoomCurriculum = /* GraphQL */ `
+  subscription OnDeleteRoomCurriculum {
+    onDeleteRoomCurriculum {
+      id
+      roomID
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateSyllabus = /* GraphQL */ `
+  subscription OnCreateSyllabus {
+    onCreateSyllabus {
+      id
+      name
+      type
+      description
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateSyllabus = /* GraphQL */ `
+  subscription OnUpdateSyllabus {
+    onUpdateSyllabus {
+      id
+      name
+      type
+      description
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteSyllabus = /* GraphQL */ `
+  subscription OnDeleteSyllabus {
+    onDeleteSyllabus {
+      id
+      name
+      type
+      description
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateSyllabusLesson = /* GraphQL */ `
+  subscription OnCreateSyllabusLesson {
+    onCreateSyllabusLesson {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      lesson {
+        id
+        title
+        type
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateSyllabusLesson = /* GraphQL */ `
+  subscription OnUpdateSyllabusLesson {
+    onUpdateSyllabusLesson {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      lesson {
+        id
+        title
+        type
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteSyllabusLesson = /* GraphQL */ `
+  subscription OnDeleteSyllabusLesson {
+    onDeleteSyllabusLesson {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      lesson {
+        id
+        title
+        type
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateCourse = /* GraphQL */ `
+  subscription OnCreateCourse {
+    onCreateCourse {
+      id
+      name
+      type
+      classrooms {
+        items {
+          id
+          open
+          openedAt
+          closedAt
+          complete
+          roster
+          viewing
+          expectedStartDate
+          expectedEndDate
+          SELStructure
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      startDate
+      duration
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCourse = /* GraphQL */ `
+  subscription OnUpdateCourse {
+    onUpdateCourse {
+      id
+      name
+      type
+      classrooms {
+        items {
+          id
+          open
+          openedAt
+          closedAt
+          complete
+          roster
+          viewing
+          expectedStartDate
+          expectedEndDate
+          SELStructure
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      startDate
+      duration
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCourse = /* GraphQL */ `
+  subscription OnDeleteCourse {
+    onDeleteCourse {
+      id
+      name
+      type
+      classrooms {
+        items {
+          id
+          open
+          openedAt
+          closedAt
+          complete
+          roster
+          viewing
+          expectedStartDate
+          expectedEndDate
+          SELStructure
+          courseID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      startDate
+      duration
       createdAt
       updatedAt
     }
@@ -1597,12 +2642,14 @@ export const onCreateArtist = /* GraphQL */ `
       type
       bio
       quotes {
+        id
         source
         text
       }
       additionalContent {
         video
         links {
+          id
           type
           text
           link
@@ -1622,12 +2669,14 @@ export const onUpdateArtist = /* GraphQL */ `
       type
       bio
       quotes {
+        id
         source
         text
       }
       additionalContent {
         video
         links {
+          id
           type
           text
           link
@@ -1647,12 +2696,14 @@ export const onDeleteArtist = /* GraphQL */ `
       type
       bio
       quotes {
+        id
         source
         text
       }
       additionalContent {
         video
         links {
+          id
           type
           text
           link
@@ -1688,12 +2739,8 @@ export const onCreateFeedback = /* GraphQL */ `
         course {
           id
           name
-          courseTypeID
-          classID
-          curriculumID
-          location
+          type
           startDate
-          endDate
           duration
           createdAt
           updatedAt
@@ -1707,7 +2754,7 @@ export const onCreateFeedback = /* GraphQL */ `
           grades
           artistID
           language
-          SELStructureID
+          SELStructure
           connection
           summary
           objectives
@@ -1716,6 +2763,7 @@ export const onCreateFeedback = /* GraphQL */ `
           coreLessonId
           activityId
           assessmentID
+          filters
           createdAt
           updatedAt
         }
@@ -1767,12 +2815,8 @@ export const onUpdateFeedback = /* GraphQL */ `
         course {
           id
           name
-          courseTypeID
-          classID
-          curriculumID
-          location
+          type
           startDate
-          endDate
           duration
           createdAt
           updatedAt
@@ -1786,7 +2830,7 @@ export const onUpdateFeedback = /* GraphQL */ `
           grades
           artistID
           language
-          SELStructureID
+          SELStructure
           connection
           summary
           objectives
@@ -1795,6 +2839,7 @@ export const onUpdateFeedback = /* GraphQL */ `
           coreLessonId
           activityId
           assessmentID
+          filters
           createdAt
           updatedAt
         }
@@ -1846,12 +2891,8 @@ export const onDeleteFeedback = /* GraphQL */ `
         course {
           id
           name
-          courseTypeID
-          classID
-          curriculumID
-          location
+          type
           startDate
-          endDate
           duration
           createdAt
           updatedAt
@@ -1865,7 +2906,7 @@ export const onDeleteFeedback = /* GraphQL */ `
           grades
           artistID
           language
-          SELStructureID
+          SELStructure
           connection
           summary
           objectives
@@ -1874,6 +2915,7 @@ export const onDeleteFeedback = /* GraphQL */ `
           coreLessonId
           activityId
           assessmentID
+          filters
           createdAt
           updatedAt
         }
@@ -1933,6 +2975,123 @@ export const onDeleteSelStructure = /* GraphQL */ `
     }
   }
 `;
+export const onCreateThemeTemplate = /* GraphQL */ `
+  subscription OnCreateThemeTemplate {
+    onCreateThemeTemplate {
+      id
+      type
+      name
+      summary
+      summaryLabel
+      quote {
+        id
+        source
+        text
+      }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
+      images
+      additionalContent {
+        video
+        links {
+          id
+          type
+          text
+          link
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateThemeTemplate = /* GraphQL */ `
+  subscription OnUpdateThemeTemplate {
+    onUpdateThemeTemplate {
+      id
+      type
+      name
+      summary
+      summaryLabel
+      quote {
+        id
+        source
+        text
+      }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
+      images
+      additionalContent {
+        video
+        links {
+          id
+          type
+          text
+          link
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteThemeTemplate = /* GraphQL */ `
+  subscription OnDeleteThemeTemplate {
+    onDeleteThemeTemplate {
+      id
+      type
+      name
+      summary
+      summaryLabel
+      quote {
+        id
+        source
+        text
+      }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
+      images
+      additionalContent {
+        video
+        links {
+          id
+          type
+          text
+          link
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateLesson = /* GraphQL */ `
   subscription OnCreateLesson {
     onCreateLesson {
@@ -1940,28 +3099,21 @@ export const onCreateLesson = /* GraphQL */ `
       title
       type
       instructions
-      contributors {
-        items {
+      theme {
+        type
+        name
+        summary
+        summaryLabel
+        quote {
           id
-          authId
-          status
-          email
-          role
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          createdAt
-          updatedAt
+          source
+          text
         }
-        nextToken
+        connection
+        images
+        additionalContent {
+          video
+        }
       }
       grades
       artistID
@@ -1972,6 +3124,7 @@ export const onCreateLesson = /* GraphQL */ `
         type
         bio
         quotes {
+          id
           source
           text
         }
@@ -1982,14 +3135,7 @@ export const onCreateLesson = /* GraphQL */ `
         updatedAt
       }
       language
-      SELStructureID
-      SELStructure {
-        id
-        name
-        description
-        createdAt
-        updatedAt
-      }
+      SELStructure
       keywords {
         items {
           id
@@ -2044,6 +3190,7 @@ export const onCreateLesson = /* GraphQL */ `
           example
           titleExample
           textExample
+          listInputNumber
         }
         breakdown {
           included
@@ -2074,6 +3221,7 @@ export const onCreateLesson = /* GraphQL */ `
           text
         }
         tools {
+          id
           name
           color
           icon
@@ -2126,6 +3274,7 @@ export const onCreateLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      filters
       createdAt
       updatedAt
     }
@@ -2138,28 +3287,21 @@ export const onUpdateLesson = /* GraphQL */ `
       title
       type
       instructions
-      contributors {
-        items {
+      theme {
+        type
+        name
+        summary
+        summaryLabel
+        quote {
           id
-          authId
-          status
-          email
-          role
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          createdAt
-          updatedAt
+          source
+          text
         }
-        nextToken
+        connection
+        images
+        additionalContent {
+          video
+        }
       }
       grades
       artistID
@@ -2170,6 +3312,7 @@ export const onUpdateLesson = /* GraphQL */ `
         type
         bio
         quotes {
+          id
           source
           text
         }
@@ -2180,14 +3323,7 @@ export const onUpdateLesson = /* GraphQL */ `
         updatedAt
       }
       language
-      SELStructureID
-      SELStructure {
-        id
-        name
-        description
-        createdAt
-        updatedAt
-      }
+      SELStructure
       keywords {
         items {
           id
@@ -2242,6 +3378,7 @@ export const onUpdateLesson = /* GraphQL */ `
           example
           titleExample
           textExample
+          listInputNumber
         }
         breakdown {
           included
@@ -2272,6 +3409,7 @@ export const onUpdateLesson = /* GraphQL */ `
           text
         }
         tools {
+          id
           name
           color
           icon
@@ -2324,6 +3462,7 @@ export const onUpdateLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      filters
       createdAt
       updatedAt
     }
@@ -2336,28 +3475,21 @@ export const onDeleteLesson = /* GraphQL */ `
       title
       type
       instructions
-      contributors {
-        items {
+      theme {
+        type
+        name
+        summary
+        summaryLabel
+        quote {
           id
-          authId
-          status
-          email
-          role
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          createdAt
-          updatedAt
+          source
+          text
         }
-        nextToken
+        connection
+        images
+        additionalContent {
+          video
+        }
       }
       grades
       artistID
@@ -2368,6 +3500,7 @@ export const onDeleteLesson = /* GraphQL */ `
         type
         bio
         quotes {
+          id
           source
           text
         }
@@ -2378,14 +3511,7 @@ export const onDeleteLesson = /* GraphQL */ `
         updatedAt
       }
       language
-      SELStructureID
-      SELStructure {
-        id
-        name
-        description
-        createdAt
-        updatedAt
-      }
+      SELStructure
       keywords {
         items {
           id
@@ -2440,6 +3566,7 @@ export const onDeleteLesson = /* GraphQL */ `
           example
           titleExample
           textExample
+          listInputNumber
         }
         breakdown {
           included
@@ -2470,6 +3597,7 @@ export const onDeleteLesson = /* GraphQL */ `
           text
         }
         tools {
+          id
           name
           color
           icon
@@ -2522,6 +3650,7 @@ export const onDeleteLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      filters
       createdAt
       updatedAt
     }
@@ -2539,8 +3668,13 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
         title
         type
         instructions
-        contributors {
-          nextToken
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
         }
         grades
         artistID
@@ -2554,14 +3688,7 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         language
-        SELStructureID
-        SELStructure {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
+        SELStructure
         keywords {
           nextToken
         }
@@ -2626,6 +3753,7 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        filters
         createdAt
         updatedAt
       }
@@ -2659,8 +3787,13 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
         title
         type
         instructions
-        contributors {
-          nextToken
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
         }
         grades
         artistID
@@ -2674,14 +3807,7 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         language
-        SELStructureID
-        SELStructure {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
+        SELStructure
         keywords {
           nextToken
         }
@@ -2746,6 +3872,7 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        filters
         createdAt
         updatedAt
       }
@@ -2779,8 +3906,13 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
         title
         type
         instructions
-        contributors {
-          nextToken
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
         }
         grades
         artistID
@@ -2794,14 +3926,7 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         language
-        SELStructureID
-        SELStructure {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
+        SELStructure
         keywords {
           nextToken
         }
@@ -2866,6 +3991,7 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        filters
         createdAt
         updatedAt
       }
@@ -3075,6 +4201,7 @@ export const onCreateWarmUp = /* GraphQL */ `
         example
         titleExample
         textExample
+        listInputNumber
         truthGameInputs {
           id
           label
@@ -3115,6 +4242,7 @@ export const onUpdateWarmUp = /* GraphQL */ `
         example
         titleExample
         textExample
+        listInputNumber
         truthGameInputs {
           id
           label
@@ -3155,6 +4283,7 @@ export const onDeleteWarmUp = /* GraphQL */ `
         example
         titleExample
         textExample
+        listInputNumber
         truthGameInputs {
           id
           label
@@ -3198,6 +4327,7 @@ export const onCreateCoreLesson = /* GraphQL */ `
         text
       }
       tools {
+        id
         name
         color
         icon
@@ -3234,6 +4364,7 @@ export const onUpdateCoreLesson = /* GraphQL */ `
         text
       }
       tools {
+        id
         name
         color
         icon
@@ -3270,6 +4401,7 @@ export const onDeleteCoreLesson = /* GraphQL */ `
         text
       }
       tools {
+        id
         name
         color
         icon
@@ -3825,12 +4957,8 @@ export const onCreateQuestionData = /* GraphQL */ `
         course {
           id
           name
-          courseTypeID
-          classID
-          curriculumID
-          location
+          type
           startDate
-          endDate
           duration
           createdAt
           updatedAt
@@ -3844,7 +4972,7 @@ export const onCreateQuestionData = /* GraphQL */ `
           grades
           artistID
           language
-          SELStructureID
+          SELStructure
           connection
           summary
           objectives
@@ -3853,6 +4981,7 @@ export const onCreateQuestionData = /* GraphQL */ `
           coreLessonId
           activityId
           assessmentID
+          filters
           createdAt
           updatedAt
         }
@@ -3894,6 +5023,7 @@ export const onCreateQuestionData = /* GraphQL */ `
         status
         email
         role
+        type
         firstName
         preferredName
         lastName
@@ -3908,6 +5038,7 @@ export const onCreateQuestionData = /* GraphQL */ `
         birthdate
         image
         language
+        filters
         createdAt
         updatedAt
       }
@@ -3943,12 +5074,8 @@ export const onUpdateQuestionData = /* GraphQL */ `
         course {
           id
           name
-          courseTypeID
-          classID
-          curriculumID
-          location
+          type
           startDate
-          endDate
           duration
           createdAt
           updatedAt
@@ -3962,7 +5089,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
           grades
           artistID
           language
-          SELStructureID
+          SELStructure
           connection
           summary
           objectives
@@ -3971,6 +5098,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
           coreLessonId
           activityId
           assessmentID
+          filters
           createdAt
           updatedAt
         }
@@ -4012,6 +5140,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
         status
         email
         role
+        type
         firstName
         preferredName
         lastName
@@ -4026,6 +5155,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
         birthdate
         image
         language
+        filters
         createdAt
         updatedAt
       }
@@ -4061,12 +5191,8 @@ export const onDeleteQuestionData = /* GraphQL */ `
         course {
           id
           name
-          courseTypeID
-          classID
-          curriculumID
-          location
+          type
           startDate
-          endDate
           duration
           createdAt
           updatedAt
@@ -4080,7 +5206,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
           grades
           artistID
           language
-          SELStructureID
+          SELStructure
           connection
           summary
           objectives
@@ -4089,6 +5215,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
           coreLessonId
           activityId
           assessmentID
+          filters
           createdAt
           updatedAt
         }
@@ -4130,6 +5257,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
         status
         email
         role
+        type
         firstName
         preferredName
         lastName
@@ -4144,6 +5272,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
         birthdate
         image
         language
+        filters
         createdAt
         updatedAt
       }
@@ -4189,6 +5318,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           status
           email
           role
+          type
           firstName
           preferredName
           lastName
@@ -4200,6 +5330,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           birthdate
           image
           language
+          filters
           createdAt
           updatedAt
         }
@@ -4261,6 +5392,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           status
           email
           role
+          type
           firstName
           preferredName
           lastName
@@ -4272,6 +5404,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           birthdate
           image
           language
+          filters
           createdAt
           updatedAt
         }
@@ -4320,6 +5453,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           status
           email
           role
+          type
           firstName
           preferredName
           lastName
@@ -4331,6 +5465,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           birthdate
           image
           language
+          filters
           createdAt
           updatedAt
         }
@@ -4392,6 +5527,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           status
           email
           role
+          type
           firstName
           preferredName
           lastName
@@ -4403,6 +5539,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           birthdate
           image
           language
+          filters
           createdAt
           updatedAt
         }
@@ -4451,6 +5588,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           status
           email
           role
+          type
           firstName
           preferredName
           lastName
@@ -4462,6 +5600,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           birthdate
           image
           language
+          filters
           createdAt
           updatedAt
         }
@@ -4523,6 +5662,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           status
           email
           role
+          type
           firstName
           preferredName
           lastName
@@ -4534,6 +5674,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           birthdate
           image
           language
+          filters
           createdAt
           updatedAt
         }
@@ -4597,8 +5738,13 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
         title
         type
         instructions
-        contributors {
-          nextToken
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
         }
         grades
         artistID
@@ -4612,14 +5758,7 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         language
-        SELStructureID
-        SELStructure {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
+        SELStructure
         keywords {
           nextToken
         }
@@ -4684,6 +5823,7 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        filters
         createdAt
         updatedAt
       }
@@ -4710,8 +5850,13 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
         title
         type
         instructions
-        contributors {
-          nextToken
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
         }
         grades
         artistID
@@ -4725,14 +5870,7 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         language
-        SELStructureID
-        SELStructure {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
+        SELStructure
         keywords {
           nextToken
         }
@@ -4797,6 +5935,7 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        filters
         createdAt
         updatedAt
       }
@@ -4823,8 +5962,13 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
         title
         type
         instructions
-        contributors {
-          nextToken
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
         }
         grades
         artistID
@@ -4838,14 +5982,7 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         language
-        SELStructureID
-        SELStructure {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
+        SELStructure
         keywords {
           nextToken
         }
@@ -4910,6 +6047,7 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        filters
         createdAt
         updatedAt
       }
@@ -4938,6 +6076,7 @@ export const onCreateStudentWord = /* GraphQL */ `
         status
         email
         role
+        type
         firstName
         preferredName
         lastName
@@ -4952,6 +6091,7 @@ export const onCreateStudentWord = /* GraphQL */ `
         birthdate
         image
         language
+        filters
         createdAt
         updatedAt
       }
@@ -4980,6 +6120,7 @@ export const onUpdateStudentWord = /* GraphQL */ `
         status
         email
         role
+        type
         firstName
         preferredName
         lastName
@@ -4994,6 +6135,7 @@ export const onUpdateStudentWord = /* GraphQL */ `
         birthdate
         image
         language
+        filters
         createdAt
         updatedAt
       }
@@ -5022,6 +6164,7 @@ export const onDeleteStudentWord = /* GraphQL */ `
         status
         email
         role
+        type
         firstName
         preferredName
         lastName
@@ -5036,6 +6179,703 @@ export const onDeleteStudentWord = /* GraphQL */ `
         birthdate
         image
         language
+        filters
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateFilter = /* GraphQL */ `
+  subscription OnCreateFilter {
+    onCreateFilter {
+      id
+      name
+      description
+      editable
+      options {
+        items {
+          id
+          filterID
+          text
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateFilter = /* GraphQL */ `
+  subscription OnUpdateFilter {
+    onUpdateFilter {
+      id
+      name
+      description
+      editable
+      options {
+        items {
+          id
+          filterID
+          text
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteFilter = /* GraphQL */ `
+  subscription OnDeleteFilter {
+    onDeleteFilter {
+      id
+      name
+      description
+      editable
+      options {
+        items {
+          id
+          filterID
+          text
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateFilterOption = /* GraphQL */ `
+  subscription OnCreateFilterOption {
+    onCreateFilterOption {
+      id
+      filterID
+      text
+      filter {
+        id
+        name
+        description
+        editable
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateFilterOption = /* GraphQL */ `
+  subscription OnUpdateFilterOption {
+    onUpdateFilterOption {
+      id
+      filterID
+      text
+      filter {
+        id
+        name
+        description
+        editable
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteFilterOption = /* GraphQL */ `
+  subscription OnDeleteFilterOption {
+    onDeleteFilterOption {
+      id
+      filterID
+      text
+      filter {
+        id
+        name
+        description
+        editable
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateClient = /* GraphQL */ `
+  subscription OnCreateClient {
+    onCreateClient {
+      id
+      name
+      architecture {
+        items {
+          id
+          name
+          clientID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateClient = /* GraphQL */ `
+  subscription OnUpdateClient {
+    onUpdateClient {
+      id
+      name
+      architecture {
+        items {
+          id
+          name
+          clientID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteClient = /* GraphQL */ `
+  subscription OnDeleteClient {
+    onDeleteClient {
+      id
+      name
+      architecture {
+        items {
+          id
+          name
+          clientID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateArchitecture = /* GraphQL */ `
+  subscription OnCreateArchitecture {
+    onCreateArchitecture {
+      id
+      name
+      clientID
+      client {
+        id
+        name
+        architecture {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      types {
+        items {
+          id
+          name
+          architectureID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters {
+        items {
+          id
+          architectureID
+          filterID
+          multiselect
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateArchitecture = /* GraphQL */ `
+  subscription OnUpdateArchitecture {
+    onUpdateArchitecture {
+      id
+      name
+      clientID
+      client {
+        id
+        name
+        architecture {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      types {
+        items {
+          id
+          name
+          architectureID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters {
+        items {
+          id
+          architectureID
+          filterID
+          multiselect
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteArchitecture = /* GraphQL */ `
+  subscription OnDeleteArchitecture {
+    onDeleteArchitecture {
+      id
+      name
+      clientID
+      client {
+        id
+        name
+        architecture {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      types {
+        items {
+          id
+          name
+          architectureID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters {
+        items {
+          id
+          architectureID
+          filterID
+          multiselect
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateType = /* GraphQL */ `
+  subscription OnCreateType {
+    onCreateType {
+      id
+      name
+      architectureID
+      architecture {
+        id
+        name
+        clientID
+        client {
+          id
+          name
+          createdAt
+          updatedAt
+        }
+        types {
+          nextToken
+        }
+        filters {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      filters {
+        items {
+          id
+          typeID
+          filterID
+          multiselect
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateType = /* GraphQL */ `
+  subscription OnUpdateType {
+    onUpdateType {
+      id
+      name
+      architectureID
+      architecture {
+        id
+        name
+        clientID
+        client {
+          id
+          name
+          createdAt
+          updatedAt
+        }
+        types {
+          nextToken
+        }
+        filters {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      filters {
+        items {
+          id
+          typeID
+          filterID
+          multiselect
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteType = /* GraphQL */ `
+  subscription OnDeleteType {
+    onDeleteType {
+      id
+      name
+      architectureID
+      architecture {
+        id
+        name
+        clientID
+        client {
+          id
+          name
+          createdAt
+          updatedAt
+        }
+        types {
+          nextToken
+        }
+        filters {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      filters {
+        items {
+          id
+          typeID
+          filterID
+          multiselect
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateFilterType = /* GraphQL */ `
+  subscription OnCreateFilterType {
+    onCreateFilterType {
+      id
+      typeID
+      filterID
+      multiselect
+      required
+      type {
+        id
+        name
+        architectureID
+        architecture {
+          id
+          name
+          clientID
+          createdAt
+          updatedAt
+        }
+        filters {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      filter {
+        id
+        name
+        description
+        editable
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateFilterType = /* GraphQL */ `
+  subscription OnUpdateFilterType {
+    onUpdateFilterType {
+      id
+      typeID
+      filterID
+      multiselect
+      required
+      type {
+        id
+        name
+        architectureID
+        architecture {
+          id
+          name
+          clientID
+          createdAt
+          updatedAt
+        }
+        filters {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      filter {
+        id
+        name
+        description
+        editable
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteFilterType = /* GraphQL */ `
+  subscription OnDeleteFilterType {
+    onDeleteFilterType {
+      id
+      typeID
+      filterID
+      multiselect
+      required
+      type {
+        id
+        name
+        architectureID
+        architecture {
+          id
+          name
+          clientID
+          createdAt
+          updatedAt
+        }
+        filters {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      filter {
+        id
+        name
+        description
+        editable
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateArchitectureFilter = /* GraphQL */ `
+  subscription OnCreateArchitectureFilter {
+    onCreateArchitectureFilter {
+      id
+      architectureID
+      filterID
+      multiselect
+      required
+      architecture {
+        id
+        name
+        clientID
+        client {
+          id
+          name
+          createdAt
+          updatedAt
+        }
+        types {
+          nextToken
+        }
+        filters {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      filter {
+        id
+        name
+        description
+        editable
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateArchitectureFilter = /* GraphQL */ `
+  subscription OnUpdateArchitectureFilter {
+    onUpdateArchitectureFilter {
+      id
+      architectureID
+      filterID
+      multiselect
+      required
+      architecture {
+        id
+        name
+        clientID
+        client {
+          id
+          name
+          createdAt
+          updatedAt
+        }
+        types {
+          nextToken
+        }
+        filters {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      filter {
+        id
+        name
+        description
+        editable
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteArchitectureFilter = /* GraphQL */ `
+  subscription OnDeleteArchitectureFilter {
+    onDeleteArchitectureFilter {
+      id
+      architectureID
+      filterID
+      multiselect
+      required
+      architecture {
+        id
+        name
+        clientID
+        client {
+          id
+          name
+          createdAt
+          updatedAt
+        }
+        types {
+          nextToken
+        }
+        filters {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      filter {
+        id
+        name
+        description
+        editable
+        options {
+          nextToken
+        }
         createdAt
         updatedAt
       }

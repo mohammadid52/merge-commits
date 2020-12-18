@@ -178,6 +178,7 @@ export const getClassroom = /* GraphQL */ `
             textExample
             titleExample
             example
+            listInputNumber
             truthGameInputs {
               id
               label
@@ -532,6 +533,7 @@ export const getClassroomStudent = /* GraphQL */ `
             example
             textExample
             titleExample
+            listInputNumber
             truthGameInputs {
               id
               label
@@ -712,28 +714,7 @@ export const getCourse = /* GraphQL */ `
     getCourse(id: $id) {
       id
       name
-      classID
-      class {
-        id
-        name
-        students {
-          items {
-            student {
-              id
-              authId
-              status
-              email
-              firstName
-              preferredName
-              lastName
-              language
-            }
-          } 
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
+      type
       classrooms {
         items {
           id
@@ -764,10 +745,7 @@ export const getCourse = /* GraphQL */ `
         }
         nextToken
       }
-      location
       startDate
-      endDate
-      duration
       createdAt
       updatedAt
     }

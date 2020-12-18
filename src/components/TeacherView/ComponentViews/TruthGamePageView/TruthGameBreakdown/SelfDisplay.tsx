@@ -18,16 +18,16 @@
 //     const [fullscreen, setFullscreen] = useState(false);
 //     return (
 //         <div className="w-full h-full flex flex-col justify-between items-center">
-//             <Banner title={state.data.lesson.warmUp.title} 
+//             <Banner title={state.data.lesson.warmUp.title}
 //                 display='SELF' fullscreen={fullscreen}/>
 //             <div className="w-full h-7/10 flex flex-col md:flex-row justify-between">
 //                 <div className={`${theme.gradient.cardBase} ${inputs.additionalInputs.length > 0 ? 'md:w-7.85/10' : 'w-full'} mb-4 md:mb-0 overflow-y-auto overflow-x-hidden h-full px-4 md:px-12 py-4 md:py-8 items-center text-md md:text-3xl font-light text-gray-200 rounded-lg shadow-2`}>
 //                     {displayProps.truthGameArray.map((item: {id: string, label: string, isLie: boolean, text: string}, key: number) => {
 //                         return (
 //                             <div className={`p-4`}>
-                                
+
 //                                 <div className={`text-2xl`}>
-//                                     {`${item.label}:`} 
+//                                     {`${item.label}:`}
 //                                 </div>
 //                                 <span className={`${item.isLie ? 'text-lg' : 'hidden'}`}> (this is your lie 🤥)</span>
 //                                 <div className={`text-xl`}>
@@ -36,12 +36,12 @@
 //                             </div>
 //                         )
 //                     })}
-                    
+
 //                     {/* { displayProps.truthGame } */}
 //                 </div>
 //                 { inputs.additionalInputs.length > 0 ?
-//                 <Modules 
-//                     additional={displayProps.additional} 
+//                 <Modules
+//                     additional={displayProps.additional}
 //                     displayMode = 'SELF'/>
 //                 : null }
 //             </div>
