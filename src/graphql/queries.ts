@@ -17,6 +17,7 @@ export const getInstitution = /* GraphQL */ `
       phone
       website
       image
+      isServiceProvider
       serviceProviders {
         items {
           id
@@ -27,6 +28,58 @@ export const getInstitution = /* GraphQL */ `
         }
         nextToken
       }
+      staff {
+        items {
+          id
+          institutionID
+          staffAuthID
+          staffEmail
+          status
+          statusChangeDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      rooms {
+        items {
+          id
+          institutionID
+          classID
+          teacherID
+          name
+          maxPersons
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      curricula {
+        items {
+          id
+          institutionID
+          name
+          type
+          description
+          objectives
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      classes {
+        items {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters
       createdAt
       updatedAt
     }
@@ -60,9 +113,23 @@ export const listInstitutions = /* GraphQL */ `
         phone
         website
         image
+        isServiceProvider
         serviceProviders {
           nextToken
         }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
         createdAt
         updatedAt
       }
@@ -188,28 +255,231 @@ export const listPersons = /* GraphQL */ `
     }
   }
 `;
+export const getRoom = /* GraphQL */ `
+  query GetRoom($id: ID!) {
+    getRoom(id: $id) {
+      id
+      institutionID
+      classID
+      teacherID
+      name
+      maxPersons
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listRooms = /* GraphQL */ `
+  query ListRooms(
+    $filter: ModelRoomFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        classID
+        teacherID
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getClass = /* GraphQL */ `
+  query GetClass($id: ID!) {
+    getClass(id: $id) {
+      id
+      institutionID
+      type
+      name
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      students {
+        items {
+          id
+          classID
+          studentID
+          studentEmail
+          studentAuth
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listClasss = /* GraphQL */ `
+  query ListClasss(
+    $filter: ModelClassFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClasss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        type
+        name
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        students {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getCurriculum = /* GraphQL */ `
   query GetCurriculum($id: ID!) {
     getCurriculum(id: $id) {
       id
+      institutionID
       name
       type
       description
       objectives
       languages
-      units {
-        items {
-          id
-          name
-          type
-          description
-          objectives
-          curriculumID
-          languages
-          createdAt
-          updatedAt
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
         }
-        nextToken
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
       }
       syllabi {
         items {
@@ -247,73 +517,31 @@ export const listCurriculums = /* GraphQL */ `
     ) {
       items {
         id
+        institutionID
         name
         type
         description
         objectives
         languages
-        units {
-          nextToken
-        }
-        syllabi {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getUnit = /* GraphQL */ `
-  query GetUnit($id: ID!) {
-    getUnit(id: $id) {
-      id
-      name
-      type
-      description
-      objectives
-      curriculumID
-      languages
-      lessons {
-        items {
+        institution {
           id
-          unitID
-          lessonID
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
           createdAt
           updatedAt
         }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listUnits = /* GraphQL */ `
-  query ListUnits(
-    $id: ID
-    $filter: ModelUnitFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listUnits(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        name
-        type
-        description
-        objectives
-        curriculumID
-        languages
-        lessons {
+        syllabi {
           nextToken
         }
         createdAt
@@ -389,53 +617,6 @@ export const getCourse = /* GraphQL */ `
       id
       name
       type
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        serviceProviders {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      classID
-      class {
-        id
-        type
-        name
-        students {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      curriculumID
-      curriculum {
-        id
-        name
-        type
-        description
-        objectives
-        languages
-        units {
-          nextToken
-        }
-        syllabi {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       classrooms {
         items {
           id
@@ -455,9 +636,7 @@ export const getCourse = /* GraphQL */ `
         }
         nextToken
       }
-      location
       startDate
-      endDate
       duration
       createdAt
       updatedAt
@@ -475,92 +654,11 @@ export const listCourses = /* GraphQL */ `
         id
         name
         type
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          createdAt
-          updatedAt
-        }
-        classID
-        class {
-          id
-          type
-          name
-          createdAt
-          updatedAt
-        }
-        curriculumID
-        curriculum {
-          id
-          name
-          type
-          description
-          objectives
-          languages
-          createdAt
-          updatedAt
-        }
         classrooms {
           nextToken
         }
-        location
         startDate
-        endDate
         duration
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getClass = /* GraphQL */ `
-  query GetClass($id: ID!) {
-    getClass(id: $id) {
-      id
-      type
-      name
-      students {
-        items {
-          id
-          classID
-          studentID
-          studentEmail
-          studentAuth
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listClasss = /* GraphQL */ `
-  query ListClasss(
-    $filter: ModelClassFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listClasss(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        type
-        name
-        students {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -596,11 +694,7 @@ export const getStudentData = /* GraphQL */ `
           id
           name
           type
-          classID
-          curriculumID
-          location
           startDate
-          endDate
           duration
           createdAt
           updatedAt
@@ -918,47 +1012,10 @@ export const getClassroom = /* GraphQL */ `
         id
         name
         type
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          createdAt
-          updatedAt
-        }
-        classID
-        class {
-          id
-          type
-          name
-          createdAt
-          updatedAt
-        }
-        curriculumID
-        curriculum {
-          id
-          name
-          type
-          description
-          objectives
-          languages
-          createdAt
-          updatedAt
-        }
         classrooms {
           nextToken
         }
-        location
         startDate
-        endDate
         duration
         createdAt
         updatedAt
@@ -1124,11 +1181,7 @@ export const listClassrooms = /* GraphQL */ `
           id
           name
           type
-          classID
-          curriculumID
-          location
           startDate
-          endDate
           duration
           createdAt
           updatedAt
@@ -1203,11 +1256,7 @@ export const getFeedback = /* GraphQL */ `
           id
           name
           type
-          classID
-          curriculumID
-          location
           startDate
-          endDate
           duration
           createdAt
           updatedAt
@@ -2207,11 +2256,7 @@ export const getQuestionData = /* GraphQL */ `
           id
           name
           type
-          classID
-          curriculumID
-          location
           startDate
-          endDate
           duration
           createdAt
           updatedAt

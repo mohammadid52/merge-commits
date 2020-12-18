@@ -64,8 +64,9 @@ type Institution
   image: String
   isServiceProvider: Boolean
   serviceProviders: [ServiceProvider] @connection(keyName: "providersByPartner", fields: ["id"])
+  staff: [Staff] @connection(keyName: "staffByInstitution", fields: ["id"])
   rooms: [Room] @connection(keyName: "roomByInstitution", fields: ["id"])
-  # curricula
+  curricula: [Curriculum] @connection(keyName: "curriculumByInstitution", fields: ["id"])
   classes: [Class] @connection(keyName: "classByInstitution", fields: ["id"])
   filters: [String]
 }
@@ -197,7 +198,7 @@ type ClassStudent
   student: Person @connection(fields: ["studentEmail", "studentAuth"])
 }
 
-### Curriculum & Syllabus
+### Curriculum
 ## 
 
 ## Keys:
@@ -206,27 +207,32 @@ type ClassStudent
 
 ## Associated tables:
 
-type Curriculum @model @key(fields: ["id"]) {
+type Curriculum 
+@model 
+@key(fields: ["id"]) 
+@key(name: "curriculumByInstitution", fields: ["institutionID"])
+{
   id: ID!
+  institutionID: ID!
   name: String!
   type: String
   description: String
   objectives: [String]
   languages: [Language]
-  units: [Unit] @connection(keyName: "byCurriculum", fields: ["id"])
+  institution: Institution @connection(fields: ["institutionID"])
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
 }
 
-type Unit @model @key(fields: ["id"]) @key(name: "byCurriculum", fields: ["curriculumID"]) {
-  id: ID!
-  name: String!
-  type: String
-  description: String
-  objectives: [String]
-  curriculumID: ID!
-  languages: [Language]
-  lessons: [LessonUnit] @connection(keyName: "lessonByUnit", fields: ["id"])
-}
+
+
+### Syllabus
+## 
+
+## Keys:
+
+## Required fields:
+
+## Associated tables:
 
 type Syllabus
 @model
@@ -255,14 +261,6 @@ type SyllabusLesson
   lesson: Lesson @connection(fields: ["lessonID"])
 }
 
-type LessonUnit @model(queries: null) @key(name: "lessonByUnit", fields: ["unitID", "lessonID"]) {
-  id: ID!
-  unitID: ID!
-  lessonID: ID!
-  unit: Unit @connection(fields: ["unitID"])
-  lesson: Lesson @connection(fields: ["lessonID"])
-}
-
 ### Course
 ## 
 
@@ -276,17 +274,8 @@ type Course @model {
   id: ID!
   name: String!
   type: String
-  institution: Institution
-  # classroomTeachers
-  # fellows
-  classID: ID!
-  class: Class @connection(fields: ["classID"])
-  curriculumID: ID!
-  curriculum: Curriculum @connection(fields: ["curriculumID"])
   classrooms: [Classroom] @connection(keyName: "byCourse", fields: ["id"])
-  location: String
   startDate: AWSDate
-  endDate: AWSDate
   duration: Int
 }
 

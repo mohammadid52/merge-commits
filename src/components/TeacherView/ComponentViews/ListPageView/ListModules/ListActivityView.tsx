@@ -28,7 +28,7 @@ const List = (props: props) => {
   const inputs = state.data.lesson.warmUp.inputs;
   const video = state.data.lesson.warmUp.instructions.link;
   const [openPopup, setOpenPopup] = useState(false);
-  const [dataProps, setDataProps] = useState<{ title?: string; story?: string; [key: string]: any }>();
+  const [dataProps, setDataProps] = useState<{ title?: string; story?: string[]; [key: string]: any }>();
 
   let displayStudentData = state.studentViewing.live
     ? state.studentViewing.studentInfo.currentLocation
