@@ -17,11 +17,25 @@ export const getInstitution = /* GraphQL */ `
       phone
       website
       image
+      isServiceProvider
       serviceProviders {
         items {
           id
           partnerID
           providerID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      rooms {
+        items {
+          id
+          institutionID
+          classID
+          teacherID
+          name
+          maxPersons
           createdAt
           updatedAt
         }
@@ -60,7 +74,11 @@ export const listInstitutions = /* GraphQL */ `
         phone
         website
         image
+        isServiceProvider
         serviceProviders {
+          nextToken
+        }
+        rooms {
           nextToken
         }
         createdAt
@@ -181,6 +199,125 @@ export const listPersons = /* GraphQL */ `
         image
         language
         filters
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getRoom = /* GraphQL */ `
+  query GetRoom($id: ID!) {
+    getRoom(id: $id) {
+      id
+      institutionID
+      classID
+      teacherID
+      name
+      maxPersons
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listRooms = /* GraphQL */ `
+  query ListRooms(
+    $filter: ModelRoomFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        classID
+        teacherID
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getClass = /* GraphQL */ `
+  query GetClass($id: ID!) {
+    getClass(id: $id) {
+      id
+      type
+      name
+      students {
+        items {
+          id
+          classID
+          studentID
+          studentEmail
+          studentAuth
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listClasss = /* GraphQL */ `
+  query ListClasss(
+    $filter: ModelClassFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClasss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        name
+        students {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -402,7 +539,11 @@ export const getCourse = /* GraphQL */ `
         phone
         website
         image
+        isServiceProvider
         serviceProviders {
+          nextToken
+        }
+        rooms {
           nextToken
         }
         createdAt
@@ -488,6 +629,7 @@ export const listCourses = /* GraphQL */ `
           phone
           website
           image
+          isServiceProvider
           createdAt
           updatedAt
         }
@@ -517,50 +659,6 @@ export const listCourses = /* GraphQL */ `
         startDate
         endDate
         duration
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getClass = /* GraphQL */ `
-  query GetClass($id: ID!) {
-    getClass(id: $id) {
-      id
-      type
-      name
-      students {
-        items {
-          id
-          classID
-          studentID
-          studentEmail
-          studentAuth
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listClasss = /* GraphQL */ `
-  query ListClasss(
-    $filter: ModelClassFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listClasss(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        type
-        name
-        students {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -931,6 +1029,7 @@ export const getClassroom = /* GraphQL */ `
           phone
           website
           image
+          isServiceProvider
           createdAt
           updatedAt
         }

@@ -58,10 +58,12 @@ type Institution
   phone: String
   website: String
   image: String
+  isServiceProvider: Boolean
   serviceProviders: [ServiceProvider] @connection(keyName: "providersByPartner", fields: ["id"])
-  # rooms
+  rooms: [Room] @connection(keyName: "roomByInstitution", fields: ["id"])
   # curricula
   # classes
+  filters: [String]
 }
 
 type ServiceProvider 
@@ -132,6 +134,50 @@ type Person
   image: String
   language: Language!
   filters: [String]
+}
+
+## Room
+# Main table for user information. This table ıs connected to Institution (belongs-to), Class (has-many), ......... Has ENUM types Language, Role, and PersonStatus.
+
+## Keys:
+
+## Required fields:
+
+type Room
+@model
+@key(name: "roomByInstitution", fields: ["institutionID"])
+{
+  id: ID!
+  institutionID: ID!
+  classID: ID!
+  teacherID: ID!
+  name: String!
+  maxPersons: Int!
+  institution: Institution @connection(fields: ["institutionID"])
+  # class:
+  # curricula: 
+}
+
+type Class 
+@model 
+{
+  id: ID!
+  type: String
+  name: String!
+  students: [ClassStudent]! @connection(keyName: "byClass", fields: ["id"])
+}
+
+type ClassStudent 
+@model(queries: null) 
+@key(name: "byClass", fields: ["classID", "studentID"]) 
+{
+  id: ID!
+  classID: ID!
+  studentID: ID!
+  studentEmail: String!
+  studentAuth: String!
+  class: Class @connection(fields: ["classID"])
+  student: Person @connection(fields: ["studentEmail", "studentAuth"])
 }
 
 type Curriculum @model @key(fields: ["id"]) {
@@ -207,23 +253,6 @@ type Course @model {
   startDate: AWSDate
   endDate: AWSDate
   duration: Int
-}
-
-type Class @model {
-  id: ID!
-  type: String
-  name: String!
-  students: [ClassStudent]! @connection(keyName: "byClass", fields: ["id"])
-}
-
-type ClassStudent @model(queries: null) @key(name: "byClass", fields: ["classID", "studentID"]) {
-  id: ID!
-  classID: ID!
-  studentID: ID!
-  studentEmail: String!
-  studentAuth: String!
-  class: Class @connection(fields: ["classID"])
-  student: Person @connection(fields: ["studentEmail", "studentAuth"])
 }
 
 type DataObject {
