@@ -15,13 +15,18 @@ export const getInstitution = /* GraphQL */ `
       state
       zip
       phone
-      contact {
-        name
-        phone
-        email
-      }
       website
       image
+      serviceProviders {
+        items {
+          id
+          partnerID
+          providerID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -53,13 +58,11 @@ export const listInstitutions = /* GraphQL */ `
         state
         zip
         phone
-        contact {
-          name
-          phone
-          email
-        }
         website
         image
+        serviceProviders {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -285,13 +288,11 @@ export const getCourse = /* GraphQL */ `
         state
         zip
         phone
-        contact {
-          name
-          phone
-          email
-        }
         website
         image
+        serviceProviders {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1360,6 +1361,134 @@ export const getLesson = /* GraphQL */ `
         nextToken
       }
       connection
+      images
+      additionalContent {
+        video
+        links {
+          id
+          type
+          text
+          link
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listThemeTemplates = /* GraphQL */ `
+  query ListThemeTemplates(
+    $filter: ModelThemeTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listThemeTemplates(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        name
+        summary
+        summaryLabel
+        quote {
+          id
+          source
+          text
+        }
+        keywords {
+          nextToken
+        }
+        connection
+        images
+        additionalContent {
+          video
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getLesson = /* GraphQL */ `
+  query GetLesson($id: ID!) {
+    getLesson(id: $id) {
+      id
+      title
+      type
+      instructions
+      theme {
+        type
+        name
+        summary
+        summaryLabel
+        quote {
+          id
+          source
+          text
+        }
+        connection
+        images
+        additionalContent {
+          video
+        }
+      }
+      contributors {
+        items {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      grades
+      artistID
+      artist {
+        id
+        images
+        name
+        type
+        bio
+        quotes {
+          id
+          source
+          text
+        }
+        additionalContent {
+          video
+        }
+        createdAt
+        updatedAt
+      }
+      language
+      SELStructure
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
       summary
       objectives
       checkpoints {
@@ -1403,6 +1532,7 @@ export const getLesson = /* GraphQL */ `
           example
           titleExample
           textExample
+          listInputNumber
         }
         breakdown {
           included
@@ -1670,6 +1800,7 @@ export const getWarmUp = /* GraphQL */ `
         example
         titleExample
         textExample
+        listInputNumber
         truthGameInputs {
           id
           label
@@ -1715,6 +1846,7 @@ export const listWarmUps = /* GraphQL */ `
           example
           titleExample
           textExample
+          listInputNumber
         }
         breakdown {
           included

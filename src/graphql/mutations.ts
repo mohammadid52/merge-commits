@@ -18,13 +18,18 @@ export const createInstitution = /* GraphQL */ `
       state
       zip
       phone
-      contact {
-        name
-        phone
-        email
-      }
       website
       image
+      serviceProviders {
+        items {
+          id
+          partnerID
+          providerID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -46,13 +51,18 @@ export const updateInstitution = /* GraphQL */ `
       state
       zip
       phone
-      contact {
-        name
-        phone
-        email
-      }
       website
       image
+      serviceProviders {
+        items {
+          id
+          partnerID
+          providerID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -74,13 +84,117 @@ export const deleteInstitution = /* GraphQL */ `
       state
       zip
       phone
-      contact {
-        name
-        phone
-        email
-      }
       website
       image
+      serviceProviders {
+        items {
+          id
+          partnerID
+          providerID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createServiceProvider = /* GraphQL */ `
+  mutation CreateServiceProvider(
+    $input: CreateServiceProviderInput!
+    $condition: ModelServiceProviderConditionInput
+  ) {
+    createServiceProvider(input: $input, condition: $condition) {
+      id
+      partnerID
+      providerID
+      providerInstitution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        serviceProviders {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateServiceProvider = /* GraphQL */ `
+  mutation UpdateServiceProvider(
+    $input: UpdateServiceProviderInput!
+    $condition: ModelServiceProviderConditionInput
+  ) {
+    updateServiceProvider(input: $input, condition: $condition) {
+      id
+      partnerID
+      providerID
+      providerInstitution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        serviceProviders {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteServiceProvider = /* GraphQL */ `
+  mutation DeleteServiceProvider(
+    $input: DeleteServiceProviderInput!
+    $condition: ModelServiceProviderConditionInput
+  ) {
+    deleteServiceProvider(input: $input, condition: $condition) {
+      id
+      partnerID
+      providerID
+      providerInstitution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        serviceProviders {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -237,12 +351,12 @@ export const createCurriculum = /* GraphQL */ `
     }
   }
 `;
-export const updateCurriculum = /* GraphQL */ `
-  mutation UpdateCurriculum(
-    $input: UpdateCurriculumInput!
+export const deleteCurriculum = /* GraphQL */ `
+  mutation DeleteCurriculum(
+    $input: DeleteCurriculumInput!
     $condition: ModelCurriculumConditionInput
   ) {
-    updateCurriculum(input: $input, condition: $condition) {
+    deleteCurriculum(input: $input, condition: $condition) {
       id
       name
       type
@@ -268,12 +382,12 @@ export const updateCurriculum = /* GraphQL */ `
     }
   }
 `;
-export const deleteCurriculum = /* GraphQL */ `
-  mutation DeleteCurriculum(
-    $input: DeleteCurriculumInput!
-    $condition: ModelCurriculumConditionInput
+export const updateUnit = /* GraphQL */ `
+  mutation UpdateUnit(
+    $input: UpdateUnitInput!
+    $condition: ModelUnitConditionInput
   ) {
-    deleteCurriculum(input: $input, condition: $condition) {
+    updateUnit(input: $input, condition: $condition) {
       id
       name
       type
@@ -778,13 +892,11 @@ export const createCourse = /* GraphQL */ `
         state
         zip
         phone
-        contact {
-          name
-          phone
-          email
-        }
         website
         image
+        serviceProviders {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -861,13 +973,11 @@ export const updateCourse = /* GraphQL */ `
         state
         zip
         phone
-        contact {
-          name
-          phone
-          email
-        }
         website
         image
+        serviceProviders {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -944,13 +1054,11 @@ export const deleteCourse = /* GraphQL */ `
         state
         zip
         phone
-        contact {
-          name
-          phone
-          email
-        }
         website
         image
+        serviceProviders {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -2935,6 +3043,141 @@ export const createLesson = /* GraphQL */ `
     $input: CreateLessonInput!
     $condition: ModelLessonConditionInput
   ) {
+    createThemeTemplate(input: $input, condition: $condition) {
+      id
+      type
+      instructions
+      theme {
+        type
+        name
+        summary
+        summaryLabel
+        quote {
+          id
+          source
+          text
+        }
+        connection
+        images
+        additionalContent {
+          video
+        }
+      }
+      contributors {
+        items {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      grades
+      artistID
+      artist {
+        id
+        images
+        name
+        type
+        bio
+        quotes {
+          id
+          source
+          text
+          link
+        }
+      }
+      language
+      SELStructure
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
+      images
+      additionalContent {
+        video
+        links {
+          id
+          type
+          text
+          link
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteThemeTemplate = /* GraphQL */ `
+  mutation DeleteThemeTemplate(
+    $input: DeleteThemeTemplateInput!
+    $condition: ModelThemeTemplateConditionInput
+  ) {
+    deleteThemeTemplate(input: $input, condition: $condition) {
+      id
+      type
+      name
+      summary
+      summaryLabel
+      quote {
+        id
+        source
+        text
+      }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
+      images
+      additionalContent {
+        video
+        links {
+          id
+          type
+          text
+          link
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createLesson = /* GraphQL */ `
+  mutation CreateLesson(
+    $input: CreateLessonInput!
+    $condition: ModelLessonConditionInput
+  ) {
     createLesson(input: $input, condition: $condition) {
       id
       title
@@ -3056,6 +3299,7 @@ export const createLesson = /* GraphQL */ `
           example
           titleExample
           textExample
+          listInputNumber
         }
         breakdown {
           included
@@ -3271,6 +3515,7 @@ export const updateLesson = /* GraphQL */ `
           example
           titleExample
           textExample
+          listInputNumber
         }
         breakdown {
           included
@@ -3486,6 +3731,7 @@ export const deleteLesson = /* GraphQL */ `
           example
           titleExample
           textExample
+          listInputNumber
         }
         breakdown {
           included
@@ -4159,6 +4405,7 @@ export const createWarmUp = /* GraphQL */ `
         example
         titleExample
         textExample
+        listInputNumber
         truthGameInputs {
           id
           label
@@ -4202,6 +4449,7 @@ export const updateWarmUp = /* GraphQL */ `
         example
         titleExample
         textExample
+        listInputNumber
         truthGameInputs {
           id
           label
@@ -4245,6 +4493,7 @@ export const deleteWarmUp = /* GraphQL */ `
         example
         titleExample
         textExample
+        listInputNumber
         truthGameInputs {
           id
           label

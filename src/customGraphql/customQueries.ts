@@ -178,6 +178,7 @@ export const getClassroom = /* GraphQL */ `
             textExample
             titleExample
             example
+            listInputNumber
             truthGameInputs {
               id
               label
@@ -532,6 +533,7 @@ export const getClassroomStudent = /* GraphQL */ `
             example
             textExample
             titleExample
+            listInputNumber
             truthGameInputs {
               id
               label

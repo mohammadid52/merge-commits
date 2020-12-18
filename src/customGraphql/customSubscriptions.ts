@@ -1,130 +1,142 @@
 export const onUpdateClassroom = /* GraphQL */ `
   subscription onUpdateClassroom($id: ID!) {
     onUpdateClassroom(id: $id) {
-        id
-        open
-        lessonID
-        roster
-        viewing
-        displayData {
-            breakdownComponent
-            studentInfo {
-                id
-                firstName
-                preferredName
-                lastName
-            }
-            warmUpData {
-                story
-                title
-                additional {
-                    name
-                    input
-                }
-            }
-            corelessonData {
-                selected {
-                    anchor
-                    color
-                    content {
-                        id
-                        text
-                    }
-                    focus
-                    id
-                }
-                rawSelected {
-                    color
-                    selected
-                }
-                selectGroup
-            }
-            activityData {
-                editInput
-                editMode
-                lines {
-                    example
-                    id
-                    menuOpen
-                    text
-                }
-                title
-            }
+      id
+      open
+      lessonID
+      roster
+      viewing
+      displayData {
+        breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
         }
-        lessonPlan {
+        warmUpData {
+          story
+          title
+          additional {
+            name
+            input
+          }
+          truthGame {
             id
-            disabled
-            open
-            active
-            stage
-            type
-            displayMode
+            label
+            isLie
+            text
+          }
         }
-        createdAt
-        updatedAt
+        corelessonData {
+          selected {
+            anchor
+            color
+            content {
+              id
+              text
+            }
+            focus
+            id
+          }
+          rawSelected {
+            color
+            selected
+          }
+          selectGroup
         }
+        activityData {
+          editInput
+          editMode
+          lines {
+            example
+            id
+            menuOpen
+            text
+          }
+          title
+        }
+      }
+      lessonPlan {
+        id
+        disabled
+        open
+        active
+        stage
+        type
+        displayMode
+      }
+      createdAt
+      updatedAt
     }
+  }
 `;
 
 export const onChangeStudentData = /* GraphQL */ `
   subscription onChangeStudentData($classroomID: ID!) {
     onChangeStudentData(classroomID: $classroomID) {
+      id
+      lessonProgress
+      currentLocation
+      status
+      saveType
+      classroomID
+      studentID
+      studentAuthID
+      student {
         id
-        lessonProgress
-        currentLocation
-        status
-        saveType
-        classroomID
-        studentID
-        studentAuthID
-        student {
+        authId
+        email
+        firstName
+        preferredName
+        lastName
+        language
+        role
+      }
+      warmupData {
+        story
+        title
+        additional {
+          name
+          input
+        }
+        truthGame {
+          id
+          label
+          isLie
+          text
+        }
+      }
+      corelessonData {
+        selected {
+          anchor
+          color
+          content {
             id
-            authId
-            email
-            firstName
-            preferredName
-            lastName
-            language
-            role
+            text
+          }
+          focus
+          id
         }
-        warmupData {
-            story
-            title
-            additional {
-                name
-                input
-            }
+        rawSelected {
+          color
+          selected
         }
-        corelessonData {
-            selected {
-                anchor
-                color
-                content {
-                    id
-                    text
-                }
-                focus
-                id
-            }
-            rawSelected {
-                color
-                selected
-            }
-            selectGroup
+        selectGroup
+      }
+      activityData {
+        editInput
+        editMode
+        lines {
+          example
+          id
+          menuOpen
+          text
         }
-        activityData {
-            editInput
-            editMode
-            lines {
-                example
-                id
-                menuOpen
-                text
-            }
-            title
-        }
-        createdAt
-        updatedAt
+        title
+      }
+      createdAt
+      updatedAt
     }
   }
 `;

@@ -23,20 +23,29 @@ enum Role {
   ST
 }
 
-## Institution:
-# Main table for definition of an institution. This table is connected to Person (has-many) and Class (has-many). Has nested type of Contact.
+### Institution:
+## A query at the Institution level includes basic insitution information, as well as:
+# an array of ServiceProvider entries and their connecting Institution entries
+# an array of Staff entries and their connected Person entries
+# an array of Room's (with access to data from all connecting tables to Room)
+# an array of Curriculum's (with access to data from all connecting tables to Curriculum)
+# an array of Class's (with access to data from all connecting tables to Class)
+
 ## Keys:
 # primary — id
-## Required fields: 
+
+## Required fields:
 # id
 # name
 # type ( from Filter table )
 # address
 # city
 # zip
-# contact ( name, phone, email )
 
-type Institution @model @key(fields: ["id"]) {
+type Institution 
+@model 
+@key(fields: ["id"]) 
+{
   id: ID!
   name: String!
   type: String!
@@ -47,26 +56,31 @@ type Institution @model @key(fields: ["id"]) {
   state: String
   zip: String!
   phone: String
-  contact: Contact!
-  # coordinator: [Person]
   website: String
   image: String
+  serviceProviders: [ServiceProvider] @connection(keyName: "providersByPartner", fields: ["id"])
 }
 
-type Contact { 
-  name: String!
-  phone: String!
-  email: String!
+type ServiceProvider 
+@model(queries: null)
+@key(name: "providersByPartner", fields: ["partnerID", "providerID"]) 
+{
+  id: ID!
+  partnerID: ID!
+  providerID: ID!
+  providerInstitution: Institution @connection(fields: ["providerID"])
 }
 
 ## Person
 # Main table for user information. This table ıs connected to Institution (belongs-to), Class (has-many), ......... Has ENUM types Language, Role, and PersonStatus.
+
 ## Keys:
 # primary — email
 # secondary — authId
 # byContributor ** IGNORE **
 # byUserId — allows for queries by userID
 # byRole — allows for queries by role
+
 ## Required fields:
 # id
 # authId
@@ -77,12 +91,12 @@ type Contact {
 # institutionID
 # language ( ENUM )
 
-type Person @model
-@key(fields: ["email", "authId"]) 
-@key(name: "byContributor", fields: ["id"])
-@key(name: "byUserId", fields: ["id"], queryField: "userById")
-@key(name: "byRole", fields: ["role"], queryField: "usersByRole")
-{
+type Person
+  @model
+  @key(fields: ["email", "authId"])
+  @key(name: "byContributor", fields: ["id"])
+  @key(name: "byUserId", fields: ["id"], queryField: "userById")
+  @key(name: "byRole", fields: ["role"], queryField: "usersByRole") {
   id: ID!
   authId: String!
   status: PersonStatus!
@@ -94,7 +108,6 @@ type Person @model
   lastName: String!
   externalId: String
   grade: String
-  #courses
   wordbank: [StudentWord] @connection(keyName: "wordsByStudent", fields: ["email"])
   onBoardSurvey: Boolean
   offBoardSurvey: Boolean
@@ -117,9 +130,7 @@ type Curriculum @model @key(fields: ["id"]) {
   units: [Unit] @connection(keyName: "byCurriculum", fields: ["id"])
 }
 
-type Unit @model @key(fields: ["id"])
-@key(name: "byCurriculum", fields: ["curriculumID"])
-{
+type Unit @model @key(fields: ["id"]) @key(name: "byCurriculum", fields: ["curriculumID"]) {
   id: ID!
   name: String!
   type: String
@@ -139,9 +150,7 @@ type Unit @model @key(fields: ["id"])
 #   lesson: Lesson @connection(fields: ["lessonID"])
 # }
 
-type LessonUnit @model(queries: null)
-@key(name: "lessonByUnit", fields: ["unitID", "lessonID"])
-{
+type LessonUnit @model(queries: null) @key(name: "lessonByUnit", fields: ["unitID", "lessonID"]) {
   id: ID!
   unitID: ID!
   lessonID: ID!
@@ -180,16 +189,14 @@ type Class @model {
   students: [ClassStudent]! @connection(keyName: "byClass", fields: ["id"])
 }
 
-type ClassStudent @model(queries: null)
-@key(name: "byClass", fields: ["classID", "studentID"])
-{
+type ClassStudent @model(queries: null) @key(name: "byClass", fields: ["classID", "studentID"]) {
   id: ID!
   classID: ID!
   studentID: ID!
   studentEmail: String!
   studentAuth: String!
   class: Class @connection(fields: ["classID"])
-  student: Person @connection( fields:["studentEmail", "studentAuth"])
+  student: Person @connection(fields: ["studentEmail", "studentAuth"])
 }
 
 type DataObject {
@@ -256,14 +263,14 @@ type ActivityData {
 
 type Subscription {
   onUpdateClassroom(id: ID!): Classroom @aws_subscribe(mutations: ["updateClassroom"])
-  onChangeStudentData(classroomID: ID!):
-  StudentData @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
+  onChangeStudentData(classroomID: ID!): StudentData
+    @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
 }
 
-type StudentData @model(subscriptions: null)
-@key(fields: ["classroomID", "studentID"])
-@key(name: "byClassroom", fields: ["classroomID", "studentID"])
-{
+type StudentData
+  @model(subscriptions: null)
+  @key(fields: ["classroomID", "studentID"])
+  @key(name: "byClassroom", fields: ["classroomID", "studentID"]) {
   id: ID!
   lessonProgress: String!
   currentLocation: String
@@ -309,8 +316,7 @@ type AdditionalContent {
   links: [Link]
 }
 
-type Artist @model
-{
+type Artist @model {
   id: ID!
   images: [String!]
   name: String!
@@ -336,9 +342,7 @@ type DisplayData {
   activityData: ActivityData
 }
 
-type Classroom @model(subscriptions: null) 
-@key(name: "byCourse", fields: ["courseID", "lessonID"])
-{
+type Classroom @model(subscriptions: null) @key(name: "byCourse", fields: ["courseID", "lessonID"]) {
   id: ID!
   open: Boolean!
   openedAt: AWSDate
@@ -400,7 +404,7 @@ type Theme {
 
 type Lesson @model @key(fields: ["id"]) {
   id: ID!
-  title: String! 
+  title: String!
   type: String
   instructions: [String]
   theme: Theme
@@ -428,9 +432,7 @@ type Lesson @model @key(fields: ["id"]) {
   filters: [String]
 }
 
-type LessonCheckpoint @model(queries: null)
-@key(name: "byLesson", fields: ["lessonID", "checkpointID"])
-{
+type LessonCheckpoint @model(queries: null) @key(name: "byLesson", fields: ["lessonID", "checkpointID"]) {
   id: ID!
   lessonID: ID!
   checkpointID: ID!
@@ -446,9 +448,7 @@ type DoFirst @model {
   questions: [DoFirstQuestion!]! @connection(keyName: "byDoFirst", fields: ["id"])
 }
 
-type DoFirstQuestion @model(queries: null) 
-@key(name: "byDoFirst", fields: ["doFirstID", "questionID"])
-{
+type DoFirstQuestion @model(queries: null) @key(name: "byDoFirst", fields: ["doFirstID", "questionID"]) {
   id: ID!
   doFirstID: ID!
   questionID: ID!
@@ -477,6 +477,7 @@ type Inputs {
   example: String
   titleExample: String
   textExample: String
+  listInputNumber: Int
   truthGameInputs: [TruthGameInput]
   additionalInputs: [WritingPrompts!]
 }
@@ -554,10 +555,10 @@ type Checkpoint @model {
   questions: [CheckpointQuestions]! @connection(keyName: "byCheckpoint", fields: ["id"])
 }
 
-type CheckpointQuestions @model(queries: null) 
-@key(name: "byCheckpoint", fields: ["checkpointID", "questionID"])
-@key(name: "byQuestion", fields: ["questionID", "checkpointID"])
-{
+type CheckpointQuestions
+  @model(queries: null)
+  @key(name: "byCheckpoint", fields: ["checkpointID", "questionID"])
+  @key(name: "byQuestion", fields: ["questionID", "checkpointID"]) {
   id: ID!
   checkpointID: ID!
   questionID: ID!
@@ -575,9 +576,7 @@ type Assessment @model {
   checkpoints: [AssessmentCheckpoint] @connection(keyName: "checkpointByAssessment", fields: ["id"])
 }
 
-type AssessmentCheckpoint @model 
-@key(name: "checkpointByAssessment", fields: ["assessmentID", "checkpointID"])
-{
+type AssessmentCheckpoint @model @key(name: "checkpointByAssessment", fields: ["assessmentID", "checkpointID"]) {
   id: ID!
   assessmentID: ID!
   checkpointID: ID!
@@ -612,9 +611,9 @@ type QuestionData @model {
   response: String
 }
 
-type QuestionDataStudentData @model(queries: null) 
-@key(name: "byStudentData", fields: ["studentDataID", "questionDataID"])
-{
+type QuestionDataStudentData
+  @model(queries: null)
+  @key(name: "byStudentData", fields: ["studentDataID", "questionDataID"]) {
   id: ID!
   studentDataID: ID!
   studentData: StudentData @connection(fields: ["studentDataID"])
@@ -622,17 +621,13 @@ type QuestionDataStudentData @model(queries: null)
   questionData: QuestionData @connection(fields: ["questionDataID"])
 }
 
-type Word @model
-@key(name: "byWord", fields: ["word"], queryField: "searchByWord")
-{
+type Word @model @key(name: "byWord", fields: ["word"], queryField: "searchByWord") {
   id: ID!
   word: String!
   definition: String
 }
 
-type LessonKeyWord @model(queries: null)
-@key(name: "wordsByLesson", fields: ["lessonID", "wordID"])
-{
+type LessonKeyWord @model(queries: null) @key(name: "wordsByLesson", fields: ["lessonID", "wordID"]) {
   id: ID!
   wordID: ID!
   lessonID: ID!
@@ -640,9 +635,7 @@ type LessonKeyWord @model(queries: null)
   lesson: Lesson @connection(fields: ["lessonID"])
 }
 
-type StudentWord @model(queries: null)
-@key(name: "wordsByStudent", fields: ["studentID", "wordID"])
-{
+type StudentWord @model(queries: null) @key(name: "wordsByStudent", fields: ["studentID", "wordID"]) {
   id: ID!
   wordID: ID!
   studentID: String!
@@ -659,39 +652,35 @@ type Filter @model {
   options: [FilterOption!]! @connection(keyName: "byFilter", fields: ["id"])
 }
 
-type FilterOption @model 
-@key(fields: ["id"])
-@key(name: "byFilter", fields: ["filterID"])
-{
+type FilterOption @model @key(fields: ["id"]) @key(name: "byFilter", fields: ["filterID"]) {
   id: ID!
   filterID: ID!
   text: String!
   filter: Filter @connection(fields: ["filterID"])
 }
 
-type Client @model
-{
+type Client @model {
   id: ID!
   name: String!
   architecture: [Architecture] @connection(name: "architectureByClient", fields: ["id"])
 }
 
-type Architecture @model
-@key(name: "architecturesByClient", fields: ["clientID", "id"])
-@key(name: "architectureByClient", fields: ["clientID"])
-{
+type Architecture
+  @model
+  @key(name: "architecturesByClient", fields: ["clientID", "id"])
+  @key(name: "architectureByClient", fields: ["clientID"]) {
   id: ID!
   name: String!
   clientID: ID!
   client: Client @connection(fields: ["clientID"])
-  types: [Type] @connection(keyName: "typeByArchitecture", fields: ["id"]) 
+  types: [Type] @connection(keyName: "typeByArchitecture", fields: ["id"])
   filters: [ArchitectureFilter] @connection(keyName: "filtersByArchitecture", fields: ["id"])
 }
 
-type Type @model
-@key(name: "typesByArchitecture", fields: ["architectureID", "id"])
-@key(name: "typeByArchitecture", fields: ["architectureID"])
-{
+type Type
+  @model
+  @key(name: "typesByArchitecture", fields: ["architectureID", "id"])
+  @key(name: "typeByArchitecture", fields: ["architectureID"]) {
   id: ID!
   name: String!
   architectureID: ID!
@@ -699,9 +688,7 @@ type Type @model
   filters: [FilterType] @connection(keyName: "filtersByType", fields: ["id"])
 }
 
-type FilterType @model(queries: null)
-@key(name: "filtersByType", fields: ["typeID", "filterID"])
-{
+type FilterType @model(queries: null) @key(name: "filtersByType", fields: ["typeID", "filterID"]) {
   id: ID!
   typeID: ID!
   filterID: ID!
@@ -711,9 +698,9 @@ type FilterType @model(queries: null)
   filter: Filter @connection(fields: ["filterID"])
 }
 
-type ArchitectureFilter @model(queries: null)
-@key(name: "filtersByArchitecture", fields: ["architectureID", "filterID"])
-{
+type ArchitectureFilter
+  @model(queries: null)
+  @key(name: "filtersByArchitecture", fields: ["architectureID", "filterID"]) {
   id: ID!
   architectureID: ID!
   filterID: ID!
