@@ -325,7 +325,6 @@ export const onChangeStudentData = /* GraphQL */ `
         image
         language
         filters
-        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -499,7 +498,6 @@ export const onCreatePerson = /* GraphQL */ `
       image
       language
       filters
-      lastLoggedIn
       createdAt
       updatedAt
     }
@@ -537,7 +535,6 @@ export const onUpdatePerson = /* GraphQL */ `
       image
       language
       filters
-      lastLoggedIn
       createdAt
       updatedAt
     }
@@ -575,7 +572,6 @@ export const onDeletePerson = /* GraphQL */ `
       image
       language
       filters
-      lastLoggedIn
       createdAt
       updatedAt
     }
@@ -1455,7 +1451,6 @@ export const onCreateClassStudent = /* GraphQL */ `
         image
         language
         filters
-        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -1504,7 +1499,6 @@ export const onUpdateClassStudent = /* GraphQL */ `
         image
         language
         filters
-        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -1553,7 +1547,6 @@ export const onDeleteClassStudent = /* GraphQL */ `
         image
         language
         filters
-        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -2076,7 +2069,6 @@ export const onCreateLesson = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -2289,7 +2281,6 @@ export const onUpdateLesson = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -2502,7 +2493,6 @@ export const onDeleteLesson = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -4065,7 +4055,6 @@ export const onCreateQuestionData = /* GraphQL */ `
         image
         language
         filters
-        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -4187,7 +4176,6 @@ export const onUpdateQuestionData = /* GraphQL */ `
         image
         language
         filters
-        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -4309,7 +4297,6 @@ export const onDeleteQuestionData = /* GraphQL */ `
         image
         language
         filters
-        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -4368,7 +4355,6 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -4443,7 +4429,6 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -4505,7 +4490,6 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -4580,7 +4564,6 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -4642,7 +4625,6 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -4717,7 +4699,6 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -5144,7 +5125,6 @@ export const onCreateStudentWord = /* GraphQL */ `
         image
         language
         filters
-        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -5189,7 +5169,6 @@ export const onUpdateStudentWord = /* GraphQL */ `
         image
         language
         filters
-        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -5234,7 +5213,6 @@ export const onDeleteStudentWord = /* GraphQL */ `
         image
         language
         filters
-        lastLoggedIn
         createdAt
         updatedAt
       }

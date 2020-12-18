@@ -99,7 +99,6 @@ export const getPerson = /* GraphQL */ `
       image
       language
       filters
-      lastLoggedIn
       createdAt
       updatedAt
     }
@@ -144,7 +143,6 @@ export const listPersons = /* GraphQL */ `
         image
         language
         filters
-        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -555,7 +553,6 @@ export const getStudentData = /* GraphQL */ `
         image
         language
         filters
-        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -683,7 +680,6 @@ export const listStudentDatas = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -1327,7 +1323,6 @@ export const getLesson = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -2209,7 +2204,6 @@ export const getQuestionData = /* GraphQL */ `
         image
         language
         filters
-        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -2275,7 +2269,6 @@ export const listQuestionDatas = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -2635,7 +2628,6 @@ export const userById = /* GraphQL */ `
         image
         language
         filters
-        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -2680,7 +2672,6 @@ export const usersByRole = /* GraphQL */ `
         image
         language
         filters
-        lastLoggedIn
         createdAt
         updatedAt
       }

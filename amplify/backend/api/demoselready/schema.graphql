@@ -102,8 +102,7 @@ type Person @model
   birthdate: AWSDate
   image: String
   language: Language!
-  filters: [String],
-  lastLoggedIn: AWSDate
+  filters: [String]
 }
 
 type Curriculum @model @key(fields: ["id"]) {
