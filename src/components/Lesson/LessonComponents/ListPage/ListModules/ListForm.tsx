@@ -5,7 +5,7 @@ import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 const ListForm = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  // const [cookies, setCookie] = useCookies(['story']);
+  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
   const [input, setInput] = useState({
     title: state.componentState.story && state.componentState.story.title ? state.componentState.story.title : '',
     story: state.componentState.story && state.componentState.story.story ? state.componentState.story.story : [''],
@@ -22,7 +22,10 @@ const ListForm = () => {
         },
       });
 
-      // setCookie('story', { ...cookies.story, title: input.title });
+      setCookie(`lesson-${state.classroomID}`, {
+        ...cookies[`lesson-${state.classroomID}`],
+        story: { ...cookies[`lesson-${state.classroomID}`].story, title: input.title },
+      });
     }
   }, [input.title]);
 
@@ -37,7 +40,10 @@ const ListForm = () => {
         },
       });
 
-      // setCookie('story', { ...cookies.story, story: input.story });
+      setCookie(`lesson-${state.classroomID}`, {
+        ...cookies[`lesson-${state.classroomID}`],
+        story: { ...cookies[`lesson-${state.classroomID}`].story, story: input.story },
+      });
     }
   }, [input.story]);
 

@@ -19,13 +19,13 @@ export interface StoryState {
 
 const List = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  const [cookies, setCookie] = useCookies(['story']);
+  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
   const inputs = state.data.lesson.warmUp.inputs;
   const video = state.data.lesson.warmUp.instructions.link;
   const [openPopup, setOpenPopup] = useState(false);
 
   useEffect(() => {
-    if (!cookies.story && !state.componentState.story) {
+    if (!cookies[`lesson-${state.classroomID}`]?.story && !state.componentState.story) {
       let tempObj: StoryState = {
         story: [''],
       };
@@ -55,7 +55,10 @@ const List = () => {
         },
       });
 
-      setCookie('story', tempObj);
+      setCookie(`lesson-${state.classroomID}`, {
+        ...cookies[`lesson-${state.classroomID}`],
+        story: tempObj,
+      });
     }
 
     if (cookies.story) {
