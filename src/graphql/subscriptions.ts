@@ -391,9 +391,11 @@ export const onCreateInstitution = /* GraphQL */ `
           id
           institutionID
           classID
-          teacherID
+          teacherAuthID
+          teacherEmail
           name
           maxPersons
+          filters
           createdAt
           updatedAt
         }
@@ -474,9 +476,11 @@ export const onUpdateInstitution = /* GraphQL */ `
           id
           institutionID
           classID
-          teacherID
+          teacherAuthID
+          teacherEmail
           name
           maxPersons
+          filters
           createdAt
           updatedAt
         }
@@ -557,9 +561,11 @@ export const onDeleteInstitution = /* GraphQL */ `
           id
           institutionID
           classID
-          teacherID
+          teacherAuthID
+          teacherEmail
           name
           maxPersons
+          filters
           createdAt
           updatedAt
         }
@@ -737,6 +743,16 @@ export const onCreateStaff = /* GraphQL */ `
       staffEmail
       status
       statusChangeDate
+      curricula {
+        items {
+          id
+          staffID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -751,6 +767,16 @@ export const onUpdateStaff = /* GraphQL */ `
       staffEmail
       status
       statusChangeDate
+      curricula {
+        items {
+          id
+          staffID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -765,6 +791,16 @@ export const onDeleteStaff = /* GraphQL */ `
       staffEmail
       status
       statusChangeDate
+      curricula {
+        items {
+          id
+          staffID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -887,7 +923,8 @@ export const onCreateRoom = /* GraphQL */ `
       id
       institutionID
       classID
-      teacherID
+      teacherAuthID
+      teacherEmail
       name
       maxPersons
       institution {
@@ -923,6 +960,74 @@ export const onCreateRoom = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        createdAt
+        updatedAt
+      }
+      class {
+        id
+        institutionID
+        type
+        name
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        rooms {
+          nextToken
+        }
+        students {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      curricula {
+        items {
+          id
+          roomID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters
       createdAt
       updatedAt
     }
@@ -934,7 +1039,8 @@ export const onUpdateRoom = /* GraphQL */ `
       id
       institutionID
       classID
-      teacherID
+      teacherAuthID
+      teacherEmail
       name
       maxPersons
       institution {
@@ -970,6 +1076,74 @@ export const onUpdateRoom = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        createdAt
+        updatedAt
+      }
+      class {
+        id
+        institutionID
+        type
+        name
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        rooms {
+          nextToken
+        }
+        students {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      curricula {
+        items {
+          id
+          roomID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters
       createdAt
       updatedAt
     }
@@ -981,7 +1155,8 @@ export const onDeleteRoom = /* GraphQL */ `
       id
       institutionID
       classID
-      teacherID
+      teacherAuthID
+      teacherEmail
       name
       maxPersons
       institution {
@@ -1017,6 +1192,74 @@ export const onDeleteRoom = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        createdAt
+        updatedAt
+      }
+      class {
+        id
+        institutionID
+        type
+        name
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        rooms {
+          nextToken
+        }
+        students {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      curricula {
+        items {
+          id
+          roomID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters
       createdAt
       updatedAt
     }
@@ -1061,6 +1304,21 @@ export const onCreateClass = /* GraphQL */ `
         filters
         createdAt
         updatedAt
+      }
+      rooms {
+        items {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       students {
         items {
@@ -1119,6 +1377,21 @@ export const onUpdateClass = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      rooms {
+        items {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       students {
         items {
           id
@@ -1176,6 +1449,21 @@ export const onDeleteClass = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      rooms {
+        items {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       students {
         items {
           id
@@ -1223,6 +1511,9 @@ export const onCreateClassStudent = /* GraphQL */ `
           filters
           createdAt
           updatedAt
+        }
+        rooms {
+          nextToken
         }
         students {
           nextToken
@@ -1291,6 +1582,9 @@ export const onUpdateClassStudent = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        rooms {
+          nextToken
+        }
         students {
           nextToken
         }
@@ -1357,6 +1651,9 @@ export const onDeleteClassStudent = /* GraphQL */ `
           filters
           createdAt
           updatedAt
+        }
+        rooms {
+          nextToken
         }
         students {
           nextToken
@@ -1574,6 +1871,264 @@ export const onDeleteCurriculum = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateTeacherCurriculum = /* GraphQL */ `
+  subscription OnCreateTeacherCurriculum {
+    onCreateTeacherCurriculum {
+      id
+      staffID
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateTeacherCurriculum = /* GraphQL */ `
+  subscription OnUpdateTeacherCurriculum {
+    onUpdateTeacherCurriculum {
+      id
+      staffID
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteTeacherCurriculum = /* GraphQL */ `
+  subscription OnDeleteTeacherCurriculum {
+    onDeleteTeacherCurriculum {
+      id
+      staffID
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateRoomCurriculum = /* GraphQL */ `
+  subscription OnCreateRoomCurriculum {
+    onCreateRoomCurriculum {
+      id
+      roomID
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateRoomCurriculum = /* GraphQL */ `
+  subscription OnUpdateRoomCurriculum {
+    onUpdateRoomCurriculum {
+      id
+      roomID
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteRoomCurriculum = /* GraphQL */ `
+  subscription OnDeleteRoomCurriculum {
+    onDeleteRoomCurriculum {
+      id
+      roomID
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt

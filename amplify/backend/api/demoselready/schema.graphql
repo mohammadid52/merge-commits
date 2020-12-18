@@ -91,7 +91,7 @@ type Staff
   staffEmail: String!
   status: String
   statusChangeDate: AWSDate
-  # curricula
+  curricula: [TeacherCurriculum] @connection(keyName: "curriculumByTeacher", fields: ["id"])
 }
 
 ### Person
@@ -152,16 +152,20 @@ type Person
 type Room
 @model
 @key(name: "roomByInstitution", fields: ["institutionID"])
+@key(name: "roomByClass", fields: ["classID"])
 {
   id: ID!
   institutionID: ID!
   classID: ID!
-  teacherID: ID!
+  teacherAuthID: String!
+  teacherEmail: String!
   name: String!
   maxPersons: Int!
   institution: Institution @connection(fields: ["institutionID"])
-  # class:
-  # curricula: 
+  teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
+  class: Class @connection(fields: ["classID"])
+  curricula:[RoomCurriculum] @connection(keyName: "curriculumByRoom", fields: ["id"])
+  filters: [String]
 }
 
 ### Class
@@ -182,6 +186,7 @@ type Class
   type: String
   name: String!
   institution: Institution @connection(fields: ["institutionID"])
+  rooms: [Room] @connection(keyName: "roomByClass", fields: ["id"])
   students: [ClassStudent]! @connection(keyName: "byClass", fields: ["id"])
 }
 
@@ -223,7 +228,25 @@ type Curriculum
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
 }
 
+type TeacherCurriculum
+@model(queries: null)
+@key(name: "curriculumByTeacher", fields: ["staffID"])
+{
+  id: ID!
+  staffID: ID!
+  curriculumID: ID!
+  curriculum: Curriculum @connection(fields: ["curriculumID"])
+}
 
+type RoomCurriculum
+@model
+@key(name: "curriculumByRoom", fields: ["roomID"])
+{
+  id: ID!
+  roomID: ID!
+  curriculumID: ID!
+  curriculum: Curriculum @connection(fields: ["curriculumID"])
+}
 
 ### Syllabus
 ## 
@@ -297,7 +320,7 @@ type TruthGameInputs {
 }
 
 type WarmUpData {
-  story: String
+  story: [String]
   title: String
   additional: [AdditionalInputs]
   truthGame: [TruthGameInputs]
@@ -416,7 +439,6 @@ type StudentInfo {
 type DisplayData {
   breakdownComponent: String
   studentInfo: StudentInfo
-  # doFirstData: doFirstData
   warmUpData: WarmUpData
   corelessonData: CoreLessonData
   activityData: ActivityData
