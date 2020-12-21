@@ -216,7 +216,7 @@ const UserLookup = () => {
 					<div className="flex justify-end py-4 mb-4">
 						<SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchUserFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
 						<Selector list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none border-r-0" arrowHidden={true} />
-						<button className={`w-28 bg-gray-100  mr-4 p-3 border-gray-400 border rounded ${theme.outlineNone} ${sortingType.asc ? 'border-l-0 rounded-l-none' : 'border-r-0 rounded-r-none transform rotate-180'}`} onClick={toggleSortDimention}>
+						<button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400 border rounded ${theme.outlineNone} ${sortingType.asc ? 'border-l-0 rounded-l-none' : 'border-r-0 rounded-r-none transform rotate-180'}`} onClick={toggleSortDimention}>
 							<IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
 								<AiOutlineArrowUp />
 							</IconContext.Provider>
