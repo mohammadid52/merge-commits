@@ -170,6 +170,12 @@ const UserLookup = () => {
 	}, [userCount])
 
 	useEffect(() => {
+		const newUserList = [...userList].sort((a, b) => (a[sortingType.value] > b[sortingType.value]) ? 1 : -1);
+		console.log({ userList, newUserList })
+		setUserList(newUserList);
+	}, [sortingType.value])
+
+	useEffect(() => {
 		listUsers(null)
 	}, [userListLength])
 
