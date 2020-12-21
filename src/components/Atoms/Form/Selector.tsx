@@ -3,11 +3,13 @@ import React, { useState } from 'react';
 interface SelectorProps {
   list?: { id: number, name: string }[]
   selectedItem?: string
+  btnClass: string
+  arrowHidden: boolean
   onChange: (c: string, n: string) => void
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
-  const { list, selectedItem, onChange } = selectorProps;
+  const { list, selectedItem, btnClass, arrowHidden, onChange } = selectorProps;
   const [showList, setShowList] = useState(false);
 
   const updateSelectedItem = (str: string, name: string) => {
@@ -16,15 +18,15 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   }
 
   return (
-    <div className="relative mr-3">
+    <div className="relative">
       <span className="inline-block w-full h-full rounded-md shadow-sm">
         <button onClick={() => setShowList(!showList)} type="button" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label"
-          className="flex items-center cursor-pointer relative w-full h-full rounded-md border border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+          className={`flex items-center cursor-pointer relative w-full h-full rounded-md border border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${btnClass ? btnClass : ''}`}
         >
           <span className="block truncate text-gray-700" >
             {selectedItem ? selectedItem : 'Sort By'}
           </span>
-          <span className="relative justify-end inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+          <span className={`relative justify-end inset-y-0 right-0 items-center pr-2 pointer-events-none ${arrowHidden ? 'hidden' : 'flex'}`}>
             <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="none" stroke="currentColor">
               <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
