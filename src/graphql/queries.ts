@@ -46,9 +46,11 @@ export const getInstitution = /* GraphQL */ `
           id
           institutionID
           classID
-          teacherID
+          teacherAuthID
+          teacherEmail
           name
           maxPersons
+          filters
           createdAt
           updatedAt
         }
@@ -146,6 +148,16 @@ export const getStaff = /* GraphQL */ `
       staffEmail
       status
       statusChangeDate
+      curricula {
+        items {
+          id
+          staffID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -165,6 +177,9 @@ export const listStaffs = /* GraphQL */ `
         staffEmail
         status
         statusChangeDate
+        curricula {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -261,7 +276,8 @@ export const getRoom = /* GraphQL */ `
       id
       institutionID
       classID
-      teacherID
+      teacherAuthID
+      teacherEmail
       name
       maxPersons
       institution {
@@ -297,6 +313,74 @@ export const getRoom = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        createdAt
+        updatedAt
+      }
+      class {
+        id
+        institutionID
+        type
+        name
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        rooms {
+          nextToken
+        }
+        students {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      curricula {
+        items {
+          id
+          roomID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters
       createdAt
       updatedAt
     }
@@ -313,7 +397,8 @@ export const listRooms = /* GraphQL */ `
         id
         institutionID
         classID
-        teacherID
+        teacherAuthID
+        teacherEmail
         name
         maxPersons
         institution {
@@ -334,6 +419,40 @@ export const listRooms = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        filters
         createdAt
         updatedAt
       }
@@ -381,6 +500,21 @@ export const getClass = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      rooms {
+        items {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       students {
         items {
           id
@@ -427,6 +561,9 @@ export const listClasss = /* GraphQL */ `
           filters
           createdAt
           updatedAt
+        }
+        rooms {
+          nextToken
         }
         students {
           nextToken
@@ -551,6 +688,78 @@ export const listCurriculums = /* GraphQL */ `
     }
   }
 `;
+export const getRoomCurriculum = /* GraphQL */ `
+  query GetRoomCurriculum($id: ID!) {
+    getRoomCurriculum(id: $id) {
+      id
+      roomID
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listRoomCurriculums = /* GraphQL */ `
+  query ListRoomCurriculums(
+    $filter: ModelRoomCurriculumFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRoomCurriculums(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        roomID
+        curriculumID
+        curriculum {
+          id
+          institutionID
+          name
+          type
+          description
+          objectives
+          languages
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getSyllabus = /* GraphQL */ `
   query GetSyllabus($id: ID!) {
     getSyllabus(id: $id) {
@@ -601,7 +810,7 @@ export const listSyllabuss = /* GraphQL */ `
         objectives
         curriculumID
         languages
-        units {
+        lessons {
           nextToken
         }
         createdAt
@@ -1446,77 +1655,6 @@ export const getLesson = /* GraphQL */ `
   query GetLesson($id: ID!) {
     getLesson(id: $id) {
       id
-      type
-      instructions
-      theme {
-        type
-        name
-        summary
-        summaryLabel
-        quote {
-          id
-          source
-          text
-        }
-        connection
-        images
-        additionalContent {
-          video
-        }
-      }
-      connection
-      images
-      additionalContent {
-        video
-        links {
-          id
-          type
-          text
-          link
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listThemeTemplates = /* GraphQL */ `
-  query ListThemeTemplates(
-    $filter: ModelThemeTemplateFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listThemeTemplates(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        type
-        name
-        summary
-        summaryLabel
-        quote {
-          id
-          source
-          text
-        }
-        keywords {
-          nextToken
-        }
-        connection
-        images
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getLesson = /* GraphQL */ `
-  query GetLesson($id: ID!) {
-    getLesson(id: $id) {
-      id
       title
       type
       instructions
@@ -1535,31 +1673,6 @@ export const getLesson = /* GraphQL */ `
         additionalContent {
           video
         }
-      }
-      contributors {
-        items {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       grades
       artistID
