@@ -3,20 +3,20 @@ import React, { useState } from 'react';
 interface SelectorProps {
   list?: { id: number, name: string }[]
   selectedItem?: string
-  onChange: (c: string) => void
+  onChange: (c: string, n: string) => void
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   const { list, selectedItem, onChange } = selectorProps;
   const [showList, setShowList] = useState(false);
 
-  const updateSelectedItem = (name: string) => {
+  const updateSelectedItem = (str: string, name: string) => {
     setShowList(!showList);
-    onChange(name);
+    onChange(str, name);
   }
 
   return (
-    <div className="relative mr-4">
+    <div className="relative mr-3">
       <span className="inline-block w-full h-full rounded-md shadow-sm">
         <button onClick={() => setShowList(!showList)} type="button" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label"
           className="flex items-center cursor-pointer relative w-full h-full rounded-md border border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5"
@@ -36,10 +36,10 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
           <div className="z-50 absolute mt-1 w-full rounded-md bg-white shadow-lg">
             <ul role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-item-3" className="max-h-60 rounded-md py-1 text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5">
 
-              {list.map((item: { name: string, id: any }, key: number) => (
+              {list.map((item: { name: string, id: any, value: string }, key: number) => (
                 <li
                   key={key}
-                  onClick={() => updateSelectedItem(item.name)}
+                  onClick={() => updateSelectedItem(item.value, item.name)}
                   id={item.id}
                   role="option" className={`hover:bg-indigo-400 hover:text-white flex cursor-pointer select-none relative py-2 px-4`}>
                   <span className={`${selectedItem === item.name ? 'display' : 'hidden'} text-indigo-600 relative w-auto flex items-center`}>

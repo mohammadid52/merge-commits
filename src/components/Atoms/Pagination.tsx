@@ -49,6 +49,8 @@ const PageCount = (pageCountProps: { currentPage: number, lastPage: boolean, fir
       setShowNumbers([currentPage - 1, currentPage])
     } else if ((currentPage == 1) && (firstPage && lastPage)) {
       setShowNumbers([currentPage])
+    } else if (currentPage === 0) {
+      setShowNumbers([currentPage + 1])
     } else {
       setShowNumbers([currentPage, currentPage + 1])
     }

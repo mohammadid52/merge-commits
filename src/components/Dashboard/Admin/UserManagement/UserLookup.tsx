@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext, Fragment } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { AiOutlineUsergroupAdd } from 'react-icons/ai';
+import { AiOutlineUsergroupAdd, AiOutlineArrowUp } from 'react-icons/ai';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import * as queries from '../../../../graphql/queries';
@@ -18,7 +19,7 @@ import SearchInput from '../../../Atoms/Form/SearchInput';
 import Selector from '../../../Atoms/Form/Selector';
 
 const UserLookup = () => {
-	const { state } = useContext(GlobalContext);
+	const { state, theme } = useContext(GlobalContext);
 	const history = useHistory();
 	const [status, setStatus] = useState('');
 	const [userList, setUserList] = useState([]);
@@ -38,7 +39,8 @@ const UserLookup = () => {
 	});
 	const [sortingType, setSortingType] = useState({
 		value: '',
-		isActive: false
+		name: '',
+		asc: true
 	});
 
 	const breadCrumsList = [
@@ -47,10 +49,10 @@ const UserLookup = () => {
 	]
 
 	const sortByList = [
-		{ id: 1, name: 'Name' },
-		{ id: 2, name: 'Role' },
-		{ id: 3, name: 'Institution' },
-		{ id: 4, name: 'Status' },
+		{ id: 1, name: 'Name', value: 'lastName' },
+		{ id: 2, name: 'Role', value: 'role' },
+		{ id: 3, name: 'Institution', value: 'institution' },
+		{ id: 4, name: 'Status', value: 'status' },
 	]
 
 	async function listUsers(currToken?: string, isPrev?: boolean, isTokenStored?: boolean) {
@@ -99,6 +101,7 @@ const UserLookup = () => {
 		}
 		// This will find token for the previous page from prevToken list.
 		listUsers(pageTokens.prevToken[currentPage - 1], true)
+		setSortingToInitial();
 	}
 
 	const loadNextPage = () => {
@@ -114,6 +117,7 @@ const UserLookup = () => {
 		} else {
 			listUsers(pageTokens.prevToken[currentPage + 1], false, true)
 		}
+		setSortingToInitial()
 	}
 
 	const handleLink = () => {
@@ -129,6 +133,7 @@ const UserLookup = () => {
 			}))
 			const items: any = users.data.listPersons.items;
 			setUserList(items);
+			setSortingToInitial();
 			setSearchInput({
 				...searchInput,
 				isActive: true
@@ -145,16 +150,33 @@ const UserLookup = () => {
 		})
 	}
 
-	const setSortingValue = (str: string) => {
+	const setSortingValue = (str: string, name: string) => {
 		setSortingType({
 			...sortingType,
-			value: str
+			value: str,
+			name: name
+		})
+	}
+
+	const toggleSortDimention = () => {
+		setSortingType({
+			...sortingType,
+			asc: !sortingType.asc
 		})
 	}
 
 	const removeSearchAction = () => {
 		setSearchInput({ value: '', isActive: false })
+		setSortingToInitial();
 		listUsers(null)
+	}
+
+	const setSortingToInitial = () => {
+		setSortingType({
+			value: '',
+			name: '',
+			asc: true
+		})
 	}
 
 	useEffect(() => {
@@ -167,13 +189,14 @@ const UserLookup = () => {
 			prevToken: []
 		})
 		setUSerListLength(userCount);
+		setSortingToInitial();
 	}, [userCount])
 
 	useEffect(() => {
-		const newUserList = [...userList].sort((a, b) => (a[sortingType.value] > b[sortingType.value]) ? 1 : -1);
-		console.log({ userList, newUserList })
+		const newUserList = [...userList].sort((a, b) => ((a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase()) && sortingType.asc) ? 1 : -1);
 		setUserList(newUserList);
-	}, [sortingType.value])
+		console.log({ userList, newUserList })
+	}, [sortingType.value, sortingType.asc])
 
 	useEffect(() => {
 		listUsers(null)
@@ -190,10 +213,15 @@ const UserLookup = () => {
 				<BreadCrums items={breadCrumsList} />
 				<div className="flex justify-between">
 					<SectionTitle title="USER MANAGEMENT" subtitle="People's List" />
-					<div className="flex justify-end py-4 mb-4 w-6/10">
+					<div className="flex justify-end py-4 mb-4">
 						<SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchUserFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
-						<Selector list={sortByList} selectedItem={sortingType.value} onChange={setSortingValue} />
-						<Buttons label="Add New Person" onClick={handleLink} btnClass="mr-4" Icon={AiOutlineUsergroupAdd} />
+						<Selector list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} />
+						<button className={`w-18 mr-4 ${theme.outlineNone} ${sortingType.asc ? '' : 'transform rotate-180'}`} onClick={toggleSortDimention}>
+							<IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+								<AiOutlineArrowUp />
+							</IconContext.Provider>
+						</button>
+						<Buttons label="Add New Person" onClick={handleLink} btnClass="mr-4 w-full" Icon={AiOutlineUsergroupAdd} />
 					</div>
 				</div>
 				<div className="flex flex-col">
