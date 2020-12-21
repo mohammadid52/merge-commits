@@ -210,6 +210,8 @@ const UserLookup = () => {
 	{
 		return (
 			<div className={`w-full h-full mt-4`}>
+
+				{/* Header Section */}
 				<BreadCrums items={breadCrumsList} />
 				<div className="flex justify-between">
 					<SectionTitle title="USER MANAGEMENT" subtitle="People's List" />
@@ -224,6 +226,8 @@ const UserLookup = () => {
 						<Buttons label="Add New Person" onClick={handleLink} btnClass="mr-4 w-full" Icon={AiOutlineUsergroupAdd} />
 					</div>
 				</div>
+
+				{/* List / Table */}
 				<div className="flex flex-col">
 					<div className="-my-2 py-2">
 						<div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b border-gray-200">
@@ -260,6 +264,8 @@ const UserLookup = () => {
 											</div>)
 								}
 							</div>
+
+							{/* Pagination And Counter */}
 							<div className="flex justify-center my-8">
 								{!searchInput.isActive &&
 									(
@@ -272,6 +278,7 @@ const UserLookup = () => {
 						</div>
 					</div>
 				</div>
+
 			</div>
 		)
 	}

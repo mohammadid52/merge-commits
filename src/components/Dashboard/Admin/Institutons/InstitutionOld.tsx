@@ -11,14 +11,10 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import * as queries from '../../../../graphql/queries';
 import ActionButton from '../Actions/ActionButton';
-import { initials, stringToHslColor } from '../../../../utilities/strings';
 import InstitutionInfo from './InstitutionInfo';
 import InstitutionEdit from './InstitutionEdit';
-import BreadCrums from '../../../Atoms/BreadCrums';
-import SectionTitle from '../../../Atoms/SectionTitle';
-import Buttons from '../../../Atoms/Buttons';
-import PageWrapper from '../../../Atoms/PageWrapper';
 
+// saperate absolute and relative imports.
 
 export interface InstitutionInfo {
   id: string;
@@ -36,7 +32,6 @@ export interface InstitutionInfo {
   image?: string | null;
   createdAt?: string;
   updatedAt?: string;
-  addressLine2?: any
 }
 
 /**
@@ -61,90 +56,43 @@ const Institution: React.FC = () => {
     image: '',
     createdAt: '',
     updatedAt: '',
-    addressLine2: ''
   });
   const { theme } = useContext(GlobalContext);
   const history = useHistory();
   const location = useLocation();
   const match = useRouteMatch();
   const urlQueryParams = queryString.parse(location.search);
-  const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Institution Management', url: '/dashboard/manage-institutions', last: false },
-    { title: 'Institute Info', url: `${location.pathname}${location.search}`, last: true }
-  ];
 
-  // async function getInstitutionData() {
-  //   try {
-  //     const fetchInstitutionData: any = await API.graphql(
-  //       /**
-  //        * Below query will get the 'id' parameter from the url
-  //        * DO NOT change the ' urlQueryParams.id ' unless you also change the url
-  //        * in ' InstitutionRow.tsx '
-  //        */
-  //       graphqlOperation(queries.getInstitution, { id: urlQueryParams.id })
-  //     );
-  //     if (!fetchInstitutionData) {
-  //       throw new Error('getInstitutionData() fetch : fail!');
-  //     } else {
-  //       setInstitutionData(fetchInstitutionData.data.getInstitution);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+  async function getInstitutionData() {
+    try {
+      const fetchInstitutionData: any = await API.graphql(
+        /**
+         * Below query will get the 'id' parameter from the url
+         * DO NOT change the ' urlQueryParams.id ' unless you also change the url
+         * in ' InstitutionRow.tsx '
+         */
+        graphqlOperation(queries.getInstitution, { id: urlQueryParams.id })
+      );
+      if (!fetchInstitutionData) {
+        throw new Error('getInstitutionData() fetch : fail!');
+      } else {
+        setInstitutionData(fetchInstitutionData.data.getInstitution);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   useEffect(() => {
-    // getInstitutionData();
-    // setInstitutionData(tempInstitutionData)
+    getInstitutionData();
   }, []);
 
   return (
-    <div className={`w-full h-full mt-4`}>
-
-      {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
-      <div className="flex justify-between">
-        <SectionTitle title="Institute Information" />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
-        </div>
+    <div className={`w-9/10 h-full mt-4`}>
+      <div className="pagetitle-container">
+        <p className="page-heading">{institutionData.name ? institutionData.name : ''}</p>
       </div>
-
-      <PageWrapper>
-        <div className="h-9/10 flex flex-col md:flex-row">
-
-          {/* Profile section */}
-          <div className="w-auto p-4 flex flex-col text-center items-center">
-            <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
-              <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{ background: `${stringToHslColor('I' + ' ' + 'N')}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
-                {initials('IN', 'NI')}
-              </div>
-            </div>
-          </div>
-
-          {/* Other Info Section */}
-          <Switch>
-            <Route
-              path={`${match.url}/edit`}
-              render={() => (
-                <InstitutionEdit institute={institutionData} />
-              )}
-            />
-
-            <Route
-              path={`${match.url}/`}
-              render={() => (
-                <InstitutionInfo institute={institutionData} />
-              )}
-            />
-          </Switch>
-        </div>
-        <div>
-
-        </div>
-      </PageWrapper>
-      {/* <div
+      <div
         className={`w-full h-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
         <div className='h-9/10 flex flex-row flex-end'>
 
@@ -178,7 +126,7 @@ const Institution: React.FC = () => {
             {/* 
               INFO/edit switch
               */}
-      {/* <Switch>
+            <Switch>
               <Route
                 path={`${match.url}/edit`}
                 render={() => (
@@ -195,33 +143,9 @@ const Institution: React.FC = () => {
             </Switch>
           </div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };
 
 export default Institution;
-
-const tempInstitutionData = {
-  address: "1234 Somewhere St.",
-  addressLine2: null,
-  city: "Houston",
-  classes: { items: [], nextToken: null },
-  createdAt: "2020-07-23T10:30:09.985Z",
-  curricula: { items: [], nextToken: null },
-  district: null,
-  filters: null,
-  id: "1",
-  image: null,
-  isServiceProvider: null,
-  name: "Iconoclast Artists",
-  phone: null,
-  rooms: { items: [], nextToken: null },
-  serviceProviders: { items: [], nextToken: null },
-  staff: { items: [], nextToken: null },
-  state: "TX",
-  type: "ORG",
-  updatedAt: "2020-07-23T10:30:09.985Z",
-  website: "www.iconoclastartists.org",
-  zip: "77077",
-}
