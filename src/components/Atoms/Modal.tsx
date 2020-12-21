@@ -1,4 +1,8 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
+import { IconContext } from 'react-icons';
+import { IoClose } from 'react-icons/io5';
+
+import { GlobalContext } from '../../contexts/GlobalContext';
 
 interface ModalProps {
   showHeader: boolean
@@ -12,26 +16,19 @@ interface ModalProps {
 
 const ModalHeader = (headerProps: { title?: string, onClick?: () => void, showBorder?: boolean }) => {
   const { title, onClick, showBorder } = headerProps;
+  const { theme } = useContext(GlobalContext);
+
   return (
-    <div className={`modal-header ${showBorder ? 'border-b' : ''}`}>
+    <div className={`${theme.modals.header} ${showBorder ? 'border-b' : ''}`}>
       <h3 className="text-xl font-semibold">{title && title}</h3>
       <button
-        className="modal-close w-auto btn"
+        className={`ml-auto w-auto ${theme.outlineNone}`}
         onClick={onClick}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          className={`text-secondary stroke-current inline-block h-5 w-5`}>
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
+        <span className="w-6 ml-4 flex cursor-pointer">
+          <IconContext.Provider value={{ size: '1.5rem', color: '#000000' }}>
+            <IoClose />
+          </IconContext.Provider>
+        </span>
       </button>
     </div>
   )
@@ -48,9 +45,10 @@ const ModalBody = (bodyProps: { children: React.ReactNode }) => {
 
 const ModalFooter = (footerProps: { onSave?: () => void, onClose?: () => void }) => {
   const { onSave, onClose } = footerProps;
+  const { theme } = useContext(GlobalContext);
 
   return (
-    <div className="modal-footer children-x-2">
+    <div className={`${theme.modals.footer}`}>
       <button className="btn btn-flat btn-red" type="button" onClick={onClose}>
         Close
       </button>
@@ -66,13 +64,14 @@ const ModalFooter = (footerProps: { onSave?: () => void, onClose?: () => void })
 
 const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
   const { showHeader, title, showHeaderBorder, showFooter, children, closeAction, saveAction } = modalProps
+  const { theme } = useContext(GlobalContext);
 
   return (
     <>
       <div className="backdrop fade-in fixed inset-0 z-40 bg-black"></div>
       <div className="modal show justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-4 mx-auto max-w-lg">
-          <div className="modal-content">
+          <div className={`${theme.modals.content}`}>
             {showHeader && <ModalHeader title={title} onClick={closeAction} showBorder={showHeaderBorder} />}
             <ModalBody>{children}</ModalBody>
             {showFooter && <ModalFooter onSave={saveAction} onClose={closeAction} />}

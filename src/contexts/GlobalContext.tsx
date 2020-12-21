@@ -42,6 +42,22 @@ export const pageThemes = {
       bg: 'bg-dark',
       text: 'text-gray-200',
     },
+    btn: {
+      indigo: 'bg-indigo-500 text-white hover:bg-indigo-600 active:bg-indigo-600 focus:bg-indigo-600',
+    },
+    text: {
+      default: 'text-black80',
+      secondary: 'text-gray-500',
+      active: 'text-indigo-500'
+    },
+    formSelect: 'bg-white border-gray-400 text-gray-900 border-2',
+    outlineNone: 'outline-none hover:outline-none active:outline-none focus:outline-none',
+    verticalBorder: 'border-l-6 border-indigo-700 pl-4',
+    modals: {
+      header: 'flex items-center justify-between p-4 border-solid rounded-t bg-white text-gray-900 border-gray-200',
+      footer: 'flex items-center justify-end p-4 border-t border-solid rounded-b bg-white text-gray-900 border-gray-200',
+      content: 'border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-gray-900'
+    }
   },
   dark: {
     bg: 'bg-dark-gray',
@@ -82,6 +98,22 @@ export const pageThemes = {
       bg: 'bg-dark-blue',
       text: 'text-gray-200',
     },
+    btn: {
+      indigo: 'bg-indigo-500 text-white hover:bg-indigo-600 active:bg-indigo-600 focus:bg-indigo-600',
+    },
+    text: {
+      default: 'text-black80',
+      secondary: 'text-gray-500',
+      active: 'text-indigo-500'
+    },
+    formSelect: 'bg-white border-gray-400 text-gray-900 border-2',
+    outlineNone: 'outline-none hover:outline-none active:outline-none focus:outline-none',
+    verticalBorder: 'border-l-6 border-indigo-700 pl-4',
+    modals: {
+      header: 'flex items-center justify-between p-4 border-solid rounded-t bg-white text-gray-900 border-gray-200',
+      footer: 'flex items-center justify-end p-4 border-t border-solid rounded-b bg-white text-gray-900 border-gray-200',
+      content: 'border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-gray-900'
+    }
   },
 };
 

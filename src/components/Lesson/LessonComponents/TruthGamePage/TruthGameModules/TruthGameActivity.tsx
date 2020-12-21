@@ -83,18 +83,18 @@ const TruthGame = () => {
   }, []);
 
   return (
-    <>
-      <div className={theme.section}>
-        <Banner />
+      <>
+        <div className={theme.section}>
+          <Banner />
 
-        <div className="flex flex-col justify-between items-center">
-          <InstructionsBlock />
-          {inputs.additionalInputs.length > 0 ? <Modules inputs={inputs.additionalInputs} /> : null}
+          <div className="flex flex-col justify-between items-center">
+            <InstructionsBlock />
+            {inputs.additionalInputs.length > 0 ? <Modules inputs={inputs.additionalInputs} /> : null}
 
-          <TruthGameForm />
+            <TruthGameForm />
+          </div>
         </div>
-      </div>
-    </>
+      </>
   );
 };
 
