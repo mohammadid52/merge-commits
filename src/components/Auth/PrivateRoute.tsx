@@ -10,22 +10,11 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute = ({ children, path }: PrivateRouteProps) => {
-  const accessToken = sessionStorage.getItem('accessToken');
-
   return (
     <Route
       path={path}
       render={({ location }) =>
-        accessToken ? (
           children
-        ) : (
-            <Redirect
-              to={{
-                pathname: "/login",
-                state: { from: location }
-              }}
-            />
-          )
       }
     />
   )

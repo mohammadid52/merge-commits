@@ -17,7 +17,8 @@ export interface LinkProps {
   setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
   currentPage: string;
   image?: string;
-  role?: string
+  role?: string;
+  updateAuthState?: Function
 };
 
 const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {

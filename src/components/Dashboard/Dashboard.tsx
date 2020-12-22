@@ -31,7 +31,11 @@ type userObject = {
   [key: string]: any,
 }
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+  updateAuthState: Function
+}
+
+const Dashboard = ({ updateAuthState }: DashboardProps) => {
   const match = useRouteMatch();
   const history = useHistory();
   const [cookies, setCookie] = useCookies(['auth']);
@@ -73,6 +77,7 @@ const Dashboard: React.FC = () => {
       // console.log(user)
       setUser(user.data.getPerson);
     } catch (error) {
+      console.log('Here in eror')
       if (!userEmail && !userAuthId) {
         history.push('/login');
       }
@@ -81,6 +86,7 @@ const Dashboard: React.FC = () => {
   }
 
   useEffect(() => {
+    console.log('state.user', state.user)
     if (!state.user.firstName) {
       getUser()
     } else {
@@ -97,7 +103,7 @@ const Dashboard: React.FC = () => {
         <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage} image={userData.image} />
         <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
       </SideMenu>
-      <PageHeaderBar setCurrentPage={setCurrentPage} currentPage={currentPage} />
+      <PageHeaderBar setCurrentPage={setCurrentPage} currentPage={currentPage} updateAuthState={updateAuthState}/>
       <div className={`height h-full overflow-x-hidden overflow-y-scroll flex flex-col`}>
         <Suspense fallback={
           <div className="min-h-screen w-full flex flex-col justify-center items-center">

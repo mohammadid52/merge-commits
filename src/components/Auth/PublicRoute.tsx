@@ -8,24 +8,11 @@ interface PublicRouteProps {
 }
 
 const PublicRoute = ({ children, path, restricted }: PublicRouteProps) => {
-  const accessToken = sessionStorage.getItem('accessToken');
-
-  // restricted will identify if need to hide this route from authenticated users.
-
   return (
     <Route
       path={path}
       render={({ location }) =>
-        (accessToken && restricted) ? (
-          <Redirect
-            to={{
-              pathname: "/dashboard",
-              state: { from: location }
-            }}
-          />
-        ) : (
-            children
-          )
+        children
       }
     />
   )

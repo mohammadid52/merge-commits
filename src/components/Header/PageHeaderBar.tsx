@@ -19,10 +19,10 @@ const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
   async function SignOut() {
     try {
       await Auth.signOut();
+      linkProps.updateAuthState(false)
       removeCookie('auth', { path: '/' });
       sessionStorage.removeItem('accessToken');
       dispatch({ type: 'CLEANUP' });
-      history.push('/');
     } catch (error) {
       console.log('error signing out: ', error);
     }
