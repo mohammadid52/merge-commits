@@ -73,19 +73,19 @@ const List = (props: ListProps) => {
             <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-no-wrap">
                 <span id={item.id} className="w-auto text-sm leading-5 text-gray-500">
                     <UserRole
-                        role={item.role} />
+                        role={item.role ? item.role : '--'} />
                 </span>
             </div>
             <div className="w-3.5/10 flex justify-center px-8 py-4 whitespace-no-wrap">
                 <div className="flex flex-col justify-center items-center">
-                    <div id={item.id} className="w-auto text-sm leading-5 text-gray-900">{item.institution ? item.institution : 'High School'}</div>
-                    <div id={item.id} className="w-auto text-sm leading-5 text-gray-500">{item.grade ? item.grade : 'Grade'}</div>
+                    <div id={item.id} className="w-auto text-sm leading-5 text-gray-900">{item.institution ? item.institution : '--'}</div>
+                    <div id={item.id} className="w-auto text-sm leading-5 text-gray-500">{item.grade ? item.grade : '--'}</div>
                 </div>
             </div>
             <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-no-wrap">
                 <div className="w-16 flex justify-center">
                     <UserStatus
-                        status={item.status} />
+                        status={item.status ? item.status : '--'} />
                 </div>
             </div>
             <div className="w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleLink} >

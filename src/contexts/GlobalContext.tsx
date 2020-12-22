@@ -50,7 +50,7 @@ export const pageThemes = {
       secondary: 'text-gray-500',
       active: 'text-indigo-500'
     },
-    formSelect: 'bg-white border-gray-400 text-gray-900 border-2',
+    formSelect: 'bg-white border-gray-400 text-gray-900 border',
     outlineNone: 'outline-none hover:outline-none active:outline-none focus:outline-none',
     verticalBorder: 'border-l-6 border-indigo-700 pl-4',
     modals: {
@@ -106,7 +106,7 @@ export const pageThemes = {
       secondary: 'text-gray-500',
       active: 'text-indigo-500'
     },
-    formSelect: 'bg-white border-gray-400 text-gray-900 border-2',
+    formSelect: 'bg-white border-gray-400 text-gray-900 border',
     outlineNone: 'outline-none hover:outline-none active:outline-none focus:outline-none',
     verticalBorder: 'border-l-6 border-indigo-700 pl-4',
     modals: {
