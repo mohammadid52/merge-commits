@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaGraduationCap } from 'react-icons/fa';
+import { FaEdit } from 'react-icons/fa';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useLocation } from 'react-router-dom';
@@ -66,6 +66,8 @@ const Institution: React.FC = () => {
   const { theme } = useContext(GlobalContext);
   const history = useHistory();
   const location = useLocation();
+  const pathName = location.pathname.replace(/\/$/, "");
+  const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const match = useRouteMatch();
   const urlQueryParams = queryString.parse(location.search);
   const breadCrumsList = [
@@ -108,20 +110,24 @@ const Institution: React.FC = () => {
         <SectionTitle title="Institute Information" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          {currentPath !== 'edit' ? (
+              <Buttons btnClass="mr-4" onClick={() => history.push(`${match.url}/edit`)} Icon={FaEdit} />
+            ) : null
+            }
         </div>
       </div>
 
       <PageWrapper>
-        <div className="h-9/10 flex flex-col md:flex-row">
+        {/* <div className="h-9/10 flex flex-col md:flex-row"> */}
 
           {/* Profile section */}
-          <div className="w-auto p-4 flex flex-col text-center items-center">
+          {/* <div className="w-auto p-4 flex flex-col text-center items-center">
             <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
               <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{ background: `${stringToHslColor('I' + ' ' + 'N')}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
                 {initials('IN', 'NI')}
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Other Info Section */}
           <Switch>
@@ -135,11 +141,11 @@ const Institution: React.FC = () => {
             <Route
               path={`${match.url}/`}
               render={() => (
-                <InstitutionInfo institute={institutionData} />
+                <InstitutionInfo />
               )}
             />
           </Switch>
-        </div>
+        {/* </div> */}
         <div>
 
         </div>
@@ -202,26 +208,26 @@ const Institution: React.FC = () => {
 
 export default Institution;
 
-const tempInstitutionData = {
-  address: "1234 Somewhere St.",
-  addressLine2: null,
-  city: "Houston",
-  classes: { items: [], nextToken: null },
-  createdAt: "2020-07-23T10:30:09.985Z",
-  curricula: { items: [], nextToken: null },
-  district: null,
-  filters: null,
-  id: "1",
-  image: null,
-  isServiceProvider: null,
-  name: "Iconoclast Artists",
-  phone: null,
-  rooms: { items: [], nextToken: null },
-  serviceProviders: { items: [], nextToken: null },
-  staff: { items: [], nextToken: null },
-  state: "TX",
-  type: "ORG",
-  updatedAt: "2020-07-23T10:30:09.985Z",
-  website: "www.iconoclastartists.org",
-  zip: "77077",
-}
+// const tempInstitutionData = {
+//   address: "1234 Somewhere St.",
+//   addressLine2: null,
+//   city: "Houston",
+//   classes: { items: [], nextToken: null },
+//   createdAt: "2020-07-23T10:30:09.985Z",
+//   curricula: { items: [], nextToken: null },
+//   district: null,
+//   filters: null,
+//   id: "1",
+//   image: null,
+//   isServiceProvider: null,
+//   name: "Iconoclast Artists",
+//   phone: null,
+//   rooms: { items: [], nextToken: null },
+//   serviceProviders: { items: [], nextToken: null },
+//   staff: { items: [], nextToken: null },
+//   state: "TX",
+//   type: "ORG",
+//   updatedAt: "2020-07-23T10:30:09.985Z",
+//   website: "www.iconoclastartists.org",
+//   zip: "77077",
+// }

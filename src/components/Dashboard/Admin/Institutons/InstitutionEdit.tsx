@@ -5,7 +5,9 @@ import ActionButton from '../Actions/ActionButton';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../../customGraphql/customMutations';
 import { useHistory } from 'react-router-dom';
+import { initials, stringToHslColor } from '../../../../utilities/strings';
 import { InstitutionInfo } from './Institution';
+import FormInput from '../../../Atoms/Form/FormInput';
 //import InstitutionInfo from './InstitutionInfo';
 
 interface InstitutionEditProps {
@@ -27,7 +29,7 @@ const InstitutionEdit: React.FC<InstitutionEditProps> = (
    * Push updated institute data
    * to the database
    */
-  async function updateInstitutionDB():Promise<void> {
+  async function updateInstitutionDB(): Promise<void> {
     const updatedInfo = {
 
     }
@@ -57,186 +59,90 @@ const InstitutionEdit: React.FC<InstitutionEditProps> = (
   };
 
   return (
-    <div className={`h-full w-full pt-2`}>
-      {/* FORM submit tag */}
-      <form onSubmit={handleEditFormSubmit}>
-        <div className={`h-full shadow-5 bg-white sm:rounded-lg mb-4`}>
-          {/* TITLE */}
-          <div className='w-full px-4 py-5 border-b border-gray-200 sm:px-6'>
-            <h3 className='text-lg leading-6 font-medium text-gray-900'>
-              Edit Information
+
+    <div className="h-9/10 flex flex-col md:flex-row">
+
+      {/* Profile section */}
+      <div className="w-auto p-4 flex flex-col text-center items-center">
+        <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+          <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{ background: `${stringToHslColor('I' + ' ' + 'N')}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
+            {initials('IN', 'NI')}
+          </div>
+        </div>
+      </div>
+
+
+      <div className={`h-full w-full pt-2`}>
+        {/* FORM submit tag */}
+        <form onSubmit={handleEditFormSubmit}>
+          <div className={`h-full shadow-5 bg-white sm:rounded-lg mb-4`}>
+            {/* TITLE */}
+            <div className='w-full px-4 py-5 border-b border-gray-200 sm:px-6'>
+              <h3 className='text-lg leading-6 font-medium text-gray-900'>
+                Edit Information
             </h3>
-          </div>
-          {/* FORM */}
-          <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 px-4 py-5'>
-            <div className='sm:col-span-3'>
-              <label
-                htmlFor='name'
-                className='block text-sm font-medium leading-5 text-gray-700'>
-                Institute Name
-              </label>
-              <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
-                <input
-                  onChange={handleEditFormChange}
-                  id='name'
-                  type='text'
-                  defaultValue={editFormValues.name}
-                  className='form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5'
-                />
-              </div>
             </div>
-            <div className='sm:col-span-3'>
-              <label
-                htmlFor='website'
-                className='block text-sm font-medium leading-5 text-gray-700'>
-                Website
-              </label>
-              <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
-                <input
-                  onChange={handleEditFormChange}
-                  id='website'
-                  type='text'
-                  defaultValue={editFormValues.website}
-                  className='form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5'
-                />
+            {/* FORM */}
+            <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 px-4 py-5'>
+              <div className='sm:col-span-3 px-2 py-4'>
+                <FormInput id='name' name='name' label="Institution Name" placeHolder="i.e. Iconoclast artist" />
               </div>
-            </div>
-            <div className='sm:col-span-3'>
-              <label
-                htmlFor='contactName'
-                className='block text-sm font-medium leading-5 text-gray-700'>
-                Contact Person
-              </label>
-              <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
-                <input
-                  readOnly
-                  id='contactName'
-                  type='text'
-                  defaultValue='n/a'
-                  className='form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5'
-                />
+              <div className='sm:col-span-3 px-2 py-4'>
+                <FormInput id='website' name='website' label="Website" placeHolder="i.e. Iconoclastartist.com" />
               </div>
-            </div>
+              <div className='sm:col-span-3 px-2 py-4'>
+                <FormInput id='website' name='website' label="Address line 1" />
+              </div>
 
-            <div className='sm:col-span-3'>
-              <label
-                htmlFor='email'
-                className='block text-sm font-medium leading-5 text-gray-700'>
-                E-mail
-              </label>
-              <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
-                <input
-                  readOnly
-                  id='email'
-                  type='text'
-                  defaultValue='n/a'
-                  className='form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5'
-                />
-              </div>
-            </div>
+              <div className='sm:col-span-3 px-2 py-4'>
+                <FormInput id='website' name='website' label="Address line 2" />
 
-            <div className='sm:col-span-3'>
-              <label
-                htmlFor='phone'
-                className='block text-sm font-medium leading-5 text-gray-700'>
-                Phone
-              </label>
-              <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
-                <input
-                  readOnly
-                  id='phone'
-                  type='text'
-                  defaultValue='n/a'
-                  className='form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5'
-                />
               </div>
-            </div>
 
-            <div className='sm:col-span-3'>
-              <label
-                htmlFor='address'
-                className='block text-sm font-medium leading-5 text-gray-700'>
-                Address
-              </label>
-              <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
-                <input
-                  onChange={handleEditFormChange}
-                  id='address'
-                  type='text'
-                  defaultValue={editFormValues.address}
-                  className='form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5'
-                />
+              <div className='sm:col-span-3 px-2 py-4'>
+                <FormInput id='website' name='website' label="City" />
+
               </div>
-            </div>
 
-            <div className='sm:col-span-3'>
-              <label
-                htmlFor='city'
-                className='block text-sm font-medium leading-5 text-gray-700'>
-                City
-              </label>
-              <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
-                <input
-                  onChange={handleEditFormChange}
-                  id='city'
-                  type='text'
-                  defaultValue={editFormValues.city}
-                  className='form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5'
-                />
+              <div className='sm:col-span-3 px-2 py-4'>
+                <FormInput id='website' name='website' label="District" />
+
               </div>
-            </div>
 
-            <div className='sm:col-span-3'>
-              <label
-                htmlFor='state'
-                className='block text-sm font-medium leading-5 text-gray-700'>
-                State
-              </label>
-              <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
-                <input
-                  onChange={handleEditFormChange}
-                  id='state'
-                  type='text'
-                  defaultValue={editFormValues.state}
-                  className='form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5'
-                />
+              <div className='sm:col-span-3 px-2 py-4'>
+                <FormInput id='website' name='website' label="State" />
+
               </div>
-            </div>
 
-            <div className='sm:col-span-3'>
-              <label
-                htmlFor='zipcode'
-                className='block text-sm font-medium leading-5 text-gray-700'>
-                Zipcode
-              </label>
-              <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
-                <input
-                  onChange={handleEditFormChange}
-                  id='zipcode'
-                  type='text'
-                  defaultValue={editFormValues.zip}
-                  className='form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5'
-                />
+              <div className='sm:col-span-3 px-2 py-4'>
+                <FormInput id='website' name='website' label="Zip" />
+
+              </div>
+
+              <div className='sm:col-span-3 px-2 py-4'>
+                <FormInput id='website' name='website' label="Phone" />
+
               </div>
             </div>
           </div>
-        </div>
-        {/* Cancel/save buttons */}
-        <div className='px-4 w-full flex justify-end'>
-          <div className='flex w-4/10'>
-            <ActionButton
-              func={history.goBack}
-              label='Cancel'
-              compClass='py-2 px-4 border border-gray-300 rounded-md text-m leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out'
-            />
-            <ActionButton
-              type='submit'
-              label='Save'
-              compClass='inline-flex justify-center py-2 px-4 ml-3 border border-transparent text-m leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out'
-            />
+          {/* Cancel/save buttons */}
+          <div className='px-4 w-full flex justify-end'>
+            <div className='flex w-4/10'>
+              <ActionButton
+                func={history.goBack}
+                label='Cancel'
+                compClass='py-2 px-4 border border-gray-300 rounded-md text-m leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out'
+              />
+              <ActionButton
+                type='submit'
+                label='Save'
+                compClass='inline-flex justify-center py-2 px-4 ml-3 border border-transparent text-m leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out'
+              />
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
+
     </div>
   );
 };

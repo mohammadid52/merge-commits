@@ -1,112 +1,95 @@
 import React from 'react';
-import ActionButton from '../Actions/ActionButton';
 import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaGraduationCap } from 'react-icons/fa';
+import { FaGraduationCap, FaChalkboardTeacher, FaHotel } from 'react-icons/fa';
+
+import ActionButton from '../Actions/ActionButton';
+import { initials, stringToHslColor } from '../../../../utilities/strings';
+import UnderlinedTabs from '../../../Atoms/UnderlinedTabs';
+import { IoPeople } from 'react-icons/io5';
 
 interface InstitutionInfoProps {
-  name: string;
+  name?: string;
 }
 
 const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const { } = instProps;
   const match = useRouteMatch();
 
+  const tabs = [
+    { index: 0, title: 'Curricular', icon: <FaGraduationCap />, active: true, content: <p className="p-16 text-center">No data</p> },
+    { index: 1, title: 'Classes', icon: <FaChalkboardTeacher />, active: false, content: <p className="p-16 text-center">No data</p> },
+    { index: 2, title: 'Staff', icon: <IoPeople />, active: false, content: <p className="p-16 text-center">No data</p> },
+    { index: 3, title: 'Rooms', icon: <FaHotel />, active: false, content: <p className="p-16 text-center">No data</p> }
+  ]
   return (
-    <div className='w-full'>
-      <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
+    <div>
+      <div className="h-9/10 flex flex-col md:flex-row">
 
-        <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">
-            General Information
-            </h3>
+        {/* Profile section */}
+        <div className="w-auto p-4 flex mr-4 flex-col text-center items-center">
+          <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+            <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{ background: `${stringToHslColor('I' + ' ' + 'N')}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
+              {initials('IN', 'NI')}
+            </div>
+          </div>
+          <div className="text-xl font-bold font-open text-gray-900 mt-4">
+            <p>
+              ICONOCLAST ARTISTS
+            </p>
+          </div>
         </div>
 
+        {/* General information section */}
+        <div className='w-full'>
+          {/* <UnderlinedTabs tabs={tabs} /> */}
 
-        <div className='px-4 py-5 sm:px-6'>
-          <dl className='grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2'>
+          <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
-            <div className='sm:col-span-1 p-2'>
-              <dt className='text-base leading-5 font-medium text-gray-500'>
-                Title
-                </dt>
-              <dd className='mt-2 text-base leading-5 text-gray-900'>
-                {/* {`${instPrps.name ? instPrps.name : '--'}`} */}
-                name
-              </dd>
+            <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                General Information
+              </h3>
             </div>
-            <div className='sm:col-span-1 p-2'>
-              <dt className='text-base leading-5 font-medium text-gray-500'>
-                Website
-                </dt>
-              <dd className='mt-2 text-base leading-5 text-gray-900'>
-                {/* {`${instPrps.website ? instPrps.website : '--'}`} */}
-                website
-              </dd>
+
+            <div className="grid grid-cols-2 divide-x divide-gray-400 p-4">
+              <div className="p-8">
+                <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+                  <span className="text-gray-900 mr-2 w-3/10">Address:</span>
+                  <span className="w-auto">
+                    1234 Somewhere St., <br />NYC street, Houston, <br />TX.-36002
+                  </span>
+                </p>
+                <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+                  <span className="text-gray-900 mr-2 w-3/10">Contact No:</span>
+                  <span className="w-auto">1234567898</span>
+                </p>
+              </div>
+              <div className="p-8">
+                <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+                  <span className="text-gray-900 mr-2 w-3/10">Institution Type:</span>
+                  <span className="w-auto">ORG</span>
+                </p>
+                <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+                  <span className="text-gray-900 mr-2 w-3/10">Website:</span>
+                  <span className="w-auto">iconoclastartist.org</span>
+                </p>
+              </div>
             </div>
-            <div className='sm:col-span-1 p-2'>
-              <dt className='text-base leading-5 font-medium text-gray-500'>
-                Contact Person
-                </dt>
-              <dd className='mt-2 text-base leading-5 text-gray-900'>
-                contactname
-                {/* {`${instPrps.contact?.name ? instPrps.contact.name : '--'}`} */}
-              </dd>
+          </div>
+          <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg'>
+            {/* <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                Other Information
+              </h3>
+            </div> */}
+            <div className='px-4 py-5 sm:px-6'>
+              <UnderlinedTabs tabs={tabs} />
             </div>
-            <div className='sm:col-span-1 p-2'>
-              <dt className='text-base leading-5 font-medium text-gray-500'>
-                Email
-                </dt>
-              <dd className='mt-2 text-base leading-5 text-gray-900'>
-                {/* {`${instPrps.contact.email ? instPrps.contact.email : '--'}`} */}
-                  abc@gmail.com
-                </dd>
-            </div>
-            {/* <div className='sm:col-span-1'>
-                <dt className='text-base leading-5 font-medium text-gray-500'>
-                  Phone
-                </dt>
-                <dd className='mt-2 text-base leading-5 text-gray-900'>
-                  {`${instPrps.institute.phone ? instPrps.institute.phone : 'n/a'}`}
-                </dd>
-              </div> */}
-            <div className='sm:col-span-1 p-2'>
-              <dt className='text-base leading-5 font-medium text-gray-500'>
-                State
-                </dt>
-              <dd className='mt-2 text-base leading-5 text-gray-900'>
-                {/* {`${instPrps.state ? instPrps.state : '--'}`} */}
-                state
-              </dd>
-            </div>
-            <div className='sm:col-span-1 p-2'>
-              <dt className='text-base leading-5 font-medium text-gray-500'>
-                Address
-                </dt>
-              <dd className='mt-2 text-base leading-5 text-gray-900'>
-                addr 1
-                {/* {`${instPrps.address ? instPrps.address : '--'}`} */}
-              </dd>
-            </div>
-          </dl>
+          </div>
         </div>
+
       </div>
-
-      <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg'>
-
-        <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">
-            Institute Classes
-            </h3>
-        </div>
-
-        <div className='px-4 py-5 sm:px-6'>
-          <dl className='grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2'>
-
-          </dl>
-        </div>
-      </div>
-
     </div>
   );
 };

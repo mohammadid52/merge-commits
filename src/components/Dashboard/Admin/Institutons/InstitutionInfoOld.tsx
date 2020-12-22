@@ -10,7 +10,7 @@ interface InstitutionInfoProps {
 }
 
 const InstitutionInfo: React.FC<InstitutionInfo> = (
-  instPrps: InstitutionInfo
+  instPrps?: InstitutionInfo
 ) => {
   const match = useRouteMatch();
 

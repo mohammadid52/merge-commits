@@ -9,7 +9,7 @@ import { InstitutionInfo } from './Institution';
 //import InstitutionInfo from './InstitutionInfo';
 
 interface InstitutionEditProps {
-  institute: InstitutionInfo;
+  institute?: InstitutionInfo;
 }
 
 const InstitutionEdit: React.FC<InstitutionEditProps> = (

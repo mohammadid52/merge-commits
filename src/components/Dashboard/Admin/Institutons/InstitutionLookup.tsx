@@ -15,6 +15,7 @@ import PageCountSelector from '../../../Atoms/PageCountSelector';
 import SearchInput from '../../../Atoms/Form/SearchInput';
 import Selector from '../../../Atoms/Form/Selector';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
+import { IoBusinessSharp } from 'react-icons/io5';
 
 /**
  * This component represents the bulk code of the institutions-lookup/all-institutions page
@@ -113,13 +114,13 @@ const InstitutionLookup: React.FC = () => {
         <SectionTitle title="INSTITUTIONS MANAGEMENT" subtitle="Institutions List" />
         <div className="flex justify-end py-4 mb-4">
           <SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchUserFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
-          <Selector list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none border-r-0" arrowHidden={true} />
+          <Selector placeholder="Sort By" list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none border-r-0" arrowHidden={true} />
           <button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400 border rounded ${theme.outlineNone} ${sortingType.asc ? 'border-l-0 rounded-l-none' : 'border-r-0 rounded-r-none transform rotate-180'}`} onClick={toggleSortDimention}>
             <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
               <AiOutlineArrowUp />
             </IconContext.Provider>
           </button>
-          <Buttons label="Add New Institution" onClick={addNewInstituion} btnClass="mr-4 w-full" Icon={AiOutlineUsergroupAdd} />
+          <Buttons label="Add New Institution" onClick={addNewInstituion} btnClass="mr-4 w-full" Icon={IoBusinessSharp} />
         </div>
       </div>
 

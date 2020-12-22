@@ -137,7 +137,7 @@ const Institution: React.FC = () => {
               <Route
                 path={`${match.url}/`}
                 render={() => (
-                  <InstitutionInfo institute={institutionData} />
+                  <InstitutionInfo  />
                 )}
               />
             </Switch>

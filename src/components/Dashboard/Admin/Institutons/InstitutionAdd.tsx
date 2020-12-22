@@ -3,11 +3,15 @@ import { useHistory } from 'react-router-dom';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaPlus } from 'react-icons/fa';
+import API, { graphqlOperation } from '@aws-amplify/api';
 
-import BreadCrums from '../../../Atoms/BreadCrums';
-import Buttons from '../../../Atoms/Buttons';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageWrapper from '../../../Atoms/PageWrapper';
+import BreadCrums from '../../../Atoms/BreadCrums';
+import FormInput from '../../../Atoms/Form/FormInput';
+import Selector from '../../../Atoms/Form/Selector';
+import Buttons from '../../../Atoms/Buttons';
+import * as mutations from '../../../../graphql/mutations';
 
 interface InstitutionProps {
 
@@ -16,21 +20,80 @@ interface InstitutionProps {
 const InstitutionAdd = (props: InstitutionProps) => {
 
   const history = useHistory();
-  const [selectedImage, setSelectedImage] = useState(null)
   const { } = props;
+  const initialState = {
+    name: '',
+    type: '',
+    website: '',
+    isServiceProvider: '',
+    address: '',
+    addressLine2: '',
+    city: '',
+    district: '',
+    state: '',
+    zip: '',
+    phone: '',
+    // createdAt: '',
+    // updatedAt: '',
+    // classes: {},
+    // rooms: {},
+    // curricula: {},
+    // staff: {}
+  }
+  const [instituteData, setInstituteData] = useState(initialState)
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Institution Management', url: '/dashboard/manage-institutions', last: false },
     { title: 'Add New Institute', url: `/dashboard/manage-institutions/add`, last: true }
   ];
+  const institutionTypeList = [
+    { id: 1, name: 'School', value: 'school' },
+    { id: 2, name: 'After School', value: 'afterSchool' },
+    { id: 3, name: 'Day Camp', value: 'institution' },
+    { id: 4, name: 'Summer Camp', value: 'status' },
+  ]
+
+  const serviceProviderList = [
+    { id: 1, name: 'Yes', value: true },
+    { id: 2, name: 'No', value: false },
+  ]
+
+  const onInputChange = (e: any) => {
+    setInstituteData({
+      ...instituteData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const onTypeSelect = (str: string) => {
+    setInstituteData({
+      ...instituteData,
+      type: str
+    });
+  }
+
+  const onServiceProSelect = (str: string) => {
+    setInstituteData({
+      ...instituteData,
+      isServiceProvider: str
+    });
+  }
+
+  const addNewInstitution = async () => {
+    // e.preventDefault();
+    // Need to add validations
+    console.log("Final institute details:", instituteData)
+    const newInstitute = await API.graphql(graphqlOperation(mutations.createInstitution, { input: instituteData }))
+    console.log("Final results", newInstitute)
+  }
 
   return (
-    <div className="w-full h-full mt-4">
+    <div className="w-full h-full mt-4 p-4">
 
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Institution" subtitle="Add new institution to the list" />
+        <SectionTitle title="Add Institution" subtitle="Add new institution to the list" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -38,52 +101,68 @@ const InstitutionAdd = (props: InstitutionProps) => {
 
       {/* Body */}
       <PageWrapper>
-        <div className="">
-          <div className="relative">
-            {selectedImage ?
-              (
-                <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
-                  {/* {!imageLoading ?  */}
-                  {/* <img
-                    className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border border-gray-400 shadow-elem-light`}
-                    src={imageUrl}
-                  />  */}
-                  {/* :
-                    <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-lightI">
-                      <Loader />
-                    </div>
-                  } */}
-                  {/* <span className="hidden group-focus:flex justify-around mt-6">
-                    <label className="w-8 cursor-pointer">
-                      <IconContext.Provider value={{ size: '1.6rem', color: '#B22222' }}>
-                        <FaEdit />
-                      </IconContext.Provider>
-                      <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
-                    </label>
-                    <span className="w-8 cursor-pointer" onClick={deletUserProfile}>
-                      <IconContext.Provider value={{ size: '1.6rem', color: '#fa0000' }}>
-                        <FaTrashAlt />
-                      </IconContext.Provider>
-                    </span>
-                  </span> */}
-                </button>) :
-              (
-                <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
-                  {/* {!imageLoading ?  */}
-                  <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
-                    <FaPlus />
-                  </IconContext.Provider>
-                  {/* : <Loader />} */}
-                  <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
+        <form>
+          <div className="h-full px-6 pb-5 pt-2">
+            <div className="text-red-500 pb-2 text-right">* Required fields</div>
+            <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
+
+              {/* General information */}
+              <div className="sm:col-span-6 p-6">
+                <h3 className="text-lg uppercase leading-6 font-medium text-gray-900"> General Information</h3>
+              </div>
+              <div className="sm:col-span-3 py-2 pl-8 pr-2">
+                <FormInput value={instituteData.name} id='name' name='name' onChange={onInputChange} label="Institution Name" placeHolder="i.e. Iconoclast artist" isRequired />
+              </div>
+              <div className="sm:col-span-3 py-2 pl-8 pr-2">
+                <FormInput value={instituteData.website} id='website' name='website' onChange={onInputChange} label="Website" placeHolder="i.e. Iconoclastartist.com" isRequired />
+              </div>
+              <div className="sm:col-span-3 py-2 pl-8 pr-2">
+                <label className="block text-m font-medium leading-5 mb-2 text-gray-700">
+                  <span className="text-red-500"> *</span> Institution Type
                 </label>
+                <Selector placeholder="Institution Type" selectedItem={instituteData.type} list={institutionTypeList} onChange={onTypeSelect} />
+              </div>
+              <div className="sm:col-span-3 py-2 pl-8 pr-2">
+                <label className="block text-m font-medium leading-5 mb-2 text-gray-700">
+                  <span className="text-red-500"> *</span> Is ServiceProvider
+                </label>
+                <Selector placeholder="Is ServiceProvider" selectedItem={instituteData.isServiceProvider} list={serviceProviderList} onChange={onServiceProSelect} />
+              </div>
 
-              )
-            }
-          </div>
-          <div className="">
+              {/* Contact Details */}
+              <div className="sm:col-span-6 p-6 mt-4">
+                <h3 className="text-lg uppercase leading-6 font-medium text-gray-900"> Contact Details</h3>
+              </div>
+              <div className="sm:col-span-2 py-2 pl-8 pr-2">
+                <FormInput value={instituteData.address} id='address' name='address' onChange={onInputChange} label="Address line 1" placeHolder="" isRequired />
+              </div>
+              <div className="sm:col-span-2 py-2 pl-8 pr-2">
+                <FormInput value={instituteData.addressLine2} id='addressLine2' name='addressLine2' onChange={onInputChange} label="Address line 2" placeHolder="" isRequired />
+              </div>
+              <div className="sm:col-span-2 py-2 pl-8 pr-2">
+                <FormInput value={instituteData.city} id='city' name='city' onChange={onInputChange} label="City" placeHolder="" isRequired />
+              </div>
+              <div className="sm:col-span-2 py-2 pl-8 pr-2">
+                <FormInput value={instituteData.district} id='district' name='district' onChange={onInputChange} label="Distict" placeHolder="" isRequired />
+              </div>
+              <div className="sm:col-span-2 py-2 pl-8 pr-2">
+                <FormInput value={instituteData.state} id='state' name='state' onChange={onInputChange} label="State" placeHolder="" isRequired />
+              </div>
+              <div className="sm:col-span-2 py-2 pl-8 pr-2">
+                <FormInput value={instituteData.zip} id='zip' name='zip' onChange={onInputChange} label="Zip" placeHolder="" isRequired />
+              </div>
+              <div className="sm:col-span-2 py-2 pl-8 pr-2">
+                <FormInput value={instituteData.phone} id='phone' name='phone' onChange={onInputChange} label="Contact No." placeHolder="" isRequired />
+              </div>
 
+              {/* Actions */}
+              <div className="sm:col-span-6 flex justify-end p-6 mt-4">
+                <Buttons btnClass="w-auto px-8 py-4" label="save" onClick={addNewInstitution} />
+              </div>
+
+            </div>
           </div>
-        </div>
+        </form>
       </PageWrapper>
 
     </div>
