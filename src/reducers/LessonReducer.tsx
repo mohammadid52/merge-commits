@@ -221,7 +221,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
         componentState: action.payload,
       };
     case 'SET_INITIAL_COMPONENT_STATE':
-      console.log('set initial component state -->', { [action.payload.name]: action.payload.content });
+      // console.log('set initial component state -->', { [action.payload.name]: action.payload.content });
       return {
         ...state,
         componentState: {
@@ -230,7 +230,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
         },
       };
     case 'UPDATE_COMPONENT_STATE':
-      console.log('update component state -->', { [action.payload.inputName]: action.payload.content });
+      // console.log('update component state -->', { [action.payload.inputName]: action.payload.content });
 
       return {
         ...state,

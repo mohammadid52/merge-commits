@@ -26,7 +26,11 @@ const List = (props: props) => {
   const { fullscreen } = props;
   const { state, theme } = useContext(LessonControlContext);
   const [openPopup, setOpenPopup] = useState(false);
-  const [dataProps, setDataProps] = useState<{ title?: string; story?: string[]; [key: string]: any }>();
+  const [dataProps, setDataProps] = useState<{
+    title?: string;
+    story?: string[];
+    [key: string]: any;
+  }>();
 
   //  Variables
   const inputs = state.data.lesson.warmUp.inputs;
@@ -58,15 +62,9 @@ const List = (props: props) => {
         <div className="flex flex-col justify-between items-center">
           <InstructionsBlock fullscreen={fullscreen} />
 
-          {/* {inputs.additionalInputs.length > 0 ?
-                        <Modules
-                            dataProps={dataProps}
-                            inputs={inputs.additionalInputs}
-                            fullscreen={fullscreen}
-                        />
-                        :
-                        null
-                    } */}
+          {inputs.additionalInputs.length > 0 ? (
+            <Modules dataProps={dataProps} inputs={inputs.additionalInputs} fullscreen={fullscreen} />
+          ) : null}
 
           <ListForm dataProps={dataProps} fullscreen={fullscreen} nrLists={nrLists} />
         </div>

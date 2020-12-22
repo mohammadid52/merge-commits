@@ -32,6 +32,12 @@ const List = () => {
     if (!cookies[`lesson-${state.classroomID}`]?.story && !state.componentState.story) {
       let tempObj: StoryState = {
         story: listArray,
+        additional: [
+          {
+            name: '',
+            text: '',
+          },
+        ],
       };
       if (inputs.title) {
         tempObj.title = '';
@@ -45,19 +51,21 @@ const List = () => {
       // UPDATE: somehow commenting this out does not affect the standard list,
       // curious as to why it was here in the first place
 
-      // if (inputs.additionalInputs.length > 0) {
-      //   let additional: Array<{ name: string; text: string | [] }> = [];
-      //   inputs.additionalInputs.forEach((input: { name: string }) => {
-      //     let newInput = {
-      //       name: input.name,
-      //       text: '',
-      //     };
-      //
-      //     additional.push(newInput);
-      //   });
-      //
-      //   tempObj.additional = additional;
-      // }
+      console.log('listactivity additional input leng: ', inputs.additionalInputs.length > 0);
+
+      if (inputs.additionalInputs.length > 0) {
+        let additional: Array<{ name: string; text: string | [] }> = [];
+        inputs.additionalInputs.forEach((input: { name: string }) => {
+          let newInput = {
+            name: input.name,
+            text: '',
+          };
+
+          additional.push(newInput);
+        });
+
+        tempObj.additional = additional;
+      }
 
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
@@ -72,7 +80,6 @@ const List = () => {
         story: tempObj,
       });
     }
-
     if (cookies.story) {
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
@@ -82,6 +89,8 @@ const List = () => {
         },
       });
     }
+
+    console.log('listactivity mounted --< ', inputs.additionalInputs);
   }, []);
 
   return (
@@ -93,13 +102,7 @@ const List = () => {
         <div className="flex flex-col justify-between items-center">
           <InstructionsBlock />
 
-          {/* {inputs.additionalInputs.length > 0 ?
-                        <Modules
-                            inputs={inputs.additionalInputs}
-                        />
-                        :
-                        null
-                    } */}
+          {inputs.additionalInputs.length > 0 ? <Modules inputs={inputs.additionalInputs} /> : null}
 
           <ListForm listArray={listArray} nrLists={nrLists} />
         </div>
