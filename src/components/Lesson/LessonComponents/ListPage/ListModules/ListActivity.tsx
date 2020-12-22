@@ -20,14 +20,18 @@ export interface StoryState {
 const List = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
   const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [openPopup, setOpenPopup] = useState(false);
+
+  //  Variables
   const inputs = state.data.lesson.warmUp.inputs;
   const video = state.data.lesson.warmUp.instructions.link;
-  const [openPopup, setOpenPopup] = useState(false);
+  const nrLists = inputs.listInputNumber;
+  const listArray = nrLists === null ? [''] : Array.from(Array(nrLists).keys()).map((elem: number) => '');
 
   useEffect(() => {
     if (!cookies[`lesson-${state.classroomID}`]?.story && !state.componentState.story) {
       let tempObj: StoryState = {
-        story: [''],
+        story: listArray,
       };
       if (inputs.title) {
         tempObj.title = '';
@@ -89,7 +93,7 @@ const List = () => {
                         null
                     } */}
 
-          <ListForm />
+          <ListForm listArray={listArray} nrLists={nrLists} />
         </div>
       </div>
     </>
