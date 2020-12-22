@@ -141,7 +141,7 @@ const User = () => {
           <div className="flex justify-end py-4 mb-4 w-5/10">
             <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
             {currentPath !== 'edit' ? (
-              <Buttons btnClass="mr-4" onClick={() => history.push(`${match.url}/edit`)} Icon={FaEdit} />
+              <Buttons btnClass="mr-4" onClick={() => history.push(`${match.url}/edit${location.search}`)} Icon={FaEdit} />
             ) : null
             }
           </div>

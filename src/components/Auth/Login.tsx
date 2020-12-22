@@ -12,7 +12,11 @@ import { useHistory, Link, NavLink } from 'react-router-dom';
 import Auth from '@aws-amplify/auth';
 import Forgot from './Forgot';
 
-const Login = () => {
+interface LoginProps {
+  updateAuthState: Function
+}
+
+const Login = ({ updateAuthState }: LoginProps) => {
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const [cookies, setCookie, removeCookie] = useCookies();
   const history = useHistory();
@@ -41,12 +45,14 @@ const Login = () => {
           email: username,
           isChecked: isChecked,
           password: password
-        });
+        }, { path: '/' });
       } else {
         removeCookie('cred');
       }
-      setCookie('auth', { email: username, authId: user.username }, { secure: false });
-      history.push('/dashboard');
+      sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken)
+      setCookie('auth', { email: username, authId: user.username }, { secure: false, path: '/' });
+      updateAuthState(true)
+      // history.push('/');
     } catch (error) {
       console.error('error signing in', error);
 
