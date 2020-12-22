@@ -37,19 +37,27 @@ const List = () => {
         tempObj.title = '';
       }
 
-      if (inputs.additionalInputs.length > 0) {
-        let additional: Array<{ name: string; text: string | [] }> = [];
-        inputs.additionalInputs.forEach((input: { name: string }) => {
-          let newInput = {
-            name: input.name,
-            text: '',
-          };
+      //TODO: this 'additionalInputs' is causing a problem with list -> database mutations...
+      // ...it clashes because 'text' does not exist on the type declaration for 'AdditionalInputsInput',
+      // ...what needs to be done is an array of {name: ..., input: ...} needs to be initialized
+      // ...also might need to rewrite the StoryState interface up above line 11 - 18
 
-          additional.push(newInput);
-        });
+      // UPDATE: somehow commenting this out does not affect the standard list,
+      // curious as to why it was here in the first place
 
-        tempObj.additional = additional;
-      }
+      // if (inputs.additionalInputs.length > 0) {
+      //   let additional: Array<{ name: string; text: string | [] }> = [];
+      //   inputs.additionalInputs.forEach((input: { name: string }) => {
+      //     let newInput = {
+      //       name: input.name,
+      //       text: '',
+      //     };
+      //
+      //     additional.push(newInput);
+      //   });
+      //
+      //   tempObj.additional = additional;
+      // }
 
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',

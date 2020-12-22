@@ -53,21 +53,21 @@ const ListForm = (props: ListFormProps) => {
   }, [input.title]);
 
   useEffect(() => {
-    if (state.componentState.story) {
-      dispatch({
-        type: 'UPDATE_COMPONENT_STATE',
-        payload: {
-          componentName: 'story',
-          inputName: 'story',
-          content: input.story,
-        },
-      });
+    // if (state.componentState.story) {
+    dispatch({
+      type: 'UPDATE_COMPONENT_STATE',
+      payload: {
+        componentName: 'story',
+        inputName: 'story',
+        content: input.story,
+      },
+    });
 
-      setCookie(`lesson-${state.classroomID}`, {
-        ...cookies[`lesson-${state.classroomID}`],
-        story: { ...cookies[`lesson-${state.classroomID}`].story, story: input.story },
-      });
-    }
+    setCookie(`lesson-${state.classroomID}`, {
+      ...cookies[`lesson-${state.classroomID}`],
+      story: { ...cookies[`lesson-${state.classroomID}`].story, story: input.story },
+    });
+    // }
   }, [input.story]);
 
   const handleInputChange = (e: { target: { id: string; value: string } }) => {
