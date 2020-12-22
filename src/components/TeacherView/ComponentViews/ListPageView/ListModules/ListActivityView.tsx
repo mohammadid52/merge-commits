@@ -25,10 +25,14 @@ interface props {
 const List = (props: props) => {
   const { fullscreen } = props;
   const { state, theme } = useContext(LessonControlContext);
-  const inputs = state.data.lesson.warmUp.inputs;
-  const video = state.data.lesson.warmUp.instructions.link;
   const [openPopup, setOpenPopup] = useState(false);
   const [dataProps, setDataProps] = useState<{ title?: string; story?: string[]; [key: string]: any }>();
+
+  //  Variables
+  const inputs = state.data.lesson.warmUp.inputs;
+  const video = state.data.lesson.warmUp.instructions.link;
+  const nrLists = inputs.listInputNumber;
+  // const listArray = nrLists === null ? [''] : Array.from(Array(nrLists).keys()).map((elem: number) => '');
 
   let displayStudentData = state.studentViewing.live
     ? state.studentViewing.studentInfo.currentLocation
@@ -64,7 +68,7 @@ const List = (props: props) => {
                         null
                     } */}
 
-          <ListForm dataProps={dataProps} fullscreen={fullscreen} />
+          <ListForm dataProps={dataProps} fullscreen={fullscreen} nrLists={nrLists} />
         </div>
       </div>
     </>
