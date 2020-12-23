@@ -1,45 +1,37 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import { useHistory } from 'react-router-dom';
+
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import ActionButton from '../Actions/ActionButton';
-// import { API, graphqlOperation } from 'aws-amplify';
-import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../../customGraphql/customMutations';
-import { useHistory } from 'react-router-dom';
 import { initials, stringToHslColor } from '../../../../utilities/strings';
 import { InstitutionInfo } from './Institution';
 import FormInput from '../../../Atoms/Form/FormInput';
+import Loader from '../../../Atoms/Loader';
+import { FaPlus } from 'react-icons/fa';
+import ProfileCropModal from '../../Profile/ProfileCropModal';
 //import InstitutionInfo from './InstitutionInfo';
 
 interface InstitutionEditProps {
-  institute: InstitutionInfo;
+  institute?: InstitutionInfo;
 }
 
-/**
- * InstitutionEdit
- * Component responsible for the edit form of institutions
- * Will update the database with new info about the institution
- */
-const InstitutionEdit: React.FC<InstitutionEditProps> = (
-  instEditPrps: InstitutionEditProps
-) => {
+const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
   const [editFormValues, setEditFormValues] = useState<InstitutionInfo>(instEditPrps.institute);
+  const [showCropper, setShowCropper] = useState(false);
+  const [upImage, setUpImage] = useState(null);
+  const [imageLoading, setImageLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState('')
   const history = useHistory();
 
-  /**
-   * Push updated institute data
-   * to the database
-   */
   async function updateInstitutionDB(): Promise<void> {
     const updatedInfo = {
 
     }
   }
 
-  /**
-   * Function to update state institution data
-   * on form change
-   * @param e - form change event
-   */
   const handleEditFormChange = (e: React.FormEvent /* <HTMLFormElement> */) => {
     const id = (e.target as HTMLInputElement).id;
     const value = (e.target as HTMLInputElement).value;
@@ -49,14 +41,38 @@ const InstitutionEdit: React.FC<InstitutionEditProps> = (
     setEditFormValues(() => ({ ...editFormValues, [id]: value }));
   };
 
-  /**
-   * Function to trigger updateInstitutionDB()
-   * @param e - Submit form button event
-   */
   const handleEditFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('test form submit');
   };
+
+  const cropSelecetedImage = async (e: any) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0]
+      const fileReader = new FileReader();
+      fileReader.onload = function () {
+        setUpImage(fileReader.result)
+      }
+      fileReader.readAsDataURL(file);
+      toggleCropper()
+    }
+  }
+
+  const toggleCropper = () => {
+    setShowCropper(!showCropper)
+  }
+
+  const saveCroppedImage = async (image: string) => {
+    setImageLoading(true);
+    toggleCropper();
+    // await uploadImageToS3(image, person.id, 'image/jpeg')
+    // const imageUrl: any = await getImageFromS3(`profile_image_${person.id}`)
+    setImageUrl(imageUrl);
+    // setPerson({ ...person, image: `profile_image_${person.id}` })
+    // updateImageParam(`profile_image_${person.id}`);
+    toggleCropper();
+    setImageLoading(false);
+  }
 
   return (
 
@@ -64,11 +80,19 @@ const InstitutionEdit: React.FC<InstitutionEditProps> = (
 
       {/* Profile section */}
       <div className="w-auto p-4 mr-4 flex flex-col text-center items-center">
-        <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+        {false ? <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
           <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{ background: `${stringToHslColor('I' + ' ' + 'N')}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
             {initials('IN', 'NI')}
           </div>
-        </div>
+        </div> :
+          <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+            {true ?
+              <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
+                <FaPlus />
+              </IconContext.Provider> :
+              <Loader />}
+            <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
+          </label>}
         <div className="text-xl font-bold font-open text-gray-900 mt-4">
           <p>
             ICONOCLAST ARTISTS
@@ -85,7 +109,7 @@ const InstitutionEdit: React.FC<InstitutionEditProps> = (
             <div className='w-full px-4 py-5 border-b border-gray-200 sm:px-6'>
               <h3 className='text-lg leading-6 font-medium text-gray-900'>
                 Edit Information
-            </h3>
+              </h3>
             </div>
             {/* FORM */}
             <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 px-4 py-5'>
@@ -101,35 +125,35 @@ const InstitutionEdit: React.FC<InstitutionEditProps> = (
 
               <div className='sm:col-span-3 px-3 py-2'>
                 <FormInput id='addressLine2' name='addressLine2' label="Address line 2" />
-
               </div>
 
               <div className='sm:col-span-3 px-3 py-2'>
                 <FormInput id='city' name='city' label="City" />
-
               </div>
 
               <div className='sm:col-span-3 px-3 py-2'>
                 <FormInput id='district' name='district' label="District" />
-
               </div>
 
               <div className='sm:col-span-3 px-3 py-2'>
                 <FormInput id='state' name='state' label="State" />
-
               </div>
 
               <div className='sm:col-span-3 px-3 py-2'>
                 <FormInput id='zip' name='zip' label="Zip" />
-
               </div>
 
               <div className='sm:col-span-3 px-3 py-2'>
                 <FormInput id='phone' name='phone' label="Phone" />
-
               </div>
             </div>
           </div>
+
+          {/* Image cropper */}
+          {showCropper && (
+            <ProfileCropModal upImg={upImage} saveCroppedImage={(img: string) => saveCroppedImage(img)} closeAction={toggleCropper} />
+          )}
+
           {/* Cancel/save buttons */}
           <div className='px-4 w-full flex justify-end'>
             <div className='flex w-4/10'>
