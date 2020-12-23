@@ -148,8 +148,6 @@ export const getStaff = /* GraphQL */ `
       staffEmail
       status
       statusChangeDate
-<<<<<<< HEAD
-=======
       staffMember {
         id
         authId
@@ -178,7 +176,6 @@ export const getStaff = /* GraphQL */ `
         createdAt
         updatedAt
       }
->>>>>>> dev
       curricula {
         items {
           id
@@ -208,8 +205,6 @@ export const listStaffs = /* GraphQL */ `
         staffEmail
         status
         statusChangeDate
-<<<<<<< HEAD
-=======
         staffMember {
           id
           authId
@@ -232,7 +227,6 @@ export const listStaffs = /* GraphQL */ `
           createdAt
           updatedAt
         }
->>>>>>> dev
         curricula {
           nextToken
         }
@@ -405,12 +399,9 @@ export const getRoom = /* GraphQL */ `
         birthdate
         image
         language
-<<<<<<< HEAD
-=======
         classes {
           nextToken
         }
->>>>>>> dev
         filters
         createdAt
         updatedAt
