@@ -124,7 +124,7 @@ const useStudentTimer = (inputs?: inputs) => {
 
     try {
       // console.log(' timer save: ', data);
-      console.log('timer save 2: ', params.state.componentState.story);
+      // console.log('timer save 2: ', params.state.componentState.story);
       const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
 
       dispatch({ type: 'SAVED_CHANGES' });
