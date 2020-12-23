@@ -280,6 +280,9 @@ export const onChangeStudentData = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -296,6 +299,10 @@ export const onChangeStudentData = /* GraphQL */ `
           label
           isLie
           text
+        }
+        poll {
+          id
+          question
         }
       }
       corelessonData {
@@ -743,6 +750,34 @@ export const onCreateStaff = /* GraphQL */ `
       staffEmail
       status
       statusChangeDate
+      staffMember {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
       curricula {
         items {
           id
@@ -767,6 +802,34 @@ export const onUpdateStaff = /* GraphQL */ `
       staffEmail
       status
       statusChangeDate
+      staffMember {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
       curricula {
         items {
           id
@@ -791,6 +854,34 @@ export const onDeleteStaff = /* GraphQL */ `
       staffEmail
       status
       statusChangeDate
+      staffMember {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
       curricula {
         items {
           id
@@ -837,6 +928,18 @@ export const onCreatePerson = /* GraphQL */ `
       birthdate
       image
       language
+      classes {
+        items {
+          id
+          classID
+          studentID
+          studentEmail
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       filters
       createdAt
       updatedAt
@@ -874,6 +977,18 @@ export const onUpdatePerson = /* GraphQL */ `
       birthdate
       image
       language
+      classes {
+        items {
+          id
+          classID
+          studentID
+          studentEmail
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       filters
       createdAt
       updatedAt
@@ -911,6 +1026,18 @@ export const onDeletePerson = /* GraphQL */ `
       birthdate
       image
       language
+      classes {
+        items {
+          id
+          classID
+          studentID
+          studentEmail
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       filters
       createdAt
       updatedAt
@@ -981,6 +1108,9 @@ export const onCreateRoom = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -1097,6 +1227,9 @@ export const onUpdateRoom = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -1213,6 +1346,9 @@ export const onDeleteRoom = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -1326,7 +1462,7 @@ export const onCreateClass = /* GraphQL */ `
           classID
           studentID
           studentEmail
-          studentAuth
+          studentAuthID
           createdAt
           updatedAt
         }
@@ -1398,7 +1534,7 @@ export const onUpdateClass = /* GraphQL */ `
           classID
           studentID
           studentEmail
-          studentAuth
+          studentAuthID
           createdAt
           updatedAt
         }
@@ -1470,7 +1606,7 @@ export const onDeleteClass = /* GraphQL */ `
           classID
           studentID
           studentEmail
-          studentAuth
+          studentAuthID
           createdAt
           updatedAt
         }
@@ -1488,7 +1624,7 @@ export const onCreateClassStudent = /* GraphQL */ `
       classID
       studentID
       studentEmail
-      studentAuth
+      studentAuthID
       class {
         id
         institutionID
@@ -1542,6 +1678,9 @@ export const onCreateClassStudent = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -1558,7 +1697,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
       classID
       studentID
       studentEmail
-      studentAuth
+      studentAuthID
       class {
         id
         institutionID
@@ -1612,6 +1751,9 @@ export const onUpdateClassStudent = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -1628,7 +1770,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
       classID
       studentID
       studentEmail
-      studentAuth
+      studentAuthID
       class {
         id
         institutionID
@@ -1682,6 +1824,9 @@ export const onDeleteClassStudent = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -4212,6 +4357,10 @@ export const onCreateWarmUp = /* GraphQL */ `
           prompt
           example
         }
+        pollInputs {
+          id
+          question
+        }
       }
       breakdown {
         included
@@ -4253,6 +4402,10 @@ export const onUpdateWarmUp = /* GraphQL */ `
           prompt
           example
         }
+        pollInputs {
+          id
+          question
+        }
       }
       breakdown {
         included
@@ -4293,6 +4446,10 @@ export const onDeleteWarmUp = /* GraphQL */ `
           name
           prompt
           example
+        }
+        pollInputs {
+          id
+          question
         }
       }
       breakdown {
@@ -5038,6 +5195,9 @@ export const onCreateQuestionData = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -5155,6 +5315,9 @@ export const onUpdateQuestionData = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -5272,6 +5435,9 @@ export const onDeleteQuestionData = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -6091,6 +6257,9 @@ export const onCreateStudentWord = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -6135,6 +6304,9 @@ export const onUpdateStudentWord = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -6179,7 +6351,160 @@ export const onDeleteStudentWord = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateFilterGroup = /* GraphQL */ `
+  subscription OnCreateFilterGroup {
+    onCreateFilterGroup {
+      id
+      name
+      description
+      filters {
+        items {
+          id
+          filterGroupID
+          filterID
+          zoiq
+          admin
+          show
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateFilterGroup = /* GraphQL */ `
+  subscription OnUpdateFilterGroup {
+    onUpdateFilterGroup {
+      id
+      name
+      description
+      filters {
+        items {
+          id
+          filterGroupID
+          filterID
+          zoiq
+          admin
+          show
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteFilterGroup = /* GraphQL */ `
+  subscription OnDeleteFilterGroup {
+    onDeleteFilterGroup {
+      id
+      name
+      description
+      filters {
+        items {
+          id
+          filterGroupID
+          filterID
+          zoiq
+          admin
+          show
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateFilterGroupFilter = /* GraphQL */ `
+  subscription OnCreateFilterGroupFilter {
+    onCreateFilterGroupFilter {
+      id
+      filterGroupID
+      filterID
+      zoiq
+      admin
+      show
+      required
+      filter {
+        id
+        name
+        description
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateFilterGroupFilter = /* GraphQL */ `
+  subscription OnUpdateFilterGroupFilter {
+    onUpdateFilterGroupFilter {
+      id
+      filterGroupID
+      filterID
+      zoiq
+      admin
+      show
+      required
+      filter {
+        id
+        name
+        description
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteFilterGroupFilter = /* GraphQL */ `
+  subscription OnDeleteFilterGroupFilter {
+    onDeleteFilterGroupFilter {
+      id
+      filterGroupID
+      filterID
+      zoiq
+      admin
+      show
+      required
+      filter {
+        id
+        name
+        description
+        options {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6194,7 +6519,6 @@ export const onCreateFilter = /* GraphQL */ `
       id
       name
       description
-      editable
       options {
         items {
           id
@@ -6216,7 +6540,6 @@ export const onUpdateFilter = /* GraphQL */ `
       id
       name
       description
-      editable
       options {
         items {
           id
@@ -6238,7 +6561,6 @@ export const onDeleteFilter = /* GraphQL */ `
       id
       name
       description
-      editable
       options {
         items {
           id
@@ -6260,17 +6582,6 @@ export const onCreateFilterOption = /* GraphQL */ `
       id
       filterID
       text
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
@@ -6282,17 +6593,6 @@ export const onUpdateFilterOption = /* GraphQL */ `
       id
       filterID
       text
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
@@ -6304,581 +6604,6 @@ export const onDeleteFilterOption = /* GraphQL */ `
       id
       filterID
       text
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateClient = /* GraphQL */ `
-  subscription OnCreateClient {
-    onCreateClient {
-      id
-      name
-      architecture {
-        items {
-          id
-          name
-          clientID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateClient = /* GraphQL */ `
-  subscription OnUpdateClient {
-    onUpdateClient {
-      id
-      name
-      architecture {
-        items {
-          id
-          name
-          clientID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteClient = /* GraphQL */ `
-  subscription OnDeleteClient {
-    onDeleteClient {
-      id
-      name
-      architecture {
-        items {
-          id
-          name
-          clientID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateArchitecture = /* GraphQL */ `
-  subscription OnCreateArchitecture {
-    onCreateArchitecture {
-      id
-      name
-      clientID
-      client {
-        id
-        name
-        architecture {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      types {
-        items {
-          id
-          name
-          architectureID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      filters {
-        items {
-          id
-          architectureID
-          filterID
-          multiselect
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateArchitecture = /* GraphQL */ `
-  subscription OnUpdateArchitecture {
-    onUpdateArchitecture {
-      id
-      name
-      clientID
-      client {
-        id
-        name
-        architecture {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      types {
-        items {
-          id
-          name
-          architectureID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      filters {
-        items {
-          id
-          architectureID
-          filterID
-          multiselect
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteArchitecture = /* GraphQL */ `
-  subscription OnDeleteArchitecture {
-    onDeleteArchitecture {
-      id
-      name
-      clientID
-      client {
-        id
-        name
-        architecture {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      types {
-        items {
-          id
-          name
-          architectureID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      filters {
-        items {
-          id
-          architectureID
-          filterID
-          multiselect
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateType = /* GraphQL */ `
-  subscription OnCreateType {
-    onCreateType {
-      id
-      name
-      architectureID
-      architecture {
-        id
-        name
-        clientID
-        client {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        types {
-          nextToken
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filters {
-        items {
-          id
-          typeID
-          filterID
-          multiselect
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateType = /* GraphQL */ `
-  subscription OnUpdateType {
-    onUpdateType {
-      id
-      name
-      architectureID
-      architecture {
-        id
-        name
-        clientID
-        client {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        types {
-          nextToken
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filters {
-        items {
-          id
-          typeID
-          filterID
-          multiselect
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteType = /* GraphQL */ `
-  subscription OnDeleteType {
-    onDeleteType {
-      id
-      name
-      architectureID
-      architecture {
-        id
-        name
-        clientID
-        client {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        types {
-          nextToken
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filters {
-        items {
-          id
-          typeID
-          filterID
-          multiselect
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateFilterType = /* GraphQL */ `
-  subscription OnCreateFilterType {
-    onCreateFilterType {
-      id
-      typeID
-      filterID
-      multiselect
-      required
-      type {
-        id
-        name
-        architectureID
-        architecture {
-          id
-          name
-          clientID
-          createdAt
-          updatedAt
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateFilterType = /* GraphQL */ `
-  subscription OnUpdateFilterType {
-    onUpdateFilterType {
-      id
-      typeID
-      filterID
-      multiselect
-      required
-      type {
-        id
-        name
-        architectureID
-        architecture {
-          id
-          name
-          clientID
-          createdAt
-          updatedAt
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteFilterType = /* GraphQL */ `
-  subscription OnDeleteFilterType {
-    onDeleteFilterType {
-      id
-      typeID
-      filterID
-      multiselect
-      required
-      type {
-        id
-        name
-        architectureID
-        architecture {
-          id
-          name
-          clientID
-          createdAt
-          updatedAt
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateArchitectureFilter = /* GraphQL */ `
-  subscription OnCreateArchitectureFilter {
-    onCreateArchitectureFilter {
-      id
-      architectureID
-      filterID
-      multiselect
-      required
-      architecture {
-        id
-        name
-        clientID
-        client {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        types {
-          nextToken
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateArchitectureFilter = /* GraphQL */ `
-  subscription OnUpdateArchitectureFilter {
-    onUpdateArchitectureFilter {
-      id
-      architectureID
-      filterID
-      multiselect
-      required
-      architecture {
-        id
-        name
-        clientID
-        client {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        types {
-          nextToken
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteArchitectureFilter = /* GraphQL */ `
-  subscription OnDeleteArchitectureFilter {
-    onDeleteArchitectureFilter {
-      id
-      architectureID
-      filterID
-      multiselect
-      required
-      architecture {
-        id
-        name
-        clientID
-        client {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        types {
-          nextToken
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
