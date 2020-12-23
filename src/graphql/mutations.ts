@@ -419,6 +419,34 @@ export const createStaff = /* GraphQL */ `
       staffEmail
       status
       statusChangeDate
+      staffMember {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
       curricula {
         items {
           id
@@ -446,6 +474,34 @@ export const updateStaff = /* GraphQL */ `
       staffEmail
       status
       statusChangeDate
+      staffMember {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
       curricula {
         items {
           id
@@ -473,6 +529,34 @@ export const deleteStaff = /* GraphQL */ `
       staffEmail
       status
       statusChangeDate
+      staffMember {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
       curricula {
         items {
           id
@@ -522,6 +606,18 @@ export const createPerson = /* GraphQL */ `
       birthdate
       image
       language
+      classes {
+        items {
+          id
+          classID
+          studentID
+          studentEmail
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       filters
       createdAt
       updatedAt
@@ -562,6 +658,18 @@ export const updatePerson = /* GraphQL */ `
       birthdate
       image
       language
+      classes {
+        items {
+          id
+          classID
+          studentID
+          studentEmail
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       filters
       createdAt
       updatedAt
@@ -602,6 +710,18 @@ export const deletePerson = /* GraphQL */ `
       birthdate
       image
       language
+      classes {
+        items {
+          id
+          classID
+          studentID
+          studentEmail
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       filters
       createdAt
       updatedAt
@@ -675,6 +795,9 @@ export const createRoom = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -794,6 +917,9 @@ export const updateRoom = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -913,6 +1039,9 @@ export const deleteRoom = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -1029,7 +1158,7 @@ export const createClass = /* GraphQL */ `
           classID
           studentID
           studentEmail
-          studentAuth
+          studentAuthID
           createdAt
           updatedAt
         }
@@ -1104,7 +1233,7 @@ export const updateClass = /* GraphQL */ `
           classID
           studentID
           studentEmail
-          studentAuth
+          studentAuthID
           createdAt
           updatedAt
         }
@@ -1179,7 +1308,7 @@ export const deleteClass = /* GraphQL */ `
           classID
           studentID
           studentEmail
-          studentAuth
+          studentAuthID
           createdAt
           updatedAt
         }
@@ -1200,7 +1329,7 @@ export const createClassStudent = /* GraphQL */ `
       classID
       studentID
       studentEmail
-      studentAuth
+      studentAuthID
       class {
         id
         institutionID
@@ -1254,6 +1383,9 @@ export const createClassStudent = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -1273,7 +1405,7 @@ export const updateClassStudent = /* GraphQL */ `
       classID
       studentID
       studentEmail
-      studentAuth
+      studentAuthID
       class {
         id
         institutionID
@@ -1327,6 +1459,9 @@ export const updateClassStudent = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -1346,7 +1481,7 @@ export const deleteClassStudent = /* GraphQL */ `
       classID
       studentID
       studentEmail
-      studentAuth
+      studentAuthID
       class {
         id
         institutionID
@@ -1400,6 +1535,9 @@ export const deleteClassStudent = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -2504,6 +2642,9 @@ export const createStudentData = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -2520,6 +2661,10 @@ export const createStudentData = /* GraphQL */ `
           label
           isLie
           text
+        }
+        poll {
+          id
+          question
         }
       }
       corelessonData {
@@ -2670,6 +2815,9 @@ export const updateStudentData = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -2686,6 +2834,10 @@ export const updateStudentData = /* GraphQL */ `
           label
           isLie
           text
+        }
+        poll {
+          id
+          question
         }
       }
       corelessonData {
@@ -2836,6 +2988,9 @@ export const deleteStudentData = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -2852,6 +3007,10 @@ export const deleteStudentData = /* GraphQL */ `
           label
           isLie
           text
+        }
+        poll {
+          id
+          question
         }
       }
       corelessonData {
@@ -5112,6 +5271,10 @@ export const createWarmUp = /* GraphQL */ `
           prompt
           example
         }
+        pollInputs {
+          id
+          question
+        }
       }
       breakdown {
         included
@@ -5156,6 +5319,10 @@ export const updateWarmUp = /* GraphQL */ `
           prompt
           example
         }
+        pollInputs {
+          id
+          question
+        }
       }
       breakdown {
         included
@@ -5199,6 +5366,10 @@ export const deleteWarmUp = /* GraphQL */ `
           name
           prompt
           example
+        }
+        pollInputs {
+          id
+          question
         }
       }
       breakdown {
@@ -6010,6 +6181,9 @@ export const createQuestionData = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -6130,6 +6304,9 @@ export const updateQuestionData = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -6250,6 +6427,9 @@ export const deleteQuestionData = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -7099,6 +7279,9 @@ export const createStudentWord = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -7146,6 +7329,9 @@ export const updateStudentWord = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
         createdAt
         updatedAt
@@ -7193,7 +7379,178 @@ export const deleteStudentWord = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createFilterGroup = /* GraphQL */ `
+  mutation CreateFilterGroup(
+    $input: CreateFilterGroupInput!
+    $condition: ModelFilterGroupConditionInput
+  ) {
+    createFilterGroup(input: $input, condition: $condition) {
+      id
+      name
+      description
+      filters {
+        items {
+          id
+          filterGroupID
+          filterID
+          zoiq
+          admin
+          show
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateFilterGroup = /* GraphQL */ `
+  mutation UpdateFilterGroup(
+    $input: UpdateFilterGroupInput!
+    $condition: ModelFilterGroupConditionInput
+  ) {
+    updateFilterGroup(input: $input, condition: $condition) {
+      id
+      name
+      description
+      filters {
+        items {
+          id
+          filterGroupID
+          filterID
+          zoiq
+          admin
+          show
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteFilterGroup = /* GraphQL */ `
+  mutation DeleteFilterGroup(
+    $input: DeleteFilterGroupInput!
+    $condition: ModelFilterGroupConditionInput
+  ) {
+    deleteFilterGroup(input: $input, condition: $condition) {
+      id
+      name
+      description
+      filters {
+        items {
+          id
+          filterGroupID
+          filterID
+          zoiq
+          admin
+          show
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createFilterGroupFilter = /* GraphQL */ `
+  mutation CreateFilterGroupFilter(
+    $input: CreateFilterGroupFilterInput!
+    $condition: ModelFilterGroupFilterConditionInput
+  ) {
+    createFilterGroupFilter(input: $input, condition: $condition) {
+      id
+      filterGroupID
+      filterID
+      zoiq
+      admin
+      show
+      required
+      filter {
+        id
+        name
+        description
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateFilterGroupFilter = /* GraphQL */ `
+  mutation UpdateFilterGroupFilter(
+    $input: UpdateFilterGroupFilterInput!
+    $condition: ModelFilterGroupFilterConditionInput
+  ) {
+    updateFilterGroupFilter(input: $input, condition: $condition) {
+      id
+      filterGroupID
+      filterID
+      zoiq
+      admin
+      show
+      required
+      filter {
+        id
+        name
+        description
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteFilterGroupFilter = /* GraphQL */ `
+  mutation DeleteFilterGroupFilter(
+    $input: DeleteFilterGroupFilterInput!
+    $condition: ModelFilterGroupFilterConditionInput
+  ) {
+    deleteFilterGroupFilter(input: $input, condition: $condition) {
+      id
+      filterGroupID
+      filterID
+      zoiq
+      admin
+      show
+      required
+      filter {
+        id
+        name
+        description
+        options {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7211,7 +7568,6 @@ export const createFilter = /* GraphQL */ `
       id
       name
       description
-      editable
       options {
         items {
           id
@@ -7236,7 +7592,6 @@ export const updateFilter = /* GraphQL */ `
       id
       name
       description
-      editable
       options {
         items {
           id
@@ -7261,7 +7616,6 @@ export const deleteFilter = /* GraphQL */ `
       id
       name
       description
-      editable
       options {
         items {
           id
@@ -7286,17 +7640,6 @@ export const createFilterOption = /* GraphQL */ `
       id
       filterID
       text
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
@@ -7311,17 +7654,6 @@ export const updateFilterOption = /* GraphQL */ `
       id
       filterID
       text
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
@@ -7336,626 +7668,6 @@ export const deleteFilterOption = /* GraphQL */ `
       id
       filterID
       text
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createClient = /* GraphQL */ `
-  mutation CreateClient(
-    $input: CreateClientInput!
-    $condition: ModelClientConditionInput
-  ) {
-    createClient(input: $input, condition: $condition) {
-      id
-      name
-      architecture {
-        items {
-          id
-          name
-          clientID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateClient = /* GraphQL */ `
-  mutation UpdateClient(
-    $input: UpdateClientInput!
-    $condition: ModelClientConditionInput
-  ) {
-    updateClient(input: $input, condition: $condition) {
-      id
-      name
-      architecture {
-        items {
-          id
-          name
-          clientID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteClient = /* GraphQL */ `
-  mutation DeleteClient(
-    $input: DeleteClientInput!
-    $condition: ModelClientConditionInput
-  ) {
-    deleteClient(input: $input, condition: $condition) {
-      id
-      name
-      architecture {
-        items {
-          id
-          name
-          clientID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createArchitecture = /* GraphQL */ `
-  mutation CreateArchitecture(
-    $input: CreateArchitectureInput!
-    $condition: ModelArchitectureConditionInput
-  ) {
-    createArchitecture(input: $input, condition: $condition) {
-      id
-      name
-      clientID
-      client {
-        id
-        name
-        architecture {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      types {
-        items {
-          id
-          name
-          architectureID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      filters {
-        items {
-          id
-          architectureID
-          filterID
-          multiselect
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateArchitecture = /* GraphQL */ `
-  mutation UpdateArchitecture(
-    $input: UpdateArchitectureInput!
-    $condition: ModelArchitectureConditionInput
-  ) {
-    updateArchitecture(input: $input, condition: $condition) {
-      id
-      name
-      clientID
-      client {
-        id
-        name
-        architecture {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      types {
-        items {
-          id
-          name
-          architectureID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      filters {
-        items {
-          id
-          architectureID
-          filterID
-          multiselect
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteArchitecture = /* GraphQL */ `
-  mutation DeleteArchitecture(
-    $input: DeleteArchitectureInput!
-    $condition: ModelArchitectureConditionInput
-  ) {
-    deleteArchitecture(input: $input, condition: $condition) {
-      id
-      name
-      clientID
-      client {
-        id
-        name
-        architecture {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      types {
-        items {
-          id
-          name
-          architectureID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      filters {
-        items {
-          id
-          architectureID
-          filterID
-          multiselect
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createType = /* GraphQL */ `
-  mutation CreateType(
-    $input: CreateTypeInput!
-    $condition: ModelTypeConditionInput
-  ) {
-    createType(input: $input, condition: $condition) {
-      id
-      name
-      architectureID
-      architecture {
-        id
-        name
-        clientID
-        client {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        types {
-          nextToken
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filters {
-        items {
-          id
-          typeID
-          filterID
-          multiselect
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateType = /* GraphQL */ `
-  mutation UpdateType(
-    $input: UpdateTypeInput!
-    $condition: ModelTypeConditionInput
-  ) {
-    updateType(input: $input, condition: $condition) {
-      id
-      name
-      architectureID
-      architecture {
-        id
-        name
-        clientID
-        client {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        types {
-          nextToken
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filters {
-        items {
-          id
-          typeID
-          filterID
-          multiselect
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteType = /* GraphQL */ `
-  mutation DeleteType(
-    $input: DeleteTypeInput!
-    $condition: ModelTypeConditionInput
-  ) {
-    deleteType(input: $input, condition: $condition) {
-      id
-      name
-      architectureID
-      architecture {
-        id
-        name
-        clientID
-        client {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        types {
-          nextToken
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filters {
-        items {
-          id
-          typeID
-          filterID
-          multiselect
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createFilterType = /* GraphQL */ `
-  mutation CreateFilterType(
-    $input: CreateFilterTypeInput!
-    $condition: ModelFilterTypeConditionInput
-  ) {
-    createFilterType(input: $input, condition: $condition) {
-      id
-      typeID
-      filterID
-      multiselect
-      required
-      type {
-        id
-        name
-        architectureID
-        architecture {
-          id
-          name
-          clientID
-          createdAt
-          updatedAt
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateFilterType = /* GraphQL */ `
-  mutation UpdateFilterType(
-    $input: UpdateFilterTypeInput!
-    $condition: ModelFilterTypeConditionInput
-  ) {
-    updateFilterType(input: $input, condition: $condition) {
-      id
-      typeID
-      filterID
-      multiselect
-      required
-      type {
-        id
-        name
-        architectureID
-        architecture {
-          id
-          name
-          clientID
-          createdAt
-          updatedAt
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteFilterType = /* GraphQL */ `
-  mutation DeleteFilterType(
-    $input: DeleteFilterTypeInput!
-    $condition: ModelFilterTypeConditionInput
-  ) {
-    deleteFilterType(input: $input, condition: $condition) {
-      id
-      typeID
-      filterID
-      multiselect
-      required
-      type {
-        id
-        name
-        architectureID
-        architecture {
-          id
-          name
-          clientID
-          createdAt
-          updatedAt
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createArchitectureFilter = /* GraphQL */ `
-  mutation CreateArchitectureFilter(
-    $input: CreateArchitectureFilterInput!
-    $condition: ModelArchitectureFilterConditionInput
-  ) {
-    createArchitectureFilter(input: $input, condition: $condition) {
-      id
-      architectureID
-      filterID
-      multiselect
-      required
-      architecture {
-        id
-        name
-        clientID
-        client {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        types {
-          nextToken
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateArchitectureFilter = /* GraphQL */ `
-  mutation UpdateArchitectureFilter(
-    $input: UpdateArchitectureFilterInput!
-    $condition: ModelArchitectureFilterConditionInput
-  ) {
-    updateArchitectureFilter(input: $input, condition: $condition) {
-      id
-      architectureID
-      filterID
-      multiselect
-      required
-      architecture {
-        id
-        name
-        clientID
-        client {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        types {
-          nextToken
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteArchitectureFilter = /* GraphQL */ `
-  mutation DeleteArchitectureFilter(
-    $input: DeleteArchitectureFilterInput!
-    $condition: ModelArchitectureFilterConditionInput
-  ) {
-    deleteArchitectureFilter(input: $input, condition: $condition) {
-      id
-      architectureID
-      filterID
-      multiselect
-      required
-      architecture {
-        id
-        name
-        clientID
-        client {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        types {
-          nextToken
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
