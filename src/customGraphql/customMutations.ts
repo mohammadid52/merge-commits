@@ -314,3 +314,28 @@ export const createFeedback = /* GraphQL */ `
     }
   }
 `;
+
+export const createInstitution = /* GraphQL */ `
+  mutation CreateInstitution($input: CreateInstitutionInput!
+    $condition: ModelInstitutionConditionInput) {
+    createInstitution(input: $input, condition: $condition) {
+      id
+      name
+      type
+      district
+      address
+      addressLine2
+      city
+      state
+      zip
+      phone
+      website
+      image
+      isServiceProvider
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+

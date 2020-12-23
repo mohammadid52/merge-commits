@@ -12,6 +12,7 @@ import FormInput from '../../../Atoms/Form/FormInput';
 import Selector from '../../../Atoms/Form/Selector';
 import Buttons from '../../../Atoms/Buttons';
 import * as mutations from '../../../../graphql/mutations';
+import * as customMutations from '../../../../customGraphql/customMutations';
 
 interface InstitutionProps {
 
@@ -83,7 +84,7 @@ const InstitutionAdd = (props: InstitutionProps) => {
     // e.preventDefault();
     // Need to add validations
     console.log("Final institute details:", instituteData)
-    const newInstitute = await API.graphql(graphqlOperation(mutations.createInstitution, { input: instituteData }))
+    const newInstitute = await API.graphql(graphqlOperation(customMutations.createInstitution, { input: instituteData }))
     console.log("Final results", newInstitute)
   }
 
