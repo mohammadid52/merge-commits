@@ -47,5 +47,4 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
     </div>
   )
 }
-
 export default BreadCrums
