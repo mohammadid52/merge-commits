@@ -186,10 +186,8 @@ type Class
 {
   id: ID!
   institutionID: ID!
-  # roomID: ID!
   type: String
   name: String!
-  # room: Room @connection(fields: ["roomID"])
   institution: Institution @connection(fields: ["institutionID"])
   rooms: [Room] @connection(keyName: "roomByClass", fields: ["id"])
   students: [ClassStudent]! @connection(keyName: "byClass", fields: ["id"])
