@@ -63,11 +63,16 @@ const InstitutionEdit: React.FC<InstitutionEditProps> = (
     <div className="h-9/10 flex flex-col md:flex-row">
 
       {/* Profile section */}
-      <div className="w-auto p-4 flex flex-col text-center items-center">
+      <div className="w-auto p-4 mr-4 flex flex-col text-center items-center">
         <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
           <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{ background: `${stringToHslColor('I' + ' ' + 'N')}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
             {initials('IN', 'NI')}
           </div>
+        </div>
+        <div className="text-xl font-bold font-open text-gray-900 mt-4">
+          <p>
+            ICONOCLAST ARTISTS
+            </p>
         </div>
       </div>
 
@@ -84,43 +89,43 @@ const InstitutionEdit: React.FC<InstitutionEditProps> = (
             </div>
             {/* FORM */}
             <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 px-4 py-5'>
-              <div className='sm:col-span-3 px-2 py-4'>
+              <div className='sm:col-span-3 px-3 py-2'>
                 <FormInput id='name' name='name' label="Institution Name" placeHolder="i.e. Iconoclast artist" />
               </div>
-              <div className='sm:col-span-3 px-2 py-4'>
+              <div className='sm:col-span-3 px-3 py-2'>
                 <FormInput id='website' name='website' label="Website" placeHolder="i.e. Iconoclastartist.com" />
               </div>
-              <div className='sm:col-span-3 px-2 py-4'>
-                <FormInput id='website' name='website' label="Address line 1" />
+              <div className='sm:col-span-3 px-3 py-2'>
+                <FormInput id='address' name='address' label="Address line 1" />
               </div>
 
-              <div className='sm:col-span-3 px-2 py-4'>
-                <FormInput id='website' name='website' label="Address line 2" />
-
-              </div>
-
-              <div className='sm:col-span-3 px-2 py-4'>
-                <FormInput id='website' name='website' label="City" />
+              <div className='sm:col-span-3 px-3 py-2'>
+                <FormInput id='addressLine2' name='addressLine2' label="Address line 2" />
 
               </div>
 
-              <div className='sm:col-span-3 px-2 py-4'>
-                <FormInput id='website' name='website' label="District" />
+              <div className='sm:col-span-3 px-3 py-2'>
+                <FormInput id='city' name='city' label="City" />
 
               </div>
 
-              <div className='sm:col-span-3 px-2 py-4'>
-                <FormInput id='website' name='website' label="State" />
+              <div className='sm:col-span-3 px-3 py-2'>
+                <FormInput id='district' name='district' label="District" />
 
               </div>
 
-              <div className='sm:col-span-3 px-2 py-4'>
-                <FormInput id='website' name='website' label="Zip" />
+              <div className='sm:col-span-3 px-3 py-2'>
+                <FormInput id='state' name='state' label="State" />
 
               </div>
 
-              <div className='sm:col-span-3 px-2 py-4'>
-                <FormInput id='website' name='website' label="Phone" />
+              <div className='sm:col-span-3 px-3 py-2'>
+                <FormInput id='zip' name='zip' label="Zip" />
+
+              </div>
+
+              <div className='sm:col-span-3 px-3 py-2'>
+                <FormInput id='phone' name='phone' label="Phone" />
 
               </div>
             </div>
