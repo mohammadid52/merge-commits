@@ -39,7 +39,6 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
 
     async function getClassroom() {
       let queryParams = queryString.parse(location.search)
-      console.log('queryParams', queryParams)
       if (Object.keys(queryParams).length && queryParams.id) {
         try {
             // this any needs to be changed once a solution is found!!!
@@ -92,8 +91,8 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
       return function cleanup() {
         if (subscription) {
           subscription.unsubscribe();
-          dispatch({ type: 'CLEANUP' })
         }
+        dispatch({ type: 'CLEANUP' })
       }
     }, [])
 
