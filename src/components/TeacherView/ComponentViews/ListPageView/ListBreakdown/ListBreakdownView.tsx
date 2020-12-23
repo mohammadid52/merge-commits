@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { studentObject } from '../../../../../state/LessonControlState'
+import { studentObject } from '../../../../../state/LessonControlState';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
 import ReflectionQuestions from './ReflectionQuestions';
@@ -8,40 +8,45 @@ import Banner from './Banner';
 import ListOutput from './ListOutput';
 
 interface props {
-    fullscreen: boolean
+  fullscreen: boolean;
 }
 
 const SelfDisplay = (props: props) => {
-    const { fullscreen } = props;
-    const { state, theme, dispatch } = useContext(LessonControlContext);
-    const [ dataProps, setDataProps ] = useState<{ title?: string, story?: string, [key: string]: any} | null>(null)
+  const { fullscreen } = props;
+  const { state, theme, dispatch } = useContext(LessonControlContext);
+  const [dataProps, setDataProps] = useState<{ title?: string; story?: string[]; [key: string]: any } | null>(null);
 
-    useEffect(() => {
-        dispatch({type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown'})
-    }, [])
+  useEffect(() => {
+    dispatch({ type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown' });
+  }, []);
 
-    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.currentLocation ? state.studentViewing.studentInfo.currentLocation === 'warmup/breakdown' : state.studentViewing.studentInfo.lessonProgress === 'warmup/breakdown' : false;
+  let displayStudentData = state.studentViewing.live
+    ? state.studentViewing.studentInfo.currentLocation
+      ? state.studentViewing.studentInfo.currentLocation === 'warmup/breakdown'
+      : state.studentViewing.studentInfo.lessonProgress === 'warmup/breakdown'
+    : false;
 
-    useEffect(() => {
-        if (displayStudentData) {
-            if ( state.studentViewing.studentInfo.warmupData ) {
-                return setDataProps(state.studentViewing.studentInfo.warmupData)
-            }
-        } return setDataProps(null)
-    }, [state.studentViewing]);
+  useEffect(() => {
+    if (displayStudentData) {
+      if (state.studentViewing.studentInfo.warmupData) {
+        return setDataProps(state.studentViewing.studentInfo.warmupData);
+      }
+    }
+    return setDataProps(null);
+  }, [state.studentViewing]);
 
-    useEffect(()=>{
-        console.log('List breakdown selfdisplay: ', dataProps)
-    },[dataProps])
+  useEffect(() => {
+    console.log('List breakdown selfdisplay: ', dataProps);
+  }, [dataProps]);
 
-    return (
-        <div className={theme.section}>
-            <ReflectionQuestions fullscreen={fullscreen} />
-            <Banner dataProps={dataProps} fullscreen={fullscreen} />
-            <ListOutput list={(dataProps && dataProps.story) ? dataProps.story : ''} fullscreen={fullscreen}/>            
-            {/* <Modules dataProps={dataProps} fullscreen={fullscreen}/>            */}
-        </div>
-    )
-}
+  return (
+    <div className={theme.section}>
+      <ReflectionQuestions fullscreen={fullscreen} />
+      <Banner dataProps={dataProps} fullscreen={fullscreen} />
+      <ListOutput list={dataProps && dataProps.story ? dataProps.story : ['']} fullscreen={fullscreen} />
+      {/* <Modules dataProps={dataProps} fullscreen={fullscreen}/>            */}
+    </div>
+  );
+};
 
 export default SelfDisplay;

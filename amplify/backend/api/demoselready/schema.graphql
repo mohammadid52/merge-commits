@@ -91,11 +91,13 @@ type Staff
   staffEmail: String!
   status: String
   statusChangeDate: AWSDate
-  # curricula
+  staffMember: Person @connection(fields: ["staffEmail", "staffAuthID"])
+  curricula: [TeacherCurriculum] @connection(keyName: "curriculumByTeacher", fields: ["id"])
 }
 
 ### Person
-## Main table for user information. This table ıs connected to Institution (belongs-to), Class (has-many), ......... Has ENUM types Language, Role, and PersonStatus.
+## Table defines users. Users have different experiences of the app according to their 'role.' A query at the Person level includes basic user information, as well as:
+# 
 
 ## Keys:
 # primary — email
@@ -137,6 +139,7 @@ type Person
   birthdate: AWSDate
   image: String
   language: Language!
+  classes: [ClassStudent] @connection(keyName: "classByStudent", fields: ["email"])
   filters: [String]
 }
 
@@ -152,17 +155,20 @@ type Person
 type Room
 @model
 @key(name: "roomByInstitution", fields: ["institutionID"])
+@key(name: "roomByClass", fields: ["classID"])
 {
   id: ID!
   institutionID: ID!
   classID: ID!
-  teacherID: ID!
+  teacherAuthID: String!
+  teacherEmail: String!
   name: String!
   maxPersons: Int!
   institution: Institution @connection(fields: ["institutionID"])
-  # teacher:
-  # class:
-  # curricula: 
+  teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
+  class: Class @connection(fields: ["classID"])
+  curricula:[RoomCurriculum] @connection(keyName: "curriculumByRoom", fields: ["id"])
+  filters: [String]
 }
 
 ### Class
@@ -180,25 +186,25 @@ type Class
 {
   id: ID!
   institutionID: ID!
-  # roomID: ID!
   type: String
   name: String!
-  # room: Room @connection(fields: ["roomID"])
   institution: Institution @connection(fields: ["institutionID"])
+  rooms: [Room] @connection(keyName: "roomByClass", fields: ["id"])
   students: [ClassStudent]! @connection(keyName: "byClass", fields: ["id"])
 }
 
 type ClassStudent 
 @model(queries: null) 
-@key(name: "byClass", fields: ["classID", "studentID"]) 
+@key(name: "byClass", fields: ["classID", "studentID"])
+@key(name: "classByStudent", fields: ["studentEmail"])
 {
   id: ID!
   classID: ID!
   studentID: ID!
   studentEmail: String!
-  studentAuth: String!
+  studentAuthID: String!
   class: Class @connection(fields: ["classID"])
-  student: Person @connection(fields: ["studentEmail", "studentAuth"])
+  student: Person @connection(fields: ["studentEmail", "studentAuthID"])
 }
 
 ### Curriculum
@@ -226,7 +232,25 @@ type Curriculum
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
 }
 
+type TeacherCurriculum
+@model(queries: null)
+@key(name: "curriculumByTeacher", fields: ["staffID"])
+{
+  id: ID!
+  staffID: ID!
+  curriculumID: ID!
+  curriculum: Curriculum @connection(fields: ["curriculumID"])
+}
 
+type RoomCurriculum
+@model
+@key(name: "curriculumByRoom", fields: ["roomID"])
+{
+  id: ID!
+  roomID: ID!
+  curriculumID: ID!
+  curriculum: Curriculum @connection(fields: ["curriculumID"])
+}
 
 ### Syllabus
 ## 
@@ -299,11 +323,22 @@ type TruthGameInputs {
   text: String
 }
 
+type PollOption {
+  id: String
+  option: String
+  isChoice: Boolean
+}
+type PollInputs {
+  id: String
+  question: String
+  option: [PollOption]
+}
 type WarmUpData {
   story: [String]
   title: String
   additional: [AdditionalInputs]
   truthGame: [TruthGameInputs]
+  poll: [PollInputs]
 }
 
 type SelectedWord {
@@ -419,7 +454,6 @@ type StudentInfo {
 type DisplayData {
   breakdownComponent: String
   studentInfo: StudentInfo
-  # doFirstData: doFirstData
   warmUpData: WarmUpData
   corelessonData: CoreLessonData
   activityData: ActivityData
@@ -562,6 +596,7 @@ type Inputs {
   listInputNumber: Int
   truthGameInputs: [TruthGameInput]
   additionalInputs: [WritingPrompts!]
+  pollInputs: [PollInputs] 
 }
 
 type WritingPrompts {
@@ -726,68 +761,43 @@ type StudentWord @model(queries: null) @key(name: "wordsByStudent", fields: ["st
   student: Person @connection(fields: ["studentID", "studentAuthID"])
 }
 
-type Filter @model {
+type FilterGroup 
+@model 
+{
+  id: ID!
+  name: String!
+  description: String!
+  filters: [FilterGroupFilter] @connection(keyName: "filtersByGroup", fields: ["id"])
+}
+
+type FilterGroupFilter
+@model
+@key(name: "filtersByGroup", fields: ["filterGroupID"])
+{
+  id: ID!
+  filterGroupID: ID!
+  filterID: ID!
+  zoiq: Boolean
+  admin: Boolean
+  show: Boolean
+  required: Boolean
+  filter: Filter @connection(fields: ["filterID"])
+}
+
+type Filter 
+@model
+{
   id: ID!
   name: String!
   description: String
-  editable: Boolean
   options: [FilterOption!]! @connection(keyName: "byFilter", fields: ["id"])
 }
 
-type FilterOption @model @key(fields: ["id"]) @key(name: "byFilter", fields: ["filterID"]) {
+type FilterOption 
+@model 
+@key(fields: ["id"]) 
+@key(name: "byFilter", fields: ["filterID"]) {
   id: ID!
   filterID: ID!
   text: String!
-  filter: Filter @connection(fields: ["filterID"])
-}
-
-type Client @model {
-  id: ID!
-  name: String!
-  architecture: [Architecture] @connection(name: "architectureByClient", fields: ["id"])
-}
-
-type Architecture
-  @model
-  @key(name: "architecturesByClient", fields: ["clientID", "id"])
-  @key(name: "architectureByClient", fields: ["clientID"]) {
-  id: ID!
-  name: String!
-  clientID: ID!
-  client: Client @connection(fields: ["clientID"])
-  types: [Type] @connection(keyName: "typeByArchitecture", fields: ["id"])
-  filters: [ArchitectureFilter] @connection(keyName: "filtersByArchitecture", fields: ["id"])
-}
-
-type Type
-  @model
-  @key(name: "typesByArchitecture", fields: ["architectureID", "id"])
-  @key(name: "typeByArchitecture", fields: ["architectureID"]) {
-  id: ID!
-  name: String!
-  architectureID: ID!
-  architecture: Architecture @connection(fields: ["architectureID"])
-  filters: [FilterType] @connection(keyName: "filtersByType", fields: ["id"])
-}
-
-type FilterType @model(queries: null) @key(name: "filtersByType", fields: ["typeID", "filterID"]) {
-  id: ID!
-  typeID: ID!
-  filterID: ID!
-  multiselect: Boolean
-  required: Boolean
-  type: Type @connection(fields: ["typeID"])
-  filter: Filter @connection(fields: ["filterID"])
-}
-
-type ArchitectureFilter
-  @model(queries: null)
-  @key(name: "filtersByArchitecture", fields: ["architectureID", "filterID"]) {
-  id: ID!
-  architectureID: ID!
-  filterID: ID!
-  multiselect: Boolean
-  required: Boolean
-  architecture: Architecture @connection(fields: ["architectureID"])
-  filter: Filter @connection(fields: ["filterID"])
 }
