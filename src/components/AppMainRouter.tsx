@@ -18,7 +18,6 @@ const Registration = lazy(() => import('./Auth/Register'));
 const Lesson = lazy(() => import('./Lesson/Lesson'));
 const TeacherView = lazy(() => import('./TeacherView/TeacherView'));
 
-
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
   const { theme, state, dispatch } = useContext(GlobalContext);
@@ -48,79 +47,78 @@ const MainRouter: React.FC = () => {
   return (
     <div
       className={`background-test h-screen md:max-w-full md:h-screen w-full overflow-x-hidden ${theme.bg} flex flex-col`}>
-
       {deviceDetected.mobile ? (
         <MobileOops userAgent={deviceDetected.device} />
       ) : (
-          <Suspense
-            fallback={
-              <div className='min-h-screen w-full flex flex-col justify-center items-center'>
-                <ComponentLoading />
-              </div>
-            }>
-            <Switch>
-              <Route path='/login' render={() => <Login />} />
-              <Route path='/register' render={() => <Registration />} />
-              <Route
-                path='/confirm'
-                render={({ location }) => (
-                  <Redirect
-                    to={{
-                      pathname: '/confirm-code',
-                      state: { from: location },
-                    }}
-                  />
-                )}
-              />
-              <Route path='/confirm-code' render={() => <ConfirmCode />} />
-              <Route
-                path='/new-password'
-                render={({ location }) => (
-                  <Redirect
-                    to={{
-                      pathname: '/confirm-code',
-                      state: { from: location },
-                    }}
-                  />
-                )}
-              />
-              <Route path='/forgot-password' render={() => <Forgot />} />
-              <Route
-                path='/reset-password'
-                render={({ location }) => (
-                  <Redirect
-                    to={{
-                      pathname: '/confirm-code',
-                      state: { from: location },
-                    }}
-                  />
-                )}
-              />
-              <Route path='/privacy-policy' render={() => <PrivacyPolicy />} />
-              <PrivateRoute path='/dashboard'>
-                <Dashboard />
-              </PrivateRoute>
-              <PrivateRoute path='/lesson'>
-                <Lesson />
-              </PrivateRoute>
-              <PrivateRoute path='/lesson-control'>
-                <TeacherView />
-              </PrivateRoute>
-              <Route
-                exact
-                path='/'
-                render={({ location }) => (
-                  <Redirect
-                    to={{
-                      pathname: '/dashboard',
-                      state: { from: location },
-                    }}
-                  />
-                )}
-              />
-            </Switch>
-          </Suspense>
-        )}
+        <Suspense
+          fallback={
+            <div className="min-h-screen w-full flex flex-col justify-center items-center">
+              <ComponentLoading />
+            </div>
+          }>
+          <Switch>
+            <Route path="/login" render={() => <Login />} />
+            {/*<Route path='/register' render={() => <Registration />} />*/}
+            <Route
+              path="/confirm"
+              render={({ location }) => (
+                <Redirect
+                  to={{
+                    pathname: '/confirm-code',
+                    state: { from: location },
+                  }}
+                />
+              )}
+            />
+            <Route path="/confirm-code" render={() => <ConfirmCode />} />
+            <Route
+              path="/new-password"
+              render={({ location }) => (
+                <Redirect
+                  to={{
+                    pathname: '/confirm-code',
+                    state: { from: location },
+                  }}
+                />
+              )}
+            />
+            <Route path="/forgot-password" render={() => <Forgot />} />
+            <Route
+              path="/reset-password"
+              render={({ location }) => (
+                <Redirect
+                  to={{
+                    pathname: '/confirm-code',
+                    state: { from: location },
+                  }}
+                />
+              )}
+            />
+            <Route path="/privacy-policy" render={() => <PrivacyPolicy />} />
+            <PrivateRoute path="/dashboard">
+              <Dashboard />
+            </PrivateRoute>
+            <PrivateRoute path="/lesson">
+              <Lesson />
+            </PrivateRoute>
+            <PrivateRoute path="/lesson-control">
+              <TeacherView />
+            </PrivateRoute>
+            <Route
+              exact
+              path="/"
+              render={({ location }) => (
+                <Redirect
+                  to={{
+                    pathname: '/dashboard',
+                    state: { from: location },
+                  }}
+                />
+              )}
+            />
+          </Switch>
+        </Suspense>
+      )}
     </div>
   );
 };
