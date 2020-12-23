@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { IconContext } from 'react-icons';
-import { FaAngleRight } from 'react-icons/fa';
+import { FaAngleRight, FaAngleLeft } from 'react-icons/fa';
 import { GlobalContext } from '../../contexts/GlobalContext';
 
 interface PaginationProps {
@@ -76,11 +76,11 @@ const PageArrows: React.FC<PageArrowsProps> = (pageProps: PageArrowsProps) => {
   return (
     <button
       onClick={onClick}
-      className={`btn btn-default w-20 ${theme.outlineNone} ${isBack ? 'transform rotate-180' : ''} ${!active ? 'cursor-default' : ''}`}
+      className={`btn btn-default w-20 ${theme.outlineNone} ${!active ? 'cursor-default' : ''}`}
       disabled={!active}>
-      <span className="w-6 mr-4 cursor-pointer">
+      <span className="w-6 cursor-pointer">
         <IconContext.Provider value={{ size: '1.5rem', color: `${active ? '#667eea' : 'darkgrey'}` }}>
-          <FaAngleRight />
+          {isBack ? <FaAngleLeft /> : <FaAngleRight />}
         </IconContext.Provider>
       </span>
     </button>
@@ -92,11 +92,13 @@ const Pagination: React.FC<PaginationProps> = (pageProps: PaginationProps) => {
   return (
     <div className="flex flex-wrap items-center justify-center">
       <PageArrows onClick={setPrev} active={currentPage !== 1} isBack={true} />
+      {currentPage !== 1 && <span className="w-auto mr-2 text-indigo-600"> . . . </span>}
       <PageCount
         firstPage={firstPage}
         lastPage={lastPage}
         currentPage={currentPage}
       />
+      {!lastPage && <span className="w-auto ml-2 text-indigo-600"> . . . </span>}
       <PageArrows onClick={setNext} active={!lastPage} />
     </div>
   )
