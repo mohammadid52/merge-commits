@@ -26,7 +26,7 @@ const UnderlinedTabs = (props: TabsProps) => {
               onClick={() => {
                 setOpenTab(tab.index)
               }}
-              className={`font-bold uppercase bg-white text-xs p-3 px-8 border-b-2 flex items-center justify-center hover:border-indigo-600 ${theme.outlineNone} ${
+              className={`font-bold uppercase bg-white text-xs p-3 px-8 border-b-2 flex items-center h-full justify-center hover:border-indigo-600 ${theme.outlineNone} ${
                 openTab === tab.index
                   ? 'bg-gray-100 border-indigo-600 '
                   : ''

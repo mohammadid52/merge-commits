@@ -96,3 +96,39 @@ export const stringToHslColor = (str: string) => {
   let h = hash % 360;
   return 'hsl(' + h + ', 70%, 72%)';
 };
+
+/**
+ * Function used for getting hostname from web url
+ * @param url
+ */
+
+export const getHostNameFromUrl = (url: string) => {
+  try {
+    const webUrl = new URL(url);
+    if (webUrl) {
+      return webUrl.hostname;
+    }
+    return url;
+  } catch {
+    return url;
+  }
+};
+
+/**
+ * Function used to format phone number in (xxx)xxx-xxxx format
+ * @param str
+ */
+
+export const formatPhoneNumber = (str: string) => {
+  //Filter only numbers from the input
+  let cleaned = ('' + str).replace(/\D/g, '');
+
+  //Check if the input is of correct length
+  let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+
+  if (match) {
+    return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+  }
+
+  return str;
+};

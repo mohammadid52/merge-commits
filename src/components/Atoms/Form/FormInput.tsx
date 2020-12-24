@@ -18,7 +18,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
   return (
     <Fragment>
       <label htmlFor={id} className="block text-m font-medium leading-5 text-gray-700">
-        <span className="text-red-500"> {isRequired ? '*' : null}</span> {label}
+        {label} <span className="text-red-500"> {isRequired ? '*' : null}</span>
       </label>
       <input
         type="text"
@@ -26,7 +26,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
         name={name}
         onChange={(e: any) => onChange(e)}
         className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
-        value={value}
+        value={value ? value : ''}
         placeholder={placeHolder} />
     </Fragment>
   )

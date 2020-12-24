@@ -20,7 +20,7 @@ const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
   return (
     <button
       type={type ? type : 'button'}
-      className={` font-bold uppercase text-xs px-4 py-2 rounded-lg flex items-center justify-center w-auto ${theme.outlineNone} ${theme.btn.indigo} ${btnClass ? btnClass : ''}`}
+      className={`font-bold uppercase text-xs px-4 py-2 rounded-lg flex items-center justify-center w-auto ${theme.outlineNone} ${transparent ? theme.btn.cancel : theme.btn.indigo} ${btnClass ? btnClass : ''}`}
       onClick={onClick}
     >
       {label ? <span className={`mx-2 ${labelClass ? labelClass : ''}`}>{label}</span> : null}

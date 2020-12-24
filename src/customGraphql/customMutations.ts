@@ -316,8 +316,7 @@ export const createFeedback = /* GraphQL */ `
 `;
 
 export const createInstitution = /* GraphQL */ `
-  mutation CreateInstitution($input: CreateInstitutionInput!
-    $condition: ModelInstitutionConditionInput) {
+  mutation CreateInstitution($input: CreateInstitutionInput!, $condition: ModelInstitutionConditionInput) {
     createInstitution(input: $input, condition: $condition) {
       id
       name
@@ -338,4 +337,22 @@ export const createInstitution = /* GraphQL */ `
   }
 `;
 
-
+export const updateInstitution = /* GraphQL */ `
+  mutation UpdateInstitution($input: UpdateInstitutionInput!, $condition: ModelInstitutionConditionInput) {
+    updateInstitution(input: $input, condition: $condition) {
+      id
+      name
+      type
+      district
+      address
+      addressLine2
+      city
+      state
+      zip
+      phone
+      website
+      image
+      isServiceProvider
+    }
+  }
+`;

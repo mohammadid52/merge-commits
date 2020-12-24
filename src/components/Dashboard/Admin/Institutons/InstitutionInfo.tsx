@@ -1,41 +1,74 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaGraduationCap, FaChalkboardTeacher, FaHotel } from 'react-icons/fa';
+import { FaGraduationCap, FaChalkboardTeacher, FaHotel, FaHandshake } from 'react-icons/fa';
 
-import ActionButton from '../Actions/ActionButton';
 import { initials, stringToHslColor } from '../../../../utilities/strings';
 import UnderlinedTabs from '../../../Atoms/UnderlinedTabs';
 import { IoPeople } from 'react-icons/io5';
+import { getImageFromS3 } from '../../../../utilities/services';
 
 interface InstitutionInfoProps {
-  name?: string;
+  institute?: InstInfo;
+}
+interface InstInfo {
+  id: string
+  name: string
+  type: string
+  website: string
+  address: string
+  addressLine2: string
+  city: string
+  district: string
+  state: string
+  zip: string
+  image: string
+  phone: string
+  isServiceProvider: boolean
 }
 
 const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const { } = instProps;
   const match = useRouteMatch();
+  const [imageUrl, setImageUrl] = useState();
 
   const tabs = [
-    { index: 0, title: 'Curricular', icon: <FaGraduationCap />, active: true, content: <p className="p-16 text-center">No data</p> },
-    { index: 1, title: 'Classes', icon: <FaChalkboardTeacher />, active: false, content: <p className="p-16 text-center">No data</p> },
-    { index: 2, title: 'Staff', icon: <IoPeople />, active: false, content: <p className="p-16 text-center">No data</p> },
-    { index: 3, title: 'Rooms', icon: <FaHotel />, active: false, content: <p className="p-16 text-center">No data</p> }
+    { index: 0, title: 'Service Providers', icon: <FaHandshake />, active: false, content: <p className="p-16 text-center">No data</p> },
+    { index: 1, title: 'Staff', icon: <IoPeople />, active: false, content: <p className="p-16 text-center">No data</p> },
+    { index: 2, title: 'Classes', icon: <FaChalkboardTeacher />, active: false, content: <p className="p-16 text-center">No data</p> },
+    { index: 3, title: 'Curricular', icon: <FaGraduationCap />, active: true, content: <p className="p-16 text-center">No data</p> },
+    { index: 4, title: 'Rooms', icon: <FaHotel />, active: false, content: <p className="p-16 text-center">No data</p> }
   ]
+
+  useEffect(() => {
+    async function getUrl() {
+      const imageUrl: any = await getImageFromS3(instProps?.institute.image);
+      setImageUrl(imageUrl);
+    }
+    getUrl();
+  }, [instProps?.institute.image]);
+
+  const { name, image } = instProps?.institute
   return (
     <div>
       <div className="h-9/10 flex flex-col md:flex-row">
 
         {/* Profile section */}
-        <div className="w-auto p-4 mr-4 flex flex-col text-center items-center">
-          <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
-            <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{ background: `${stringToHslColor('I' + ' ' + 'N')}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
-              {initials('IN', 'NI')}
-            </div>
-          </div>
+        <div className="w-2/10 p-4 mr-4 flex flex-col text-center items-center">
+
+          {image ?
+            <img
+              className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+              src={imageUrl}
+            /> : <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+              <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{ background: `${stringToHslColor('I' + ' ' + 'N')}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
+                {initials('IN', 'NI')}
+              </div>
+            </div>}
+
           <div className="text-xl font-bold font-open text-gray-900 mt-4">
             <p>
-              ICONOCLAST ARTISTS
+              {name ? name : ''}
             </p>
           </div>
         </div>
@@ -78,11 +111,6 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
             </div>
           </div>
           <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg'>
-            {/* <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
-                Other Information
-              </h3>
-            </div> */}
             <div className='px-4 py-5 sm:px-6'>
               <UnderlinedTabs tabs={tabs} />
             </div>
@@ -95,7 +123,3 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 };
 
 export default InstitutionInfo;
-
-const InstituteData = {
-
-}
