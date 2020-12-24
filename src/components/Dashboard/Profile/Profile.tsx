@@ -284,7 +284,7 @@ const Profile: React.FC = () => {
           </div>
           <div className={`w-full white_back p-8 mb-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
             <div className="h-9/10 flex flex-col md:flex-row">
-              <div className="w-auto p-4 flex flex-col text-center items-center">
+              <div className="w-auto p-4 flex flex-shrink-0 flex-col text-center items-center">
                 <div className='relative' >
                   {person.image ?
                     (
@@ -302,7 +302,7 @@ const Profile: React.FC = () => {
                             <IconContext.Provider value={{ size: '1.6rem', color: '#B22222' }}>
                               <FaEdit />
                             </IconContext.Provider>
-                            <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
+                            <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
                           </label>
                           <span className="w-8 cursor-pointer" onClick={deletUserProfile}>
                             <IconContext.Provider value={{ size: '1.6rem', color: '#fa0000' }}>
@@ -316,7 +316,7 @@ const Profile: React.FC = () => {
                         {!imageLoading ? <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
                           <FaPlus />
                         </IconContext.Provider> : <Loader />}
-                        <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
+                        <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
                       </label>
 
                     )

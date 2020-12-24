@@ -139,7 +139,7 @@ const ConfirmCode = () => {
       const user = await Auth.signIn(username, tempPassword);
       const changePasswordRes = await Auth.changePassword(user, tempPassword, password);
       console.log(changePasswordRes);
-
+      sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken);
       dispatch({ type: 'LOG_IN', payload: { email: username, authId: user.username } });
       if (isChecked) {
         setCookie('cred', {
@@ -150,6 +150,7 @@ const ConfirmCode = () => {
       } else {
         removeCookie('cred');
       }
+      setCookie('auth', { email: username, authId: user.username }, { path: '/' });
       history.push('/dashboard');
     } catch (error) {
 

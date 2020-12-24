@@ -11,7 +11,7 @@ interface ProfileCropModalProps {
 
 const ProfileCropModal: React.FC<ProfileCropModalProps> = (props: ProfileCropModalProps) => {
   const { upImg, saveCroppedImage, closeAction } = props
-  const [crop, setCrop] = useState<any>({ unit: '%', width: 30, aspect: 1 });
+  const [crop, setCrop] = useState<any>({ unit: '%', x: 0, y: 0, width: 100, aspect: 1 });
   const [completedCrop, setCompletedCrop] = useState(null);
   const imgRef = useRef(null);
 
@@ -56,12 +56,13 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (props: ProfileCropMod
 
 
   return (
-    <Modal showHeader={true} title="Crop Avatar" showFooter={false} saveAction={saveCroped} closeAction={closeAction}>
+    <Modal showHeader={true} showHeaderBorder={false} showFooter={false} saveAction={saveCroped} closeAction={closeAction}>
       <div className="mx-auto my-5 max-w-112 w-112 max-h-100 overflow-hidden">
         <ReactCrop
           src={upImg}
           onImageLoaded={onLoad}
           crop={crop}
+          // imageStyle={{ width: '28rem', maxHeight: '25rem', objectFit: 'contain' }}        // style for the image tag in cropper
           onChange={(c: any) => setCrop(c)}
           onComplete={(c: any) => setCompletedCrop(c)}
         />
