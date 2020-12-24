@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
-import { useCookies } from 'react-cookie';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { MdEmail } from 'react-icons/md';
 import { useHistory, NavLink } from 'react-router-dom';
@@ -8,7 +7,6 @@ import { useHistory, NavLink } from 'react-router-dom';
 import Auth from '@aws-amplify/auth';
 
 const Forgot = () => {
-  const [cookies, setCookie] = useCookies(['auth']);
   const history = useHistory();
   const { theme, state, dispatch } = useContext(GlobalContext);
   let [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({

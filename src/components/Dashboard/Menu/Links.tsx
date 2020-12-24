@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, SetStateAction } from 'react';
-import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 // Iconz
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FiUsers } from 'react-icons/fi';
@@ -18,12 +18,14 @@ export interface LinkProps {
   currentPage: string;
   image?: string;
   role?: string;
-}
+  updateAuthState?: Function
+};
 
 const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const history = useHistory();
   const match = useRouteMatch();
   const { state } = useContext(GlobalContext);
+  const { role } = linkProps;
   const [links, setLinks] = useState<Array<LinkObject>>([]);
 
   const userLinks = (role: string): void => {
@@ -103,13 +105,18 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     }
   };
 
+  // useEffect(() => {
+  //   userLinks(state.user.role);
+  // }, [state.user.role]);
+
   useEffect(() => {
-    userLinks(state.user.role);
-  }, [state.user.role]);
+    userLinks(role);
+  }, [role]);
 
   // useEffect(() => {
-  //   userLinks(state.user?.role);
-  // }, []);
+  //   console.log("initial useeffect in links has been called", role)
+  //   userLinks(role);
+  // }, [])
 
   const handleLink = (e: any) => {
     const id = e.target.id.toLowerCase();
@@ -152,22 +159,28 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const getClassStyle = (label: string) => {
     switch (label) {
       case 'People':
-        return `${linkProps.currentPage === 'manage-users' && 'bg-grayscale'} border-l-4 border-mustard-yellow`;
+        return `${linkProps.currentPage === 'manage-users' && 'bg-grayscale'
+          } border-l-4 border-mustard-yellow`;
         break;
       case 'Registration':
-        return `${linkProps.currentPage === 'registration' && 'bg-grayscale'} border-l-4 border-ketchup`;
+        return `${linkProps.currentPage === 'registration' && 'bg-grayscale'
+          } border-l-4 border-ketchup`;
         break;
       case 'Classroom':
-        return `${linkProps.currentPage === 'classroom' && 'bg-grayscale'} border-l-4 border-blueberry`;
+        return `${linkProps.currentPage === 'classroom' && 'bg-grayscale'
+          } border-l-4 border-blueberry`;
         break;
       case 'Lesson Planner':
-        return `${linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'} border-l-4 border-sea-green`;
+        return `${linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'
+          } border-l-4 border-sea-green`;
         break;
       case 'Lesson Builder':
-        return `${linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'} border-l-4 border-sea-green`;
+        return `${linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'
+          } border-l-4 border-sea-green`;
         break;
       case 'Institutions':
-        return `${linkProps.currentPage === 'manage-institutions' && 'bg-grayscale'} border-l-4 border-ketchup`;
+        return `${linkProps.currentPage === 'manage-institutions' && 'bg-grayscale'
+          } border-l-4 border-ketchup`;
         break;
       default:
         return '';

@@ -2284,6 +2284,7 @@ export const onCreateSyllabus = /* GraphQL */ `
   subscription OnCreateSyllabus {
     onCreateSyllabus {
       id
+      type
       name
       type
       description
@@ -2311,6 +2312,7 @@ export const onUpdateSyllabus = /* GraphQL */ `
   subscription OnUpdateSyllabus {
     onUpdateSyllabus {
       id
+      type
       name
       type
       description

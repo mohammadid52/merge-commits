@@ -3332,6 +3332,7 @@ export const createClassroom = /* GraphQL */ `
         }
         nextToken
       }
+      filters
       createdAt
       updatedAt
     }
@@ -3702,6 +3703,7 @@ export const deleteClassroom = /* GraphQL */ `
         }
         nextToken
       }
+      filters
       createdAt
       updatedAt
     }
@@ -3781,6 +3783,7 @@ export const createFeedback = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      filters
       createdAt
       updatedAt
     }

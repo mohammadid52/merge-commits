@@ -1,5 +1,3 @@
-@import "./components.css";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -28,20 +26,6 @@
 
 /* This contains custom class names for the reusable components. */
 
-/* Text colors */
-
-.text-default {
-  @apply text-black80;
-}
-
-.text-secondary {
-  @apply text-gray-500;
-}
-
-.text-active {
-  @apply text-indigo-500;
-}
-
 .pagetitle-container {
   @apply my-4 p-4;
 }
@@ -64,6 +48,50 @@
 
 .purpule-button:active {
   @apply border-indigo-700;
+}
+
+/*** MODAL STYLES ***/
+
+.backdrop.fade-in {
+  opacity: 0.25;
+  animation-name: backdropFadeInOpacity;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 0.2s;
+}
+
+@keyframes backdropFadeInOpacity {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0.25;
+  }
+}
+
+.modal.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, 0);
+  animation-name: modalShow;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 0.2s;
+}
+
+@keyframes modalShow {
+  0% {
+    visibility: hidden;
+    opacity: 0;
+    transform: translate(0, -20px);
+  }
+
+  100% {
+    visibility: visible;
+    opacity: 1;
+    transform: translate(0, 0);
+  }
 }
 
 /* ----- */
