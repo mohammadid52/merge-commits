@@ -78,6 +78,10 @@ const MainRouter: React.FC = () => {
   useEffect(() => {
     if (authState === 'loggedIn') {
       checkForUserInactivity()
+    } else {
+      removeCookie('auth', { path: '/' });
+      dispatch({ type: 'CLEANUP' });
+      sessionStorage.removeItem('accessToken');
     }
   }, [authState]);
 
