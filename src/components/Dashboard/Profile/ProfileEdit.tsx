@@ -48,7 +48,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                     id: state.user.id,
                     firstName: editUser.firstName,
                     lastName: editUser.lastName,
-                    language: state.user.language,
+                    language: editUser.language,
                     onBoardSurvey: state.user.onBoardSurvey ? state.user.onBoardSurvey : false,
                     role: state.user.role,
                     image: state.user.image

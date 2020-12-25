@@ -27,7 +27,6 @@ const MainRouter: React.FC = () => {
           const { email, sub } = user.attributes
           let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }))
           userInfo = userInfo.data.getPerson;
-          console.log('userInfouserInfouserInfouserInfouserInfouserInfouserInfouserInfo', userInfo)
           updateAuthState(true)
           dispatch({
             type: 'PREV_LOG_IN',

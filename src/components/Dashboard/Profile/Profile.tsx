@@ -23,6 +23,7 @@ import BreadCrums from '../../Atoms/BreadCrums';
 import SectionTitle from '../../Atoms/SectionTitle';
 import Buttons from '../../Atoms/Buttons';
 import Loader from '../../Atoms/Loader';
+import useDictionary from '../../../customHooks/dictionary';
 
 export interface UserInfo {
   authId: string
@@ -69,12 +70,12 @@ const Profile: React.FC = () => {
       birthdate: null,
     }
   );
-
+  const { dashboardProfileDict } = useDictionary();
   const match = useRouteMatch();
   const history = useHistory();
   const pathName = location.pathname.replace(/\/$/, "");
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
-  const { state, theme, dispatch } = useContext(GlobalContext);
+  const { state, theme, userLanguage, dispatch } = useContext(GlobalContext);
   const [status, setStatus] = useState('');
   const [select, setSelect] = useState('Profile');
   const [showCropper, setShowCropper] = useState(false);
@@ -268,12 +269,13 @@ const Profile: React.FC = () => {
     return (<LessonLoading />)
   }
   {
+    const sectionTitle: any = dashboardProfileDict[userLanguage]['TITLE']
     return (
       <div className="w-full h-9.28/10 md:h-full flex items-center justify-center">
         <div className={`w-9/10 h-full main_container mt-4`}>
           <BreadCrums items={breadCrumsList} />
           <div className="flex justify-between">
-            <SectionTitle title="USER PROFILE" subtitle="This contains your profile information." />
+            <SectionTitle title={sectionTitle} subtitle="This contains your profile information." />
             <div className="flex justify-end py-4 mb-4 w-5/10">
               <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
               {currentPath !== 'edit' ? (
