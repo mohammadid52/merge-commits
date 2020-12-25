@@ -256,6 +256,14 @@ const sideBarLinksDict: any = {
         CLASSROOM: 'Aula'
     }
 }
+const appDict: any = {
+    'EN': {
+        LOG_OUT: 'Log Out'
+    },
+    'ES': {
+        LOG_OUT: 'Cerrar sesión'
+    }
+}
 
 function useDictionary() {
     async function lookUp(word: string) {
@@ -279,7 +287,7 @@ function useDictionary() {
     }
 
     return {
-        lessonDict, dashboardDict, dashboardProfileDict, sideBarLinksDict
+        appDict, sideBarLinksDict, dashboardProfileDict 
     }
 }
 
