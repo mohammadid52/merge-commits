@@ -56,9 +56,6 @@ const MainRouter: React.FC = () => {
   const autoLogout = async () => {
     if (isUserLoggedIn()) {
       await Auth.signOut();
-      removeCookie('auth', { path: '/' });
-      dispatch({ type: 'CLEANUP' });
-      sessionStorage.removeItem('accessToken');
       updateAuthState(false)
     }    
   }
