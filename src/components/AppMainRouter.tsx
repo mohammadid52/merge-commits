@@ -1,5 +1,4 @@
-import React, { useState, useContext, useEffect, Suspense, lazy } from 'react';
-import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
+import React, { useState, useContext, useEffect, Suspense } from 'react';
 import { Auth } from '@aws-amplify/auth';
 import { useCookies } from 'react-cookie';
 
@@ -15,7 +14,6 @@ const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
   const { theme, dispatch } = useContext(GlobalContext);
   const [cookies, setCookie, removeCookie] = useCookies();
-  const history = useHistory();
   const [authState, setAuthState] = useState('loading')
 
   const checkUserAuthenticated = async () => {
@@ -25,53 +23,65 @@ const MainRouter: React.FC = () => {
         const user = await Auth.currentAuthenticatedUser()
         if (user) {
           const { email, sub } = user.attributes
-          setAuthState('loggedIn')
+          updateAuthState(true)
           dispatch({
             type: 'PREV_LOG_IN',
             payload: { email, authId: sub },
           });
         }
       } else {
-        setAuthState('notLoggedIn')  
+        updateAuthState(false)
       }
     } catch (err) {
-      setAuthState('notLoggedIn')
+      updateAuthState(false)
     }
   };
 
-  // const checkForUserInactivity = () => {
-  //   let idelTime = 0;
-  //   let timer: any;
+  const checkForUserInactivity = () => {
+    let idelTime = 0;
+    let timer: any;
 
-  //   window.addEventListener("visibilitychange", function () {
-  //     if (document.visibilityState === 'visible') {
-  //       clearTimeout(timer);        //  Clear timer if user comes back to the app.
-  //     } else {
-  //       idelTime = 30 * 60 * 1000;  // Timer for 30 mins to count if user not using the app.
+    window.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === 'visible') {
+        clearTimeout(timer);        //  Clear timer if user comes back to the app.
+      } else {
+        if (isUserLoggedIn()) {
+          idelTime = 30 * 60 * 1000;  // Timer for 30 mins to count if user not using the app.
+          timer = setTimeout(autoLogout, idelTime)
+        }
+      }
+    });
 
-  //       const autoLogout = async () => {
-  //         try {
-  //           await Auth.signOut();
-  //           removeCookie('auth', { path: '/' });
-  //           dispatch({ type: 'CLEANUP' });
-  //           sessionStorage.removeItem('accessToken');
-  //           history.push('/login');
-  //         } catch (error) {
-  //           console.log('error signing out: ', error);
-  //         }
-  //       }
+  }
+  const autoLogout = async () => {
+    if (isUserLoggedIn()) {
+      await Auth.signOut();
+      removeCookie('auth', { path: '/' });
+      dispatch({ type: 'CLEANUP' });
+      sessionStorage.removeItem('accessToken');
+      updateAuthState(false)
+    }    
+  }
 
-  //       timer = setTimeout(autoLogout, idelTime)
-  //     }
-  //   });
-
-  // }
+  const isUserLoggedIn = () => {
+    return authState === 'loggedIn'
+  }
 
   const updateAuthState = (auth: boolean) => {
-    setAuthState(auth ? 'loggedIn': 'notLoggedIn')
+    if (auth) {
+      setAuthState('loggedIn')
+    } else {
+      setAuthState('notLoggedIn')
+    }
   }
+
   useEffect(() => {
-    // checkForUserInactivity();
+    if (authState === 'loggedIn') {
+      checkForUserInactivity()
+    }
+  }, [authState]);
+
+  useEffect(() => {
     checkUserAuthenticated();
   }, []);
 
