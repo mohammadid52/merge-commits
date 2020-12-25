@@ -269,13 +269,12 @@ const Profile: React.FC = () => {
     return (<LessonLoading />)
   }
   {
-    const sectionTitle: any = dashboardProfileDict[userLanguage]['TITLE']
     return (
       <div className="w-full h-9.28/10 md:h-full flex items-center justify-center">
         <div className={`w-9/10 h-full main_container mt-4`}>
           <BreadCrums items={breadCrumsList} />
           <div className="flex justify-between">
-            <SectionTitle title={sectionTitle} subtitle="This contains your profile information." />
+            <SectionTitle title={dashboardProfileDict[userLanguage]['TITLE']} subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']} />
             <div className="flex justify-end py-4 mb-4 w-5/10">
               <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
               {currentPath !== 'edit' ? (

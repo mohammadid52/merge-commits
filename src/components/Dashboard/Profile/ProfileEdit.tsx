@@ -7,7 +7,7 @@ import DropdownForm from './DropdownForm';
 import { UserInfo } from './Profile';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import { GlobalContext } from '../../../contexts/GlobalContext';
-
+import useDictionary from '../../../customHooks/dictionary';
 interface UserInfoProps {
     user: UserInfo
     status: string
@@ -17,9 +17,10 @@ interface UserInfoProps {
 
 const ProfileEdit = (props: UserInfoProps) => {
     const history = useHistory();
+    const { dashboardProfileDict } = useDictionary();
     const { user, getUser, status, setStatus } = props;
     const [editUser, setEditUser] = useState(user);
-    const { state, dispatch } = useContext(GlobalContext);
+    const { state, userLanguage, dispatch } = useContext(GlobalContext);
 
     async function updatePerson() {
         const input = {
@@ -132,8 +133,8 @@ const ProfileEdit = (props: UserInfoProps) => {
 
                         <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
                             <h3 className="text-lg leading-6 font-medium text-gray-900">
-                                Edit Personal Information
-                    </h3>
+                                {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
+                            </h3>
                         </div>
 
                         <div className="h-full px-4 py-5 sm:px-6">
@@ -144,8 +145,8 @@ const ProfileEdit = (props: UserInfoProps) => {
                                     <>
                                         <div className="sm:col-span-3 p-2">
                                             <label htmlFor="preferredName" className="block text-sm font-medium leading-5 text-gray-700">
-                                                Nickname
-                            </label>
+                                                {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['NICKNAME']}
+                                            </label>
                                             <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                                 <input id="preferredName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                                                     defaultValue={user.preferredName}
@@ -157,15 +158,15 @@ const ProfileEdit = (props: UserInfoProps) => {
                                             <DropdownForm
                                                 handleChangeLanguage={handleChangeLanguage}
                                                 userLanguage={user.language}
-                                                label='Language Preference'
+                                                label={dashboardProfileDict[userLanguage]['EDIT_PROFILE']['LANGUAGE']}
                                                 items={Language}
                                             />
                                         </div>
 
                                         <div className="sm:col-span-3 p-2">
                                             <label htmlFor="phone" className="block text-sm font-medium leading-5 text-gray-700">
-                                                Contact Number
-                            </label>
+                                                {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['CONTACT']}
+                                            </label>
                                             <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                                 <input id="phone" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                                                     defaultValue={user.phone}
@@ -175,8 +176,8 @@ const ProfileEdit = (props: UserInfoProps) => {
 
                                         <div className="sm:col-span-3 p-2">
                                             <label htmlFor="birthdate" className="block text-sm font-medium leading-5 text-gray-700">
-                                                Birthday
-                            </label>
+                                                {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['BIRTHDAY']}
+                                            </label>
                                             <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                                 <input id="birthdate" type="date" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                                                     defaultValue={user.birthdate}
@@ -190,8 +191,8 @@ const ProfileEdit = (props: UserInfoProps) => {
                                     <>
                                         <div className="sm:col-span-3 p-2">
                                             <label htmlFor="firstName" className="block text-sm font-medium leading-5 text-gray-700">
-                                                First name
-                            </label>
+                                                {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['FIRST_NAME']}
+                                            </label>
                                             <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                                 <input id="firstName"
                                                     onChange={onChange}
@@ -204,8 +205,8 @@ const ProfileEdit = (props: UserInfoProps) => {
 
                                         <div className="sm:col-span-3 p-2">
                                             <label htmlFor="lastName" className="block text-sm font-medium leading-5 text-gray-700">
-                                                Last name
-                            </label>
+                                                {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['LAST_NAME']}
+                                            </label>
                                             <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                                 <input id="lastName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                                                     defaultValue={user.lastName} type="text"
@@ -215,8 +216,8 @@ const ProfileEdit = (props: UserInfoProps) => {
 
                                         <div className="sm:col-span-3 p-2">
                                             <label htmlFor="preferredName" className="block text-sm font-medium leading-5 text-gray-700">
-                                                Nickname
-                            </label>
+                                                {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['NICKNAME']}
+                                            </label>
                                             <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                                 <input id="preferredName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                                                     defaultValue={user.preferredName}
@@ -228,15 +229,15 @@ const ProfileEdit = (props: UserInfoProps) => {
                                             <DropdownForm
                                                 handleChangeLanguage={handleChangeLanguage}
                                                 userLanguage={user.language}
-                                                label='Language Preference'
+                                                label={dashboardProfileDict[userLanguage]['EDIT_PROFILE']['LANGUAGE']}
                                                 items={Language}
                                             />
                                         </div>
 
                                         <div className="sm:col-span-3 p-2">
                                             <label htmlFor="phone" className="block text-sm font-medium leading-5 text-gray-700">
-                                                Contact Number
-                            </label>
+                                                {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['CONTACT']}
+                                            </label>
                                             <div className="mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                                                 <input id="phone" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                                                     defaultValue={user.phone}
@@ -294,14 +295,14 @@ const ProfileEdit = (props: UserInfoProps) => {
                             <span className="inline-flex rounded-md shadow-sm">
                                 <NavLink to={`/dashboard/profile`}>
                                     <button type="button" className="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
-                                        Cancel
-                    </button>
+                                        {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['CANCEL']}
+                                    </button>
                                 </NavLink>
                             </span>
                             <span className="ml-3 inline-flex rounded-md shadow-5">
                                 <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
-                                    Save
-                    </button>
+                                    {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['SAVE']}
+                                </button>
                             </span>
                         </div>
                     </div>

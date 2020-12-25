@@ -147,10 +147,96 @@ const dashboardDict: any = {
 
 const dashboardProfileDict: any = {
     'EN': {
-        TITLE: 'USER PROFILE'
+        TITLE: 'USER PROFILE',
+        SUBTITLE: 'This contains your profile information.',
+        PERSONAL_INFO: {
+            TITLE: 'Personal Information',
+            FULL_NAME: 'Full Name',
+            NICKNAME: 'Nickname',
+            BIRTHDAY: 'Birthday',
+            LANGUAGE: 'Language',
+            EMAIL: 'Email address',
+            CONTACT: 'Contact Number'
+        },
+        INSTITUTION_INFO: {
+            TITLE: 'Institution Information',
+            INSTITUTION: 'Institution',
+            GRADE: 'Grade'
+        },
+        EDIT_PROFILE: {
+            TITLE: 'Edit Personal Information',
+            FIRST_NAME: 'First Name',
+            BIRTHDAY: 'Birthday',
+            LAST_NAME: 'Last Name',
+            NICKNAME: 'Nickname',
+            LANGUAGE: 'Language Preference',
+            CONTACT: 'Contact Number',
+            SAVE: 'Save',
+            CANCEL: 'Cancel'
+        },
+        CHANGE_PASSWORD: {
+            TITLE: 'Change your Password',
+            INFO: 'Password must be at least 8 characters and include uppercase and lowercase',
+            OLD_PASS: 'Old Password',
+            NEW_PASS: 'New Password',
+            CONFIRM_PASS: 'Confirm Password',
+            FORGOT_PASS_LINK: `Can't remember your old password?`,
+            SAVE: 'Save New Password',
+            CANCEL: 'Cancel',
+            SUCCESS_MSG: 'Success',
+            ERRORS: {
+                NO_OLD_PASS: 'Please enter your old password',
+                NO_NEW_PASS: 'Please enter your new password',
+                NO_CONFIRM_PASS: 'Please enter your confirmation password',
+                NOT_MATCH: 'Your new password and confirm password do not match'
+            }
+        }
     },
     'ES': {
-        TITLE: 'PERFIL DEL USUARIO'
+        TITLE: 'PERFIL DEL USUARIO',
+        SUBTITLE: 'Esto contiene la información de su perfil.',
+        PERSONAL_INFO: {
+            TITLE: 'Informacion personal',
+            FULL_NAME: 'nombre completo',
+            NICKNAME: 'apodo',
+            BIRTHDAY: 'Cumpleaños',
+            LANGUAGE: 'Idioma',
+            EMAIL: 'dirección de correo electrónico',
+            CONTACT: 'número de contacto'
+        },
+        INSTITUTION_INFO: {
+            TITLE: 'Información institucional',
+            INSTITUTION: 'Institución',
+            GRADE: 'Grado'
+        },
+        EDIT_PROFILE: {
+            TITLE: 'Editar información personal',
+            FIRST_NAME: 'Primer nombre',
+            LAST_NAME: 'Apellido',
+            BIRTHDAY: 'Cumpleaños',
+            NICKNAME: 'apodo',
+            LANGUAGE: 'preferencia de idioma',
+            CONTACT: 'número de contacto',
+            SAVE: 'Salvar',
+            CANCEL: 'Cancelar'
+        },
+        CHANGE_PASSWORD: {
+            TITLE: 'Cambia tu contraseña',
+            INFO: 'La contraseña debe tener al menos 8 caracteres e incluir mayúsculas y minúsculas',
+            OLD_PASS: 'Contraseña anterior',
+            NEW_PASS: 'Nueva contraseña',
+            CONFIRM_PASS: 'Confirmar contraseña',
+            FORGOT_PASS_LINK: `No recuerdo su contraseña anterior?`,
+            SAVE: 'Guardar nueva contraseña',
+            CANCEL: 'Cancelar',
+            SUCCESS_MSG: 'Éxito',
+            ERRORS: {
+                NO_OLD_PASS: 'Ingrese su contraseña anterior',
+                NO_NEW_PASS: 'Ingrese su nueva contraseña',
+                NO_CONFIRM_PASS: 'Ingrese su contraseña de confirmación',
+                NOT_MATCH: 'Su nueva contraseña y la contraseña de confirmación no coinciden'
+            }
+        }
     }
 }
 
