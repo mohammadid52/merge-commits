@@ -20,8 +20,6 @@ const MainRouter: React.FC = () => {
 
   const checkUserAuthenticated = async () => {
     try {
-      const accessToken = sessionStorage.getItem('accessToken');
-      if (accessToken) {
         const user = await Auth.currentAuthenticatedUser()
         if (user) {
           const { email, sub } = user.attributes
@@ -44,10 +42,9 @@ const MainRouter: React.FC = () => {
               image: userInfo.image
             }
           });
+        } else {
+          updateAuthState(false)    
         }
-      } else {
-        updateAuthState(false)
-      }
     } catch (err) {
       updateAuthState(false)
     }

@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
@@ -8,10 +9,9 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { AiOutlineEyeInvisible } from 'react-icons/ai';
 import { MdEmail } from 'react-icons/md';
 import { useHistory, Link, NavLink } from 'react-router-dom';
-// import { Auth } from 'aws-amplify';
 import Auth from '@aws-amplify/auth';
-import Forgot from './Forgot';
-
+import * as queries from '../../graphql/queries'
+import * as customMutations from '../../customGraphql/customMutations';
 interface LoginProps {
   updateAuthState: Function
 }
@@ -41,18 +41,36 @@ const Login = ({ updateAuthState }: LoginProps) => {
       const user = await Auth.signIn(username, password);
       dispatch({ type: 'LOG_IN', payload: { email: username, authId: user.username } });
       if (isChecked) {
-        setCookie('cred', {
-          email: username,
-          isChecked: isChecked,
-          password: password
-        }, { path: '/' });
+        setCookie('cred', { email: username, isChecked, password }, { path: '/' })
       } else {
         removeCookie('cred');
       }
-      sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken)
       setCookie('auth', { email: username, authId: user.username }, { secure: false, path: '/' });
+      sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken)
+      let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: username, authId: user.username }))
+      userInfo = userInfo.data.getPerson;
+      dispatch({
+        type: 'SET_USER',
+        payload: {
+          id: userInfo.id,
+          firstName: userInfo.preferredName || userInfo.firstName,
+          lastName: userInfo.lastName,
+          language: userInfo.language,
+          onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
+          role: userInfo.role,
+          image: userInfo.image
+        }
+      });
+      const input = {
+        id: userInfo.id,
+        authId: user.username,
+        email: username,
+        lastLoggedIn: (new Date()).toISOString()
+      }
+      const update: any = await API.graphql(
+        graphqlOperation(customMutations.updatePersonLoginTime, { input })
+      );
       updateAuthState(true)
-      // history.push('/');
     } catch (error) {
       console.error('error signing in', error);
 
@@ -190,12 +208,11 @@ const Login = ({ updateAuthState }: LoginProps) => {
               <div className='w-full h-1/10 flex justify-center items-center'>
                 {message.show ? (
                   <p
-                    className={`text-sm text-center ${
-                      message.type === 'success'
-                        ? 'text-green-500'
-                        : message.type === 'error'
-                          ? 'text-red-500'
-                          : null
+                    className={`text-sm text-center ${message.type === 'success'
+                      ? 'text-green-500'
+                      : message.type === 'error'
+                        ? 'text-red-500'
+                        : null
                       }`}>
                     {message.message}
                   </p>

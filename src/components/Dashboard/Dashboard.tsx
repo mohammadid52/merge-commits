@@ -69,6 +69,7 @@ const Dashboard = ({ updateAuthState }: DashboardProps) => {
   }
 
   async function getUser() {
+    console.log('get user is called')
     const userEmail = (state.user?.email) ? (state.user?.email) : (cookies.auth?.email);
     const userAuthId = (state.user?.authId) ? (state.user?.authId) : (cookies.auth?.authId);
     try {
