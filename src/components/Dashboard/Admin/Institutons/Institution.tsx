@@ -38,7 +38,9 @@ export interface InstitutionInfo {
   createdAt?: string;
   updatedAt?: string;
   addressLine2?: any;
-  isServiceProvider?: boolean
+  isServiceProvider?: boolean;
+  classes?: { items: { name?: string, id: string }[] }
+  curricula?: { items: { name?: string, id: string }[] }
 }
 
 /**
@@ -65,7 +67,16 @@ const Institution: React.FC = () => {
     updatedAt: '',
     addressLine2: '',
     phone: '',
-    isServiceProvider: false
+    isServiceProvider: false,
+    classes: {
+      items: [
+        { name: '', id: '' }]
+    },
+    curricula: {
+      items: [
+        { name: '', id: '' }]
+    }
+
   });
   const history = useHistory();
   const match = useRouteMatch();

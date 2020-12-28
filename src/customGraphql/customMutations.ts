@@ -356,3 +356,56 @@ export const updateInstitution = /* GraphQL */ `
     }
   }
 `;
+
+export const createCurriculum = /* GraphQL */ `
+  mutation CreateCurriculum($input: CreateCurriculumInput!, $condition: ModelCurriculumConditionInput) {
+    createCurriculum(input: $input, condition: $condition) {
+      id
+      name
+      institutionID
+    }
+  }
+`;
+
+export const createClass = /* GraphQL */ `
+  mutation CreateClass($input: CreateClassInput!, $condition: ModelClassConditionInput) {
+    createClass(input: $input, condition: $condition) {
+      id
+      institutionID
+      name
+      institution {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const createClassStudent = /* GraphQL */ `
+  mutation CreateClassStudent($input: CreateClassStudentInput!, $condition: ModelClassStudentConditionInput) {
+    createClassStudent(input: $input, condition: $condition) {
+      id
+      classID
+      studentID
+      studentEmail
+      studentAuthID
+    }
+  }
+`;
+
+export const createRoom = /* GraphQL */ `
+  mutation CreateRoom(
+    $input: CreateRoomInput!
+    $condition: ModelRoomConditionInput
+  ) {
+    createRoom(input: $input, condition: $condition) {
+      id
+      institutionID
+      classID
+      teacherAuthID
+      teacherEmail
+      name
+      maxPersons
+    }
+  }
+`;

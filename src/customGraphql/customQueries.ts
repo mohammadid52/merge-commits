@@ -14,6 +14,25 @@ export const getPerson = /* GraphQL */ `
   }
 `;
 
+export const listPersons = /* GraphQL */ `
+  query ListPersons($filter: ModelPersonFilterInput, $sortDirection: ModelSortDirection) {
+    listPersons(filter: $filter, sortDirection: $sortDirection) {
+      items {
+        id
+        authId
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        image
+      }
+      nextToken
+    }
+  }
+`;
+
 export const getClassroom = /* GraphQL */ `
   query GetClassroom($id: ID!) {
     getClassroom(id: $id) {
@@ -731,14 +750,14 @@ export const getCourse = /* GraphQL */ `
           lessonID
           lesson {
             title
-              artist {
-                id
-                images
-                name
-                type
-              }
-              language
-              summary
+            artist {
+              id
+              images
+              name
+              type
+            }
+            language
+            summary
           }
           createdAt
           updatedAt
@@ -760,13 +779,7 @@ export const listCurriculums = /* GraphQL */ `
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listCurriculums(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
+    listCurriculums(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken, sortDirection: $sortDirection) {
       items {
         id
         name
@@ -790,11 +803,7 @@ export const listCurriculums = /* GraphQL */ `
 `;
 
 export const listWarmUps = /* GraphQL */ `
-  query ListWarmUps(
-    $filter: ModelWarmUpFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListWarmUps($filter: ModelWarmUpFilterInput, $limit: Int, $nextToken: String) {
     listWarmUps(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -807,11 +816,7 @@ export const listWarmUps = /* GraphQL */ `
 `;
 
 export const listCoreLessons = /* GraphQL */ `
-  query ListCoreLessons(
-    $filter: ModelCoreLessonFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListCoreLessons($filter: ModelCoreLessonFilterInput, $limit: Int, $nextToken: String) {
     listCoreLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -824,11 +829,7 @@ export const listCoreLessons = /* GraphQL */ `
 `;
 
 export const listActivitys = /* GraphQL */ `
-  query ListActivitys(
-    $filter: ModelActivityFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListActivitys($filter: ModelActivityFilterInput, $limit: Int, $nextToken: String) {
     listActivitys(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -841,11 +842,7 @@ export const listActivitys = /* GraphQL */ `
 `;
 
 export const listQuestions = /* GraphQL */ `
-  query ListQuestions(
-    $filter: ModelQuestionFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListQuestions($filter: ModelQuestionFilterInput, $limit: Int, $nextToken: String) {
     listQuestions(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -874,13 +871,7 @@ export const listLessons = /* GraphQL */ `
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listLessons(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
+    listLessons(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken, sortDirection: $sortDirection) {
       items {
         id
         title
@@ -907,11 +898,7 @@ export const listLessons = /* GraphQL */ `
 `;
 
 export const listFilters = /* GraphQL */ `
-  query ListFilters(
-    $filter: ModelFilterFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListFilters($filter: ModelFilterFilterInput, $limit: Int, $nextToken: String) {
     listFilters(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -935,13 +922,7 @@ export const listLessonFilters = /* GraphQL */ `
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listLessonFilters(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
+    listLessonFilters(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken, sortDirection: $sortDirection) {
       items {
         id
         lessonID

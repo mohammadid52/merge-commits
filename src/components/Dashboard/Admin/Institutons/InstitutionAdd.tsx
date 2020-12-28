@@ -16,7 +16,6 @@ import CheckBox from '../../../Atoms/Form/CheckBox';
 import Buttons from '../../../Atoms/Buttons';
 import Loader from '../../../Atoms/Loader';
 import * as customMutations from '../../../../customGraphql/customMutations';
-import { getImageFromS3 } from '../../../../utilities/services';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import { statesList } from '../../../../utilities/staticData';
 

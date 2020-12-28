@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { useRouteMatch } from 'react-router-dom';
 import { FaGraduationCap, FaChalkboardTeacher, FaHotel, FaHandshake } from 'react-icons/fa';
 
 import { initials, stringToHslColor, formatPhoneNumber, getHostNameFromUrl, getInitialsFromString } from '../../../../utilities/strings';
 import UnderlinedTabs from '../../../Atoms/UnderlinedTabs';
 import { IoPeople } from 'react-icons/io5';
 import { getImageFromS3 } from '../../../../utilities/services';
-// import ClassBuilder from './Builders/ClassBuilder';
+import ClassList from './Builders/ClassList';
+import StaffBuilder from './Builders/StaffBuilder';
+import ServiceProviders from './Builders/ServiceProviders';
+import CurriculumList from './Builders/CurriculumList';
+import RoomsList from './Builders/RoomsList';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -25,6 +28,8 @@ interface InstInfo {
   zip: string
   image: string
   phone: string
+  classes: { items: { name?: string, id: string }[] }
+  curricula: { items: { name?: string, id: string }[] }
   isServiceProvider: boolean
 }
 
@@ -34,11 +39,11 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const [imageUrl, setImageUrl] = useState();
 
   const tabs = [
-    { index: 0, title: 'Service Providers', icon: <FaHandshake />, active: false, content: <p className="p-16 text-center">No data</p> },
-    { index: 1, title: 'Staff', icon: <IoPeople />, active: false, content: <p className="p-16 text-center">No data</p> },
-    { index: 2, title: 'Classes', icon: <FaChalkboardTeacher />, active: true, content: <p className="p-16 text-center">No data</p> },
-    { index: 3, title: 'Curricular', icon: <FaGraduationCap />, active: false, content: <p className="p-16 text-center">No data</p> },
-    { index: 4, title: 'Rooms', icon: <FaHotel />, active: false, content: <p className="p-16 text-center">No data</p> }
+    { index: 0, title: 'Service Providers', icon: <FaHandshake />, active: false, content: <ServiceProviders /> },
+    { index: 1, title: 'Staff', icon: <IoPeople />, active: true, content: <StaffBuilder /> },
+    { index: 2, title: 'Classes', icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={instProps?.institute?.classes} /> },
+    { index: 3, title: 'Curricular', icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} /> },
+    { index: 4, title: 'Rooms', icon: <FaHotel />, active: false, content: <RoomsList /> }
   ]
 
   useEffect(() => {
@@ -49,7 +54,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     getUrl();
   }, [instProps?.institute.image]);
 
-  const { name, image, type, address, addressLine2, city, state, district, zip, phone, website } = instProps?.institute
+  const { name, image, type, address, addressLine2, city, state, district, zip, phone, website, isServiceProvider } = instProps?.institute
   return (
     <div>
       <div className="h-9/10 flex flex-col md:flex-row">
@@ -62,7 +67,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
               className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
               src={imageUrl}
             /> : <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
-              <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{ background: `${stringToHslColor('I' + ' ' + 'N')}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
+              <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
+                style={{ background: `${name ? (stringToHslColor(getInitialsFromString(name)[0] + ' ' + getInitialsFromString(name)[1])) : null}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
                 {name && (
                   initials(getInitialsFromString(name)[0], getInitialsFromString(name)[1])
                 )}
@@ -93,7 +99,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   <span className="w-auto">
                     {address && (address + ', ')}
                     {addressLine2 && (addressLine2 + ', ')}<br />
-                    {city && city}
+                    {city && (city + ', ')}
                     {district && district}<br />
                     {state && state}
                     {zip && ('-' + zip)}
@@ -113,6 +119,10 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   <span className="text-gray-900 mr-2 w-3/10">Website:</span>
                   <span className="w-auto">{website ? getHostNameFromUrl(website) : '--'}</span>
                 </p>
+                <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+                  <span className="text-gray-900 mr-2 w-3/10">ServiceProvider:</span>
+                  <span className="w-auto">{isServiceProvider ? 'YES' : 'NO'}</span>
+                </p>
               </div>
             </div>
           </div>
@@ -124,7 +134,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         </div>
 
       </div>
-    </div>
+    </div >
   );
 };
 
