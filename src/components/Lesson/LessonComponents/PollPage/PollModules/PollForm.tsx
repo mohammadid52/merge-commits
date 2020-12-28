@@ -1,13 +1,11 @@
-import React, { useState, useContext, useEffect, ChangeEvent, KeyboardEvent } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
-import ToolTip from '../../../../General/ToolTip/ToolTip';
-import { MdSettingsBackupRestore } from 'react-icons/md';
 
 export interface PollInput {
   id: string;
   question: string;
-  options: {
+  option: {
     id: string;
     option: string;
     isChoice: boolean;
@@ -16,29 +14,32 @@ export interface PollInput {
 
 export type PollInputState = Array<PollInput>;
 
+/**
+ *
+ * Still to do:
+ *
+ * 1. remove references to and initialization of 'pollOptions',
+ * current data structure PollInput contains enough information
+ * to store all the poll answers.
+ *
+ * 2. selecting the radio buttons should toggle the UPDATE_COMPONENT_STATE
+ *
+ * 3. The poll should show which radio buttons are selected and which aren't
+ *
+ */
+
 const PollForm = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
   const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
-  const pollInputs = state.data.lesson.warmUp.inputs.pollInputs;
-  // const [input, setInput] = useState({
-  //   pollOptions:
-  //     state.componentState.poll && state.componentState.poll.pollOptions
-  //       ? state.componentState.poll.pollOptions
-  //       : [],
-  //   story:
-  //     state.componentState.poll && state.componentState.poll.pollArray
-  //       ? state.componentState.poll.pollArray
-  //       : [],
-  // });
-
+  const pollInputs = state.data.lesson.warmUp.inputs.pollInputs; // This is correct
   const [input, setInput] = useState(
-    state.componentState.poll && state.componentState.poll.pollOptions ? state.componentState.poll.pollOptions : []
+    state.componentState.poll && state.componentState.pollInputs ? state.componentState.poll : [{}]
   );
 
   useEffect(() => {
     if (cookies[`lesson-${state.classroomID}`]?.poll) {
       setInput(() => {
-        return cookies[`lesson-${state.classroomID}`].poll.pollOptions;
+        return cookies[`lesson-${state.classroomID}`].poll;
       });
     }
   }, []);
@@ -49,7 +50,7 @@ const PollForm = () => {
         type: 'UPDATE_COMPONENT_STATE',
         payload: {
           componentName: 'poll',
-          inputName: 'pollOptions',
+          inputName: 'pollInputs',
           content: input,
         },
       });
@@ -61,93 +62,69 @@ const PollForm = () => {
     }
   }, [input]);
 
-  // const handleInputChange = (e: { target: { id: string; value: string } }) => {
-  //   setInput({
-  //     ...input,
-  //     [e.target.id]: e.target.value,
-  //   });
-  // };
-
-  /////// below are all temporary
-
-  const [data, setData] = useState<any>([]);
-  // console.log(options, 'test')
-
-  // const handleRadioSelect = (passedKey: any, passedId: string, passedAns: string) => {
-
-  //   setData(() => {
-  //     return tempData.map((item: {id: string, question: string, options: any}, key: any) => {
-
-  //     if(item.id === passedKey) {
-  //       console.log(item.id, 'item.id')
-  //       console.log(passedKey, 'item.id')
-  //       console.log(passedId, 'passedID')
-  //       return {
-  //         // ...item,
-  //         ...item.options.map((options: {id: string, option: string}, key: number) => {
-  //           if(options.id === passedId ) {
-  //             setInput(() => {
-  //               return {...input,
-  //               answer: passedAns}
-
-  //             })
-  //             return {
-
-  //               ...options,
-  //               isChoice: true
-  //             }}
-  //           //   else {
-  //           //     return {...options}
-  //           // }
-  //         }
-  //         )}
-  //     }
-
-  //     else {
-  //       return {...item}
-
-  //     }
-
-  //   }) })
-
-  // };
-
-  const handleRadioSelect = (passedKey: any, passedId: string, passedAns: string) => {
+  /**
+   * Function handles selecting the poll options
+   * @param pollItemID
+   * @param pollOptionID
+   */
+  const handleRadioSelect = (pollItemID: string, pollOptionID: string) => {
     setInput(() => {
-      return input
-        ? input.map((item: { id: string; question: string; answer: any }, key: any) => {
-            if (item.id === passedKey) {
+      const updatedInputs = input
+        ? input.pollInputs.map((item: { id: string; question: string; answer: any }, key: any) => {
+            if (item.id === pollItemID) {
               return {
                 ...item,
-                // id: item.id,
-                // question: item.question,
-                answer: passedAns,
+                option: { id: pollOptionID },
               };
             } else {
               return { ...item };
             }
           })
         : null;
+
+      return { pollInputs: updatedInputs };
     });
   };
 
+  /**
+   * Function handles checking if the radio buttons for
+   * the poll are currently selected
+   * @param pollItemID
+   * @param pollOptionID
+   */
+  const isSelected = (pollItemID: string, pollOptionID: string, pollKey: number) => {
+    const inputObject = JSON.parse(JSON.stringify(input.pollInputs[pollKey])); // Simple deep cloning, could not get the right nested values otherwise
+
+    if (inputObject.option.hasOwnProperty('id')) {
+      const id = inputObject['option'].id;
+
+      if (id === pollOptionID) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  };
+
   return (
-    <div className="bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600">
-      <h3 className={`text-xl text-gray-200 font-open font-light ${theme.underline}`}>Poll </h3>
+    <div className="w-full h-full rounded-xl">
+      <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>Poll</h3>
       <div className="relative h-full flex flex-col items-center mb-5 mt-2">
         {pollInputs
-          ? pollInputs.map((item: { id: string; question: string; option: any }, key: number) => {
+          ? pollInputs.map((item: { id: string; question: string; option: any }, pollKey: number) => {
               return (
-                <div key={key} className="flex flex-col p-4 items-center justify-between">
+                <div key={pollKey} className="flex flex-col items-center justify-between">
                   <div
                     id={item ? item.id : null}
                     className="flex flex-col items-center justify-start py-4 font-light text-gray-400">
                     <label
                       id={item ? item.id : null}
-                      className="w-full font-light text-gray-400 text-base flex justify-between items-center m-2 px-2">
+                      className={theme.elem.text}>
                       {item ? item.question : null}
                     </label>
-                    <div className="flex">
+                    <div className="flex flex-col">
                       {item
                         ? item.option.map(
                             (option: { id: string; option: string; isChoice: boolean }, optionKey: number) => {
@@ -155,14 +132,15 @@ const PollForm = () => {
                                 <label
                                   key={optionKey}
                                   id={option.id}
-                                  className="flex items-center text-sm cursor-pointer h-8">
+                                  className={theme.elem.text}>
                                   <button
                                     key={optionKey}
                                     id={option.id}
                                     name="choice"
-                                    onClick={() => handleRadioSelect(item.id, option.id, option.option)}
-                                    className={`${option.option ? 'text-xl' : ''} w-auto px-4`}>
-                                    {option.isChoice ? '❌' : '⚪️'}
+                                    onClick={() => handleRadioSelect(item.id, option.id)}
+                                    className={`${theme.elem.text} w-auto px-4`}>
+                                    {/*{option.isChoice ? '❌' : '⚪️'}*/}
+                                    {input.pollInputs && isSelected(item.id, option.id, pollKey) ? '❌' : '⚪️'}
                                   </button>
                                   {option.option}
                                 </label>
