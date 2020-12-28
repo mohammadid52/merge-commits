@@ -141,6 +141,7 @@ type Person
   language: Language!
   classes: [ClassStudent] @connection(keyName: "classByStudent", fields: ["email"])
   filters: [String]
+  lastLoggedIN: AWSDate
 }
 
 ### Room

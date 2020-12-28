@@ -18,6 +18,19 @@ export const updatePerson = /* GraphQL */ `
   }
 `;
 
+export const updatePersonLoginTime = /* GraphQL */ `
+  mutation UpdatePerson($input: UpdatePersonInput!, $condition: ModelPersonConditionInput) {
+    updatePerson(input: $input, condition: $condition) {
+      id
+      authId
+      email
+      lastLoggedIn
+    }
+  }
+`;
+
+
+
 export const createStudentData = /* GraphQL */ `
   mutation CreateStudentData($input: CreateStudentDataInput!, $condition: ModelStudentDataConditionInput) {
     createStudentData(input: $input, condition: $condition) {
