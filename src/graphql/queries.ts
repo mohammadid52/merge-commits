@@ -173,7 +173,7 @@ export const getStaff = /* GraphQL */ `
           nextToken
         }
         filters
-        lastLoggedIN
+        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -225,7 +225,7 @@ export const listStaffs = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIN
+          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -283,7 +283,7 @@ export const getPerson = /* GraphQL */ `
         nextToken
       }
       filters
-      lastLoggedIN
+      lastLoggedIn
       createdAt
       updatedAt
     }
@@ -331,7 +331,7 @@ export const listPersons = /* GraphQL */ `
           nextToken
         }
         filters
-        lastLoggedIN
+        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -407,7 +407,7 @@ export const getRoom = /* GraphQL */ `
           nextToken
         }
         filters
-        lastLoggedIN
+        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -511,7 +511,7 @@ export const listRooms = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIN
+          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -1049,7 +1049,7 @@ export const getStudentData = /* GraphQL */ `
           nextToken
         }
         filters
-        lastLoggedIN
+        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -1181,7 +1181,7 @@ export const listStudentDatas = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIN
+          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -2636,7 +2636,7 @@ export const getQuestionData = /* GraphQL */ `
           nextToken
         }
         filters
-        lastLoggedIN
+        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -2702,7 +2702,7 @@ export const listQuestionDatas = /* GraphQL */ `
           image
           language
           filters
-          lastLoggedIN
+          lastLoggedIn
           createdAt
           updatedAt
         }
@@ -2966,7 +2966,7 @@ export const userById = /* GraphQL */ `
           nextToken
         }
         filters
-        lastLoggedIN
+        lastLoggedIn
         createdAt
         updatedAt
       }
@@ -3014,7 +3014,7 @@ export const usersByRole = /* GraphQL */ `
           nextToken
         }
         filters
-        lastLoggedIN
+        lastLoggedIn
         createdAt
         updatedAt
       }
