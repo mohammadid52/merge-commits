@@ -26,64 +26,57 @@ const Poll = () => {
   const video = state.data.lesson.warmUp.instructions.link;
   const [openPopup, setOpenPopup] = useState(false);
 
-  useEffect(() => {
-    if (!cookies[`lesson-${state.classroomID}`].poll && !state.componentState.poll) {
-      /**
-       * Below the pollInputs is mapped into an array of objects
-       * with only the essential keys/values
-       *
-       *    This should initialize the component's componentState
-       *    in the context
-       *
-       */
-
-      let inputsArray = inputs.pollInputs.map((item: { id: string; question: string; option: any }) => {
-        return {
-          id: item.id,
-          question: item.question,
-          option: { id: item.option.id, isChoice: item.option.isChoice },
-        };
-      });
-
-      let initialObject = {
-        pollInputs: inputsArray,
-      };
-
-      dispatch({
-        type: 'SET_INITIAL_COMPONENT_STATE',
-        payload: {
-          name: 'poll',
-          content: initialObject,
-        },
-      });
-
-      setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], poll: initialObject });
-    }
-
-    if (cookies[`lesson-${state.classroomID}`].poll) {
-      dispatch({
-        type: 'SET_INITIAL_COMPONENT_STATE',
-        payload: {
-          name: 'poll',
-          content: cookies[`lesson-${state.classroomID}`].poll,
-        },
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (cookies[`lesson-${state.classroomID}`].poll) {
+  //     dispatch({
+  //       type: 'SET_INITIAL_COMPONENT_STATE',
+  //       payload: {
+  //         name: 'poll',
+  //         content: cookies[`lesson-${state.classroomID}`].poll,
+  //       },
+  //     });
+  //   } else {
+  //     let inputsArray = inputs.pollInputs.map((item: { id: string; question: string; option: any }) => {
+  //       return {
+  //         id: item.id,
+  //         question: item.question,
+  //         option: { id: item.option.id, isChoice: item.option.isChoice },
+  //       };
+  //     });
+  //
+  //     let initialObject = {
+  //       pollInputs: inputsArray,
+  //     };
+  //
+  //     dispatch({
+  //       type: 'SET_INITIAL_COMPONENT_STATE',
+  //       payload: {
+  //         name: 'poll',
+  //         content: initialObject,
+  //       },
+  //     });
+  //
+  //     setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], poll: initialObject });
+  //   }
+  // }, []);
 
   return (
     <>
-      <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup} />
-      <div className={theme.section}>
-        <Banner />
+      {state.componentState.poll && state.componentState.poll.pollInputs ? (
+        <>
+          <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup} />
+          <div className={theme.section}>
+            <Banner />
 
-        <div className="flex flex-col justify-between items-center">
-          <InstructionsBlock />
-          {inputs.additionalInputs.length > 0 ? <Modules inputs={inputs.additionalInputs} /> : null}
+            <div className="flex flex-col justify-between items-center">
+              <InstructionsBlock />
+              {/*{inputs.additionalInputs.length > 0 ? <Modules inputs={inputs.additionalInputs} /> : null}*/}
 
-          <PollForm />
-        </div>
-      </div>
+              <PollForm />
+            </div>
+          </div>
+        </>
+      ) : null}
     </>
   );
 };

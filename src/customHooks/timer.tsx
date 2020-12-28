@@ -117,13 +117,15 @@ const useStudentTimer = (inputs?: inputs) => {
         ? params.state.componentState.story
         : typeof params.state.componentState.truthGame?.truthGameArray !== 'undefined'
         ? { truthGame: params.state.componentState.truthGame.truthGameArray } //TODO: Fix this ternary statement
-        : null, // If story === false, send truthGame array
+        : typeof params.state.componentState.poll?.pollInputs !== 'undefined'
+        ? params.state.componentState.poll.pollInputs
+        : null,
       corelessonData: params.state.componentState.lyrics ? params.state.componentState.lyrics : null,
       activityData: params.state.componentState.poem ? params.state.componentState.poem : null,
     };
 
     try {
-      // console.log(' timer save: ', data);
+      console.log(' timer save: ', data);
       // console.log('timer save 2: ', params.state.componentState.story);
       const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
 

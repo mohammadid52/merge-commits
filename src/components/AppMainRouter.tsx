@@ -39,34 +39,6 @@ const MainRouter: React.FC = () => {
     }
   };
 
-  // const checkForUserInactivity = () => {
-  //   let idelTime = 0;
-  //   let timer: any;
-
-  //   window.addEventListener("visibilitychange", function () {
-  //     if (document.visibilityState === 'visible') {
-  //       clearTimeout(timer);        //  Clear timer if user comes back to the app.
-  //     } else {
-  //       idelTime = 30 * 60 * 1000;  // Timer for 30 mins to count if user not using the app.
-
-  //       const autoLogout = async () => {
-  //         try {
-  //           await Auth.signOut();
-  //           removeCookie('auth', { path: '/' });
-  //           dispatch({ type: 'CLEANUP' });
-  //           sessionStorage.removeItem('accessToken');
-  //           history.push('/login');
-  //         } catch (error) {
-  //           console.log('error signing out: ', error);
-  //         }
-  //       }
-
-  //       timer = setTimeout(autoLogout, idelTime)
-  //     }
-  //   });
-
-  // }
-
   const updateAuthState = (auth: boolean) => {
     setAuthState(auth ? 'loggedIn': 'notLoggedIn')
   }
