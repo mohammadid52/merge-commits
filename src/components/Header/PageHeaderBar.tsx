@@ -9,12 +9,14 @@ import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineLogout } from 'react-icons/ai';
 
 import { Auth } from '@aws-amplify/auth';
+import useDictionary from '../../customHooks/dictionary';
 
 const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const [cookies, , removeCookie] = useCookies();
+  const { appDict } = useDictionary()
   const location = useLocation();
   const history = useHistory();
-  const { theme, lightSwitch, forceTheme, state, dispatch } = useContext(GlobalContext);
+  const { theme, lightSwitch, forceTheme, userLanguage, state, dispatch } = useContext(GlobalContext);
 
   async function SignOut() {
     try {
@@ -68,7 +70,7 @@ const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
               </IconContext.Provider>
             </span>
             <span className={`relative mr-1 w-auto h-full flex items-center justify-center`}>
-              <button className="align-middle self-center mb-1">Log Out</button>
+              <button className="align-middle self-center mb-1">{appDict[userLanguage]['LOG_OUT']}</button>
             </span>
           </div>
         ) : null}

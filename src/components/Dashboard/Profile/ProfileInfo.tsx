@@ -7,7 +7,7 @@ import { NavLink, useRouteMatch } from 'react-router-dom';
 import { UserInfo } from './Profile';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import ToolTip from '../../General/ToolTip/ToolTip'
-
+import useDictionary from '../../../customHooks/dictionary';
 interface UserInfoProps {
     user: UserInfo
     status: string
@@ -15,8 +15,8 @@ interface UserInfoProps {
 
 const ProfileInfo = (props: UserInfoProps) => {
     const { user, status } = props;
-
-    const { theme, state, dispatch } = useContext(GlobalContext);
+    const { dashboardProfileDict } = useDictionary();
+    const { theme, state, userLanguage, dispatch } = useContext(GlobalContext);
     const match = useRouteMatch();
 
     const language = () => {
@@ -47,8 +47,8 @@ const ProfileInfo = (props: UserInfoProps) => {
                 <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
                     <div className="flex justify-between border-b border-gray-200 sm:px-6">
                         <h3 className="px-4 py-5 text-lg leading-6 font-medium text-gray-900">
-                            Personal Information
-                    </h3>
+                            {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['TITLE']}
+                        </h3>
                         {/* <div className="py-2 flex">
                     <Dropdown />
                     </div> */}
@@ -57,7 +57,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                         <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
                             <div className="sm:col-span-1 p-2">
                                 <dt className="text-sm leading-5 font-medium text-gray-500">
-                                    Full Name
+                                    {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['FULL_NAME']}
                                 </dt>
                                 <dd className="mt-1 text-sm leading-5 text-gray-900">
                                     {`${user.firstName} ${user.lastName}`}
@@ -65,7 +65,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                             </div>
                             <div className="sm:col-span-1 p-2">
                                 <dt className="text-sm leading-5 font-medium text-gray-500">
-                                    Nickname
+                                    {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['NICKNAME']}
                                 </dt>
                                 <dd className="mt-1 text-sm leading-5 text-gray-900">
                                     {`${user.preferredName ? user.preferredName : '--'}`}
@@ -73,7 +73,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                             </div>
                             <div className="sm:col-span-1 p-2">
                                 <dt className="text-sm leading-5 font-medium text-gray-500">
-                                    Birthday
+                                    {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['BIRTHDAY']}
                                 </dt>
                                 <dd className="mt-1 text-sm leading-5 text-gray-900">
                                     {`${user.birthdate ? changeToUsFormat(user.birthdate) : 'not set'}`}
@@ -81,7 +81,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                             </div>
                             <div className="sm:col-span-1 p-2">
                                 <dt className="text-sm leading-5 font-medium text-gray-500">
-                                    Language
+                                    {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['LANGUAGE']}
                                 </dt>
                                 <dd className="mt-1 text-sm leading-5 text-gray-900">
                                     {language()}
@@ -89,7 +89,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                             </div>
                             <div className="sm:col-span-1 p-2">
                                 <dt className="text-sm leading-5 font-medium text-gray-500">
-                                    Email address
+                                    {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['EMAIL']}
                                 </dt>
                                 <dd className="mt-1 text-sm leading-5 text-gray-900">
                                     {`${user.email}`}
@@ -97,7 +97,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                             </div>
                             <div className="sm:col-span-1 p-2">
                                 <dt className="text-sm leading-5 font-medium text-gray-500">
-                                    Contact Number
+                                    {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['CONTACT']}
                                 </dt>
                                 <dd className="mt-1 text-sm leading-5 text-gray-900">
                                     {`${user.phone ? user.phone : '--'}`}
