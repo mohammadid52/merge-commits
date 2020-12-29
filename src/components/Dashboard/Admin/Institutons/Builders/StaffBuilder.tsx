@@ -17,7 +17,8 @@ interface StaffBuilderProps {
 }
 
 const StaffBuilder = (props: StaffBuilderProps) => {
-  const [staffList, setStaffList] = useState(null);
+  const [availableUsers, setAvailableUsers] = useState(null);
+  const [allAvailableUsers, setAllAvailableUsers] = useState(null)
   const [newMember, setNewMember] = useState({
     name: '',
     id: '',
@@ -28,8 +29,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const onChange = (str: string, name: string, id: string, avatar: string) => {
     setNewMember({
-      id: id,
       name: name,
+      id: id,
       value: str,
       avatar: avatar
     })
@@ -51,15 +52,14 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       }));
       const sortedList = list.data.listPersons.items.sort((a: any, b: any) => (a.firstName?.toLowerCase() > b.firstName?.toLowerCase()) ? 1 : -1);
       const personsList = sortedList.map((item: any, i: any) => ({
-        id: i,
+        id: item.id,
         name: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
         value: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
         authId: item.authId,
         email: item.email
       }));
-      console.log('personsList', personsList)
-      setStaffList(personsList);
-    } catch{
+      return personsList;
+    } catch {
       console.log('Error while fetching staff details')
     }
   }
@@ -71,44 +71,82 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       }));
       let staffMembers: any = staff.data.listStaffs.items;
       staffMembers = staffMembers.map((member: any) => {
+        member.userId = member.staffMember.id;
         member.name = `${member.staffMember.firstName || ''} ${member.staffMember.lastName || ''}`
         member.image = member.staffMember.image
         member.role = member.staffMember.role
         return member
       })
-      console.log('staff.data.listStaffs.items', staffMembers)
-      setActiveStaffList(staffMembers)
-    } catch(err) {
+      return staffMembers
+    } catch (err) {
       console.log('Error: Get Staff, StaffBuilder: Could not get list of Institution staff members', err)
     }
   }
 
   const addStaffMember = async () => {
     try {
-      const member = staffList.filter((item: any) => item.id === newMember.id)[0]
-      const input = {
-        institutionID: props.instituteId,
-        staffAuthID: member.authId,
-        staffEmail: member.email,
-        status: 'Active',
-        statusChangeDate: (new Date()).toISOString().split('T')[0]
+      if (newMember && newMember.id) {
+        // get the selected user from the list
+        const member = availableUsers.filter((item: any) => item.id === newMember.id)[0]
+        // add user mutation
+        const input = {
+          institutionID: props.instituteId,
+          staffAuthID: member.authId,
+          staffEmail: member.email,
+          status: 'Active',
+          statusChangeDate: (new Date()).toISOString().split('T')[0]
+        }
+        const staff: any = await API.graphql(graphqlOperation(mutations.createStaff, { input: input }));
+        // use the mutation result to add the selected user to the staff list
+        const addedMember = staff.data.createStaff;
+        addedMember.userId = addedMember.staffMember.id;
+        addedMember.name = `${addedMember.staffMember.firstName || ''} ${addedMember.staffMember.lastName || ''}`
+        addedMember.image = addedMember.staffMember.image;
+        addedMember.role = addedMember.staffMember.roleaddedMember;
+        setActiveStaffList([...activeStaffList, addedMember]);
+        // remove the selected user
+        setNewMember({ name: '', id: '', value: '', avatar: '' });
+        // remove the selected user from the available users list
+        let updatedAvailableUsers = availableUsers.filter((item: any) => item.id !== member.id)
+        setAvailableUsers(updatedAvailableUsers)
+      } else {
+        // TODO: Add the validation msg or error msg on UI for the user. 
+        // or disable add button if newMember is not selected 
+        console.log('select a user to add.')
       }
-      console.log('input', input)
-      const staff: any = await API.graphql(graphqlOperation(mutations.createStaff, { input: input }));
-      const addedMember = staff.data.createStaff;
-      addedMember.name = `${addedMember.staffMember.firstName || ''} ${addedMember.staffMember.lastName || ''}`
-      addedMember.image = addedMember.staffMember.image;
-      addedMember.role = addedMember.staffMember.roleaddedMember;
-      setActiveStaffList([...activeStaffList, addedMember])
-    } catch(err) {
+    } catch (err) {
       console.log('Error: Add Staff, StaffBuilder: Could not add new staff member in institution', err)
     }
   }
 
+  const fetchStaffData = async () => {
+    const staffMembers = await getStaff()
+    const staffMembersIds = staffMembers.map((item: any) => item.userId)
+    let users = await getPersonsList()
+    let availableUsersList = users.filter((item: any) => staffMembersIds.indexOf(item.id) < 0)
+    setActiveStaffList(staffMembers)
+    setAvailableUsers(availableUsersList)
+    // saving the initial all users list for future use. see removeStaff member function for use.
+    setAllAvailableUsers(users)
+  }
+
   useEffect(() => {
-    getPersonsList()
-    getStaff()
+    fetchStaffData()
   }, [])
+
+  const removeStaffMember = async (item: any) => {
+    // remove staff member mutation
+    const input = {
+      id: item.id
+    }
+    await API.graphql(graphqlOperation(mutations.deleteStaff, { input }));
+    // remove the removed user from the staff list.
+    let updatedStaffList = activeStaffList.filter((member: any) => member.id !== item.id)
+    // fetch the user object from allAvailableUsers and re add in the available users list.
+    let removedUser = allAvailableUsers.filter((user: any) => user.id === item.staffMember.id)[0]
+    setActiveStaffList(updatedStaffList)
+    setAvailableUsers([...availableUsers, removedUser])
+  }
 
   return (
     <div className="p-8 flex m-auto justify-center">
@@ -116,14 +154,14 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         <PageWrapper>
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">STAFF MEMBERS</h3>
           <div className="flex items-center w-6/10 m-auto px-2">
-            <SelectorWithAvatar selectedItem={newMember} list={staffList} placeholder="Add new staff member" onChange={onChange} />
+            <SelectorWithAvatar selectedItem={newMember} list={availableUsers} placeholder="Add new staff member" onChange={onChange} />
             <Buttons btnClass="ml-4 py-1" label="Add" onClick={addStaffMember} />
           </div>
           <div className="my-4 w-8/10 m-auto max-h-88 overflow-y-scroll">
             {activeStaffList.length > 0 && (
               <Fragment>
-                {activeStaffList.map(item =>
-                  <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                {activeStaffList.map((item, index) =>
+                  <div key={index} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                     <div className="flex w-3/10 items-center">
                       <div className="flex-shrink-0 h-10 w-10 flex items-center">
                         {item.staffMember.image ?
@@ -137,7 +175,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                       <div className="ml-4">{item.name}</div>
                     </div>
                     <div className="flex items-center">{item.role ? getStaffRole(item.role) : ''}</div>
-                    <span className="w-6 h-6 flex items-center" onClick={() => console.log('')}>
+                    <span className="w-6 h-6 flex items-center" onClick={() => removeStaffMember(item)}>
                       <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
                         <IoClose />
                       </IconContext.Provider>
