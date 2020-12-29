@@ -133,7 +133,6 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
           show: true,
           errorMsg: 'Unable to update institute details. Please try again later.'
         })
-        console.log('Error while updating the data')
       }
     }
   };
@@ -198,35 +197,9 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
     });
   }
 
-  const removeImageUrlFromDb = async () => {
-    const input = {
-      id: editFormValues.id,
-      name: editFormValues.name,
-      type: editFormValues.type,
-      website: editFormValues.website,
-      address: editFormValues.address,
-      addressLine2: editFormValues.addressLine2,
-      city: editFormValues.city,
-      district: editFormValues.district,
-      state: editFormValues.state,
-      zip: editFormValues.zip,
-      image: editFormValues.image,
-      phone: editFormValues.phone,
-    }
-    try {
-      const update: any = await API.graphql(graphqlOperation(customMutations.updateInstitution, { input: input }))
-    } catch (error) {
-      setError({
-        show: true,
-        errorMsg: 'Unable to delete image. Please try again later.'
-      })
-    }
-  }
-
   const deletUserProfile = async () => {
     await deletImageFromS3(`instituteImages/institute_image_${editFormValues.id}`)
     setEditFormValues({ ...editFormValues, image: '' });
-    removeImageUrlFromDb();
   }
 
   const saveCroppedImage = async (image: string) => {
@@ -240,6 +213,21 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
     setImageLoading(false);
   }
 
+  const updateImagUrlToDb = async () => {
+    try {
+      const input = {
+        id: editFormValues.id,
+        image: editFormValues.image,
+      }
+      const update: any = await API.graphql(graphqlOperation(customMutations.updateInstitution, { input: input }))
+    } catch (error) {
+      setError({
+        show: true,
+        errorMsg: 'Unable to update image changes. Please try again later.'
+      })
+    }
+  }
+
   useEffect(() => {
     setEditFormValues(instEditPrps.institute);
   }, [instEditPrps.institute])
@@ -251,6 +239,12 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
     }
     getUrl();
   }, [instEditPrps.institute.image])
+
+  useEffect(() => {
+    if (instEditPrps.institute.image !== editFormValues.image) {
+      updateImagUrlToDb();
+    }
+  }, [editFormValues.image])
 
   const { name, type, website, image, address, addressLine2, city, district, state, zip, phone, isServiceProvider } = editFormValues;
 
@@ -354,11 +348,6 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
             </div>
           </div>
 
-          {/* Image cropper */}
-          {showCropper && (
-            <ProfileCropModal upImg={upImage} saveCroppedImage={(img: string) => saveCroppedImage(img)} closeAction={toggleCropper} />
-          )}
-
           {error.show ?
             <span className="text-sm text-red-600 my-6 mx-3">{error.errorMsg}</span>
             : null}
@@ -371,6 +360,11 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
             </div>
           </div>
         </form>
+
+        {/* Image cropper */}
+        {showCropper && (
+          <ProfileCropModal upImg={upImage} saveCroppedImage={(img: string) => saveCroppedImage(img)} closeAction={toggleCropper} />
+        )}
       </div>
 
     </div>
