@@ -26,40 +26,6 @@ const Poll = () => {
   const video = state.data.lesson.warmUp.instructions.link;
   const [openPopup, setOpenPopup] = useState(false);
 
-  // useEffect(() => {
-  //   if (cookies[`lesson-${state.classroomID}`].poll) {
-  //     dispatch({
-  //       type: 'SET_INITIAL_COMPONENT_STATE',
-  //       payload: {
-  //         name: 'poll',
-  //         content: cookies[`lesson-${state.classroomID}`].poll,
-  //       },
-  //     });
-  //   } else {
-  //     let inputsArray = inputs.pollInputs.map((item: { id: string; question: string; option: any }) => {
-  //       return {
-  //         id: item.id,
-  //         question: item.question,
-  //         option: { id: item.option.id, isChoice: item.option.isChoice },
-  //       };
-  //     });
-  //
-  //     let initialObject = {
-  //       pollInputs: inputsArray,
-  //     };
-  //
-  //     dispatch({
-  //       type: 'SET_INITIAL_COMPONENT_STATE',
-  //       payload: {
-  //         name: 'poll',
-  //         content: initialObject,
-  //       },
-  //     });
-  //
-  //     setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], poll: initialObject });
-  //   }
-  // }, []);
-
   return (
     <>
       {state.componentState.poll && state.componentState.poll.pollInputs ? (

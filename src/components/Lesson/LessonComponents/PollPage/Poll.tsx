@@ -12,10 +12,23 @@ const PollPage = () => {
   const inputs = state.data.lesson.warmUp.inputs;
   const match = useRouteMatch();
 
+  /**
+   * ON MOUNT:
+   *
+   * Activate the lesson for the student\
+   *
+   */
   useEffect(() => {
     dispatch({ type: 'ACTIVATE_LESSON', payload: 'warmup' });
   }, []);
 
+
+  /**
+   * ON MOUNT:
+   *
+   * Set the context component state with the right data structure and values
+   *
+   */
   useEffect(() => {
     if (cookies[`lesson-${state.classroomID}`].poll) {
       dispatch({

@@ -21,7 +21,7 @@ const PollForm = (props: any) => {
   const [input, setInput] = useState({ pollInputs: [] });
 
   useEffect(() => {
-    console.log('form mount: ', state.componentState.poll);
+    // console.log('form mount: ', state.componentState.poll);
 
     if (cookies[`lesson-${state.classroomID}`]) {
       setInput(() => {
