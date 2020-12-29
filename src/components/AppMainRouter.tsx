@@ -11,6 +11,8 @@ import ComponentLoading from './Lesson/Loading/ComponentLoading';
 import AuthRoutes from './AppRoutes/AuthRoutes';
 import UnauthRoutes from './AppRoutes/UnauthRoutes';
 
+import * as customMutations from '../customGraphql/customMutations'
+
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
   // const { theme, dispatch } = useContext(GlobalContext);
@@ -68,6 +70,13 @@ const MainRouter: React.FC = () => {
   }
   const autoLogout = async () => {
     if (isUserLoggedIn()) {
+      const input = {
+        id: state.user.id,
+        authId: state.user.authId,
+        email: state.user.email,
+        lastLoggedOut: (new Date()).toISOString()
+      }
+      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, { input }));
       await Auth.signOut();
       updateAuthState(false)
     }

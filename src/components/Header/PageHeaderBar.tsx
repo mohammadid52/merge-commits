@@ -10,6 +10,8 @@ import { AiOutlineLogout } from 'react-icons/ai';
 
 import { Auth } from '@aws-amplify/auth';
 import useDictionary from '../../customHooks/dictionary';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import * as customMutations from '../../customGraphql/customMutations'
 
 const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const [cookies, , removeCookie] = useCookies();
@@ -20,6 +22,13 @@ const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
   async function SignOut() {
     try {
+      const input = {
+        id: state.user.id,
+        authId: state.user.authId,
+        email: state.user.email,
+        lastLoggedOut: (new Date()).toISOString()
+      }
+      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, { input }));
       await Auth.signOut();
       linkProps.updateAuthState(false)
       removeCookie('auth', { path: '/' });
