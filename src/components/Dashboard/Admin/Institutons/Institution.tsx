@@ -21,7 +21,6 @@ export interface InstitutionInfo {
   name: string;
   institutionTypeId?: string;
   institutionType?: null;
-  district?: string;
   address?: string;
   city?: string;
   state?: string;
@@ -51,7 +50,6 @@ const Institution: React.FC = () => {
     name: '',
     institutionTypeId: '',
     institutionType: null,
-    district: null,
     address: '',
     city: '',
     state: '',

@@ -31,7 +31,6 @@ const InstitutionAdd = () => {
     address: '',
     addressLine2: '',
     city: '',
-    district: '',
     state: '',
     zip: '',
     phone: '',
@@ -192,7 +191,7 @@ const InstitutionAdd = () => {
     })
   }, [])
 
-  const { name, type, website, image, address, addressLine2, city, district, state, zip, phone, isServiceProvider } = instituteData;
+  const { name, type, website, image, address, addressLine2, city, state, zip, phone, isServiceProvider } = instituteData;
 
   return (
     <div className="w-full h-full mt-4 p-4">
@@ -280,10 +279,6 @@ const InstitutionAdd = () => {
 
                   <div className='sm:col-span-3 px-3 py-2'>
                     <FormInput value={city} id='city' onChange={onInputChange} name='city' label="City" />
-                  </div>
-
-                  <div className='sm:col-span-3 px-3 py-2'>
-                    <FormInput value={district} id='district' onChange={onInputChange} name='district' label="District" />
                   </div>
 
                   <div className='sm:col-span-3 px-3 py-2'>

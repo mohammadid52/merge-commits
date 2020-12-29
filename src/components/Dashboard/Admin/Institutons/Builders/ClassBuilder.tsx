@@ -43,6 +43,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   const [studentList, setStudentList] = useState([]);
   const [institutionList, setInstitutionList] = useState([]);
   const [selectedStudents, setSelectedStudent] = useState([]);
+  const [allStudentList, setAllStudentList] = useState([])
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -106,20 +107,22 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   }
 
   const addMemberToList = () => {
-    setSelectedStudent([
-      ...selectedStudents,
-      {
-        name: newMember.name,
-        id: newMember.id,
-        avatar: newMember.avatar
-      }
-    ])
-    setNewMember({
-      id: '',
-      name: '',
-      value: '',
-      avatar: ''
-    })
+    if (newMember.id) {
+      setSelectedStudent([
+        ...selectedStudents,
+        {
+          name: newMember.name,
+          id: newMember.id,
+          avatar: newMember.avatar
+        }
+      ])
+      setNewMember({
+        id: '',
+        name: '',
+        value: '',
+        avatar: ''
+      })
+    }
   }
 
   const removeStudentFromList = (id: string) => {
@@ -145,7 +148,10 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         email: item.email ? item.email : '',
         authId: item.authId ? item.authId : ''
       })));
-      personsList.then(res => setStudentList(res))
+      personsList.then(res => {
+        setStudentList(res);
+        setAllStudentList(res)
+      })
     } catch{
       setMessages({
         show: true,
@@ -278,7 +284,8 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   }, [])
 
   useEffect(() => {
-    const newList = studentList.filter(item => !selectedStudents.some(std => std.id === item.id));
+    const previousList = [...allStudentList]
+    const newList = previousList.filter(item => !selectedStudents.some(std => std.id === item.id));
     setStudentList(newList)
   }, [selectedStudents])
 
@@ -334,7 +341,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
                     </div>
                     <div className="ml-4">{item.name}</div>
                   </div>
-                  <span className="w-6 h-6 flex items-center" onClick={() => removeStudentFromList(item.id)}>
+                  <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => removeStudentFromList(item.id)}>
                     <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
                       <IoClose />
                     </IconContext.Provider>

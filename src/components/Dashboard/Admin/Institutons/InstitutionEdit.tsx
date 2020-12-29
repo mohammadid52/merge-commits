@@ -27,7 +27,6 @@ interface InstInfo {
   address: string
   addressLine2: string
   city: string
-  district: string
   state: string
   zip: string
   image: string
@@ -43,7 +42,6 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
     address: '',
     addressLine2: '',
     city: '',
-    district: '',
     state: '',
     zip: '',
     image: '',
@@ -120,7 +118,6 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
           address: editFormValues.address,
           addressLine2: editFormValues.addressLine2,
           city: editFormValues.city,
-          district: editFormValues.district,
           state: editFormValues.state,
           zip: editFormValues.zip,
           image: editFormValues.image,
@@ -246,7 +243,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
     }
   }, [editFormValues.image])
 
-  const { name, type, website, image, address, addressLine2, city, district, state, zip, phone, isServiceProvider } = editFormValues;
+  const { name, type, website, image, address, addressLine2, city, state, zip, phone, isServiceProvider } = editFormValues;
 
   return (
 
@@ -322,10 +319,6 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
 
               <div className='sm:col-span-3 px-3 py-2'>
                 <FormInput value={city} id='city' onChange={handleEditFormChange} name='city' label="City" />
-              </div>
-
-              <div className='sm:col-span-3 px-3 py-2'>
-                <FormInput value={district} id='district' onChange={handleEditFormChange} name='district' label="District" />
               </div>
 
               <div className='sm:col-span-3 px-3 py-2'>

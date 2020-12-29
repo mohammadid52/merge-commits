@@ -23,7 +23,6 @@ interface InstInfo {
   address: string
   addressLine2: string
   city: string
-  district: string
   state: string
   zip: string
   image: string
@@ -55,7 +54,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     getUrl();
   }, [instProps?.institute.image]);
 
-  const { name, image, type, address, addressLine2, city, state, district, zip, phone, website, isServiceProvider } = instProps?.institute
+  const { name, image, type, address, addressLine2, city, state, zip, phone, website, isServiceProvider } = instProps?.institute
   return (
     <div>
       <div className="h-9/10 flex flex-col md:flex-row">
@@ -98,11 +97,9 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                 <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
                   <span className="text-gray-900 mr-2 w-3/10">Address:</span>
                   <span className="w-auto">
-                    {address && (address + ', ')}
+                    {address && (address + ', ')}<br />
                     {addressLine2 && (addressLine2 + ', ')}<br />
-                    {city && (city + ', ')}
-                    {district && district}<br />
-                    {state && state}
+                    {city && (city + ', ')} {state && state} <br />
                     {zip && ('-' + zip)}
                   </span>
                 </p>
