@@ -285,6 +285,7 @@ export const onChangeStudentData = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -777,6 +778,7 @@ export const onCreateStaff = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -830,6 +832,7 @@ export const onUpdateStaff = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -883,6 +886,7 @@ export const onDeleteStaff = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -946,6 +950,7 @@ export const onCreatePerson = /* GraphQL */ `
       }
       filters
       lastLoggedIn
+      lastLoggedOut
       createdAt
       updatedAt
     }
@@ -996,6 +1001,7 @@ export const onUpdatePerson = /* GraphQL */ `
       }
       filters
       lastLoggedIn
+      lastLoggedOut
       createdAt
       updatedAt
     }
@@ -1046,6 +1052,7 @@ export const onDeletePerson = /* GraphQL */ `
       }
       filters
       lastLoggedIn
+      lastLoggedOut
       createdAt
       updatedAt
     }
@@ -1120,6 +1127,7 @@ export const onCreateRoom = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -1240,6 +1248,7 @@ export const onUpdateRoom = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -1360,6 +1369,7 @@ export const onDeleteRoom = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -1693,6 +1703,7 @@ export const onCreateClassStudent = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -1767,6 +1778,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -1841,6 +1853,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -5213,6 +5226,7 @@ export const onCreateQuestionData = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -5334,6 +5348,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -5455,6 +5470,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -5514,6 +5530,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           language
           filters
           lastLoggedIn
+          lastLoggedOut
           createdAt
           updatedAt
         }
@@ -5589,6 +5606,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           language
           filters
           lastLoggedIn
+          lastLoggedOut
           createdAt
           updatedAt
         }
@@ -5651,6 +5669,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           language
           filters
           lastLoggedIn
+          lastLoggedOut
           createdAt
           updatedAt
         }
@@ -5726,6 +5745,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           language
           filters
           lastLoggedIn
+          lastLoggedOut
           createdAt
           updatedAt
         }
@@ -5788,6 +5808,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           language
           filters
           lastLoggedIn
+          lastLoggedOut
           createdAt
           updatedAt
         }
@@ -5863,6 +5884,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           language
           filters
           lastLoggedIn
+          lastLoggedOut
           createdAt
           updatedAt
         }
@@ -6284,6 +6306,7 @@ export const onCreateStudentWord = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -6332,6 +6355,7 @@ export const onUpdateStudentWord = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -6380,6 +6404,7 @@ export const onDeleteStudentWord = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
