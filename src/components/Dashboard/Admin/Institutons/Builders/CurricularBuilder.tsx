@@ -19,9 +19,7 @@ interface CurricularBuilderProps {
 
 const CurricularBuilder = (props: CurricularBuilderProps) => {
   const { } = props;
-  const history = useHistory();
-  const [institutionList, setInstitutionList] = useState(null);
-  const [curricularData, setCurricularData] = useState({
+  const initialData = {
     id: '',
     name: '',
     institute: {
@@ -29,6 +27,14 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       name: '',
       value: ''
     }
+  }
+  const history = useHistory();
+  const [institutionList, setInstitutionList] = useState(null);
+  const [curricularData, setCurricularData] = useState(initialData);
+  const [messages, setMessages] = useState({
+    show: false,
+    message: '',
+    isError: false
   });
 
   const breadCrumsList = [
@@ -41,6 +47,13 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       ...curricularData,
       name: e.target.value
     })
+    if (messages.show) {
+      setMessages({
+        show: false,
+        message: '',
+        isError: false
+      })
+    }
   }
 
   const selectInstitute = (val: string, name: string, id: string) => {
@@ -52,19 +65,37 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         value: val
       }
     })
+    if (messages.show) {
+      setMessages({
+        show: false,
+        message: '',
+        isError: false
+      })
+    }
   }
 
   const saveCurriculum = async () => {
-    try {
-      const input = {
-        id: curricularData.id,
-        name: curricularData.name,
-        institutionID: curricularData.institute.id
+    const isValid = await validateForm();
+    if (isValid) {
+      try {
+        const input = {
+          name: curricularData.name,
+          institutionID: curricularData.institute.id
+        }
+        const newCurricular = await API.graphql(graphqlOperation(customMutations.createCurriculum, { input: input }));
+        setMessages({
+          show: true,
+          message: 'New curriculum has been saved.',
+          isError: false
+        })
+        setCurricularData(initialData);
+      } catch{
+        setMessages({
+          show: true,
+          message: 'New curriculum has been saved.',
+          isError: true
+        })
       }
-      const newCurricular = await API.graphql(graphqlOperation(customMutations.createCurriculum, { input: input }));
-      console.log("newCurricular", newCurricular)
-    } catch{
-      console.log('error while creating curriculum')
     }
   }
 
@@ -79,15 +110,66 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       }));
       setInstitutionList(InstituteList);
     } catch{
-      console.log('Error while fetching institute lists')
+      setMessages({
+        show: true,
+        message: 'Unable to fetch institution list pleas try later.',
+        isError: true
+      })
+    }
+  }
+
+  const checkUniqCurricularName = async () => {
+    try {
+      const list: any = await API.graphql(graphqlOperation(queries.listCurriculums, {
+        filter: {
+          institutionID: { eq: curricularData.institute.id },
+          name: { eq: curricularData.name }
+        }
+      }))
+      return list.data.listCurriculums.items.length === 0 ? true : false;
+
+    } catch {
+      setMessages({
+        show: true,
+        message: 'Error while processing please Try again later.',
+        isError: true
+      })
+    }
+  }
+
+  const validateForm = async () => {
+    if (curricularData.name.trim() === '') {
+      setMessages({
+        show: true,
+        message: 'Curricular name is required please enter name.',
+        isError: true
+      })
+      return false;
+    } else if (curricularData.institute.id === '') {
+      setMessages({
+        show: true,
+        message: 'Please select an institute to add curricular.',
+        isError: true
+      })
+      return false;
+    } else if (curricularData.name.trim() !== '') {
+      const isUniq = await checkUniqCurricularName()
+      if (!isUniq) {
+        setMessages({
+          show: true,
+          message: 'This curricular name is already exist, please add another name.',
+          isError: true
+        })
+        return false;
+      } else {
+        return true
+      }
+    } else {
+      return true
     }
   }
 
   useEffect(() => {
-    setCurricularData({
-      ...curricularData,
-      id: uuidv4()
-    })
     getInstitutionList()
   }, [])
 
@@ -120,7 +202,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
             </div>
           </div>
         </div>
-
+        {messages.show ? (<div className="py-2 m-auto text-center">
+          <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
+        </div>) : null}
         <div className="flex my-8 justify-center">
           <Buttons btnClass="py-3 px-12 text-sm" label="Save" onClick={saveCurriculum} />
         </div>
