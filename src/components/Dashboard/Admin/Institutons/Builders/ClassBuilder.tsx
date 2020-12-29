@@ -2,7 +2,6 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoClose } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { v4 as uuidv4 } from 'uuid';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
@@ -25,7 +24,7 @@ interface ClassBuilderProps {
 const ClassBuilder = (props: ClassBuilderProps) => {
   const { } = props;
   const history = useHistory();
-  const [classData, setClassData] = useState({
+  const initialData = {
     id: '',
     name: '',
     institute: {
@@ -33,16 +32,22 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       name: '',
       value: ''
     }
-  })
+  }
+  const [classData, setClassData] = useState(initialData)
   const [newMember, setNewMember] = useState({
     name: '',
     id: '',
     value: '',
     avatar: ''
   });
-  const [studentList, setStudentList] = useState(null);
-  const [institutionList, setInstitutionList] = useState(null);
+  const [studentList, setStudentList] = useState([]);
+  const [institutionList, setInstitutionList] = useState([]);
   const [selectedStudents, setSelectedStudent] = useState([]);
+  const [messages, setMessages] = useState({
+    show: false,
+    message: '',
+    isError: false
+  });
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
@@ -54,6 +59,13 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       ...classData,
       name: e.target.value
     })
+    if (messages.show) {
+      setMessages({
+        show: false,
+        message: '',
+        isError: false
+      })
+    }
   }
 
   const setInstitute = (val: string, name: string, id: string) => {
@@ -65,6 +77,13 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         value: val
       }
     })
+    if (messages.show) {
+      setMessages({
+        show: false,
+        message: '',
+        isError: false
+      })
+    }
   }
 
   const getImageURL = async (uniqKey: string) => {
@@ -94,8 +113,18 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         id: newMember.id,
         avatar: newMember.avatar
       }
-    ]
-    )
+    ])
+    setNewMember({
+      id: '',
+      name: '',
+      value: '',
+      avatar: ''
+    })
+  }
+
+  const removeStudentFromList = (id: string) => {
+    const newList = selectedStudents.filter(item => item.id !== id);
+    setSelectedStudent(newList)
   }
 
   const getStudentsList = async () => {
@@ -118,7 +147,11 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       })));
       personsList.then(res => setStudentList(res))
     } catch{
-      console.log('Error while fetching staff details')
+      setMessages({
+        show: true,
+        message: 'Error while fetching student list, Please try again or you can add them later.',
+        isError: true
+      })
     }
 
   }
@@ -133,49 +166,121 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         value: `${item.name ? item.name : ''}`
       }));
       setInstitutionList(InstituteList);
-    } catch{
-      console.log('Error while fetching staff details')
+    } catch {
+      setMessages({
+        show: true,
+        message: 'Error while fetching institution list, Please try again later.',
+        isError: true
+      })
     }
   }
 
   const saveClassDetails = async () => {
-    try {
-      const input = {
-        id: classData.id,
-        name: classData.name,
-        institutionID: classData.institute.id,
+    const isValid = await validateForm();
+    if (isValid) {
+      try {
+        const input = {
+          name: classData.name,
+          institutionID: classData.institute.id,
+        }
+        const newClass: any = await API.graphql(graphqlOperation(customMutations.createClass, { input: input }));
+        const classId = newClass.data.createClass.id
+        const studentsList: any = Promise.all(selectedStudents.map(async (item: any) => await saveStudentsList(item.id, classId)));
+        setMessages({
+          show: true,
+          message: 'New class details has been saved.',
+          isError: false
+        })
+        setSelectedStudent([])
+        setClassData(initialData)
+      } catch{
+        setMessages({
+          show: true,
+          message: 'Unable to save new class. Please try again later.',
+          isError: true
+        })
       }
-
-      const newClass: any = await API.graphql(graphqlOperation(customMutations.createClass, { input: input }));
-      const studentsList: any = Promise.all(selectedStudents.map(async (item: any) => await saveStudentsList(item.id)));
-    } catch{
-      console.log('Error while creating class details')
     }
   }
 
-  const saveStudentsList = async (id: string) => {
+  const saveStudentsList = async (id: string, classId: string) => {
     try {
-      const studets = {
+      const input = {
         studentAuthID: studentList.find((item: any) => item.id === id).authId,
-        classID: classData.id,
+        classID: classId,
         studentID: id,
         studentEmail: studentList.find((item: any) => item.id === id).email
       };
-      const students: any = await API.graphql(graphqlOperation(customMutations.createClassStudent, { input: studets }));
-
+      const students: any = await API.graphql(graphqlOperation(customMutations.createClassStudent, { input: input }));
     } catch{
+      setMessages({
+        show: true,
+        message: 'Error while adding stuents data, you can add them saperately from class.',
+        isError: true
+      })
+    }
+  }
 
+  const checkUniqClassName = async () => {
+    try {
+      const list: any = await API.graphql(graphqlOperation(queries.listClasss, {
+        filter: {
+          institutionID: { eq: classData.institute.id },
+          name: { eq: classData.name }
+        }
+      }))
+      return list.data.listClasss.items.length === 0 ? true : false;
+
+    } catch {
+      setMessages({
+        show: true,
+        message: 'Error while processing please Try again later.',
+        isError: true
+      })
+    }
+  }
+
+  const validateForm = async () => {
+    if (classData.name.trim() === '') {
+      setMessages({
+        show: true,
+        message: 'Class name is required please enter.',
+        isError: true
+      })
+      return false;
+    } else if (classData.institute.id === '') {
+      setMessages({
+        show: true,
+        message: 'Please select an institute to add class.',
+        isError: true
+      })
+      return false;
+    } else if (classData.name.trim() !== '') {
+      const isUniq = await checkUniqClassName()
+      if (!isUniq) {
+        setMessages({
+          show: true,
+          message: 'This class name is already exist, please add another name.',
+          isError: true
+        })
+        return false;
+      } else {
+        return true
+      }
+    } else {
+      return true
     }
   }
 
   useEffect(() => {
     getStudentsList()
     getInstitutionList()
-    setClassData({
-      ...classData,
-      id: uuidv4()
-    })
   }, [])
+
+  useEffect(() => {
+    const newList = studentList.filter(item => !selectedStudents.some(std => std.id === item.id));
+    setStudentList(newList)
+  }, [selectedStudents])
 
   const { name, institute } = classData;
 
@@ -197,11 +302,11 @@ const ClassBuilder = (props: ClassBuilderProps) => {
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CLASS INFORMATION</h3>
           <div className="">
             <div className="px-3 py-4">
-              <FormInput value={name} id='className' onChange={onChange} name='className' label="Class Name" />
+              <FormInput value={name} id='className' onChange={onChange} name='className' label="Class Name" isRequired />
             </div>
             <div className="px-3 py-4">
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Institute
+                Institute <span className="text-red-500"> *</span>
               </label>
               <Selector selectedItem={institute.value} placeholder="Select Institute" list={institutionList} onChange={setInstitute} />
             </div>
@@ -229,7 +334,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
                     </div>
                     <div className="ml-4">{item.name}</div>
                   </div>
-                  <span className="w-6 h-6 flex items-center" onClick={() => console.log('')}>
+                  <span className="w-6 h-6 flex items-center" onClick={() => removeStudentFromList(item.id)}>
                     <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
                       <IoClose />
                     </IconContext.Provider>
@@ -238,6 +343,9 @@ const ClassBuilder = (props: ClassBuilderProps) => {
             </Fragment>
           )}
         </div>
+        {messages.show ? (<div className="py-2 m-auto text-center">
+          <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
+        </div>) : null}
         <div className="flex my-8 justify-center">
           <Buttons btnClass="my-8 py-3 px-12 text-sm" label="Save" onClick={saveClassDetails} />
         </div>
