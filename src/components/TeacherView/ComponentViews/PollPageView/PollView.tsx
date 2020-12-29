@@ -1,5 +1,5 @@
-import React, { useEffect, useContext } from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { useRouteMatch } from 'react-router-dom';
 
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
@@ -13,10 +13,7 @@ const PollView = () => {
     dispatch({ type: 'ACTIVATE_LESSON', payload: 'warmup' });
   }, []);
 
-  return (
-    <PollActivityView/>
-  )
-
-}
+  return <PollActivityView />;
+};
 
 export default PollView;

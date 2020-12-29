@@ -38,6 +38,7 @@ const PollActivityView = () => {
       if (state.studentViewing.studentInfo.warmupData) {
         return setDataProps(state.studentViewing.studentInfo.warmupData);
       }
+    } else {
       return setDataProps(null);
     }
   }, [state.studentViewing]);
@@ -50,7 +51,6 @@ const PollActivityView = () => {
        *
        */}
       <div className={theme.section}>
-
         <Banner isTeacher={true} />
 
         <div className="flex flex-col justify-between items-center">
@@ -62,9 +62,11 @@ const PollActivityView = () => {
            *
            */}
           <InstructionBlock isTeacher={true} />
-          {inputs.additionalInputs.length > 0 ? <Modules isTeacher={true} inputs={inputs.additionalInputs} dataProps={dataProps}/> : null}
+          {inputs.additionalInputs.length > 0 ? (
+            <Modules isTeacher={true} inputs={inputs.additionalInputs} dataProps={dataProps} />
+          ) : null}
 
-          <PollForm isTeacher={true} dataProps={dataProps}/>
+          <PollForm isTeacher={true} dataProps={dataProps} />
         </div>
       </div>
     </>

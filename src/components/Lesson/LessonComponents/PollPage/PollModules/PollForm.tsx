@@ -93,6 +93,8 @@ const PollForm = (props: PollFormProps) => {
   useEffect(()=>{
     if(isTeacher && dataProps){
       console.log('Poll form -> ', 'setting poll form for teacher view...')
+      console.log('Poll form -> ', dataProps)
+      // setInput({pollInputs: dataProps.pollInputs})
     }
   },[dataProps])
 
