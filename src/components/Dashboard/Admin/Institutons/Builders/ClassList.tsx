@@ -45,9 +45,9 @@ const ClassList = (props: ClassListProps) => {
                   <div className="flex w-6/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                     {item.name ? item.name : ''}
                   </div>
-                  <span className="w-3/10 h-6 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900" onClick={() => console.log('')}>
+                  <span className="w-3/10 h-6 cursor-pointer flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900" onClick={() => history.push(`/dashboard/manage-institutions/class-edit?id=${item.id}`)}>
                     edit
-                </span>
+                  </span>
                 </div>
               ))
             ) : (<p className="text-center p-16"> No Results</p>)}
