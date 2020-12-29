@@ -41,7 +41,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 
   const tabs = [
     { index: 0, title: 'Service Providers', icon: <FaHandshake />, active: false, content: <ServiceProviders serviceProviders={institute.serviceProviders} instId={institute?.id} /> },
-    { index: 1, title: 'Staff', icon: <IoPeople />, active: true, content: <StaffBuilder /> },
+    { index: 1, title: 'Staff', icon: <IoPeople />, active: true, content: <StaffBuilder instituteId={instProps?.institute?.id} /> },
     { index: 2, title: 'Classes', icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={instProps?.institute?.classes} /> },
     { index: 3, title: 'Curricular', icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} /> },
     { index: 4, title: 'Rooms', icon: <FaHotel />, active: false, content: <RoomsList /> }
@@ -127,11 +127,14 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
               </div>
             </div>
           </div>
-          <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg'>
-            <div className='px-4 py-5 sm:px-6'>
-              <UnderlinedTabs tabs={tabs} />
+          {
+            instProps?.institute?.id &&
+            <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg'>
+              <div className='px-4 py-5 sm:px-6'>
+                <UnderlinedTabs tabs={tabs} />
+              </div>
             </div>
-          </div>
+          }
         </div>
 
       </div>

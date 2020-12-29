@@ -10,13 +10,13 @@ import { getInitialsFromString, initials, stringToHslColor } from '../../../../.
 import { IoClose } from 'react-icons/io5';
 import Buttons from '../../../../Atoms/Buttons';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
-
+import * as queries from '../../../../../graphql/queries'
+import * as mutations from '../../../../../graphql/mutations'
 interface StaffBuilderProps {
-
+  instituteId: String
 }
 
 const StaffBuilder = (props: StaffBuilderProps) => {
-
   const [staffList, setStaffList] = useState(null);
   const [newMember, setNewMember] = useState({
     name: '',
@@ -33,14 +33,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       value: str,
       avatar: avatar
     })
-  }
-  const addMemberToList = () => {
-    setActiveStaffList([
-      ...activeStaffList,
-      {
-        name: newMember.name
-      }]
-    )
   }
 
   const getStaffRole = (role: string) => {
@@ -61,16 +53,49 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       const personsList = sortedList.map((item: any, i: any) => ({
         id: i,
         name: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
-        value: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`
+        value: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
+        authId: item.authId,
+        email: item.email
       }));
+      console.log('personsList', personsList)
       setStaffList(personsList);
     } catch{
       console.log('Error while fetching staff details')
     }
   }
 
+  const getStaff = async () => {
+    try {
+      const staff: any = await API.graphql(graphqlOperation(queries.listStaffs, {
+        filter: { institutionID: { eq: props.instituteId } },
+      }));
+    } catch(err) {
+      console.log('Error: Get Staff, StaffBuilder: Could not get list of Institution staff members', err)
+    }
+  }
+
+  const addStaffMember = async () => {
+    try {
+      console.log('newMember', newMember)
+      const member = staffList.filter((item: any) => item.id === newMember.id)[0]
+      const input = {
+        institutionID: props.instituteId,
+        staffAuthID: member.authId,
+        staffEmail: member.email,
+        status: 'Active',
+        statusChangeDate: (new Date()).toISOString().split('T')[0]
+      }
+      console.log('input', input)
+      const staff: any = await API.graphql(graphqlOperation(mutations.createStaff, { input: input }));
+      console.log('staff', staff)
+    } catch(err) {
+      console.log('Error: Add Staff, StaffBuilder: Could not add new staff member in institution', err)
+    }
+  }
+
   useEffect(() => {
     getPersonsList()
+    getStaff()
   }, [])
 
   return (
@@ -80,7 +105,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">STAFF MEMBERS</h3>
           <div className="flex items-center w-6/10 m-auto px-2">
             <SelectorWithAvatar selectedItem={newMember} list={staffList} placeholder="Add new staff member" onChange={onChange} />
-            <Buttons btnClass="ml-4 py-1" label="Add" onClick={addMemberToList} />
+            <Buttons btnClass="ml-4 py-1" label="Add" onClick={addStaffMember} />
           </div>
           <div className="my-4 w-8/10 m-auto max-h-88 overflow-y-scroll">
             {activeStaffList.length > 0 && (
