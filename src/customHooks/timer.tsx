@@ -116,9 +116,9 @@ const useStudentTimer = (inputs?: inputs) => {
       warmupData: params.state.componentState.story
         ? params.state.componentState.story
         : typeof params.state.componentState.truthGame?.truthGameArray !== 'undefined'
-        ? { truthGame: params.state.componentState.truthGame.truthGameArray } //TODO: Fix this ternary statement
+        ? { truthGame: params.state.componentState.truthGame.truthGameArray }
         : typeof params.state.componentState.poll?.pollInputs !== 'undefined'
-        ? {poll : params.state.componentState.poll.pollInputs}
+        ? { poll: params.state.componentState.poll.pollInputs, additional: params.state.componentState.poll.additional }
         : null,
       corelessonData: params.state.componentState.lyrics ? params.state.componentState.lyrics : null,
       activityData: params.state.componentState.poem ? params.state.componentState.poem : null,

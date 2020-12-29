@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
 import InstructionsBlock from './InstructionBlock';
@@ -28,7 +28,7 @@ const Poll = () => {
 
   return (
     <>
-      {state.componentState.poll && state.componentState.poll.pollInputs ? (
+      {state.componentState.poll && state.componentState.poll?.pollInputs ? (
         <>
           <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup} />
           <div className={theme.section}>
@@ -36,7 +36,7 @@ const Poll = () => {
 
             <div className="flex flex-col justify-between items-center">
               <InstructionsBlock />
-              {/*{inputs.additionalInputs.length > 0 ? <Modules inputs={inputs.additionalInputs} /> : null}*/}
+              {inputs.additionalInputs.length > 0 ? <Modules inputs={inputs.additionalInputs} /> : null}
 
               <PollForm />
             </div>
