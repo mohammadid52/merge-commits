@@ -18,6 +18,19 @@ export const updatePerson = /* GraphQL */ `
   }
 `;
 
+export const updatePersonLoginTime = /* GraphQL */ `
+  mutation UpdatePerson($input: UpdatePersonInput!, $condition: ModelPersonConditionInput) {
+    updatePerson(input: $input, condition: $condition) {
+      id
+      authId
+      email
+      lastLoggedIn
+    }
+  }
+`;
+
+
+
 export const createStudentData = /* GraphQL */ `
   mutation CreateStudentData($input: CreateStudentDataInput!, $condition: ModelStudentDataConditionInput) {
     createStudentData(input: $input, condition: $condition) {
@@ -51,15 +64,6 @@ export const createStudentData = /* GraphQL */ `
           label
           isLie
           text
-        }
-        poll {
-          id
-          question
-          option {
-            id
-            option
-            isChoice
-          }
         }
       }
       corelessonData {
@@ -150,15 +154,6 @@ export const updateStudentData = /* GraphQL */ `
           isLie
           text
         }
-        poll {
-          id
-          question
-          option {
-            id
-            option
-            isChoice
-          }
-        }
       }
       corelessonData {
         selected {
@@ -223,15 +218,6 @@ export const updateClassroom = /* GraphQL */ `
             label
             isLie
             text
-          }
-          poll {
-            id
-            question
-            option {
-              id
-              option
-              isChoice
-            }
           }
         }
         corelessonData {

@@ -160,7 +160,7 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
 
   const theme = lightOn ? pageThemes.light : pageThemes.dark;
   const globalStateAccess = state;
-
+  const userLanguage = state.user.language || 'EN'
   return (
     <GlobalContext.Provider
       value={{
@@ -172,6 +172,7 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
         main_container,
         white_back,
         globalStateAccess,
+        userLanguage
       }}>
       {children}
     </GlobalContext.Provider>

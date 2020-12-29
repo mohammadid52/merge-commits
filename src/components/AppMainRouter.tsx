@@ -1,8 +1,8 @@
-import React, { useState, useContext, useEffect, Suspense, lazy } from 'react';
-import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
+import React, { useState, useContext, useEffect, Suspense } from 'react';
 import { Auth } from '@aws-amplify/auth';
 import { useCookies } from 'react-cookie';
-
+import API, { graphqlOperation } from '@aws-amplify/api';
+import * as queries from '../graphql/queries';
 import { GlobalContext } from '../contexts/GlobalContext';
 import useDeviceDetect from '../customHooks/deviceDetect';
 import MobileOops from '../components/Error/MobileOops';
@@ -13,37 +13,89 @@ import UnauthRoutes from './AppRoutes/UnauthRoutes';
 
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
-  const { theme, dispatch } = useContext(GlobalContext);
+  // const { theme, dispatch } = useContext(GlobalContext);
+  const { state, theme, dispatch } = useContext(GlobalContext);
   const [cookies, setCookie, removeCookie] = useCookies();
-  const history = useHistory();
   const [authState, setAuthState] = useState('loading')
 
   const checkUserAuthenticated = async () => {
     try {
-      const accessToken = sessionStorage.getItem('accessToken');
-      if (accessToken) {
         const user = await Auth.currentAuthenticatedUser()
         if (user) {
           const { email, sub } = user.attributes
-          setAuthState('loggedIn')
+          let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }))
+          userInfo = userInfo.data.getPerson;
+          updateAuthState(true)
           dispatch({
             type: 'PREV_LOG_IN',
             payload: { email, authId: sub },
           });
+          dispatch({
+            type: 'SET_USER',
+            payload: {
+              id: userInfo.id,
+              firstName: userInfo.preferredName || userInfo.firstName,
+              lastName: userInfo.lastName,
+              language: userInfo.language,
+              onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
+              role: userInfo.role,
+              image: userInfo.image
+            }
+          });
+        } else {
+          updateAuthState(false)    
         }
-      } else {
-        setAuthState('notLoggedIn')  
-      }
     } catch (err) {
-      setAuthState('notLoggedIn')
+      updateAuthState(false)
     }
   };
 
-  const updateAuthState = (auth: boolean) => {
-    setAuthState(auth ? 'loggedIn': 'notLoggedIn')
+  const checkForUserInactivity = () => {
+    let idelTime = 0;
+    let timer: any;
+
+    window.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === 'visible') {
+        clearTimeout(timer);        //  Clear timer if user comes back to the app.
+      } else {
+        if (isUserLoggedIn()) {
+          idelTime = 30 * 60 * 1000;  // Timer for 30 mins to count if user not using the app.
+          timer = setTimeout(autoLogout, idelTime)
+        }
+      }
+    });
+
   }
+  const autoLogout = async () => {
+    if (isUserLoggedIn()) {
+      await Auth.signOut();
+      updateAuthState(false)
+    }
+  }
+
+  const isUserLoggedIn = () => {
+    return authState === 'loggedIn'
+  }
+
+  const updateAuthState = (auth: boolean) => {
+    if (auth) {
+      setAuthState('loggedIn')
+    } else {
+      setAuthState('notLoggedIn')
+    }
+  }
+
   useEffect(() => {
-    // checkForUserInactivity();
+    if (authState === 'loggedIn') {
+      checkForUserInactivity()
+    } else {
+      removeCookie('auth', { path: '/' });
+      dispatch({ type: 'CLEANUP' });
+      sessionStorage.removeItem('accessToken');
+    }
+  }, [authState]);
+
+  useEffect(() => {
     checkUserAuthenticated();
   }, []);
 
@@ -65,10 +117,10 @@ const MainRouter: React.FC = () => {
                 </div>
               }>
               {
-                authState === 'loggedIn' && <AuthRoutes updateAuthState={updateAuthState}/>
+                authState === 'loggedIn' && <AuthRoutes updateAuthState={updateAuthState} />
               }
               {
-                authState === 'notLoggedIn' && <UnauthRoutes updateAuthState={updateAuthState}/>
+                authState === 'notLoggedIn' && <UnauthRoutes updateAuthState={updateAuthState} />
               }
             </Suspense>
           )}

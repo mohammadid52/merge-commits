@@ -6,10 +6,12 @@ import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FiUsers } from 'react-icons/fi';
 import { FaUniversity, FaRulerVertical } from 'react-icons/fa';
 import { AiOutlineSchedule, AiOutlineAudit, AiOutlineUsergroupAdd } from 'react-icons/ai';
+import useDictionary from '../../../customHooks/dictionary';
 
 type LinkObject = {
   name: string;
   path: string;
+  title: string
 };
 
 export interface LinkProps {
@@ -22,12 +24,13 @@ export interface LinkProps {
 };
 
 const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
+  const { sideBarLinksDict } = useDictionary()
   const history = useHistory();
   const match = useRouteMatch();
-  const { state } = useContext(GlobalContext);
+  const { state, userLanguage } = useContext(GlobalContext);
   const { role } = linkProps;
   const [links, setLinks] = useState<Array<LinkObject>>([]);
-
+  
   const userLinks = (role: string): void => {
     switch (role) {
       case 'SUP':
@@ -35,22 +38,27 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
+              title: 'REGISTRATION',
               name: 'Registration',
               path: 'registration',
             },
             {
+              title: 'PEOPLE',
               name: 'People',
               path: 'manage-users',
             },
             {
+              title: 'CLASSROOM',
               name: 'Classroom',
               path: 'classroom',
             },
             {
+              title: 'LESSON_PLANNER',
               name: 'Lesson Planner',
               path: 'lesson-planner',
             },
             {
+              title: 'INSTITUTIONS',
               name: 'Institutions',
               path: 'manage-institutions',
             },
@@ -61,10 +69,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
+              title: 'INSTITUTIONS',
               name: 'Institutions',
               path: 'manage-institutions',
             },
             {
+              title: 'PEOPLE',
               name: 'People',
               path: 'manage-users',
             },
@@ -73,10 +83,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
             //   path: 'lesson-planner',
             // },
             {
+              title: 'LESSON_PLANNER',
               name: 'Lesson Planner',
               path: 'lesson-planner',
             },
             {
+              title: 'CLASSROOM',
               name: 'Classroom',
               path: 'classroom',
             },
@@ -91,10 +103,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
             //   path: 'registration',
             // },
             {
+              title: 'PEOPLE',
               name: 'People',
               path: 'manage-users',
             },
             {
+              title: 'LESSON_PLANNER',
               name: 'Lesson Planner',
               path: 'lesson-planner',
             },

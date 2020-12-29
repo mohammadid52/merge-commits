@@ -38,7 +38,7 @@ interface DashboardProps {
 const Dashboard = ({ updateAuthState }: DashboardProps) => {
   const match = useRouteMatch();
   const history = useHistory();
-  const [cookies, setCookie] = useCookies(['auth']);
+  const [cookies, setCookie, removeCookie] = useCookies(['auth']);
   const [userData, setUserData] = useState({
     role: '',
     image: ''
@@ -69,24 +69,26 @@ const Dashboard = ({ updateAuthState }: DashboardProps) => {
   }
 
   async function getUser() {
+    console.log('get user is called')
     const userEmail = (state.user?.email) ? (state.user?.email) : (cookies.auth?.email);
     const userAuthId = (state.user?.authId) ? (state.user?.authId) : (cookies.auth?.authId);
     try {
       // this any needs to be changed once a solution is found!!!
       const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: userEmail, authId: userAuthId }))
-      // console.log(user)
       setUser(user.data.getPerson);
     } catch (error) {
-      console.log('Here in eror')
+      console.log('Here in error')
       if (!userEmail && !userAuthId) {
-        history.push('/login');
+        removeCookie('auth', { path: '/' });
+        dispatch({ type: 'CLEANUP' });
+        sessionStorage.removeItem('accessToken');
+        updateAuthState(false)
       }
       console.error(error)
     }
   }
 
   useEffect(() => {
-    console.log('state.user', state.user)
     if (!state.user.firstName) {
       getUser()
     } else {
@@ -103,7 +105,7 @@ const Dashboard = ({ updateAuthState }: DashboardProps) => {
         <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage} image={userData.image} />
         <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
       </SideMenu>
-      <PageHeaderBar setCurrentPage={setCurrentPage} currentPage={currentPage} updateAuthState={updateAuthState}/>
+      <PageHeaderBar setCurrentPage={setCurrentPage} currentPage={currentPage} updateAuthState={updateAuthState} />
       <div className={`height h-full overflow-x-hidden overflow-y-scroll flex flex-col`}>
         <Suspense fallback={
           <div className="min-h-screen w-full flex flex-col justify-center items-center">
