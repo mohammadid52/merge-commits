@@ -104,6 +104,9 @@ const useStudentTimer = (inputs?: inputs) => {
      * so that it doesn't look specifically for the truthGame object
      * but can also return any other additional object from new components
      */
+
+    //TODO: clean up the warmUpData ternary condition below
+
     let data = {
       id: state.studentDataID,
       lessonProgress: lessonProgress,
