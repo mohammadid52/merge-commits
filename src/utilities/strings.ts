@@ -60,6 +60,23 @@ export const firstInitialFunc = (str: string) => {
 };
 
 /**
+ * Function used in multiple places to
+ * set array as a filter object while fetching data.
+ * @param arr
+ * @param key
+ */
+export const getFilterORArray = (arr: any, key: string) => {
+  let newArray = arr.map((item: any) => {
+    return {
+      [key]: {
+        eq: item,
+      },
+    };
+  });
+  return newArray;
+};
+
+/**
  * Below function used in multiple places to
  * Show initials of name and stringToHsl background colors.
  * @param firstName

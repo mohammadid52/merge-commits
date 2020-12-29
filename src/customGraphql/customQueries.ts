@@ -966,3 +966,23 @@ export const listServiceProviders = /* GraphQL */ `
     }
   }
 `;
+
+export const getInstitution = /* GraphQL */ `
+  query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      name
+      isServiceProvider
+      serviceProviders {
+        items {
+          id
+          partnerID
+          providerID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+    }
+  }
+`;
