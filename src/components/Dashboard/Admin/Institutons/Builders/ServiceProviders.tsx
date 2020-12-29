@@ -3,17 +3,21 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 
 import * as queries from '../../../../../graphql/queries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
+import * as customQueries from '../../../../../customGraphql/customQueries';
+import * as mutation from '../../../../../graphql/mutations';
 import PageWrapper from '../../../../Atoms/PageWrapper'
 import Buttons from '../../../../Atoms/Buttons'
 import Selector from '../../../../Atoms/Form/Selector';
 
 interface ServiceProvidersProps {
-
+  instId: string
+  serviceProviders: { items: { id: string, providerID: string }[] }
 }
 
 const ServiceProviders = (props: ServiceProvidersProps) => {
-  const { } = props;
+  const { instId } = props;
   const [servProList, setServProList] = useState();
+  const [currentInstituteId, setCurrentInstituteId] = useState('');
   const [activeServPro, setActiveServPro] = useState([]);
   const [newServPro, setNewServPro] = useState({
     id: '',
@@ -30,34 +34,51 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
   const addServiceProvider = () => {
     try {
       const input = {
-
+        partnerID: instId,
+        providerID: newServPro.id
       }
-      const updatedInstitute: any = API.graphql(graphqlOperation(customMutations.updateInstitution))
+      const updatedInstitute: any = API.graphql(graphqlOperation(mutation.createServiceProvider, { input: input }))
+    } catch{
+      console.log("error adding service providers")
+    }
+  }
+
+  const deleteServiceProvider = async (id: string) => {
+    try {
+      const input = {
+        id: id
+      }
+      const list: any = await API.graphql(graphqlOperation(mutation.deleteServiceProvider, { input: input }))
     } catch{
 
     }
   }
   const fetchServProList = async () => {
     try {
-      const list: any = await API.graphql(graphqlOperation(queries.listInstitutions, {
+      const list: any = await API.graphql(graphqlOperation(customQueries.listServiceProviders, {
         filter: {
           isServiceProvider: { eq: true }
         }
       }));
-      const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase()) ? 1 : -1);
-      const InstituteList = sortedList.map((item: any, i: any) => ({
+      const filteredList = list.data.listInstitutions?.items.filter((item: { id: string }) => item.id !== instId)
+      const sortedList = filteredList.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase()) ? 1 : -1);
+      const servProList = sortedList.map((item: any, i: any) => ({
         id: item.id,
         name: `${item.name ? item.name : ''}`,
         value: `${item.name ? item.name : ''}`
       }));
-      setServProList(InstituteList);
+      setServProList(servProList);
     } catch{
-      console.log('Error while fetching institute lists')
+      console.log('Error while fetching service providers lists')
     }
   }
+
   useEffect(() => {
-    fetchServProList()
-  }, [])
+    if (instId) {
+      fetchServProList()
+    }
+  }, [instId])
+
   return (
     <div className="p-8 flex m-auto justify-center">
       <div className="">

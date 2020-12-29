@@ -97,6 +97,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   }
 
   const getImageURL = async (uniqKey: string) => {
+    console.log("Asked for image")
     const imageUrl: any = await getImageFromS3(uniqKey);
     if (imageUrl) {
       console.log(imageUrl)
@@ -114,7 +115,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         },
       }));
       const sortedList = list.data.listPersons.items.sort((a: any, b: any) => (a.firstName?.toLowerCase() > b.firstName?.toLowerCase()) ? 1 : -1);
-      const personsList = Promise.all(sortedList.map(async (item: any, i: any) => ({
+      const personsList = Promise.all(sortedList.map(async (item: any) => ({
         id: item.id,
         name: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
         value: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
@@ -124,7 +125,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       })));
       setTeachersList(personsList);
     } catch{
-      console.log('Error while fetching staff details')
+      console.log('Error while fetching teachers list')
     }
 
   }
@@ -140,7 +141,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       }));
       setInstitutionList(InstituteList);
     } catch{
-      console.log('Error while fetching staff details')
+      console.log('Error while fetching institution list')
     }
   }
   const getClassLists = async () => {
@@ -154,7 +155,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       }));
       setClassList(classList);
     } catch{
-      console.log('Error while fetching staff details')
+      console.log('Error while fetching class list')
     }
   }
 
@@ -169,7 +170,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       }));
       setCurricularList(curricularList);
     } catch{
-      console.log('Error while fetching staff details')
+      console.log('Error while fetching curricular details')
     }
   }
 
@@ -187,7 +188,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       const newRoom: any = await API.graphql(graphqlOperation(customMutation.createRoom, { input: input }));
 
     } catch{
-      console.log('Error while fetching staff details')
+      console.log('Error while creating new room')
     }
   }
 

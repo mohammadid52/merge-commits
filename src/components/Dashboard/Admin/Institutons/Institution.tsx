@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaEdit } from 'react-icons/fa';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
@@ -8,10 +7,7 @@ import queryString from 'query-string';
 import { useHistory } from 'react-router-dom';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
-import { GlobalContext } from '../../../../contexts/GlobalContext';
 import * as queries from '../../../../graphql/queries';
-import ActionButton from '../Actions/ActionButton';
-import { initials, stringToHslColor } from '../../../../utilities/strings';
 import InstitutionInfo from './InstitutionInfo';
 import InstitutionEdit from './InstitutionEdit';
 import BreadCrums from '../../../Atoms/BreadCrums';
@@ -41,6 +37,7 @@ export interface InstitutionInfo {
   isServiceProvider?: boolean;
   classes?: { items: { name?: string, id: string }[] }
   curricula?: { items: { name?: string, id: string }[] }
+  serviceProviders?: { items: { id: string, providerID: string }[] }
 }
 
 /**
@@ -68,14 +65,9 @@ const Institution: React.FC = () => {
     addressLine2: '',
     phone: '',
     isServiceProvider: false,
-    classes: {
-      items: [
-        { name: '', id: '' }]
-    },
-    curricula: {
-      items: [
-        { name: '', id: '' }]
-    }
+    classes: { items: [{ name: '', id: '' }] },
+    serviceProviders: { items: [{ id: '', providerID: '' }] },
+    curricula: { items: [{ name: '', id: '' }] }
 
   });
   const history = useHistory();
