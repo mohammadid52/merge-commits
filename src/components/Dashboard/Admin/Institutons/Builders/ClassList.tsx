@@ -40,8 +40,8 @@ const ClassList = (props: ClassListProps) => {
             </div>
 
             {(classes.items && classes.items.length > 0) ? (
-              classes.items.map(item => (
-                <div className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+              classes.items.map((item, index) => (
+                <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div className="flex w-6/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                     {item.name ? item.name : ''}
                   </div>

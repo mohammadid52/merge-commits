@@ -37,8 +37,8 @@ const CurriculumList = (props: CurriculumListProps) => {
 
 
             {(curricular.items && curricular.items.length > 0) ? (
-              curricular.items.map(item => (
-                <div className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+              curricular.items.map((item, index) => (
+                <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div className="flex w-7/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                     {item.name ? item.name : ''}
                   </div>

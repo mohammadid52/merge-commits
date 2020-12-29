@@ -69,6 +69,15 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       const staff: any = await API.graphql(graphqlOperation(queries.listStaffs, {
         filter: { institutionID: { eq: props.instituteId } },
       }));
+      let staffMembers: any = staff.data.listStaffs.items;
+      staffMembers = staffMembers.map((member: any) => {
+        member.name = `${member.staffMember.firstName || ''} ${member.staffMember.lastName || ''}`
+        member.image = member.staffMember.image
+        member.role = member.staffMember.role
+        return member
+      })
+      console.log('staff.data.listStaffs.items', staffMembers)
+      setActiveStaffList(staffMembers)
     } catch(err) {
       console.log('Error: Get Staff, StaffBuilder: Could not get list of Institution staff members', err)
     }
@@ -76,7 +85,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const addStaffMember = async () => {
     try {
-      console.log('newMember', newMember)
       const member = staffList.filter((item: any) => item.id === newMember.id)[0]
       const input = {
         institutionID: props.instituteId,
@@ -87,7 +95,11 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       }
       console.log('input', input)
       const staff: any = await API.graphql(graphqlOperation(mutations.createStaff, { input: input }));
-      console.log('staff', staff)
+      const addedMember = staff.data.createStaff;
+      addedMember.name = `${addedMember.staffMember.firstName || ''} ${addedMember.staffMember.lastName || ''}`
+      addedMember.image = addedMember.staffMember.image;
+      addedMember.role = addedMember.staffMember.roleaddedMember;
+      setActiveStaffList([...activeStaffList, addedMember])
     } catch(err) {
       console.log('Error: Add Staff, StaffBuilder: Could not add new staff member in institution', err)
     }
@@ -114,7 +126,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                   <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                     <div className="flex w-3/10 items-center">
                       <div className="flex-shrink-0 h-10 w-10 flex items-center">
-                        {item.image ?
+                        {item.staffMember.image ?
                           (<img
                             // src={imageUrl}
                             className="h-8 w-8 rounded-full" />) :

@@ -192,7 +192,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       {/* {state.user.role && links.length > 0 */}
       {role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
-          <>
+          <React.Fragment key={key}>
             <div
               id={link.path}
               key={key}
@@ -211,7 +211,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
             <div className={`w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent`}></div>
 
-          </>
+          </React.Fragment>
         ))
         : null}
     </div>
