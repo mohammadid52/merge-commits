@@ -13,6 +13,9 @@ const PollView = () => {
     dispatch({ type: 'ACTIVATE_LESSON', payload: 'warmup' });
   }, []);
 
+  /**
+   * TODO: do a switch here to toggle between PoemActivityView & PoemBreakdownView
+   */
   return <PollActivityView />;
 };
 
