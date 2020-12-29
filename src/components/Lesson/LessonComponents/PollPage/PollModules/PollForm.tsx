@@ -1,54 +1,100 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
+
 import { useCookies } from 'react-cookie';
 
-export interface PollInput {
-  id: string;
-  question: string;
-  option: {
-    id: string;
-    option: string;
-    isChoice: boolean;
-  };
-}
+import { PollInput } from './PollActivity';
+
 
 export type PollInputState = Array<PollInput>;
 
-const PollForm = (props: any) => {
-  const { state, theme, dispatch } = useContext(LessonContext);
+interface PollFormProps {
+  isTeacher?: boolean;
+  dataProps?:{
+    pollInputs: PollInput[];
+    additional: any;
+  }
+}
+
+const PollForm = (props: PollFormProps) => {
+  /**
+   * Teacher switch
+   */
+  const { isTeacher, dataProps } = props;
+  const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
+  const { state, theme, dispatch } = switchContext;
+
+  /**
+   * Component state and cookies
+   */
   const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
   const pollInputs = state.data.lesson.warmUp.inputs.pollInputs; // This is correct
   const [input, setInput] = useState({ pollInputs: [] });
 
+  /**
+   * Lifecycle
+   */
   useEffect(() => {
-    // console.log('form mount: ', state.componentState.poll);
-
-    if (cookies[`lesson-${state.classroomID}`]) {
-      setInput(() => {
-        return cookies[`lesson-${state.classroomID}`].poll;
-      });
-    } else {
-      setInput(state.componentState.poll);
+    /**
+     *
+     * CHECK IF NOT TEACHER and
+     * ONLY DO THIS FOR STUDENT
+     *
+     */
+    if(!isTeacher){
+      if (cookies[`lesson-${state.classroomID}`]) {
+        setInput(() => {
+          return cookies[`lesson-${state.classroomID}`].poll;
+        });
+      } else {
+        setInput(state.componentState.poll);
+      }
     }
+
+    if(isTeacher){
+        setInput({pollInputs: pollInputs})
+    }
+
   }, []);
 
   useEffect(() => {
-    if (state.componentState.poll && input.pollInputs.length > 0) {
-      dispatch({
-        type: 'UPDATE_COMPONENT_STATE',
-        payload: {
-          componentName: 'poll',
-          inputName: 'pollInputs',
-          content: input.pollInputs,
-        },
-      });
+    /**
+     *
+     * CHECK IF NOT TEACHER and
+     * ONLY DO THIS FOR STUDENT
+     *
+     */
+    if(!isTeacher){
+      if (state.componentState.poll && input.pollInputs.length > 0) {
+        dispatch({
+          type: 'UPDATE_COMPONENT_STATE',
+          payload: {
+            componentName: 'poll',
+            inputName: 'pollInputs',
+            content: input.pollInputs,
+          },
+        });
 
-      setCookie(`lesson-${state.classroomID}`, {
-        ...cookies[`lesson-${state.classroomID}`],
-        poll: { ...cookies[`lesson-${state.classroomID}`].poll },
-      });
+        setCookie(`lesson-${state.classroomID}`, {
+          ...cookies[`lesson-${state.classroomID}`],
+          poll: { ...cookies[`lesson-${state.classroomID}`].poll },
+        });
+      }
     }
+
   }, [input]);
+
+  /**
+   * USE EFFECT -> setting form inputs in case of teacher view
+   * receiving DATAPROPS
+   */
+
+  useEffect(()=>{
+    if(isTeacher && dataProps){
+      console.log('Poll form -> ', 'setting poll form for teacher view...')
+    }
+  },[dataProps])
 
   /**
    * Function handles selecting the poll options
@@ -123,10 +169,10 @@ const PollForm = (props: any) => {
                                         key={optionKey}
                                         id={option.id}
                                         name="choice"
-                                        onClick={() => handleRadioSelect(item.id, option.id)}
+                                        onClick={() => !isTeacher && handleRadioSelect(item.id, option.id)}
                                         className={`${theme.elem.text} w-auto px-4`}>
                                         {/*{option.isChoice ? '❌' : '⚪️'}*/}
-                                        {input && isSelected(item.id, option.id, pollKey) ? '❌' : '⚪️'}
+                                        {!isTeacher && input && isSelected(item.id, option.id, pollKey) ? '❌' : '⚪️'}
                                       </button>
                                       {option.option}
                                     </label>

@@ -2,9 +2,22 @@ import React, { useContext } from 'react';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaPoll } from 'react-icons/fa';
 import { LessonContext } from '../../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
-const Banner = () => {
-  const { state, theme } = useContext(LessonContext);
+interface BannerProps {
+  isTeacher?: boolean
+}
+
+const Banner = (props: BannerProps) => {
+  /**
+   * Teacher switch
+   */
+  const {isTeacher} = props;
+
+  const switchContext = (isTeacher) ? useContext(LessonControlContext) : useContext(LessonContext);
+
+  const { state, theme } = switchContext;
+
   const title = state.data.lesson.warmUp.title;
 
   return (
