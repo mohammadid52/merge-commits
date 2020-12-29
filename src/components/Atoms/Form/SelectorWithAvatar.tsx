@@ -40,7 +40,7 @@ const SelectorWithAvatar = (props: selectorProps) => {
           <div className="z-50 absolute mt-1 w-full rounded-md bg-white shadow-lg max-h-48 overflow-y-scroll">
             <ul role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-item-3" className="max-h-60 rounded-md py-1 text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5">
 
-              {list.map((item: { name: string, id: any, value: string, avatar?: string }, key: number) => (
+              {list.length > 0 ? (list.map((item: { name: string, id: any, value: string, avatar?: string }, key: number) => (
                 <li
                   key={key}
                   onClick={() => updateSelectedItem(item.value, item.name, item.id, item.avatar)}
@@ -60,7 +60,11 @@ const SelectorWithAvatar = (props: selectorProps) => {
                     </svg>
                   </span>
                 </li>
-              ))}
+              ))) : (
+                  <li className="flex justify-center relative py-2 px-4">
+                    <span className="font-normal"> No Results</span>
+                  </li>
+                )}
             </ul>
           </div>
         )
