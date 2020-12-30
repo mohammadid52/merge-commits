@@ -18,6 +18,7 @@ import { statesList } from '../../../../utilities/staticData';
 
 interface InstitutionEditProps {
   institute: InstInfo;
+  toggleUpdateState: () => void;
 }
 interface InstInfo {
   id: string
@@ -122,8 +123,10 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
           zip: editFormValues.zip,
           image: editFormValues.image,
           phone: editFormValues.phone,
+          isServiceProvider: editFormValues.isServiceProvider
         }
         const updatedList = await API.graphql(graphqlOperation(customMutations.updateInstitution, { input: input }));
+        instEditPrps.toggleUpdateState()
         history.goBack();
       } catch{
         setError({
@@ -217,6 +220,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
         image: editFormValues.image,
       }
       const update: any = await API.graphql(graphqlOperation(customMutations.updateInstitution, { input: input }))
+      instEditPrps.toggleUpdateState();
     } catch (error) {
       setError({
         show: true,

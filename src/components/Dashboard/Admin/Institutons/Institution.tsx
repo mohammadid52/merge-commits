@@ -69,6 +69,7 @@ const Institution: React.FC = () => {
     curricula: { items: [{ name: '', id: '' }] }
 
   });
+  const [isNewUpdate, setISNewUpdate] = useState(false);
   const history = useHistory();
   const match = useRouteMatch();
   const location = useLocation();
@@ -81,6 +82,9 @@ const Institution: React.FC = () => {
     { title: 'Institute Info', url: `${location.pathname}${location.search}`, last: true }
   ];
 
+  const toggleUpdateState = () => {
+    setISNewUpdate(!isNewUpdate);
+  }
   async function getInstitutionData() {
     try {
       if (urlQueryParams.id) {
@@ -109,6 +113,10 @@ const Institution: React.FC = () => {
     getInstitutionData();
   }, []);
 
+  useEffect(() => {
+    getInstitutionData();
+  }, [isNewUpdate]);
+
   return (
     <div className={`w-full h-full mt-4`}>
 
@@ -129,7 +137,7 @@ const Institution: React.FC = () => {
           <Route
             path={`${match.url}/edit`}
             render={() => (
-              <InstitutionEdit institute={institutionData} />
+              <InstitutionEdit institute={institutionData} toggleUpdateState={toggleUpdateState} />
             )}
           />
           <Route

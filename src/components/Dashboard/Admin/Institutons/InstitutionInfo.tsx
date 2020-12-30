@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { FaGraduationCap, FaChalkboardTeacher, FaHotel, FaHandshake } from 'react-icons/fa';
 
@@ -43,7 +43,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     { index: 1, title: 'Staff', icon: <IoPeople />, active: true, content: <StaffBuilder serviceProviders={institute.serviceProviders} instituteId={instProps?.institute?.id} /> },
     { index: 2, title: 'Classes', icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={instProps?.institute?.classes} /> },
     { index: 3, title: 'Curricular', icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} /> },
-    { index: 4, title: 'Rooms', icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id}  /> }
+    { index: 4, title: 'Rooms', icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id} /> }
   ]
 
   useEffect(() => {
@@ -97,8 +97,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                 <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
                   <span className="text-gray-900 mr-2 w-3/10">Address:</span>
                   <span className="w-auto">
-                    {address && (address + ', ')}<br />
-                    {addressLine2 && (addressLine2 + ', ')}<br />
+                    {address && (<Fragment>{address + ', '} <br /></Fragment>)}
+                    {addressLine2 && (<Fragment>{addressLine2 + ', '} <br /></Fragment>)}
                     {city && (city + ', ')} {state && state} <br />
                     {zip && zip}
                   </span>
