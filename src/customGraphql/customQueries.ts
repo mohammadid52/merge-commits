@@ -44,8 +44,6 @@ export const getClassroom = /* GraphQL */ `
             question
             option {
                 id
-                option
-                isChoice
             }
           }
         }
@@ -344,8 +342,6 @@ export const getClassroom = /* GraphQL */ `
               question
               option {
                 id
-                option
-                isChoice
               }
             }
           }
@@ -425,8 +421,6 @@ export const getClassroomStudent = /* GraphQL */ `
             question
             option {
               id
-              option
-              isChoice
             }
           }
         }
@@ -724,8 +718,6 @@ export const getStudentData = /* GraphQL */ `
           question
           option {
             id
-            option
-            isChoice
           }
         }
       }
