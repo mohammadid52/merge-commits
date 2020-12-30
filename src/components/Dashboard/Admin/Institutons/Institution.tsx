@@ -82,18 +82,22 @@ const Institution: React.FC = () => {
 
   async function getInstitutionData() {
     try {
-      const fetchInstitutionData: any = await API.graphql(
-        /**
-         * Below query will get the 'id' parameter from the url
-         * DO NOT change the ' urlQueryParams.id ' unless you also change the url
-         * in ' InstitutionRow.tsx '
-         */
-        graphqlOperation(queries.getInstitution, { id: urlQueryParams.id })
-      );
-      if (!fetchInstitutionData) {
-        throw new Error('getInstitutionData() fetch : fail!');
+      if (urlQueryParams.id) {
+        const fetchInstitutionData: any = await API.graphql(
+          /**
+           * Below query will get the 'id' parameter from the url
+           * DO NOT change the ' urlQueryParams.id ' unless you also change the url
+           * in ' InstitutionRow.tsx '
+           */
+          graphqlOperation(queries.getInstitution, { id: urlQueryParams.id })
+        );
+        if (!fetchInstitutionData) {
+          throw new Error('getInstitutionData() fetch : fail!');
+        } else {
+          setInstitutionData(fetchInstitutionData.data.getInstitution);
+        }
       } else {
-        setInstitutionData(fetchInstitutionData.data.getInstitution);
+        history.push('/dashboard/manage-institutions')
       }
     } catch (error) {
       console.error(error);
