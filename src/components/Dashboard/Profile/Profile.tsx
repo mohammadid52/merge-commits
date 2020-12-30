@@ -87,26 +87,8 @@ const Profile: React.FC = () => {
     { title: 'Profile', url: '/dashboard/profile', last: true },
   ]
 
-  const initials = (firstName: string, lastName: string) => {
-    let firstInitial = firstName.charAt(0).toUpperCase()
-    let lastInitial = lastName.charAt(0).toUpperCase()
-    return firstInitial + lastInitial;
-  }
-
-  const stringToHslColor = (str: string) => {
-    let hash = 0;
-    let i;
-    for (i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let h = hash % 360;
-    return 'hsl(' + h + ', 70%, 72%)';
-  }
-
   // TODO: 
   // Set type for file instead of any
-
   const uploadImageToS3 = async (file: any, id: string, type: string) => {
     // Upload file to s3 bucket
 
