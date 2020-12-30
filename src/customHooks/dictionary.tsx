@@ -245,7 +245,7 @@ const sideBarLinksDict: any = {
         REGISTRATION: 'Registration',
         INSTITUTIONS: 'Institution',
         PEOPLE: 'People',
-        LESSION_PLANNER: 'Lession Planner',
+        LESSON_PLANNER: 'Lesson Planner',
         CLASSROOM: 'Classroom'
     },
     'ES': {
