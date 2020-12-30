@@ -60,6 +60,38 @@ export const firstInitialFunc = (str: string) => {
 };
 
 /**
+ * Function used in multiple places
+ * Unsure what it does exactly??
+ * @param str
+ */
+export const keywordParser = (str: string) => {
+  if (typeof str !== 'string') {
+    return null;
+  }
+  let tempWord = '';
+  let initialArray = Array.from(str);
+  let finalArray = [];
+  initialArray.forEach((letter) => {
+    if (letter !== ',') {
+      tempWord = tempWord + letter;
+    } else {
+      finalArray.push(tempWord + ',');
+      tempWord = '';
+    }
+  });
+
+  finalArray.push(tempWord);
+
+  return finalArray;
+};
+
+export const keywordCapitilizer = (str: string) => {
+  let capitalizedStr = str.replace(/^\w/, (char) => char.toUpperCase());
+  return capitalizedStr;
+};
+
+
+/**
  * Function used in multiple places to
  * set array as a filter object while fetching data.
  * @param arr

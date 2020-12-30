@@ -25,10 +25,18 @@ interface props {
 const List = (props: props) => {
   const { fullscreen } = props;
   const { state, theme } = useContext(LessonControlContext);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [dataProps, setDataProps] = useState<{
+    title?: string;
+    story?: string[];
+    [key: string]: any;
+  }>();
+
+  //  Variables
   const inputs = state.data.lesson.warmUp.inputs;
   const video = state.data.lesson.warmUp.instructions.link;
-  const [openPopup, setOpenPopup] = useState(false);
-  const [dataProps, setDataProps] = useState<{ title?: string; story?: string[]; [key: string]: any }>();
+  const nrLists = inputs.listInputNumber;
+  // const listArray = nrLists === null ? [''] : Array.from(Array(nrLists).keys()).map((elem: number) => '');
 
   let displayStudentData = state.studentViewing.live
     ? state.studentViewing.studentInfo.currentLocation
@@ -54,17 +62,11 @@ const List = (props: props) => {
         <div className="flex flex-col justify-between items-center">
           <InstructionsBlock fullscreen={fullscreen} />
 
-          {/* {inputs.additionalInputs.length > 0 ?
-                        <Modules
-                            dataProps={dataProps}
-                            inputs={inputs.additionalInputs}
-                            fullscreen={fullscreen}
-                        />
-                        :
-                        null
-                    } */}
+          {inputs.additionalInputs.length > 0 ? (
+            <Modules dataProps={dataProps} inputs={inputs.additionalInputs} fullscreen={fullscreen} />
+          ) : null}
 
-          <ListForm dataProps={dataProps} fullscreen={fullscreen} />
+          <ListForm dataProps={dataProps} fullscreen={fullscreen} nrLists={nrLists} />
         </div>
       </div>
     </>

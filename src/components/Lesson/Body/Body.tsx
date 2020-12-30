@@ -46,7 +46,7 @@ const Body = () => {
     }
   };
 
-  console.log(state, 'state');
+  // console.log(state, 'state');
 
   const pageFetch = (stage: string) => {
     let pageMatch = state.pages

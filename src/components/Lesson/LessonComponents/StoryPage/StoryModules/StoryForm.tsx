@@ -59,10 +59,18 @@ const StoryForm = () => {
   }, [input.story]);
 
   const handleInputChange = (e: { target: { id: string; value: string } }) => {
-    setInput({
-      ...input,
-      [e.target.id]: [e.target.value],
-    });
+    if (e.target.id === 'title') {
+      setInput({
+        ...input,
+        [e.target.id]: e.target.value,
+      });
+    }
+    if (e.target.id === 'story') {
+      setInput({
+        ...input,
+        [e.target.id]: [e.target.value],
+      });
+    }
   };
 
   return (

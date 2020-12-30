@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, Fragment } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { AiOutlineUsergroupAdd, AiOutlineArrowUp } from 'react-icons/ai';
+import { AiOutlineUsergroupAdd, AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 
 import { GlobalContext } from '../../../../contexts/GlobalContext';
@@ -25,12 +25,6 @@ const UserLookup = () => {
 	const [userList, setUserList] = useState([]);
 	const [userCount, setUserCount] = useState(10);
 	const [currentPage, setCurrentPage] = useState(0);
-	const [pageTokens, setPageTokens] = useState({
-		currentPageToken: null,
-		nextPageToken: null,
-		prevToken: []
-	})
-	const [userListLength, setUSerListLength] = useState(10);
 	const [lastPage, setLastPage] = useState(false);
 	const [firstPage, setFirstPage] = useState(false);
 	const [searchInput, setSearchInput] = useState({
@@ -42,6 +36,12 @@ const UserLookup = () => {
 		name: '',
 		asc: true
 	});
+
+	// Below changes are for fetching entire list on client side.
+	const [totalUserList, setTotalUserList] = useState([]);
+	const [totalUserNum, setTotalUserNum] = useState(0);
+	const [totalPages, setTotalPages] = useState(0);
+	// ...End.
 
 	const breadCrumsList = [
 		{ title: 'Home', url: '/dashboard', last: false },
@@ -55,69 +55,28 @@ const UserLookup = () => {
 		{ id: 4, name: 'Status', value: 'status' },
 	]
 
-	async function listUsers(currToken?: string, isPrev?: boolean, isTokenStored?: boolean) {
-		try {
-			const users: any = await API.graphql(graphqlOperation(queries.listPersons, {
-				limit: userCount,
-				nextToken: currToken
-			}))
-			const listPersons: any = users.data.listPersons;
-			const items: any = listPersons.items;
-
-			if (!isPrev && !isTokenStored) {
-				// To store tokens for next and prev pages.
-
-				setPageTokens({
-					...pageTokens,
-					currentPageToken: currToken,
-					nextPageToken: listPersons.nextToken,
-					prevToken: [
-						...pageTokens.prevToken,
-						pageTokens.currentPageToken
-					]
-				})
-				setCurrentPage(currentPage + 1);
-			} else if (!isPrev && isTokenStored) {
-				setCurrentPage(currentPage + 1);
-			} else {
-				currentPage === 1 ? setFirstPage(true) :
-					setCurrentPage(currentPage - 1);
-			}
-			if (!listPersons.nextToken) {
-				setLastPage(true);
-			}
-			setUserList(items);
-			setStatus('done');
-		} catch (error) {
-			console.error(error);
-		}
-	}
-
-
-	const loadPrevPage = () => {
-
-		if (lastPage) {
-			setLastPage(false);
-		}
-		// This will find token for the previous page from prevToken list.
-		listUsers(pageTokens.prevToken[currentPage - 1], true)
-		setSortingToInitial();
-	}
-
-	const loadNextPage = () => {
+	const goNextPage = () => {
+		const pageHigherLimit = totalPages - 1;
 		if (firstPage) {
-			setFirstPage(false);
+			setFirstPage(false)
 		}
-		// Below conditions decides which token to use for data fetching.  
+		if (currentPage < (pageHigherLimit - 1)) {
+			setCurrentPage(currentPage + 1);
+		} else if (currentPage === pageHigherLimit - 1) {
+			setCurrentPage(currentPage + 1);
+			setLastPage(true);
+		}
+	}
 
-		if (pageTokens.prevToken.length < currentPage + 1) {
-			listUsers(pageTokens.nextPageToken)
-		} else if (pageTokens.prevToken.length === currentPage + 1) {
-			listUsers(pageTokens.currentPageToken, false, true)
-		} else {
-			listUsers(pageTokens.prevToken[currentPage + 1], false, true)
+	const goPrevPage = () => {
+		if (lastPage) {
+			setLastPage(false)
 		}
-		setSortingToInitial()
+		if (currentPage > 0)
+			setCurrentPage(currentPage - 1);
+		else {
+			setFirstPage(true)
+		}
 	}
 
 	const handleLink = () => {
@@ -125,21 +84,25 @@ const UserLookup = () => {
 	}
 
 	const searchUserFromList = async () => {
-		try {
-			const users: any = await API.graphql(graphqlOperation(queries.listPersons, {
-				filter: {
-					email: { contains: searchInput.value },
-				}
-			}))
-			const items: any = users.data.listPersons.items;
-			setUserList(items);
-			setSortingToInitial();
+
+		if (searchInput.value) {
+			const currentUsersList = [...totalUserList];
+			const newList = currentUsersList.filter(item => {
+				// Search on firstName, lastName, email, and prefferred name for match.
+				return (
+					(item.firstName?.toLowerCase().includes(searchInput.value)) ||
+					(item.email?.toLowerCase().includes(searchInput.value)) ||
+					(item.preferredName?.toLowerCase().includes(searchInput.value)) ||
+					(item.lastName?.toLowerCase().includes(searchInput.value))
+				)
+			});
 			setSearchInput({
 				...searchInput,
 				isActive: true
 			})
-		} catch (error) {
-			console.error(error);
+			setUserList(newList)
+		} else {
+			removeSearchAction();
 		}
 	}
 
@@ -158,6 +121,16 @@ const UserLookup = () => {
 		})
 	}
 
+	const backToInitials = () => {
+		setCurrentPage(0);
+		currenPageUsers();
+		setFirstPage(true);
+		if (totalPages === 1) {
+			setLastPage(true)
+		} else {
+			setLastPage(false);
+		}
+	}
 	const toggleSortDimention = () => {
 		setSortingType({
 			...sortingType,
@@ -166,41 +139,75 @@ const UserLookup = () => {
 	}
 
 	const removeSearchAction = () => {
-		setSearchInput({ value: '', isActive: false })
-		setSortingToInitial();
-		listUsers(null)
+		backToInitials();
+		setSearchInput({ value: '', isActive: false });
 	}
 
-	const setSortingToInitial = () => {
-		setSortingType({
-			value: '',
-			name: '',
-			asc: true
-		})
+	const fetchSortedList = () => {
+		const newUserList = [...totalUserList].sort((a, b) => ((a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase()) && sortingType.asc) ? 1 : -1);
+		setTotalUserList(newUserList);
 	}
+
+	const currenPageUsers = () => {
+		const initialItem = (currentPage) * userCount;
+		const updatedList = totalUserList.slice(initialItem, initialItem + userCount);
+		setUserList(updatedList);
+	}
+
+	const fetchAllUsersList = async () => {
+		try {
+			const users: any = await API.graphql(graphqlOperation(queries.listPersons))
+			const usersList = users?.data?.listPersons?.items;
+
+			const totalListPages = Math.floor(usersList.length / userCount)
+			if (totalListPages * userCount === usersList.length) {
+				setTotalPages(totalListPages);
+			} else {
+				setTotalPages(totalListPages + 1)
+			}
+			setTotalUserList(usersList);
+			setTotalUserNum(usersList.length);
+			setStatus('done');
+		}
+		catch (error) {
+			console.error(error);
+		}
+	}
+
+	useEffect(() => {
+		fetchAllUsersList();
+	}, [])
+
+	useEffect(() => {
+		backToInitials();
+	}, [totalUserList])
 
 	useEffect(() => {
 		setCurrentPage(0);
-		setLastPage(false);
 		setFirstPage(true);
-		setPageTokens({
-			currentPageToken: null,
-			nextPageToken: null,
-			prevToken: []
-		})
-		setUSerListLength(userCount);
-		setSortingToInitial();
-	}, [userCount])
+		setLastPage(false);
+		const totalListPages = Math.floor(totalUserNum / userCount);
+		if (userCount * totalListPages === totalUserNum) {
+			setTotalPages(totalListPages);
+		} else {
+			setTotalPages(totalListPages + 1)
+		}
+	}, [userCount]);
 
 	useEffect(() => {
-		const newUserList = [...userList].sort((a, b) => ((a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase()) && sortingType.asc) ? 1 : -1);
-		setUserList(newUserList);
-		console.log({ userList, newUserList })
+		currenPageUsers();
+	}, [currentPage, totalUserNum, userCount])
+
+	useEffect(() => {
+		if (totalPages === 1) {
+			setFirstPage(true);
+			setLastPage(true);
+		}
+	}, [totalPages])
+
+	useEffect(() => {
+		fetchSortedList();
 	}, [sortingType.value, sortingType.asc])
-
-	useEffect(() => {
-		listUsers(null)
-	}, [userListLength])
 
 	if (status !== 'done') {
 		return (
@@ -218,9 +225,9 @@ const UserLookup = () => {
 					<div className="flex justify-end py-4 mb-4">
 						<SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchUserFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
 						<Selector placeholder="Sort By" list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none border-r-0" arrowHidden={true} />
-						<button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400 border rounded ${theme.outlineNone} ${sortingType.asc ? 'border-l-0 rounded-l-none' : 'border-r-0 rounded-r-none transform rotate-180'}`} onClick={toggleSortDimention}>
+						<button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400 border rounded border-l-0 rounded-l-none ${theme.outlineNone} `} onClick={toggleSortDimention}>
 							<IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
-								<AiOutlineArrowUp />
+								{sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
 							</IconContext.Provider>
 						</button>
 						<Buttons label="Add New Person" onClick={handleLink} btnClass="mr-4 w-full" Icon={AiOutlineUsergroupAdd} />
@@ -270,7 +277,14 @@ const UserLookup = () => {
 								{!searchInput.isActive &&
 									(
 										<Fragment>
-											<Pagination currentPage={currentPage} setNext={loadNextPage} setPrev={loadPrevPage} firstPage={firstPage} lastPage={lastPage} />
+											<span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">Showing Page {currentPage + 1} of {totalPages} pages</span>
+											<Pagination
+												currentPage={currentPage + 1}
+												setNext={goNextPage}
+												setPrev={goPrevPage}
+												firstPage={firstPage}
+												lastPage={lastPage}
+											/>
 											<PageCountSelector pageSize={userCount} setPageSize={(c: number) => setUserCount(c)} />
 										</Fragment>
 									)}
