@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import PageWrapper from '../../../../Atoms/PageWrapper'
 import Buttons from '../../../../Atoms/Buttons'
@@ -9,11 +9,47 @@ interface ClassListProps {
 
 const ClassList = (props: ClassListProps) => {
   const { classes } = props;
+  const [classList, setClassList] = useState([]);
   const history = useHistory();
 
   const createNewClass = () => {
     history.push('/dashboard/manage-institutions/class-creation')
   }
+
+  const fetchClassList = () => {
+    // try {
+    //   const list: any = await API.graphql(graphqlOperation(queries.listClasss, {
+    //     filter: { or: getFilterORArray(allInstiId, 'institutionID') },
+    //   }));
+    //   const listClass = list.data.listClasss?.items
+    //   if (listClass.length === 0) {
+    //     setMessages({
+    //       show: true,
+    //       message: 'Please add class first for the selected institute or select another institute.',
+    //       isError: true
+    //     })
+    //   } else {
+    //     const sortedList = listClass.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase()) ? 1 : -1);
+    //     const classList = sortedList.map((item: any, i: any) => ({
+    //       id: item.id,
+    //       name: `${item.name ? item.name : ''}`,
+    //       value: `${item.name ? item.name : ''}`
+    //     }));
+    //     setClassList(classList);
+    //   }
+    // } catch{
+    //   setMessages({
+    //     show: true,
+    //     message: 'Unable to fetch class list. Please try again later.',
+    //     isError: true
+    //   })
+    // }
+  }
+
+  // useEffect(() => {
+  //   fetchClassList()
+  // }, [])
+
   return (
     <div className="p-8 flex m-auto justify-center">
       <div className="">
@@ -23,18 +59,17 @@ const ClassList = (props: ClassListProps) => {
           {
             (classes.items && classes.items.length > 0) ? (
               <Fragment>
-                <div className="flex justify-end">
+                <div className="flex justify-end w-8/10 m-auto ">
                   <Buttons btnClass="mx-4" label="Create new class" onClick={createNewClass} />
                 </div>
-                <div className="my-8 m-auto max-h-88 overflow-y-auto">
-
+                <div className="my-8 w-8/10 m-auto max-h-88 overflow-y-auto">
                   <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                     <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>Class Name</span>
                     </div>
                     {/* <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>Students</span>
-              </div> */}
+                      <span>Active Students</span>
+                    </div> */}
                     <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>Actions</span>
                     </div>

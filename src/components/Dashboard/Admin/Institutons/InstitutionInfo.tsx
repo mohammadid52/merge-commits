@@ -100,7 +100,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                     {address && (address + ', ')}<br />
                     {addressLine2 && (addressLine2 + ', ')}<br />
                     {city && (city + ', ')} {state && state} <br />
-                    {zip && ('-' + zip)}
+                    {zip && zip}
                   </span>
                 </p>
                 <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
