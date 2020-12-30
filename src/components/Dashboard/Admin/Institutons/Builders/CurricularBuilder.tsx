@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { v4 as uuidv4 } from 'uuid';
 
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as queries from '../../../../../graphql/queries';
@@ -92,7 +91,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       } catch{
         setMessages({
           show: true,
-          message: 'New curriculum has been saved.',
+          message: 'Unable to save new curriculum please try again later.',
           isError: true
         })
       }
