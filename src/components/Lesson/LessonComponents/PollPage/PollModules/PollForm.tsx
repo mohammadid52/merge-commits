@@ -6,15 +6,14 @@ import { useCookies } from 'react-cookie';
 
 import { PollInput } from './PollActivity';
 
-
 export type PollInputState = Array<PollInput>;
 
 interface PollFormProps {
   isTeacher?: boolean;
-  dataProps?:{
-    pollInputs: PollInput[];
+  dataProps?: {
+    poll: PollInput[];
     additional: any;
-  }
+  };
 }
 
 const PollForm = (props: PollFormProps) => {
@@ -42,7 +41,7 @@ const PollForm = (props: PollFormProps) => {
      * ONLY DO THIS FOR STUDENT
      *
      */
-    if(!isTeacher){
+    if (!isTeacher) {
       if (cookies[`lesson-${state.classroomID}`]) {
         setInput(() => {
           return cookies[`lesson-${state.classroomID}`].poll;
@@ -52,10 +51,13 @@ const PollForm = (props: PollFormProps) => {
       }
     }
 
-    if(isTeacher){
-        setInput({pollInputs: pollInputs})
+    if (isTeacher) {
+      if (dataProps) {
+        setInput({ pollInputs: dataProps.poll });
+      } else {
+        setInput({ pollInputs: pollInputs });
+      }
     }
-
   }, []);
 
   useEffect(() => {
@@ -65,7 +67,7 @@ const PollForm = (props: PollFormProps) => {
      * ONLY DO THIS FOR STUDENT
      *
      */
-    if(!isTeacher){
+    if (!isTeacher) {
       if (state.componentState.poll && input.pollInputs.length > 0) {
         dispatch({
           type: 'UPDATE_COMPONENT_STATE',
@@ -82,21 +84,26 @@ const PollForm = (props: PollFormProps) => {
         });
       }
     }
-
   }, [input]);
 
-  /**
-   * USE EFFECT -> setting form inputs in case of teacher view
-   * receiving DATAPROPS
-   */
-
-  useEffect(()=>{
-    if(isTeacher && dataProps){
-      console.log('Poll form -> ', 'setting poll form for teacher view...')
-      console.log('Poll form -> ', dataProps)
-      // setInput({pollInputs: dataProps.pollInputs})
+  useEffect(() => {
+    if (isTeacher) {
+      /**
+       *
+       * CHECK IF TEACHER and
+       * ONLY DO THIS FOR TEACHER
+       *
+       * USE EFFECT -> setting form inputs in case of teacher view
+       * receiving DATAPROPS
+       *
+       */
+      if (dataProps && dataProps.poll) {
+        // console.log('Poll form -> ', 'setting poll form for teacher view...')
+        // console.log('Poll form -> ', dataProps)
+        setInput({ pollInputs: dataProps.poll });
+      }
     }
-  },[dataProps])
+  }, [dataProps]);
 
   /**
    * Function handles selecting the poll options
@@ -110,7 +117,7 @@ const PollForm = (props: PollFormProps) => {
             if (item.id === pollItemID) {
               return {
                 ...item,
-                option: { id: pollOptionID },
+                option: [{ id: pollOptionID }],
               };
             } else {
               return { ...item };
@@ -133,7 +140,7 @@ const PollForm = (props: PollFormProps) => {
 
     if (inputsAvailable.length > 0) {
       const inputObject = JSON.parse(JSON.stringify(input.pollInputs[pollKey])); // Simple deep cloning, could not get the right nested values otherwise
-      const id = inputObject['option'].id;
+      const id = inputObject['option'][0]?.id; // 0 (zero) index used because an array with only 1 object inside is returned
 
       if (id === pollOptionID) {
         return true;
@@ -173,8 +180,7 @@ const PollForm = (props: PollFormProps) => {
                                         name="choice"
                                         onClick={() => !isTeacher && handleRadioSelect(item.id, option.id)}
                                         className={`${theme.elem.text} w-auto px-4`}>
-                                        {/*{option.isChoice ? '❌' : '⚪️'}*/}
-                                        {!isTeacher && input && isSelected(item.id, option.id, pollKey) ? '❌' : '⚪️'}
+                                        {input && isSelected(item.id, option.id, pollKey) ? '❌' : '⚪️'}
                                       </button>
                                       {option.option}
                                     </label>
