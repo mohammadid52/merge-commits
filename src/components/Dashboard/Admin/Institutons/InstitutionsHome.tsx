@@ -8,7 +8,7 @@ import RoomBuilder from './Builders/RoomBuilder';
 import CurricularBuilder from './Builders/CurricularBuilder';
 import EditClass from './EditBuilders/EditClass';
 import EditCurricular from './EditBuilders/EditCurricular';
-// import EditRoom from './EditBuilders/EditRoom';
+import EditRoom from './EditBuilders/EditRoom';
 
 const InstitutionsHome = () => {
   const match = useRouteMatch();
@@ -45,10 +45,10 @@ const InstitutionsHome = () => {
           path={`${match.url}/class-edit`}
           render={() => <EditClass />}
         />
-        {/* <Route
+        <Route
           path={`${match.url}/room-edit`}
           render={() => <EditRoom />}
-        /> */}
+        />
         <Route
           path={`${match.url}/curricular-edit`}
           render={() => <EditCurricular />}

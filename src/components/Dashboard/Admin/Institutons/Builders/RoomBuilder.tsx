@@ -1,8 +1,7 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IoArrowUndoCircleOutline, IoClose } from 'react-icons/io5';
+import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { v4 as uuidv4 } from 'uuid';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutation from '../../../../../customGraphql/customMutations';
@@ -13,8 +12,7 @@ import BreadCrums from '../../../../Atoms/BreadCrums';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
-import { IconContext } from 'react-icons';
-import { stringToHslColor, getInitialsFromString, initials, getFilterORArray } from '../../../../../utilities/strings';
+import { getFilterORArray } from '../../../../../utilities/strings';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../../../utilities/services';
@@ -40,7 +38,6 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   const [institutionList, setInstitutionList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
   const [classList, setClassList] = useState([]);
-  const [servProIds, setServProIds] = useState([]);
   const [curricularList, setCurricularList] = useState([]);
   const [messages, setMessages] = useState({
     show: false,
@@ -165,7 +162,6 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         id: instId
       }));
       const serviceProviders = list.data.getInstitution?.serviceProviders?.items;
-      setServProIds([...serviceProviders, instId])
       return serviceProviders;
     } catch{
       setMessages({
