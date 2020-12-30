@@ -85,7 +85,7 @@ const RoomsList = (props: RoomListProps) => {
                 </div>
 
                 {roomList.map((item: any, i: number) => (
-                  <div key={i} className="flex justify-between w-full px-8 py-4 border-b border-gray-200">
+                  <div key={i} className="flex justify-between items-center w-full px-8 py-4 border-b border-gray-200">
                     <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{i + 1}.</div>
                     <div className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                       {item.name}

@@ -6,6 +6,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutation from '../../../../../customGraphql/customMutations';
 import * as queries from '../../../../../graphql/queries';
+import * as mutation from '../../../../../graphql/mutations';
 import SectionTitle from '../../../../Atoms/SectionTitle';
 import PageWrapper from '../../../../Atoms/PageWrapper'
 import BreadCrums from '../../../../Atoms/BreadCrums';
@@ -70,20 +71,19 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   }
 
   const selectInstitute = async (val: string, name: string, id: string) => {
-    setRoomData({
-      ...roomData,
-      institute: {
-        id: id,
-        name: name,
-        value: val
-      }
-    });
-    const items: any = await getInstituteInfo(id);
-    const serviceProviders = items.map((item: any) => item.providerID);
-    const allInstiId = [...serviceProviders, id]
-    getTeachersList(allInstiId);
-    getClassLists(allInstiId);
-    getCurricularList(allInstiId);
+    if (roomData.institute.id !== id) {
+      setRoomData({
+        ...roomData,
+        institute: {
+          id: id,
+          name: name,
+          value: val
+        },
+        teacher: { id: '', name: '', value: '' },
+        classRoom: { id: '', name: '', value: '' },
+        curricular: { id: '', name: '', value: '' },
+      });
+    }
     removeErrorMsg();
   }
 
@@ -336,6 +336,38 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     }
   }
 
+  const saveRoomCurricular = async (roomId: string, currId: string) => {
+    if (roomId) {
+      try {
+        const curricularInput = {
+          roomID: roomId,
+          curriculumID: currId,
+        }
+
+        const addCurricular: any = await API.graphql(graphqlOperation(mutation.createRoomCurriculum, { input: curricularInput }))
+        setMessages({
+          show: true,
+          message: 'New room details has been saved.',
+          isError: false
+        })
+        setRoomData(initialData)
+      } catch {
+        setMessages({
+          show: true,
+          message: 'Error while adding room curricular. Please try again later.',
+          isError: true
+        })
+      }
+    } else {
+      setMessages({
+        show: true,
+        message: 'Error while adding room curricular. Please try again later.',
+        isError: true
+      })
+    }
+
+  }
+
   const createNewRoom = async () => {
     const isValid = await validateForm();
     if (isValid) {
@@ -349,12 +381,18 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           maxPersons: roomData.maxPersons,
         }
         const newRoom: any = await API.graphql(graphqlOperation(customMutation.createRoom, { input: input }));
-        setMessages({
-          show: true,
-          message: 'New room details has been saved.',
-          isError: false
-        })
-        setRoomData(initialData)
+        const roomId = newRoom.data.createRoom.id;
+        if (roomData.curricular.id) {
+          await saveRoomCurricular(roomId, roomData.curricular.id)
+        } else {
+          setMessages({
+            show: true,
+            message: 'New room details has been saved.',
+            isError: false
+          })
+          setRoomData(initialData)
+        }
+
       } catch{
         setMessages({
           show: true,
@@ -364,6 +402,20 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       }
     }
   }
+  const fetchOtherList = async (id: string) => {
+    const items: any = await getInstituteInfo(id);
+    const serviceProviders = items.map((item: any) => item.providerID);
+    const allInstiId = [...serviceProviders, id]
+    getTeachersList(allInstiId);
+    getClassLists(allInstiId);
+    getCurricularList(allInstiId);
+  }
+
+  useEffect(() => {
+    if (roomData.institute.id) {
+      fetchOtherList(roomData.institute.id);
+    }
+  }, [roomData.institute.id])
 
   useEffect(() => {
     getInstitutionList()
