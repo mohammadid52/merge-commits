@@ -1,23 +1,30 @@
-import React, { useEffect, useState, Fragment } from 'react';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
+import React, { useEffect, useState, Fragment, useContext } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
 
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import PageWrapper from '../../../../Atoms/PageWrapper';
-import Selector from '../../../../Atoms/Form/Selector';
-import { getInitialsFromString, initials, stringToHslColor } from '../../../../../utilities/strings';
 import { IoClose } from 'react-icons/io5';
-import Buttons from '../../../../Atoms/Buttons';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
+import Buttons from '../../../../Atoms/Buttons';
+import PageWrapper from '../../../../Atoms/PageWrapper';
+
+import { getInitialsFromString, initials, stringToHslColor, getFilterORArray } from '../../../../../utilities/strings';
+
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../customHooks/dictionary';
+
+import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as queries from '../../../../../graphql/queries';
 import * as mutations from '../../../../../graphql/mutations';
-import { getFilterORArray } from '../../../../../utilities/strings';
 interface StaffBuilderProps {
   instituteId: String
   serviceProviders: { items: { id: string, providerID: string }[] }
 }
 
 const StaffBuilder = (props: StaffBuilderProps) => {
+  const { staffBuilderDict } = useDictionary();
+  const { userLanguage } = useContext(GlobalContext);
+  const dictionary = staffBuilderDict[userLanguage]
   const [availableUsers, setAvailableUsers] = useState(null);
   const [allAvailableUsers, setAllAvailableUsers] = useState(null)
   const [newMember, setNewMember] = useState({
@@ -160,15 +167,14 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     setActiveStaffList(updatedStaffList)
     setAvailableUsers([...availableUsers, removedUser])
   }
-
   return (
     <div className="p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">STAFF MEMBERS</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{dictionary['TITLE']}</h3>
           <div className="flex items-center w-6/10 m-auto px-2">
-            <SelectorWithAvatar selectedItem={newMember} list={availableUsers} placeholder="Add new staff member" onChange={onChange} />
-            <Buttons btnClass="ml-4 py-1" label="Add" onClick={addStaffMember} />
+            <SelectorWithAvatar selectedItem={newMember} list={availableUsers} placeholder={dictionary['ADD_PLACEHOLDER']} onChange={onChange} />
+            <Buttons btnClass="ml-4 py-1" label={dictionary['ADD_BUTTON']} onClick={addStaffMember} />
           </div>
           <div className="my-4 w-8/10 m-auto max-h-88 overflow-y-scroll">
             {activeStaffList.length > 0 && (

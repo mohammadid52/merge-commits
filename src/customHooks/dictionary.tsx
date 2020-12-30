@@ -265,6 +265,20 @@ const appDict: any = {
     }
 }
 
+const staffBuilderDict: any = {
+    'EN': {
+        TITLE: 'STAFF MEMBERS',
+        ADD_PLACEHOLDER: 'Add new',
+        ADD_BUTTON: 'Añadir'
+
+    },
+    'ES': {
+        TITLE: 'MIEMBROS DEL PERSONAL',
+        ADD_PLACEHOLDER: 'Añadir nuevo',
+        ADD_BUTTON: 'Añadir'
+    }
+}
+
 function useDictionary() {
     async function lookUp(word: string) {
         const appId = 'c4ad157e';
@@ -287,7 +301,10 @@ function useDictionary() {
     }
 
     return {
-        appDict, sideBarLinksDict, dashboardProfileDict 
+        appDict,
+        sideBarLinksDict,
+        dashboardProfileDict,
+        staffBuilderDict
     }
 }
 
