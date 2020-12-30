@@ -986,3 +986,104 @@ export const getInstitution = /* GraphQL */ `
     }
   }
 `;
+
+
+export const GetInstitutionDetails = /* GraphQL */ `
+query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      name
+      type
+      district
+      address
+      addressLine2
+      city
+      state
+      zip
+      phone
+      website
+      image
+      isServiceProvider
+      serviceProviders {
+        items {
+          id
+          partnerID
+          providerID
+          providerInstitution {
+            id
+            name
+            type
+            district
+            address
+            addressLine2
+            city
+            state
+            zip
+            phone
+            website
+            image
+          }
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      staff {
+        items {
+          id
+          institutionID
+          staffAuthID
+          staffEmail
+          status
+          statusChangeDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      rooms {
+        items {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      curricula {
+        items {
+          id
+          institutionID
+          name
+          type
+          description
+          objectives
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      classes {
+        items {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters
+      createdAt
+      updatedAt
+    }
+  }
+`;

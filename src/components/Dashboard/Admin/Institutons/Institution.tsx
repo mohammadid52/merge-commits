@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
 import * as queries from '../../../../graphql/queries';
+import * as customQueries from '../../../../customGraphql/customQueries'
 import InstitutionInfo from './InstitutionInfo';
 import InstitutionEdit from './InstitutionEdit';
 import BreadCrums from '../../../Atoms/BreadCrums';
@@ -89,7 +90,7 @@ const Institution: React.FC = () => {
            * DO NOT change the ' urlQueryParams.id ' unless you also change the url
            * in ' InstitutionRow.tsx '
            */
-          graphqlOperation(queries.getInstitution, { id: urlQueryParams.id })
+          graphqlOperation(customQueries.GetInstitutionDetails, { id: urlQueryParams.id })
         );
         if (!fetchInstitutionData) {
           throw new Error('getInstitutionData() fetch : fail!');
