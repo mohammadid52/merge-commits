@@ -6,11 +6,11 @@ import { initials, stringToHslColor, formatPhoneNumber, getHostNameFromUrl, getI
 import UnderlinedTabs from '../../../Atoms/UnderlinedTabs';
 import { IoPeople } from 'react-icons/io5';
 import { getImageFromS3 } from '../../../../utilities/services';
-import ClassList from './Builders/ClassList';
-import StaffBuilder from './Builders/StaffBuilder';
-import ServiceProviders from './Builders/ServiceProviders';
-import CurriculumList from './Builders/CurriculumList';
-import RoomsList from './Builders/RoomsList';
+import ClassList from './Listing/ClassList';
+import StaffBuilder from './Listing/StaffBuilder';
+import ServiceProviders from './Listing/ServiceProviders';
+import CurriculumList from './Listing/CurriculumList';
+import RoomsList from './Listing/RoomsList';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
