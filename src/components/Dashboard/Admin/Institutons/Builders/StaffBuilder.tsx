@@ -1,5 +1,4 @@
 import React, { useEffect, useState, Fragment } from 'react';
-import { FaPlus } from 'react-icons/fa';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import API, { graphqlOperation } from '@aws-amplify/api';
 
@@ -10,10 +9,12 @@ import { getInitialsFromString, initials, stringToHslColor } from '../../../../.
 import { IoClose } from 'react-icons/io5';
 import Buttons from '../../../../Atoms/Buttons';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
-import * as queries from '../../../../../graphql/queries'
-import * as mutations from '../../../../../graphql/mutations'
+import * as queries from '../../../../../graphql/queries';
+import * as mutations from '../../../../../graphql/mutations';
+import { getFilterORArray } from '../../../../../utilities/strings';
 interface StaffBuilderProps {
   instituteId: String
+  serviceProviders: { items: { id: string, providerID: string }[] }
 }
 
 const StaffBuilder = (props: StaffBuilderProps) => {
@@ -66,16 +67,28 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const getStaff = async () => {
     try {
+      // get service providers of the institute and create a list and fetch the staff
+      const { serviceProviders: { items }, instituteId } = props;
+      const institutions = [instituteId]
+      items.map((item: any) => institutions.push(item.providerID))
+
       const staff: any = await API.graphql(graphqlOperation(queries.listStaffs, {
-        filter: { institutionID: { eq: props.instituteId } },
+        filter: { or: getFilterORArray(institutions, 'institutionID') },
       }));
+      // We are removing duplicate staff memebers across institution and service providers.
+      // confirm with Mike. If we have to show multiple entries with institute name 
+      // remove this staffUserIds logic and add institute name in the oject
+      const staffUserIds: Array<string> = []
       let staffMembers: any = staff.data.listStaffs.items;
-      staffMembers = staffMembers.map((member: any) => {
-        member.userId = member.staffMember.id;
-        member.name = `${member.staffMember.firstName || ''} ${member.staffMember.lastName || ''}`
-        member.image = member.staffMember.image
-        member.role = member.staffMember.role
-        return member
+      staffMembers = staffMembers.filter((member: any) => {
+        if (staffUserIds.indexOf(member.staffMember.id) < 0) {
+          staffUserIds.push(member.staffMember.id)
+          member.userId = member.staffMember.id;
+          member.name = `${member.staffMember.firstName || ''} ${member.staffMember.lastName || ''}`
+          member.image = member.staffMember.image
+          member.role = member.staffMember.role
+          return member
+        }
       })
       return staffMembers
     } catch (err) {
