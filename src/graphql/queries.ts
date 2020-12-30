@@ -174,6 +174,7 @@ export const getStaff = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -226,6 +227,7 @@ export const listStaffs = /* GraphQL */ `
           language
           filters
           lastLoggedIn
+          lastLoggedOut
           createdAt
           updatedAt
         }
@@ -284,6 +286,7 @@ export const getPerson = /* GraphQL */ `
       }
       filters
       lastLoggedIn
+      lastLoggedOut
       createdAt
       updatedAt
     }
@@ -332,6 +335,7 @@ export const listPersons = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -408,6 +412,7 @@ export const getRoom = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -512,6 +517,7 @@ export const listRooms = /* GraphQL */ `
           language
           filters
           lastLoggedIn
+          lastLoggedOut
           createdAt
           updatedAt
         }
@@ -1050,6 +1056,7 @@ export const getStudentData = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -1182,6 +1189,7 @@ export const listStudentDatas = /* GraphQL */ `
           language
           filters
           lastLoggedIn
+          lastLoggedOut
           createdAt
           updatedAt
         }
@@ -2637,6 +2645,7 @@ export const getQuestionData = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -2703,6 +2712,7 @@ export const listQuestionDatas = /* GraphQL */ `
           language
           filters
           lastLoggedIn
+          lastLoggedOut
           createdAt
           updatedAt
         }
@@ -2967,6 +2977,7 @@ export const userById = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -3015,6 +3026,7 @@ export const usersByRole = /* GraphQL */ `
         }
         filters
         lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
