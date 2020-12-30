@@ -60,9 +60,7 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
                     authId: action.payload.authId,
                 }
             }
-        case 'PREV_LOG_IN': 
-            console.log(action.payload);
-            
+        case 'PREV_LOG_IN':
             return {
                 ...state,
                 status: 'logged-in',
