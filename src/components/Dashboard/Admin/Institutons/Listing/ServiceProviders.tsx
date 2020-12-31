@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Fragment } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api';
 
 import { IoClose } from 'react-icons/io5';
@@ -25,7 +25,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
   const existingPartners = serviceProviders.items.map((item: any) => {
     return {
       id: item.id,
-      partner: { ...item.providerInstitution}
+      partner: { ...item.providerInstitution }
     }
   })
   const [availableServiceProviders, setAvailableServiceProviders] = useState([]);
@@ -42,9 +42,9 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
       value: val
     })
   }
-  
 
-  
+
+
   const fetchAvailableServiceProviders = async () => {
     try {
       const { serviceProviders: { items } } = props;
@@ -64,7 +64,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
         value: item.name || ''
       })).sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase()) ? 1 : -1);
       setAvailableServiceProviders(servProList);
-    } catch(err){
+    } catch (err) {
       console.log('Error while fetching service providers lists', err)
     }
   }
@@ -86,7 +86,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
         const addedPartner: any = await API.graphql(graphqlOperation(mutation.createServiceProvider, { input: input }))
         const item = addedPartner.data.createServiceProvider;
         props.updateServiceProviders(item)
-        const updatedPartners = [...partners, {id: item.id, partner: { ...item.providerInstitution}}]
+        const updatedPartners = [...partners, { id: item.id, partner: { ...item.providerInstitution } }]
         const updatedAvailableServiceProviders = availableServiceProviders.filter((item: any) => item.id !== newServPro.id)
         setNewServPro({ id: '', name: '', value: '' })
         setPartners(updatedPartners)
@@ -119,38 +119,43 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
       <div className="">
         <PageWrapper>
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">SERVICE PROVIDERS</h3>
-          <div className="flex items-center w-6/10 m-auto px-2">
+          <div className="flex items-center w-6/10 m-auto px-2 mb-8">
             <Selector selectedItem={newServPro.value} list={availableServiceProviders} placeholder="Add a new service provider" onChange={onServProChange} />
             <Buttons btnClass="ml-4 py-1" label="Add" onClick={addPartner} />
           </div>
 
+          {(partners && partners.length > 0) ? (
+            <Fragment>
 
-          <div className="my-8 m-auto max-h-88 overflow-y-scroll">
+              <div className="my-8 m-auto max-h-88 overflow-y-scroll">
 
-            <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-              <div className="w-7/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>Service Providers</span>
-              </div>
-              <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>Actions</span>
-              </div>
-            </div>
-
-            {(partners && partners.length > 0) ? (
-              partners.map((item, index) => (
-                <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div className="flex w-7/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
-                    {item.partner.name || ''}
+                <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                  <div className="w-7/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>Service Providers</span>
                   </div>
-                  <span className="w-1/10 h-6 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900" onClick={() => removePartner(item)}>
+                  <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>Actions</span>
+                  </div>
+                </div>
+
+                {partners.map((item, index) => (
+                  <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                    <div className="flex w-7/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+                      {item.partner.name || ''}
+                    </div>
+                    <span className="w-1/10 h-6 flex items-center text-left px-8 py-3 cursor-pointer text-indigo-600 hover:text-indigo-900" onClick={() => removePartner(item)}>
                       <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
                         <IoClose />
                       </IconContext.Provider>
                     </span>
-                </div>
-              ))
-            ) : (<p className="text-center p-16"> No Results</p>)}
-          </div>
+                  </div>
+                ))}
+              </div>
+            </Fragment>
+          ) : (
+              <div className="text-center p-16">
+                <p> This institute does not have any service provider. Please add new service provider.</p>
+              </div>)}
         </PageWrapper>
       </div>
     </div>
