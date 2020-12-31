@@ -14,6 +14,7 @@ import Selector from '../../../Atoms/Form/Selector';
 import CheckBox from '../../../Atoms/Form/CheckBox';
 import { getImageFromS3 } from '../../../../utilities/services';
 import { statesList } from '../../../../utilities/staticData';
+import InstitutionPopUp from './InstitutionPopUp';
 
 
 interface InstitutionEditProps {
@@ -54,6 +55,11 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
   const [upImage, setUpImage] = useState(null);
   const [imageLoading, setImageLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
+  const [showModal, setShowModal] = useState({
+    warnModal: false,
+    infoModal: false,
+    modalMessage: '',
+  });
   const [error, setError] = useState({
     show: true,
     errorMsg: ''
@@ -137,10 +143,37 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
     }
   };
 
-  const handdleCheckBox = () => {
+  const saveAsServicePro = () => {
     setEditFormValues({
       ...editFormValues,
       isServiceProvider: !editFormValues.isServiceProvider,
+    })
+    togglePopUpModal();
+  }
+  const onServiceProviderChange = () => {
+    if (!isServiceProvider) {
+      setShowModal({
+        warnModal: true,
+        infoModal: false,
+        modalMessage: `Setting service provider will allow other 
+                       institutes to use your CLASS and ROOM structure. 
+                       Are you sure you want to continue?`,
+      })
+    } else {
+      setShowModal({
+        warnModal: false,
+        infoModal: true,
+        modalMessage: `You can not remove institute from service providers role. 
+                       Please contact ZOIQ for further help.`,
+      })
+    }
+  }
+
+  const togglePopUpModal = () => {
+    setShowModal({
+      warnModal: false,
+      infoModal: false,
+      modalMessage: '',
     })
   }
   const cropSelecetedImage = async (e: any) => {
@@ -340,7 +373,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
                 <FormInput value={phone} id='phone' onChange={handleEditFormChange} name='phone' label="Phone" />
               </div>
               <div className='sm:col-span-3 px-3 py-2 flex items-center'>
-                <CheckBox value={isServiceProvider} onChange={handdleCheckBox} name='isServiceProvider' label="Service Provider" />
+                <CheckBox value={isServiceProvider} onChange={onServiceProviderChange} name='isServiceProvider' label="Service Provider" />
               </div>
             </div>
           </div>
@@ -361,6 +394,12 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
         {/* Image cropper */}
         {showCropper && (
           <ProfileCropModal upImg={upImage} saveCroppedImage={(img: string) => saveCroppedImage(img)} closeAction={toggleCropper} />
+        )}
+        {showModal.warnModal && (
+          <InstitutionPopUp saveLabel="Save" saveAction={saveAsServicePro} closeAction={togglePopUpModal} message={showModal.modalMessage} />
+        )}
+        {showModal.infoModal && (
+          <InstitutionPopUp onlyInfo saveLabel="OK" closeAction={togglePopUpModal} saveAction={togglePopUpModal} message={showModal.modalMessage} />
         )}
       </div>
 
