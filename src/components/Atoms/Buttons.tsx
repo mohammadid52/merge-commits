@@ -9,16 +9,18 @@ interface ButtonProps {
   transparent?: boolean;
   Icon?: any;
   btnClass?: string;
-  labelClass?: string
+  labelClass?: string;
+  disabled?: boolean;
 }
 
 const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
 
-  const { label, Icon, transparent, type, onClick, btnClass, labelClass } = btnPrps;
+  const { label, Icon, transparent, type, onClick, btnClass, labelClass, disabled } = btnPrps;
   const { theme } = useContext(GlobalContext);
 
   return (
     <button
+      disabled={disabled}
       type={type ? type : 'button'}
       className={`font-bold uppercase text-xs px-4 py-2 rounded-lg flex items-center justify-center w-auto ${theme.outlineNone} ${transparent ? theme.btn.cancel : theme.btn.indigo} ${btnClass ? btnClass : ''}`}
       onClick={onClick}

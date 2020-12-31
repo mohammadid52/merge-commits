@@ -6,6 +6,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as queries from '../../../../../graphql/queries';
+import * as mutations from '../../../../../graphql/mutations';
 import SectionTitle from '../../../../Atoms/SectionTitle';
 import PageWrapper from '../../../../Atoms/PageWrapper'
 import BreadCrums from '../../../../Atoms/BreadCrums';
@@ -45,6 +46,7 @@ const EditClass = (props: EditClassProps) => {
   const [institutionList, setInstitutionList] = useState([]);
   const [selectedStudents, setSelectedStudent] = useState([]);
   const [allStudentList, setAllStudentList] = useState([]);
+  const [prevStdList, setPrevStdList] = useState([]);
   const [previousName, setPreviousName] = useState('')
   const [messages, setMessages] = useState({
     show: false,
@@ -58,7 +60,7 @@ const EditClass = (props: EditClassProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Class Creation', url: '/dashboard/class-creation', last: true }
+    { title: 'Edit Class', url: `/dashboard/class-edit?id=${params.get('id')}`, last: true }
   ];
 
   const onChange = (e: any) => {
@@ -114,6 +116,7 @@ const EditClass = (props: EditClassProps) => {
 
   const addMemberToList = () => {
     if (newMember.id) {
+      saveClassStudent(newMember.id, classData.id)
       setSelectedStudent([
         ...selectedStudents,
         {
@@ -134,6 +137,7 @@ const EditClass = (props: EditClassProps) => {
   const removeStudentFromList = (id: string) => {
     const newList = selectedStudents.filter(item => item.id !== id);
     setSelectedStudent(newList)
+    removeStudentFromClass(id);
   }
 
   const getStudentsList = async () => {
@@ -192,19 +196,16 @@ const EditClass = (props: EditClassProps) => {
     if (isValid) {
       try {
         const input = {
+          id: classData.id,
           name: classData.name,
           institutionID: classData.institute.id,
         }
-        const newClass: any = await API.graphql(graphqlOperation(customMutations.createClass, { input: input }));
-        const classId = newClass.data.createClass.id
-        const studentsList: any = Promise.all(selectedStudents.map(async (item: any) => await saveStudentsList(item.id, classId)));
+        const newClass: any = await API.graphql(graphqlOperation(mutations.updateClass, { input: input }));
         setMessages({
           show: true,
           message: 'Class details has been updated.',
           isError: false
         })
-        setSelectedStudent([])
-        setClassData(initialData)
       } catch{
         setMessages({
           show: true,
@@ -215,19 +216,42 @@ const EditClass = (props: EditClassProps) => {
     }
   }
 
-  const saveStudentsList = async (id: string, classId: string) => {
+  const saveClassStudent = async (id: string, classId: string) => {
     try {
+      const authID = allStudentList.find((item: any) => item.id === id).authId;
+      const stdEmail = allStudentList.find((item: any) => item.id === id).email;
       const input = {
-        studentAuthID: studentList.find((item: any) => item.id === id).authId,
+        studentAuthID: authID,
         classID: classId,
         studentID: id,
-        studentEmail: studentList.find((item: any) => item.id === id).email
+        studentEmail: stdEmail
       };
       const students: any = await API.graphql(graphqlOperation(customMutations.createClassStudent, { input: input }));
+      const newEntry = students.data.createClassStudent;
+      setPrevStdList([
+        ...prevStdList,
+        newEntry
+      ]);
     } catch{
       setMessages({
         show: true,
-        message: 'Error while adding stuents data, please try again later',
+        message: 'Error while adding stuent, please try again later',
+        isError: true
+      })
+    }
+  }
+
+  const removeStudentFromClass = async (stdId: string) => {
+    try {
+      const uniqID = prevStdList.find(item => item.studentID === stdId).id;
+      const input = {
+        id: uniqID
+      };
+      const students: any = await API.graphql(graphqlOperation(mutations.deleteClassStudent, { input: input }));
+    } catch{
+      setMessages({
+        show: true,
+        message: 'Error while deleting stuents from class, please try again later',
         isError: true
       })
     }
@@ -300,6 +324,7 @@ const EditClass = (props: EditClassProps) => {
             value: savedclassData.institution.name,
           }
         })
+        setPrevStdList(savedclassData.students.items)
         setPreviousName(savedclassData.name)
       } catch {
         setMessages({
@@ -312,34 +337,34 @@ const EditClass = (props: EditClassProps) => {
       history.push('/dashboard/manage-institutions')
     }
   }
-  const fetchClassStudentsList = async () => {
+  // const fetchClassStudentsList = async () => {
 
-    try {
-      const result: any = await API.graphql(graphqlOperation(queries.listStudentDatas, { classroomID: params.get('id') }))
-      const savedData = result.data.listStudentDatas;
-      console.log(">>>>>>>>>>>>", savedData)
-      // setClassData({
-      //   ...classData,
-      //   id: savedData.id,
-      //   name: savedData.name,
-      //   institute: {
-      //     id: savedData.institution.id,
-      //     name: savedData.institution.name,
-      //     value: savedData.institution.name,
-      //   }
-      // })
-    } catch {
-      setMessages({
-        show: true,
-        message: 'Error while fetching students data,please try again later.',
-        isError: true
-      })
-    }
-  }
+  //   try {
+  //     const result: any = await API.graphql(graphqlOperation(queries.listStudentDatas, { classroomID: params.get('id') }))
+  //     const savedData = result.data.listStudentDatas;
+  //     // console.log(">>>>>>>>>>>>", savedData)
+  //     // setClassData({
+  //     //   ...classData,
+  //     //   id: savedData.id,
+  //     //   name: savedData.name,
+  //     //   institute: {
+  //     //     id: savedData.institution.id,
+  //     //     name: savedData.institution.name,
+  //     //     value: savedData.institution.name,
+  //     //   }
+  //     // })
+  //   } catch {
+  //     setMessages({
+  //       show: true,
+  //       message: 'Error while fetching students data,please try again later.',
+  //       isError: true
+  //     })
+  //   }
+  // }
 
   useEffect(() => {
     fetchClassData();
-    fetchClassStudentsList();
+    // fetchClassStudentsList();
     getStudentsList()
     getInstitutionList()
   }, [])
@@ -350,6 +375,18 @@ const EditClass = (props: EditClassProps) => {
     setStudentList(newList)
   }, [selectedStudents])
 
+  useEffect(() => {
+    const prevSelectedStudents = allStudentList.filter(item => prevStdList.some(std => std.studentID === item.id)).map(data => ({
+      name: data.name,
+      id: data.id,
+      avatar: data.avatar,
+    }))
+    setSelectedStudent([
+      ...selectedStudents,
+      ...prevSelectedStudents
+    ])
+  }, [allStudentList])
+
   const { name, institute } = classData;
 
   return (
@@ -358,7 +395,7 @@ const EditClass = (props: EditClassProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Create New Class" subtitle="Add new class to the list" />
+        <SectionTitle title="Edit Class" subtitle="Edit class information" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -389,7 +426,7 @@ const EditClass = (props: EditClassProps) => {
           {selectedStudents.length > 0 && (
             <Fragment>
               {selectedStudents.map(item =>
-                <div className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                <div key={item.id} className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div className="flex w-3/10 items-center">
                     <div className="flex-shrink-0 h-10 w-10 flex items-center">
                       {item.avatar ?
