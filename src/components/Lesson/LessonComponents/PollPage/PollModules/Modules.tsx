@@ -10,10 +10,10 @@ type InputProp = [{ name: string; example: string; prompt: string }];
 interface ModulesProps {
   isTeacher?: boolean;
   inputs: InputProp;
-  dataProps?:{
+  dataProps?: {
     pollInputs: PollInput[];
     additional: any;
-  }
+  };
 }
 
 interface FormInputsState {
@@ -126,12 +126,18 @@ const Modules = (props: ModulesProps) => {
    * receiving DATAPROPS
    */
 
-  useEffect(()=>{
-    if(isTeacher && dataProps){
-      console.log('Poll modules -> ', 'setting poll inputs for teacher view...')
-    }
-  },[dataProps])
+  useEffect(() => {
+    if (isTeacher && dataProps) {
+      if (dataProps.additional) {
+        const mappedValues = dataProps.additional.map((item: { name: string; input: string }) => {
+          return { [item.name]: item.input };
+        });
 
+        setFormInputs(mappedValues[0]); // TODO: same as PollForm.tsx, in student this data structure is an object, but in teacher it becomes array
+        // TODO: fix this so data structure doesnt change
+      }
+    }
+  }, [dataProps]);
 
   const handleFormInputChange = (e: { target: { id: string; value: string } }) => {
     setFormInputs({

@@ -5,6 +5,7 @@ import { LessonControlContext } from '../../../../../contexts/LessonControlConte
 import { useCookies } from 'react-cookie';
 
 import { PollInput } from './PollActivity';
+import { PollBreakdownProps } from '../PollBreakdown/PollBreakdown';
 
 
 export type PollInputState = Array<PollInput>;
@@ -17,7 +18,7 @@ interface PollFormProps {
   }
 }
 
-const PollForm = (props: PollFormProps) => {
+const PollForm = (props: PollBreakdownProps) => {
   /**
    * Teacher switch
    */
@@ -92,9 +93,11 @@ const PollForm = (props: PollFormProps) => {
 
   useEffect(()=>{
     if(isTeacher && dataProps){
-      console.log('Poll form -> ', 'setting poll form for teacher view...')
-      console.log('Poll form -> ', dataProps)
-      // setInput({pollInputs: dataProps.pollInputs})
+      // console.log('Poll form -> ', 'setting poll form for teacher view...')
+      if(dataProps.poll){
+        // console.log('Poll form -> ', dataProps)
+        setInput({pollInputs: dataProps.poll})
+      }
     }
   },[dataProps])
 
@@ -133,7 +136,7 @@ const PollForm = (props: PollFormProps) => {
 
     if (inputsAvailable.length > 0) {
       const inputObject = JSON.parse(JSON.stringify(input.pollInputs[pollKey])); // Simple deep cloning, could not get the right nested values otherwise
-      const id = inputObject['option'].id;
+      const id = (!isTeacher) ? inputObject['option'].id : inputObject['option'][0].id; // TODO: should not change the data structure from student -to - teacher, fix this so don't need [0]
 
       if (id === pollOptionID) {
         return true;
@@ -174,7 +177,7 @@ const PollForm = (props: PollFormProps) => {
                                         onClick={() => !isTeacher && handleRadioSelect(item.id, option.id)}
                                         className={`${theme.elem.text} w-auto px-4`}>
                                         {/*{option.isChoice ? '❌' : '⚪️'}*/}
-                                        {!isTeacher && input && isSelected(item.id, option.id, pollKey) ? '❌' : '⚪️'}
+                                        {input && isSelected(item.id, option.id, pollKey) ? '❌' : '⚪️'}
                                       </button>
                                       {option.option}
                                     </label>

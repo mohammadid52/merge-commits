@@ -1,26 +1,34 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
+import SelfDisplay from '../../../../Lesson/LessonComponents/PollPage/PollBreakdown/SelfDisplay';
 
-const PollBreakdownView = () => {
-  const { state, theme } = useContext(LessonControlContext);
+import {PollBreakdownProps} from '../../../../Lesson/LessonComponents/PollPage/PollBreakdown/PollBreakdown';
+
+const PollBreakdownView = (props: PollBreakdownProps) => {
+  const { state, theme, dispatch } = useContext(LessonControlContext);
   const [dataProps, setDataProps] = useState();
 
-  // let displayStudentData =
+  useEffect(() => {
+    dispatch({ type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown' });
+  }, []);
+
+  let displayStudentData = state.studentViewing.live
+    ? state.studentViewing.studentInfo.currentLocation
+      ? state.studentViewing.studentInfo.currentLocation === 'warmup/breakdown'
+      : state.studentViewing.studentInfo.lessonProgress === 'warmup/breakdown'
+    : false;
 
   useEffect(() => {
-    // TODO: add livecycle events similar to PoemBreakdownView.tsx
+    if (displayStudentData) {
+      if (state.studentViewing.studentInfo.warmupData) {
+        return setDataProps(state.studentViewing.studentInfo.warmupData);
+      }
+    }
+    return setDataProps(null);
   }, [state.studentViewing]);
 
   return (
-    <div className={theme.section}>
-      {/**
-       *
-       * 1. Reflection questions
-       * 2. Banner
-       * 3. PollOutput
-       *
-       */}
-    </div>
+    <SelfDisplay isTeacher={true} dataProps={dataProps} displayMode={'SELF'}/>
   );
 };
 

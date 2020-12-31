@@ -1,37 +1,47 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import ReflectionQuestions from '../../ReflectionQuestions';
-import Modules from './Modules';
-import Banner from './Banner';
 import SelfDisplay from './SelfDisplay';
-import CoopDisplay from './CoopDisplay';
 import CoopDisplaycopy from './CoopDisplaycopy';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
+import { PollInput } from '../PollModules/PollActivity';
 
-
-const StoryBreakdown = () => {
-    const { state, dispatch } = useContext(LessonContext);
-    const displayProps = state.componentState.story;
-    const [displayMode, setDisplayMode] = useState(state.data.lessonPlan[state.currentPage].displayMode);
-
-
-    useEffect(() => {
-        dispatch({type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown'})
-    }, [])
-
-    useEffect(() => {
-        if ( state.pages[state.currentPage].displayMode !== displayMode ) {
-            setDisplayMode(state.pages[state.currentPage].displayMode)
-        }
-    }, [state.pages])
-
-if (displayMode === 'SELF') {
-    return (
-        <SelfDisplay />
-    )} if (displayMode === 'COOP') {
-        return (
-            <CoopDisplaycopy />
-        )
-    }
+export interface PollBreakdownProps {
+  isTeacher?: boolean;
+  dataProps?: {
+    pollInputs: PollInput[];
+    poll?: PollInput[];
+    additional: any;
+  };
+  displayMode?: string;
 }
 
-export default StoryBreakdown;
+const PollBreakdown = (props: PollBreakdownProps) => {
+  /**
+   * Teacher switch
+   */
+  const { isTeacher } = props;
+  const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
+  const { state, theme, dispatch } = switchContext;
+
+  // const displayProps = state.componentState.warmUp.poll;
+  const [displayMode, setDisplayMode] = useState(state.data.lessonPlan[state.currentPage].displayMode);
+
+  useEffect(() => {
+    dispatch({ type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown' });
+  }, []);
+
+  useEffect(() => {
+    if (state.pages[state.currentPage].displayMode !== displayMode) {
+      setDisplayMode(state.pages[state.currentPage].displayMode);
+    }
+  }, [state.pages]);
+
+  if (displayMode === 'SELF') {
+    return <SelfDisplay displayMode={'SELF'}/>;
+  }
+  if (displayMode === 'COOP') {
+    return <CoopDisplaycopy />;
+  }
+};
+
+export default PollBreakdown;
