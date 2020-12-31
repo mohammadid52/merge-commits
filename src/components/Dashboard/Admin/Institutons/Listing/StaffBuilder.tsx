@@ -7,6 +7,7 @@ import { IconContext } from 'react-icons/lib/esm/iconContext';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import Buttons from '../../../../Atoms/Buttons';
 import PageWrapper from '../../../../Atoms/PageWrapper';
+import InstitutionPopUp from '../InstitutionPopUp';
 
 import { getInitialsFromString, initials, stringToHslColor, createFilterToFetchSpecificItemsOnly } from '../../../../../utilities/strings';
 
@@ -27,6 +28,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const dictionary = staffBuilderDict[userLanguage]
   const [availableUsers, setAvailableUsers] = useState([]);
   const [allAvailableUsers, setAllAvailableUsers] = useState([])
+  const [showModal, setShowModal] = useState(false);
   const [newMember, setNewMember] = useState({
     name: '',
     id: '',
@@ -156,6 +158,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   }, [])
 
   const removeStaffMember = async (item: any) => {
+    setShowModal(false);
+
     // remove staff member mutation
     const input = {
       id: item.id
@@ -216,12 +220,16 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                           </div>
                           <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">{item.role ? getStaffRole(item.role) : ''}</div>
                           <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">
-                            <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => removeStaffMember(item)}>
+                            <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => setShowModal(true)}>
                               <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
                                 <IoClose />
                               </IconContext.Provider>
                             </span>
                           </div>
+                          {
+                            showModal && (
+                              <InstitutionPopUp saveLabel="Delete" saveAction={() => removeStaffMember(item)} closeAction={() => setShowModal(false)} message={"Are you sure you want to remove this staff member?"} />
+                            )}
                         </div>)}
                     </div>
                   </Fragment>
@@ -231,9 +239,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                     </div>
                   )}
               </> : (
-              <div className="text-center p-16">
-                <p>Loading...</p>
-              </div>
+                <div className="text-center p-16">
+                  <p>Loading...</p>
+                </div>
               )
           }
         </PageWrapper>

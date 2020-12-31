@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { IconContext } from 'react-icons';
 import { IoArrowUndoCircleOutline, IoClose } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 
@@ -13,7 +14,7 @@ import BreadCrums from '../../../../Atoms/BreadCrums';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
-import { IconContext } from 'react-icons';
+import InstitutionPopUp from '../InstitutionPopUp';
 import { stringToHslColor, getInitialsFromString, initials } from '../../../../../utilities/strings';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import { getImageFromS3 } from '../../../../../utilities/services';
@@ -48,6 +49,7 @@ const EditClass = (props: EditClassProps) => {
   const [allStudentList, setAllStudentList] = useState([]);
   const [prevStdList, setPrevStdList] = useState([]);
   const [previousName, setPreviousName] = useState('')
+  const [showModal, setShowModal] = useState(false);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -135,6 +137,7 @@ const EditClass = (props: EditClassProps) => {
   }
 
   const removeStudentFromList = (id: string) => {
+    setShowModal(false);
     const newList = selectedStudents.filter(item => item.id !== id);
     setSelectedStudent(newList)
     removeStudentFromClass(id);
@@ -425,12 +428,16 @@ const EditClass = (props: EditClassProps) => {
                     <div className="ml-4">{item.name}</div>
                   </div>
                   <div className="w-1/10">
-                    <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => removeStudentFromList(item.id)}>
+                    <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => setShowModal(true)}>
                       <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
                         <IoClose />
                       </IconContext.Provider>
                     </span>
                   </div>
+                  {
+                    showModal && (
+                      <InstitutionPopUp saveLabel="Delete" saveAction={() => removeStudentFromList(item.id)} closeAction={() => setShowModal(false)} message={"Are you sure you want to remove this student?"} />
+                    )}
                 </div>)}
             </div>
           </Fragment>

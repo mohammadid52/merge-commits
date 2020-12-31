@@ -7,6 +7,7 @@ import { IconContext } from 'react-icons/lib/esm/iconContext';
 import PageWrapper from '../../../../Atoms/PageWrapper'
 import Buttons from '../../../../Atoms/Buttons'
 import Selector from '../../../../Atoms/Form/Selector';
+import InstitutionPopUp from '../InstitutionPopUp';
 
 import { createFilterToFetchAllItemsExcept } from '../../../../../utilities/strings';
 
@@ -28,6 +29,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
   })
   const [availableServiceProviders, setAvailableServiceProviders] = useState([]);
   const [partners, setPartners] = useState(existingPartners);
+  const [showModal, setShowModal] = useState(false);
   const [newServPro, setNewServPro] = useState({
     id: '',
     name: '',
@@ -100,6 +102,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
   }
 
   const removePartner = async (partner: any) => {
+    setShowModal(false);
     try {
       const input = { id: partner.id }
       await API.graphql(graphqlOperation(mutation.deleteServiceProvider, { input: input }))
@@ -131,7 +134,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
                   <div className="w-7/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>Service Providers</span>
                   </div>
-                  <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>Actions</span>
                   </div>
                 </div>
@@ -141,11 +144,17 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
                     <div className="flex w-7/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                       {item.partner.name || ''}
                     </div>
-                    <span className="w-1/10 h-6 flex items-center text-left px-8 py-3 cursor-pointer text-indigo-600 hover:text-indigo-900" onClick={() => removePartner(item)}>
-                      <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
-                        <IoClose />
-                      </IconContext.Provider>
-                    </span>
+                    <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">
+                      <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => setShowModal(true)}>
+                        <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
+                          <IoClose />
+                        </IconContext.Provider>
+                      </span>
+                    </div>
+                    {
+                      showModal && (
+                        <InstitutionPopUp saveLabel="Delete" saveAction={() => removePartner(item)} closeAction={() => setShowModal(false)} message={"Are you sure you want to delete this service provider?"} />
+                      )}
                   </div>
                 ))}
               </div>
