@@ -15,7 +15,7 @@ import { PollInput } from '../../../../Lesson/LessonComponents/PollPage/PollModu
 import Modules from '../../../../Lesson/LessonComponents/PollPage/PollModules/Modules';
 
 interface DataProps {
-  pollInputs: PollInput[];
+  poll: PollInput[];
   additional: any;
 }
 

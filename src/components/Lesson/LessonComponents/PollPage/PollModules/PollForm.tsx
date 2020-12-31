@@ -7,15 +7,15 @@ import { useCookies } from 'react-cookie';
 import { PollInput } from './PollActivity';
 import { PollBreakdownProps } from '../PollBreakdown/PollBreakdown';
 
-
 export type PollInputState = Array<PollInput>;
 
 interface PollFormProps {
   isTeacher?: boolean;
-  dataProps?:{
+  dataProps?: {
     pollInputs: PollInput[];
+    poll: PollInput[];
     additional: any;
-  }
+  };
 }
 
 const PollForm = (props: PollBreakdownProps) => {
@@ -43,7 +43,7 @@ const PollForm = (props: PollBreakdownProps) => {
      * ONLY DO THIS FOR STUDENT
      *
      */
-    if(!isTeacher){
+    if (!isTeacher) {
       if (cookies[`lesson-${state.classroomID}`]) {
         setInput(() => {
           return cookies[`lesson-${state.classroomID}`].poll;
@@ -53,10 +53,13 @@ const PollForm = (props: PollBreakdownProps) => {
       }
     }
 
-    if(isTeacher){
-        setInput({pollInputs: pollInputs})
+    if (isTeacher) {
+      if (dataProps) {
+        setInput({ pollInputs: dataProps.poll });
+      } else {
+        setInput({ pollInputs: pollInputs });
+      }
     }
-
   }, []);
 
   useEffect(() => {
@@ -66,7 +69,7 @@ const PollForm = (props: PollBreakdownProps) => {
      * ONLY DO THIS FOR STUDENT
      *
      */
-    if(!isTeacher){
+    if (!isTeacher) {
       if (state.componentState.poll && input.pollInputs.length > 0) {
         dispatch({
           type: 'UPDATE_COMPONENT_STATE',
@@ -83,7 +86,6 @@ const PollForm = (props: PollBreakdownProps) => {
         });
       }
     }
-
   }, [input]);
 
   /**
@@ -91,15 +93,15 @@ const PollForm = (props: PollBreakdownProps) => {
    * receiving DATAPROPS
    */
 
-  useEffect(()=>{
-    if(isTeacher && dataProps){
+  useEffect(() => {
+    if (isTeacher && dataProps) {
       // console.log('Poll form -> ', 'setting poll form for teacher view...')
-      if(dataProps.poll){
+      if (dataProps.poll) {
         // console.log('Poll form -> ', dataProps)
-        setInput({pollInputs: dataProps.poll})
+        setInput({ pollInputs: dataProps.poll });
       }
     }
-  },[dataProps])
+  }, [dataProps]);
 
   /**
    * Function handles selecting the poll options
@@ -113,7 +115,7 @@ const PollForm = (props: PollBreakdownProps) => {
             if (item.id === pollItemID) {
               return {
                 ...item,
-                option: { id: pollOptionID },
+                option: [{ id: pollOptionID }],
               };
             } else {
               return { ...item };
@@ -136,7 +138,7 @@ const PollForm = (props: PollBreakdownProps) => {
 
     if (inputsAvailable.length > 0) {
       const inputObject = JSON.parse(JSON.stringify(input.pollInputs[pollKey])); // Simple deep cloning, could not get the right nested values otherwise
-      const id = (!isTeacher) ? inputObject['option'].id : inputObject['option'][0].id; // TODO: should not change the data structure from student -to - teacher, fix this so don't need [0]
+      const id = inputObject['option'].length > 0 ? inputObject['option'][0].id : null;
 
       if (id === pollOptionID) {
         return true;

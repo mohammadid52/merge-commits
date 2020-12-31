@@ -11,7 +11,8 @@ interface ModulesProps {
   isTeacher?: boolean;
   inputs: InputProp;
   dataProps?: {
-    pollInputs: PollInput[];
+    pollInputs?: PollInput[];
+    poll?: PollInput[];
     additional: any;
   };
 }
@@ -121,10 +122,6 @@ const Modules = (props: ModulesProps) => {
     }
   }, [formInputs]);
 
-  /**
-   * USE EFFECT -> setting form inputs in case of teacher view
-   * receiving DATAPROPS
-   */
 
   useEffect(() => {
     if (isTeacher && dataProps) {
@@ -147,32 +144,32 @@ const Modules = (props: ModulesProps) => {
   };
 
   return (
-    <div className="relative w-full h-full rounded-xl">
+    <div className='relative w-full h-full rounded-xl'>
       <div className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
         <h3>Focus Questions</h3>
       </div>
-      <div className="w-full h-full ">
+      <div className='w-full h-full '>
         {formInputs
           ? inputs.map((input, key) => (
-              <div
-                key={key}
-                className={`flex flex-col animate-fadeIn ${
-                  key !== inputs.length - 1 && 'border-b border-white border-opacity-10 '
-                }`}>
-                <label className={`${theme.elem.text} mt-2 mb-2 w-full`} htmlFor={input.name}>
-                  {input.prompt}
-                </label>
-                <input
-                  id={input.name}
-                  className={`h-auto ${theme.elem.textInput} w-full rounded-xl`}
-                  name={input.name}
-                  type="text"
-                  placeholder={`${input.example}, etc.`}
-                  value={formInputs[input.name]}
-                  onChange={handleFormInputChange}
-                />
-              </div>
-            ))
+            <div
+              key={key}
+              className={`flex flex-col animate-fadeIn ${
+                key !== inputs.length - 1 && 'border-b border-white border-opacity-10 '
+              }`}>
+              <label className={`${theme.elem.text} mt-2 mb-2 w-full`} htmlFor={input.name}>
+                {input.prompt}
+              </label>
+              <input
+                id={input.name}
+                className={`h-auto ${theme.elem.textInput} w-full rounded-xl`}
+                name={input.name}
+                type='text'
+                placeholder={`${input.example}, etc.`}
+                value={formInputs[input.name]}
+                onChange={handleFormInputChange}
+              />
+            </div>
+          ))
           : null}
       </div>
     </div>

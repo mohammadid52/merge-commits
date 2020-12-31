@@ -8,7 +8,7 @@ import { PollInput } from '../PollModules/PollActivity';
 export interface PollBreakdownProps {
   isTeacher?: boolean;
   dataProps?: {
-    pollInputs: PollInput[];
+    pollInputs?: PollInput[];
     poll?: PollInput[];
     additional: any;
   };
