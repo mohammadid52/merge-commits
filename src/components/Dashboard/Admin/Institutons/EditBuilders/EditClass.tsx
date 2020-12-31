@@ -337,34 +337,9 @@ const EditClass = (props: EditClassProps) => {
       history.push('/dashboard/manage-institutions')
     }
   }
-  // const fetchClassStudentsList = async () => {
-
-  //   try {
-  //     const result: any = await API.graphql(graphqlOperation(queries.listStudentDatas, { classroomID: params.get('id') }))
-  //     const savedData = result.data.listStudentDatas;
-  //     // console.log(">>>>>>>>>>>>", savedData)
-  //     // setClassData({
-  //     //   ...classData,
-  //     //   id: savedData.id,
-  //     //   name: savedData.name,
-  //     //   institute: {
-  //     //     id: savedData.institution.id,
-  //     //     name: savedData.institution.name,
-  //     //     value: savedData.institution.name,
-  //     //   }
-  //     // })
-  //   } catch {
-  //     setMessages({
-  //       show: true,
-  //       message: 'Error while fetching students data,please try again later.',
-  //       isError: true
-  //     })
-  //   }
-  // }
 
   useEffect(() => {
     fetchClassData();
-    // fetchClassStudentsList();
     getStudentsList()
     getInstitutionList()
   }, [])

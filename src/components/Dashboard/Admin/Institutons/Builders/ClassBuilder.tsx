@@ -214,17 +214,8 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       try {
         setIsLoading(true);
         const input = {
-          // id: classData.id,
           name: classData.name,
           institutionID: classData.institute.id,
-          // students: {
-          //   items: [{
-          //     classID: classData.id,
-          //     studentID: '9161b8be-2cb2-4725-88cb-26dbf8beaa07',
-          //     studentEmail: 'angela.galvez@iconoclastartists.org',
-          //     studentAuthID: "dd396d17-74fb-4209-9514-55358e99dccb"
-          //   }]
-          // }
         }
         const newClass: any = await API.graphql(graphqlOperation(mutations.createClass, { input: input }));
         const classId = newClass.data.createClass.id
