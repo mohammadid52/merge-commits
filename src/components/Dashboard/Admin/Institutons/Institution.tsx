@@ -113,6 +113,13 @@ const Institution: React.FC = () => {
     getInstitutionData();
   }, []);
 
+
+  const updateServiceProviders = (item: any) => {
+    const instData = institutionData
+    instData.serviceProviders.items.push(item)
+    setInstitutionData(instData);
+  }
+
   useEffect(() => {
     getInstitutionData();
   }, [isNewUpdate]);
@@ -143,7 +150,7 @@ const Institution: React.FC = () => {
           <Route
             path={`${match.url}/`}
             render={() => (
-              <InstitutionInfo institute={institutionData} />
+              <InstitutionInfo institute={institutionData} updateServiceProviders={updateServiceProviders}/>
             )}
           />
         </Switch>

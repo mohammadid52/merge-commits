@@ -25,8 +25,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const { staffBuilderDict } = useDictionary();
   const { userLanguage } = useContext(GlobalContext);
   const dictionary = staffBuilderDict[userLanguage]
-  const [availableUsers, setAvailableUsers] = useState(null);
-  const [allAvailableUsers, setAllAvailableUsers] = useState(null)
+  const [availableUsers, setAvailableUsers] = useState([]);
+  const [allAvailableUsers, setAllAvailableUsers] = useState([])
   const [newMember, setNewMember] = useState({
     name: '',
     id: '',
@@ -78,7 +78,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       const { serviceProviders: { items }, instituteId } = props;
       const institutions = [instituteId]
       items.map((item: any) => institutions.push(item.providerID))
-
       const staff: any = await API.graphql(graphqlOperation(queries.listStaffs, {
         filter: { ...createFilterToFetchSpecificItemsOnly(institutions, 'institutionID') },
       }));

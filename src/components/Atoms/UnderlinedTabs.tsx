@@ -26,8 +26,7 @@ const UnderlinedTabs = (props: TabsProps) => {
               onClick={() => {
                 setOpenTab(tab.index)
               }}
-              className={`font-bold uppercase bg-white text-xs p-3 px-8 border-b-2 flex items-center h-full justify-center hover:border-indigo-600 ${theme.outlineNone} ${
-                openTab === tab.index
+              className={`font-bold uppercase bg-white text-xs p-3 px-8 border-b-2 flex items-center h-full justify-center hover:border-indigo-600 ${theme.outlineNone} ${openTab === tab.index
                   ? 'bg-gray-100 border-indigo-600 '
                   : ''
                 }`}
@@ -45,10 +44,16 @@ const UnderlinedTabs = (props: TabsProps) => {
       {tabs.map((tab, key) => (
         <div
           key={key}
-          className={`w-full p-4 ${
-            openTab !== tab.index ? 'hidden' : 'block'
+          className={`w-full p-4 ${openTab !== tab.index ? 'hidden' : 'block'
             }`}>
-          {tab.content}
+          {
+            openTab === tab.index ?
+              <>
+                {tab.content}
+              </>
+              : null
+          }
+
         </div>
       ))}
     </div>

@@ -17,7 +17,7 @@ import * as mutation from '../../../../../graphql/mutations';
 interface ServiceProvidersProps {
   instId: string
   serviceProviders: { items: { id: string, providerID: string, providerInstitution: any }[] }
-  updateInstServiceProviders: Function
+  updateServiceProviders: Function
 }
 
 const ServiceProviders = (props: ServiceProvidersProps) => {
@@ -85,6 +85,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
         }
         const addedPartner: any = await API.graphql(graphqlOperation(mutation.createServiceProvider, { input: input }))
         const item = addedPartner.data.createServiceProvider;
+        props.updateServiceProviders(item)
         const updatedPartners = [...partners, {id: item.id, partner: { ...item.providerInstitution}}]
         const updatedAvailableServiceProviders = availableServiceProviders.filter((item: any) => item.id !== newServPro.id)
         setNewServPro({ id: '', name: '', value: '' })
