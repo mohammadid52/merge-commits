@@ -269,7 +269,7 @@ const staffBuilderDict: any = {
     'EN': {
         TITLE: 'STAFF MEMBERS',
         ADD_PLACEHOLDER: 'Add new',
-        ADD_BUTTON: 'Añadir'
+        ADD_BUTTON: 'ADD'
 
     },
     'ES': {
