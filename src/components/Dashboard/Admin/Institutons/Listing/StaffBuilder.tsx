@@ -8,7 +8,7 @@ import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import Buttons from '../../../../Atoms/Buttons';
 import PageWrapper from '../../../../Atoms/PageWrapper';
 
-import { getInitialsFromString, initials, stringToHslColor, getFilterORArray } from '../../../../../utilities/strings';
+import { getInitialsFromString, initials, stringToHslColor, createFilterToFetchSpecificItemsOnly } from '../../../../../utilities/strings';
 
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
@@ -25,8 +25,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const { staffBuilderDict } = useDictionary();
   const { userLanguage } = useContext(GlobalContext);
   const dictionary = staffBuilderDict[userLanguage]
-  const [availableUsers, setAvailableUsers] = useState(null);
-  const [allAvailableUsers, setAllAvailableUsers] = useState(null)
+  const [availableUsers, setAvailableUsers] = useState([]);
+  const [allAvailableUsers, setAllAvailableUsers] = useState([])
   const [newMember, setNewMember] = useState({
     name: '',
     id: '',
@@ -78,9 +78,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       const { serviceProviders: { items }, instituteId } = props;
       const institutions = [instituteId]
       items.map((item: any) => institutions.push(item.providerID))
-
       const staff: any = await API.graphql(graphqlOperation(queries.listStaffs, {
-        filter: { or: getFilterORArray(institutions, 'institutionID') },
+        filter: { ...createFilterToFetchSpecificItemsOnly(institutions, 'institutionID') },
       }));
       // We are removing duplicate staff memebers across institution and service providers.
       // confirm with Mike. If we have to show multiple entries with institute name 

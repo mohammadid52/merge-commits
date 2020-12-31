@@ -181,3 +181,38 @@ export const formatPhoneNumber = (str: string) => {
 
   return str;
 };
+
+
+/**
+ * Function used in multiple places to
+ * set array as a filter object while fetching data.
+ * @param arr
+ * @param key
+ */
+export const createFilterToFetchSpecificItemsOnly = (arr: any, key: string) => {
+  let newArray = arr.map((item: any) => {
+    return {
+      [key]: {
+        eq: item,
+      },
+    };
+  });
+  return { or: newArray };
+};
+
+/**
+ * Function used in multiple places to
+ * set array as a filter object while fetching data.
+ * @param arr
+ * @param key
+ */
+export const createFilterToFetchAllItemsExcept = (arr: any, key: string) => {
+  let newArray = arr.map((item: any) => {
+    return {
+      [key]: {
+        ne: item,
+      },
+    };
+  });
+  return { and: newArray };
+};

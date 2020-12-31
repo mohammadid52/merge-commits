@@ -1,24 +1,35 @@
 import React, { useEffect, useState } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api';
 
-import * as queries from '../../../../../graphql/queries';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as mutation from '../../../../../graphql/mutations';
+import { IoClose } from 'react-icons/io5';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+
 import PageWrapper from '../../../../Atoms/PageWrapper'
 import Buttons from '../../../../Atoms/Buttons'
 import Selector from '../../../../Atoms/Form/Selector';
 
+import { createFilterToFetchAllItemsExcept } from '../../../../../utilities/strings';
+
+import * as queries from '../../../../../graphql/queries';
+import * as customMutations from '../../../../../customGraphql/customMutations';
+import * as customQueries from '../../../../../customGraphql/customQueries';
+import * as mutation from '../../../../../graphql/mutations';
 interface ServiceProvidersProps {
   instId: string
-  serviceProviders: { items: { id: string, providerID: string }[] }
+  serviceProviders: { items: { id: string, providerID: string, providerInstitution: any }[] }
+  updateServiceProviders: Function
 }
 
 const ServiceProviders = (props: ServiceProvidersProps) => {
-  const { instId } = props;
-  const [servProList, setServProList] = useState();
-  const [currentInstituteId, setCurrentInstituteId] = useState('');
-  const [activeServPro, setActiveServPro] = useState([]);
+  const { instId, serviceProviders } = props;
+  const existingPartners = serviceProviders.items.map((item: any) => {
+    return {
+      id: item.id,
+      partner: { ...item.providerInstitution}
+    }
+  })
+  const [availableServiceProviders, setAvailableServiceProviders] = useState([]);
+  const [partners, setPartners] = useState(existingPartners);
   const [newServPro, setNewServPro] = useState({
     id: '',
     name: '',
@@ -31,53 +42,77 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
       value: val
     })
   }
-  const addServiceProvider = () => {
-    try {
-      const input = {
-        partnerID: instId,
-        providerID: newServPro.id
-      }
-      const updatedInstitute: any = API.graphql(graphqlOperation(mutation.createServiceProvider, { input: input }))
-    } catch{
-      console.log("error adding service providers")
-    }
-  }
+  
 
-  const deleteServiceProvider = async (id: string) => {
+  
+  const fetchAvailableServiceProviders = async () => {
     try {
-      const input = {
-        id: id
-      }
-      const list: any = await API.graphql(graphqlOperation(mutation.deleteServiceProvider, { input: input }))
-    } catch{
-
-    }
-  }
-  const fetchServProList = async () => {
-    try {
+      const { serviceProviders: { items } } = props;
+      const serviceProvidersIds = items.map((sp: any) => sp.providerID)
+      // fetch list of service providers expect the self and partner institutes
       const list: any = await API.graphql(graphqlOperation(customQueries.listServiceProviders, {
         filter: {
-          isServiceProvider: { eq: true }
+          isServiceProvider: { eq: true },
+          ...createFilterToFetchAllItemsExcept([instId, ...serviceProvidersIds], 'id')
         }
       }));
-      const filteredList = list.data.listInstitutions?.items.filter((item: { id: string }) => item.id !== instId)
-      const sortedList = filteredList.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase()) ? 1 : -1);
-      const servProList = sortedList.map((item: any, i: any) => ({
+      const listItems = list.data.listInstitutions?.items || [];
+      // create
+      const servProList = listItems.map((item: any, i: any) => ({
         id: item.id,
-        name: `${item.name ? item.name : ''}`,
-        value: `${item.name ? item.name : ''}`
-      }));
-      setServProList(servProList);
-    } catch{
-      console.log('Error while fetching service providers lists')
+        name: item.name || '',
+        value: item.name || ''
+      })).sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase()) ? 1 : -1);
+      setAvailableServiceProviders(servProList);
+    } catch(err){
+      console.log('Error while fetching service providers lists', err)
     }
   }
 
   useEffect(() => {
     if (instId) {
-      fetchServProList()
+      fetchAvailableServiceProviders()
     }
   }, [instId])
+
+  const addPartner = async () => {
+    try {
+      if (newServPro && newServPro.id) {
+        // get the selected user from the list
+        const input = {
+          partnerID: instId,
+          providerID: newServPro.id
+        }
+        const addedPartner: any = await API.graphql(graphqlOperation(mutation.createServiceProvider, { input: input }))
+        const item = addedPartner.data.createServiceProvider;
+        props.updateServiceProviders(item)
+        const updatedPartners = [...partners, {id: item.id, partner: { ...item.providerInstitution}}]
+        const updatedAvailableServiceProviders = availableServiceProviders.filter((item: any) => item.id !== newServPro.id)
+        setNewServPro({ id: '', name: '', value: '' })
+        setPartners(updatedPartners)
+        setAvailableServiceProviders(updatedAvailableServiceProviders)
+      } else {
+        // TODO: Add the validation msg or error msg on UI for the service provider.
+        // or disable add button if newServPro is not selected 
+        console.log('select a service provider to add.')
+      }
+    } catch (err) {
+      console.log('Error: Add partner, service provider builder: Could not add new partner in institution', err)
+    }
+  }
+
+  const removePartner = async (partner: any) => {
+    try {
+      const input = { id: partner.id }
+      await API.graphql(graphqlOperation(mutation.deleteServiceProvider, { input: input }))
+      let updatedPartners = partners.filter((item: any) => item.id !== partner.id)
+      setPartners(updatedPartners)
+      const updatedAvaiSP = [...availableServiceProviders, { id: partner.id, name: partner.partner.name, value: partner.partner.name }].sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase()) ? 1 : -1)
+      setAvailableServiceProviders(updatedAvaiSP)
+    } catch (err) {
+      console.log('Remove partner service provders', err)
+    }
+  }
 
   return (
     <div className="p-8 flex m-auto justify-center">
@@ -85,8 +120,8 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
         <PageWrapper>
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">SERVICE PROVIDERS</h3>
           <div className="flex items-center w-6/10 m-auto px-2">
-            <Selector selectedItem={newServPro.value} list={servProList} placeholder="Add a new service provider" onChange={onServProChange} />
-            <Buttons btnClass="ml-4 py-1" label="Add" onClick={addServiceProvider} />
+            <Selector selectedItem={newServPro.value} list={availableServiceProviders} placeholder="Add a new service provider" onChange={onServProChange} />
+            <Buttons btnClass="ml-4 py-1" label="Add" onClick={addPartner} />
           </div>
 
 
@@ -101,23 +136,21 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
               </div>
             </div>
 
-            {(activeServPro && activeServPro.length > 0) ? (
-              activeServPro.map(item => (
-                <div className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+            {(partners && partners.length > 0) ? (
+              partners.map((item, index) => (
+                <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div className="flex w-7/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
-                    {item.name ? item.name : ''}
+                    {item.partner.name || ''}
                   </div>
-                  <span className="w-1/10 h-6 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900" onClick={() => console.log('')}>
-                    edit
-                  </span>
+                  <span className="w-1/10 h-6 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900" onClick={() => removePartner(item)}>
+                      <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
+                        <IoClose />
+                      </IconContext.Provider>
+                    </span>
                 </div>
               ))
             ) : (<p className="text-center p-16"> No Results</p>)}
-
           </div>
-
-
-
         </PageWrapper>
       </div>
     </div>
