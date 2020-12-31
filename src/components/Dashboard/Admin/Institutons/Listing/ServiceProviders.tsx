@@ -10,13 +10,11 @@ import Selector from '../../../../Atoms/Form/Selector';
 
 import { createFilterToFetchAllItemsExcept } from '../../../../../utilities/strings';
 
-import * as queries from '../../../../../graphql/queries';
-import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as mutation from '../../../../../graphql/mutations';
 interface ServiceProvidersProps {
   instId: string
-  serviceProviders: { items: { id: string, providerID: string, providerInstitution: any }[] }
+  serviceProviders: { items: { id: string, providerID: string, providerInstitution?: any }[] }
   updateServiceProviders: Function
 }
 

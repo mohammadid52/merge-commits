@@ -31,7 +31,7 @@ interface InstInfo {
   classes: { items: { name?: string, id: string }[] }
   curricula: { items: { name?: string, id: string }[] }
   isServiceProvider: boolean
-  serviceProviders: { items: { id: string, providerID: string }[] }
+  serviceProviders?: { items: { id: string, providerID: string, providerInstitution?: any }[] }
 }
 
 const InstitutionInfo = (instProps: InstitutionInfoProps) => {
@@ -40,7 +40,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const [imageUrl, setImageUrl] = useState();
 
   const tabs = [
-    { index: 0, title: 'Service Providers', icon: <FaHandshake />, active: false, content: <ServiceProviders serviceProviders={institute.serviceProviders} instId={institute?.id} updateServiceProviders={instProps.updateServiceProviders}/> },
+    { index: 0, title: 'Service Providers', icon: <FaHandshake />, active: false, content: <ServiceProviders serviceProviders={institute.serviceProviders} instId={institute?.id} updateServiceProviders={instProps.updateServiceProviders} /> },
     { index: 1, title: 'Staff', icon: <IoPeople />, active: true, content: <StaffBuilder serviceProviders={institute.serviceProviders} instituteId={instProps?.institute?.id} /> },
     { index: 2, title: 'Classes', icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={instProps?.institute?.classes} /> },
     { index: 3, title: 'Curricular', icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} /> },

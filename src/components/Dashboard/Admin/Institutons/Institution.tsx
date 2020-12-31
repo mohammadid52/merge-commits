@@ -37,7 +37,7 @@ export interface InstitutionInfo {
   isServiceProvider?: boolean;
   classes?: { items: { name?: string, id: string }[] }
   curricula?: { items: { name?: string, id: string }[] }
-  serviceProviders?: { items: { id: string, providerID: string }[] }
+  serviceProviders?: { items: { id: string, providerID: string, providerInstitution?: any }[] }
 }
 
 /**
@@ -66,7 +66,7 @@ const Institution: React.FC = () => {
     isServiceProvider: false,
     classes: { items: [{ name: '', id: '' }] },
     serviceProviders: { items: [{ id: '', providerID: '' }] },
-    curricula: { items: [{ name: '', id: '' }] }
+    curricula: { items: [{ name: '', id: '' }] },
 
   });
   const [isNewUpdate, setISNewUpdate] = useState(false);
@@ -150,7 +150,7 @@ const Institution: React.FC = () => {
           <Route
             path={`${match.url}/`}
             render={() => (
-              <InstitutionInfo institute={institutionData} updateServiceProviders={updateServiceProviders}/>
+              <InstitutionInfo institute={institutionData} updateServiceProviders={updateServiceProviders} />
             )}
           />
         </Switch>
