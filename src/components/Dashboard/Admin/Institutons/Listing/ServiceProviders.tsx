@@ -107,7 +107,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
       await API.graphql(graphqlOperation(mutation.deleteServiceProvider, { input: input }))
       let updatedPartners = partners.filter((item: any) => item.id !== partner.id)
       setPartners(updatedPartners)
-      const updatedAvaiSP = [...availableServiceProviders, { id: partner.id, name: partner.partner.name, value: partner.partner.name }].sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase()) ? 1 : -1)
+      const updatedAvaiSP = [...availableServiceProviders, { id: partner.partner.id, name: partner.partner.name, value: partner.partner.name }].sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase()) ? 1 : -1)
       setAvailableServiceProviders(updatedAvaiSP)
     } catch (err) {
       console.log('Remove partner service provders', err)
