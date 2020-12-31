@@ -34,6 +34,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     avatar: ''
   });
   const [activeStaffList, setActiveStaffList] = useState([]);
+  const [dataLoading, setDataLoading] = useState(true)
 
   const onChange = (str: string, name: string, id: string, avatar: string) => {
     setNewMember({
@@ -147,6 +148,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     setAvailableUsers(availableUsersList)
     // saving the initial all users list for future use. see removeStaff member function for use.
     setAllAvailableUsers(users)
+    setDataLoading(false)
   }
 
   useEffect(() => {
@@ -171,6 +173,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       <div className="">
         <PageWrapper>
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{dictionary['TITLE']}</h3>
+          
+          {
+            !dataLoading ?
+            <>
           <div className="flex items-center w-6/10 m-auto px-2 mb-8">
             <SelectorWithAvatar selectedItem={newMember} list={availableUsers} placeholder={dictionary['ADD_PLACEHOLDER']} onChange={onChange} />
             <Buttons btnClass="ml-4 py-1" label={dictionary['ADD_BUTTON']} onClick={addStaffMember} />
@@ -224,6 +230,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                 <p> This institute does not have any staff member. Please add new member.</p>
               </div>
             )}
+            </> : <div>Loading...</div>
+}
         </PageWrapper>
       </div>
     </div>
