@@ -173,65 +173,69 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       <div className="">
         <PageWrapper>
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{dictionary['TITLE']}</h3>
-          
+
           {
             !dataLoading ?
-            <>
-          <div className="flex items-center w-6/10 m-auto px-2 mb-8">
-            <SelectorWithAvatar selectedItem={newMember} list={availableUsers} placeholder={dictionary['ADD_PLACEHOLDER']} onChange={onChange} />
-            <Buttons btnClass="ml-4 py-1" label={dictionary['ADD_BUTTON']} onClick={addStaffMember} />
-          </div>
-          {activeStaffList.length > 0 ? (
-            <Fragment>
-              <div className="my-4 w-8/10 m-auto max-h-88 overflow-y-scroll">
-                <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>No.</span>
-                  </div>
-                  <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>Name</span>
-                  </div>
-                  <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>Role</span>
-                  </div>
-                  <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>Actions</span>
-                  </div>
+              <>
+                <div className="flex items-center w-6/10 m-auto px-2 mb-8">
+                  <SelectorWithAvatar selectedItem={newMember} list={availableUsers} placeholder={dictionary['ADD_PLACEHOLDER']} onChange={onChange} />
+                  <Buttons btnClass="ml-4 py-1" label={dictionary['ADD_BUTTON']} onClick={addStaffMember} />
                 </div>
-                {activeStaffList.map((item, index) =>
-                  <div key={index} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                    <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
-                    <div className="flex w-6/10 px-8 py-3 items-center text-left text-s leading-4 font-medium ">
-                      <div className="flex-shrink-0 h-10 w-10 flex items-center">
-                        {/* {item.staffMember.image ?
+                {activeStaffList.length > 0 ? (
+                  <Fragment>
+                    <div className="my-4 w-8/10 m-auto max-h-88 overflow-y-scroll">
+                      <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                        <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                          <span>No.</span>
+                        </div>
+                        <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                          <span>Name</span>
+                        </div>
+                        <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                          <span>Role</span>
+                        </div>
+                        <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                          <span>Actions</span>
+                        </div>
+                      </div>
+                      {activeStaffList.map((item, index) =>
+                        <div key={index} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                          <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
+                          <div className="flex w-6/10 px-8 py-3 items-center text-left text-s leading-4 font-medium ">
+                            <div className="flex-shrink-0 h-10 w-10 flex items-center">
+                              {/* {item.staffMember.image ?
                           (<img
                             // src={imageUrl}
                             className="h-8 w-8 rounded-full" />) : */}
-                        <div className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold" style={{ background: `${stringToHslColor(getInitialsFromString(item.name)[0] + ' ' + getInitialsFromString(item.name)[1])}`, textShadow: '0.1rem 0.1rem 2px #423939b3' }} >
-                          {item.name ? initials(getInitialsFromString(item.name)[0], getInitialsFromString(item.name)[1]) : initials('N', 'A')}
-                        </div>
-                        {/*  } */}
-                      </div>
-                      <div className="ml-4">{item.name}</div>
+                              <div className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold" style={{ background: `${stringToHslColor(getInitialsFromString(item.name)[0] + ' ' + getInitialsFromString(item.name)[1])}`, textShadow: '0.1rem 0.1rem 2px #423939b3' }} >
+                                {item.name ? initials(getInitialsFromString(item.name)[0], getInitialsFromString(item.name)[1]) : initials('N', 'A')}
+                              </div>
+                              {/*  } */}
+                            </div>
+                            <div className="ml-4">{item.name}</div>
+                          </div>
+                          <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">{item.role ? getStaffRole(item.role) : ''}</div>
+                          <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">
+                            <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => removeStaffMember(item)}>
+                              <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
+                                <IoClose />
+                              </IconContext.Provider>
+                            </span>
+                          </div>
+                        </div>)}
                     </div>
-                    <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">{item.role ? getStaffRole(item.role) : ''}</div>
-                    <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">
-                      <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => removeStaffMember(item)}>
-                        <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
-                          <IoClose />
-                        </IconContext.Provider>
-                      </span>
+                  </Fragment>
+                ) : (
+                    <div className="text-center p-16">
+                      <p> This institute does not have any staff member. Please add new member.</p>
                     </div>
-                  </div>)}
-              </div>
-            </Fragment>
-          ) : (
+                  )}
+              </> : (
               <div className="text-center p-16">
-                <p> This institute does not have any staff member. Please add new member.</p>
+                <p>Loading...</p>
               </div>
-            )}
-            </> : <div>Loading...</div>
-}
+              )
+          }
         </PageWrapper>
       </div>
     </div>
