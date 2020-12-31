@@ -159,8 +159,8 @@ const EditClass = (props: EditClassProps) => {
         authId: item.authId ? item.authId : ''
       })));
       personsList.then(res => {
-        setStudentList(res);
         setAllStudentList(res)
+        setStudentList(res);
       })
     } catch{
       setMessages({
@@ -324,8 +324,10 @@ const EditClass = (props: EditClassProps) => {
             value: savedclassData.institution.name,
           }
         })
-        setPrevStdList(savedclassData.students.items)
-        setPreviousName(savedclassData.name)
+        setPrevStdList(savedclassData.students.items);
+        setPreviousName(savedclassData.name);
+        getInstitutionList();
+        getStudentsList();
       } catch {
         setMessages({
           show: true,
@@ -340,8 +342,6 @@ const EditClass = (props: EditClassProps) => {
 
   useEffect(() => {
     fetchClassData();
-    getStudentsList()
-    getInstitutionList()
   }, [])
 
   useEffect(() => {
@@ -351,6 +351,9 @@ const EditClass = (props: EditClassProps) => {
   }, [selectedStudents])
 
   useEffect(() => {
+    console.log("++++++++");
+    console.log(allStudentList.length, prevStdList.length)
+    console.log("++++++++");
     const prevSelectedStudents = allStudentList.filter(item => prevStdList.some(std => std.studentID === item.id)).map(data => ({
       name: data.name,
       id: data.id,
@@ -384,25 +387,32 @@ const EditClass = (props: EditClassProps) => {
             <div className="px-3 py-4">
               <FormInput value={name} id='className' onChange={onChange} name='className' label="Class Name" isRequired />
             </div>
-            <div className="px-3 py-4">
+
+            {/* 
+              **
+              * Hide institution drop down since all the things are tied to the 
+              * Institute, will add this later if need to add builders saperately.
+            */}
+            {/* <div className="px-3 py-4">
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 Institute <span className="text-red-500"> *</span>
               </label>
               <Selector selectedItem={institute.value} placeholder="Select Institute" list={institutionList} onChange={setInstitute} />
-            </div>
+            </div> */}
           </div>
         </div>
-        <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">Students</h3>
+        <h3 className="text-center text-lg text-gray-600 font-medium mt-12 mb-6">STUDENTS</h3>
         <div className="flex items-center w-6/10 m-auto px-2">
           <SelectorWithAvatar selectedItem={newMember} list={studentList} placeholder="Add new student" onChange={onStudentSelect} />
           <Buttons btnClass="ml-4 py-1" label="Add" onClick={addMemberToList} />
         </div>
-        <div className="my-4 w-6/10 m-auto px-2 max-h-88 overflow-y-scroll">
-          {selectedStudents.length > 0 && (
-            <Fragment>
-              {selectedStudents.map(item =>
+        {selectedStudents.length > 0 && (
+          <Fragment>
+            <div className="mb-4 mt-8 w-6/10 m-auto px-2 max-h-88 overflow-y-scroll">
+              {selectedStudents.map((item, index) =>
                 <div key={item.id} className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div className="flex w-3/10 items-center">
+                  <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
+                  <div className="flex w-8/10 items-center px-4 py-2">
                     <div className="flex-shrink-0 h-10 w-10 flex items-center">
                       {item.avatar ?
                         (<img
@@ -414,20 +424,23 @@ const EditClass = (props: EditClassProps) => {
                     </div>
                     <div className="ml-4">{item.name}</div>
                   </div>
-                  <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => removeStudentFromList(item.id)}>
-                    <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
-                      <IoClose />
-                    </IconContext.Provider>
-                  </span>
+                  <div className="w-1/10">
+                    <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => removeStudentFromList(item.id)}>
+                      <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
+                        <IoClose />
+                      </IconContext.Provider>
+                    </span>
+                  </div>
                 </div>)}
-            </Fragment>
-          )}
-        </div>
+            </div>
+          </Fragment>
+        )}
         {messages.show ? (<div className="py-2 m-auto text-center">
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
         </div>) : null}
-        <div className="flex my-8 justify-center">
-          <Buttons btnClass="my-8 py-3 px-12 text-sm" label="Save" onClick={saveClassDetails} />
+        <div className="flex my-12 justify-center">
+          <Buttons btnClass="my-8 py-3 px-12 text-sm mr-4" label="Cancel" onClick={history.goBack} transparent />
+          <Buttons btnClass="my-8 py-3 px-12 text-sm ml-4" label="Save" onClick={saveClassDetails} />
         </div>
       </PageWrapper>
     </div>
