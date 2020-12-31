@@ -44,7 +44,8 @@ const EditClass = (props: EditClassProps) => {
   const [studentList, setStudentList] = useState([]);
   const [institutionList, setInstitutionList] = useState([]);
   const [selectedStudents, setSelectedStudent] = useState([]);
-  const [allStudentList, setAllStudentList] = useState([])
+  const [allStudentList, setAllStudentList] = useState([]);
+  const [previousName, setPreviousName] = useState('')
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -160,7 +161,7 @@ const EditClass = (props: EditClassProps) => {
     } catch{
       setMessages({
         show: true,
-        message: 'Error while fetching student list, Please try again or you can add them later.',
+        message: 'Error while fetching student list, Please try again later.',
         isError: true
       })
     }
@@ -199,7 +200,7 @@ const EditClass = (props: EditClassProps) => {
         const studentsList: any = Promise.all(selectedStudents.map(async (item: any) => await saveStudentsList(item.id, classId)));
         setMessages({
           show: true,
-          message: 'New class details has been saved.',
+          message: 'Class details has been updated.',
           isError: false
         })
         setSelectedStudent([])
@@ -207,7 +208,7 @@ const EditClass = (props: EditClassProps) => {
       } catch{
         setMessages({
           show: true,
-          message: 'Unable to save new class. Please try again later.',
+          message: 'Unable to update class details. Please try again later.',
           isError: true
         })
       }
@@ -226,7 +227,7 @@ const EditClass = (props: EditClassProps) => {
     } catch{
       setMessages({
         show: true,
-        message: 'Error while adding stuents data, you can add them saperately from class.',
+        message: 'Error while adding stuents data, please try again later',
         isError: true
       })
     }
@@ -266,7 +267,7 @@ const EditClass = (props: EditClassProps) => {
         isError: true
       })
       return false;
-    } else if (classData.name.trim() !== '') {
+    } else if (classData.name.trim() !== '' && previousName !== classData.name) {
       const isUniq = await checkUniqClassName()
       if (!isUniq) {
         setMessages({
@@ -284,30 +285,61 @@ const EditClass = (props: EditClassProps) => {
   }
 
   const fetchClassData = async () => {
+    const classId = params.get('id')
+    if (classId) {
+      try {
+        const result: any = await API.graphql(graphqlOperation(queries.getClass, { id: classId }))
+        const savedclassData = result.data.getClass;
+        setClassData({
+          ...classData,
+          id: savedclassData.id,
+          name: savedclassData.name,
+          institute: {
+            id: savedclassData.institution.id,
+            name: savedclassData.institution.name,
+            value: savedclassData.institution.name,
+          }
+        })
+        setPreviousName(savedclassData.name)
+      } catch {
+        setMessages({
+          show: true,
+          message: 'Error while fetching class data,please try again later.',
+          isError: true
+        })
+      }
+    } else {
+      history.push('/dashboard/manage-institutions')
+    }
+  }
+  const fetchClassStudentsList = async () => {
+
     try {
-      const result: any = await API.graphql(graphqlOperation(queries.getClass, { id: params.get('id') }))
-      const savedclassData = result.data.getClass;
-      setClassData({
-        ...classData,
-        id: savedclassData.id,
-        name: savedclassData.name,
-        institute: {
-          id: savedclassData.institution.id,
-          name: savedclassData.institution.name,
-          value: savedclassData.institution.value,
-        }
-      })
+      const result: any = await API.graphql(graphqlOperation(queries.listStudentDatas, { classroomID: params.get('id') }))
+      const savedData = result.data.listStudentDatas;
+      console.log(">>>>>>>>>>>>", savedData)
+      // setClassData({
+      //   ...classData,
+      //   id: savedData.id,
+      //   name: savedData.name,
+      //   institute: {
+      //     id: savedData.institution.id,
+      //     name: savedData.institution.name,
+      //     value: savedData.institution.name,
+      //   }
+      // })
     } catch {
       setMessages({
         show: true,
-        message: 'Error while fetching class data,please try again later.',
+        message: 'Error while fetching students data,please try again later.',
         isError: true
       })
     }
   }
 
   useEffect(() => {
-    fetchClassData()
+    fetchClassData();
+    fetchClassStudentsList();
     getStudentsList()
     getInstitutionList()
   }, [])

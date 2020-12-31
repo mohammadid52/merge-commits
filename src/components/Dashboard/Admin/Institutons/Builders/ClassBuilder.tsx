@@ -181,6 +181,14 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     }
   }
 
+  const saveAllStudentsData = async (classId: string) => {
+    Promise.all(
+      selectedStudents.map(async (item: any) => await saveStudentsList(item.id, classId))
+    )
+      .then(res => console.log(res, "**********"))
+      .catch(err => console.log("**************"))
+  }
+
   const saveClassDetails = async () => {
     const isValid = await validateForm();
     if (isValid) {
@@ -191,7 +199,13 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         }
         const newClass: any = await API.graphql(graphqlOperation(customMutations.createClass, { input: input }));
         const classId = newClass.data.createClass.id
-        const studentsList: any = Promise.all(selectedStudents.map(async (item: any) => await saveStudentsList(item.id, classId)));
+        // console.log("Class id", classId)
+        // saveAllStudentsData(classId)
+        // saveStudentsList(selectedStudents[0].id, classId)
+        // await Promise.all(selectedStudents.map(async (item: any) => await saveStudentsList(item.id, classId)))
+        //   .then(res => console.log(res));
+        // if (studentsList) {
+
         setMessages({
           show: true,
           message: 'New class details has been saved.',
@@ -199,6 +213,8 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         })
         setSelectedStudent([])
         setClassData(initialData)
+
+        // }
       } catch{
         setMessages({
           show: true,
@@ -210,12 +226,16 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   }
 
   const saveStudentsList = async (id: string, classId: string) => {
+    console.log("Student list called")
     try {
+      console.log("save student try");
+      const stdEmail = studentList.find((item: any) => item.id === id).email;
+      const authId = studentList.find((item: any) => item.id === id).authId;
       const input = {
-        studentAuthID: studentList.find((item: any) => item.id === id).authId,
         classID: classId,
         studentID: id,
-        studentEmail: studentList.find((item: any) => item.id === id).email
+        studentEmail: stdEmail,
+        studentAuthID: authId,
       };
       const students: any = await API.graphql(graphqlOperation(customMutations.createClassStudent, { input: input }));
     } catch{
