@@ -119,7 +119,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   <span className="w-auto">{website ? getHostNameFromUrl(website) : '--'}</span>
                 </p>
                 <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                  <span className="text-gray-900 mr-2 w-3/10">ServiceProvider:</span>
+                  <span className="text-gray-900 mr-2 w-3/10">Service Provider:</span>
                   <span className="w-auto">{isServiceProvider ? 'YES' : 'NO'}</span>
                 </p>
               </div>

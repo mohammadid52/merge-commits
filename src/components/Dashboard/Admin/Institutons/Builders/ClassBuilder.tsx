@@ -2,10 +2,12 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoClose } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
+import { v4 as uuidv4 } from 'uuid';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as queries from '../../../../../graphql/queries';
+import * as mutations from '../../../../../graphql/mutations';
 import SectionTitle from '../../../../Atoms/SectionTitle';
 import PageWrapper from '../../../../Atoms/PageWrapper'
 import BreadCrums from '../../../../Atoms/BreadCrums';
@@ -43,7 +45,8 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   const [studentList, setStudentList] = useState([]);
   const [institutionList, setInstitutionList] = useState([]);
   const [selectedStudents, setSelectedStudent] = useState([]);
-  const [allStudentList, setAllStudentList] = useState([])
+  const [allStudentList, setAllStudentList] = useState([]);
+  const [loading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -182,39 +185,51 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   }
 
   const saveAllStudentsData = async (classId: string) => {
+
     Promise.all(
       selectedStudents.map(async (item: any) => await saveStudentsList(item.id, classId))
     )
-      .then(res => console.log(res, "**********"))
-      .catch(err => console.log("**************"))
-  }
-
-  const saveClassDetails = async () => {
-    const isValid = await validateForm();
-    if (isValid) {
-      try {
-        const input = {
-          name: classData.name,
-          institutionID: classData.institute.id,
-        }
-        const newClass: any = await API.graphql(graphqlOperation(customMutations.createClass, { input: input }));
-        const classId = newClass.data.createClass.id
-        // console.log("Class id", classId)
-        // saveAllStudentsData(classId)
-        // saveStudentsList(selectedStudents[0].id, classId)
-        // await Promise.all(selectedStudents.map(async (item: any) => await saveStudentsList(item.id, classId)))
-        //   .then(res => console.log(res));
-        // if (studentsList) {
-
+      .then(res => {
         setMessages({
           show: true,
           message: 'New class details has been saved.',
           isError: false
         })
         setSelectedStudent([])
-        setClassData(initialData)
+        setClassData(initialData);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        setMessages({
+          show: true,
+          message: 'Error while adding students data, you can add them saperately from class.',
+          isError: true
+        })
+      })
+  }
 
-        // }
+  const saveClassDetails = async () => {
+    const isValid = await validateForm();
+    if (isValid) {
+      try {
+        setIsLoading(true);
+        const input = {
+          // id: classData.id,
+          name: classData.name,
+          institutionID: classData.institute.id,
+          // students: {
+          //   items: [{
+          //     classID: classData.id,
+          //     studentID: '9161b8be-2cb2-4725-88cb-26dbf8beaa07',
+          //     studentEmail: 'angela.galvez@iconoclastartists.org',
+          //     studentAuthID: "dd396d17-74fb-4209-9514-55358e99dccb"
+          //   }]
+          // }
+        }
+        const newClass: any = await API.graphql(graphqlOperation(mutations.createClass, { input: input }));
+        const classId = newClass.data.createClass.id
+        saveAllStudentsData(classId)
+
       } catch{
         setMessages({
           show: true,
@@ -226,11 +241,9 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   }
 
   const saveStudentsList = async (id: string, classId: string) => {
-    console.log("Student list called")
     try {
-      console.log("save student try");
-      const stdEmail = studentList.find((item: any) => item.id === id).email;
-      const authId = studentList.find((item: any) => item.id === id).authId;
+      const stdEmail = allStudentList.find((item: any) => item.id === id).email;
+      const authId = allStudentList.find((item: any) => item.id === id).authId;
       const input = {
         classID: classId,
         studentID: id,
@@ -238,7 +251,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         studentAuthID: authId,
       };
       const students: any = await API.graphql(graphqlOperation(customMutations.createClassStudent, { input: input }));
-    } catch{
+    } catch {
       setMessages({
         show: true,
         message: 'Error while adding stuents data, you can add them saperately from class.',
@@ -299,6 +312,10 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   }
 
   useEffect(() => {
+    setClassData({
+      ...classData,
+      id: uuidv4()
+    })
     getStudentsList()
     getInstitutionList()
   }, [])
@@ -374,7 +391,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
         </div>) : null}
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="my-8 py-3 px-12 text-sm" label="Save" onClick={saveClassDetails} />
+          <Buttons btnClass="my-8 py-3 px-12 text-sm" label={loading ? 'Saving...' : 'Save'} onClick={saveClassDetails} disabled={loading ? true : false} />
         </div>
       </PageWrapper>
     </div>
