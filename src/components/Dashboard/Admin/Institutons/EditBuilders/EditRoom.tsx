@@ -53,7 +53,7 @@ const EditRoom = (props: EditRoomProps) => {
   const params = useQuery();
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Room Creation', url: '/dashboard/room-creation', last: true }
+    { title: 'Edit Room', url: `/dashboard/room-edit?id=${params.get('id')}`, last: true }
   ];
 
   const selectTeacher = (val: string, name: string, id: string) => {
@@ -419,9 +419,6 @@ const EditRoom = (props: EditRoomProps) => {
         value: selectedCurr?.value
       }
     })
-    console.log("__________________________")
-    console.log({ currId, curricularList, selectedCurr })
-    console.log("__________________________")
 
   }
 
@@ -502,7 +499,7 @@ const EditRoom = (props: EditRoomProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Create New Room" subtitle="Add new room to the list" />
+        <SectionTitle title="Edit Room" subtitle="Edit room information" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>

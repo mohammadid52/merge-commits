@@ -45,7 +45,7 @@ const EditCurricular = (props: EditCurricularProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Curricular Creation', url: '/dashboard/curricular-creation', last: true }
+    { title: 'Edit Curricular', url: `/dashboard/curricular-edit?id=${params.get('id')}`, last: true }
   ];
 
   const onChange = (e: any) => {
@@ -216,7 +216,7 @@ const EditCurricular = (props: EditCurricularProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Create New Curricular" subtitle="Add new curricular to the list" />
+        <SectionTitle title="Edit Curricular" subtitle="Edit curricular information" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
