@@ -26,20 +26,20 @@ const InstitutionsHome = () => {
           render={() => <InstitutionAdd />}
         />
         <Route
-          path={`${match.url}/institution`}
-          render={() => <Institution />}
-        />
-        <Route
-          path={`${match.url}/class-creation`}
+          path={`${match.url}/institution/class-creation`}
           render={() => <ClassBuilder />}
         />
         <Route
-          path={`${match.url}/curricular-creation`}
+          path={`${match.url}/institution/curricular-creation`}
           render={() => <CurricularBuilder />}
         />
         <Route
-          path={`${match.url}/room-creation`}
+          path={`${match.url}/institution/room-creation`}
           render={() => <RoomBuilder />}
+        />
+        <Route
+          path={`${match.url}/institution`}
+          render={() => <Institution />}
         />
         <Route
           path={`${match.url}/class-edit`}

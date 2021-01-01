@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 
@@ -28,6 +28,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     }
   }
   const history = useHistory();
+  const location = useLocation();
   const [institutionList, setInstitutionList] = useState(null);
   const [curricularData, setCurricularData] = useState(initialData);
   const [messages, setMessages] = useState({
@@ -35,6 +36,10 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     message: '',
     isError: false
   });
+  const useQuery = () => {
+    return new URLSearchParams(location.search);
+  };
+  const params = useQuery();
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
@@ -169,8 +174,46 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   }
 
   useEffect(() => {
-    getInstitutionList()
+
+    const instId = params.get('id');
+    if (instId) {
+      setCurricularData({
+        ...curricularData,
+        institute: {
+          ...institute,
+          id: instId,
+          name: '',
+          value: ''
+        }
+      })
+      getInstitutionList()
+    } else {
+      history.push('/dashboard/manage-institutions')
+    }
   }, [])
+
+  useEffect(() => {
+    if (curricularData.institute.id) {
+      const instName = institutionList.find((item: { id: string }) => item.id === curricularData.institute.id).name
+      if (instName) {
+        setCurricularData({
+          ...curricularData,
+          institute: {
+            ...institute,
+            id: curricularData.institute.id,
+            name: instName,
+            value: instName
+          }
+        })
+      } else {
+        setMessages({
+          show: true,
+          message: 'Invalid path please go back to institution selection page to select your institute.',
+          isError: true
+        })
+      }
+    }
+  }, [institutionList])
 
   const { name, institute } = curricularData;
   return (
@@ -193,12 +236,17 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
             <div className="px-3 py-4">
               <FormInput value={name} id='curricularName' onChange={onChange} name='name' label="Curricular Name" />
             </div>
-            <div className="px-3 py-4">
+            {/* 
+              **
+              * Hide institution drop down since all the things are tied to the 
+              * Institute, will add this later if need to add builders saperately.
+            */}
+            {/* <div className="px-3 py-4">
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 Institute
               </label>
               <Selector selectedItem={institute.value} placeholder="Select Institute" list={institutionList} onChange={selectInstitute} />
-            </div>
+            </div> */}
           </div>
         </div>
         {messages.show ? (<div className="py-2 m-auto text-center">

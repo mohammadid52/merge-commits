@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 
@@ -25,6 +25,7 @@ interface RoomBuilderProps {
 const RoomBuilder = (props: RoomBuilderProps) => {
   const { } = props;
   const history = useHistory();
+  const location = useLocation();
   const initialData = {
     id: '',
     name: '',
@@ -45,7 +46,10 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     message: '',
     isError: false
   })
-
+  const useQuery = () => {
+    return new URLSearchParams(location.search);
+  };
+  const params = useQuery();
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Room Creation', url: '/dashboard/room-creation', last: true }
@@ -181,7 +185,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       if (listStaffs?.length === 0) {
         setMessages({
           show: true,
-          message: 'Please add staff member first for the selected institute or select another institute.',
+          message: 'Please create staff member first for your institute.',
           isError: true
         })
       } else {
@@ -215,7 +219,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       if (listClass.length === 0) {
         setMessages({
           show: true,
-          message: 'Please add class first for the selected institute or select another institute.',
+          message: 'Please create class first for your institute.',
           isError: true
         })
       } else {
@@ -418,8 +422,43 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   }, [roomData.institute.id])
 
   useEffect(() => {
-    getInstitutionList()
+    const instId = params.get('id');
+    if (instId) {
+      setRoomData({
+        ...roomData,
+        institute: {
+          id: instId,
+          name: '',
+          value: ''
+        }
+      })
+      getInstitutionList()
+    } else {
+      history.push('/dashboard/manage-institutions')
+    }
   }, [])
+
+  useEffect(() => {
+    if (roomData.institute.id) {
+      const instName = institutionList.find((item: { id: string }) => item.id === roomData.institute.id).name
+      if (instName) {
+        setRoomData({
+          ...roomData,
+          institute: {
+            id: roomData.institute.id,
+            name: instName,
+            value: instName
+          }
+        })
+      } else {
+        setMessages({
+          show: true,
+          message: 'Invalid path please go back to institution selection page to select your institute.',
+          isError: true
+        })
+      }
+    }
+  }, [institutionList])
 
   const { name, curricular, classRoom, maxPersons, institute, teacher } = roomData;
 
@@ -443,12 +482,17 @@ const RoomBuilder = (props: RoomBuilderProps) => {
             <div className="px-3 py-4">
               <FormInput value={name} id='name' onChange={editInputField} name='name' label="Room Name" placeHolder="Add room name" isRequired />
             </div>
-            <div className="px-3 py-4">
+            {/* 
+              **
+              * Hide institution drop down since all the things are tied to the 
+              * Institute, will add this later if need to add builders saperately.
+            */}
+            {/* <div className="px-3 py-4">
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 Institute  <span className="text-red-500"> *</span>
               </label>
               <Selector selectedItem={institute.value} placeholder="Select Institute" list={institutionList} onChange={selectInstitute} />
-            </div>
+            </div> */}
 
             <div>
               <div className="px-3 py-4">
