@@ -29,7 +29,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
   })
   const [availableServiceProviders, setAvailableServiceProviders] = useState([]);
   const [partners, setPartners] = useState(existingPartners);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState<{ show: boolean; item: any; }>({show: false, item: {}})
   const [newServPro, setNewServPro] = useState({
     id: '',
     name: '',
@@ -102,7 +102,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
   }
 
   const removePartner = async (partner: any) => {
-    setShowModal(false);
+    setShowModal({ show: false, item: {}});
     try {
       const input = { id: partner.id }
       await API.graphql(graphqlOperation(mutation.deleteServiceProvider, { input: input }))
@@ -114,7 +114,6 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
       console.log('Remove partner service provders', err)
     }
   }
-
   return (
     <div className="p-8 flex m-auto justify-center">
       <div className="">
@@ -145,19 +144,19 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
                       {item.partner.name || ''}
                     </div>
                     <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">
-                      <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => setShowModal(true)}>
+                      <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => setShowModal({ show: true, item })}>
                         <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
                           <IoClose />
                         </IconContext.Provider>
                       </span>
                     </div>
-                    {
-                      showModal && (
-                        <InstitutionPopUp saveLabel="Delete" saveAction={() => removePartner(item)} closeAction={() => setShowModal(false)} message={"Are you sure you want to delete this service provider?"} />
-                      )}
                   </div>
                 ))}
               </div>
+              {
+                showModal.show && (
+                  <InstitutionPopUp saveLabel="Delete" saveAction={() => removePartner(showModal.item)} closeAction={() => setShowModal({show: false, item: {}})} message={`Are you sure you want to delete ${showModal.item?.partner?.name || 'institute'} from service provider's list?`} />
+                )}
             </Fragment>
           ) : (
               <div className="text-center p-16">

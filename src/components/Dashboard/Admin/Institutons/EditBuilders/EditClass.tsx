@@ -4,57 +4,41 @@ import { IconContext } from 'react-icons';
 import { IoArrowUndoCircleOutline, IoClose } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as queries from '../../../../../graphql/queries';
-import * as mutations from '../../../../../graphql/mutations';
+
 import SectionTitle from '../../../../Atoms/SectionTitle';
 import PageWrapper from '../../../../Atoms/PageWrapper'
 import BreadCrums from '../../../../Atoms/BreadCrums';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
-import Selector from '../../../../Atoms/Form/Selector';
-import InstitutionPopUp from '../InstitutionPopUp';
-import { stringToHslColor, getInitialsFromString, initials } from '../../../../../utilities/strings';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
+
+import InstitutionPopUp from '../InstitutionPopUp';
+
+import { stringToHslColor, getInitialsFromString, initials } from '../../../../../utilities/strings';
 import { getImageFromS3 } from '../../../../../utilities/services';
 
-interface EditClassProps {
+import * as customQueries from '../../../../../customGraphql/customQueries';
+import * as customMutations from '../../../../../customGraphql/customMutations';
+import * as queries from '../../../../../graphql/queries';
+import * as mutations from '../../../../../graphql/mutations';
 
-}
+interface EditClassProps {}
 
 const EditClass = (props: EditClassProps) => {
   const { } = props;
   const history = useHistory();
   const location = useLocation();
-  const initialData = {
-    id: '',
-    name: '',
-    institute: {
-      id: '',
-      name: '',
-      value: ''
-    }
-  }
+  const initialData = { id: '', name: '', institute: { id: '', name: '', value: '' } }
   const [classData, setClassData] = useState(initialData)
-  const [newMember, setNewMember] = useState({
-    name: '',
-    id: '',
-    value: '',
-    avatar: ''
-  });
+  const [newMember, setNewMember] = useState({ name: '', id: '', value: '', avatar: '' });
   const [studentList, setStudentList] = useState([]);
   const [institutionList, setInstitutionList] = useState([]);
   const [selectedStudents, setSelectedStudent] = useState([]);
   const [allStudentList, setAllStudentList] = useState([]);
   const [prevStdList, setPrevStdList] = useState([]);
   const [previousName, setPreviousName] = useState('')
-  const [showModal, setShowModal] = useState(false);
-  const [messages, setMessages] = useState({
-    show: false,
-    message: '',
-    isError: false
-  });
+  const [showModal, setShowModal] = useState<{ show: boolean; item: any; }>({show: false, item: {}})
+  const [messages, setMessages] = useState({ show: false, message: '', isError: false });
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
@@ -99,12 +83,7 @@ const EditClass = (props: EditClassProps) => {
 
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);
-    if (imageUrl) {
-      console.log(imageUrl)
-      return imageUrl
-    } else {
-      return ''
-    }
+    return imageUrl || '';
   }
 
   const onStudentSelect = (str: string, name: string, id: string, avatar: string) => {
@@ -137,7 +116,7 @@ const EditClass = (props: EditClassProps) => {
   }
 
   const removeStudentFromList = (id: string) => {
-    setShowModal(false);
+    setShowModal({ show: false, item: {}});
     const newList = selectedStudents.filter(item => item.id !== id);
     setSelectedStudent(newList)
     removeStudentFromClass(id);
@@ -155,17 +134,17 @@ const EditClass = (props: EditClassProps) => {
       const sortedList = list.data.listPersons.items.sort((a: any, b: any) => (a.firstName?.toLowerCase() > b.firstName?.toLowerCase()) ? 1 : -1);
       const personsList = Promise.all(sortedList.map(async (item: any, i: any) => ({
         id: item.id,
-        name: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
-        value: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
+        name: `${item.firstName || ''} ${item.lastName || ''}`,
+        value: `${item.firstName || ''} ${item.lastName || ''}`,
         avatar: item.image ? await getImageURL(item.image) : '',
-        email: item.email ? item.email : '',
-        authId: item.authId ? item.authId : ''
+        email: item.email || '',
+        authId: item.authId || ''
       })));
       personsList.then(res => {
         setAllStudentList(res)
         setStudentList(res);
       })
-    } catch{
+    } catch {
       setMessages({
         show: true,
         message: 'Error while fetching student list, Please try again later.',
@@ -181,8 +160,8 @@ const EditClass = (props: EditClassProps) => {
       const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase()) ? 1 : -1);
       const InstituteList = sortedList.map((item: any, i: any) => ({
         id: item.id,
-        name: `${item.name ? item.name : ''}`,
-        value: `${item.name ? item.name : ''}`
+        name: `${item.name || ''}`,
+        value: `${item.name || ''}`
       }));
       setInstitutionList(InstituteList);
     } catch {
@@ -209,7 +188,7 @@ const EditClass = (props: EditClassProps) => {
           message: 'Class details has been updated.',
           isError: false
         })
-      } catch{
+      } catch {
         setMessages({
           show: true,
           message: 'Unable to update class details. Please try again later.',
@@ -235,7 +214,7 @@ const EditClass = (props: EditClassProps) => {
         ...prevStdList,
         newEntry
       ]);
-    } catch{
+    } catch {
       setMessages({
         show: true,
         message: 'Error while adding stuent, please try again later',
@@ -250,8 +229,8 @@ const EditClass = (props: EditClassProps) => {
       const input = {
         id: uniqID
       };
-      const students: any = await API.graphql(graphqlOperation(mutations.deleteClassStudent, { input: input }));
-    } catch{
+      await API.graphql(graphqlOperation(mutations.deleteClassStudent, { input: input }));
+    } catch {
       setMessages({
         show: true,
         message: 'Error while deleting stuents from class, please try again later',
@@ -354,9 +333,6 @@ const EditClass = (props: EditClassProps) => {
   }, [selectedStudents])
 
   useEffect(() => {
-    console.log("++++++++");
-    console.log(allStudentList.length, prevStdList.length)
-    console.log("++++++++");
     const prevSelectedStudents = allStudentList.filter(item => prevStdList.some(std => std.studentID === item.id)).map(data => ({
       name: data.name,
       id: data.id,
@@ -428,18 +404,18 @@ const EditClass = (props: EditClassProps) => {
                     <div className="ml-4">{item.name}</div>
                   </div>
                   <div className="w-1/10">
-                    <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => setShowModal(true)}>
+                    <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => setShowModal({show: true, item})}>
                       <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
                         <IoClose />
                       </IconContext.Provider>
                     </span>
                   </div>
-                  {
-                    showModal && (
-                      <InstitutionPopUp saveLabel="Delete" saveAction={() => removeStudentFromList(item.id)} closeAction={() => setShowModal(false)} message={"Are you sure you want to remove this student?"} />
-                    )}
                 </div>)}
             </div>
+            {
+              showModal.show && (
+                <InstitutionPopUp saveLabel="Delete" saveAction={() => removeStudentFromList(showModal.item.id)} closeAction={() => setShowModal({ show: false, item: {} })} message={`Are you sure you want to remove ${showModal.item?.name || 'student'} from class?`} />
+              )}
           </Fragment>
         )}
         {messages.show ? (<div className="py-2 m-auto text-center">
