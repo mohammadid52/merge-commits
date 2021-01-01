@@ -155,9 +155,9 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
       setShowModal({
         warnModal: true,
         infoModal: false,
-        modalMessage: `Setting service provider will allow other 
-                       institutes to use your CLASS and ROOM structure. 
-                       Are you sure you want to continue?`,
+        modalMessage: `The service provider status allows other institutions 
+                        access to the curricula and/or teachers of this institution.
+                        Do you want to continue ?`,
       })
     } else {
       setShowModal({
