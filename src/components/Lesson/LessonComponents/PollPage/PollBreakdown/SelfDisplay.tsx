@@ -41,7 +41,7 @@ const SelfDisplay = (props: PollBreakdownProps) => {
       <PollOutput
         isTeacher={isTeacher}
         dataProps={isTeacher && dataProps ? dataProps : !isTeacher && displayProps ? displayProps : null}
-      />{' '}
+      />
       {/*  NEEDS TO RECEIVE DISPLAY PROPS OR DATA PROPS  */}
     </div>
   );

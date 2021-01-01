@@ -44,7 +44,7 @@ const PollPage = () => {
         return {
           id: item.id,
           question: item.question,
-          option: { id: item.option.id, isChoice: item.option.isChoice },
+          option: [{ id: item.option.id, isChoice: item.option.isChoice }],
         };
       });
 

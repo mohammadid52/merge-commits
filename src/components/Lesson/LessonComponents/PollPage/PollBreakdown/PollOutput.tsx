@@ -34,10 +34,11 @@ const PollOutput = (props: PollOutputProps) => {
   const getOption = (pollQuestionID: number, pollOptionID: string) => {
     const questionOptions = state.data.lesson.warmUp.inputs.pollInputs[pollQuestionID]['option'];
     const questionAnswer = questionOptions.filter((option: { id: string; isChoice: boolean; option: string }) => {
+      console.log('questionAnswer Filter -> ', option.id, '  ', pollOptionID);
       return option.id === pollOptionID ? option : null;
     });
 
-    if (questionAnswer.length > 0) return questionAnswer[0].option;
+    return questionAnswer.length > 0 ? questionAnswer[0].option : 'No answer given...';
   };
 
   return (
@@ -51,22 +52,28 @@ const PollOutput = (props: PollOutputProps) => {
       <div className={`w-full flex flex-col`}>
         {dataProps && dataProps.pollInputs ? (
           dataProps.pollInputs.map((item: { id: string; question: string; option: any }, key: number) => {
+            {
+              console.log('item.option -> ', item.option);
+            }
+
             return (
               <div key={`polloutput_${key}`} className={`py-4`}>
                 <div className={`${theme.elem.text}`}>{`${item.question}:`}</div>
                 <div className={`${theme.elem.text} ${theme.blockQuote}`}>
-                  {item.option.hasOwnProperty('id') ? getOption(key, item.option.id) : 'No answer given...'}
+                  {item.option[0].hasOwnProperty('id') ? getOption(key, item.option[0].id) : 'No answer given...'}
                 </div>
               </div>
             );
           })
         ) : dataProps && dataProps.poll ? (
           dataProps.poll.map((item: { id: string; question: string; option: any }, key: number) => {
+            console.log('item.option -> ', item.option);
+
             return (
               <div key={`polloutput_${key}`} className={`py-4`}>
                 <div className={`${theme.elem.text}`}>{`${item.question}:`}</div>
                 <div className={`${theme.elem.text} ${theme.blockQuote}`}>
-                  {item.option[0].hasOwnProperty('id') && item.option[0].id !== null ? getOption(key, item.option[0].id) : 'No answer given...'}
+                  {item.option[0].hasOwnProperty('id') ? getOption(key, item.option[0].id) : 'No answer given...'}
                 </div>
               </div>
             );
