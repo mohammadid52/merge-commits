@@ -230,18 +230,23 @@ const EditCurricular = (props: EditCurricularProps) => {
             <div className="px-3 py-4">
               <FormInput value={name} id='curricularName' onChange={onChange} name='name' label="Curricular Name" />
             </div>
-            <div className="px-3 py-4">
+            {/* 
+              **
+              * Hide institution drop down since all the things are tied to the 
+              * Institute, will add this later if need to add builders saperately.
+            */}
+            {/* <div className="px-3 py-4">
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 Institute
               </label>
               <Selector selectedItem={institute.value} placeholder="Select Institute" list={institutionList} onChange={selectInstitute} />
-            </div>
+            </div> */}
           </div>
         </div>
         {messages.show ? (<div className="py-2 m-auto text-center">
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
         </div>) : null}
-        <div className="flex my-8 justify-center">
+        <div className="flex my-8 mt-12 justify-center">
           <Buttons btnClass="py-3 px-12 text-sm mr-4" label="Cancel" onClick={history.goBack} transparent />
           <Buttons btnClass="py-3 px-12 text-sm ml-4" label="Save" onClick={saveCurriculum} />
         </div>

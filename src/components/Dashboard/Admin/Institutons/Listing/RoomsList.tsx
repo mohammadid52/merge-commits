@@ -21,7 +21,7 @@ const RoomsList = (props: RoomListProps) => {
     isError: false
   })
   const createNewRoom = () => {
-    history.push('/dashboard/manage-institutions/room-creation')
+    history.push(`/dashboard/manage-institutions/institution/room-creation?id=${instId}`)
   }
 
   const editCurrentRoom = (id: string) => {

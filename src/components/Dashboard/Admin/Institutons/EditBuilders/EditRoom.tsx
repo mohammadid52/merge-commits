@@ -513,12 +513,17 @@ const EditRoom = (props: EditRoomProps) => {
             <div className="px-3 py-4">
               <FormInput value={name} id='name' onChange={editInputField} name='name' label="Room Name" placeHolder="Add room name" isRequired />
             </div>
-            <div className="px-3 py-4">
+            {/* 
+              **
+              * Hide institution drop down since all the things are tied to the 
+              * Institute, will add this later if need to add builders saperately.
+            */}
+            {/* <div className="px-3 py-4">
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 Institute  <span className="text-red-500"> *</span>
               </label>
               <Selector selectedItem={institute.value} placeholder="Select Institute" list={institutionList} onChange={selectInstitute} />
-            </div>
+            </div> */}
 
             <div>
               <div className="px-3 py-4">

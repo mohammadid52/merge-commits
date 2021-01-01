@@ -4,16 +4,17 @@ import PageWrapper from '../../../../Atoms/PageWrapper'
 import Buttons from '../../../../Atoms/Buttons'
 
 interface ClassListProps {
-  classes: { items: { name?: string, id: string }[] }
+  classes: { items: { name?: string, id: string }[] },
+  instId: string
 }
 
 const ClassList = (props: ClassListProps) => {
-  const { classes } = props;
+  const { classes, instId } = props;
   const [classList, setClassList] = useState([]);
   const history = useHistory();
 
   const createNewClass = () => {
-    history.push('/dashboard/manage-institutions/class-creation')
+    history.push(`/dashboard/manage-institutions/institution/class-creation?id=${instId}`)
   }
 
   return (

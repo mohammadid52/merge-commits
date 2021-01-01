@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoClose } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,6 +26,7 @@ interface ClassBuilderProps {
 const ClassBuilder = (props: ClassBuilderProps) => {
   const { } = props;
   const history = useHistory();
+  const location = useLocation();
   const initialData = {
     id: '',
     name: '',
@@ -52,6 +53,11 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     message: '',
     isError: false
   });
+
+  const useQuery = () => {
+    return new URLSearchParams(location.search);
+  };
+  const params = useQuery();
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
@@ -303,12 +309,21 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   }
 
   useEffect(() => {
-    setClassData({
-      ...classData,
-      id: uuidv4()
-    })
-    getStudentsList()
-    getInstitutionList()
+    const instId = params.get('id');
+    if (instId) {
+      setClassData({
+        ...classData,
+        institute: {
+          id: instId,
+          name: '',
+          value: ''
+        }
+      })
+      getStudentsList()
+      getInstitutionList()
+    } else {
+      history.push('/dashboard/manage-institutions')
+    }
   }, [])
 
   useEffect(() => {
@@ -316,6 +331,28 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     const newList = previousList.filter(item => !selectedStudents.some(std => std.id === item.id));
     setStudentList(newList)
   }, [selectedStudents])
+
+  useEffect(() => {
+    if (classData.institute.id) {
+      const instName = institutionList.find(item => item.id === classData.institute.id).name
+      if (instName) {
+        setClassData({
+          ...classData,
+          institute: {
+            id: classData.institute.id,
+            name: instName,
+            value: instName
+          }
+        })
+      } else {
+        setMessages({
+          show: true,
+          message: 'Invalid path please go back to institution selection page to select your institute.',
+          isError: true
+        })
+      }
+    }
+  }, [institutionList])
 
   const { name, institute } = classData;
 
@@ -339,15 +376,22 @@ const ClassBuilder = (props: ClassBuilderProps) => {
             <div className="px-3 py-4">
               <FormInput value={name} id='className' onChange={onChange} name='className' label="Class Name" isRequired />
             </div>
-            <div className="px-3 py-4">
+
+            {/* 
+              **
+              * Hide institution drop down since all the things are tied to the 
+              * Institute, will add this later if need to add builders saperately.
+            */}
+
+            {/* <div className="px-3 py-4">
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 Institute <span className="text-red-500"> *</span>
               </label>
               <Selector selectedItem={institute.value} placeholder="Select Institute" list={institutionList} onChange={setInstitute} />
-            </div>
+            </div> */}
           </div>
         </div>
-        <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">Students</h3>
+        <h3 className="text-center text-lg text-gray-600 font-medium mt-12 mb-6">STUDENTS</h3>
         <div className="flex items-center w-6/10 m-auto px-2">
           <SelectorWithAvatar selectedItem={newMember} list={studentList} placeholder="Add new student" onChange={onStudentSelect} />
           <Buttons btnClass="ml-4 py-1" label="Add" onClick={addMemberToList} />

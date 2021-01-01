@@ -5,15 +5,16 @@ import Buttons from '../../../../Atoms/Buttons'
 
 interface CurriculumListProps {
   curricular: { items: { name?: string, id: string }[] }
+  instId: string
 }
 
 const CurriculumList = (props: CurriculumListProps) => {
 
-  const { curricular } = props;
+  const { curricular, instId } = props;
   const history = useHistory();
 
   const createNewCurricular = () => {
-    history.push('/dashboard/manage-institutions/curricular-creation')
+    history.push(`/dashboard/manage-institutions/institution/curricular-creation?id=${instId}`)
   }
 
   const editCurrentCurricular = (id: string) => {
