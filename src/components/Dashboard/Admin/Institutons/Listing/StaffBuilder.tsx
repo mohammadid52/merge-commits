@@ -28,7 +28,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const dictionary = staffBuilderDict[userLanguage]
   const [availableUsers, setAvailableUsers] = useState([]);
   const [allAvailableUsers, setAllAvailableUsers] = useState([])
-  const [showModal, setShowModal] = useState(false);
   const [newMember, setNewMember] = useState({
     name: '',
     id: '',
@@ -37,6 +36,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   });
   const [activeStaffList, setActiveStaffList] = useState([]);
   const [dataLoading, setDataLoading] = useState(true)
+  const [showModal, setShowModal] = useState<{ show: boolean; item: any; }>({show: false, item: {}})
 
   const onChange = (str: string, name: string, id: string, avatar: string) => {
     setNewMember({
@@ -124,7 +124,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         addedMember.userId = addedMember.staffMember.id;
         addedMember.name = `${addedMember.staffMember.firstName || ''} ${addedMember.staffMember.lastName || ''}`
         addedMember.image = addedMember.staffMember.image;
-        addedMember.role = addedMember.staffMember.roleaddedMember;
+        addedMember.role = addedMember.staffMember.role;
         setActiveStaffList([...activeStaffList, addedMember]);
         // remove the selected user
         setNewMember({ name: '', id: '', value: '', avatar: '' });
@@ -158,7 +158,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   }, [])
 
   const removeStaffMember = async (item: any) => {
-    setShowModal(false);
+    setShowModal({ show: false, item: {}});
 
     // remove staff member mutation
     const input = {
@@ -220,18 +220,18 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                           </div>
                           <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">{item.role ? getStaffRole(item.role) : ''}</div>
                           <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">
-                            <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => setShowModal(true)}>
+                            <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => setShowModal({ show: true, item })}>
                               <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
                                 <IoClose />
                               </IconContext.Provider>
                             </span>
                           </div>
-                          {
-                            showModal && (
-                              <InstitutionPopUp saveLabel="Delete" saveAction={() => removeStaffMember(item)} closeAction={() => setShowModal(false)} message={"Are you sure you want to remove this staff member?"} />
-                            )}
                         </div>)}
                     </div>
+                    {
+                      showModal.show && (
+                        <InstitutionPopUp saveLabel="Delete" saveAction={() => removeStaffMember(showModal.item)} closeAction={() => setShowModal({ show: false, item: {} })} message={`Are you sure you want to delete ${showModal.item?.name || 'user'} from the staff?`} />
+                      )}
                   </Fragment>
                 ) : (
                     <div className="text-center p-16">
