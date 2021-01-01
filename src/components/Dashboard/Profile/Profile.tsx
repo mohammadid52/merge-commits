@@ -87,26 +87,8 @@ const Profile: React.FC = () => {
     { title: 'Profile', url: '/dashboard/profile', last: true },
   ]
 
-  const initials = (firstName: string, lastName: string) => {
-    let firstInitial = firstName.charAt(0).toUpperCase()
-    let lastInitial = lastName.charAt(0).toUpperCase()
-    return firstInitial + lastInitial;
-  }
-
-  const stringToHslColor = (str: string) => {
-    let hash = 0;
-    let i;
-    for (i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let h = hash % 360;
-    return 'hsl(' + h + ', 70%, 72%)';
-  }
-
   // TODO: 
   // Set type for file instead of any
-
   const uploadImageToS3 = async (file: any, id: string, type: string) => {
     // Upload file to s3 bucket
 
@@ -285,13 +267,13 @@ const Profile: React.FC = () => {
           </div>
           <div className={`w-full white_back p-8 mb-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
             <div className="h-9/10 flex flex-col md:flex-row">
-              <div className="w-auto p-4 flex flex-shrink-0 flex-col text-center items-center">
+              <div className="w-2/10 p-4 flex flex-col text-center items-center">
                 <div className='relative' >
                   {person.image ?
                     (
                       <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
                         {!imageLoading ? <img
-                          className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border border-gray-400 shadow-elem-light`}
+                          className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
                           src={imageUrl}
                         /> :
                           <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-lightI">

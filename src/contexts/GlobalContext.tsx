@@ -44,6 +44,7 @@ export const pageThemes = {
     },
     btn: {
       indigo: 'bg-indigo-500 text-white hover:bg-indigo-600 active:bg-indigo-600 focus:bg-indigo-600',
+      cancel: 'bg-white text-gray-600 border border-gray-600 hover:bg-gray-200'
     },
     text: {
       default: 'text-black80',
@@ -100,6 +101,7 @@ export const pageThemes = {
     },
     btn: {
       indigo: 'bg-indigo-500 text-white hover:bg-indigo-600 active:bg-indigo-600 focus:bg-indigo-600',
+      cancel: 'bg-white text-gray-600 border border-gray-600 hover:bg-gray-200'
     },
     text: {
       default: 'text-black80',

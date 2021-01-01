@@ -15,8 +15,11 @@ const ChangePassword = () => {
     const [passToggle, setPassToggle] = useState(false);
     const [passMatchToggle, setPassMatchToggle] = useState(false);
     const history = useHistory();
+
     const { dashboardProfileDict } = useDictionary();
     const { userLanguage } = useContext(GlobalContext);
+    const dictionary = dashboardProfileDict[userLanguage]
+
     const [ message, setMessage ] = useState<{show: boolean, type: string, message: string,}>({
         show: false,
         type: '',
@@ -85,7 +88,7 @@ const ChangePassword = () => {
             return {
                 show: true,
                 type: 'error',
-                message: dashboardProfileDict[userLanguage]['CHANGE_PASSWORD']["ERRORS"]['NO_OLD_PASS'],
+                message: dictionary['CHANGE_PASSWORD']["ERRORS"]['NO_OLD_PASS'],
             }
             
         } 
@@ -93,21 +96,21 @@ const ChangePassword = () => {
             return {
                 show: true,
                 type: 'error',
-                message: dashboardProfileDict[userLanguage]['CHANGE_PASSWORD']["ERRORS"]['NO_NEW_PASS'],
+                message: dictionary['CHANGE_PASSWORD']["ERRORS"]['NO_NEW_PASS'],
             }
         } 
         if (!input.match) {
             return {
                 show: true,
                 type: 'error',
-                message: dashboardProfileDict[userLanguage]['CHANGE_PASSWORD']["ERRORS"]['NO_CONFIRM_PASS'],
+                message: dictionary['CHANGE_PASSWORD']["ERRORS"]['NO_CONFIRM_PASS'],
             }
         } 
         if ( input.newPassword !== input.match ) {
             return {
                 show: true,
                 type: 'error',
-                message: dashboardProfileDict[userLanguage]['CHANGE_PASSWORD']["ERRORS"]['NOT_MATCH'],
+                message: dictionary['CHANGE_PASSWORD']["ERRORS"]['NOT_MATCH'],
             }
         } 
         validated = true;
@@ -153,12 +156,12 @@ const ChangePassword = () => {
             
                 <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    {dashboardProfileDict[userLanguage]['CHANGE_PASSWORD']['TITLE']}
+                    {dictionary['CHANGE_PASSWORD']['TITLE']}
                     </h3>
                 </div>
 
                 <div className="h-full px-4 py-5 sm:px-6">
-                    <div className="text-center text-sm">{dashboardProfileDict[userLanguage]['CHANGE_PASSWORD']['INFO']}</div>
+                    <div className="text-center text-sm">{dictionary['CHANGE_PASSWORD']['INFO']}</div>
                     <div className="w-full h-auto flex flex-col justify-between items-center my-4">
 
                         <div className="w-3.27/10 m-1 relative">
@@ -180,8 +183,8 @@ const ChangePassword = () => {
                                     <FaKey />
                                 </IconContext.Provider>
                             </div>
-                            <label className="hidden" htmlFor="oldPassword">{dashboardProfileDict[userLanguage]['CHANGE_PASSWORD']['OLD_PASS']}</label>
-                            <input className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder={dashboardProfileDict[userLanguage]['CHANGE_PASSWORD']['OLD_PASS']} type={oldPassToggle ? 'text' : 'password'} id="oldPassword" name="password" defaultValue={input.oldPassword} onChange={handleChange} onKeyDown={handleEnter}/>
+                            <label className="hidden" htmlFor="oldPassword">{dictionary['CHANGE_PASSWORD']['OLD_PASS']}</label>
+                            <input className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder={dictionary['CHANGE_PASSWORD']['OLD_PASS']} type={oldPassToggle ? 'text' : 'password'} id="oldPassword" name="password" defaultValue={input.oldPassword} onChange={handleChange} onKeyDown={handleEnter}/>
                         </div>
                         </div>
 
@@ -204,8 +207,8 @@ const ChangePassword = () => {
                                     <FaKey />
                                 </IconContext.Provider>
                             </div>
-                            <label className="hidden" htmlFor="password">{dashboardProfileDict[userLanguage]['CHANGE_PASSWORD']['NEW_PASS']}</label>
-                            <input className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder={dashboardProfileDict[userLanguage]['CHANGE_PASSWORD']['NEW_PASS']} type={passToggle ? 'text' : 'password'}  id="newPassword" name="password" defaultValue={input.newPassword} onChange={handleChange}/>
+                            <label className="hidden" htmlFor="password">{dictionary['CHANGE_PASSWORD']['NEW_PASS']}</label>
+                            <input className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder={dictionary['CHANGE_PASSWORD']['NEW_PASS']} type={passToggle ? 'text' : 'password'}  id="newPassword" name="password" defaultValue={input.newPassword} onChange={handleChange}/>
                         </div>
                         </div>
 
@@ -228,8 +231,8 @@ const ChangePassword = () => {
                                         <FaKey />
                                     </IconContext.Provider>
                                 </div>
-                                <label className="hidden" htmlFor="match">{dashboardProfileDict[userLanguage]['CHANGE_PASSWORD']['CONFIRM_PASS']}</label>
-                                <input className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder={dashboardProfileDict[userLanguage]['CHANGE_PASSWORD']['CONFIRM_PASS']} type={passMatchToggle ? 'text' : 'password'}  id="match" name="match" defaultValue={input.match} onChange={handleChange}/>
+                                <label className="hidden" htmlFor="match">{dictionary['CHANGE_PASSWORD']['CONFIRM_PASS']}</label>
+                                <input className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5" placeholder={dictionary['CHANGE_PASSWORD']['CONFIRM_PASS']} type={passMatchToggle ? 'text' : 'password'}  id="match" name="match" defaultValue={input.match} onChange={handleChange}/>
                             </div>
                         </div>
                     </div>
@@ -237,7 +240,7 @@ const ChangePassword = () => {
                     
                         
                     <div className="w-auto text-sm text-center text-gray-600 ">
-                        <NavLink to="/forgot-password" className={`hover:text-blue-500`}>{dashboardProfileDict[userLanguage]['CHANGE_PASSWORD']['FORGOT_PASS_LINK']}</NavLink>
+                        <NavLink to="/forgot-password" className={`hover:text-blue-500`}>{dictionary['CHANGE_PASSWORD']['FORGOT_PASS_LINK']}</NavLink>
                     </div>
                         
                     
@@ -264,13 +267,13 @@ const ChangePassword = () => {
                 <span className="inline-flex rounded-md shadow-sm">
                     <NavLink to={`/dashboard/profile`}>
                     <button type="button" className="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
-                    {dashboardProfileDict[userLanguage]['CHANGE_PASSWORD']['CANCEL']}
+                    {dictionary['CHANGE_PASSWORD']['CANCEL']}
                     </button>
                     </NavLink>
                 </span>
                 <div className="ml-3 inline-flex rounded-md shadow-5">
                     <button onClick={handleSubmit} className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700">
-                    {dashboardProfileDict[userLanguage]['CHANGE_PASSWORD']['SAVE']}
+                    {dictionary['CHANGE_PASSWORD']['SAVE']}
                     </button>
                 </div>
                 </div>

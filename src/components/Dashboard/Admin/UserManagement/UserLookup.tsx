@@ -217,12 +217,14 @@ const UserLookup = () => {
 	{
 		return (
 			<div className={`w-full h-full mt-4`}>
+
+				{/* Header Section */}
 				<BreadCrums items={breadCrumsList} />
 				<div className="flex justify-between">
 					<SectionTitle title="USER MANAGEMENT" subtitle="People's List" />
 					<div className="flex justify-end py-4 mb-4">
 						<SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchUserFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
-						<Selector list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none border-r-0" arrowHidden={true} />
+						<Selector placeholder="Sort By" list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none border-r-0" arrowHidden={true} />
 						<button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400 border rounded border-l-0 rounded-l-none ${theme.outlineNone} `} onClick={toggleSortDimention}>
 							<IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
 								{sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
@@ -231,6 +233,8 @@ const UserLookup = () => {
 						<Buttons label="Add New Person" onClick={handleLink} btnClass="mr-4 w-full" Icon={AiOutlineUsergroupAdd} />
 					</div>
 				</div>
+
+				{/* List / Table */}
 				<div className="flex flex-col">
 					<div className="-my-2 py-2">
 						<div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b border-gray-200">
@@ -267,6 +271,8 @@ const UserLookup = () => {
 											</div>)
 								}
 							</div>
+
+							{/* Pagination And Counter */}
 							<div className="flex justify-center my-8">
 								{!searchInput.isActive &&
 									(
@@ -286,6 +292,7 @@ const UserLookup = () => {
 						</div>
 					</div>
 				</div>
+
 			</div>
 		)
 	}

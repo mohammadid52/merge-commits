@@ -245,7 +245,7 @@ const sideBarLinksDict: any = {
         REGISTRATION: 'Registration',
         INSTITUTIONS: 'Institution',
         PEOPLE: 'People',
-        LESSION_PLANNER: 'Lession Planner',
+        LESSON_PLANNER: 'Lesson Planner',
         CLASSROOM: 'Classroom'
     },
     'ES': {
@@ -262,6 +262,20 @@ const appDict: any = {
     },
     'ES': {
         LOG_OUT: 'Cerrar sesión'
+    }
+}
+
+const staffBuilderDict: any = {
+    'EN': {
+        TITLE: 'STAFF MEMBERS',
+        ADD_PLACEHOLDER: 'Add new',
+        ADD_BUTTON: 'ADD'
+
+    },
+    'ES': {
+        TITLE: 'MIEMBROS DEL PERSONAL',
+        ADD_PLACEHOLDER: 'Añadir nuevo',
+        ADD_BUTTON: 'Añadir'
     }
 }
 
@@ -287,7 +301,10 @@ function useDictionary() {
     }
 
     return {
-        appDict, sideBarLinksDict, dashboardProfileDict 
+        appDict,
+        sideBarLinksDict,
+        dashboardProfileDict,
+        staffBuilderDict
     }
 }
 

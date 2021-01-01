@@ -89,3 +89,130 @@ export const keywordCapitilizer = (str: string) => {
   let capitalizedStr = str.replace(/^\w/, (char) => char.toUpperCase());
   return capitalizedStr;
 };
+
+
+/**
+ * Function used in multiple places to
+ * set array as a filter object while fetching data.
+ * @param arr
+ * @param key
+ */
+export const getFilterORArray = (arr: any, key: string) => {
+  let newArray = arr.map((item: any) => {
+    return {
+      [key]: {
+        eq: item,
+      },
+    };
+  });
+  return newArray;
+};
+
+/**
+ * Below function used in multiple places to
+ * Show initials of name and stringToHsl background colors.
+ * @param firstName
+ * @param lastName
+ * ---
+ * @param str
+ */
+export const initials = (firstName: string, lastName: string) => {
+  let firstInitial = firstName.charAt(0).toUpperCase();
+  let lastInitial = lastName.charAt(0).toUpperCase();
+  return firstInitial + lastInitial;
+};
+
+export const getInitialsFromString = (str: string) => {
+  /**
+   * This will retun first two initials from string of multiple words
+   * or first two characters of single word.
+   */
+  const splitedWords = str.split(' ');
+  if (splitedWords.length > 1) {
+    return splitedWords;
+  } else {
+    return str.split('');
+  }
+};
+
+export const stringToHslColor = (str: string) => {
+  let hash = 0;
+  let i;
+  for (i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let h = hash % 360;
+  return 'hsl(' + h + ', 70%, 72%)';
+};
+
+/**
+ * Function used for getting hostname from web url
+ * @param url
+ */
+
+export const getHostNameFromUrl = (url: string) => {
+  try {
+    const webUrl = new URL(url);
+    if (webUrl) {
+      return webUrl.hostname;
+    }
+    return url;
+  } catch {
+    return url;
+  }
+};
+
+/**
+ * Function used to format phone number in (xxx)xxx-xxxx format
+ * @param str
+ */
+
+export const formatPhoneNumber = (str: string) => {
+  //Filter only numbers from the input
+  let cleaned = ('' + str).replace(/\D/g, '');
+
+  //Check if the input is of correct length
+  let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+
+  if (match) {
+    return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+  }
+
+  return str;
+};
+
+
+/**
+ * Function used in multiple places to
+ * set array as a filter object while fetching data.
+ * @param arr
+ * @param key
+ */
+export const createFilterToFetchSpecificItemsOnly = (arr: any, key: string) => {
+  let newArray = arr.map((item: any) => {
+    return {
+      [key]: {
+        eq: item,
+      },
+    };
+  });
+  return { or: newArray };
+};
+
+/**
+ * Function used in multiple places to
+ * set array as a filter object while fetching data.
+ * @param arr
+ * @param key
+ */
+export const createFilterToFetchAllItemsExcept = (arr: any, key: string) => {
+  let newArray = arr.map((item: any) => {
+    return {
+      [key]: {
+        ne: item,
+      },
+    };
+  });
+  return { and: newArray };
+};
