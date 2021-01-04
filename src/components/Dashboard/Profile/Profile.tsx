@@ -241,8 +241,11 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     async function getUrl() {
-      const imageUrl: any = await getImageFromS3(person.image);
-      setImageUrl(imageUrl);
+      if (person?.image) {
+        const imageUrl: any = await getImageFromS3(person.image);
+        console.log('imageUrl', imageUrl)
+        setImageUrl(imageUrl);
+      }
     }
     getUrl();
   }, [person.image])
