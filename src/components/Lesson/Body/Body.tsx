@@ -1,6 +1,7 @@
-import React, { useContext, useEffect, Suspense, lazy } from 'react';
+import React, { lazy, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../contexts/LessonContext';
-import { Switch, Route, useLocation, useRouteMatch, Redirect } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
+
 const Intro = lazy(() => import('../LessonComponents/Intro/Intro'));
 const Story = lazy(() => import('../LessonComponents/StoryPage/Story'));
 const Lyrics = lazy(() => import('../LessonComponents/LyricsPage/Lyrics'));
@@ -62,17 +63,17 @@ const Body = () => {
     return pageSwitch(pageMatch.type);
   };
 
-  const urlParser = (str: string) => {
-    let temp = '';
-    let arr = Array.from(str);
-    arr.forEach((char) => {
-      if (char !== '/') {
-        temp = temp + char;
-      }
-      return temp;
-    });
-    return temp;
-  };
+  // const urlParser = (str: string) => {
+  //   let temp = '';
+  //   let arr = Array.from(str);
+  //   arr.forEach((char) => {
+  //     if (char !== '/') {
+  //       temp = temp + char;
+  //     }
+  //     return temp;
+  //   });
+  //   return temp;
+  // };
 
   useEffect(() => {
     if (state.currentPage < state.pages.length - 1) {

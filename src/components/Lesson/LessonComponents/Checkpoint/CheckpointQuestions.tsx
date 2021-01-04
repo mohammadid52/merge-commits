@@ -1,12 +1,11 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import queryString from 'query-string';
-// import { useCookies } from 'react-cookie';
 import SelectOneQuestions from './Questions/SelectOneQuestions';
 import TextQuestions from './Questions/TextQuestions';
 
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { ImCheckboxUnchecked, ImCheckboxChecked } from 'react-icons/im';
+import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im';
 
 const setInitialState = (array: Array<any>) => {
   let tempObj: any = {};
@@ -15,12 +14,12 @@ const setInitialState = (array: Array<any>) => {
       item.question.type === 'text'
         ? ''
         : item.question.type === 'input'
-          ? ''
-          : item.question.type === 'selectOne'
-            ? null
-            : item.question.type === 'selectMany'
-              ? []
-              : null;
+        ? ''
+        : item.question.type === 'selectOne'
+          ? null
+          : item.question.type === 'selectMany'
+            ? []
+            : null;
   });
   return tempObj;
 };
@@ -32,29 +31,20 @@ interface CheckpointQuestionsProps {
 const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const { handleSetTitle } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
-  // const [cookies, setCookie] = useCookies(['questionData']);
   const queryParams = queryString.parse(location.search);
-  // console.log('params', queryParams);
   const checkpoints = state.data.lesson.checkpoints.items;
-  // console.log('checkpt array', checkpoints);
   const checkpoint = checkpoints
     .filter((item: any) => {
       return item.checkpoint.id == queryParams.id;
     })
     .pop();
-  // console.log(checkpoint, 'checkpoint');
-  // const checkpoint = state.data.lesson.checkpoints.items[0].checkpoint;
   const [status, setStatus] = useState('');
   const [input, setInput] = useState<any>();
 
+  /**
+   * ON CHECKPOINT MOUNT
+   */
   useEffect(() => {
-    // if ( cookies.questionData ) {
-    //     dispatch({
-    //         type: 'SET_QUESTION_DATA',
-    //         payload: cookies.questionData
-    //     })
-    // }
-
     let questionDataKeys = [];
 
     if (state.questionData[checkpoint.checkpoint.id]) {
@@ -62,36 +52,23 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     }
 
     if (!input && questionDataKeys.length > 0) {
-      // console.log('oldu', state.questionData);
-
       setInput(() => {
         return state.questionData[checkpoint.checkpoint.id];
       });
     }
 
     if (!input && questionDataKeys.length <= 0) {
-      // console.log('bu da oldu');
-
       setInput(() => {
         return setInitialState(checkpoint.checkpoint.questions.items);
       });
     }
 
     setStatus('loaded');
-    // if ( cookies.questionData ) {
-    //     dispatch({
-    //         type: 'SET_QUESTION_DATA',
-    //         payload: cookies.questionData
-    //     })
-    // }
-
-    // if (!input && !state.questionData) {
-    //   setInput(() => {
-    //     return setInitialState(checkpoint.checkpoint.questions.items);
-    //   });
-    // }
   }, []);
 
+  /**
+   * ON CHECKPOINT/ASSESSMENT CHANGE
+   */
   useEffect(() => {
     if (checkpoint.checkpoint.title) {
       handleSetTitle(checkpoint.checkpoint.title);
@@ -113,12 +90,12 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                   item.question.type === 'text'
                     ? ''
                     : item.question.type === 'input'
-                      ? ''
-                      : item.question.type === 'selectOne'
-                        ? null
-                        : item.question.type === 'selectMany'
-                          ? []
-                          : null,
+                    ? ''
+                    : item.question.type === 'selectOne'
+                      ? null
+                      : item.question.type === 'selectMany'
+                        ? []
+                        : null,
               };
             });
           }
@@ -127,10 +104,9 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     }
   }, [checkpoint]);
 
-  useEffect(() => {
-    // console.log('input', input);
-    console.log('qData', state.questionData);
-  }, [state.questionData]);
+  // useEffect(() => {
+  //   console.log('qData', state.questionData);
+  // }, [state.questionData]);
 
   const handleSelect = (e: any) => {
     const questionID = e.target.getAttribute('data-key');
@@ -156,13 +132,9 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       ...input,
       [questionID]: array,
     });
-
-    // console.log(selected, 'selected')
   };
 
   useEffect(() => {
-    // console.log('input', input);
-
     if (input && state.questionData[checkpoint.checkpoint.id] !== input) {
       let dispatchInput: any = {};
       checkpoint.checkpoint.questions.items.forEach(
@@ -185,10 +157,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
         },
       });
     }
-
-    // if (input && cookies.questionData !== input) {
-    //   setCookie('questionData', input);
-    // }
   }, [input]);
 
   const handleInputChange = (e: any) => {
@@ -202,7 +170,12 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     question: {
       id: string;
       label: string;
-      options: Array<{ label: string; icon: string; color: string; text: string }>;
+      options: Array<{
+        label: string;
+        icon: string;
+        color: string;
+        text: string
+      }>;
       question: string;
       type: string;
     },
@@ -213,7 +186,10 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
         return (
           <div key={key} className={'flex flex-col mb-4'}>
             <label className={theme.elem.text} htmlFor={question.label}>
-            <p><b>{key + 1}. </b>{question.question}</p>
+              <p>
+                <b>{key + 1}. </b>
+                {question.question}
+              </p>
             </label>
             <input
               id={question.id}
@@ -228,7 +204,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       case 'text':
         return (
           <TextQuestions
-          number={key}
+            number={key}
             keyProp={key}
             question={question}
             value={input[question.id]}
@@ -239,7 +215,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       case 'selectOne':
         return (
           <SelectOneQuestions
-          number={key}
+            number={key}
             keyProp={key}
             question={question}
             value={input[question.id]}
@@ -250,61 +226,44 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       case 'selectMany':
         return (
           <div className={`w-full rounded-xl`}>
-            <div className={theme.elem.text}><p><b>{key + 1}. </b>{question.question}</p></div>
+            <div className={theme.elem.text}>
+              <p>
+                <b>{key + 1}. </b>
+                {question.question}
+              </p>
+            </div>
             <div id={question.label} className={'flex'}>
               {question.options.map(
-                (
-                  option: { label: string; icon: string; color: string; text: string },
-                  key: any
-                ) => (
-                    <div
-                      key={key}
-                      className={`w-3/4 flex justify-center items-center mb-2`}
-                      onClick={handleSelect}
-                      data-key={question.id}>
+                (option: { label: string; icon: string; color: string; text: string }, key: any) => (
+                  <div
+                    key={key}
+                    className={`w-3/4 flex justify-center items-center mb-2`}
+                    onClick={handleSelect}
+                    data-key={question.id}>
+                    {input[question.id].indexOf(`${option.label}`) >= 0 ? (
+                      <div
+                        id={`${option.label}`}
+                        className=''ursor-pointer w-36 h-12 p-2 text-base rounded flex justify-start items-center''                        style={{ backgroundColor: `${option.color}` }}
+                        data-key={question.id}>
+                        <IconContext.Provider value={{ color: '#EDF2F7', size: '1.25rem', className: 'w-auto mr-2' }}>
+                          <ImCheckboxChecked style={{ pointerEvents: 'none' }} />
+                        </IconContext.Provider>
 
-                      {input[question.id].indexOf(`${option.label}`) >= 0 ? (
-                        <div
-                          id={`${option.label}`}
-                          className='cursor-pointer w-36 h-12 p-2 text-base rounded flex justify-start items-center'
-                          style={{ backgroundColor: `${option.color}` }}
-                          data-key={question.id}>
-
-                          <IconContext.Provider  value={{ color: '#EDF2F7', size: '1.25rem', className: 'w-auto mr-2'}}>
-                            
-                              <ImCheckboxChecked style={{ pointerEvents: 'none' }} />
-                          
-                          </IconContext.Provider>
-
-                          {/* {option.icon ? option.icon : ''} */}
-                          {option.text}
-
-                        </div>
-                      ) : (
-                          <div
-                            id={`${option.label}`}
-                            className='bg-gray-400 text-black50 cursor-pointer w-36 h-12 p-2 text-base rounded flex justify-start items-center'
-                            data-key={question.id}>
-
-                            <IconContext.Provider value={{ color: '#000', size: '1.25rem', className: 'w-auto mr-2' }}>
-                             
-                                <ImCheckboxUnchecked style={{ pointerEvents: 'none' }} />
-                              
-                            </IconContext.Provider>
-
-                            {/* {option.icon ? option.icon : ''} */}
-                            {option.text}
-
-                          </div>
-                        )}
-
-                      {/* <div id={`${option.label}`} className='mx-4'>
                         {option.text}
-                      </div> */}
+                      </div>
+                    ) : (
+                      <div
+                        id={`${option.label}`}
+                        className=''g-gray-400 text-black50 cursor-pointer w-36 h-12 p-2 text-base rounded flex justify-start items-center''                        data-key={question.id}>
+                        <IconContext.Provider value={{ color: '#000', size: '1.25rem', className: 'w-auto mr-2' }}>
+                          <ImCheckboxUnchecked style={{ pointerEvents: 'none' }} />
+                        </IconContext.Provider>
 
-
-                    </div>
-                  )
+                        {option.text}
+                      </div>
+                    )}
+                  </div>
+                ),
               )}
             </div>
           </div>
@@ -319,16 +278,12 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   return (
     <div className={theme.section}>
       {checkpoint.checkpoint.subtitle ? (
-        <h3 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
-          {checkpoint.checkpoint.subtitle}
-        </h3>
+        <h3 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>{checkpoint.checkpoint.subtitle}</h3>
       ) : (
-          ''
-        )}
+        ''
+      )}
 
-      <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
-        {checkpoint.checkpoint.instructions}
-      </div>
+      <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>{checkpoint.checkpoint.instructions}</div>
 
       <div className={`${theme.elem.text}`}>
         <div className='w-full h-full flex flex-col flex-wrap justify-around items-center'>

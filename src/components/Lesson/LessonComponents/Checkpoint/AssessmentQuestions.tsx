@@ -1,20 +1,19 @@
-import React, { useState, useContext, useEffect } from "react";
-import { LessonContext } from "../../../../contexts/LessonContext";
-import queryString from "query-string";
+import React, { useContext, useEffect, useState } from 'react';
+import { LessonContext } from '../../../../contexts/LessonContext';
 // import { useCookies } from "react-cookie";
-import SelectOneQuestions from "./Questions/SelectOneQuestions";
-import TextQuestions from "./Questions/TextQuestions";
-import Pagination from "../../../General/Pagination";
+import SelectOneQuestions from './Questions/SelectOneQuestions';
+import TextQuestions from './Questions/TextQuestions';
+import Pagination from '../../../General/Pagination';
 
 const setInitialState = (array: Array<any>) => {
   let tempObj: any = {};
   array.forEach(
     (item: { question: { id: string; type: string; label: string } }) => {
       tempObj[item.question.id] =
-        item.question.type === "text"
-          ? ""
-          : item.question.type === "input"
-          ? ""
+        item.question.type === 'text'
+          ? ''
+          : item.question.type === 'input'
+          ? ''
           : item.question.type === "selectOne"
           ? null
           : item.question.type === "selectMany"
@@ -34,8 +33,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const { state, theme, dispatch } = useContext(LessonContext);
   const checkpoints = state.data.lesson.assessment.checkpoints.items;
 
-  // console.log(state, "state");
-  // console.log(checkpoints, "checkpoints");
 
   const [status, setStatus] = useState("");
   const [input, setInput] = useState<any>();
@@ -51,16 +48,19 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const indexOfLastPost = currentPage * dataPerPage;
   const indexOfFirstPost = indexOfLastPost - dataPerPage;
   const currentData = data.slice(indexOfFirstPost, indexOfLastPost);
-  const currentId = data.slice(indexOfFirstPost, indexOfLastPost)
+  const currentId = data.slice(indexOfFirstPost, indexOfLastPost);
 
   const checkpoint = currentId.pop();
-  // console.log(checkpoint, 'checkpoint')
+
+  /**
+   * ON ASSESSMENT MOUNT
+   */
   useEffect(() => {
     let questionDataKeys = [];
 
     if (state.questionData[checkpoint.checkpoint.id]) {
       questionDataKeys = Object.keys(
-        state.questionData[checkpoint.checkpoint.id]
+        state.questionData[checkpoint.checkpoint.id],
       );
     }
 
@@ -76,9 +76,12 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       });
     }
 
-    setStatus("loaded");
+    setStatus('loaded');
   }, []);
 
+  /**
+   * ON CHECKPOINT/ASSESSMENT CHANGE
+   */
   useEffect(() => {
     if (checkpoint.checkpoint.title) {
       handleSetTitle(checkpoint.checkpoint.title);
@@ -102,10 +105,10 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                     : item.question.type === "input"
                     ? ""
                     : item.question.type === "selectOne"
-                    ? null
-                    : item.question.type === "selectMany"
-                    ? []
-                    : null
+                      ? null
+                      : item.question.type === "selectMany"
+                        ? []
+                        : null
               };
             });
           }

@@ -6,16 +6,8 @@ import * as customQueries from '../../../customGraphql/customQueries';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import Today from './TodayLesson';
 import Upcoming from './Upcoming';
-import Completed from './Completed';
-import Dashboard from './Dashboard';
-import Loading from '../../Lesson/Loading/ComponentLoading';
-import SurveyCard from './SurveyCard';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
-import queryString from 'query-string';
-
-import useDeviceDetect from '../../../customHooks/deviceDetect';
-
-import TestForm from '../TestPages/TestForm';
+import SurveyCard from './SurveyCard';
 
 interface Artist {
   id: string;
@@ -49,9 +41,7 @@ const Classroom: React.FC = () => {
 
   async function getCourse(id: string) {
     try {
-      const course: any = await API.graphql(
-        graphqlOperation(customQueries.getCourse, { id: id })
-      );
+      const course: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: id }));
       const lessonsInfo = course.data.getCourse.classrooms.items;
       const nextLesson = lessonsInfo.lesson;
       setCurriculum(nextLesson);
@@ -62,7 +52,6 @@ const Classroom: React.FC = () => {
     }
   }
 
-
   const getSurvey = async () => {
     try {
       const surveyData: any = await API.graphql(
@@ -70,12 +59,12 @@ const Classroom: React.FC = () => {
       );
       // console.log('survey', surveyData)
       await setSurvey(() => {
-        // let surveyStatus: boolean = state.user.onBoardSurvey ? !state.user.onBoardSurvey : true;,
-        // console.log(surveyStatus, 'status', state);
+        let surveyStatus: boolean = state.user.onBoardSurvey ? !state.user.onBoardSurvey : true;
+        console.log(surveyStatus, 'status', state);
 
         return {
           ...survey,
-          // display: surveyStatus,
+          display: surveyStatus,
           data: surveyData.data.getClassroom,
         };
       });
@@ -86,11 +75,11 @@ const Classroom: React.FC = () => {
   };
 
   /**
-   * 
-   * 
+   *
+   *
    * AUTO-PUSH TO SPECIFIC LESSON
-   * 
-   * 
+   *
+   *
    */
 
   useEffect(() => {
@@ -100,11 +89,11 @@ const Classroom: React.FC = () => {
   }, []);
 
   /**
-   * 
-   * 
+   *
+   *
    * ssSSSssHOW SURVEY IF IT HAS NOT BEEN COMPLETED
-   * 
-   * 
+   *
+   *
    */
 
   useEffect(() => {
@@ -112,7 +101,23 @@ const Classroom: React.FC = () => {
       getSurvey();
     }
 
-    if (true) {
+    // if (true) {
+    //   setSurvey(() => {
+    //     return {
+    //       ...survey,
+    //       display: false,
+    //     };
+    //   });
+    // }
+
+    if (!state.user.onBoardSurvey) {
+      setSurvey(() => {
+        return {
+          ...survey,
+          display: true,
+        };
+      });
+    } else {
       setSurvey(() => {
         return {
           ...survey,
@@ -120,16 +125,6 @@ const Classroom: React.FC = () => {
         };
       });
     }
-
-    // if (!state.user.onBoardSurvey) {
-    //   setSurvey(() => {
-    //     return {
-    //       ...survey,
-    //       display: true,
-    //     };
-    //   });
-    // }
-
   }, [state]);
 
   const handleLink = () => {
@@ -143,16 +138,14 @@ const Classroom: React.FC = () => {
     return (
       <div className='transform translate-y-12'>
         {survey.display ? (
-          <div className={` bg-opacity-10`} >
+          <div className={` bg-opacity-10`}>
             <div className={`${theme.section} p-4`}>
-              <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>
-                Welcome to Iconoclast Artists
-              </h2>
+              <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Welcome to Iconoclast Artists</h2>
             </div>
           </div>
         ) : (
-            ''
-          )}
+          ''
+        )}
 
         {survey.display ? (
           <div>
@@ -163,14 +156,11 @@ const Classroom: React.FC = () => {
         ) : null}
 
         {/* LETS GET THE TEST FORM HERE */}
-          {/* <TestForm/> */}
-
+        {/* <TestForm/> */}
 
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} p-4 text-xl m-auto`}>
-            <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>
-              Today's Lesson
-            </h2>
+            <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Today's Lesson</h2>
 
             <Today link={'/lesson?id=1'} curriculums={listCurriculum} />
           </div>
@@ -178,9 +168,7 @@ const Classroom: React.FC = () => {
 
         <div className={`bg-grayscale-light bg-opacity-10`}>
           <div className={`${theme.section} p-4 text-xl m-auto`}>
-            <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>
-              Upcoming Lessons
-            </h2>
+            <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Upcoming Lessons</h2>
 
             <Upcoming curriculum={listCurriculum} />
             {/* <Dashboard /> */}
