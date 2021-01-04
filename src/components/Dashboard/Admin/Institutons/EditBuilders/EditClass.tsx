@@ -21,8 +21,9 @@ import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as queries from '../../../../../graphql/queries';
 import * as mutations from '../../../../../graphql/mutations';
+import Selector from '../../../../Atoms/Form/Selector';
 
-interface EditClassProps {}
+interface EditClassProps { }
 
 const EditClass = (props: EditClassProps) => {
   const { } = props;
@@ -37,8 +38,9 @@ const EditClass = (props: EditClassProps) => {
   const [allStudentList, setAllStudentList] = useState([]);
   const [prevStdList, setPrevStdList] = useState([]);
   const [previousName, setPreviousName] = useState('')
-  const [showModal, setShowModal] = useState<{ show: boolean; item: any; }>({show: false, item: {}})
+  const [showModal, setShowModal] = useState<{ show: boolean; item: any; }>({ show: false, item: {} })
   const [messages, setMessages] = useState({ show: false, message: '', isError: false });
+  const [statusEdit, setStatusEdit] = useState('');
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
@@ -48,6 +50,12 @@ const EditClass = (props: EditClassProps) => {
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Edit Class', url: `/dashboard/class-edit?id=${params.get('id')}`, last: true }
   ];
+
+  const statusList = [
+    { id: 1, name: 'Active', value: 'Active' },
+    { id: 2, name: 'Inactive', value: 'Inactive' },
+    { id: 3, name: 'Dropped', value: 'Dropped' }
+  ]
 
   const onChange = (e: any) => {
     setClassData({
@@ -116,10 +124,15 @@ const EditClass = (props: EditClassProps) => {
   }
 
   const removeStudentFromList = (id: string) => {
-    setShowModal({ show: false, item: {}});
+    setShowModal({ show: false, item: {} });
     const newList = selectedStudents.filter(item => item.id !== id);
     setSelectedStudent(newList)
     removeStudentFromClass(id);
+  }
+
+  const updateClassStdStatus = () => {
+    // Update student status to db here.
+    setStatusEdit('')
   }
 
   const getStudentsList = async () => {
@@ -388,10 +401,16 @@ const EditClass = (props: EditClassProps) => {
         {selectedStudents.length > 0 && (
           <Fragment>
             <div className="mb-4 mt-8 w-6/10 m-auto px-2 max-h-88 overflow-y-scroll">
+              <div className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200 text-sm text-gray-600">
+                <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">No.</div>
+                <div className="flex w-5/10 items-center px-4 py-2">Student Name </div>
+                <div className="w-3/10">Status</div>
+                <div className="w-1/10">Actions</div>
+              </div>
               {selectedStudents.map((item, index) =>
                 <div key={item.id} className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
-                  <div className="flex w-8/10 items-center px-4 py-2">
+                  <div className="flex w-5/10 items-center px-4 py-2">
                     <div className="flex-shrink-0 h-10 w-10 flex items-center">
                       {item.avatar ?
                         (<img
@@ -403,19 +422,36 @@ const EditClass = (props: EditClassProps) => {
                     </div>
                     <div className="ml-4">{item.name}</div>
                   </div>
+                  {/*  */}
+                  {statusEdit === item.id ?
+                    (<div className="w-3/10 mr-6">
+                      <Selector selectedItem='Active' placeholder="Select Status" list={statusList} onChange={} />
+                    </div>) :
+                    <div className="w-3/10">
+                      Active   {/* Show students status here */}
+                    </div>}
                   <div className="w-1/10">
-                    <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => setShowModal({show: true, item})}>
-                      <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
+                    {/* <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
                         <IoClose />
-                      </IconContext.Provider>
+                      </IconContext.Provider> */}
+                    {statusEdit === item.id ?
+                      <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={updateClassStdStatus}>
+                        Save
+                      </span>
+                      :
+                      <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit(item.id)}>
+                        Edit
                     </span>
+                    }
                   </div>
                 </div>)}
             </div>
-            {
+
+            {/* {
               showModal.show && (
                 <InstitutionPopUp saveLabel="Delete" saveAction={() => removeStudentFromList(showModal.item.id)} closeAction={() => setShowModal({ show: false, item: {} })} message={`Are you sure you want to remove ${showModal.item?.name || 'student'} from class?`} />
-              )}
+              )} */}
+
           </Fragment>
         )}
         {messages.show ? (<div className="py-2 m-auto text-center">
@@ -426,7 +462,7 @@ const EditClass = (props: EditClassProps) => {
           <Buttons btnClass="my-8 py-3 px-12 text-sm ml-4" label="Save" onClick={saveClassDetails} />
         </div>
       </PageWrapper>
-    </div>
+    </div >
   )
 }
 
