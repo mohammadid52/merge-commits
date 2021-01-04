@@ -36,7 +36,7 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     className={`${theme.text.default} stroke-current inline-block h-4 w-4`}>
-                    <polyline points="9 18 15 12 9 6"></polyline>
+                    <polyline points="9 18 15 12 9 6"></polyline> 
                   </svg>
                 )}
               </li>
