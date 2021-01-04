@@ -136,7 +136,7 @@ const Classroom: React.FC = () => {
   }
   {
     return (
-      <div className='transform translate-y-12'>
+      <div className="transform translate-y-12">
         {survey.display ? (
           <div className={` bg-opacity-10`}>
             <div className={`${theme.section} p-4`}>

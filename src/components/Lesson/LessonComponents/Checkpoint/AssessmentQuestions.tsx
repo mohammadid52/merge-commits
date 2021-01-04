@@ -10,10 +10,10 @@ const setInitialState = (array: Array<any>) => {
   array.forEach(
     (item: { question: { id: string; type: string; label: string } }) => {
       tempObj[item.question.id] =
-        item.question.type === 'text'
-          ? ''
-          : item.question.type === 'input'
-          ? ''
+        item.question.type === "text"
+          ? ""
+          : item.question.type === "input"
+          ? ""
           : item.question.type === "selectOne"
           ? null
           : item.question.type === "selectMany"
@@ -48,7 +48,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const indexOfLastPost = currentPage * dataPerPage;
   const indexOfFirstPost = indexOfLastPost - dataPerPage;
   const currentData = data.slice(indexOfFirstPost, indexOfLastPost);
-  const currentId = data.slice(indexOfFirstPost, indexOfLastPost);
+  const currentId = data.slice(indexOfFirstPost, indexOfLastPost)
 
   const checkpoint = currentId.pop();
 
@@ -60,7 +60,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
 
     if (state.questionData[checkpoint.checkpoint.id]) {
       questionDataKeys = Object.keys(
-        state.questionData[checkpoint.checkpoint.id],
+        state.questionData[checkpoint.checkpoint.id]
       );
     }
 
@@ -76,7 +76,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       });
     }
 
-    setStatus('loaded');
+    setStatus("loaded");
   }, []);
 
   /**
@@ -105,10 +105,10 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                     : item.question.type === "input"
                     ? ""
                     : item.question.type === "selectOne"
-                      ? null
-                      : item.question.type === "selectMany"
-                        ? []
-                        : null
+                    ? null
+                    : item.question.type === "selectMany"
+                    ? []
+                    : null
               };
             });
           }

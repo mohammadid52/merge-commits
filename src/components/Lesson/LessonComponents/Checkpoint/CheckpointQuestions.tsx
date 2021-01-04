@@ -16,10 +16,10 @@ const setInitialState = (array: Array<any>) => {
         : item.question.type === 'input'
         ? ''
         : item.question.type === 'selectOne'
-          ? null
-          : item.question.type === 'selectMany'
-            ? []
-            : null;
+        ? null
+        : item.question.type === 'selectMany'
+        ? []
+        : null;
   });
   return tempObj;
 };
@@ -92,10 +92,10 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                     : item.question.type === 'input'
                     ? ''
                     : item.question.type === 'selectOne'
-                      ? null
-                      : item.question.type === 'selectMany'
-                        ? []
-                        : null,
+                    ? null
+                    : item.question.type === 'selectMany'
+                    ? []
+                    : null,
               };
             });
           }
@@ -174,8 +174,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
         label: string;
         icon: string;
         color: string;
-        text: string
-      }>;
+        text: string }>;
       question: string;
       type: string;
     },
@@ -194,7 +193,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
             <input
               id={question.id}
               className={`w-full py-2 px-4 text-gray-800 rounded-xl ${theme.elem.textInput}`}
-              type='text'
+              type="text"
               name={question.label}
               value={input[question.id]}
               onChange={handleInputChange}
@@ -243,7 +242,8 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                     {input[question.id].indexOf(`${option.label}`) >= 0 ? (
                       <div
                         id={`${option.label}`}
-                        className=''ursor-pointer w-36 h-12 p-2 text-base rounded flex justify-start items-center''                        style={{ backgroundColor: `${option.color}` }}
+                        className="cursor-pointer w-36 h-12 p-2 text-base rounded flex justify-start items-center"
+                        style={{ backgroundColor: `${option.color}` }}
                         data-key={question.id}>
                         <IconContext.Provider value={{ color: '#EDF2F7', size: '1.25rem', className: 'w-auto mr-2' }}>
                           <ImCheckboxChecked style={{ pointerEvents: 'none' }} />
@@ -254,7 +254,8 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                     ) : (
                       <div
                         id={`${option.label}`}
-                        className=''g-gray-400 text-black50 cursor-pointer w-36 h-12 p-2 text-base rounded flex justify-start items-center''                        data-key={question.id}>
+                        className="bg-gray-400 text-black50 cursor-pointer w-36 h-12 p-2 text-base rounded flex justify-start items-center"
+                        data-key={question.id}>
                         <IconContext.Provider value={{ color: '#000', size: '1.25rem', className: 'w-auto mr-2' }}>
                           <ImCheckboxUnchecked style={{ pointerEvents: 'none' }} />
                         </IconContext.Provider>
@@ -263,7 +264,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                       </div>
                     )}
                   </div>
-                ),
+                )
               )}
             </div>
           </div>
@@ -286,7 +287,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>{checkpoint.checkpoint.instructions}</div>
 
       <div className={`${theme.elem.text}`}>
-        <div className='w-full h-full flex flex-col flex-wrap justify-around items-center'>
+        <div className="w-full h-full flex flex-col flex-wrap justify-around items-center">
           {checkpoint.checkpoint.questions.items.map((item: { question: any }, key: number) => {
             return <>{inputSwitch(item.question, key)}</>;
           })}
