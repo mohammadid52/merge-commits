@@ -943,6 +943,7 @@ export const onCreatePerson = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -994,6 +995,7 @@ export const onUpdatePerson = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -1045,6 +1047,7 @@ export const onDeletePerson = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -1483,6 +1486,7 @@ export const onCreateClass = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -1555,6 +1559,7 @@ export const onUpdateClass = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -1627,6 +1632,7 @@ export const onDeleteClass = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -1645,6 +1651,7 @@ export const onCreateClassStudent = /* GraphQL */ `
       studentID
       studentEmail
       studentAuthID
+      status
       class {
         id
         institutionID
@@ -1720,6 +1727,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
       studentID
       studentEmail
       studentAuthID
+      status
       class {
         id
         institutionID
@@ -1795,6 +1803,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
       studentID
       studentEmail
       studentAuthID
+      status
       class {
         id
         institutionID
