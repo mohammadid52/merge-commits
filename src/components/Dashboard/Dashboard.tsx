@@ -6,7 +6,8 @@ import {
   useRouteMatch,
   Switch,
   Route,
-  Redirect
+  Redirect,
+  useHistory
 } from 'react-router-dom';
 // import PageHeaderBar from '../Header/PageHeaderBar';
 import SideMenu from './Menu/SideMenu';
@@ -30,9 +31,14 @@ type userObject = {
   [key: string]: any,
 }
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+  updateAuthState: Function
+}
+
+const Dashboard = ({ updateAuthState }: DashboardProps) => {
   const match = useRouteMatch();
-  const [cookies, setCookie] = useCookies(['auth']);
+  const history = useHistory();
+  const [cookies, setCookie, removeCookie] = useCookies(['auth']);
   const [userData, setUserData] = useState({
     role: '',
     image: ''
@@ -41,6 +47,10 @@ const Dashboard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<string>('');
 
   const setUser = (user: userObject) => {
+    setUserData({
+      role: user.role,
+      image: user.image
+    })
     let firstName = user.preferredName ? user.preferredName : user.firstName
     dispatch({
       type: 'SET_USER',
@@ -55,16 +65,25 @@ const Dashboard: React.FC = () => {
       }
     })
 
-    setCookie('auth', { ...cookies.auth, role: user.role, firstName: firstName, id: user.id })
+    setCookie('auth', { ...cookies.auth, role: user.role, firstName: firstName, id: user.id }, { path: '/' })
   }
 
   async function getUser() {
+    console.log('get user is called')
+    const userEmail = (state.user?.email) ? (state.user?.email) : (cookies.auth?.email);
+    const userAuthId = (state.user?.authId) ? (state.user?.authId) : (cookies.auth?.authId);
     try {
       // this any needs to be changed once a solution is found!!!
-      const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: state.user.email, authId: state.user.authId }))
-      // console.log(user)
+      const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: userEmail, authId: userAuthId }))
       setUser(user.data.getPerson);
     } catch (error) {
+      console.log('Here in error')
+      if (!userEmail && !userAuthId) {
+        removeCookie('auth', { path: '/' });
+        dispatch({ type: 'CLEANUP' });
+        sessionStorage.removeItem('accessToken');
+        updateAuthState(false)
+      }
       console.error(error)
     }
   }
@@ -72,6 +91,11 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     if (!state.user.firstName) {
       getUser()
+    } else {
+      setUserData({
+        role: state.user?.role,
+        image: state.user?.image
+      })
     }
   }, [])
 
@@ -81,7 +105,7 @@ const Dashboard: React.FC = () => {
         <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage} image={userData.image} />
         <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
       </SideMenu>
-      <PageHeaderBar setCurrentPage={setCurrentPage} currentPage={currentPage} />
+      <PageHeaderBar setCurrentPage={setCurrentPage} currentPage={currentPage} updateAuthState={updateAuthState} />
       <div className={`height h-full overflow-x-hidden overflow-y-scroll flex flex-col`}>
         <Suspense fallback={
           <div className="min-h-screen w-full flex flex-col justify-center items-center">

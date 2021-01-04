@@ -19,19 +19,39 @@ export interface StoryState {
 
 const List = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  const [cookies, setCookie] = useCookies(['story']);
-  const inputs = state.data.lesson.warmUp.inputs;
-  const video = state.data.lesson.warmUp.instructions.link;
+  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
   const [openPopup, setOpenPopup] = useState(false);
 
+  //  Variables
+  const inputs = state.data.lesson.warmUp.inputs;
+  const video = state.data.lesson.warmUp.instructions.link;
+  const nrLists = inputs.listInputNumber;
+  const listArray = nrLists === null ? [''] : Array.from(Array(nrLists).keys()).map((elem: number) => '');
+
   useEffect(() => {
-    if (!cookies.story && !state.componentState.story) {
+    if (!cookies[`lesson-${state.classroomID}`]?.story && !state.componentState.story) {
       let tempObj: StoryState = {
-        story: [''],
+        story: listArray,
+        additional: [
+          {
+            name: '',
+            text: '',
+          },
+        ],
       };
       if (inputs.title) {
         tempObj.title = '';
       }
+
+      //TODO: this 'additionalInputs' is causing a problem with list -> database mutations...
+      // ...it clashes because 'text' does not exist on the type declaration for 'AdditionalInputsInput',
+      // ...what needs to be done is an array of {name: ..., input: ...} needs to be initialized
+      // ...also might need to rewrite the StoryState interface up above line 11 - 18
+
+      // UPDATE: somehow commenting this out does not affect the standard list,
+      // curious as to why it was here in the first place
+
+      console.log('listactivity additional input leng: ', inputs.additionalInputs.length > 0);
 
       if (inputs.additionalInputs.length > 0) {
         let additional: Array<{ name: string; text: string | [] }> = [];
@@ -55,9 +75,11 @@ const List = () => {
         },
       });
 
-      setCookie('story', tempObj);
+      setCookie(`lesson-${state.classroomID}`, {
+        ...cookies[`lesson-${state.classroomID}`],
+        story: tempObj,
+      });
     }
-
     if (cookies.story) {
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
@@ -67,6 +89,8 @@ const List = () => {
         },
       });
     }
+
+    console.log('listactivity mounted --< ', inputs.additionalInputs);
   }, []);
 
   return (
@@ -78,15 +102,9 @@ const List = () => {
         <div className="flex flex-col justify-between items-center">
           <InstructionsBlock />
 
-          {/* {inputs.additionalInputs.length > 0 ?
-                        <Modules
-                            inputs={inputs.additionalInputs}
-                        />
-                        :
-                        null
-                    } */}
+          {inputs.additionalInputs.length > 0 ? <Modules inputs={inputs.additionalInputs} /> : null}
 
-          <ListForm />
+          <ListForm listArray={listArray} nrLists={nrLists} />
         </div>
       </div>
     </>

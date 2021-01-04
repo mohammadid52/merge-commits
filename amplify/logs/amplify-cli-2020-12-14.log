@@ -20,13 +20,11 @@
 2020-12-14T13:50:41.690Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
 2020-12-14T13:50:43.775Z|info : amplify-provider-awscloudformation.initialize-env.run.cfn.updateamplifyMetaFileWithStackOutputs([{"StackName":"[***]ify-[***]ready-[***]at-[***]704"}])
 2020-12-14T13:50:44.784Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]ify-[***]json","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
-<<<<<<< HEAD
 2020-12-14T13:54:16.819Z|info : amplify pull core  
 2020-12-14T13:54:27.181Z|info : amplify-provider-awscloudformation.zip-util.downloadZip.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip"},null])
 2020-12-14T13:54:27.184Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
 2020-12-14T13:54:29.307Z|info : amplify-provider-awscloudformation.initialize-env.run.cfn.updateamplifyMetaFileWithStackOutputs([{"StackName":"[***]ify-[***]ready-[***]at-[***]704"}])
 2020-12-14T13:54:30.311Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]ify-[***]json","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
-=======
 2020-12-14T18:35:55.504Z|info : amplify pull core  
 2020-12-14T18:36:07.406Z|info : amplify-provider-awscloudformation.zip-util.downloadZip.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip"},null])
 2020-12-14T18:36:07.409Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
@@ -37,9 +35,40 @@
 2020-12-14T18:41:15.095Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
 2020-12-14T18:41:17.286Z|info : amplify-provider-awscloudformation.initialize-env.run.cfn.updateamplifyMetaFileWithStackOutputs([{"StackName":"[***]ify-[***]ready-[***]at-[***]704"}])
 2020-12-14T18:41:18.297Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]ify-[***]json","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
->>>>>>> dev
 2020-12-14T18:43:07.221Z|info : amplify pull core  
 2020-12-14T18:43:16.839Z|info : amplify-provider-awscloudformation.zip-util.downloadZip.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip"},null])
 2020-12-14T18:43:16.842Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
 2020-12-14T18:43:19.021Z|info : amplify-provider-awscloudformation.initialize-env.run.cfn.updateamplifyMetaFileWithStackOutputs([{"StackName":"[***]ify-[***]ready-[***]at-[***]704"}])
 2020-12-14T18:43:20.024Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]ify-[***]json","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T13:01:13.561Z|info : amplify pull core  
+2020-12-14T13:01:26.701Z|info : amplify-provider-awscloudformation.zip-util.downloadZip.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip"},null])
+2020-12-14T13:01:26.704Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T13:01:28.926Z|info : amplify-provider-awscloudformation.initialize-env.run.cfn.updateamplifyMetaFileWithStackOutputs([{"StackName":"[***]ify-[***]ready-[***]at-[***]704"}])
+2020-12-14T13:01:29.926Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]ify-[***]json","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T13:13:24.302Z|info : amplify pull core  
+2020-12-14T13:13:30.752Z|info : amplify-provider-awscloudformation.zip-util.downloadZip.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip"},null])
+2020-12-14T13:13:30.755Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T13:13:32.850Z|info : amplify-provider-awscloudformation.initialize-env.run.cfn.updateamplifyMetaFileWithStackOutputs([{"StackName":"[***]ify-[***]ready-[***]at-[***]704"}])
+2020-12-14T13:13:33.829Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]ify-[***]json","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T13:18:05.300Z|info : amplify pull core  
+2020-12-14T13:18:11.722Z|info : amplify-provider-awscloudformation.zip-util.downloadZip.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip"},null])
+2020-12-14T13:18:11.725Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T13:18:13.895Z|info : amplify-provider-awscloudformation.initialize-env.run.cfn.updateamplifyMetaFileWithStackOutputs([{"StackName":"[***]ify-[***]ready-[***]at-[***]704"}])
+2020-12-14T13:18:14.890Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]ify-[***]json","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T13:49:58.408Z|info : amplify pull core  
+2020-12-14T13:50:15.057Z|info : amplify-provider-awscloudformation.zip-util.downloadZip.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip"},null])
+2020-12-14T13:50:31.673Z|info : amplify pull core  
+2020-12-14T13:50:41.687Z|info : amplify-provider-awscloudformation.zip-util.downloadZip.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip"},null])
+2020-12-14T13:50:41.690Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T13:50:43.775Z|info : amplify-provider-awscloudformation.initialize-env.run.cfn.updateamplifyMetaFileWithStackOutputs([{"StackName":"[***]ify-[***]ready-[***]at-[***]704"}])
+2020-12-14T13:50:44.784Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]ify-[***]json","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T18:35:55.504Z|info : amplify pull core  
+2020-12-14T18:36:07.406Z|info : amplify-provider-awscloudformation.zip-util.downloadZip.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip"},null])
+2020-12-14T18:36:07.409Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T18:36:09.653Z|info : amplify-provider-awscloudformation.initialize-env.run.cfn.updateamplifyMetaFileWithStackOutputs([{"StackName":"[***]ify-[***]ready-[***]at-[***]704"}])
+2020-12-14T18:36:10.663Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]ify-[***]json","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T18:41:08.695Z|info : amplify pull core  
+2020-12-14T18:41:15.092Z|info : amplify-provider-awscloudformation.zip-util.downloadZip.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip"},null])
+2020-12-14T18:41:15.095Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]rent-[***]ud-[***]d.zip","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])
+2020-12-14T18:41:17.286Z|info : amplify-provider-awscloudformation.initialize-env.run.cfn.updateamplifyMetaFileWithStackOutputs([{"StackName":"[***]ify-[***]ready-[***]at-[***]704"}])
+2020-12-14T18:41:18.297Z|info : amplify-provider-awscloudformation.aws-s3.s3.getFile([{"Key":"[***]ify-[***]json","Bucket":"[***]ify-[***]ready-[***]at-[***]704-[***]ment"}])

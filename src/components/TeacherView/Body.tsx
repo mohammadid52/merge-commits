@@ -1,13 +1,14 @@
-import React, { useContext, useEffect, Suspense, lazy, useState } from 'react';
+import React, { lazy, useContext, useEffect, useState } from 'react';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
-import { Switch, Route, useLocation, useRouteMatch, Redirect } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
+
 const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
 const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
 const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
 const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'));
 const ListView = lazy(() => import('./ComponentViews/ListPageView/ListView'));
-// const Poll = lazy(() => import('./ComponentViews/PollPageView/PollView'));
-// const TChart = lazy(() => import('./ComponentViews/TChartPageView/TChartView'));
+const PollView = lazy(() => import('./ComponentViews/PollPageView/PollView'));
+
 const TruthGameView = lazy(() => import('./ComponentViews/TruthGamePageView/TruthGameView'));
 const OutroView = lazy(() => import('./ComponentViews/OutroView/OutroView'));
 const LessonError = lazy(() => import('./../Error/LessonError'));
@@ -45,6 +46,8 @@ const Body: React.FC<BodyProps> = (props: BodyProps) => {
         return <ListView fullscreen={fullscreen} />;
       case 'truthgame':
         return <TruthGameView fullscreen={fullscreen} />;
+      case 'poll':
+        return <PollView/>;
       default:
         return <LessonError />;
     }

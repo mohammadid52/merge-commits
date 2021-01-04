@@ -99,6 +99,14 @@ const useStudentTimer = (inputs?: inputs) => {
         ? 'intro'
         : params.state.pages[params.state.currentPage].stage;
 
+    /**
+     * The warmupData ternary condition should be improved
+     * so that it doesn't look specifically for the truthGame object
+     * but can also return any other additional object from new components
+     */
+
+    //TODO: clean up the warmUpData ternary condition below
+
     let data = {
       id: state.studentDataID,
       lessonProgress: lessonProgress,
@@ -112,7 +120,9 @@ const useStudentTimer = (inputs?: inputs) => {
         ? params.state.componentState.story
         : typeof params.state.componentState.truthGame?.truthGameArray !== 'undefined'
         ? { truthGame: params.state.componentState.truthGame.truthGameArray }
-        : null, // If story === false, send truthGame array
+        : typeof params.state.componentState.poll?.pollInputs !== 'undefined'
+        ? { poll: params.state.componentState.poll.pollInputs, additional: params.state.componentState.poll.additional }
+        : null,
       corelessonData: params.state.componentState.lyrics ? params.state.componentState.lyrics : null,
       activityData: params.state.componentState.poem ? params.state.componentState.poem : null,
     };
@@ -122,7 +132,6 @@ const useStudentTimer = (inputs?: inputs) => {
       const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
 
       dispatch({ type: 'SAVED_CHANGES' });
-      // console.log('state', state)
     } catch (error) {
       console.error(error);
     }

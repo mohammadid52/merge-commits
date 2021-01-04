@@ -175,6 +175,25 @@ export type ModelStaffConditionInput = {
   not?: ModelStaffConditionInput | null,
 };
 
+export enum PersonStatus {
+  ACTIVE = "ACTIVE",
+  SUSPENDED = "SUSPENDED",
+  INACTIVE = "INACTIVE",
+  HOLD = "HOLD",
+}
+
+
+export enum Role {
+  SUP = "SUP",
+  ADM = "ADM",
+  BLD = "BLD",
+  FLW = "FLW",
+  CRD = "CRD",
+  TR = "TR",
+  ST = "ST",
+}
+
+
 export type UpdateStaffInput = {
   id: string,
   institutionID?: string | null,
@@ -207,26 +226,9 @@ export type CreatePersonInput = {
   image?: string | null,
   language: Language,
   filters?: Array< string | null > | null,
+  lastLoggedIn?: string | null,
+  lastLoggedOut?: string | null,
 };
-
-export enum PersonStatus {
-  ACTIVE = "ACTIVE",
-  SUSPENDED = "SUSPENDED",
-  INACTIVE = "INACTIVE",
-  HOLD = "HOLD",
-}
-
-
-export enum Role {
-  SUP = "SUP",
-  ADM = "ADM",
-  BLD = "BLD",
-  FLW = "FLW",
-  CRD = "CRD",
-  TR = "TR",
-  ST = "ST",
-}
-
 
 export type ModelPersonConditionInput = {
   status?: ModelPersonStatusInput | null,
@@ -244,6 +246,8 @@ export type ModelPersonConditionInput = {
   image?: ModelStringInput | null,
   language?: ModelLanguageInput | null,
   filters?: ModelStringInput | null,
+  lastLoggedIn?: ModelStringInput | null,
+  lastLoggedOut?: ModelStringInput | null,
   and?: Array< ModelPersonConditionInput | null > | null,
   or?: Array< ModelPersonConditionInput | null > | null,
   not?: ModelPersonConditionInput | null,
@@ -283,6 +287,8 @@ export type UpdatePersonInput = {
   image?: string | null,
   language?: Language | null,
   filters?: Array< string | null > | null,
+  lastLoggedIn?: string | null,
+  lastLoggedOut?: string | null,
 };
 
 export type DeletePersonInput = {
@@ -373,14 +379,14 @@ export type CreateClassStudentInput = {
   classID: string,
   studentID: string,
   studentEmail: string,
-  studentAuth: string,
+  studentAuthID: string,
 };
 
 export type ModelClassStudentConditionInput = {
   classID?: ModelIDInput | null,
   studentID?: ModelIDInput | null,
   studentEmail?: ModelStringInput | null,
-  studentAuth?: ModelStringInput | null,
+  studentAuthID?: ModelStringInput | null,
   and?: Array< ModelClassStudentConditionInput | null > | null,
   or?: Array< ModelClassStudentConditionInput | null > | null,
   not?: ModelClassStudentConditionInput | null,
@@ -391,7 +397,7 @@ export type UpdateClassStudentInput = {
   classID?: string | null,
   studentID?: string | null,
   studentEmail?: string | null,
-  studentAuth?: string | null,
+  studentAuthID?: string | null,
 };
 
 export type DeleteClassStudentInput = {
@@ -604,6 +610,7 @@ export type WarmUpDataInput = {
   title?: string | null,
   additional?: Array< AdditionalInputsInput | null > | null,
   truthGame?: Array< TruthGameInputsInput | null > | null,
+  poll?: Array< PollInputsInput | null > | null,
 };
 
 export type AdditionalInputsInput = {
@@ -616,6 +623,18 @@ export type TruthGameInputsInput = {
   label?: string | null,
   isLie?: boolean | null,
   text?: string | null,
+};
+
+export type PollInputsInput = {
+  id?: string | null,
+  question?: string | null,
+  option?: Array< PollOptionInput | null > | null,
+};
+
+export type PollOptionInput = {
+  id?: string | null,
+  option?: string | null,
+  isChoice?: boolean | null,
 };
 
 export type CoreLessonDataInput = {
@@ -1090,6 +1109,7 @@ export type InputsInput = {
   listInputNumber?: number | null,
   truthGameInputs?: Array< TruthGameInputInput | null > | null,
   additionalInputs?: Array< WritingPromptsInput > | null,
+  pollInputs?: Array< PollInputsInput | null > | null,
 };
 
 export type TruthGameInputInput = {
@@ -1524,17 +1544,75 @@ export type DeleteStudentWordInput = {
   id?: string | null,
 };
 
+export type CreateFilterGroupInput = {
+  id?: string | null,
+  name: string,
+  description: string,
+};
+
+export type ModelFilterGroupConditionInput = {
+  name?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  and?: Array< ModelFilterGroupConditionInput | null > | null,
+  or?: Array< ModelFilterGroupConditionInput | null > | null,
+  not?: ModelFilterGroupConditionInput | null,
+};
+
+export type UpdateFilterGroupInput = {
+  id: string,
+  name?: string | null,
+  description?: string | null,
+};
+
+export type DeleteFilterGroupInput = {
+  id?: string | null,
+};
+
+export type CreateFilterGroupFilterInput = {
+  id?: string | null,
+  filterGroupID: string,
+  filterID: string,
+  zoiq?: boolean | null,
+  admin?: boolean | null,
+  show?: boolean | null,
+  required?: boolean | null,
+};
+
+export type ModelFilterGroupFilterConditionInput = {
+  filterGroupID?: ModelIDInput | null,
+  filterID?: ModelIDInput | null,
+  zoiq?: ModelBooleanInput | null,
+  admin?: ModelBooleanInput | null,
+  show?: ModelBooleanInput | null,
+  required?: ModelBooleanInput | null,
+  and?: Array< ModelFilterGroupFilterConditionInput | null > | null,
+  or?: Array< ModelFilterGroupFilterConditionInput | null > | null,
+  not?: ModelFilterGroupFilterConditionInput | null,
+};
+
+export type UpdateFilterGroupFilterInput = {
+  id: string,
+  filterGroupID?: string | null,
+  filterID?: string | null,
+  zoiq?: boolean | null,
+  admin?: boolean | null,
+  show?: boolean | null,
+  required?: boolean | null,
+};
+
+export type DeleteFilterGroupFilterInput = {
+  id?: string | null,
+};
+
 export type CreateFilterInput = {
   id?: string | null,
   name: string,
   description?: string | null,
-  editable?: boolean | null,
 };
 
 export type ModelFilterConditionInput = {
   name?: ModelStringInput | null,
   description?: ModelStringInput | null,
-  editable?: ModelBooleanInput | null,
   and?: Array< ModelFilterConditionInput | null > | null,
   or?: Array< ModelFilterConditionInput | null > | null,
   not?: ModelFilterConditionInput | null,
@@ -1544,7 +1622,6 @@ export type UpdateFilterInput = {
   id: string,
   name?: string | null,
   description?: string | null,
-  editable?: boolean | null,
 };
 
 export type DeleteFilterInput = {
@@ -1573,135 +1650,6 @@ export type UpdateFilterOptionInput = {
 
 export type DeleteFilterOptionInput = {
   id: string,
-};
-
-export type CreateClientInput = {
-  id?: string | null,
-  name: string,
-};
-
-export type ModelClientConditionInput = {
-  name?: ModelStringInput | null,
-  and?: Array< ModelClientConditionInput | null > | null,
-  or?: Array< ModelClientConditionInput | null > | null,
-  not?: ModelClientConditionInput | null,
-};
-
-export type UpdateClientInput = {
-  id: string,
-  name?: string | null,
-};
-
-export type DeleteClientInput = {
-  id?: string | null,
-};
-
-export type CreateArchitectureInput = {
-  id?: string | null,
-  name: string,
-  clientID: string,
-};
-
-export type ModelArchitectureConditionInput = {
-  name?: ModelStringInput | null,
-  clientID?: ModelIDInput | null,
-  and?: Array< ModelArchitectureConditionInput | null > | null,
-  or?: Array< ModelArchitectureConditionInput | null > | null,
-  not?: ModelArchitectureConditionInput | null,
-};
-
-export type UpdateArchitectureInput = {
-  id: string,
-  name?: string | null,
-  clientID?: string | null,
-};
-
-export type DeleteArchitectureInput = {
-  id?: string | null,
-};
-
-export type CreateTypeInput = {
-  id?: string | null,
-  name: string,
-  architectureID: string,
-};
-
-export type ModelTypeConditionInput = {
-  name?: ModelStringInput | null,
-  architectureID?: ModelIDInput | null,
-  and?: Array< ModelTypeConditionInput | null > | null,
-  or?: Array< ModelTypeConditionInput | null > | null,
-  not?: ModelTypeConditionInput | null,
-};
-
-export type UpdateTypeInput = {
-  id: string,
-  name?: string | null,
-  architectureID?: string | null,
-};
-
-export type DeleteTypeInput = {
-  id?: string | null,
-};
-
-export type CreateFilterTypeInput = {
-  id?: string | null,
-  typeID: string,
-  filterID: string,
-  multiselect?: boolean | null,
-  required?: boolean | null,
-};
-
-export type ModelFilterTypeConditionInput = {
-  typeID?: ModelIDInput | null,
-  filterID?: ModelIDInput | null,
-  multiselect?: ModelBooleanInput | null,
-  required?: ModelBooleanInput | null,
-  and?: Array< ModelFilterTypeConditionInput | null > | null,
-  or?: Array< ModelFilterTypeConditionInput | null > | null,
-  not?: ModelFilterTypeConditionInput | null,
-};
-
-export type UpdateFilterTypeInput = {
-  id: string,
-  typeID?: string | null,
-  filterID?: string | null,
-  multiselect?: boolean | null,
-  required?: boolean | null,
-};
-
-export type DeleteFilterTypeInput = {
-  id?: string | null,
-};
-
-export type CreateArchitectureFilterInput = {
-  id?: string | null,
-  architectureID: string,
-  filterID: string,
-  multiselect?: boolean | null,
-  required?: boolean | null,
-};
-
-export type ModelArchitectureFilterConditionInput = {
-  architectureID?: ModelIDInput | null,
-  filterID?: ModelIDInput | null,
-  multiselect?: ModelBooleanInput | null,
-  required?: ModelBooleanInput | null,
-  and?: Array< ModelArchitectureFilterConditionInput | null > | null,
-  or?: Array< ModelArchitectureFilterConditionInput | null > | null,
-  not?: ModelArchitectureFilterConditionInput | null,
-};
-
-export type UpdateArchitectureFilterInput = {
-  id: string,
-  architectureID?: string | null,
-  filterID?: string | null,
-  multiselect?: boolean | null,
-  required?: boolean | null,
-};
-
-export type DeleteArchitectureFilterInput = {
-  id?: string | null,
 };
 
 export type ModelInstitutionFilterInput = {
@@ -1771,6 +1719,8 @@ export type ModelPersonFilterInput = {
   image?: ModelStringInput | null,
   language?: ModelLanguageInput | null,
   filters?: ModelStringInput | null,
+  lastLoggedIn?: ModelStringInput | null,
+  lastLoggedOut?: ModelStringInput | null,
   and?: Array< ModelPersonFilterInput | null > | null,
   or?: Array< ModelPersonFilterInput | null > | null,
   not?: ModelPersonFilterInput | null,
@@ -2056,11 +2006,32 @@ export type ModelWordFilterInput = {
   not?: ModelWordFilterInput | null,
 };
 
+export type ModelFilterGroupFilterInput = {
+  id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  and?: Array< ModelFilterGroupFilterInput | null > | null,
+  or?: Array< ModelFilterGroupFilterInput | null > | null,
+  not?: ModelFilterGroupFilterInput | null,
+};
+
+export type ModelFilterGroupFilterFilterInput = {
+  id?: ModelIDInput | null,
+  filterGroupID?: ModelIDInput | null,
+  filterID?: ModelIDInput | null,
+  zoiq?: ModelBooleanInput | null,
+  admin?: ModelBooleanInput | null,
+  show?: ModelBooleanInput | null,
+  required?: ModelBooleanInput | null,
+  and?: Array< ModelFilterGroupFilterFilterInput | null > | null,
+  or?: Array< ModelFilterGroupFilterFilterInput | null > | null,
+  not?: ModelFilterGroupFilterFilterInput | null,
+};
+
 export type ModelFilterFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
   description?: ModelStringInput | null,
-  editable?: ModelBooleanInput | null,
   and?: Array< ModelFilterFilterInput | null > | null,
   or?: Array< ModelFilterFilterInput | null > | null,
   not?: ModelFilterFilterInput | null,
@@ -2073,32 +2044,6 @@ export type ModelFilterOptionFilterInput = {
   and?: Array< ModelFilterOptionFilterInput | null > | null,
   or?: Array< ModelFilterOptionFilterInput | null > | null,
   not?: ModelFilterOptionFilterInput | null,
-};
-
-export type ModelClientFilterInput = {
-  id?: ModelIDInput | null,
-  name?: ModelStringInput | null,
-  and?: Array< ModelClientFilterInput | null > | null,
-  or?: Array< ModelClientFilterInput | null > | null,
-  not?: ModelClientFilterInput | null,
-};
-
-export type ModelArchitectureFilterInput = {
-  id?: ModelIDInput | null,
-  name?: ModelStringInput | null,
-  clientID?: ModelIDInput | null,
-  and?: Array< ModelArchitectureFilterInput | null > | null,
-  or?: Array< ModelArchitectureFilterInput | null > | null,
-  not?: ModelArchitectureFilterInput | null,
-};
-
-export type ModelTypeFilterInput = {
-  id?: ModelIDInput | null,
-  name?: ModelStringInput | null,
-  architectureID?: ModelIDInput | null,
-  and?: Array< ModelTypeFilterInput | null > | null,
-  or?: Array< ModelTypeFilterInput | null > | null,
-  not?: ModelTypeFilterInput | null,
 };
 
 export type CreateInstitutionMutationVariables = {
@@ -2580,6 +2525,39 @@ export type CreateStaffMutation = {
     staffEmail: string,
     status: string | null,
     statusChangeDate: string | null,
+    staffMember:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     curricula:  {
       __typename: "ModelTeacherCurriculumConnection",
       items:  Array< {
@@ -2611,6 +2589,39 @@ export type UpdateStaffMutation = {
     staffEmail: string,
     status: string | null,
     statusChangeDate: string | null,
+    staffMember:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     curricula:  {
       __typename: "ModelTeacherCurriculumConnection",
       items:  Array< {
@@ -2642,6 +2653,39 @@ export type DeleteStaffMutation = {
     staffEmail: string,
     status: string | null,
     statusChangeDate: string | null,
+    staffMember:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     curricula:  {
       __typename: "ModelTeacherCurriculumConnection",
       items:  Array< {
@@ -2697,7 +2741,23 @@ export type CreatePersonMutation = {
     birthdate: string | null,
     image: string | null,
     language: Language,
+    classes:  {
+      __typename: "ModelClassStudentConnection",
+      items:  Array< {
+        __typename: "ClassStudent",
+        id: string,
+        classID: string,
+        studentID: string,
+        studentEmail: string,
+        studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     filters: Array< string | null > | null,
+    lastLoggedIn: string | null,
+    lastLoggedOut: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2741,7 +2801,23 @@ export type UpdatePersonMutation = {
     birthdate: string | null,
     image: string | null,
     language: Language,
+    classes:  {
+      __typename: "ModelClassStudentConnection",
+      items:  Array< {
+        __typename: "ClassStudent",
+        id: string,
+        classID: string,
+        studentID: string,
+        studentEmail: string,
+        studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     filters: Array< string | null > | null,
+    lastLoggedIn: string | null,
+    lastLoggedOut: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2785,7 +2861,23 @@ export type DeletePersonMutation = {
     birthdate: string | null,
     image: string | null,
     language: Language,
+    classes:  {
+      __typename: "ModelClassStudentConnection",
+      items:  Array< {
+        __typename: "ClassStudent",
+        id: string,
+        classID: string,
+        studentID: string,
+        studentEmail: string,
+        studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     filters: Array< string | null > | null,
+    lastLoggedIn: string | null,
+    lastLoggedOut: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2868,7 +2960,13 @@ export type CreateRoomMutation = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3003,7 +3101,13 @@ export type UpdateRoomMutation = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3138,7 +3242,13 @@ export type DeleteRoomMutation = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3272,7 +3382,7 @@ export type CreateClassMutation = {
         classID: string,
         studentID: string,
         studentEmail: string,
-        studentAuth: string,
+        studentAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -3359,7 +3469,7 @@ export type UpdateClassMutation = {
         classID: string,
         studentID: string,
         studentEmail: string,
-        studentAuth: string,
+        studentAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -3446,7 +3556,7 @@ export type DeleteClassMutation = {
         classID: string,
         studentID: string,
         studentEmail: string,
-        studentAuth: string,
+        studentAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -3469,7 +3579,7 @@ export type CreateClassStudentMutation = {
     classID: string,
     studentID: string,
     studentEmail: string,
-    studentAuth: string,
+    studentAuthID: string,
     class:  {
       __typename: "Class",
       id: string,
@@ -3529,7 +3639,13 @@ export type CreateClassStudentMutation = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3550,7 +3666,7 @@ export type UpdateClassStudentMutation = {
     classID: string,
     studentID: string,
     studentEmail: string,
-    studentAuth: string,
+    studentAuthID: string,
     class:  {
       __typename: "Class",
       id: string,
@@ -3610,7 +3726,13 @@ export type UpdateClassStudentMutation = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3631,7 +3753,7 @@ export type DeleteClassStudentMutation = {
     classID: string,
     studentID: string,
     studentEmail: string,
-    studentAuth: string,
+    studentAuthID: string,
     class:  {
       __typename: "Class",
       id: string,
@@ -3691,7 +3813,13 @@ export type DeleteClassStudentMutation = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4926,7 +5054,13 @@ export type CreateStudentDataMutation = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -4945,6 +5079,11 @@ export type CreateStudentDataMutation = {
         label: string | null,
         isLie: boolean | null,
         text: string | null,
+      } | null > | null,
+      poll:  Array< {
+        __typename: "PollInputs",
+        id: string | null,
+        question: string | null,
       } | null > | null,
     } | null,
     corelessonData:  {
@@ -5115,7 +5254,13 @@ export type UpdateStudentDataMutation = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -5134,6 +5279,11 @@ export type UpdateStudentDataMutation = {
         label: string | null,
         isLie: boolean | null,
         text: string | null,
+      } | null > | null,
+      poll:  Array< {
+        __typename: "PollInputs",
+        id: string | null,
+        question: string | null,
       } | null > | null,
     } | null,
     corelessonData:  {
@@ -5304,7 +5454,13 @@ export type DeleteStudentDataMutation = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -5323,6 +5479,11 @@ export type DeleteStudentDataMutation = {
         label: string | null,
         isLie: boolean | null,
         text: string | null,
+      } | null > | null,
+      poll:  Array< {
+        __typename: "PollInputs",
+        id: string | null,
+        question: string | null,
       } | null > | null,
     } | null,
     corelessonData:  {
@@ -7898,6 +8059,11 @@ export type CreateWarmUpMutation = {
         prompt: string,
         example: string,
       } > | null,
+      pollInputs:  Array< {
+        __typename: "PollInputs",
+        id: string | null,
+        question: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -7949,6 +8115,11 @@ export type UpdateWarmUpMutation = {
         prompt: string,
         example: string,
       } > | null,
+      pollInputs:  Array< {
+        __typename: "PollInputs",
+        id: string | null,
+        question: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -8000,6 +8171,11 @@ export type DeleteWarmUpMutation = {
         prompt: string,
         example: string,
       } > | null,
+      pollInputs:  Array< {
+        __typename: "PollInputs",
+        id: string | null,
+        question: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -8926,7 +9102,13 @@ export type CreateQuestionDataMutation = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9059,7 +9241,13 @@ export type UpdateQuestionDataMutation = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9192,7 +9380,13 @@ export type DeleteQuestionDataMutation = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9259,6 +9453,8 @@ export type CreateQuestionDataStudentDataMutation = {
         image: string | null,
         language: Language,
         filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -9342,6 +9538,8 @@ export type CreateQuestionDataStudentDataMutation = {
         image: string | null,
         language: Language,
         filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -9411,6 +9609,8 @@ export type UpdateQuestionDataStudentDataMutation = {
         image: string | null,
         language: Language,
         filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -9494,6 +9694,8 @@ export type UpdateQuestionDataStudentDataMutation = {
         image: string | null,
         language: Language,
         filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -9563,6 +9765,8 @@ export type DeleteQuestionDataStudentDataMutation = {
         image: string | null,
         language: Language,
         filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -9646,6 +9850,8 @@ export type DeleteQuestionDataStudentDataMutation = {
         image: string | null,
         language: Language,
         filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -10133,7 +10339,13 @@ export type CreateStudentWordMutation = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -10185,7 +10397,13 @@ export type UpdateStudentWordMutation = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -10237,7 +10455,205 @@ export type DeleteStudentWordMutation = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateFilterGroupMutationVariables = {
+  input: CreateFilterGroupInput,
+  condition?: ModelFilterGroupConditionInput | null,
+};
+
+export type CreateFilterGroupMutation = {
+  createFilterGroup:  {
+    __typename: "FilterGroup",
+    id: string,
+    name: string,
+    description: string,
+    filters:  {
+      __typename: "ModelFilterGroupFilterConnection",
+      items:  Array< {
+        __typename: "FilterGroupFilter",
+        id: string,
+        filterGroupID: string,
+        filterID: string,
+        zoiq: boolean | null,
+        admin: boolean | null,
+        show: boolean | null,
+        required: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateFilterGroupMutationVariables = {
+  input: UpdateFilterGroupInput,
+  condition?: ModelFilterGroupConditionInput | null,
+};
+
+export type UpdateFilterGroupMutation = {
+  updateFilterGroup:  {
+    __typename: "FilterGroup",
+    id: string,
+    name: string,
+    description: string,
+    filters:  {
+      __typename: "ModelFilterGroupFilterConnection",
+      items:  Array< {
+        __typename: "FilterGroupFilter",
+        id: string,
+        filterGroupID: string,
+        filterID: string,
+        zoiq: boolean | null,
+        admin: boolean | null,
+        show: boolean | null,
+        required: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteFilterGroupMutationVariables = {
+  input: DeleteFilterGroupInput,
+  condition?: ModelFilterGroupConditionInput | null,
+};
+
+export type DeleteFilterGroupMutation = {
+  deleteFilterGroup:  {
+    __typename: "FilterGroup",
+    id: string,
+    name: string,
+    description: string,
+    filters:  {
+      __typename: "ModelFilterGroupFilterConnection",
+      items:  Array< {
+        __typename: "FilterGroupFilter",
+        id: string,
+        filterGroupID: string,
+        filterID: string,
+        zoiq: boolean | null,
+        admin: boolean | null,
+        show: boolean | null,
+        required: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateFilterGroupFilterMutationVariables = {
+  input: CreateFilterGroupFilterInput,
+  condition?: ModelFilterGroupFilterConditionInput | null,
+};
+
+export type CreateFilterGroupFilterMutation = {
+  createFilterGroupFilter:  {
+    __typename: "FilterGroupFilter",
+    id: string,
+    filterGroupID: string,
+    filterID: string,
+    zoiq: boolean | null,
+    admin: boolean | null,
+    show: boolean | null,
+    required: boolean | null,
+    filter:  {
+      __typename: "Filter",
+      id: string,
+      name: string,
+      description: string | null,
+      options:  {
+        __typename: "ModelFilterOptionConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateFilterGroupFilterMutationVariables = {
+  input: UpdateFilterGroupFilterInput,
+  condition?: ModelFilterGroupFilterConditionInput | null,
+};
+
+export type UpdateFilterGroupFilterMutation = {
+  updateFilterGroupFilter:  {
+    __typename: "FilterGroupFilter",
+    id: string,
+    filterGroupID: string,
+    filterID: string,
+    zoiq: boolean | null,
+    admin: boolean | null,
+    show: boolean | null,
+    required: boolean | null,
+    filter:  {
+      __typename: "Filter",
+      id: string,
+      name: string,
+      description: string | null,
+      options:  {
+        __typename: "ModelFilterOptionConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteFilterGroupFilterMutationVariables = {
+  input: DeleteFilterGroupFilterInput,
+  condition?: ModelFilterGroupFilterConditionInput | null,
+};
+
+export type DeleteFilterGroupFilterMutation = {
+  deleteFilterGroupFilter:  {
+    __typename: "FilterGroupFilter",
+    id: string,
+    filterGroupID: string,
+    filterID: string,
+    zoiq: boolean | null,
+    admin: boolean | null,
+    show: boolean | null,
+    required: boolean | null,
+    filter:  {
+      __typename: "Filter",
+      id: string,
+      name: string,
+      description: string | null,
+      options:  {
+        __typename: "ModelFilterOptionConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -10257,7 +10673,6 @@ export type CreateFilterMutation = {
     id: string,
     name: string,
     description: string | null,
-    editable: boolean | null,
     options:  {
       __typename: "ModelFilterOptionConnection",
       items:  Array< {
@@ -10286,7 +10701,6 @@ export type UpdateFilterMutation = {
     id: string,
     name: string,
     description: string | null,
-    editable: boolean | null,
     options:  {
       __typename: "ModelFilterOptionConnection",
       items:  Array< {
@@ -10315,7 +10729,6 @@ export type DeleteFilterMutation = {
     id: string,
     name: string,
     description: string | null,
-    editable: boolean | null,
     options:  {
       __typename: "ModelFilterOptionConnection",
       items:  Array< {
@@ -10344,19 +10757,6 @@ export type CreateFilterOptionMutation = {
     id: string,
     filterID: string,
     text: string,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -10373,19 +10773,6 @@ export type UpdateFilterOptionMutation = {
     id: string,
     filterID: string,
     text: string,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -10402,733 +10789,6 @@ export type DeleteFilterOptionMutation = {
     id: string,
     filterID: string,
     text: string,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateClientMutationVariables = {
-  input: CreateClientInput,
-  condition?: ModelClientConditionInput | null,
-};
-
-export type CreateClientMutation = {
-  createClient:  {
-    __typename: "Client",
-    id: string,
-    name: string,
-    architecture:  {
-      __typename: "ModelArchitectureConnection",
-      items:  Array< {
-        __typename: "Architecture",
-        id: string,
-        name: string,
-        clientID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateClientMutationVariables = {
-  input: UpdateClientInput,
-  condition?: ModelClientConditionInput | null,
-};
-
-export type UpdateClientMutation = {
-  updateClient:  {
-    __typename: "Client",
-    id: string,
-    name: string,
-    architecture:  {
-      __typename: "ModelArchitectureConnection",
-      items:  Array< {
-        __typename: "Architecture",
-        id: string,
-        name: string,
-        clientID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteClientMutationVariables = {
-  input: DeleteClientInput,
-  condition?: ModelClientConditionInput | null,
-};
-
-export type DeleteClientMutation = {
-  deleteClient:  {
-    __typename: "Client",
-    id: string,
-    name: string,
-    architecture:  {
-      __typename: "ModelArchitectureConnection",
-      items:  Array< {
-        __typename: "Architecture",
-        id: string,
-        name: string,
-        clientID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateArchitectureMutationVariables = {
-  input: CreateArchitectureInput,
-  condition?: ModelArchitectureConditionInput | null,
-};
-
-export type CreateArchitectureMutation = {
-  createArchitecture:  {
-    __typename: "Architecture",
-    id: string,
-    name: string,
-    clientID: string,
-    client:  {
-      __typename: "Client",
-      id: string,
-      name: string,
-      architecture:  {
-        __typename: "ModelArchitectureConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    types:  {
-      __typename: "ModelTypeConnection",
-      items:  Array< {
-        __typename: "Type",
-        id: string,
-        name: string,
-        architectureID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    filters:  {
-      __typename: "ModelArchitectureFilterConnection",
-      items:  Array< {
-        __typename: "ArchitectureFilter",
-        id: string,
-        architectureID: string,
-        filterID: string,
-        multiselect: boolean | null,
-        required: boolean | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateArchitectureMutationVariables = {
-  input: UpdateArchitectureInput,
-  condition?: ModelArchitectureConditionInput | null,
-};
-
-export type UpdateArchitectureMutation = {
-  updateArchitecture:  {
-    __typename: "Architecture",
-    id: string,
-    name: string,
-    clientID: string,
-    client:  {
-      __typename: "Client",
-      id: string,
-      name: string,
-      architecture:  {
-        __typename: "ModelArchitectureConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    types:  {
-      __typename: "ModelTypeConnection",
-      items:  Array< {
-        __typename: "Type",
-        id: string,
-        name: string,
-        architectureID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    filters:  {
-      __typename: "ModelArchitectureFilterConnection",
-      items:  Array< {
-        __typename: "ArchitectureFilter",
-        id: string,
-        architectureID: string,
-        filterID: string,
-        multiselect: boolean | null,
-        required: boolean | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteArchitectureMutationVariables = {
-  input: DeleteArchitectureInput,
-  condition?: ModelArchitectureConditionInput | null,
-};
-
-export type DeleteArchitectureMutation = {
-  deleteArchitecture:  {
-    __typename: "Architecture",
-    id: string,
-    name: string,
-    clientID: string,
-    client:  {
-      __typename: "Client",
-      id: string,
-      name: string,
-      architecture:  {
-        __typename: "ModelArchitectureConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    types:  {
-      __typename: "ModelTypeConnection",
-      items:  Array< {
-        __typename: "Type",
-        id: string,
-        name: string,
-        architectureID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    filters:  {
-      __typename: "ModelArchitectureFilterConnection",
-      items:  Array< {
-        __typename: "ArchitectureFilter",
-        id: string,
-        architectureID: string,
-        filterID: string,
-        multiselect: boolean | null,
-        required: boolean | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateTypeMutationVariables = {
-  input: CreateTypeInput,
-  condition?: ModelTypeConditionInput | null,
-};
-
-export type CreateTypeMutation = {
-  createType:  {
-    __typename: "Type",
-    id: string,
-    name: string,
-    architectureID: string,
-    architecture:  {
-      __typename: "Architecture",
-      id: string,
-      name: string,
-      clientID: string,
-      client:  {
-        __typename: "Client",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      types:  {
-        __typename: "ModelTypeConnection",
-        nextToken: string | null,
-      } | null,
-      filters:  {
-        __typename: "ModelArchitectureFilterConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filters:  {
-      __typename: "ModelFilterTypeConnection",
-      items:  Array< {
-        __typename: "FilterType",
-        id: string,
-        typeID: string,
-        filterID: string,
-        multiselect: boolean | null,
-        required: boolean | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateTypeMutationVariables = {
-  input: UpdateTypeInput,
-  condition?: ModelTypeConditionInput | null,
-};
-
-export type UpdateTypeMutation = {
-  updateType:  {
-    __typename: "Type",
-    id: string,
-    name: string,
-    architectureID: string,
-    architecture:  {
-      __typename: "Architecture",
-      id: string,
-      name: string,
-      clientID: string,
-      client:  {
-        __typename: "Client",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      types:  {
-        __typename: "ModelTypeConnection",
-        nextToken: string | null,
-      } | null,
-      filters:  {
-        __typename: "ModelArchitectureFilterConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filters:  {
-      __typename: "ModelFilterTypeConnection",
-      items:  Array< {
-        __typename: "FilterType",
-        id: string,
-        typeID: string,
-        filterID: string,
-        multiselect: boolean | null,
-        required: boolean | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteTypeMutationVariables = {
-  input: DeleteTypeInput,
-  condition?: ModelTypeConditionInput | null,
-};
-
-export type DeleteTypeMutation = {
-  deleteType:  {
-    __typename: "Type",
-    id: string,
-    name: string,
-    architectureID: string,
-    architecture:  {
-      __typename: "Architecture",
-      id: string,
-      name: string,
-      clientID: string,
-      client:  {
-        __typename: "Client",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      types:  {
-        __typename: "ModelTypeConnection",
-        nextToken: string | null,
-      } | null,
-      filters:  {
-        __typename: "ModelArchitectureFilterConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filters:  {
-      __typename: "ModelFilterTypeConnection",
-      items:  Array< {
-        __typename: "FilterType",
-        id: string,
-        typeID: string,
-        filterID: string,
-        multiselect: boolean | null,
-        required: boolean | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateFilterTypeMutationVariables = {
-  input: CreateFilterTypeInput,
-  condition?: ModelFilterTypeConditionInput | null,
-};
-
-export type CreateFilterTypeMutation = {
-  createFilterType:  {
-    __typename: "FilterType",
-    id: string,
-    typeID: string,
-    filterID: string,
-    multiselect: boolean | null,
-    required: boolean | null,
-    type:  {
-      __typename: "Type",
-      id: string,
-      name: string,
-      architectureID: string,
-      architecture:  {
-        __typename: "Architecture",
-        id: string,
-        name: string,
-        clientID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      filters:  {
-        __typename: "ModelFilterTypeConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateFilterTypeMutationVariables = {
-  input: UpdateFilterTypeInput,
-  condition?: ModelFilterTypeConditionInput | null,
-};
-
-export type UpdateFilterTypeMutation = {
-  updateFilterType:  {
-    __typename: "FilterType",
-    id: string,
-    typeID: string,
-    filterID: string,
-    multiselect: boolean | null,
-    required: boolean | null,
-    type:  {
-      __typename: "Type",
-      id: string,
-      name: string,
-      architectureID: string,
-      architecture:  {
-        __typename: "Architecture",
-        id: string,
-        name: string,
-        clientID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      filters:  {
-        __typename: "ModelFilterTypeConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteFilterTypeMutationVariables = {
-  input: DeleteFilterTypeInput,
-  condition?: ModelFilterTypeConditionInput | null,
-};
-
-export type DeleteFilterTypeMutation = {
-  deleteFilterType:  {
-    __typename: "FilterType",
-    id: string,
-    typeID: string,
-    filterID: string,
-    multiselect: boolean | null,
-    required: boolean | null,
-    type:  {
-      __typename: "Type",
-      id: string,
-      name: string,
-      architectureID: string,
-      architecture:  {
-        __typename: "Architecture",
-        id: string,
-        name: string,
-        clientID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      filters:  {
-        __typename: "ModelFilterTypeConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateArchitectureFilterMutationVariables = {
-  input: CreateArchitectureFilterInput,
-  condition?: ModelArchitectureFilterConditionInput | null,
-};
-
-export type CreateArchitectureFilterMutation = {
-  createArchitectureFilter:  {
-    __typename: "ArchitectureFilter",
-    id: string,
-    architectureID: string,
-    filterID: string,
-    multiselect: boolean | null,
-    required: boolean | null,
-    architecture:  {
-      __typename: "Architecture",
-      id: string,
-      name: string,
-      clientID: string,
-      client:  {
-        __typename: "Client",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      types:  {
-        __typename: "ModelTypeConnection",
-        nextToken: string | null,
-      } | null,
-      filters:  {
-        __typename: "ModelArchitectureFilterConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateArchitectureFilterMutationVariables = {
-  input: UpdateArchitectureFilterInput,
-  condition?: ModelArchitectureFilterConditionInput | null,
-};
-
-export type UpdateArchitectureFilterMutation = {
-  updateArchitectureFilter:  {
-    __typename: "ArchitectureFilter",
-    id: string,
-    architectureID: string,
-    filterID: string,
-    multiselect: boolean | null,
-    required: boolean | null,
-    architecture:  {
-      __typename: "Architecture",
-      id: string,
-      name: string,
-      clientID: string,
-      client:  {
-        __typename: "Client",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      types:  {
-        __typename: "ModelTypeConnection",
-        nextToken: string | null,
-      } | null,
-      filters:  {
-        __typename: "ModelArchitectureFilterConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteArchitectureFilterMutationVariables = {
-  input: DeleteArchitectureFilterInput,
-  condition?: ModelArchitectureFilterConditionInput | null,
-};
-
-export type DeleteArchitectureFilterMutation = {
-  deleteArchitectureFilter:  {
-    __typename: "ArchitectureFilter",
-    id: string,
-    architectureID: string,
-    filterID: string,
-    multiselect: boolean | null,
-    required: boolean | null,
-    architecture:  {
-      __typename: "Architecture",
-      id: string,
-      name: string,
-      clientID: string,
-      client:  {
-        __typename: "Client",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      types:  {
-        __typename: "ModelTypeConnection",
-        nextToken: string | null,
-      } | null,
-      filters:  {
-        __typename: "ModelArchitectureFilterConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -11300,6 +10960,39 @@ export type GetStaffQuery = {
     staffEmail: string,
     status: string | null,
     statusChangeDate: string | null,
+    staffMember:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     curricula:  {
       __typename: "ModelTeacherCurriculumConnection",
       items:  Array< {
@@ -11334,6 +11027,31 @@ export type ListStaffsQuery = {
       staffEmail: string,
       status: string | null,
       statusChangeDate: string | null,
+      staffMember:  {
+        __typename: "Person",
+        id: string,
+        authId: string,
+        status: PersonStatus,
+        email: string,
+        role: Role,
+        type: string | null,
+        firstName: string,
+        preferredName: string | null,
+        lastName: string,
+        externalId: string | null,
+        grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
+        phone: string | null,
+        birthdate: string | null,
+        image: string | null,
+        language: Language,
+        filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       curricula:  {
         __typename: "ModelTeacherCurriculumConnection",
         nextToken: string | null,
@@ -11383,7 +11101,23 @@ export type GetPersonQuery = {
     birthdate: string | null,
     image: string | null,
     language: Language,
+    classes:  {
+      __typename: "ModelClassStudentConnection",
+      items:  Array< {
+        __typename: "ClassStudent",
+        id: string,
+        classID: string,
+        studentID: string,
+        studentEmail: string,
+        studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     filters: Array< string | null > | null,
+    lastLoggedIn: string | null,
+    lastLoggedOut: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -11424,7 +11158,13 @@ export type ListPersonsQuery = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -11508,7 +11248,13 @@ export type GetRoomQuery = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11623,6 +11369,8 @@ export type ListRoomsQuery = {
         image: string | null,
         language: Language,
         filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -11722,7 +11470,7 @@ export type GetClassQuery = {
         classID: string,
         studentID: string,
         studentEmail: string,
-        studentAuth: string,
+        studentAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -12228,7 +11976,13 @@ export type GetStudentDataQuery = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -12247,6 +12001,11 @@ export type GetStudentDataQuery = {
         label: string | null,
         isLie: boolean | null,
         text: string | null,
+      } | null > | null,
+      poll:  Array< {
+        __typename: "PollInputs",
+        id: string | null,
+        question: string | null,
       } | null > | null,
     } | null,
     corelessonData:  {
@@ -12366,6 +12125,8 @@ export type ListStudentDatasQuery = {
         image: string | null,
         language: Language,
         filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -13436,6 +13197,11 @@ export type GetWarmUpQuery = {
         prompt: string,
         example: string,
       } > | null,
+      pollInputs:  Array< {
+        __typename: "PollInputs",
+        id: string | null,
+        question: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -14044,7 +13810,13 @@ export type GetQuestionDataQuery = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -14116,6 +13888,8 @@ export type ListQuestionDatasQuery = {
         image: string | null,
         language: Language,
         filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -14163,6 +13937,126 @@ export type ListWordsQuery = {
   } | null,
 };
 
+export type GetFilterGroupQueryVariables = {
+  id: string,
+};
+
+export type GetFilterGroupQuery = {
+  getFilterGroup:  {
+    __typename: "FilterGroup",
+    id: string,
+    name: string,
+    description: string,
+    filters:  {
+      __typename: "ModelFilterGroupFilterConnection",
+      items:  Array< {
+        __typename: "FilterGroupFilter",
+        id: string,
+        filterGroupID: string,
+        filterID: string,
+        zoiq: boolean | null,
+        admin: boolean | null,
+        show: boolean | null,
+        required: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListFilterGroupsQueryVariables = {
+  filter?: ModelFilterGroupFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListFilterGroupsQuery = {
+  listFilterGroups:  {
+    __typename: "ModelFilterGroupConnection",
+    items:  Array< {
+      __typename: "FilterGroup",
+      id: string,
+      name: string,
+      description: string,
+      filters:  {
+        __typename: "ModelFilterGroupFilterConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetFilterGroupFilterQueryVariables = {
+  id: string,
+};
+
+export type GetFilterGroupFilterQuery = {
+  getFilterGroupFilter:  {
+    __typename: "FilterGroupFilter",
+    id: string,
+    filterGroupID: string,
+    filterID: string,
+    zoiq: boolean | null,
+    admin: boolean | null,
+    show: boolean | null,
+    required: boolean | null,
+    filter:  {
+      __typename: "Filter",
+      id: string,
+      name: string,
+      description: string | null,
+      options:  {
+        __typename: "ModelFilterOptionConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListFilterGroupFiltersQueryVariables = {
+  filter?: ModelFilterGroupFilterFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListFilterGroupFiltersQuery = {
+  listFilterGroupFilters:  {
+    __typename: "ModelFilterGroupFilterConnection",
+    items:  Array< {
+      __typename: "FilterGroupFilter",
+      id: string,
+      filterGroupID: string,
+      filterID: string,
+      zoiq: boolean | null,
+      admin: boolean | null,
+      show: boolean | null,
+      required: boolean | null,
+      filter:  {
+        __typename: "Filter",
+        id: string,
+        name: string,
+        description: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
 export type GetFilterQueryVariables = {
   id: string,
 };
@@ -14173,7 +14067,6 @@ export type GetFilterQuery = {
     id: string,
     name: string,
     description: string | null,
-    editable: boolean | null,
     options:  {
       __typename: "ModelFilterOptionConnection",
       items:  Array< {
@@ -14205,7 +14098,6 @@ export type ListFiltersQuery = {
       id: string,
       name: string,
       description: string | null,
-      editable: boolean | null,
       options:  {
         __typename: "ModelFilterOptionConnection",
         nextToken: string | null,
@@ -14227,19 +14119,6 @@ export type GetFilterOptionQuery = {
     id: string,
     filterID: string,
     text: string,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -14261,238 +14140,6 @@ export type ListFilterOptionsQuery = {
       id: string,
       filterID: string,
       text: string,
-      filter:  {
-        __typename: "Filter",
-        id: string,
-        name: string,
-        description: string | null,
-        editable: boolean | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken: string | null,
-  } | null,
-};
-
-export type GetClientQueryVariables = {
-  id: string,
-};
-
-export type GetClientQuery = {
-  getClient:  {
-    __typename: "Client",
-    id: string,
-    name: string,
-    architecture:  {
-      __typename: "ModelArchitectureConnection",
-      items:  Array< {
-        __typename: "Architecture",
-        id: string,
-        name: string,
-        clientID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListClientsQueryVariables = {
-  filter?: ModelClientFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListClientsQuery = {
-  listClients:  {
-    __typename: "ModelClientConnection",
-    items:  Array< {
-      __typename: "Client",
-      id: string,
-      name: string,
-      architecture:  {
-        __typename: "ModelArchitectureConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken: string | null,
-  } | null,
-};
-
-export type GetArchitectureQueryVariables = {
-  id: string,
-};
-
-export type GetArchitectureQuery = {
-  getArchitecture:  {
-    __typename: "Architecture",
-    id: string,
-    name: string,
-    clientID: string,
-    client:  {
-      __typename: "Client",
-      id: string,
-      name: string,
-      architecture:  {
-        __typename: "ModelArchitectureConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    types:  {
-      __typename: "ModelTypeConnection",
-      items:  Array< {
-        __typename: "Type",
-        id: string,
-        name: string,
-        architectureID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    filters:  {
-      __typename: "ModelArchitectureFilterConnection",
-      items:  Array< {
-        __typename: "ArchitectureFilter",
-        id: string,
-        architectureID: string,
-        filterID: string,
-        multiselect: boolean | null,
-        required: boolean | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListArchitecturesQueryVariables = {
-  filter?: ModelArchitectureFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListArchitecturesQuery = {
-  listArchitectures:  {
-    __typename: "ModelArchitectureConnection",
-    items:  Array< {
-      __typename: "Architecture",
-      id: string,
-      name: string,
-      clientID: string,
-      client:  {
-        __typename: "Client",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      types:  {
-        __typename: "ModelTypeConnection",
-        nextToken: string | null,
-      } | null,
-      filters:  {
-        __typename: "ModelArchitectureFilterConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken: string | null,
-  } | null,
-};
-
-export type GetTypeQueryVariables = {
-  id: string,
-};
-
-export type GetTypeQuery = {
-  getType:  {
-    __typename: "Type",
-    id: string,
-    name: string,
-    architectureID: string,
-    architecture:  {
-      __typename: "Architecture",
-      id: string,
-      name: string,
-      clientID: string,
-      client:  {
-        __typename: "Client",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      types:  {
-        __typename: "ModelTypeConnection",
-        nextToken: string | null,
-      } | null,
-      filters:  {
-        __typename: "ModelArchitectureFilterConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filters:  {
-      __typename: "ModelFilterTypeConnection",
-      items:  Array< {
-        __typename: "FilterType",
-        id: string,
-        typeID: string,
-        filterID: string,
-        multiselect: boolean | null,
-        required: boolean | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListTypesQueryVariables = {
-  filter?: ModelTypeFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListTypesQuery = {
-  listTypes:  {
-    __typename: "ModelTypeConnection",
-    items:  Array< {
-      __typename: "Type",
-      id: string,
-      name: string,
-      architectureID: string,
-      architecture:  {
-        __typename: "Architecture",
-        id: string,
-        name: string,
-        clientID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      filters:  {
-        __typename: "ModelFilterTypeConnection",
-        nextToken: string | null,
-      } | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -14534,7 +14181,13 @@ export type UserByIdQuery = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -14576,7 +14229,13 @@ export type UsersByRoleQuery = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -14924,7 +14583,13 @@ export type OnChangeStudentDataSubscription = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -14943,6 +14608,11 @@ export type OnChangeStudentDataSubscription = {
         label: string | null,
         isLie: boolean | null,
         text: string | null,
+      } | null > | null,
+      poll:  Array< {
+        __typename: "PollInputs",
+        id: string | null,
+        question: string | null,
       } | null > | null,
     } | null,
     corelessonData:  {
@@ -15447,6 +15117,39 @@ export type OnCreateStaffSubscription = {
     staffEmail: string,
     status: string | null,
     statusChangeDate: string | null,
+    staffMember:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     curricula:  {
       __typename: "ModelTeacherCurriculumConnection",
       items:  Array< {
@@ -15473,6 +15176,39 @@ export type OnUpdateStaffSubscription = {
     staffEmail: string,
     status: string | null,
     statusChangeDate: string | null,
+    staffMember:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     curricula:  {
       __typename: "ModelTeacherCurriculumConnection",
       items:  Array< {
@@ -15499,6 +15235,39 @@ export type OnDeleteStaffSubscription = {
     staffEmail: string,
     status: string | null,
     statusChangeDate: string | null,
+    staffMember:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     curricula:  {
       __typename: "ModelTeacherCurriculumConnection",
       items:  Array< {
@@ -15549,7 +15318,23 @@ export type OnCreatePersonSubscription = {
     birthdate: string | null,
     image: string | null,
     language: Language,
+    classes:  {
+      __typename: "ModelClassStudentConnection",
+      items:  Array< {
+        __typename: "ClassStudent",
+        id: string,
+        classID: string,
+        studentID: string,
+        studentEmail: string,
+        studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     filters: Array< string | null > | null,
+    lastLoggedIn: string | null,
+    lastLoggedOut: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -15588,7 +15373,23 @@ export type OnUpdatePersonSubscription = {
     birthdate: string | null,
     image: string | null,
     language: Language,
+    classes:  {
+      __typename: "ModelClassStudentConnection",
+      items:  Array< {
+        __typename: "ClassStudent",
+        id: string,
+        classID: string,
+        studentID: string,
+        studentEmail: string,
+        studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     filters: Array< string | null > | null,
+    lastLoggedIn: string | null,
+    lastLoggedOut: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -15627,7 +15428,23 @@ export type OnDeletePersonSubscription = {
     birthdate: string | null,
     image: string | null,
     language: Language,
+    classes:  {
+      __typename: "ModelClassStudentConnection",
+      items:  Array< {
+        __typename: "ClassStudent",
+        id: string,
+        classID: string,
+        studentID: string,
+        studentEmail: string,
+        studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     filters: Array< string | null > | null,
+    lastLoggedIn: string | null,
+    lastLoggedOut: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -15705,7 +15522,13 @@ export type OnCreateRoomSubscription = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -15835,7 +15658,13 @@ export type OnUpdateRoomSubscription = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -15965,7 +15794,13 @@ export type OnDeleteRoomSubscription = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -16094,7 +15929,7 @@ export type OnCreateClassSubscription = {
         classID: string,
         studentID: string,
         studentEmail: string,
-        studentAuth: string,
+        studentAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -16176,7 +16011,7 @@ export type OnUpdateClassSubscription = {
         classID: string,
         studentID: string,
         studentEmail: string,
-        studentAuth: string,
+        studentAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -16258,7 +16093,7 @@ export type OnDeleteClassSubscription = {
         classID: string,
         studentID: string,
         studentEmail: string,
-        studentAuth: string,
+        studentAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -16276,7 +16111,7 @@ export type OnCreateClassStudentSubscription = {
     classID: string,
     studentID: string,
     studentEmail: string,
-    studentAuth: string,
+    studentAuthID: string,
     class:  {
       __typename: "Class",
       id: string,
@@ -16336,7 +16171,13 @@ export type OnCreateClassStudentSubscription = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -16352,7 +16193,7 @@ export type OnUpdateClassStudentSubscription = {
     classID: string,
     studentID: string,
     studentEmail: string,
-    studentAuth: string,
+    studentAuthID: string,
     class:  {
       __typename: "Class",
       id: string,
@@ -16412,7 +16253,13 @@ export type OnUpdateClassStudentSubscription = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -16428,7 +16275,7 @@ export type OnDeleteClassStudentSubscription = {
     classID: string,
     studentID: string,
     studentEmail: string,
-    studentAuth: string,
+    studentAuthID: string,
     class:  {
       __typename: "Class",
       id: string,
@@ -16488,7 +16335,13 @@ export type OnDeleteClassStudentSubscription = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -19286,6 +19139,11 @@ export type OnCreateWarmUpSubscription = {
         prompt: string,
         example: string,
       } > | null,
+      pollInputs:  Array< {
+        __typename: "PollInputs",
+        id: string | null,
+        question: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -19332,6 +19190,11 @@ export type OnUpdateWarmUpSubscription = {
         prompt: string,
         example: string,
       } > | null,
+      pollInputs:  Array< {
+        __typename: "PollInputs",
+        id: string | null,
+        question: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -19378,6 +19241,11 @@ export type OnDeleteWarmUpSubscription = {
         prompt: string,
         example: string,
       } > | null,
+      pollInputs:  Array< {
+        __typename: "PollInputs",
+        id: string | null,
+        question: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -20194,7 +20062,13 @@ export type OnCreateQuestionDataSubscription = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -20322,7 +20196,13 @@ export type OnUpdateQuestionDataSubscription = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -20450,7 +20330,13 @@ export type OnDeleteQuestionDataSubscription = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -20512,6 +20398,8 @@ export type OnCreateQuestionDataStudentDataSubscription = {
         image: string | null,
         language: Language,
         filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -20595,6 +20483,8 @@ export type OnCreateQuestionDataStudentDataSubscription = {
         image: string | null,
         language: Language,
         filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -20659,6 +20549,8 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
         image: string | null,
         language: Language,
         filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -20742,6 +20634,8 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
         image: string | null,
         language: Language,
         filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -20806,6 +20700,8 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         image: string | null,
         language: Language,
         filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -20889,6 +20785,8 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         image: string | null,
         language: Language,
         filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -21341,7 +21239,13 @@ export type OnCreateStudentWordSubscription = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -21388,7 +21292,13 @@ export type OnUpdateStudentWordSubscription = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -21435,7 +21345,175 @@ export type OnDeleteStudentWordSubscription = {
       birthdate: string | null,
       image: string | null,
       language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
       filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateFilterGroupSubscription = {
+  onCreateFilterGroup:  {
+    __typename: "FilterGroup",
+    id: string,
+    name: string,
+    description: string,
+    filters:  {
+      __typename: "ModelFilterGroupFilterConnection",
+      items:  Array< {
+        __typename: "FilterGroupFilter",
+        id: string,
+        filterGroupID: string,
+        filterID: string,
+        zoiq: boolean | null,
+        admin: boolean | null,
+        show: boolean | null,
+        required: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateFilterGroupSubscription = {
+  onUpdateFilterGroup:  {
+    __typename: "FilterGroup",
+    id: string,
+    name: string,
+    description: string,
+    filters:  {
+      __typename: "ModelFilterGroupFilterConnection",
+      items:  Array< {
+        __typename: "FilterGroupFilter",
+        id: string,
+        filterGroupID: string,
+        filterID: string,
+        zoiq: boolean | null,
+        admin: boolean | null,
+        show: boolean | null,
+        required: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteFilterGroupSubscription = {
+  onDeleteFilterGroup:  {
+    __typename: "FilterGroup",
+    id: string,
+    name: string,
+    description: string,
+    filters:  {
+      __typename: "ModelFilterGroupFilterConnection",
+      items:  Array< {
+        __typename: "FilterGroupFilter",
+        id: string,
+        filterGroupID: string,
+        filterID: string,
+        zoiq: boolean | null,
+        admin: boolean | null,
+        show: boolean | null,
+        required: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateFilterGroupFilterSubscription = {
+  onCreateFilterGroupFilter:  {
+    __typename: "FilterGroupFilter",
+    id: string,
+    filterGroupID: string,
+    filterID: string,
+    zoiq: boolean | null,
+    admin: boolean | null,
+    show: boolean | null,
+    required: boolean | null,
+    filter:  {
+      __typename: "Filter",
+      id: string,
+      name: string,
+      description: string | null,
+      options:  {
+        __typename: "ModelFilterOptionConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateFilterGroupFilterSubscription = {
+  onUpdateFilterGroupFilter:  {
+    __typename: "FilterGroupFilter",
+    id: string,
+    filterGroupID: string,
+    filterID: string,
+    zoiq: boolean | null,
+    admin: boolean | null,
+    show: boolean | null,
+    required: boolean | null,
+    filter:  {
+      __typename: "Filter",
+      id: string,
+      name: string,
+      description: string | null,
+      options:  {
+        __typename: "ModelFilterOptionConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteFilterGroupFilterSubscription = {
+  onDeleteFilterGroupFilter:  {
+    __typename: "FilterGroupFilter",
+    id: string,
+    filterGroupID: string,
+    filterID: string,
+    zoiq: boolean | null,
+    admin: boolean | null,
+    show: boolean | null,
+    required: boolean | null,
+    filter:  {
+      __typename: "Filter",
+      id: string,
+      name: string,
+      description: string | null,
+      options:  {
+        __typename: "ModelFilterOptionConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -21450,7 +21528,6 @@ export type OnCreateFilterSubscription = {
     id: string,
     name: string,
     description: string | null,
-    editable: boolean | null,
     options:  {
       __typename: "ModelFilterOptionConnection",
       items:  Array< {
@@ -21474,7 +21551,6 @@ export type OnUpdateFilterSubscription = {
     id: string,
     name: string,
     description: string | null,
-    editable: boolean | null,
     options:  {
       __typename: "ModelFilterOptionConnection",
       items:  Array< {
@@ -21498,7 +21574,6 @@ export type OnDeleteFilterSubscription = {
     id: string,
     name: string,
     description: string | null,
-    editable: boolean | null,
     options:  {
       __typename: "ModelFilterOptionConnection",
       items:  Array< {
@@ -21522,19 +21597,6 @@ export type OnCreateFilterOptionSubscription = {
     id: string,
     filterID: string,
     text: string,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -21546,19 +21608,6 @@ export type OnUpdateFilterOptionSubscription = {
     id: string,
     filterID: string,
     text: string,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -21570,658 +21619,6 @@ export type OnDeleteFilterOptionSubscription = {
     id: string,
     filterID: string,
     text: string,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateClientSubscription = {
-  onCreateClient:  {
-    __typename: "Client",
-    id: string,
-    name: string,
-    architecture:  {
-      __typename: "ModelArchitectureConnection",
-      items:  Array< {
-        __typename: "Architecture",
-        id: string,
-        name: string,
-        clientID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateClientSubscription = {
-  onUpdateClient:  {
-    __typename: "Client",
-    id: string,
-    name: string,
-    architecture:  {
-      __typename: "ModelArchitectureConnection",
-      items:  Array< {
-        __typename: "Architecture",
-        id: string,
-        name: string,
-        clientID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteClientSubscription = {
-  onDeleteClient:  {
-    __typename: "Client",
-    id: string,
-    name: string,
-    architecture:  {
-      __typename: "ModelArchitectureConnection",
-      items:  Array< {
-        __typename: "Architecture",
-        id: string,
-        name: string,
-        clientID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateArchitectureSubscription = {
-  onCreateArchitecture:  {
-    __typename: "Architecture",
-    id: string,
-    name: string,
-    clientID: string,
-    client:  {
-      __typename: "Client",
-      id: string,
-      name: string,
-      architecture:  {
-        __typename: "ModelArchitectureConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    types:  {
-      __typename: "ModelTypeConnection",
-      items:  Array< {
-        __typename: "Type",
-        id: string,
-        name: string,
-        architectureID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    filters:  {
-      __typename: "ModelArchitectureFilterConnection",
-      items:  Array< {
-        __typename: "ArchitectureFilter",
-        id: string,
-        architectureID: string,
-        filterID: string,
-        multiselect: boolean | null,
-        required: boolean | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateArchitectureSubscription = {
-  onUpdateArchitecture:  {
-    __typename: "Architecture",
-    id: string,
-    name: string,
-    clientID: string,
-    client:  {
-      __typename: "Client",
-      id: string,
-      name: string,
-      architecture:  {
-        __typename: "ModelArchitectureConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    types:  {
-      __typename: "ModelTypeConnection",
-      items:  Array< {
-        __typename: "Type",
-        id: string,
-        name: string,
-        architectureID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    filters:  {
-      __typename: "ModelArchitectureFilterConnection",
-      items:  Array< {
-        __typename: "ArchitectureFilter",
-        id: string,
-        architectureID: string,
-        filterID: string,
-        multiselect: boolean | null,
-        required: boolean | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteArchitectureSubscription = {
-  onDeleteArchitecture:  {
-    __typename: "Architecture",
-    id: string,
-    name: string,
-    clientID: string,
-    client:  {
-      __typename: "Client",
-      id: string,
-      name: string,
-      architecture:  {
-        __typename: "ModelArchitectureConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    types:  {
-      __typename: "ModelTypeConnection",
-      items:  Array< {
-        __typename: "Type",
-        id: string,
-        name: string,
-        architectureID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    filters:  {
-      __typename: "ModelArchitectureFilterConnection",
-      items:  Array< {
-        __typename: "ArchitectureFilter",
-        id: string,
-        architectureID: string,
-        filterID: string,
-        multiselect: boolean | null,
-        required: boolean | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateTypeSubscription = {
-  onCreateType:  {
-    __typename: "Type",
-    id: string,
-    name: string,
-    architectureID: string,
-    architecture:  {
-      __typename: "Architecture",
-      id: string,
-      name: string,
-      clientID: string,
-      client:  {
-        __typename: "Client",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      types:  {
-        __typename: "ModelTypeConnection",
-        nextToken: string | null,
-      } | null,
-      filters:  {
-        __typename: "ModelArchitectureFilterConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filters:  {
-      __typename: "ModelFilterTypeConnection",
-      items:  Array< {
-        __typename: "FilterType",
-        id: string,
-        typeID: string,
-        filterID: string,
-        multiselect: boolean | null,
-        required: boolean | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateTypeSubscription = {
-  onUpdateType:  {
-    __typename: "Type",
-    id: string,
-    name: string,
-    architectureID: string,
-    architecture:  {
-      __typename: "Architecture",
-      id: string,
-      name: string,
-      clientID: string,
-      client:  {
-        __typename: "Client",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      types:  {
-        __typename: "ModelTypeConnection",
-        nextToken: string | null,
-      } | null,
-      filters:  {
-        __typename: "ModelArchitectureFilterConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filters:  {
-      __typename: "ModelFilterTypeConnection",
-      items:  Array< {
-        __typename: "FilterType",
-        id: string,
-        typeID: string,
-        filterID: string,
-        multiselect: boolean | null,
-        required: boolean | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteTypeSubscription = {
-  onDeleteType:  {
-    __typename: "Type",
-    id: string,
-    name: string,
-    architectureID: string,
-    architecture:  {
-      __typename: "Architecture",
-      id: string,
-      name: string,
-      clientID: string,
-      client:  {
-        __typename: "Client",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      types:  {
-        __typename: "ModelTypeConnection",
-        nextToken: string | null,
-      } | null,
-      filters:  {
-        __typename: "ModelArchitectureFilterConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filters:  {
-      __typename: "ModelFilterTypeConnection",
-      items:  Array< {
-        __typename: "FilterType",
-        id: string,
-        typeID: string,
-        filterID: string,
-        multiselect: boolean | null,
-        required: boolean | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateFilterTypeSubscription = {
-  onCreateFilterType:  {
-    __typename: "FilterType",
-    id: string,
-    typeID: string,
-    filterID: string,
-    multiselect: boolean | null,
-    required: boolean | null,
-    type:  {
-      __typename: "Type",
-      id: string,
-      name: string,
-      architectureID: string,
-      architecture:  {
-        __typename: "Architecture",
-        id: string,
-        name: string,
-        clientID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      filters:  {
-        __typename: "ModelFilterTypeConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateFilterTypeSubscription = {
-  onUpdateFilterType:  {
-    __typename: "FilterType",
-    id: string,
-    typeID: string,
-    filterID: string,
-    multiselect: boolean | null,
-    required: boolean | null,
-    type:  {
-      __typename: "Type",
-      id: string,
-      name: string,
-      architectureID: string,
-      architecture:  {
-        __typename: "Architecture",
-        id: string,
-        name: string,
-        clientID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      filters:  {
-        __typename: "ModelFilterTypeConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteFilterTypeSubscription = {
-  onDeleteFilterType:  {
-    __typename: "FilterType",
-    id: string,
-    typeID: string,
-    filterID: string,
-    multiselect: boolean | null,
-    required: boolean | null,
-    type:  {
-      __typename: "Type",
-      id: string,
-      name: string,
-      architectureID: string,
-      architecture:  {
-        __typename: "Architecture",
-        id: string,
-        name: string,
-        clientID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      filters:  {
-        __typename: "ModelFilterTypeConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateArchitectureFilterSubscription = {
-  onCreateArchitectureFilter:  {
-    __typename: "ArchitectureFilter",
-    id: string,
-    architectureID: string,
-    filterID: string,
-    multiselect: boolean | null,
-    required: boolean | null,
-    architecture:  {
-      __typename: "Architecture",
-      id: string,
-      name: string,
-      clientID: string,
-      client:  {
-        __typename: "Client",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      types:  {
-        __typename: "ModelTypeConnection",
-        nextToken: string | null,
-      } | null,
-      filters:  {
-        __typename: "ModelArchitectureFilterConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateArchitectureFilterSubscription = {
-  onUpdateArchitectureFilter:  {
-    __typename: "ArchitectureFilter",
-    id: string,
-    architectureID: string,
-    filterID: string,
-    multiselect: boolean | null,
-    required: boolean | null,
-    architecture:  {
-      __typename: "Architecture",
-      id: string,
-      name: string,
-      clientID: string,
-      client:  {
-        __typename: "Client",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      types:  {
-        __typename: "ModelTypeConnection",
-        nextToken: string | null,
-      } | null,
-      filters:  {
-        __typename: "ModelArchitectureFilterConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteArchitectureFilterSubscription = {
-  onDeleteArchitectureFilter:  {
-    __typename: "ArchitectureFilter",
-    id: string,
-    architectureID: string,
-    filterID: string,
-    multiselect: boolean | null,
-    required: boolean | null,
-    architecture:  {
-      __typename: "Architecture",
-      id: string,
-      name: string,
-      clientID: string,
-      client:  {
-        __typename: "Client",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      types:  {
-        __typename: "ModelTypeConnection",
-        nextToken: string | null,
-      } | null,
-      filters:  {
-        __typename: "ModelArchitectureFilterConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    filter:  {
-      __typename: "Filter",
-      id: string,
-      name: string,
-      description: string | null,
-      editable: boolean | null,
-      options:  {
-        __typename: "ModelFilterOptionConnection",
-        nextToken: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,

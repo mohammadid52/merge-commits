@@ -1,15 +1,17 @@
 import React, { useContext, useState, useEffect, SetStateAction } from 'react';
-import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 // Iconz
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FiUsers } from 'react-icons/fi';
 import { FaUniversity, FaRulerVertical } from 'react-icons/fa';
 import { AiOutlineSchedule, AiOutlineAudit, AiOutlineUsergroupAdd } from 'react-icons/ai';
+import useDictionary from '../../../customHooks/dictionary';
 
 type LinkObject = {
   name: string;
   path: string;
+  title: string
 };
 
 export interface LinkProps {
@@ -17,15 +19,18 @@ export interface LinkProps {
   setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
   currentPage: string;
   image?: string;
-  role?: string
+  role?: string;
+  updateAuthState?: Function
 };
 
 const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
+  const { sideBarLinksDict } = useDictionary()
   const history = useHistory();
   const match = useRouteMatch();
-  const { state } = useContext(GlobalContext);
+  const { state, userLanguage } = useContext(GlobalContext);
+  const { role } = linkProps;
   const [links, setLinks] = useState<Array<LinkObject>>([]);
-
+  
   const userLinks = (role: string): void => {
     switch (role) {
       case 'SUP':
@@ -33,22 +38,27 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
+              title: 'REGISTRATION',
               name: 'Registration',
               path: 'registration',
             },
             {
+              title: 'PEOPLE',
               name: 'People',
               path: 'manage-users',
             },
             {
+              title: 'CLASSROOM',
               name: 'Classroom',
               path: 'classroom',
             },
             {
+              title: 'LESSON_PLANNER',
               name: 'Lesson Planner',
               path: 'lesson-planner',
             },
             {
+              title: 'INSTITUTIONS',
               name: 'Institutions',
               path: 'manage-institutions',
             },
@@ -59,10 +69,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
+              title: 'INSTITUTIONS',
               name: 'Institutions',
               path: 'manage-institutions',
             },
             {
+              title: 'PEOPLE',
               name: 'People',
               path: 'manage-users',
             },
@@ -71,10 +83,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
             //   path: 'lesson-planner',
             // },
             {
+              title: 'LESSON_PLANNER',
               name: 'Lesson Planner',
               path: 'lesson-planner',
             },
             {
+              title: 'CLASSROOM',
               name: 'Classroom',
               path: 'classroom',
             },
@@ -89,10 +103,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
             //   path: 'registration',
             // },
             {
+              title: 'PEOPLE',
               name: 'People',
               path: 'manage-users',
             },
             {
+              title: 'LESSON_PLANNER',
               name: 'Lesson Planner',
               path: 'lesson-planner',
             },
@@ -103,13 +119,18 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     }
   };
 
+  // useEffect(() => {
+  //   userLinks(state.user.role);
+  // }, [state.user.role]);
+
   useEffect(() => {
-    userLinks(state.user.role);
-  }, [state.user.role]);
+    userLinks(role);
+  }, [role]);
 
   // useEffect(() => {
-  //   userLinks(state.user?.role);
-  // }, []);
+  //   console.log("initial useeffect in links has been called", role)
+  //   userLinks(role);
+  // }, [])
 
   const handleLink = (e: any) => {
     const id = e.target.id.toLowerCase();
@@ -181,30 +202,27 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   };
 
   return (
-    <div className='link  w-full h-12 z-40'>
+    <div className="link  w-full h-12 z-40">
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
-          <>
-            <div
-              id={link.path}
-              key={key}
-              className={`w-full h-16 text-center text-sm mx-auto py-4 flex flex-col items-center justify-center ${getClassStyle(
-                link.name
-              )}`}
-              onClick={handleLink}>
-
-              <div id={link.path} className='w-full text-center'>
-                <IconContext.Provider value={{ size: '1.5rem' }}>
-                  {getMenuIcon(link.name, link.path)}
-                </IconContext.Provider>
+            <div key={`link_${key}`}>
+              <div
+                id={link.path}
+                className={`w-full h-16 text-center text-sm mx-auto py-4 flex flex-col items-center justify-center ${getClassStyle(
+                  link.name
+                )}`}
+                onClick={handleLink}>
+                <div id={link.path} className="w-full text-center">
+                  <IconContext.Provider value={{ size: '1.5rem' }}>
+                    {getMenuIcon(link.name, link.path)}
+                  </IconContext.Provider>
+                </div>
+                {link.name}
               </div>
-              {link.name}
+
+              <div className={`w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent`}></div>
             </div>
-
-            <div className={`w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent`}></div>
-
-          </>
-        ))
+          ))
         : null}
     </div>
   );

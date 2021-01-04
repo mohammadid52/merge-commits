@@ -148,6 +148,36 @@ export const getStaff = /* GraphQL */ `
       staffEmail
       status
       statusChangeDate
+      staffMember {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        createdAt
+        updatedAt
+      }
       curricula {
         items {
           id
@@ -177,6 +207,30 @@ export const listStaffs = /* GraphQL */ `
         staffEmail
         status
         statusChangeDate
+        staffMember {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
         curricula {
           nextToken
         }
@@ -218,7 +272,21 @@ export const getPerson = /* GraphQL */ `
       birthdate
       image
       language
+      classes {
+        items {
+          id
+          classID
+          studentID
+          studentEmail
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       filters
+      lastLoggedIn
+      lastLoggedOut
       createdAt
       updatedAt
     }
@@ -262,7 +330,12 @@ export const listPersons = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
+        lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -334,7 +407,12 @@ export const getRoom = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
+        lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -438,6 +516,8 @@ export const listRooms = /* GraphQL */ `
           image
           language
           filters
+          lastLoggedIn
+          lastLoggedOut
           createdAt
           updatedAt
         }
@@ -521,7 +601,7 @@ export const getClass = /* GraphQL */ `
           classID
           studentID
           studentEmail
-          studentAuth
+          studentAuthID
           createdAt
           updatedAt
         }
@@ -971,7 +1051,12 @@ export const getStudentData = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
+        lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -987,6 +1072,10 @@ export const getStudentData = /* GraphQL */ `
           label
           isLie
           text
+        }
+        poll {
+          id
+          question
         }
       }
       corelessonData {
@@ -1099,6 +1188,8 @@ export const listStudentDatas = /* GraphQL */ `
           image
           language
           filters
+          lastLoggedIn
+          lastLoggedOut
           createdAt
           updatedAt
         }
@@ -2025,6 +2116,10 @@ export const getWarmUp = /* GraphQL */ `
           prompt
           example
         }
+        pollInputs {
+          id
+          question
+        }
       }
       breakdown {
         included
@@ -2545,7 +2640,12 @@ export const getQuestionData = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
+        lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -2611,6 +2711,8 @@ export const listQuestionDatas = /* GraphQL */ `
           image
           language
           filters
+          lastLoggedIn
+          lastLoggedOut
           createdAt
           updatedAt
         }
@@ -2651,13 +2753,116 @@ export const listWords = /* GraphQL */ `
     }
   }
 `;
+export const getFilterGroup = /* GraphQL */ `
+  query GetFilterGroup($id: ID!) {
+    getFilterGroup(id: $id) {
+      id
+      name
+      description
+      filters {
+        items {
+          id
+          filterGroupID
+          filterID
+          zoiq
+          admin
+          show
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listFilterGroups = /* GraphQL */ `
+  query ListFilterGroups(
+    $filter: ModelFilterGroupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFilterGroups(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        description
+        filters {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getFilterGroupFilter = /* GraphQL */ `
+  query GetFilterGroupFilter($id: ID!) {
+    getFilterGroupFilter(id: $id) {
+      id
+      filterGroupID
+      filterID
+      zoiq
+      admin
+      show
+      required
+      filter {
+        id
+        name
+        description
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listFilterGroupFilters = /* GraphQL */ `
+  query ListFilterGroupFilters(
+    $filter: ModelFilterGroupFilterFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFilterGroupFilters(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        filterGroupID
+        filterID
+        zoiq
+        admin
+        show
+        required
+        filter {
+          id
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getFilter = /* GraphQL */ `
   query GetFilter($id: ID!) {
     getFilter(id: $id) {
       id
       name
       description
-      editable
       options {
         items {
           id
@@ -2684,7 +2889,6 @@ export const listFilters = /* GraphQL */ `
         id
         name
         description
-        editable
         options {
           nextToken
         }
@@ -2701,17 +2905,6 @@ export const getFilterOption = /* GraphQL */ `
       id
       filterID
       text
-      filter {
-        id
-        name
-        description
-        editable
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
@@ -2736,196 +2929,6 @@ export const listFilterOptions = /* GraphQL */ `
         id
         filterID
         text
-        filter {
-          id
-          name
-          description
-          editable
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getClient = /* GraphQL */ `
-  query GetClient($id: ID!) {
-    getClient(id: $id) {
-      id
-      name
-      architecture {
-        items {
-          id
-          name
-          clientID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listClients = /* GraphQL */ `
-  query ListClients(
-    $filter: ModelClientFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listClients(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        architecture {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getArchitecture = /* GraphQL */ `
-  query GetArchitecture($id: ID!) {
-    getArchitecture(id: $id) {
-      id
-      name
-      clientID
-      client {
-        id
-        name
-        architecture {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      types {
-        items {
-          id
-          name
-          architectureID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      filters {
-        items {
-          id
-          architectureID
-          filterID
-          multiselect
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listArchitectures = /* GraphQL */ `
-  query ListArchitectures(
-    $filter: ModelArchitectureFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listArchitectures(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        clientID
-        client {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        types {
-          nextToken
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getType = /* GraphQL */ `
-  query GetType($id: ID!) {
-    getType(id: $id) {
-      id
-      name
-      architectureID
-      architecture {
-        id
-        name
-        clientID
-        client {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        types {
-          nextToken
-        }
-        filters {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filters {
-        items {
-          id
-          typeID
-          filterID
-          multiselect
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listTypes = /* GraphQL */ `
-  query ListTypes(
-    $filter: ModelTypeFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listTypes(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        architectureID
-        architecture {
-          id
-          name
-          clientID
-          createdAt
-          updatedAt
-        }
-        filters {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2969,7 +2972,12 @@ export const userById = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
+        lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }
@@ -3013,7 +3021,12 @@ export const usersByRole = /* GraphQL */ `
         birthdate
         image
         language
+        classes {
+          nextToken
+        }
         filters
+        lastLoggedIn
+        lastLoggedOut
         createdAt
         updatedAt
       }

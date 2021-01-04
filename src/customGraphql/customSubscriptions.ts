@@ -27,6 +27,15 @@ export const onUpdateClassroom = /* GraphQL */ `
             isLie
             text
           }
+          poll {
+            id
+            question
+            option {
+              id
+              option
+              isChoice
+            }
+          }
         }
         corelessonData {
           selected {
@@ -105,6 +114,15 @@ export const onChangeStudentData = /* GraphQL */ `
           label
           isLie
           text
+        }
+        poll {
+          id
+          question
+          option {
+            id
+            option
+            isChoice
+          }
         }
       }
       corelessonData {

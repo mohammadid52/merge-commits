@@ -1,32 +1,67 @@
 import { useState, useEffect, useContext } from 'react';
-import {LessonContext} from "../contexts/LessonContext";
+import { LessonContext } from '../contexts/LessonContext';
+import { LessonControlContext } from '../contexts/LessonControlContext';
+import { useLocation, useRouteMatch } from 'react-router-dom';
 
-const usePageLabel = () => {
-    const {state} = useContext(LessonContext);
-    const [pageLabel, setPageLabel] = useState<string>('');
-    const [prevPageLabel, setPrevPageLabel] = useState<string>('');
+interface UsePageLabelProps {
+  isTeacher?: boolean;
+}
 
-    useEffect(() => {
-        const labelSwitch = (input: string) => {
-            if (RegExp('Breakdown', 'i').test(input)) {
-                return 'Breakdown';
-            } else {
-                if (RegExp('intro', 'i').test(input)) return 'Intro';
-                if (RegExp('Warmup', 'i').test(input)) return 'Warm Up';
-                if (RegExp('Corelesson', 'i').test(input)) return 'Core Lesson';
-                if (RegExp('Activity', 'i').test(input)) return 'Activity';
-                if (RegExp('Checkpoint', 'i').test(input)) return 'Checkpoint';
-                if (RegExp('Outro', 'i').test(input)) return 'Outro';
-            }
-        };
+const usePageLabel = (props: UsePageLabelProps) => {
+  /**
+   * Teacher switch
+   */
+  const { isTeacher } = props;
+  const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
+  const { state } = switchContext;
 
-        setPageLabel(labelSwitch(state.pages[state.currentPage].stage));
-        setPrevPageLabel(labelSwitch(state.pages[state.currentPage-1].stage));
+  const match = useRouteMatch();
 
-        return () => console.log(' -> ', '');
-    }, []);
+  const [pageLabel, setPageLabel] = useState<string>('');
+  const [prevPageLabel, setPrevPageLabel] = useState<string>('');
 
-    return { prev: prevPageLabel, current: pageLabel };
+  useEffect(() => {
+    const currentPage = () => {
+      if (isTeacher) {
+        const url = match.url;
+        const n = url.lastIndexOf('/');
+        return url.substring(n + 1);
+      } else {
+        return state.pages[state.currentPage].stage;
+      }
+    };
+
+    const previousPage = () => {
+      if (isTeacher) {
+        const url = match.url;
+        const splitArray = url.split('/');
+        return splitArray[splitArray.length-2];
+      } else {
+        return state.pages[state.currentPage - 1].stage;
+      }
+    };
+
+    const labelSwitch = (input: string) => {
+      if (RegExp('Breakdown', 'i').test(input)) {
+        return 'Breakdown';
+      } else {
+        if (RegExp('intro', 'i').test(input)) return 'Intro';
+        if (RegExp('Warmup', 'i').test(input)) return 'Warm Up';
+        if (RegExp('Corelesson', 'i').test(input)) return 'Core Lesson';
+        if (RegExp('Activity', 'i').test(input)) return 'Activity';
+        if (RegExp('Checkpoint', 'i').test(input)) return 'Checkpoint';
+        if (RegExp('Outro', 'i').test(input)) return 'Outro';
+      }
+    };
+
+    // setPageLabel(labelSwitch(state.pages[state.currentPage].stage));
+    setPageLabel(labelSwitch(currentPage()));
+    setPrevPageLabel(labelSwitch(previousPage()));
+
+    return () => console.log(' -> ', '');
+  }, []);
+
+  return { prev: prevPageLabel, current: pageLabel };
 };
 
 export default usePageLabel;

@@ -55,12 +55,10 @@ const CoopDisplay = () => {
       state.displayData.breakdownComponent &&
       state.displayData.breakdownComponent === 'warmup/breakdown'
     ) {
-      // console.log( 'got it', state.displayData );
       setTeacherData(state.displayData);
     }
   }, [state.displayData]);
 
-  // {console.log(state.displayData.breakdownComponent, 'state and find name')}
 
   return (
     <div className={theme.section}>
@@ -108,9 +106,14 @@ const CoopDisplay = () => {
 
         <div className="w-full h-8.8/10 flex md:flex-col justify-between">
           <ListOutput list={teacherData && teacherData.warmUpData && teacherData.warmUpData.story} />
-          {/* <Modules
-                        additional={teacherData && teacherData.warmUpData && teacherData.warmUpData.additional ? teacherData.warmUpData.additional : null}
-                        displayMode="COOP" /> */}
+          <Modules
+            additional={
+              teacherData && teacherData.warmUpData && teacherData.warmUpData.additional
+                ? teacherData.warmUpData.additional
+                : null
+            }
+            displayMode="COOP"
+          />
         </div>
       </div>
 
@@ -137,9 +140,7 @@ const CoopDisplay = () => {
 
         <div className="w-full h-8.8/10 flex flex-col justify-between">
           <ListOutput list={displayProps.story} />
-          {/* <Modules
-                        additional={displayProps.additional}
-                        displayMode="SELFinCOOP" /> */}
+          <Modules additional={displayProps.additional} displayMode="SELFinCOOP" />
         </div>
       </div>
     </div>

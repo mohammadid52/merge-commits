@@ -11,6 +11,9 @@ interface DropdownProps {
 }
 
 
+// TODO: Need to make this component 
+// to use selector component in atom > froms > selector.
+
 const DropdownForm = ( props: DropdownProps ) => {
 
     const {label, items, userInfo, handleChange, id, style, value} = props;

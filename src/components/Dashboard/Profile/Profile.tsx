@@ -23,6 +23,7 @@ import BreadCrums from '../../Atoms/BreadCrums';
 import SectionTitle from '../../Atoms/SectionTitle';
 import Buttons from '../../Atoms/Buttons';
 import Loader from '../../Atoms/Loader';
+import useDictionary from '../../../customHooks/dictionary';
 
 export interface UserInfo {
   authId: string
@@ -69,12 +70,12 @@ const Profile: React.FC = () => {
       birthdate: null,
     }
   );
-
+  const { dashboardProfileDict } = useDictionary();
   const match = useRouteMatch();
   const history = useHistory();
   const pathName = location.pathname.replace(/\/$/, "");
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
-  const { state, theme, dispatch } = useContext(GlobalContext);
+  const { state, theme, userLanguage, dispatch } = useContext(GlobalContext);
   const [status, setStatus] = useState('');
   const [select, setSelect] = useState('Profile');
   const [showCropper, setShowCropper] = useState(false);
@@ -86,26 +87,8 @@ const Profile: React.FC = () => {
     { title: 'Profile', url: '/dashboard/profile', last: true },
   ]
 
-  const initials = (firstName: string, lastName: string) => {
-    let firstInitial = firstName.charAt(0).toUpperCase()
-    let lastInitial = lastName.charAt(0).toUpperCase()
-    return firstInitial + lastInitial;
-  }
-
-  const stringToHslColor = (str: string) => {
-    let hash = 0;
-    let i;
-    for (i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let h = hash % 360;
-    return 'hsl(' + h + ', 70%, 72%)';
-  }
-
   // TODO: 
   // Set type for file instead of any
-
   const uploadImageToS3 = async (file: any, id: string, type: string) => {
     // Upload file to s3 bucket
 
@@ -273,7 +256,7 @@ const Profile: React.FC = () => {
         <div className={`w-9/10 h-full main_container mt-4`}>
           <BreadCrums items={breadCrumsList} />
           <div className="flex justify-between">
-            <SectionTitle title="USER PROFILE" subtitle="This contains your profile information." />
+            <SectionTitle title={dashboardProfileDict[userLanguage]['TITLE']} subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']} />
             <div className="flex justify-end py-4 mb-4 w-5/10">
               <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
               {currentPath !== 'edit' ? (
@@ -284,13 +267,13 @@ const Profile: React.FC = () => {
           </div>
           <div className={`w-full white_back p-8 mb-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
             <div className="h-9/10 flex flex-col md:flex-row">
-              <div className="w-auto p-4 flex flex-col text-center items-center">
+              <div className="w-2/10 p-4 flex flex-col text-center items-center">
                 <div className='relative' >
                   {person.image ?
                     (
                       <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
                         {!imageLoading ? <img
-                          className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border border-gray-400 shadow-elem-light`}
+                          className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
                           src={imageUrl}
                         /> :
                           <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-lightI">
@@ -302,7 +285,7 @@ const Profile: React.FC = () => {
                             <IconContext.Provider value={{ size: '1.6rem', color: '#B22222' }}>
                               <FaEdit />
                             </IconContext.Provider>
-                            <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
+                            <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
                           </label>
                           <span className="w-8 cursor-pointer" onClick={deletUserProfile}>
                             <IconContext.Provider value={{ size: '1.6rem', color: '#fa0000' }}>
@@ -316,7 +299,7 @@ const Profile: React.FC = () => {
                         {!imageLoading ? <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
                           <FaPlus />
                         </IconContext.Provider> : <Loader />}
-                        <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} accept="image/*" multiple={false} />
+                        <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
                       </label>
 
                     )

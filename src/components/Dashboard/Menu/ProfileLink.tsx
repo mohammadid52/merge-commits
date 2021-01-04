@@ -67,7 +67,8 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
       <div className='size flex flex-col text-center justify-center items-center py-4 border-b border-t border-white20'>
         <div className='w-8 h-8'>
           {
-            state.user.image ?
+            // state.user.image ?
+            linkProps.image ?
               <img
                 className="w-8 h-8 rounded-full"
                 src={imageUrl}
@@ -75,11 +76,7 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
               <div
                 className='w-8 h-8 rounded-full flex justify-center items-center text-sm font-bold text-white font-sans'
                 style={{
-                  background: `${
-                    state.user.firstName
-                      ? stringToHslColor(state.user.firstName + ' ' + state.user.lastName)
-                      : '#272730'
-                    }`,
+                  background: `${state.user.firstName ? stringToHslColor(state.user.firstName + ' ' + state.user.lastName) : '#272730'}`,
                   textShadow: '0.1rem 0.1rem 2px #423939b3',
                 }}>
                 {`${initials(state.user.firstName, state.user.lastName)}`}
