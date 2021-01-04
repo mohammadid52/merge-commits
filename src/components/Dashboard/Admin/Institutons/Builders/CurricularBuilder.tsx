@@ -5,12 +5,14 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as queries from '../../../../../graphql/queries';
+import { languageList } from '../../../../../utilities/staticData';
 import SectionTitle from '../../../../Atoms/SectionTitle';
 import PageWrapper from '../../../../Atoms/PageWrapper'
 import BreadCrums from '../../../../Atoms/BreadCrums';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
-import Selector from '../../../../Atoms/Form/Selector';
+import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
+import TextArea from '../../../../Atoms/Form/TextArea';
 
 interface CurricularBuilderProps {
 
@@ -21,6 +23,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const initialData = {
     id: '',
     name: '',
+    description: '',
+    objectives: '',
+    languages: [{ id: '1', name: "English", value: 'EN' }],
     institute: {
       id: '',
       name: '',
@@ -49,7 +54,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const onChange = (e: any) => {
     setCurricularData({
       ...curricularData,
-      name: e.target.value
+      [e.target.name]: e.target.value
     })
     if (messages.show) {
       setMessages({
@@ -59,7 +64,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       })
     }
   }
+  const selectLanguage = () => {
 
+  }
   const selectInstitute = (val: string, name: string, id: string) => {
     setCurricularData({
       ...curricularData,
@@ -215,7 +222,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     }
   }, [institutionList])
 
-  const { name, institute } = curricularData;
+  const { name, description, objectives, languages, institute } = curricularData;
   return (
     <div className="w-8/10 h-full mt-4 p-4">
 
@@ -234,8 +241,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CURRICULAR INFORMATION</h3>
           <div className="">
             <div className="px-3 py-4">
-              <FormInput value={name} id='curricularName' onChange={onChange} name='name' label="Curricular Name" />
+              <FormInput value={name} id='curricularName' onChange={onChange} name='name' label="Curricular Name" isRequired />
             </div>
+
             {/* 
               **
               * Hide institution drop down since all the things are tied to the 
@@ -247,6 +255,19 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
               </label>
               <Selector selectedItem={institute.value} placeholder="Select Institute" list={institutionList} onChange={selectInstitute} />
             </div> */}
+
+            <div className="px-3 py-4">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                Select Language
+              </label>
+              <MultipleSelector selectedItems={languages} placeholder="Select Languages" list={languageList} onChange={selectLanguage} />
+            </div>
+            <div className="px-3 py-4">
+              <TextArea value={description} id='description' onChange={onChange} name='description' label="Description" />
+            </div>
+            <div className="px-3 py-4">
+              <TextArea value={objectives} id='objectives' onChange={onChange} name='objectives' label="Objective" />
+            </div>
           </div>
         </div>
         {messages.show ? (<div className="py-2 m-auto text-center">

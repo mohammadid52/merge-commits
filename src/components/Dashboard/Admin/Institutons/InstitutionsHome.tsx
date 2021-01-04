@@ -8,6 +8,7 @@ import RoomBuilder from './Builders/RoomBuilder';
 import CurricularBuilder from './Builders/CurricularBuilder';
 import EditClass from './EditBuilders/EditClass';
 import EditCurricular from './EditBuilders/EditCurricular';
+import CurricularView from './EditBuilders/CurricularsView/CurricularView';
 import EditRoom from './EditBuilders/EditRoom';
 
 const InstitutionsHome = () => {
@@ -50,8 +51,12 @@ const InstitutionsHome = () => {
           render={() => <EditRoom />}
         />
         <Route
-          path={`${match.url}/curricular-edit`}
+          path={`${match.url}/curricular/edit`}
           render={() => <EditCurricular />}
+        />
+        <Route
+          path={`${match.url}/curricular`}
+          render={() => <CurricularView />}
         />
       </Switch>
     </div>
