@@ -279,6 +279,7 @@ export const getPerson = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -602,6 +603,7 @@ export const getClass = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }

@@ -205,6 +205,7 @@ type ClassStudent
   studentID: ID!
   studentEmail: String!
   studentAuthID: String!
+  status: String
   class: Class @connection(fields: ["classID"])
   student: Person @connection(fields: ["studentEmail", "studentAuthID"])
 }
