@@ -1,9 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
-import { string } from 'prop-types';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineInfoCircle } from 'react-icons/ai';
 
 type InputProp = [{ name: string; example: string; prompt: string }];
 
@@ -33,9 +30,9 @@ const Modules = (props: ModulesProps) => {
 
     if (
       cookies[`lesson-${state.classroomID}`]?.story?.additional &&
-      cookies[`lesson-${state.classroomID}`].story.additional.length > 0
+      cookies[`lesson-${state.classroomID}`].story?.additional?.length > 0
     ) {
-      cookies[`lesson-${state.classroomID}`].story.additional.forEach((item: { name: string; input: string }) => {
+      cookies[`lesson-${state.classroomID}`].story?.additional?.forEach((item: { name: string; input: string }) => {
         setFormInputs((prev) => {
           return {
             ...prev,
@@ -47,10 +44,10 @@ const Modules = (props: ModulesProps) => {
 
     if (
       state.componentState.story &&
-      state.componentState.story.additional &&
-      state.componentState.story.additional.length > 0
+      state.componentState.story?.additional &&
+      state.componentState.story?.additional?.length > 0
     ) {
-      state.componentState.story.additional.map((item: { name: string; input: string }) => {
+      state.componentState.story?.additional?.map((item: { name: string; input: string }) => {
         setFormInputs((prev) => {
           return {
             ...prev,
@@ -62,7 +59,7 @@ const Modules = (props: ModulesProps) => {
   }, []);
 
   useEffect(() => {
-    if (formInputs && state.componentState.story.additional && state.componentState.story.additional.length > 0) {
+    if (formInputs && state.componentState.story?.additional && state.componentState.story?.additional?.length > 0) {
       let tempArray: Array<{ name: string; input: string }> = [];
       inputs.forEach((input) => {
         let tempObj = {

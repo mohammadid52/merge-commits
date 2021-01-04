@@ -1,106 +1,179 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import { useCookies } from 'react-cookie';
+import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 
-type InputProp = [{ name: string; example: string; prompt: string; }];
+import { useCookies } from 'react-cookie';
+import { PollInput } from './PollActivity';
+
+type InputProp = [{ name: string; example: string; prompt: string }];
 
 interface ModulesProps {
-    inputs: InputProp;
+  isTeacher?: boolean;
+  inputs: InputProp;
+  dataProps?: {
+    pollInputs?: PollInput[];
+    poll?: PollInput[];
+    additional: any;
+  };
 }
 
 interface FormInputsState {
-    [key: string]: string
+  [key: string]: string;
 }
 
 const Modules = (props: ModulesProps) => {
-    const { inputs } = props
-    const { state, theme, dispatch } = useContext(LessonContext);
-    const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]) 
-    const [ formInputs, setFormInputs ] = useState<FormInputsState>() 
+  /**
+   * Teacher switch
+   */
+  const { isTeacher, inputs, dataProps } = props;
+  const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
+  const { state, theme, dispatch } = switchContext;
 
-    useEffect(() => {
-        inputs.forEach((item: { name: string; example: string; prompt: string; }) => {
-            setFormInputs(prev => {
-                return {
-                    ...prev,
-                    [item.name]: '',
-                }
-            })
-        })
+  /**
+   * Component state and cookies
+   */
+  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [formInputs, setFormInputs] = useState<FormInputsState>();
 
-        if ( cookies[`lesson-${state.classroomID}`]?.poll?.additional && cookies[`lesson-${state.classroomID}`].poll.additional.length > 0 ) {
-            cookies[`lesson-${state.classroomID}`].poll.additional.forEach((item: { name: string, input: string }) => {
-                setFormInputs(prev => {
-                    return {
-                        ...prev,
-                        [item.name]: item.input,
-                    }
-                })
-            })
-        }
+  /**
+   * Lifecycle
+   */
+  useEffect(() => {
+    inputs.forEach((item: { name: string; example: string; prompt: string }) => {
+      setFormInputs((prev) => {
+        return {
+          ...prev,
+          [item.name]: '',
+        };
+      });
+    });
 
-        if ( state.componentState.poll && state.componentState.poll.additional && state.componentState.poll.additional.length > 0 ) {
-            state.componentState.poll.additional.map((item: {name: string, input: string}) => {
-                setFormInputs(prev => {
-                    return {
-                        ...prev,
-                        [item.name]: item.input,
-                    }
-                })
-            })
-        }
-    }, [])
+    if (!isTeacher) {
+      /**
+       *
+       * CHECK IF NOT TEACHER and
+       * ONLY DO THIS FOR STUDENT
+       *
+       */
+      if (
+        cookies[`lesson-${state.classroomID}`]?.poll?.additional &&
+        cookies[`lesson-${state.classroomID}`].poll.additional.length > 0
+      ) {
+        cookies[`lesson-${state.classroomID}`].poll.additional.forEach((item: { name: string; input: string }) => {
+          setFormInputs((prev) => {
+            return {
+              ...prev,
+              [item.name]: item.input,
+            };
+          });
+        });
+      }
 
-    useEffect(() => {
-        if ( formInputs && state.componentState.poll.additional
-            && state.componentState.poll.additional.length > 0 ) {
-            let tempArray: Array<{name: string, input: string}> = [];
-            inputs.forEach(input => {
-                let tempObj = {
-                    name: input.name,
-                    input: formInputs[input.name]
-                }
-                
-                tempArray.push(tempObj)
-            })
-
-            dispatch({
-                type: 'UPDATE_COMPONENT_STATE',
-                payload: {
-                    componentName: 'poll',
-                    inputName: 'additional',
-                    content: tempArray
-                }
-            })
-
-            setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], poll: { ...cookies[`lesson-${state.classroomID}`].poll, additional: tempArray }})
-        }
-    }, [formInputs])
-
-    const handleFormInputChange = (e: { target: { id: string; value: string; }; }) => {
-        setFormInputs({
-            ...formInputs,
-            [e.target.id]: e.target.value
-        }) 
+      if (
+        state.componentState.poll &&
+        state.componentState.poll.additional &&
+        state.componentState.poll.additional.length > 0
+      ) {
+        state.componentState.poll.additional.map((item: { name: string; input: string }) => {
+          setFormInputs((prev) => {
+            return {
+              ...prev,
+              [item.name]: item.input,
+            };
+          });
+        });
+      }
     }
+  }, []);
 
-    return (
-        <div className="md:h-5.8/10 overflow-y-scroll w-full bg-gradient-to-tl from-dark-blue to-med-dark-blue text-gray-200 md:mb-0 px-4 md:px-8 py-4 rounded-lg overflow-hidden">
-            <h3 className={`text-xl font-open font-light ${theme.underline}`}>Focus Questions</h3>
-            <div className="w-full h-full ">
-                { 
-                    formInputs ? inputs.map((input, key) => (
-                        <div key={key} className={`flex flex-col animate-fadeIn ${key !== inputs.length-1 && 'border-b border-white border-opacity-10 '}`}>
-                            <label className="text-sm md:text-md mb-2 font-light text-base text-blue-100 text-opacity-70" htmlFor={input.name}>
-                                { input.prompt }
-                            </label>
-                            <input id={input.name} className="px-4 py-1 text-lg rounded-lg text-gray-700 bg-gray-300" name={input.name} type="text" placeholder={`${input.example}, etc.`} value={formInputs[input.name]} onChange={handleFormInputChange}/>
-                        </div>
-                    )) : null
-                }
+  useEffect(() => {
+    if (!isTeacher) {
+      /**
+       *
+       * CHECK IF NOT TEACHER and
+       * ONLY DO THIS FOR STUDENT
+       *
+       */
+      if (formInputs) {
+        let tempArray: Array<{ name: string; input: string }> = [];
+        inputs.forEach((input) => {
+          let tempObj = {
+            name: input.name,
+            input: formInputs[input.name],
+          };
+
+          tempArray.push(tempObj);
+        });
+
+        dispatch({
+          type: 'UPDATE_COMPONENT_STATE',
+          payload: {
+            componentName: 'poll',
+            inputName: 'additional',
+            content: tempArray,
+          },
+        });
+
+        setCookie(`lesson-${state.classroomID}`, {
+          ...cookies[`lesson-${state.classroomID}`],
+          poll: { ...cookies[`lesson-${state.classroomID}`].poll, additional: tempArray },
+        });
+      }
+    }
+  }, [formInputs]);
+
+
+  useEffect(() => {
+    if (isTeacher && dataProps) {
+      if (dataProps.additional) {
+        const mappedValues = dataProps.additional.map((item: { name: string; input: string }) => {
+          return { [item.name]: item.input };
+        });
+
+        setFormInputs(mappedValues[0]); // TODO: same as PollForm.tsx, in student this data structure is an object, but in teacher it becomes array
+        // TODO: fix this so data structure doesnt change
+      }
+    }
+  }, [dataProps]);
+
+  const handleFormInputChange = (e: { target: { id: string; value: string } }) => {
+    setFormInputs({
+      ...formInputs,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  return (
+    <div className='relative w-full h-full rounded-xl'>
+      <div className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
+        <h3>Focus Questions</h3>
+      </div>
+      <div className='w-full h-full '>
+        {formInputs
+          ? inputs.map((input, key) => (
+            <div
+              key={key}
+              className={`flex flex-col animate-fadeIn ${
+                key !== inputs.length - 1 && 'border-b border-white border-opacity-10 '
+              }`}>
+              <label className={`${theme.elem.text} mt-2 mb-2 w-full`} htmlFor={input.name}>
+                {input.prompt}
+              </label>
+              <input
+                id={input.name}
+                className={`h-auto ${theme.elem.textInput} w-full rounded-xl`}
+                name={input.name}
+                type='text'
+                placeholder={`${input.example}, etc.`}
+                value={formInputs[input.name]}
+                onChange={handleFormInputChange}
+              />
             </div>
-        </div>
-    )
-}
+          ))
+          : null}
+      </div>
+    </div>
+  );
+};
 
 export default Modules;

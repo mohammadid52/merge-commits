@@ -76,6 +76,13 @@ export const createStudentData = /* GraphQL */ `
           isLie
           text
         }
+        poll {
+          id
+          question
+          option {
+            id
+          }
+        }
       }
       corelessonData {
         selected {
@@ -165,6 +172,13 @@ export const updateStudentData = /* GraphQL */ `
           isLie
           text
         }
+        poll {
+          id
+          question
+          option {
+            id
+          }
+        }
       }
       corelessonData {
         selected {
@@ -229,6 +243,13 @@ export const updateClassroom = /* GraphQL */ `
             label
             isLie
             text
+          }
+          poll {
+            id
+            question
+            option {
+              id
+            }
           }
         }
         corelessonData {

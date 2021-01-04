@@ -2,19 +2,26 @@ import React, { useState, useContext } from 'react';
 import { LessonContext } from '../../../contexts/LessonContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
-import usePageLabel from "../../../customHooks/pageLabel";
+import usePageLabel from '../../../customHooks/pageLabel';
+import { LessonControlContext } from '../../../contexts/LessonControlContext';
 
 interface ReflectionQuestionProps {
-    questions: string[];
+  isTeacher?: boolean;
+  questions: string[];
 }
 
 const ReflectionQuestions = (props: ReflectionQuestionProps) => {
-    const pageLabel = usePageLabel();
+  /**
+   * Teacher switch
+   */
+  const { isTeacher } = props;
+  const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
+  const { state, theme } = switchContext;
+
+
+  const pageLabel = usePageLabel({isTeacher: isTeacher});
   const [question, setQuestion] = useState(0);
-  const { state, theme } = useContext(LessonContext);
   const questArr = props.questions;
-
-
 
   const nextQuestion = () => {
     if (question < questArr.length - 1) {
@@ -65,8 +72,8 @@ const ReflectionQuestions = (props: ReflectionQuestionProps) => {
         </div>
       </div>
 
-      <div className='question w-full flex-grow text-sm md:text-xl font-light text-gray-200 flex justify-center md:px-4'>
-        <p className='text-center'>{questArr[question]}</p>
+      <div className="question w-full flex-grow text-sm md:text-xl font-light text-gray-200 flex justify-center md:px-4">
+        <p className="text-center">{questArr[question]}</p>
       </div>
     </div>
   );
