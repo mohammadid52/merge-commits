@@ -190,14 +190,17 @@ export const formatPhoneNumber = (str: string) => {
  * @param key
  */
 export const createFilterToFetchSpecificItemsOnly = (arr: any, key: string) => {
-  let newArray = arr.map((item: any) => {
-    return {
-      [key]: {
-        eq: item,
-      },
-    };
-  });
-  return { or: newArray };
+  if (arr.length) {
+    let newArray = arr.map((item: any) => {
+      return {
+        [key]: {
+          eq: item,
+        },
+      };
+    });
+    return { or: newArray };
+  }
+  return {};
 };
 
 /**
@@ -207,12 +210,15 @@ export const createFilterToFetchSpecificItemsOnly = (arr: any, key: string) => {
  * @param key
  */
 export const createFilterToFetchAllItemsExcept = (arr: any, key: string) => {
-  let newArray = arr.map((item: any) => {
-    return {
-      [key]: {
-        ne: item,
-      },
-    };
-  });
-  return { and: newArray };
+  if (arr.length) {
+    let newArray = arr.map((item: any) => {
+      return {
+        [key]: {
+          ne: item,
+        },
+      };
+    });
+    return { and: newArray };
+  }
+  return {}
 };

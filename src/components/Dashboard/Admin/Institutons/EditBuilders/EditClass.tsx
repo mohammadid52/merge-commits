@@ -289,7 +289,7 @@ const EditClass = (props: EditClassProps) => {
           <Buttons btnClass="ml-4 py-1" label={dictionary.ADD_STUDENT_BUTTON} onClick={addStudentInClass} />
         </div>
 
-        {classStudents.length ? (
+        {classStudents ? (
           <Fragment>
             <div className="mb-4 mt-8 w-6/10 m-auto px-2 max-h-88 overflow-y-scroll">
               <div className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200 text-sm text-gray-600">
@@ -303,7 +303,7 @@ const EditClass = (props: EditClassProps) => {
             {
               !loading ?
                 <>
-                  {classStudents.map((item, index) =>
+                  {classStudents.length ? classStudents.map((item, index) =>
                     <div key={item.id} className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                       <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
                       <div className="flex w-5/10 items-center px-4 py-2">
@@ -338,7 +338,7 @@ const EditClass = (props: EditClassProps) => {
                           </span>
                         }
                       </div>
-                    </div>)}
+                    </div>) : <div>No students</div>}
                 </> : <div>Loading class students...</div>
             }
             { messages.show && (
