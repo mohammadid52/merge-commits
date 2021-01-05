@@ -5,6 +5,7 @@ import { IoClose } from 'react-icons/io5';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
+import Selector from '../../../../Atoms/Form/Selector';
 import Buttons from '../../../../Atoms/Buttons';
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import InstitutionPopUp from '../InstitutionPopUp';
@@ -15,6 +16,7 @@ import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
+import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as queries from '../../../../../graphql/queries';
 import * as mutations from '../../../../../graphql/mutations';
 interface StaffBuilderProps {
@@ -36,8 +38,14 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   });
   const [activeStaffList, setActiveStaffList] = useState([]);
   const [dataLoading, setDataLoading] = useState(true)
-  const [showModal, setShowModal] = useState<{ show: boolean; item: any; }>({show: false, item: {}})
-
+  const [showModal, setShowModal] = useState<{ show: boolean; item: any; }>({ show: false, item: {} })
+  const [statusEdit, setStatusEdit] = useState('');
+  const [updateStatus, setUpdateStatus] = useState(false)
+  const statusList = [
+    { id: 1, name: 'Active', value: 'Active' },
+    { id: 2, name: 'Inactive', value: 'Inactive' },
+    { id: 3, name: 'Dropped', value: 'Dropped' }
+  ]
   const onChange = (str: string, name: string, id: string, avatar: string) => {
     setNewMember({
       name: name,
@@ -90,7 +98,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       const staffUserIds: Array<string> = []
       let staffMembers: any = staff.data.listStaffs.items;
       staffMembers = staffMembers.filter((member: any) => {
-        if (staffUserIds.indexOf(member.staffMember.id) < 0) {
+        if (member.staffMember && staffUserIds.indexOf(member.staffMember.id) < 0) {
           staffUserIds.push(member.staffMember.id)
           member.userId = member.staffMember.id;
           member.name = `${member.staffMember.firstName || ''} ${member.staffMember.lastName || ''}`
@@ -157,27 +165,27 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     fetchStaffData()
   }, [])
 
-  const removeStaffMember = async (item: any) => {
-    setShowModal({ show: false, item: {}});
-
-    // remove staff member mutation
-    const input = {
-      id: item.id
+  const onStaffStatusChange = async (status: string, staffId: string, currentStatus: string) => {
+    if (currentStatus === status) {
+      setStatusEdit('');
+    } else {
+      setUpdateStatus(true)
+      await API.graphql(graphqlOperation(customMutations.updateStaff, { input: { id: staffId, status } }));
+      const updatedStaff = activeStaffList.map(staff => {
+        if (staff.id === staffId) {
+          staff.status = status
+        }
+        return staff
+      })
+      setActiveStaffList(updatedStaff);
+      setUpdateStatus(false)
     }
-    await API.graphql(graphqlOperation(mutations.deleteStaff, { input }));
-    // remove the removed user from the staff list.
-    let updatedStaffList = activeStaffList.filter((member: any) => member.id !== item.id)
-    // fetch the user object from allAvailableUsers and re add in the available users list.
-    let removedUser = allAvailableUsers.filter((user: any) => user.id === item.staffMember.id)[0]
-    setActiveStaffList(updatedStaffList)
-    setAvailableUsers([...availableUsers, removedUser])
   }
   return (
     <div className="p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{dictionary['TITLE']}</h3>
-
           {
             !dataLoading ?
               <>
@@ -185,6 +193,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                   <SelectorWithAvatar selectedItem={newMember} list={availableUsers} placeholder={dictionary['ADD_PLACEHOLDER']} onChange={onChange} />
                   <Buttons btnClass="ml-4 py-1" label={dictionary['ADD_BUTTON']} onClick={addStaffMember} />
                 </div>
+
                 {activeStaffList.length > 0 ? (
                   <Fragment>
                     <div className="my-4 w-8/10 m-auto max-h-88 overflow-y-scroll">
@@ -199,39 +208,50 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                           <span>Role</span>
                         </div>
                         <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                          <span>Actions</span>
+                          <span>Status</span>
+                        </div>
+                        <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                          <span>Action</span>
                         </div>
                       </div>
+
                       {activeStaffList.map((item, index) =>
                         <div key={index} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+
                           <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
+
                           <div className="flex w-6/10 px-8 py-3 items-center text-left text-s leading-4 font-medium ">
                             <div className="flex-shrink-0 h-10 w-10 flex items-center">
-                              {/* {item.staffMember.image ?
-                          (<img
-                            // src={imageUrl}
-                            className="h-8 w-8 rounded-full" />) : */}
                               <div className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold" style={{ background: `${stringToHslColor(getInitialsFromString(item.name)[0] + ' ' + getInitialsFromString(item.name)[1])}`, textShadow: '0.1rem 0.1rem 2px #423939b3' }} >
                                 {item.name ? initials(getInitialsFromString(item.name)[0], getInitialsFromString(item.name)[1]) : initials('N', 'A')}
                               </div>
-                              {/*  } */}
                             </div>
                             <div className="ml-4">{item.name}</div>
                           </div>
+
                           <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">{item.role ? getStaffRole(item.role) : ''}</div>
-                          <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">
-                            <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => setShowModal({ show: true, item })}>
-                              <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
-                                <IoClose />
-                              </IconContext.Provider>
-                            </span>
+                          {
+                            statusEdit === item.id ? (
+                              <div className="w-3/10 mr-6">
+                                <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={(val, name, id) => onStaffStatusChange(val, item.id, item.status)} />
+                              </div>) :
+                              <div className="w-3/10">
+                                {item.status || 'Active'}
+                              </div>
+                          }
+                          <div className="w-1/10">
+                            {statusEdit === item.id ?
+                              <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600">{updateStatus ? 'updating...' : ''}</span>
+                              :
+                              <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit(item.id)}>
+                                Edit
+                              </span>
+                            }
                           </div>
-                        </div>)}
+                        </div>)
+                      }
+
                     </div>
-                    {
-                      showModal.show && (
-                        <InstitutionPopUp saveLabel="Delete" saveAction={() => removeStaffMember(showModal.item)} closeAction={() => setShowModal({ show: false, item: {} })} message={`Are you sure you want to delete ${showModal.item?.name || 'user'} from the staff?`} />
-                      )}
                   </Fragment>
                 ) : (
                     <div className="text-center p-16">

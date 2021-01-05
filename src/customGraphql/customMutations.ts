@@ -443,3 +443,12 @@ export const createRoom = /* GraphQL */ `
     }
   }
 `;
+
+export const updateStaff = /* GraphQL */ `
+  mutation UpdateStaff($input: UpdateStaffInput!, $condition: ModelStaffConditionInput) {
+    updateStaff(input: $input, condition: $condition) {
+      id
+      status
+    }
+  }
+`;
