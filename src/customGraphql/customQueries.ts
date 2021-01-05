@@ -1009,6 +1009,7 @@ query GetInstitution($id: ID!) {
           id
           partnerID
           providerID
+          status
           providerInstitution {
             id
             name

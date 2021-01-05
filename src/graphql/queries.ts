@@ -23,6 +23,7 @@ export const getInstitution = /* GraphQL */ `
           id
           partnerID
           providerID
+          status
           createdAt
           updatedAt
         }

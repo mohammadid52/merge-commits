@@ -12,10 +12,12 @@ import InstitutionPopUp from '../InstitutionPopUp';
 import { createFilterToFetchAllItemsExcept } from '../../../../../utilities/strings';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as mutation from '../../../../../graphql/mutations';
+import * as customMutations from '../../../../../customGraphql/customMutations';
+import * as queries from '../../../../../graphql/queries';
+import * as mutations from '../../../../../graphql/mutations';
 interface ServiceProvidersProps {
   instId: string
-  serviceProviders: { items: { id: string, providerID: string, providerInstitution?: any }[] }
+  serviceProviders: { items: { id: string, providerID: string, status: string, providerInstitution?: any }[] }
   updateServiceProviders: Function
 }
 
@@ -24,17 +26,22 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
   const existingPartners = serviceProviders.items.map((item: any) => {
     return {
       id: item.id,
+      status: item.status,
       partner: { ...item.providerInstitution }
     }
   })
   const [availableServiceProviders, setAvailableServiceProviders] = useState([]);
   const [partners, setPartners] = useState(existingPartners);
-  const [showModal, setShowModal] = useState<{ show: boolean; item: any; }>({show: false, item: {}})
-  const [newServPro, setNewServPro] = useState({
-    id: '',
-    name: '',
-    value: ''
-  });
+  const [showModal, setShowModal] = useState<{ show: boolean; item: any; }>({ show: false, item: {} })
+  const [newServPro, setNewServPro] = useState({ id: '', name: '', value: '' });
+  const [statusEdit, setStatusEdit] = useState('');
+  const [updateStatus, setUpdateStatus] = useState(false)
+  const statusList = [
+    { id: 1, name: 'Active', value: 'Active' },
+    { id: 2, name: 'Inactive', value: 'Inactive' },
+    { id: 3, name: 'Dropped', value: 'Dropped' }
+  ]
+  
   const onServProChange = (val: string, name: string, id: string) => {
     setNewServPro({
       id: id,
@@ -81,12 +88,13 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
         // get the selected user from the list
         const input = {
           partnerID: instId,
-          providerID: newServPro.id
+          providerID: newServPro.id,
+          status: 'Active'
         }
-        const addedPartner: any = await API.graphql(graphqlOperation(mutation.createServiceProvider, { input: input }))
+        const addedPartner: any = await API.graphql(graphqlOperation(mutations.createServiceProvider, { input: input }))
         const item = addedPartner.data.createServiceProvider;
         props.updateServiceProviders(item)
-        const updatedPartners = [...partners, { id: item.id, partner: { ...item.providerInstitution } }]
+        const updatedPartners = [...partners, { id: item.id, status: 'Active', partner: { ...item.providerInstitution } }]
         const updatedAvailableServiceProviders = availableServiceProviders.filter((item: any) => item.id !== newServPro.id)
         setNewServPro({ id: '', name: '', value: '' })
         setPartners(updatedPartners)
@@ -101,18 +109,20 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
     }
   }
 
-  const removePartner = async (partner: any) => {
-    setShowModal({ show: false, item: {}});
-    try {
-      const input = { id: partner.id }
-      await API.graphql(graphqlOperation(mutation.deleteServiceProvider, { input: input }))
-      let updatedPartners = partners.filter((item: any) => item.id !== partner.id)
-      setPartners(updatedPartners)
-      const updatedAvaiSP = [...availableServiceProviders, { id: partner.partner.id, name: partner.partner.name, value: partner.partner.name }].sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase()) ? 1 : -1)
-      setAvailableServiceProviders(updatedAvaiSP)
-    } catch (err) {
-      console.log('Remove partner service provders', err)
+  const onPartnerStatusChange = async (status: string, id: string, currentStatus: string) => {
+    if (currentStatus !== status) {
+      setUpdateStatus(true)
+      await API.graphql(graphqlOperation(customMutations.updateServiceProviderStatus, { input: { id, status } }));
+      const updatedPartners = partners.map(sp => {
+        if (sp.id === id) {
+          sp.status = status
+        }
+        return sp
+      })
+      setPartners(updatedPartners);
+      setUpdateStatus(false)
     }
+    setStatusEdit('');
   }
   return (
     <div className="p-8 flex m-auto justify-center">
@@ -140,23 +150,34 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
 
                 {partners.map((item, index) => (
                   <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+
                     <div className="flex w-7/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                       {item.partner.name || ''}
                     </div>
-                    <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">
-                      <span className="w-6 h-6 flex items-center cursor-pointer" onClick={() => setShowModal({ show: true, item })}>
-                        <IconContext.Provider value={{ size: '1rem', color: '#000000' }}>
-                          <IoClose />
-                        </IconContext.Provider>
-                      </span>
+
+                    {
+                      statusEdit === item.id ? (
+                        <div className="w-3/10 mr-6">
+                          <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={(val, name, id) => onPartnerStatusChange(val, item.id, item.status)} />
+                        </div>) :
+                        <div className="w-3/10">
+                          {item.status || 'Active'}
+                        </div>
+                    }
+                    <div className="w-1/10">
+                      {statusEdit === item.id ?
+                        <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600">{updateStatus ? 'updating...' : ''}</span>
+                        :
+                        <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit(item.id)}>
+                          Edit
+                              </span>
+                      }
                     </div>
+
                   </div>
                 ))}
               </div>
-              {
-                showModal.show && (
-                  <InstitutionPopUp saveLabel="Delete" saveAction={() => removePartner(showModal.item)} closeAction={() => setShowModal({show: false, item: {}})} message={`Are you sure you want to delete ${showModal.item?.partner?.name || 'institute'} from service provider's list?`} />
-                )}
+
             </Fragment>
           ) : (
               <div className="text-center p-16">

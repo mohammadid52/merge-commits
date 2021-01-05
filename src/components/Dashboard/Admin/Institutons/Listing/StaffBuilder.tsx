@@ -166,9 +166,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   }, [])
 
   const onStaffStatusChange = async (status: string, staffId: string, currentStatus: string) => {
-    if (currentStatus === status) {
-      setStatusEdit('');
-    } else {
+    if (currentStatus !== status) {
       setUpdateStatus(true)
       await API.graphql(graphqlOperation(customMutations.updateStaff, { input: { id: staffId, status } }));
       const updatedStaff = activeStaffList.map(staff => {
@@ -180,6 +178,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       setActiveStaffList(updatedStaff);
       setUpdateStatus(false)
     }
+    setStatusEdit('');
   }
   return (
     <div className="p-8 flex m-auto justify-center">

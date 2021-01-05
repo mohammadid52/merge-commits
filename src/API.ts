@@ -119,11 +119,13 @@ export type CreateServiceProviderInput = {
   id?: string | null,
   partnerID: string,
   providerID: string,
+  status?: string | null,
 };
 
 export type ModelServiceProviderConditionInput = {
   partnerID?: ModelIDInput | null,
   providerID?: ModelIDInput | null,
+  status?: ModelStringInput | null,
   and?: Array< ModelServiceProviderConditionInput | null > | null,
   or?: Array< ModelServiceProviderConditionInput | null > | null,
   not?: ModelServiceProviderConditionInput | null,
@@ -149,6 +151,7 @@ export type UpdateServiceProviderInput = {
   id: string,
   partnerID?: string | null,
   providerID?: string | null,
+  status?: string | null,
 };
 
 export type DeleteServiceProviderInput = {
@@ -2077,6 +2080,7 @@ export type CreateInstitutionMutation = {
         id: string,
         partnerID: string,
         providerID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -2177,6 +2181,7 @@ export type UpdateInstitutionMutation = {
         id: string,
         partnerID: string,
         providerID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -2277,6 +2282,7 @@ export type DeleteInstitutionMutation = {
         id: string,
         partnerID: string,
         providerID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -2360,6 +2366,7 @@ export type CreateServiceProviderMutation = {
     id: string,
     partnerID: string,
     providerID: string,
+    status: string | null,
     providerInstitution:  {
       __typename: "Institution",
       id: string,
@@ -2415,6 +2422,7 @@ export type UpdateServiceProviderMutation = {
     id: string,
     partnerID: string,
     providerID: string,
+    status: string | null,
     providerInstitution:  {
       __typename: "Institution",
       id: string,
@@ -2470,6 +2478,7 @@ export type DeleteServiceProviderMutation = {
     id: string,
     partnerID: string,
     providerID: string,
+    status: string | null,
     providerInstitution:  {
       __typename: "Institution",
       id: string,
@@ -10833,6 +10842,7 @@ export type GetInstitutionQuery = {
         id: string,
         partnerID: string,
         providerID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -14710,6 +14720,7 @@ export type OnCreateInstitutionSubscription = {
         id: string,
         partnerID: string,
         providerID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -14805,6 +14816,7 @@ export type OnUpdateInstitutionSubscription = {
         id: string,
         partnerID: string,
         providerID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -14900,6 +14912,7 @@ export type OnDeleteInstitutionSubscription = {
         id: string,
         partnerID: string,
         providerID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -14978,6 +14991,7 @@ export type OnCreateServiceProviderSubscription = {
     id: string,
     partnerID: string,
     providerID: string,
+    status: string | null,
     providerInstitution:  {
       __typename: "Institution",
       id: string,
@@ -15028,6 +15042,7 @@ export type OnUpdateServiceProviderSubscription = {
     id: string,
     partnerID: string,
     providerID: string,
+    status: string | null,
     providerInstitution:  {
       __typename: "Institution",
       id: string,
@@ -15078,6 +15093,7 @@ export type OnDeleteServiceProviderSubscription = {
     id: string,
     partnerID: string,
     providerID: string,
+    status: string | null,
     providerInstitution:  {
       __typename: "Institution",
       id: string,

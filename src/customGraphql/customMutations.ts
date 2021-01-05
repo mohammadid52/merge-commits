@@ -452,3 +452,14 @@ export const updateStaff = /* GraphQL */ `
     }
   }
 `;
+export const updateServiceProviderStatus = /* GraphQL */ `
+  mutation UpdateServiceProvider(
+    $input: UpdateServiceProviderInput!
+    $condition: ModelServiceProviderConditionInput
+  ) {
+    updateServiceProvider(input: $input, condition: $condition) {
+      id
+      status
+    }
+  }
+`;

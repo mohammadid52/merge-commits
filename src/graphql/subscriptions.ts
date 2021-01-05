@@ -377,6 +377,7 @@ export const onCreateInstitution = /* GraphQL */ `
           id
           partnerID
           providerID
+          status
           createdAt
           updatedAt
         }
@@ -462,6 +463,7 @@ export const onUpdateInstitution = /* GraphQL */ `
           id
           partnerID
           providerID
+          status
           createdAt
           updatedAt
         }
@@ -547,6 +549,7 @@ export const onDeleteInstitution = /* GraphQL */ `
           id
           partnerID
           providerID
+          status
           createdAt
           updatedAt
         }
@@ -617,6 +620,7 @@ export const onCreateServiceProvider = /* GraphQL */ `
       id
       partnerID
       providerID
+      status
       providerInstitution {
         id
         name
@@ -661,6 +665,7 @@ export const onUpdateServiceProvider = /* GraphQL */ `
       id
       partnerID
       providerID
+      status
       providerInstitution {
         id
         name
@@ -705,6 +710,7 @@ export const onDeleteServiceProvider = /* GraphQL */ `
       id
       partnerID
       providerID
+      status
       providerInstitution {
         id
         name
