@@ -1,4 +1,6 @@
 import React, { Fragment } from 'react'
+import { useHistory } from 'react-router';
+
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import Buttons from '../../../../../../Atoms/Buttons';
 
@@ -8,12 +10,16 @@ interface TopicsListProps {
 
 const TopicsList = (props: TopicsListProps) => {
   const { topicsList } = props;
-  const createNewTopic = () => {
+  const history = useHistory();
 
+  const createNewTopic = () => {
+    // need to check for route id
+    history.push(`/dashboard/manage-institutions/curricular/topic/add?id=${'_blank_'}`)
   }
 
   const editCurrentTopic = (id: string) => {
-
+    // need to check for route id
+    history.push(`/dashboard/manage-institutions/curricular/topic/edit?id=${'_blank_'}`)
   }
 
   return (

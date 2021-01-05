@@ -9,11 +9,11 @@ interface TextAreaProps {
   onChange?: (e: any) => void
   value?: string
   placeHolder?: string
-
+  rows?: number
 }
 
 const TextArea = (props: TextAreaProps) => {
-  const { id, name, label, isRequired, onChange, value, placeHolder, } = props;
+  const { id, name, label, isRequired, onChange, rows, value, placeHolder, } = props;
   const { theme } = useContext(GlobalContext);
 
   return (
@@ -28,7 +28,7 @@ const TextArea = (props: TextAreaProps) => {
         className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
         value={value ? value : ''}
         placeholder={placeHolder}
-        rows={5}
+        rows={rows ? rows : 5}
       />
     </Fragment>
   )

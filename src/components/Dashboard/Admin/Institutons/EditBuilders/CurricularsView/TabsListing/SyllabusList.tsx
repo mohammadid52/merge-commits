@@ -1,4 +1,6 @@
-import React, { Fragment } from 'react'
+import React, { Fragment } from 'react';
+import { useHistory } from 'react-router';
+
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import Buttons from '../../../../../../Atoms/Buttons';
 
@@ -8,11 +10,15 @@ interface SyllabusListProps {
 
 const SyllabusList = (props: SyllabusListProps) => {
   const { syllabusList, } = props;
+  const history = useHistory();
+
   const createNewSyllabus = () => {
+    history.push(`/dashboard/manage-institutions/curricular/syllabus/add?id=${'_blank_'}`)
 
   }
 
   const editCurrentSyllabus = (id: string) => {
+    history.push(`/dashboard/manage-institutions/curricular/syllabus/edit?id=${'_blank_'}`)
 
   }
 

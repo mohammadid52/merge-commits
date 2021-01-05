@@ -1,4 +1,6 @@
-import React, { Fragment } from 'react'
+import React, { Fragment } from 'react';
+import { useHistory } from 'react-router';
+
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import Buttons from '../../../../../../Atoms/Buttons';
 
@@ -10,11 +12,15 @@ interface MeasMntListProps {
 
 const MeasMntList = (props: MeasMntListProps) => {
   const { measurementList } = props;
+  const history = useHistory();
+
   const createNewMeasurement = () => {
+    history.push(`/dashboard/manage-institutions/curricular/measurement/add?id=${'_blank_'}`)
 
   }
 
   const editCurrentMeasurement = (id: string) => {
+    history.push(`/dashboard/manage-institutions/curricular/measurement/edit?id=${'_blank_'}`)
 
   }
   return (
