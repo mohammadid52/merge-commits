@@ -279,6 +279,37 @@ const staffBuilderDict: any = {
     }
 }
 
+const editClassDict: any = {
+    'EN': {
+        TITLE: 'EDIT CLASS',
+        SUBTITLE: 'Edit class information',
+        NAME_INPUT_LABEL: 'Class Name',
+        STUDENTS: 'STUDENTS',
+        ADD_STUDENT_PLACEHOLDER: 'Add new student',
+        ADD_STUDENT_BUTTON: 'Add',
+        TABLE: {
+            SNO: 'No.',
+            NAME: 'Student Name',
+            STATUS: 'Status',
+            ACTIONS: 'Actions'
+        }
+    },
+    'ES': {
+        TITLE: 'EDITAR CLASE',
+        SUBTITLE: 'Editar la información de la clase',
+        NAME_INPUT_LABEL: 'Nombre de la clase',
+        STUDENTS: 'ALUMNAS',
+        ADD_STUDENT_PLACEHOLDER: 'Agregar nuevo alumno',
+        ADD_STUDENT_BUTTON: 'Añadir',
+        TABLE: {
+            SNO: 'No.',
+            NAME: 'nombre del estudiante',
+            STATUS: 'estado',
+            ACTIONS: 'comportamiento'
+        }
+    }
+} 
+
 function useDictionary() {
     async function lookUp(word: string) {
         const appId = 'c4ad157e';
@@ -304,7 +335,8 @@ function useDictionary() {
         appDict,
         sideBarLinksDict,
         dashboardProfileDict,
-        staffBuilderDict
+        staffBuilderDict,
+        editClassDict
     }
 }
 

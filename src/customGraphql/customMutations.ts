@@ -411,8 +411,18 @@ export const createClassStudent = /* GraphQL */ `
       id
       classID
       studentID
+      status
       studentEmail
       studentAuthID
+    }
+  }
+`;
+
+export const updateClassStudent = /* GraphQL */ `
+  mutation UpdateClassStudent($input: UpdateClassStudentInput!, $condition: ModelClassStudentConditionInput) {
+    updateClassStudent(input: $input, condition: $condition) {
+      id
+      status
     }
   }
 `;
