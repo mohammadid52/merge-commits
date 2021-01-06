@@ -67,9 +67,21 @@ const EditCurricular = (props: EditCurricularProps) => {
       })
     }
   }
-  const selectLanguage = () => {
-
+  const selectLanguage = (id: string, name: string, value: string) => {
+    let updatedList;
+    const currentLanguages = curricularData.languages;
+    const selectedItem = currentLanguages.find(item => item.id === id);
+    if (!selectedItem) {
+      updatedList = [...currentLanguages, { id, name, value }];
+    } else {
+      updatedList = currentLanguages.filter(item => item.id !== id);
+    }
+    setCurricularData({
+      ...curricularData,
+      languages: updatedList
+    })
   }
+
   const selectInstitute = (val: string, name: string, id: string) => {
     setCurricularData({
       ...curricularData,
@@ -92,10 +104,14 @@ const EditCurricular = (props: EditCurricularProps) => {
     const isValid = await validateForm();
     if (isValid) {
       try {
+        const languagesCode = curricularData.languages.map((item: { value: string }) => item.value);
         const input = {
           id: curricularData.id,
           name: curricularData.name,
-          institutionID: curricularData.institute.id
+          institutionID: curricularData.institute.id,
+          description: curricularData.description,
+          objectives: [curricularData.objectives],
+          languages: languagesCode,
         }
         const newCurricular = await API.graphql(graphqlOperation(mutation.updateCurriculum, { input: input }));
         setMessages({
@@ -183,7 +199,9 @@ const EditCurricular = (props: EditCurricularProps) => {
     }
   }
 
-  // This function will be removed. will get data from props.
+  // This function will be removed. Will get data from props.
+  // will create parent for curricular view and this edit page.
+
   const fetchCurricularData = async () => {
     const currID = params.get('id');
     if (currID) {
@@ -198,7 +216,10 @@ const EditCurricular = (props: EditCurricularProps) => {
             id: savedData.institution.id,
             name: savedData.institution.name,
             value: savedData.institution.name,
-          }
+          },
+          description: savedData.description,
+          objectives: savedData.objectives[0],
+          languages: languageList.filter(item => savedData.languages.includes(item.value))
         })
         setPreviousName(savedData.name);
       } catch {
@@ -237,7 +258,7 @@ const EditCurricular = (props: EditCurricularProps) => {
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CURRICULAR INFORMATION</h3>
           <div className="">
             <div className="px-3 py-4">
-              <FormInput value={name} id='curricularName' onChange={onChange} name='name' label="Curricular Name" />
+              <FormInput value={name} id='curricularName' onChange={onChange} name='name' label="Curricular Name" isRequired />
             </div>
             {/* 
               **
