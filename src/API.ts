@@ -453,6 +453,96 @@ export type DeleteCurriculumInput = {
   id: string,
 };
 
+export type CreateTopicInput = {
+  id?: string | null,
+  curriculumID: string,
+  name: string,
+  description?: string | null,
+};
+
+export type ModelTopicConditionInput = {
+  curriculumID?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  and?: Array< ModelTopicConditionInput | null > | null,
+  or?: Array< ModelTopicConditionInput | null > | null,
+  not?: ModelTopicConditionInput | null,
+};
+
+export type UpdateTopicInput = {
+  id: string,
+  curriculumID?: string | null,
+  name?: string | null,
+  description?: string | null,
+};
+
+export type DeleteTopicInput = {
+  id: string,
+};
+
+export type CreateLearningObjectiveInput = {
+  id?: string | null,
+  name: string,
+  description?: string | null,
+};
+
+export type ModelLearningObjectiveConditionInput = {
+  name?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  and?: Array< ModelLearningObjectiveConditionInput | null > | null,
+  or?: Array< ModelLearningObjectiveConditionInput | null > | null,
+  not?: ModelLearningObjectiveConditionInput | null,
+};
+
+export type UpdateLearningObjectiveInput = {
+  id: string,
+  name?: string | null,
+  description?: string | null,
+};
+
+export type DeleteLearningObjectiveInput = {
+  id: string,
+};
+
+export type CreateRubricInput = {
+  id?: string | null,
+  criteria?: string | null,
+  distinguished?: string | null,
+  excelled?: string | null,
+  Adequite?: string | null,
+  basic?: string | null,
+  learningObjectiveID: string,
+  topicID: string,
+};
+
+export type ModelRubricConditionInput = {
+  criteria?: ModelStringInput | null,
+  distinguished?: ModelStringInput | null,
+  excelled?: ModelStringInput | null,
+  Adequite?: ModelStringInput | null,
+  basic?: ModelStringInput | null,
+  learningObjectiveID?: ModelIDInput | null,
+  topicID?: ModelIDInput | null,
+  and?: Array< ModelRubricConditionInput | null > | null,
+  or?: Array< ModelRubricConditionInput | null > | null,
+  not?: ModelRubricConditionInput | null,
+};
+
+export type UpdateRubricInput = {
+  id: string,
+  criteria?: string | null,
+  distinguished?: string | null,
+  excelled?: string | null,
+  Adequite?: string | null,
+  basic?: string | null,
+  learningObjectiveID?: string | null,
+  topicID?: string | null,
+};
+
+export type DeleteRubricInput = {
+  id: string,
+};
+
 export type CreateTeacherCurriculumInput = {
   id?: string | null,
   staffID: string,
@@ -1767,6 +1857,39 @@ export type ModelCurriculumFilterInput = {
   and?: Array< ModelCurriculumFilterInput | null > | null,
   or?: Array< ModelCurriculumFilterInput | null > | null,
   not?: ModelCurriculumFilterInput | null,
+};
+
+export type ModelTopicFilterInput = {
+  id?: ModelIDInput | null,
+  curriculumID?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  and?: Array< ModelTopicFilterInput | null > | null,
+  or?: Array< ModelTopicFilterInput | null > | null,
+  not?: ModelTopicFilterInput | null,
+};
+
+export type ModelLearningObjectiveFilterInput = {
+  id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  and?: Array< ModelLearningObjectiveFilterInput | null > | null,
+  or?: Array< ModelLearningObjectiveFilterInput | null > | null,
+  not?: ModelLearningObjectiveFilterInput | null,
+};
+
+export type ModelRubricFilterInput = {
+  id?: ModelIDInput | null,
+  criteria?: ModelStringInput | null,
+  distinguished?: ModelStringInput | null,
+  excelled?: ModelStringInput | null,
+  Adequite?: ModelStringInput | null,
+  basic?: ModelStringInput | null,
+  learningObjectiveID?: ModelIDInput | null,
+  topicID?: ModelIDInput | null,
+  and?: Array< ModelRubricFilterInput | null > | null,
+  or?: Array< ModelRubricFilterInput | null > | null,
+  not?: ModelRubricFilterInput | null,
 };
 
 export type ModelRoomCurriculumFilterInput = {
@@ -3919,6 +4042,19 @@ export type CreateCurriculumMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    topics:  {
+      __typename: "ModelTopicConnection",
+      items:  Array< {
+        __typename: "Topic",
+        id: string,
+        curriculumID: string,
+        name: string,
+        description: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3989,6 +4125,19 @@ export type UpdateCurriculumMutation = {
         objectives: Array< string | null > | null,
         curriculumID: string,
         languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    topics:  {
+      __typename: "ModelTopicConnection",
+      items:  Array< {
+        __typename: "Topic",
+        id: string,
+        curriculumID: string,
+        name: string,
+        description: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -4069,6 +4218,385 @@ export type DeleteCurriculumMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    topics:  {
+      __typename: "ModelTopicConnection",
+      items:  Array< {
+        __typename: "Topic",
+        id: string,
+        curriculumID: string,
+        name: string,
+        description: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateTopicMutationVariables = {
+  input: CreateTopicInput,
+  condition?: ModelTopicConditionInput | null,
+};
+
+export type CreateTopicMutation = {
+  createTopic:  {
+    __typename: "Topic",
+    id: string,
+    curriculumID: string,
+    curriculum:  {
+      __typename: "Curriculum",
+      id: string,
+      institutionID: string,
+      name: string,
+      type: string | null,
+      description: string | null,
+      objectives: Array< string | null > | null,
+      languages: Array< Language | null > | null,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      syllabi:  {
+        __typename: "ModelSyllabusConnection",
+        nextToken: string | null,
+      } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    name: string,
+    description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateTopicMutationVariables = {
+  input: UpdateTopicInput,
+  condition?: ModelTopicConditionInput | null,
+};
+
+export type UpdateTopicMutation = {
+  updateTopic:  {
+    __typename: "Topic",
+    id: string,
+    curriculumID: string,
+    curriculum:  {
+      __typename: "Curriculum",
+      id: string,
+      institutionID: string,
+      name: string,
+      type: string | null,
+      description: string | null,
+      objectives: Array< string | null > | null,
+      languages: Array< Language | null > | null,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      syllabi:  {
+        __typename: "ModelSyllabusConnection",
+        nextToken: string | null,
+      } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    name: string,
+    description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteTopicMutationVariables = {
+  input: DeleteTopicInput,
+  condition?: ModelTopicConditionInput | null,
+};
+
+export type DeleteTopicMutation = {
+  deleteTopic:  {
+    __typename: "Topic",
+    id: string,
+    curriculumID: string,
+    curriculum:  {
+      __typename: "Curriculum",
+      id: string,
+      institutionID: string,
+      name: string,
+      type: string | null,
+      description: string | null,
+      objectives: Array< string | null > | null,
+      languages: Array< Language | null > | null,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      syllabi:  {
+        __typename: "ModelSyllabusConnection",
+        nextToken: string | null,
+      } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    name: string,
+    description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateLearningObjectiveMutationVariables = {
+  input: CreateLearningObjectiveInput,
+  condition?: ModelLearningObjectiveConditionInput | null,
+};
+
+export type CreateLearningObjectiveMutation = {
+  createLearningObjective:  {
+    __typename: "LearningObjective",
+    id: string,
+    name: string,
+    description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateLearningObjectiveMutationVariables = {
+  input: UpdateLearningObjectiveInput,
+  condition?: ModelLearningObjectiveConditionInput | null,
+};
+
+export type UpdateLearningObjectiveMutation = {
+  updateLearningObjective:  {
+    __typename: "LearningObjective",
+    id: string,
+    name: string,
+    description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteLearningObjectiveMutationVariables = {
+  input: DeleteLearningObjectiveInput,
+  condition?: ModelLearningObjectiveConditionInput | null,
+};
+
+export type DeleteLearningObjectiveMutation = {
+  deleteLearningObjective:  {
+    __typename: "LearningObjective",
+    id: string,
+    name: string,
+    description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateRubricMutationVariables = {
+  input: CreateRubricInput,
+  condition?: ModelRubricConditionInput | null,
+};
+
+export type CreateRubricMutation = {
+  createRubric:  {
+    __typename: "Rubric",
+    id: string,
+    criteria: string | null,
+    distinguished: string | null,
+    excelled: string | null,
+    Adequite: string | null,
+    basic: string | null,
+    learningObjectiveID: string,
+    learningObjective:  {
+      __typename: "LearningObjective",
+      id: string,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    topicID: string,
+    topic:  {
+      __typename: "Topic",
+      id: string,
+      curriculumID: string,
+      curriculum:  {
+        __typename: "Curriculum",
+        id: string,
+        institutionID: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateRubricMutationVariables = {
+  input: UpdateRubricInput,
+  condition?: ModelRubricConditionInput | null,
+};
+
+export type UpdateRubricMutation = {
+  updateRubric:  {
+    __typename: "Rubric",
+    id: string,
+    criteria: string | null,
+    distinguished: string | null,
+    excelled: string | null,
+    Adequite: string | null,
+    basic: string | null,
+    learningObjectiveID: string,
+    learningObjective:  {
+      __typename: "LearningObjective",
+      id: string,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    topicID: string,
+    topic:  {
+      __typename: "Topic",
+      id: string,
+      curriculumID: string,
+      curriculum:  {
+        __typename: "Curriculum",
+        id: string,
+        institutionID: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteRubricMutationVariables = {
+  input: DeleteRubricInput,
+  condition?: ModelRubricConditionInput | null,
+};
+
+export type DeleteRubricMutation = {
+  deleteRubric:  {
+    __typename: "Rubric",
+    id: string,
+    criteria: string | null,
+    distinguished: string | null,
+    excelled: string | null,
+    Adequite: string | null,
+    basic: string | null,
+    learningObjectiveID: string,
+    learningObjective:  {
+      __typename: "LearningObjective",
+      id: string,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    topicID: string,
+    topic:  {
+      __typename: "Topic",
+      id: string,
+      curriculumID: string,
+      curriculum:  {
+        __typename: "Curriculum",
+        id: string,
+        institutionID: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4115,6 +4643,10 @@ export type CreateTeacherCurriculumMutation = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
+        nextToken: string | null,
+      } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -4168,6 +4700,10 @@ export type UpdateTeacherCurriculumMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4217,6 +4753,10 @@ export type DeleteTeacherCurriculumMutation = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
+        nextToken: string | null,
+      } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -4270,6 +4810,10 @@ export type CreateRoomCurriculumMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4321,6 +4865,10 @@ export type UpdateRoomCurriculumMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4370,6 +4918,10 @@ export type DeleteRoomCurriculumMutation = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
+        nextToken: string | null,
+      } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -11623,6 +12175,19 @@ export type GetCurriculumQuery = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    topics:  {
+      __typename: "ModelTopicConnection",
+      items:  Array< {
+        __typename: "Topic",
+        id: string,
+        curriculumID: string,
+        name: string,
+        description: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -11671,6 +12236,233 @@ export type ListCurriculumsQuery = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetTopicQueryVariables = {
+  id: string,
+};
+
+export type GetTopicQuery = {
+  getTopic:  {
+    __typename: "Topic",
+    id: string,
+    curriculumID: string,
+    curriculum:  {
+      __typename: "Curriculum",
+      id: string,
+      institutionID: string,
+      name: string,
+      type: string | null,
+      description: string | null,
+      objectives: Array< string | null > | null,
+      languages: Array< Language | null > | null,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      syllabi:  {
+        __typename: "ModelSyllabusConnection",
+        nextToken: string | null,
+      } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    name: string,
+    description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListTopicsQueryVariables = {
+  id?: string | null,
+  filter?: ModelTopicFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListTopicsQuery = {
+  listTopics:  {
+    __typename: "ModelTopicConnection",
+    items:  Array< {
+      __typename: "Topic",
+      id: string,
+      curriculumID: string,
+      curriculum:  {
+        __typename: "Curriculum",
+        id: string,
+        institutionID: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetLearningObjectiveQueryVariables = {
+  id: string,
+};
+
+export type GetLearningObjectiveQuery = {
+  getLearningObjective:  {
+    __typename: "LearningObjective",
+    id: string,
+    name: string,
+    description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListLearningObjectivesQueryVariables = {
+  id?: string | null,
+  filter?: ModelLearningObjectiveFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListLearningObjectivesQuery = {
+  listLearningObjectives:  {
+    __typename: "ModelLearningObjectiveConnection",
+    items:  Array< {
+      __typename: "LearningObjective",
+      id: string,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetRubricQueryVariables = {
+  id: string,
+};
+
+export type GetRubricQuery = {
+  getRubric:  {
+    __typename: "Rubric",
+    id: string,
+    criteria: string | null,
+    distinguished: string | null,
+    excelled: string | null,
+    Adequite: string | null,
+    basic: string | null,
+    learningObjectiveID: string,
+    learningObjective:  {
+      __typename: "LearningObjective",
+      id: string,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    topicID: string,
+    topic:  {
+      __typename: "Topic",
+      id: string,
+      curriculumID: string,
+      curriculum:  {
+        __typename: "Curriculum",
+        id: string,
+        institutionID: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListRubricsQueryVariables = {
+  id?: string | null,
+  filter?: ModelRubricFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListRubricsQuery = {
+  listRubrics:  {
+    __typename: "ModelRubricConnection",
+    items:  Array< {
+      __typename: "Rubric",
+      id: string,
+      criteria: string | null,
+      distinguished: string | null,
+      excelled: string | null,
+      Adequite: string | null,
+      basic: string | null,
+      learningObjectiveID: string,
+      learningObjective:  {
+        __typename: "LearningObjective",
+        id: string,
+        name: string,
+        description: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      topicID: string,
+      topic:  {
+        __typename: "Topic",
+        id: string,
+        curriculumID: string,
+        name: string,
+        description: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -11718,6 +12510,10 @@ export type GetRoomCurriculumQuery = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
+        nextToken: string | null,
+      } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -16454,6 +17250,19 @@ export type OnCreateCurriculumSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    topics:  {
+      __typename: "ModelTopicConnection",
+      items:  Array< {
+        __typename: "Topic",
+        id: string,
+        curriculumID: string,
+        name: string,
+        description: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -16519,6 +17328,19 @@ export type OnUpdateCurriculumSubscription = {
         objectives: Array< string | null > | null,
         curriculumID: string,
         languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    topics:  {
+      __typename: "ModelTopicConnection",
+      items:  Array< {
+        __typename: "Topic",
+        id: string,
+        curriculumID: string,
+        name: string,
+        description: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -16594,6 +17416,340 @@ export type OnDeleteCurriculumSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    topics:  {
+      __typename: "ModelTopicConnection",
+      items:  Array< {
+        __typename: "Topic",
+        id: string,
+        curriculumID: string,
+        name: string,
+        description: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateTopicSubscription = {
+  onCreateTopic:  {
+    __typename: "Topic",
+    id: string,
+    curriculumID: string,
+    curriculum:  {
+      __typename: "Curriculum",
+      id: string,
+      institutionID: string,
+      name: string,
+      type: string | null,
+      description: string | null,
+      objectives: Array< string | null > | null,
+      languages: Array< Language | null > | null,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      syllabi:  {
+        __typename: "ModelSyllabusConnection",
+        nextToken: string | null,
+      } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    name: string,
+    description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateTopicSubscription = {
+  onUpdateTopic:  {
+    __typename: "Topic",
+    id: string,
+    curriculumID: string,
+    curriculum:  {
+      __typename: "Curriculum",
+      id: string,
+      institutionID: string,
+      name: string,
+      type: string | null,
+      description: string | null,
+      objectives: Array< string | null > | null,
+      languages: Array< Language | null > | null,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      syllabi:  {
+        __typename: "ModelSyllabusConnection",
+        nextToken: string | null,
+      } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    name: string,
+    description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteTopicSubscription = {
+  onDeleteTopic:  {
+    __typename: "Topic",
+    id: string,
+    curriculumID: string,
+    curriculum:  {
+      __typename: "Curriculum",
+      id: string,
+      institutionID: string,
+      name: string,
+      type: string | null,
+      description: string | null,
+      objectives: Array< string | null > | null,
+      languages: Array< Language | null > | null,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      syllabi:  {
+        __typename: "ModelSyllabusConnection",
+        nextToken: string | null,
+      } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    name: string,
+    description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateLearningObjectiveSubscription = {
+  onCreateLearningObjective:  {
+    __typename: "LearningObjective",
+    id: string,
+    name: string,
+    description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateLearningObjectiveSubscription = {
+  onUpdateLearningObjective:  {
+    __typename: "LearningObjective",
+    id: string,
+    name: string,
+    description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteLearningObjectiveSubscription = {
+  onDeleteLearningObjective:  {
+    __typename: "LearningObjective",
+    id: string,
+    name: string,
+    description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateRubricSubscription = {
+  onCreateRubric:  {
+    __typename: "Rubric",
+    id: string,
+    criteria: string | null,
+    distinguished: string | null,
+    excelled: string | null,
+    Adequite: string | null,
+    basic: string | null,
+    learningObjectiveID: string,
+    learningObjective:  {
+      __typename: "LearningObjective",
+      id: string,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    topicID: string,
+    topic:  {
+      __typename: "Topic",
+      id: string,
+      curriculumID: string,
+      curriculum:  {
+        __typename: "Curriculum",
+        id: string,
+        institutionID: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateRubricSubscription = {
+  onUpdateRubric:  {
+    __typename: "Rubric",
+    id: string,
+    criteria: string | null,
+    distinguished: string | null,
+    excelled: string | null,
+    Adequite: string | null,
+    basic: string | null,
+    learningObjectiveID: string,
+    learningObjective:  {
+      __typename: "LearningObjective",
+      id: string,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    topicID: string,
+    topic:  {
+      __typename: "Topic",
+      id: string,
+      curriculumID: string,
+      curriculum:  {
+        __typename: "Curriculum",
+        id: string,
+        institutionID: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteRubricSubscription = {
+  onDeleteRubric:  {
+    __typename: "Rubric",
+    id: string,
+    criteria: string | null,
+    distinguished: string | null,
+    excelled: string | null,
+    Adequite: string | null,
+    basic: string | null,
+    learningObjectiveID: string,
+    learningObjective:  {
+      __typename: "LearningObjective",
+      id: string,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    topicID: string,
+    topic:  {
+      __typename: "Topic",
+      id: string,
+      curriculumID: string,
+      curriculum:  {
+        __typename: "Curriculum",
+        id: string,
+        institutionID: string,
+        name: string,
+        type: string | null,
+        description: string | null,
+        objectives: Array< string | null > | null,
+        languages: Array< Language | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      name: string,
+      description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -16635,6 +17791,10 @@ export type OnCreateTeacherCurriculumSubscription = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
+        nextToken: string | null,
+      } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -16683,6 +17843,10 @@ export type OnUpdateTeacherCurriculumSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -16727,6 +17891,10 @@ export type OnDeleteTeacherCurriculumSubscription = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
+        nextToken: string | null,
+      } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -16775,6 +17943,10 @@ export type OnCreateRoomCurriculumSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -16821,6 +17993,10 @@ export type OnUpdateRoomCurriculumSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -16865,6 +18041,10 @@ export type OnDeleteRoomCurriculumSubscription = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
+        nextToken: string | null,
+      } | null,
+      topics:  {
+        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
