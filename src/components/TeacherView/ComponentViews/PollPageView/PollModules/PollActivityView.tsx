@@ -4,7 +4,7 @@ import { LessonControlContext } from '../../../../../contexts/LessonControlConte
 /**
  * IMPORT STUDENT COMPONENTS
  */
-import Banner from '../../../../Lesson/LessonComponents/PollPage/PollModules/Banner';
+import Banner from '../../../../Lesson/LessonComponents/Banner';
 import InstructionBlock from '../../../../Lesson/LessonComponents/PollPage/PollModules/InstructionBlock';
 import PollForm from '../../../../Lesson/LessonComponents/PollPage/PollModules/PollForm';
 
@@ -23,6 +23,7 @@ const PollActivityView = () => {
   const { state, theme } = useContext(LessonControlContext);
   const inputs = state.data.lesson.warmUp.inputs;
   const [dataProps, setDataProps] = useState<DataProps>();
+  const title = state.data.lesson.warmUp.title;
 
   /**
    * INITIALIZE VIEWING STUDENT DATA
@@ -51,7 +52,7 @@ const PollActivityView = () => {
        *
        */}
       <div className={theme.section}>
-        <Banner isTeacher={true} />
+        <Banner isTeacher={true} title={title} iconName={`FaPoll`}/>
 
         <div className="flex flex-col justify-between items-center">
           {/**

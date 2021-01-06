@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
 import InstructionsBlock from './InstructionBlock';
-import Banner from './Banner';
+import Banner from '../../Banner';
 import Modules from './Modules';
 import InstructionsPopup from '../../../Popup/InstructionsPopup';
 import PollForm from './PollForm';
@@ -25,6 +25,7 @@ const Poll = () => {
   const inputs = state.data.lesson.warmUp.inputs;
   const video = state.data.lesson.warmUp.instructions.link;
   const [openPopup, setOpenPopup] = useState(false);
+  const title = state.data.lesson.warmUp.title;
 
   return (
     <>
@@ -32,7 +33,7 @@ const Poll = () => {
         <>
           <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup} />
           <div className={theme.section}>
-            <Banner />
+            <Banner title={title} iconName={'FaPoll'}/>
 
             <div className="flex flex-col justify-between items-center">
               <InstructionsBlock />

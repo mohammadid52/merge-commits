@@ -14,7 +14,7 @@ const MultiList = lazy(() => import('../LessonComponents/MultiListPage/MultiList
 const Adventure = lazy(() => import('../LessonComponents/AdventurePage/Adventure'));
 const Outro = lazy(() => import('../LessonComponents/Outro/Outro'));
 const LessonError = lazy(() => import('../../Error/LessonError'));
-const Checkpoint = lazy(() => import('../LessonComponents/Checkpoint/Checkpoint'));
+const Checkpoint = lazy(() => import('../AssessmentComponents/Checkpoint'));
 const Assessments = lazy(() => import('../LessonComponents/Checkpoint/Assessments'));
 
 const Body = () => {
@@ -47,8 +47,6 @@ const Body = () => {
     }
   };
 
-  // console.log(state, 'state');
-
   const pageFetch = (stage: string) => {
     let pageMatch = state.pages
       .filter((page: { stage: string }) => {
@@ -62,18 +60,6 @@ const Body = () => {
 
     return pageSwitch(pageMatch.type);
   };
-
-  // const urlParser = (str: string) => {
-  //   let temp = '';
-  //   let arr = Array.from(str);
-  //   arr.forEach((char) => {
-  //     if (char !== '/') {
-  //       temp = temp + char;
-  //     }
-  //     return temp;
-  //   });
-  //   return temp;
-  // };
 
   useEffect(() => {
     if (state.currentPage < state.pages.length - 1) {
