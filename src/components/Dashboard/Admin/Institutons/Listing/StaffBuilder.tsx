@@ -1,14 +1,10 @@
 import React, { useEffect, useState, Fragment, useContext } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
 
-import { IoClose } from 'react-icons/io5';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import Selector from '../../../../Atoms/Form/Selector';
 import Buttons from '../../../../Atoms/Buttons';
 import PageWrapper from '../../../../Atoms/PageWrapper';
-import InstitutionPopUp from '../InstitutionPopUp';
 
 import { getInitialsFromString, initials, stringToHslColor, createFilterToFetchSpecificItemsOnly } from '../../../../../utilities/strings';
 

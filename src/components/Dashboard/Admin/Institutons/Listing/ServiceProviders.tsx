@@ -1,19 +1,16 @@
-import React, { useEffect, useState, Fragment } from 'react'
+import React, { useEffect, useState, useContext, Fragment } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api';
-
-import { IoClose } from 'react-icons/io5';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
 
 import PageWrapper from '../../../../Atoms/PageWrapper'
 import Buttons from '../../../../Atoms/Buttons'
 import Selector from '../../../../Atoms/Form/Selector';
-import InstitutionPopUp from '../InstitutionPopUp';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../customHooks/dictionary';
 
 import { createFilterToFetchAllItemsExcept } from '../../../../../utilities/strings';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as queries from '../../../../../graphql/queries';
 import * as mutations from '../../../../../graphql/mutations';
 interface ServiceProvidersProps {
   instId: string
@@ -22,6 +19,10 @@ interface ServiceProvidersProps {
 }
 
 const ServiceProviders = (props: ServiceProvidersProps) => {
+  const { spBuilderDict, BUTTONS } = useDictionary();
+  const { userLanguage } = useContext(GlobalContext);
+  const dictionary = spBuilderDict[userLanguage]
+
   const { instId, serviceProviders } = props;
   const existingPartners = serviceProviders.items.map((item: any) => {
     return {
@@ -128,10 +129,10 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
     <div className="p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">SERVICE PROVIDERS</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{dictionary.TITLE}</h3>
           <div className="flex items-center w-6/10 m-auto px-2 mb-8">
-            <Selector selectedItem={newServPro.value} list={availableServiceProviders} placeholder="Add a new service provider" onChange={onServProChange} />
-            <Buttons btnClass="ml-4 py-1" label="Add" onClick={addPartner} />
+            <Selector selectedItem={newServPro.value} list={availableServiceProviders} placeholder={dictionary.ADD_PLACEHOLDER} onChange={onServProChange} />
+            <Buttons btnClass="ml-4 py-1" label={BUTTONS[userLanguage].ADD} onClick={addPartner} />
           </div>
 
           {(partners && partners.length > 0) ? (
@@ -169,8 +170,8 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
                         <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600">{updateStatus ? 'updating...' : ''}</span>
                         :
                         <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit(item.id)}>
-                          Edit
-                              </span>
+                          {BUTTONS[userLanguage].EDIT}
+                        </span>
                       }
                     </div>
 

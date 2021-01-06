@@ -291,7 +291,7 @@ const EditClass = (props: EditClassProps) => {
 
         {classStudents ? (
           <Fragment>
-            <div className="mb-4 mt-8 w-6/10 m-auto px-2 max-h-88 overflow-y-scroll">
+            <div className="mb-4 mt-8 w-full m-auto px-2 max-h-88 overflow-y-scroll">
               <div className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200 text-sm text-gray-600">
                 <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{dictionary.TABLE.SNO}</div>
                 <div className="flex w-5/10 items-center px-4 py-2">{dictionary.TABLE.NAME}</div>
