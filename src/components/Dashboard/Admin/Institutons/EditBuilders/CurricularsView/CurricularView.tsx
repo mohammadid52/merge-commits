@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import API, { graphqlOperation } from '@aws-amplify/api';
 import { useLocation, useHistory, useRouteMatch } from 'react-router';
 import { IoArrowUndoCircleOutline, IoSpeedometerSharp } from 'react-icons/io5';
 import { BiNotepad } from 'react-icons/bi';
 import { MdSpeakerNotes } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
 
+import * as queries from '../../../../../../graphql/queries';
 import BreadCrums from '../../../../../Atoms/BreadCrums';
 import SectionTitle from '../../../../../Atoms/SectionTitle';
 import Buttons from '../../../../../Atoms/Buttons';
@@ -31,7 +33,19 @@ const CurricularView = (props: CurricularViewProps) => {
     return new URLSearchParams(location.search);
   };
   const params = useQuery();
-
+  const initialData = {
+    id: '',
+    name: '',
+    description: '',
+    languages: [{ id: '1', name: "English", value: 'EN' }],
+    objectives: '',
+    institute: {
+      id: '',
+      name: '',
+      value: ''
+    }
+  }
+  const [curricularData, setCurricularData] = useState(initialData);
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Curricular Info', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
@@ -41,6 +55,39 @@ const CurricularView = (props: CurricularViewProps) => {
     { index: 1, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList /> },
     { index: 2, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList /> },
   ]
+
+
+  const fetchCurricularData = async () => {
+    const currID = params.get('id');
+    if (currID) {
+      try {
+        const result: any = await API.graphql(graphqlOperation(queries.getCurriculum, { id: currID }))
+        const savedData = result.data.getCurriculum;
+        setCurricularData({
+          ...curricularData,
+          id: savedData.id,
+          name: savedData.name,
+          institute: {
+            id: savedData.institution.id,
+            name: savedData.institution.name,
+            value: savedData.institution.name,
+          },
+          description: savedData.description,
+          objectives: savedData.objectives,
+          languages: savedData.languages
+        })
+      } catch {
+        console.log('Error while fetching curricular data.')
+      }
+    } else {
+      history.push('/dashboard/manage-institutions')
+    }
+  }
+
+  useEffect(() => {
+    fetchCurricularData()
+  }, [])
+
   return (
     <div className="w-9/10 h-full mt-4 p-4">
 

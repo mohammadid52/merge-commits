@@ -183,6 +183,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     }
   }
 
+  // This function will be removed. will get data from props.
   const fetchCurricularData = async () => {
     const currID = params.get('id');
     if (currID) {

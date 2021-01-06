@@ -119,7 +119,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           name: curricularData.name,
           institutionID: curricularData.institute.id,
           description: curricularData.description,
-          objectives: curricularData.objectives,
+          objectives: [curricularData.objectives],
           languages: languagesCode
         }
         const newCurricular = await API.graphql(graphqlOperation(customMutations.createCurriculum, { input: input }));
