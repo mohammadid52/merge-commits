@@ -234,7 +234,16 @@ type Curriculum
   languages: [Language]
   institution: Institution @connection(fields: ["institutionID"])
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
-  topics: [Topic] @connection(keyName: "topicByCurriculum", fields: ["id"])
+}
+
+type CurriculumSequences
+@key(fields: ["curriculumID"])
+@model
+{
+  id: ID!
+  curriculumID: ID!
+  type: String!
+  sequence: AWSJSON
 }
 
 type Topic

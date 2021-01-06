@@ -453,6 +453,32 @@ export type DeleteCurriculumInput = {
   id: string,
 };
 
+export type CreateCurriculumSequencesInput = {
+  id?: string | null,
+  curriculumID: string,
+  type: string,
+  sequence?: string | null,
+};
+
+export type ModelCurriculumSequencesConditionInput = {
+  type?: ModelStringInput | null,
+  sequence?: ModelStringInput | null,
+  and?: Array< ModelCurriculumSequencesConditionInput | null > | null,
+  or?: Array< ModelCurriculumSequencesConditionInput | null > | null,
+  not?: ModelCurriculumSequencesConditionInput | null,
+};
+
+export type UpdateCurriculumSequencesInput = {
+  id: string,
+  curriculumID: string,
+  type?: string | null,
+  sequence?: string | null,
+};
+
+export type DeleteCurriculumSequencesInput = {
+  curriculumID: string,
+};
+
 export type CreateTopicInput = {
   id?: string | null,
   curriculumID: string,
@@ -1884,6 +1910,16 @@ export type ModelCurriculumFilterInput = {
   and?: Array< ModelCurriculumFilterInput | null > | null,
   or?: Array< ModelCurriculumFilterInput | null > | null,
   not?: ModelCurriculumFilterInput | null,
+};
+
+export type ModelCurriculumSequencesFilterInput = {
+  id?: ModelIDInput | null,
+  curriculumID?: ModelIDInput | null,
+  type?: ModelStringInput | null,
+  sequence?: ModelStringInput | null,
+  and?: Array< ModelCurriculumSequencesFilterInput | null > | null,
+  or?: Array< ModelCurriculumSequencesFilterInput | null > | null,
+  not?: ModelCurriculumSequencesFilterInput | null,
 };
 
 export type ModelTopicFilterInput = {
@@ -4079,19 +4115,6 @@ export type CreateCurriculumMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    topics:  {
-      __typename: "ModelTopicConnection",
-      items:  Array< {
-        __typename: "Topic",
-        id: string,
-        curriculumID: string,
-        name: string,
-        description: string | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4162,19 +4185,6 @@ export type UpdateCurriculumMutation = {
         objectives: Array< string | null > | null,
         curriculumID: string,
         languages: Array< Language | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    topics:  {
-      __typename: "ModelTopicConnection",
-      items:  Array< {
-        __typename: "Topic",
-        id: string,
-        curriculumID: string,
-        name: string,
-        description: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -4255,19 +4265,57 @@ export type DeleteCurriculumMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    topics:  {
-      __typename: "ModelTopicConnection",
-      items:  Array< {
-        __typename: "Topic",
-        id: string,
-        curriculumID: string,
-        name: string,
-        description: string | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateCurriculumSequencesMutationVariables = {
+  input: CreateCurriculumSequencesInput,
+  condition?: ModelCurriculumSequencesConditionInput | null,
+};
+
+export type CreateCurriculumSequencesMutation = {
+  createCurriculumSequences:  {
+    __typename: "CurriculumSequences",
+    id: string,
+    curriculumID: string,
+    type: string,
+    sequence: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateCurriculumSequencesMutationVariables = {
+  input: UpdateCurriculumSequencesInput,
+  condition?: ModelCurriculumSequencesConditionInput | null,
+};
+
+export type UpdateCurriculumSequencesMutation = {
+  updateCurriculumSequences:  {
+    __typename: "CurriculumSequences",
+    id: string,
+    curriculumID: string,
+    type: string,
+    sequence: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteCurriculumSequencesMutationVariables = {
+  input: DeleteCurriculumSequencesInput,
+  condition?: ModelCurriculumSequencesConditionInput | null,
+};
+
+export type DeleteCurriculumSequencesMutation = {
+  deleteCurriculumSequences:  {
+    __typename: "CurriculumSequences",
+    id: string,
+    curriculumID: string,
+    type: string,
+    sequence: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4313,10 +4361,6 @@ export type CreateTopicMutation = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
-        nextToken: string | null,
-      } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -4371,10 +4415,6 @@ export type UpdateTopicMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
-        nextToken: string | null,
-      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4425,10 +4465,6 @@ export type DeleteTopicMutation = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
-        nextToken: string | null,
-      } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -4682,10 +4718,6 @@ export type CreateTeacherCurriculumMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
-        nextToken: string | null,
-      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4735,10 +4767,6 @@ export type UpdateTeacherCurriculumMutation = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
-        nextToken: string | null,
-      } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -4792,10 +4820,6 @@ export type DeleteTeacherCurriculumMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
-        nextToken: string | null,
-      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4845,10 +4869,6 @@ export type CreateRoomCurriculumMutation = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
-        nextToken: string | null,
-      } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -4902,10 +4922,6 @@ export type UpdateRoomCurriculumMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
-        nextToken: string | null,
-      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4955,10 +4971,6 @@ export type DeleteRoomCurriculumMutation = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
-        nextToken: string | null,
-      } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -12263,19 +12275,6 @@ export type GetCurriculumQuery = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    topics:  {
-      __typename: "ModelTopicConnection",
-      items:  Array< {
-        __typename: "Topic",
-        id: string,
-        curriculumID: string,
-        name: string,
-        description: string | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -12324,10 +12323,46 @@ export type ListCurriculumsQuery = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
-        nextToken: string | null,
-      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetCurriculumSequencesQueryVariables = {
+  curriculumID: string,
+};
+
+export type GetCurriculumSequencesQuery = {
+  getCurriculumSequences:  {
+    __typename: "CurriculumSequences",
+    id: string,
+    curriculumID: string,
+    type: string,
+    sequence: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListCurriculumSequencessQueryVariables = {
+  curriculumID?: string | null,
+  filter?: ModelCurriculumSequencesFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListCurriculumSequencessQuery = {
+  listCurriculumSequencess:  {
+    __typename: "ModelCurriculumSequencesConnection",
+    items:  Array< {
+      __typename: "CurriculumSequences",
+      id: string,
+      curriculumID: string,
+      type: string,
+      sequence: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -12374,10 +12409,6 @@ export type GetTopicQuery = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
-        nextToken: string | null,
-      } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -12598,10 +12629,6 @@ export type GetRoomCurriculumQuery = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
-        nextToken: string | null,
-      } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -17378,19 +17405,6 @@ export type OnCreateCurriculumSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    topics:  {
-      __typename: "ModelTopicConnection",
-      items:  Array< {
-        __typename: "Topic",
-        id: string,
-        curriculumID: string,
-        name: string,
-        description: string | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -17456,19 +17470,6 @@ export type OnUpdateCurriculumSubscription = {
         objectives: Array< string | null > | null,
         curriculumID: string,
         languages: Array< Language | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
-    topics:  {
-      __typename: "ModelTopicConnection",
-      items:  Array< {
-        __typename: "Topic",
-        id: string,
-        curriculumID: string,
-        name: string,
-        description: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -17544,19 +17545,42 @@ export type OnDeleteCurriculumSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    topics:  {
-      __typename: "ModelTopicConnection",
-      items:  Array< {
-        __typename: "Topic",
-        id: string,
-        curriculumID: string,
-        name: string,
-        description: string | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null > | null,
-      nextToken: string | null,
-    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateCurriculumSequencesSubscription = {
+  onCreateCurriculumSequences:  {
+    __typename: "CurriculumSequences",
+    id: string,
+    curriculumID: string,
+    type: string,
+    sequence: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateCurriculumSequencesSubscription = {
+  onUpdateCurriculumSequences:  {
+    __typename: "CurriculumSequences",
+    id: string,
+    curriculumID: string,
+    type: string,
+    sequence: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteCurriculumSequencesSubscription = {
+  onDeleteCurriculumSequences:  {
+    __typename: "CurriculumSequences",
+    id: string,
+    curriculumID: string,
+    type: string,
+    sequence: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -17597,10 +17621,6 @@ export type OnCreateTopicSubscription = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
-        nextToken: string | null,
-      } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -17650,10 +17670,6 @@ export type OnUpdateTopicSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
-        nextToken: string | null,
-      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -17699,10 +17715,6 @@ export type OnDeleteTopicSubscription = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
-        nextToken: string | null,
-      } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -17921,10 +17933,6 @@ export type OnCreateTeacherCurriculumSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
-        nextToken: string | null,
-      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -17969,10 +17977,6 @@ export type OnUpdateTeacherCurriculumSubscription = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
-        nextToken: string | null,
-      } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -18021,10 +18025,6 @@ export type OnDeleteTeacherCurriculumSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
-        nextToken: string | null,
-      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -18069,10 +18069,6 @@ export type OnCreateRoomCurriculumSubscription = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
-        nextToken: string | null,
-      } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -18121,10 +18117,6 @@ export type OnUpdateRoomCurriculumSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
-        nextToken: string | null,
-      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -18169,10 +18161,6 @@ export type OnDeleteRoomCurriculumSubscription = {
       } | null,
       syllabi:  {
         __typename: "ModelSyllabusConnection",
-        nextToken: string | null,
-      } | null,
-      topics:  {
-        __typename: "ModelTopicConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,

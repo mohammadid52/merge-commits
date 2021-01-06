@@ -1934,17 +1934,6 @@ export const onCreateCurriculum = /* GraphQL */ `
         }
         nextToken
       }
-      topics {
-        items {
-          id
-          curriculumID
-          name
-          description
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -2002,17 +1991,6 @@ export const onUpdateCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      topics {
-        items {
-          id
-          curriculumID
-          name
-          description
           createdAt
           updatedAt
         }
@@ -2080,17 +2058,42 @@ export const onDeleteCurriculum = /* GraphQL */ `
         }
         nextToken
       }
-      topics {
-        items {
-          id
-          curriculumID
-          name
-          description
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateCurriculumSequences = /* GraphQL */ `
+  subscription OnCreateCurriculumSequences {
+    onCreateCurriculumSequences {
+      id
+      curriculumID
+      type
+      sequence
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCurriculumSequences = /* GraphQL */ `
+  subscription OnUpdateCurriculumSequences {
+    onUpdateCurriculumSequences {
+      id
+      curriculumID
+      type
+      sequence
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCurriculumSequences = /* GraphQL */ `
+  subscription OnDeleteCurriculumSequences {
+    onDeleteCurriculumSequences {
+      id
+      curriculumID
+      type
+      sequence
       createdAt
       updatedAt
     }
@@ -2128,9 +2131,6 @@ export const onCreateTopic = /* GraphQL */ `
           updatedAt
         }
         syllabi {
-          nextToken
-        }
-        topics {
           nextToken
         }
         createdAt
@@ -2177,9 +2177,6 @@ export const onUpdateTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        topics {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2222,9 +2219,6 @@ export const onDeleteTopic = /* GraphQL */ `
           updatedAt
         }
         syllabi {
-          nextToken
-        }
-        topics {
           nextToken
         }
         createdAt
@@ -2431,9 +2425,6 @@ export const onCreateTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        topics {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2475,9 +2466,6 @@ export const onUpdateTeacherCurriculum = /* GraphQL */ `
           updatedAt
         }
         syllabi {
-          nextToken
-        }
-        topics {
           nextToken
         }
         createdAt
@@ -2523,9 +2511,6 @@ export const onDeleteTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        topics {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2567,9 +2552,6 @@ export const onCreateRoomCurriculum = /* GraphQL */ `
           updatedAt
         }
         syllabi {
-          nextToken
-        }
-        topics {
           nextToken
         }
         createdAt
@@ -2615,9 +2597,6 @@ export const onUpdateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        topics {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2659,9 +2638,6 @@ export const onDeleteRoomCurriculum = /* GraphQL */ `
           updatedAt
         }
         syllabi {
-          nextToken
-        }
-        topics {
           nextToken
         }
         createdAt

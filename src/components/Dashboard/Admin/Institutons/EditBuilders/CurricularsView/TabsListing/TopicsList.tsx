@@ -1,11 +1,13 @@
-import React, { Fragment } from 'react'
+import React, { useEffect, Fragment } from 'react'
 import { useHistory } from 'react-router';
 
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import Buttons from '../../../../../../Atoms/Buttons';
-
+import * as queries from '../../../../../../../graphql/queries'
+import * as customQueries from '../../../../../../../customGraphql/customQueries'
 interface TopicsListProps {
   topicsList?: any[]
+  curricularId: string
 }
 
 const TopicsList = (props: TopicsListProps) => {
@@ -21,6 +23,14 @@ const TopicsList = (props: TopicsListProps) => {
     // need to check for route id
     history.push(`/dashboard/manage-institutions/curricular/topic/edit?id=${'_blank_'}`)
   }
+
+  const fetchTopics = () => {
+    // 
+  }
+
+  useEffect(() => {
+    fetchTopics()
+  }, [])
 
   return (
     <div className="p-8 flex m-auto justify-center">

@@ -1170,3 +1170,19 @@ export const getClassDetails = /* GraphQL */ `
     }
   }
 `;
+
+export const listTopics = /* GraphQL */ `
+  query ListTopics($filter: ModelTopicFilterInput, $sortDirection: ModelSortDirection) {
+    listTopics(filter: $filter, sortDirection: $sortDirection) {
+      items {
+        id
+        curriculumID
+        name
+        description
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

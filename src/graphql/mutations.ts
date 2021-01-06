@@ -1646,17 +1646,6 @@ export const createCurriculum = /* GraphQL */ `
         }
         nextToken
       }
-      topics {
-        items {
-          id
-          curriculumID
-          name
-          description
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -1717,17 +1706,6 @@ export const updateCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      topics {
-        items {
-          id
-          curriculumID
-          name
-          description
           createdAt
           updatedAt
         }
@@ -1798,17 +1776,51 @@ export const deleteCurriculum = /* GraphQL */ `
         }
         nextToken
       }
-      topics {
-        items {
-          id
-          curriculumID
-          name
-          description
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCurriculumSequences = /* GraphQL */ `
+  mutation CreateCurriculumSequences(
+    $input: CreateCurriculumSequencesInput!
+    $condition: ModelCurriculumSequencesConditionInput
+  ) {
+    createCurriculumSequences(input: $input, condition: $condition) {
+      id
+      curriculumID
+      type
+      sequence
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCurriculumSequences = /* GraphQL */ `
+  mutation UpdateCurriculumSequences(
+    $input: UpdateCurriculumSequencesInput!
+    $condition: ModelCurriculumSequencesConditionInput
+  ) {
+    updateCurriculumSequences(input: $input, condition: $condition) {
+      id
+      curriculumID
+      type
+      sequence
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCurriculumSequences = /* GraphQL */ `
+  mutation DeleteCurriculumSequences(
+    $input: DeleteCurriculumSequencesInput!
+    $condition: ModelCurriculumSequencesConditionInput
+  ) {
+    deleteCurriculumSequences(input: $input, condition: $condition) {
+      id
+      curriculumID
+      type
+      sequence
       createdAt
       updatedAt
     }
@@ -1849,9 +1861,6 @@ export const createTopic = /* GraphQL */ `
           updatedAt
         }
         syllabi {
-          nextToken
-        }
-        topics {
           nextToken
         }
         createdAt
@@ -1901,9 +1910,6 @@ export const updateTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        topics {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1949,9 +1955,6 @@ export const deleteTopic = /* GraphQL */ `
           updatedAt
         }
         syllabi {
-          nextToken
-        }
-        topics {
           nextToken
         }
         createdAt
@@ -2179,9 +2182,6 @@ export const createTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        topics {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2226,9 +2226,6 @@ export const updateTeacherCurriculum = /* GraphQL */ `
           updatedAt
         }
         syllabi {
-          nextToken
-        }
-        topics {
           nextToken
         }
         createdAt
@@ -2277,9 +2274,6 @@ export const deleteTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        topics {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2324,9 +2318,6 @@ export const createRoomCurriculum = /* GraphQL */ `
           updatedAt
         }
         syllabi {
-          nextToken
-        }
-        topics {
           nextToken
         }
         createdAt
@@ -2375,9 +2366,6 @@ export const updateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        topics {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2422,9 +2410,6 @@ export const deleteRoomCurriculum = /* GraphQL */ `
           updatedAt
         }
         syllabi {
-          nextToken
-        }
-        topics {
           nextToken
         }
         createdAt
