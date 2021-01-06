@@ -17,7 +17,18 @@ import TextArea from '../../../../Atoms/Form/TextArea';
 interface CurricularBuilderProps {
 
 }
-
+interface InitialData {
+  id: string,
+  name: string,
+  description: string,
+  objectives: string,
+  languages: { id: string, name: string, value: string }[],
+  institute: {
+    id: string,
+    name: string,
+    value: string
+  }
+}
 const CurricularBuilder = (props: CurricularBuilderProps) => {
   const { } = props;
   const initialData = {
@@ -35,7 +46,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const history = useHistory();
   const location = useLocation();
   const [institutionList, setInstitutionList] = useState(null);
-  const [curricularData, setCurricularData] = useState(initialData);
+  const [curricularData, setCurricularData] = useState<InitialData>(initialData);
+  const [loading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -64,8 +76,20 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       })
     }
   }
-  const selectLanguage = () => {
 
+  const selectLanguage = (id: string, name: string, value: string) => {
+    let updatedList;
+    const currentLanguages = curricularData.languages;
+    const selectedItem = currentLanguages.find(item => item.id === id);
+    if (!selectedItem) {
+      updatedList = [...currentLanguages, { id, name, value }];
+    } else {
+      updatedList = currentLanguages.filter(item => item.id !== id);
+    }
+    setCurricularData({
+      ...curricularData,
+      languages: updatedList
+    })
   }
   const selectInstitute = (val: string, name: string, id: string) => {
     setCurricularData({
@@ -89,9 +113,14 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     const isValid = await validateForm();
     if (isValid) {
       try {
+        setIsLoading(true);
+        const languagesCode = curricularData.languages.map((item: { value: string }) => item.value);
         const input = {
           name: curricularData.name,
-          institutionID: curricularData.institute.id
+          institutionID: curricularData.institute.id,
+          description: curricularData.description,
+          objectives: [curricularData.objectives],
+          languages: languagesCode
         }
         const newCurricular = await API.graphql(graphqlOperation(customMutations.createCurriculum, { input: input }));
         setMessages({
@@ -100,6 +129,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           isError: false
         })
         setCurricularData(initialData);
+        setIsLoading(false);
       } catch{
         setMessages({
           show: true,
@@ -260,7 +290,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 Select Language
               </label>
-              <MultipleSelector selectedItems={languages} placeholder="Select Languages" list={languageList} onChange={selectLanguage} />
+              <MultipleSelector selectedItems={languages} placeholder="Select Language" list={languageList} onChange={selectLanguage} />
             </div>
             <div className="px-3 py-4">
               <TextArea value={description} id='description' onChange={onChange} name='description' label="Description" />
@@ -274,7 +304,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
         </div>) : null}
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-12 text-sm" label="Save" onClick={saveCurriculum} />
+          <Buttons btnClass="py-3 px-12 text-sm" label={loading ? 'Saving...' : 'Save'} onClick={saveCurriculum} disabled={loading ? true : false} />
         </div>
       </PageWrapper>
     </div>
