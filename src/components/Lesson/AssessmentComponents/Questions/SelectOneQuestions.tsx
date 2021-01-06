@@ -33,25 +33,19 @@ const SelectOneQuestions = (props: QuestionProps) => {
       <div key={questionKey} className={'flex flex-col mb-3'}>
         <p className={theme.elem.text}>
           <b>{questionIndex + 1}. </b>
-          {
-            question
-            .question
-            .question
-          }
+          {question.question.question}
         </p>
         <div className={`flex justify-center`}>
-          {
-            question
-              .question
-              .options
-              .map(
-            (option:
-               {
-                 label: string;
-                 icon: string;
-                 color: string;
-                 text: string
-               }, questionOptionIndex: number) => {
+          {question.question.options.map(
+            (
+              option: {
+                label: string;
+                icon: string;
+                color: string;
+                text: string;
+              },
+              questionOptionIndex: number
+            ) => {
               return (
                 <div key={`question_${questionId}_${questionOptionIndex}`} className={`${theme.elem.text} w-auto`}>
                   <label className="w-auto cursor-pointer flex flex-row">
@@ -69,8 +63,7 @@ const SelectOneQuestions = (props: QuestionProps) => {
                 </div>
               );
             }
-          )
-          }
+          )}
         </div>
       </div>
     </>

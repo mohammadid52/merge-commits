@@ -15,7 +15,14 @@ const Adventure = lazy(() => import('../LessonComponents/AdventurePage/Adventure
 const Outro = lazy(() => import('../LessonComponents/Outro/Outro'));
 const LessonError = lazy(() => import('../../Error/LessonError'));
 const Checkpoint = lazy(() => import('../AssessmentComponents/Checkpoint'));
-const Assessments = lazy(() => import('../LessonComponents/Checkpoint/Assessments'));
+// const Assessments = lazy(() => import('../LessonComponents/Checkpoint/Assessments'));
+
+/**
+ * TODO:
+ *  when the time comes to add the assessments,
+ *  add it back here
+ */
+
 
 const Body = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
@@ -88,9 +95,9 @@ const Body = () => {
         <Route path={`${match.url}/checkpoint`}>
           <Checkpoint />
         </Route>
-        <Route path={`${match.url}/assessment`}>
+        {/*<Route path={`${match.url}/assessment`}>
           <Assessments />
-        </Route>
+        </Route>*/}
         <Route
           path={`${match.url}/intro`}
           render={({ location }) => (

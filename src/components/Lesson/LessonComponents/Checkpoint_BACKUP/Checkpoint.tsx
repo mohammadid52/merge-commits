@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { LessonContext } from '../../../contexts/LessonContext';
+import { LessonContext } from '../../../../contexts/LessonContext';
+import SampleProfileQuestions from './SampleProfileQuestion';
 import CheckpointQuestions from './CheckpointQuestions';
-import Banner from '../LessonComponents/Banner';
+import Assessments from './Assessments';
+import Banner from './Banner';
 
 const Checkpoint = () => {
   const { state, dispatch, theme } = useContext(LessonContext);
@@ -11,6 +13,17 @@ const Checkpoint = () => {
     setTitle(title);
   };
 
+    const tempCheckPtSwitch = (type: string) => {
+        switch(type) {
+            case 'profile': 
+                return <SampleProfileQuestions  />
+            case 'survey':
+                return <CheckpointQuestions handleSetTitle={handleSetTitle} />
+            default:
+                return
+        }
+    }
+
   useEffect(() => {
     if (!state.pages[state.currentPage].active) {
       dispatch({ type: 'ACTIVATE_LESSON', payload: state.pages[state.currentPage].stage });
@@ -19,8 +32,8 @@ const Checkpoint = () => {
 
   return (
     <div className={theme.section}>
-      <Banner title={title} iconName={'FaCheck'} />
-      <CheckpointQuestions checkpointType={`checkpoint`} handleSetTitle={handleSetTitle} />
+      <Banner />
+        {tempCheckPtSwitch(state.pages[state.currentPage].type)}
     </div>
   );
 };

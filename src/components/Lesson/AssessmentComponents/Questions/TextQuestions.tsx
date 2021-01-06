@@ -16,7 +16,7 @@ const TextQuestions = (props: QuestionProps) => {
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
 
-  const [contents, setContents] = useState<TextInputState>({ id: null, value: null });
+  const [contents, setContents] = useState<TextInputState>({ id: '', value: '' });
 
   const questionId = question.question.id;
 
@@ -42,10 +42,10 @@ const TextQuestions = (props: QuestionProps) => {
 
   return (
     <div key={`question_${questionId}`} className={`${theme.elem.text} w-auto`}>
-      <label className={theme.elem.text} htmlFor={question.label}>
+      <label className={theme.elem.text} htmlFor={question.question.label}>
         <p className={theme.elem.text}>
           <b>{questionIndex + 1}. </b>
-          {question.question}
+          {question.question.question}
         </p>
       </label>
       <textarea

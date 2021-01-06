@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 import { LessonContext } from '../../../contexts/LessonContext';
-import { QuestionInterface } from './CheckpointQuestions';
+import { QuestionInterface, ResponseState } from './CheckpointQuestions';
 
 /**
  * MAIN QUESTION COMPONENT IMPORTS
@@ -17,25 +17,26 @@ export interface QuestionProps {
   questionIndex?: number;
   questionKey: any;
   handleInputChange?: (id: string, value: string) => void;
-  value?: string;
+  value?: ResponseState;
 }
 
 const Question = (props: QuestionProps) => {
   /**
    * Teacher switch
    */
-  const { isTeacher, question, questionIndex, questionKey, handleInputChange } = props;
+  const { isTeacher, question, questionIndex, questionKey, handleInputChange, value } = props;
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
 
+  const cloneQuestion = JSON.parse(JSON.stringify(question));
+
   /**
    * Function for returning different question-types e.g. selectOne, selectMany, etc.
-   * @param question
    * @param questionIndex
    * @param key
    */
-  const questionSwitch = (question: QuestionInterface, questionIndex: number, key: string) => {
-    switch (question.type) {
+  const questionSwitch = (questionIndex: number, key: string) => {
+    switch (cloneQuestion.question.type) {
       case 'input':
         return (
           <InputQuestions
@@ -43,6 +44,7 @@ const Question = (props: QuestionProps) => {
             questionIndex={questionIndex}
             questionKey={key}
             handleInputChange={handleInputChange}
+            value={value}
           />
         );
       case 'text':
@@ -51,8 +53,8 @@ const Question = (props: QuestionProps) => {
             question={question}
             questionIndex={questionIndex}
             questionKey={key}
-            // value={input[question.id]}
             handleInputChange={handleInputChange}
+            value={value}
           />
         );
       case 'selectOne':
@@ -61,8 +63,8 @@ const Question = (props: QuestionProps) => {
             question={question}
             questionIndex={questionIndex}
             questionKey={key}
-            // value={input[question.id]}
             handleInputChange={handleInputChange}
+            value={value}
           />
         );
       case 'selectMany':
@@ -71,8 +73,8 @@ const Question = (props: QuestionProps) => {
             question={question}
             questionIndex={questionIndex}
             questionKey={key}
-            // value={input[question.id]}
             handleInputChange={handleInputChange}
+            value={value}
           />
         );
       default:
@@ -80,7 +82,11 @@ const Question = (props: QuestionProps) => {
     }
   };
 
-  return questionSwitch(question, questionIndex, questionKey);
+  return (
+    <>
+      {question && cloneQuestion ? questionSwitch(questionIndex, questionKey) : null}
+    </>
+  );
 };
 
 export default Question;

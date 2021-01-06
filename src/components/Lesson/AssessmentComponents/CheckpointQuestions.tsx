@@ -24,10 +24,12 @@ import Question from './Question';
 interface CheckpointQuestionsProps {
   isTeacher?: boolean;
   handleSetTitle?: React.Dispatch<React.SetStateAction<string>>;
+  checkpointType?: string;
 }
 
-interface ResponseState {
-  [key: number]: string | number | [];
+export interface ResponseState {
+  // [key: number]: string | number | [];
+  [key: number]: any;
 }
 
 export interface QuestionInterface {
@@ -43,7 +45,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   /**
    * Teacher switch
    */
-  const { isTeacher, handleSetTitle } = props;
+  const { isTeacher, handleSetTitle, checkpointType } = props;
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
 
@@ -55,26 +57,41 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
 
   /**
    * Other
+   * - queryParams (possibly deprecated)
+   * - question source switch : to switch between checkpoint questions and doFirst questions
    */
   const queryParams = queryString.parse(location.search);
-  const checkpoints = state.data.lesson.checkpoints.items;
+
+  const flattenCheckpoints = (checkpointArray: any) => {
+    return checkpointArray.reduce((acc: [], checkpointObj: any) => {
+      const questionItems = checkpointObj.checkpoint.questions.items; // Array of question objects
+      return [...acc, ...questionItems];
+    }, []);
+  };
+
+  const questionSource = (() => {
+    switch (checkpointType) {
+      case 'assessment':
+      case 'checkpoint':
+        const checkpoints = state.data.lesson.checkpoints.items;
+        return flattenCheckpoints(checkpoints);
+        break;
+      case 'doFirst':
+        const doFirst = state.data.lesson.doFirst.questions.items;
+        return doFirst;
+        break;
+      default:
+        return null;
+    }
+  })();
 
   /**
-   * allQuestions - flattened array of all questions contained in
-   * multiple checkpoints, if there are multiple
-   */
-  const allQuestions = checkpoints.reduce((acc: [], checkpointObj: any) => {
-    const questionItems = checkpointObj.checkpoint.questions.items; // Array of question objects
-    return [...acc, ...questionItems];
-  }, []);
-
-  /**
-   * Loop over allQuestions to create an object of question ID's
+   * Loop over questionSource(checkpointType) to create an object of question ID's
    * and their answers e.g:
    *
    * { 2:'', 3:'', 6:[], 10:''}
    */
-  const initialResponseState = allQuestions.reduce((acc: {}, questionObj: QuestionInterface) => {
+  const initialResponseState = questionSource.reduce((acc: {}, questionObj: QuestionInterface) => {
     const dataType = (questionType: string): string | [] => {
       switch (questionType) {
         case 'text':
@@ -206,6 +223,12 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     //     }
     //   }
     // );
+    //
+    //
+    //  the dispatch.payload.key below
+    //  will have to be changed to say 'doFirst' when swtching
+    //  between DOFIRST / CHECKPOINT / ASSESSMENT
+    //
     // dispatch({
     //   type: 'SET_QUESTION_DATA',
     //   payload: {
@@ -217,7 +240,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   }, [input]);
 
   const handleInputChange = (id: number | string, value: string) => {
-    console.log('handleInputChange -> ', `id: ${id} :: value: ${value}`);
+    // console.log('handleInputChange -> ', `id: ${id} :: value: ${value}`);
     setInput({
       ...input,
       [id]: value,
@@ -230,17 +253,20 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     <div className={theme.section}>
       <div className={`${theme.elem.text}`}>
         <div className="w-full h-full flex flex-col flex-wrap justify-around items-center">
-          {allQuestions.map((question: QuestionInterface, key: number) => {
-            return (
-              <div key={`questionParent_${key}`}>
-                <Question
-                  question={question}
-                  questionIndex={key}
-                  questionKey={`question_${key}`}
-                  handleInputChange={handleInputChange}
-                />
-              </div>
-            );
+          {questionSource.map((question: QuestionInterface, key: number) => {
+
+              return (
+                <div key={`questionParent_${key}`}>
+                  <Question
+                    question={question}
+                    questionIndex={key}
+                    questionKey={`question_${key}`}
+                    value={input[key]}
+                    handleInputChange={handleInputChange}
+                  />
+                </div>
+              );
+
           })}
         </div>
       </div>
