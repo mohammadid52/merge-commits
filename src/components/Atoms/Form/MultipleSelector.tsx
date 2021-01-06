@@ -20,13 +20,11 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
           className={`flex items-center cursor-pointer relative w-full h-full rounded-md border border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${btnClass ? btnClass : ''}`}
         >
           <span className="block truncate text-gray-700" >
-            {selectedItems.length ? (selectedItems.map((item, index) => (
-
+            {selectedItems.length ? (
               selectedItems.length < 3 ? (
-                item.name + `${selectedItems.length - 1 === index ? '.' : ',' + ' '}`
+                selectedItems.map((item, index) => (item.name + `${selectedItems.length - 1 === index ? '.' : ',' + ' '}`))
               ) : (`${selectedItems.length} items Selected`)
-
-            ))) : placeholder}
+            ) : placeholder}
           </span>
           <span className={`relative justify-end inset-y-0 right-0 items-center pr-2 pointer-events-none ${arrowHidden ? 'hidden' : 'flex'}`}>
             <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="none" stroke="currentColor">
