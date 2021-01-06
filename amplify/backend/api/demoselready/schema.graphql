@@ -843,3 +843,13 @@ type FilterOption
   filterID: ID!
   text: String!
 }
+
+type Clients
+@model
+@key(fields: ["id"])
+{
+  id: ID!
+  name: String
+  subdomain: String
+  key: String
+}

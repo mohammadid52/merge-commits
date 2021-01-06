@@ -8120,3 +8120,48 @@ export const deleteFilterOption = /* GraphQL */ `
     }
   }
 `;
+export const createClients = /* GraphQL */ `
+  mutation CreateClients(
+    $input: CreateClientsInput!
+    $condition: ModelClientsConditionInput
+  ) {
+    createClients(input: $input, condition: $condition) {
+      id
+      name
+      subdomain
+      key
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateClients = /* GraphQL */ `
+  mutation UpdateClients(
+    $input: UpdateClientsInput!
+    $condition: ModelClientsConditionInput
+  ) {
+    updateClients(input: $input, condition: $condition) {
+      id
+      name
+      subdomain
+      key
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteClients = /* GraphQL */ `
+  mutation DeleteClients(
+    $input: DeleteClientsInput!
+    $condition: ModelClientsConditionInput
+  ) {
+    deleteClients(input: $input, condition: $condition) {
+      id
+      name
+      subdomain
+      key
+      createdAt
+      updatedAt
+    }
+  }
+`;

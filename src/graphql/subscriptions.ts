@@ -7025,3 +7025,39 @@ export const onDeleteFilterOption = /* GraphQL */ `
     }
   }
 `;
+export const onCreateClients = /* GraphQL */ `
+  subscription OnCreateClients {
+    onCreateClients {
+      id
+      name
+      subdomain
+      key
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateClients = /* GraphQL */ `
+  subscription OnUpdateClients {
+    onUpdateClients {
+      id
+      name
+      subdomain
+      key
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteClients = /* GraphQL */ `
+  subscription OnDeleteClients {
+    onDeleteClients {
+      id
+      name
+      subdomain
+      key
+      createdAt
+      updatedAt
+    }
+  }
+`;

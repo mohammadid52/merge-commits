@@ -3166,6 +3166,45 @@ export const listFilterOptions = /* GraphQL */ `
     }
   }
 `;
+export const getClients = /* GraphQL */ `
+  query GetClients($id: ID!) {
+    getClients(id: $id) {
+      id
+      name
+      subdomain
+      key
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listClientss = /* GraphQL */ `
+  query ListClientss(
+    $id: ID
+    $filter: ModelClientsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listClientss(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        subdomain
+        key
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID

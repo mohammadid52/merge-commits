@@ -1748,6 +1748,33 @@ export type DeleteFilterOptionInput = {
   id: string,
 };
 
+export type CreateClientsInput = {
+  id?: string | null,
+  name?: string | null,
+  subdomain?: string | null,
+  key?: string | null,
+};
+
+export type ModelClientsConditionInput = {
+  name?: ModelStringInput | null,
+  subdomain?: ModelStringInput | null,
+  key?: ModelStringInput | null,
+  and?: Array< ModelClientsConditionInput | null > | null,
+  or?: Array< ModelClientsConditionInput | null > | null,
+  not?: ModelClientsConditionInput | null,
+};
+
+export type UpdateClientsInput = {
+  id: string,
+  name?: string | null,
+  subdomain?: string | null,
+  key?: string | null,
+};
+
+export type DeleteClientsInput = {
+  id: string,
+};
+
 export type ModelInstitutionFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -2173,6 +2200,16 @@ export type ModelFilterOptionFilterInput = {
   and?: Array< ModelFilterOptionFilterInput | null > | null,
   or?: Array< ModelFilterOptionFilterInput | null > | null,
   not?: ModelFilterOptionFilterInput | null,
+};
+
+export type ModelClientsFilterInput = {
+  id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  subdomain?: ModelStringInput | null,
+  key?: ModelStringInput | null,
+  and?: Array< ModelClientsFilterInput | null > | null,
+  or?: Array< ModelClientsFilterInput | null > | null,
+  not?: ModelClientsFilterInput | null,
 };
 
 export type CreateInstitutionMutationVariables = {
@@ -11367,6 +11404,57 @@ export type DeleteFilterOptionMutation = {
   } | null,
 };
 
+export type CreateClientsMutationVariables = {
+  input: CreateClientsInput,
+  condition?: ModelClientsConditionInput | null,
+};
+
+export type CreateClientsMutation = {
+  createClients:  {
+    __typename: "Clients",
+    id: string,
+    name: string | null,
+    subdomain: string | null,
+    key: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateClientsMutationVariables = {
+  input: UpdateClientsInput,
+  condition?: ModelClientsConditionInput | null,
+};
+
+export type UpdateClientsMutation = {
+  updateClients:  {
+    __typename: "Clients",
+    id: string,
+    name: string | null,
+    subdomain: string | null,
+    key: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteClientsMutationVariables = {
+  input: DeleteClientsInput,
+  condition?: ModelClientsConditionInput | null,
+};
+
+export type DeleteClientsMutation = {
+  deleteClients:  {
+    __typename: "Clients",
+    id: string,
+    name: string | null,
+    subdomain: string | null,
+    key: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type GetInstitutionQueryVariables = {
   id: string,
 };
@@ -14960,6 +15048,46 @@ export type ListFilterOptionsQuery = {
       id: string,
       filterID: string,
       text: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetClientsQueryVariables = {
+  id: string,
+};
+
+export type GetClientsQuery = {
+  getClients:  {
+    __typename: "Clients",
+    id: string,
+    name: string | null,
+    subdomain: string | null,
+    key: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListClientssQueryVariables = {
+  id?: string | null,
+  filter?: ModelClientsFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListClientssQuery = {
+  listClientss:  {
+    __typename: "ModelClientsConnection",
+    items:  Array< {
+      __typename: "Clients",
+      id: string,
+      name: string | null,
+      subdomain: string | null,
+      key: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -22838,6 +22966,42 @@ export type OnDeleteFilterOptionSubscription = {
     id: string,
     filterID: string,
     text: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateClientsSubscription = {
+  onCreateClients:  {
+    __typename: "Clients",
+    id: string,
+    name: string | null,
+    subdomain: string | null,
+    key: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateClientsSubscription = {
+  onUpdateClients:  {
+    __typename: "Clients",
+    id: string,
+    name: string | null,
+    subdomain: string | null,
+    key: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteClientsSubscription = {
+  onDeleteClients:  {
+    __typename: "Clients",
+    id: string,
+    name: string | null,
+    subdomain: string | null,
+    key: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
