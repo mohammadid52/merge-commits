@@ -22,7 +22,7 @@ interface InitialData {
   name: string,
   description: string,
   objectives: string,
-  languages: { id: string, name: string, value: string }[] | [],
+  languages: { id: string, name: string, value: string }[],
   institute: {
     id: string,
     name: string,
@@ -36,7 +36,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     name: '',
     description: '',
     objectives: '',
-    languages: [],
+    languages: [{ id: '1', name: "English", value: 'EN' }],
     institute: {
       id: '',
       name: '',
@@ -47,6 +47,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const location = useLocation();
   const [institutionList, setInstitutionList] = useState(null);
   const [curricularData, setCurricularData] = useState<InitialData>(initialData);
+  const [loading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -112,7 +113,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     const isValid = await validateForm();
     if (isValid) {
       try {
-        const languagesCode = curricularData.languages.map(item => item.value);
+        setIsLoading(true);
+        const languagesCode = curricularData.languages.map((item: { value: string }) => item.value);
         const input = {
           name: curricularData.name,
           institutionID: curricularData.institute.id,
@@ -127,6 +129,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           isError: false
         })
         setCurricularData(initialData);
+        setIsLoading(false);
       } catch{
         setMessages({
           show: true,
@@ -287,7 +290,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 Select Language
               </label>
-              <MultipleSelector selectedItems={languages} placeholder="Select Languages" list={languageList} onChange={selectLanguage} />
+              <MultipleSelector selectedItems={languages} placeholder="Select Language" list={languageList} onChange={selectLanguage} />
             </div>
             <div className="px-3 py-4">
               <TextArea value={description} id='description' onChange={onChange} name='description' label="Description" />
@@ -301,7 +304,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
         </div>) : null}
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-12 text-sm" label="Save" onClick={saveCurriculum} />
+          <Buttons btnClass="py-3 px-12 text-sm" label={loading ? 'Saving...' : 'Save'} onClick={saveCurriculum} disabled={loading ? true : false} />
         </div>
       </PageWrapper>
     </div>
