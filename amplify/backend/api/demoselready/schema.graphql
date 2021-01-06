@@ -234,6 +234,44 @@ type Curriculum
   languages: [Language]
   institution: Institution @connection(fields: ["institutionID"])
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
+  topics: [Topic] @connection(keyName: "topicByCurriculum", fields: ["id"])
+}
+
+type Topic
+@model 
+@key(fields: ["id"])
+@key(name: "topicByCurriculum", fields: ["curriculumID"])
+{
+  id: ID!
+  curriculumID: ID!
+  curriculum: Curriculum @connection(fields: ["curriculumID"])
+  name: String!
+  description: String
+}
+
+type LearningObjective
+@model
+@key(fields: ["id"])
+{
+  id: ID!
+  name: String!
+  description: String
+}
+
+type Rubric
+@model
+@key(fields: ["id"])
+{
+  id: ID!
+  criteria: String
+  distinguished: String
+  excelled: String
+  Adequite: String
+  basic: String
+  learningObjectiveID: ID!
+  learningObjective: LearningObjective @connection(fields: ["learningObjectiveID"])
+  topicID: ID!
+  topic: Topic @connection(fields: ["topicID"])
 }
 
 type TeacherCurriculum

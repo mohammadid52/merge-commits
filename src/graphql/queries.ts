@@ -715,6 +715,17 @@ export const getCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      topics {
+        items {
+          id
+          curriculumID
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -764,6 +775,219 @@ export const listCurriculums = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        topics {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getTopic = /* GraphQL */ `
+  query GetTopic($id: ID!) {
+    getTopic(id: $id) {
+      id
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        topics {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      name
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listTopics = /* GraphQL */ `
+  query ListTopics(
+    $id: ID
+    $filter: ModelTopicFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listTopics(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        curriculumID
+        curriculum {
+          id
+          institutionID
+          name
+          type
+          description
+          objectives
+          languages
+          createdAt
+          updatedAt
+        }
+        name
+        description
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getLearningObjective = /* GraphQL */ `
+  query GetLearningObjective($id: ID!) {
+    getLearningObjective(id: $id) {
+      id
+      name
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listLearningObjectives = /* GraphQL */ `
+  query ListLearningObjectives(
+    $id: ID
+    $filter: ModelLearningObjectiveFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listLearningObjectives(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getRubric = /* GraphQL */ `
+  query GetRubric($id: ID!) {
+    getRubric(id: $id) {
+      id
+      criteria
+      distinguished
+      excelled
+      Adequite
+      basic
+      learningObjectiveID
+      learningObjective {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+      }
+      topicID
+      topic {
+        id
+        curriculumID
+        curriculum {
+          id
+          institutionID
+          name
+          type
+          description
+          objectives
+          languages
+          createdAt
+          updatedAt
+        }
+        name
+        description
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listRubrics = /* GraphQL */ `
+  query ListRubrics(
+    $id: ID
+    $filter: ModelRubricFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listRubrics(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        criteria
+        distinguished
+        excelled
+        Adequite
+        basic
+        learningObjectiveID
+        learningObjective {
+          id
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        topicID
+        topic {
+          id
+          curriculumID
+          name
+          description
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -804,6 +1028,9 @@ export const getRoomCurriculum = /* GraphQL */ `
           updatedAt
         }
         syllabi {
+          nextToken
+        }
+        topics {
           nextToken
         }
         createdAt
