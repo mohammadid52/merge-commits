@@ -715,17 +715,6 @@ export const getCurriculum = /* GraphQL */ `
         }
         nextToken
       }
-      topics {
-        items {
-          id
-          curriculumID
-          name
-          description
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -775,9 +764,45 @@ export const listCurriculums = /* GraphQL */ `
         syllabi {
           nextToken
         }
-        topics {
-          nextToken
-        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCurriculumSequences = /* GraphQL */ `
+  query GetCurriculumSequences($curriculumID: ID!) {
+    getCurriculumSequences(curriculumID: $curriculumID) {
+      id
+      curriculumID
+      type
+      sequence
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCurriculumSequencess = /* GraphQL */ `
+  query ListCurriculumSequencess(
+    $curriculumID: ID
+    $filter: ModelCurriculumSequencesFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCurriculumSequencess(
+      curriculumID: $curriculumID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        curriculumID
+        type
+        sequence
         createdAt
         updatedAt
       }
@@ -817,9 +842,6 @@ export const getTopic = /* GraphQL */ `
           updatedAt
         }
         syllabi {
-          nextToken
-        }
-        topics {
           nextToken
         }
         createdAt
@@ -1028,9 +1050,6 @@ export const getRoomCurriculum = /* GraphQL */ `
           updatedAt
         }
         syllabi {
-          nextToken
-        }
-        topics {
           nextToken
         }
         createdAt
@@ -3159,6 +3178,45 @@ export const listFilterOptions = /* GraphQL */ `
         id
         filterID
         text
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getClients = /* GraphQL */ `
+  query GetClients($id: ID!) {
+    getClients(id: $id) {
+      id
+      name
+      subdomain
+      key
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listClientss = /* GraphQL */ `
+  query ListClientss(
+    $id: ID
+    $filter: ModelClientsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listClientss(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        subdomain
+        key
         createdAt
         updatedAt
       }

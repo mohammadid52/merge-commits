@@ -45,6 +45,8 @@ const CurricularView = (props: CurricularViewProps) => {
     return new URLSearchParams(location.search);
   };
   const params = useQuery();
+  const currID = params.get('id');
+
   const initialData = {
     id: '',
     name: '',
@@ -57,13 +59,14 @@ const CurricularView = (props: CurricularViewProps) => {
     languages: [{ id: '1', name: "English", value: 'EN' }],
     objectives: '',
   }
+  const [curricularId, setCurricularId] = useState(currID);
   const [curricularData, setCurricularData] = useState<InitialData>(initialData);
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Curricular Info', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
   ]
   const tabs = [
-    { index: 0, title: 'Topics', icon: <MdSpeakerNotes />, active: true, content: <TopicsList /> },
+    { index: 0, title: 'Topics', icon: <MdSpeakerNotes />, active: true, content: <TopicsList curricularId={curricularId}/> },
     { index: 1, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList /> },
     { index: 2, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList /> },
   ]
