@@ -17,7 +17,18 @@ import TextArea from '../../../../Atoms/Form/TextArea';
 interface CurricularBuilderProps {
 
 }
-
+interface InitialData {
+  id: string,
+  name: string,
+  description: string,
+  objectives: string,
+  languages: { id: string, name: string, value: string }[] | [],
+  institute: {
+    id: string,
+    name: string,
+    value: string
+  }
+}
 const CurricularBuilder = (props: CurricularBuilderProps) => {
   const { } = props;
   const initialData = {
@@ -25,7 +36,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     name: '',
     description: '',
     objectives: '',
-    languages: [{ id: '1', name: "English", value: 'EN' }],
+    languages: [],
     institute: {
       id: '',
       name: '',
@@ -35,7 +46,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const history = useHistory();
   const location = useLocation();
   const [institutionList, setInstitutionList] = useState(null);
-  const [curricularData, setCurricularData] = useState(initialData);
+  const [curricularData, setCurricularData] = useState<InitialData>(initialData);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -64,8 +75,20 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       })
     }
   }
-  const selectLanguage = () => {
 
+  const selectLanguage = (id: string, name: string, value: string) => {
+    let updatedList;
+    const currentLanguages = curricularData.languages;
+    const selectedItem = currentLanguages.find(item => item.id === id);
+    if (!selectedItem) {
+      updatedList = [...currentLanguages, { id, name, value }];
+    } else {
+      updatedList = currentLanguages.filter(item => item.id !== id);
+    }
+    setCurricularData({
+      ...curricularData,
+      languages: updatedList
+    })
   }
   const selectInstitute = (val: string, name: string, id: string) => {
     setCurricularData({
@@ -89,9 +112,13 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     const isValid = await validateForm();
     if (isValid) {
       try {
+        const languagesCode = curricularData.languages.map(item => item.value);
         const input = {
           name: curricularData.name,
-          institutionID: curricularData.institute.id
+          institutionID: curricularData.institute.id,
+          description: curricularData.description,
+          objectives: curricularData.objectives,
+          languages: languagesCode
         }
         const newCurricular = await API.graphql(graphqlOperation(customMutations.createCurriculum, { input: input }));
         setMessages({
