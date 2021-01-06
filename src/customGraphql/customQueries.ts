@@ -1009,6 +1009,7 @@ query GetInstitution($id: ID!) {
           id
           partnerID
           providerID
+          status
           providerInstitution {
             id
             name
@@ -1082,6 +1083,88 @@ query GetInstitution($id: ID!) {
         nextToken
       }
       filters
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+
+export const getClassDetails = /* GraphQL */ `
+  query GetClassDetails($id: ID!) {
+    getClass(id: $id) {
+      id
+      institutionID
+      type
+      name
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        createdAt
+        updatedAt
+      }
+      rooms {
+        items {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      students {
+        items {
+          id
+          classID
+          studentID
+          studentEmail
+          studentAuthID
+          status
+          createdAt
+          updatedAt
+          student {
+            id
+            firstName
+            preferredName
+            lastName
+            image
+          }
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }

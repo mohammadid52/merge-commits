@@ -78,6 +78,7 @@ type ServiceProvider
   id: ID!
   partnerID: ID!
   providerID: ID!
+  status: String
   providerInstitution: Institution @connection(fields: ["providerID"])
 }
 
@@ -205,6 +206,7 @@ type ClassStudent
   studentID: ID!
   studentEmail: String!
   studentAuthID: String!
+  status: String
   class: Class @connection(fields: ["classID"])
   student: Person @connection(fields: ["studentEmail", "studentAuthID"])
 }

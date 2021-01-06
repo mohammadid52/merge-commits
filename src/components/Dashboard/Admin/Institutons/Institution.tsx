@@ -37,7 +37,7 @@ export interface InstitutionInfo {
   isServiceProvider?: boolean;
   classes?: { items: { name?: string, id: string }[] }
   curricula?: { items: { name?: string, id: string }[] }
-  serviceProviders?: { items: { id: string, providerID: string, providerInstitution?: any }[] }
+  serviceProviders?: { items: { id: string, providerID: string, status: string, providerInstitution?: any }[] }
 }
 
 /**
@@ -65,7 +65,7 @@ const Institution: React.FC = () => {
     phone: '',
     isServiceProvider: false,
     classes: { items: [{ name: '', id: '' }] },
-    serviceProviders: { items: [{ id: '', providerID: '' }] },
+    serviceProviders: { items: [{ id: '', providerID: '', status }] },
     curricula: { items: [{ name: '', id: '' }] },
 
   });

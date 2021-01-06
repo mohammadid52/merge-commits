@@ -119,11 +119,13 @@ export type CreateServiceProviderInput = {
   id?: string | null,
   partnerID: string,
   providerID: string,
+  status?: string | null,
 };
 
 export type ModelServiceProviderConditionInput = {
   partnerID?: ModelIDInput | null,
   providerID?: ModelIDInput | null,
+  status?: ModelStringInput | null,
   and?: Array< ModelServiceProviderConditionInput | null > | null,
   or?: Array< ModelServiceProviderConditionInput | null > | null,
   not?: ModelServiceProviderConditionInput | null,
@@ -149,6 +151,7 @@ export type UpdateServiceProviderInput = {
   id: string,
   partnerID?: string | null,
   providerID?: string | null,
+  status?: string | null,
 };
 
 export type DeleteServiceProviderInput = {
@@ -380,6 +383,7 @@ export type CreateClassStudentInput = {
   studentID: string,
   studentEmail: string,
   studentAuthID: string,
+  status?: string | null,
 };
 
 export type ModelClassStudentConditionInput = {
@@ -387,6 +391,7 @@ export type ModelClassStudentConditionInput = {
   studentID?: ModelIDInput | null,
   studentEmail?: ModelStringInput | null,
   studentAuthID?: ModelStringInput | null,
+  status?: ModelStringInput | null,
   and?: Array< ModelClassStudentConditionInput | null > | null,
   or?: Array< ModelClassStudentConditionInput | null > | null,
   not?: ModelClassStudentConditionInput | null,
@@ -398,6 +403,7 @@ export type UpdateClassStudentInput = {
   studentID?: string | null,
   studentEmail?: string | null,
   studentAuthID?: string | null,
+  status?: string | null,
 };
 
 export type DeleteClassStudentInput = {
@@ -2074,6 +2080,7 @@ export type CreateInstitutionMutation = {
         id: string,
         partnerID: string,
         providerID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -2174,6 +2181,7 @@ export type UpdateInstitutionMutation = {
         id: string,
         partnerID: string,
         providerID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -2274,6 +2282,7 @@ export type DeleteInstitutionMutation = {
         id: string,
         partnerID: string,
         providerID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -2357,6 +2366,7 @@ export type CreateServiceProviderMutation = {
     id: string,
     partnerID: string,
     providerID: string,
+    status: string | null,
     providerInstitution:  {
       __typename: "Institution",
       id: string,
@@ -2412,6 +2422,7 @@ export type UpdateServiceProviderMutation = {
     id: string,
     partnerID: string,
     providerID: string,
+    status: string | null,
     providerInstitution:  {
       __typename: "Institution",
       id: string,
@@ -2467,6 +2478,7 @@ export type DeleteServiceProviderMutation = {
     id: string,
     partnerID: string,
     providerID: string,
+    status: string | null,
     providerInstitution:  {
       __typename: "Institution",
       id: string,
@@ -2750,6 +2762,7 @@ export type CreatePersonMutation = {
         studentID: string,
         studentEmail: string,
         studentAuthID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -2810,6 +2823,7 @@ export type UpdatePersonMutation = {
         studentID: string,
         studentEmail: string,
         studentAuthID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -2870,6 +2884,7 @@ export type DeletePersonMutation = {
         studentID: string,
         studentEmail: string,
         studentAuthID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -3383,6 +3398,7 @@ export type CreateClassMutation = {
         studentID: string,
         studentEmail: string,
         studentAuthID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -3470,6 +3486,7 @@ export type UpdateClassMutation = {
         studentID: string,
         studentEmail: string,
         studentAuthID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -3557,6 +3574,7 @@ export type DeleteClassMutation = {
         studentID: string,
         studentEmail: string,
         studentAuthID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -3580,6 +3598,7 @@ export type CreateClassStudentMutation = {
     studentID: string,
     studentEmail: string,
     studentAuthID: string,
+    status: string | null,
     class:  {
       __typename: "Class",
       id: string,
@@ -3667,6 +3686,7 @@ export type UpdateClassStudentMutation = {
     studentID: string,
     studentEmail: string,
     studentAuthID: string,
+    status: string | null,
     class:  {
       __typename: "Class",
       id: string,
@@ -3754,6 +3774,7 @@ export type DeleteClassStudentMutation = {
     studentID: string,
     studentEmail: string,
     studentAuthID: string,
+    status: string | null,
     class:  {
       __typename: "Class",
       id: string,
@@ -10821,6 +10842,7 @@ export type GetInstitutionQuery = {
         id: string,
         partnerID: string,
         providerID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -11110,6 +11132,7 @@ export type GetPersonQuery = {
         studentID: string,
         studentEmail: string,
         studentAuthID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -11471,6 +11494,7 @@ export type GetClassQuery = {
         studentID: string,
         studentEmail: string,
         studentAuthID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -14696,6 +14720,7 @@ export type OnCreateInstitutionSubscription = {
         id: string,
         partnerID: string,
         providerID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -14791,6 +14816,7 @@ export type OnUpdateInstitutionSubscription = {
         id: string,
         partnerID: string,
         providerID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -14886,6 +14912,7 @@ export type OnDeleteInstitutionSubscription = {
         id: string,
         partnerID: string,
         providerID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -14964,6 +14991,7 @@ export type OnCreateServiceProviderSubscription = {
     id: string,
     partnerID: string,
     providerID: string,
+    status: string | null,
     providerInstitution:  {
       __typename: "Institution",
       id: string,
@@ -15014,6 +15042,7 @@ export type OnUpdateServiceProviderSubscription = {
     id: string,
     partnerID: string,
     providerID: string,
+    status: string | null,
     providerInstitution:  {
       __typename: "Institution",
       id: string,
@@ -15064,6 +15093,7 @@ export type OnDeleteServiceProviderSubscription = {
     id: string,
     partnerID: string,
     providerID: string,
+    status: string | null,
     providerInstitution:  {
       __typename: "Institution",
       id: string,
@@ -15327,6 +15357,7 @@ export type OnCreatePersonSubscription = {
         studentID: string,
         studentEmail: string,
         studentAuthID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -15382,6 +15413,7 @@ export type OnUpdatePersonSubscription = {
         studentID: string,
         studentEmail: string,
         studentAuthID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -15437,6 +15469,7 @@ export type OnDeletePersonSubscription = {
         studentID: string,
         studentEmail: string,
         studentAuthID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -15930,6 +15963,7 @@ export type OnCreateClassSubscription = {
         studentID: string,
         studentEmail: string,
         studentAuthID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -16012,6 +16046,7 @@ export type OnUpdateClassSubscription = {
         studentID: string,
         studentEmail: string,
         studentAuthID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -16094,6 +16129,7 @@ export type OnDeleteClassSubscription = {
         studentID: string,
         studentEmail: string,
         studentAuthID: string,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -16112,6 +16148,7 @@ export type OnCreateClassStudentSubscription = {
     studentID: string,
     studentEmail: string,
     studentAuthID: string,
+    status: string | null,
     class:  {
       __typename: "Class",
       id: string,
@@ -16194,6 +16231,7 @@ export type OnUpdateClassStudentSubscription = {
     studentID: string,
     studentEmail: string,
     studentAuthID: string,
+    status: string | null,
     class:  {
       __typename: "Class",
       id: string,
@@ -16276,6 +16314,7 @@ export type OnDeleteClassStudentSubscription = {
     studentID: string,
     studentEmail: string,
     studentAuthID: string,
+    status: string | null,
     class:  {
       __typename: "Class",
       id: string,

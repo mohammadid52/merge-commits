@@ -377,6 +377,7 @@ export const onCreateInstitution = /* GraphQL */ `
           id
           partnerID
           providerID
+          status
           createdAt
           updatedAt
         }
@@ -462,6 +463,7 @@ export const onUpdateInstitution = /* GraphQL */ `
           id
           partnerID
           providerID
+          status
           createdAt
           updatedAt
         }
@@ -547,6 +549,7 @@ export const onDeleteInstitution = /* GraphQL */ `
           id
           partnerID
           providerID
+          status
           createdAt
           updatedAt
         }
@@ -617,6 +620,7 @@ export const onCreateServiceProvider = /* GraphQL */ `
       id
       partnerID
       providerID
+      status
       providerInstitution {
         id
         name
@@ -661,6 +665,7 @@ export const onUpdateServiceProvider = /* GraphQL */ `
       id
       partnerID
       providerID
+      status
       providerInstitution {
         id
         name
@@ -705,6 +710,7 @@ export const onDeleteServiceProvider = /* GraphQL */ `
       id
       partnerID
       providerID
+      status
       providerInstitution {
         id
         name
@@ -943,6 +949,7 @@ export const onCreatePerson = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -994,6 +1001,7 @@ export const onUpdatePerson = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -1045,6 +1053,7 @@ export const onDeletePerson = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -1483,6 +1492,7 @@ export const onCreateClass = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -1555,6 +1565,7 @@ export const onUpdateClass = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -1627,6 +1638,7 @@ export const onDeleteClass = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -1645,6 +1657,7 @@ export const onCreateClassStudent = /* GraphQL */ `
       studentID
       studentEmail
       studentAuthID
+      status
       class {
         id
         institutionID
@@ -1720,6 +1733,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
       studentID
       studentEmail
       studentAuthID
+      status
       class {
         id
         institutionID
@@ -1795,6 +1809,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
       studentID
       studentEmail
       studentAuthID
+      status
       class {
         id
         institutionID

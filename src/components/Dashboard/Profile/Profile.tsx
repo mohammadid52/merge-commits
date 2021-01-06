@@ -97,7 +97,6 @@ const Profile: React.FC = () => {
         contentType: type,
         ContentEncoding: 'base64',
       }).then(result => {
-        console.log('File successfully uploaded to s3', result)
         resolve(true)
       }).catch(err => {
         console.log('Error in uploading file to s3', err)
@@ -112,7 +111,6 @@ const Profile: React.FC = () => {
 
     return new Promise((resolve, reject) => {
       Storage.remove(key).then(result => {
-        console.log('File successfully deleted from s3')
         resolve(result)
       }).catch(err => {
         console.log('Error in deleting file from s3', err)
@@ -241,8 +239,10 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     async function getUrl() {
-      const imageUrl: any = await getImageFromS3(person.image);
-      setImageUrl(imageUrl);
+      if (person?.image) {
+        const imageUrl: any = await getImageFromS3(person.image);
+        setImageUrl(imageUrl);
+      }
     }
     getUrl();
   }, [person.image])
