@@ -322,7 +322,10 @@ type Syllabus
   name: String!
   type: String
   description: String
-  objectives: [String]
+  methodology:String
+  policies: String
+  pupose: String
+  objectives: String
   curriculumID: ID!
   languages: [Language]
   lessons: [SyllabusLesson] @connection(keyName: "lessonBySyllabus", fields: ["id"])
