@@ -432,8 +432,18 @@ export const createClassStudent = /* GraphQL */ `
       id
       classID
       studentID
+      status
       studentEmail
       studentAuthID
+    }
+  }
+`;
+
+export const updateClassStudent = /* GraphQL */ `
+  mutation UpdateClassStudent($input: UpdateClassStudentInput!, $condition: ModelClassStudentConditionInput) {
+    updateClassStudent(input: $input, condition: $condition) {
+      id
+      status
     }
   }
 `;
@@ -451,6 +461,26 @@ export const createRoom = /* GraphQL */ `
       teacherEmail
       name
       maxPersons
+    }
+  }
+`;
+
+export const updateStaff = /* GraphQL */ `
+  mutation UpdateStaff($input: UpdateStaffInput!, $condition: ModelStaffConditionInput) {
+    updateStaff(input: $input, condition: $condition) {
+      id
+      status
+    }
+  }
+`;
+export const updateServiceProviderStatus = /* GraphQL */ `
+  mutation UpdateServiceProvider(
+    $input: UpdateServiceProviderInput!
+    $condition: ModelServiceProviderConditionInput
+  ) {
+    updateServiceProvider(input: $input, condition: $condition) {
+      id
+      status
     }
   }
 `;

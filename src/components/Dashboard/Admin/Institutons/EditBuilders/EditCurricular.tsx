@@ -6,12 +6,15 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as mutation from '../../../../../graphql/mutations';
 import * as queries from '../../../../../graphql/queries';
+import { languageList } from '../../../../../utilities/staticData';
 import SectionTitle from '../../../../Atoms/SectionTitle';
 import PageWrapper from '../../../../Atoms/PageWrapper'
 import BreadCrums from '../../../../Atoms/BreadCrums';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
+import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
+import TextArea from '../../../../Atoms/Form/TextArea';
 
 interface EditCurricularProps {
 
@@ -22,6 +25,9 @@ const EditCurricular = (props: EditCurricularProps) => {
   const initialData = {
     id: '',
     name: '',
+    description: '',
+    languages: [{ id: '1', name: "English", value: 'EN' }],
+    objectives: '',
     institute: {
       id: '',
       name: '',
@@ -45,13 +51,13 @@ const EditCurricular = (props: EditCurricularProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Edit Curricular', url: `/dashboard/curricular-edit?id=${params.get('id')}`, last: true }
+    { title: 'Edit Curricular', url: `/dashboard/manage-institutions/curricular/edit?id=${params.get('id')}`, last: true }
   ];
 
   const onChange = (e: any) => {
     setCurricularData({
       ...curricularData,
-      name: e.target.value
+      [e.target.name]: e.target.value
     })
     if (messages.show) {
       setMessages({
@@ -61,7 +67,9 @@ const EditCurricular = (props: EditCurricularProps) => {
       })
     }
   }
+  const selectLanguage = () => {
 
+  }
   const selectInstitute = (val: string, name: string, id: string) => {
     setCurricularData({
       ...curricularData,
@@ -209,7 +217,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     getInstitutionList()
   }, [])
 
-  const { name, institute } = curricularData;
+  const { name, description, objectives, languages, institute } = curricularData;
   return (
     <div className="w-8/10 h-full mt-4 p-4">
 
@@ -241,6 +249,20 @@ const EditCurricular = (props: EditCurricularProps) => {
               </label>
               <Selector selectedItem={institute.value} placeholder="Select Institute" list={institutionList} onChange={selectInstitute} />
             </div> */}
+
+            <div className="px-3 py-4">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                Select Language
+              </label>
+              <MultipleSelector selectedItems={languages} placeholder="Select Languages" list={languageList} onChange={selectLanguage} />
+            </div>
+            <div className="px-3 py-4">
+              <TextArea value={description} id='description' onChange={onChange} name='description' label="Description" />
+            </div>
+            <div className="px-3 py-4">
+              <TextArea value={objectives} id='objectives' onChange={onChange} name='objectives' label="Objective" />
+            </div>
+
           </div>
         </div>
         {messages.show ? (<div className="py-2 m-auto text-center">

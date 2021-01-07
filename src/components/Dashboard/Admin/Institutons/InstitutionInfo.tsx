@@ -31,7 +31,7 @@ interface InstInfo {
   classes: { items: { name?: string, id: string }[] }
   curricula: { items: { name?: string, id: string }[] }
   isServiceProvider: boolean
-  serviceProviders?: { items: { id: string, providerID: string, providerInstitution?: any }[] }
+  serviceProviders?: { items: { id: string, providerID: string, status: string, providerInstitution?: any }[] }
 }
 
 const InstitutionInfo = (instProps: InstitutionInfoProps) => {

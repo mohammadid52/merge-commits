@@ -26,6 +26,7 @@ export const createInstitution = /* GraphQL */ `
           id
           partnerID
           providerID
+          status
           createdAt
           updatedAt
         }
@@ -114,6 +115,7 @@ export const updateInstitution = /* GraphQL */ `
           id
           partnerID
           providerID
+          status
           createdAt
           updatedAt
         }
@@ -202,6 +204,7 @@ export const deleteInstitution = /* GraphQL */ `
           id
           partnerID
           providerID
+          status
           createdAt
           updatedAt
         }
@@ -275,6 +278,7 @@ export const createServiceProvider = /* GraphQL */ `
       id
       partnerID
       providerID
+      status
       providerInstitution {
         id
         name
@@ -322,6 +326,7 @@ export const updateServiceProvider = /* GraphQL */ `
       id
       partnerID
       providerID
+      status
       providerInstitution {
         id
         name
@@ -369,6 +374,7 @@ export const deleteServiceProvider = /* GraphQL */ `
       id
       partnerID
       providerID
+      status
       providerInstitution {
         id
         name
@@ -619,6 +625,7 @@ export const createPerson = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -673,6 +680,7 @@ export const updatePerson = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -727,6 +735,7 @@ export const deletePerson = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -1177,6 +1186,7 @@ export const createClass = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -1252,6 +1262,7 @@ export const updateClass = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -1327,6 +1338,7 @@ export const deleteClass = /* GraphQL */ `
           studentID
           studentEmail
           studentAuthID
+          status
           createdAt
           updatedAt
         }
@@ -1348,6 +1360,7 @@ export const createClassStudent = /* GraphQL */ `
       studentID
       studentEmail
       studentAuthID
+      status
       class {
         id
         institutionID
@@ -1426,6 +1439,7 @@ export const updateClassStudent = /* GraphQL */ `
       studentID
       studentEmail
       studentAuthID
+      status
       class {
         id
         institutionID
@@ -1504,6 +1518,7 @@ export const deleteClassStudent = /* GraphQL */ `
       studentID
       studentEmail
       studentAuthID
+      status
       class {
         id
         institutionID
@@ -1631,6 +1646,17 @@ export const createCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      topics {
+        items {
+          id
+          curriculumID
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -1691,6 +1717,17 @@ export const updateCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      topics {
+        items {
+          id
+          curriculumID
+          name
+          description
           createdAt
           updatedAt
         }
@@ -1761,6 +1798,344 @@ export const deleteCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      topics {
+        items {
+          id
+          curriculumID
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createTopic = /* GraphQL */ `
+  mutation CreateTopic(
+    $input: CreateTopicInput!
+    $condition: ModelTopicConditionInput
+  ) {
+    createTopic(input: $input, condition: $condition) {
+      id
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        topics {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      name
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateTopic = /* GraphQL */ `
+  mutation UpdateTopic(
+    $input: UpdateTopicInput!
+    $condition: ModelTopicConditionInput
+  ) {
+    updateTopic(input: $input, condition: $condition) {
+      id
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        topics {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      name
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteTopic = /* GraphQL */ `
+  mutation DeleteTopic(
+    $input: DeleteTopicInput!
+    $condition: ModelTopicConditionInput
+  ) {
+    deleteTopic(input: $input, condition: $condition) {
+      id
+      curriculumID
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        syllabi {
+          nextToken
+        }
+        topics {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      name
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createLearningObjective = /* GraphQL */ `
+  mutation CreateLearningObjective(
+    $input: CreateLearningObjectiveInput!
+    $condition: ModelLearningObjectiveConditionInput
+  ) {
+    createLearningObjective(input: $input, condition: $condition) {
+      id
+      name
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateLearningObjective = /* GraphQL */ `
+  mutation UpdateLearningObjective(
+    $input: UpdateLearningObjectiveInput!
+    $condition: ModelLearningObjectiveConditionInput
+  ) {
+    updateLearningObjective(input: $input, condition: $condition) {
+      id
+      name
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteLearningObjective = /* GraphQL */ `
+  mutation DeleteLearningObjective(
+    $input: DeleteLearningObjectiveInput!
+    $condition: ModelLearningObjectiveConditionInput
+  ) {
+    deleteLearningObjective(input: $input, condition: $condition) {
+      id
+      name
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createRubric = /* GraphQL */ `
+  mutation CreateRubric(
+    $input: CreateRubricInput!
+    $condition: ModelRubricConditionInput
+  ) {
+    createRubric(input: $input, condition: $condition) {
+      id
+      criteria
+      distinguished
+      excelled
+      Adequite
+      basic
+      learningObjectiveID
+      learningObjective {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+      }
+      topicID
+      topic {
+        id
+        curriculumID
+        curriculum {
+          id
+          institutionID
+          name
+          type
+          description
+          objectives
+          languages
+          createdAt
+          updatedAt
+        }
+        name
+        description
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateRubric = /* GraphQL */ `
+  mutation UpdateRubric(
+    $input: UpdateRubricInput!
+    $condition: ModelRubricConditionInput
+  ) {
+    updateRubric(input: $input, condition: $condition) {
+      id
+      criteria
+      distinguished
+      excelled
+      Adequite
+      basic
+      learningObjectiveID
+      learningObjective {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+      }
+      topicID
+      topic {
+        id
+        curriculumID
+        curriculum {
+          id
+          institutionID
+          name
+          type
+          description
+          objectives
+          languages
+          createdAt
+          updatedAt
+        }
+        name
+        description
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteRubric = /* GraphQL */ `
+  mutation DeleteRubric(
+    $input: DeleteRubricInput!
+    $condition: ModelRubricConditionInput
+  ) {
+    deleteRubric(input: $input, condition: $condition) {
+      id
+      criteria
+      distinguished
+      excelled
+      Adequite
+      basic
+      learningObjectiveID
+      learningObjective {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+      }
+      topicID
+      topic {
+        id
+        curriculumID
+        curriculum {
+          id
+          institutionID
+          name
+          type
+          description
+          objectives
+          languages
+          createdAt
+          updatedAt
+        }
+        name
+        description
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -1802,6 +2177,9 @@ export const createTeacherCurriculum = /* GraphQL */ `
           updatedAt
         }
         syllabi {
+          nextToken
+        }
+        topics {
           nextToken
         }
         createdAt
@@ -1850,6 +2228,9 @@ export const updateTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        topics {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1894,6 +2275,9 @@ export const deleteTeacherCurriculum = /* GraphQL */ `
           updatedAt
         }
         syllabi {
+          nextToken
+        }
+        topics {
           nextToken
         }
         createdAt
@@ -1942,6 +2326,9 @@ export const createRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        topics {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1988,6 +2375,9 @@ export const updateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        topics {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -2032,6 +2422,9 @@ export const deleteRoomCurriculum = /* GraphQL */ `
           updatedAt
         }
         syllabi {
+          nextToken
+        }
+        topics {
           nextToken
         }
         createdAt
