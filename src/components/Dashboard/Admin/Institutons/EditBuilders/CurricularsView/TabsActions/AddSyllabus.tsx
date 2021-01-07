@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import { IoArrowUndoCircleOutline } from 'react-icons/io5'
 
 import BreadCrums from '../../../../../../Atoms/BreadCrums'
@@ -17,6 +17,8 @@ interface AddSyllabusProps {
 const AddSyllabus = (props: AddSyllabusProps) => {
   const { } = props;
   const history = useHistory();
+  const urlParams:any = useParams()
+  const curricularId = urlParams.curricularId; 
   const [measurementData, setMeasurementData] = useState();
   const [messages, setMessages] = useState({
     show: false,
@@ -26,7 +28,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Add Syllabus', url: `/dashboard/curricular/syllabus/add?id=${'_blank_'}`, last: true }
+    { title: 'Add Syllabus', url: `/dashboard/manage-institutions/curricular/${curricularId}/syllabus/add`, last: true }
   ];
 
   const sequenceList: any[] = [];

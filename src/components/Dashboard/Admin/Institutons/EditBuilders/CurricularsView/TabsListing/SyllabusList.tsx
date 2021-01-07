@@ -6,20 +6,19 @@ import Buttons from '../../../../../../Atoms/Buttons';
 
 interface SyllabusListProps {
   syllabusList?: any[]
+  curricularId?: string
 }
 
 const SyllabusList = (props: SyllabusListProps) => {
-  const { syllabusList, } = props;
+  const { syllabusList, curricularId } = props;
   const history = useHistory();
 
   const createNewSyllabus = () => {
-    history.push(`/dashboard/manage-institutions/curricular/syllabus/add?id=${'_blank_'}`)
-
+    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/syllabus/add`)
   }
 
   const editCurrentSyllabus = (id: string) => {
-    history.push(`/dashboard/manage-institutions/curricular/syllabus/edit?id=${'_blank_'}`)
-
+    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/syllabus/edit?id=${id}`)
   }
 
   return (

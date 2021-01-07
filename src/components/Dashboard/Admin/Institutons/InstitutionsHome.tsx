@@ -98,11 +98,11 @@ const InstitutionsHome = () => {
           render={() => <EditMeasurement />}          // Edit curricular measurement
         />
         <Route
-          path={`${match.url}/curricular/syllabus/add`}
+          path={`${match.url}/curricular/:curricularId/syllabus/add`}
           render={() => <AddSyllabus />}           // Add new syllabus to curricular
         />
         <Route
-          path={`${match.url}/curricular/syllabus/edit`}
+          path={`${match.url}/curricular/:curricularId/syllabus/edit`}
           render={() => <EditSyllabus />}          // Edit curricular syllabus
         />
         <Route
