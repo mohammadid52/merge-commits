@@ -16,7 +16,7 @@ export interface QuestionProps {
   question?: QuestionInterface;
   questionIndex?: number;
   questionKey: any;
-  handleInputChange?: (id: string, value: string) => void;
+  handleInputChange?: (id: number | string, value: string | string[]) => void;
   value?: ResponseState;
 }
 

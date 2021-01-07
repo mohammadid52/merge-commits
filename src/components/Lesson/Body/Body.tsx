@@ -29,6 +29,13 @@ const Body = () => {
   const location = useLocation();
   const match = useRouteMatch();
 
+  /**
+   * TODO:
+   *  list/tchart/multilist need to
+   *  redirect to list && any bugs
+   *  need to be fixed
+   * @param pageType
+   */
   const pageSwitch = (pageType: string) => {
     switch (pageType) {
       case 'story':

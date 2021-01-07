@@ -25,6 +25,7 @@ const SelectOneQuestions = (props: QuestionProps) => {
   // TODO: change this code for doFirst / Assessment / Checkpoint
   const handleRadioSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, id } = e.target as HTMLInputElement;
+    console.log('lakert radio -> ', id)
     setInput({ id: questionId, value: id });
     handleInputChange(questionId, id);
   };
@@ -50,10 +51,10 @@ const SelectOneQuestions = (props: QuestionProps) => {
                 <div key={`question_${questionId}_${questionOptionIndex}`} className={`${theme.elem.text} w-auto`}>
                   <label className="w-auto cursor-pointer flex flex-row">
                     <input
-                      id={`${questionOptionIndex + 1}`}
+                      id={option.label}
                       className="w-12 my-auto mx-4 cursor-pointer"
                       type="radio"
-                      name={question.label}
+                      name={option.label}
                       value={option.label}
                       onChange={handleRadioSelect}
                       checked={input.value === option.label}

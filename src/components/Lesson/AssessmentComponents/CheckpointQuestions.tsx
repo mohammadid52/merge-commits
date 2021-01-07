@@ -239,8 +239,8 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     // }
   }, [input]);
 
-  const handleInputChange = (id: number | string, value: string) => {
-    // console.log('handleInputChange -> ', `id: ${id} :: value: ${value}`);
+  const handleInputChange = (id: number | string, value: string | string[]) => {
+    console.log('handleInputChange -> ', `id: ${id} :: value: ${value}`);
     setInput({
       ...input,
       [id]: value,
@@ -254,19 +254,17 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       <div className={`${theme.elem.text}`}>
         <div className="w-full h-full flex flex-col flex-wrap justify-around items-center">
           {questionSource.map((question: QuestionInterface, key: number) => {
-
-              return (
-                <div key={`questionParent_${key}`}>
-                  <Question
-                    question={question}
-                    questionIndex={key}
-                    questionKey={`question_${key}`}
-                    value={input[key]}
-                    handleInputChange={handleInputChange}
-                  />
-                </div>
-              );
-
+            return (
+              <div key={`questionParent_${key}`}>
+                <Question
+                  question={question}
+                  questionIndex={key}
+                  questionKey={`question_${key}`}
+                  value={input[key]}
+                  handleInputChange={handleInputChange}
+                />
+              </div>
+            );
           })}
         </div>
       </div>
