@@ -452,6 +452,7 @@ export const updateStaff = /* GraphQL */ `
     }
   }
 `;
+
 export const updateServiceProviderStatus = /* GraphQL */ `
   mutation UpdateServiceProvider(
     $input: UpdateServiceProviderInput!
@@ -460,6 +461,26 @@ export const updateServiceProviderStatus = /* GraphQL */ `
     updateServiceProvider(input: $input, condition: $condition) {
       id
       status
+    }
+  }
+`;
+
+export const createSyllabusLesson = /* GraphQL */ `
+  mutation CreateSyllabusLesson(
+    $input: CreateSyllabusLessonInput!
+    $condition: ModelSyllabusLessonConditionInput
+  ) {
+    createSyllabusLesson(input: $input, condition: $condition) {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      lesson {
+        id
+        title
+        type
+      }
     }
   }
 `;

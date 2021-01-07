@@ -987,9 +987,8 @@ export const getInstitution = /* GraphQL */ `
   }
 `;
 
-
 export const GetInstitutionDetails = /* GraphQL */ `
-query GetInstitution($id: ID!) {
+  query GetInstitution($id: ID!) {
     getInstitution(id: $id) {
       id
       name
@@ -1089,7 +1088,6 @@ query GetInstitution($id: ID!) {
   }
 `;
 
-
 export const getClassDetails = /* GraphQL */ `
   query GetClassDetails($id: ID!) {
     getClass(id: $id) {
@@ -1181,6 +1179,25 @@ export const listTopics = /* GraphQL */ `
         description
         createdAt
         updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listLessonsTitles = /* GraphQL */ `
+  query ListLessons(
+    $id: ID
+    $filter: ModelLessonFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listLessons(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken, sortDirection: $sortDirection) {
+      items {
+        id
+        title
+        type
       }
       nextToken
     }

@@ -31,38 +31,40 @@ const SyllabusList = (props: SyllabusListProps) => {
               <div className="flex justify-end w-8/10 m-auto ">
                 <Buttons btnClass="mx-4" label="Add new Syllabus" onClick={createNewSyllabus} />
               </div>
-              <div className="my-8 w-8/10 m-auto max-h-88 overflow-y-auto">
+              <div className="my-8 w-8/10 m-auto">
 
                 <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>No.</span>
                   </div>
-                  <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div className="w-7/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>Syllabus Name</span>
                   </div>
-                  <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  {/* <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>Description</span>
-                  </div>
-                  <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  </div> */}
+                  <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>Actions</span>
                   </div>
                 </div>
 
-                {/* Edit as per respective syllabus fields.  */}
-                {syllabusList.map((item, index) => (
-                  <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                    <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
-                    <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
-                      {item.name ? item.name : ''}
-                    </div>
-                    <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+                <div className="max-h-88 overflow-y-auto">
+
+                  {syllabusList.map((item, index) => (
+                    <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                      <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
+                      <div className="flex w-7/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+                        {item.name ? item.name : ''}
+                      </div>
+                      {/* <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                       {item.description ? item.description : ''}
-                    </div>
-                    <span className="w-3/10 h-6 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentSyllabus(item.id)}>
-                      edit
+                    </div> */}
+                      <span className="w-2/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentSyllabus(item.id)}>
+                        edit
                   </span>
-                  </div>
-                ))}
+                    </div>
+                  ))}
+                </div>
               </div>
             </Fragment>
           ) : (
