@@ -145,102 +145,39 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   /**
    * ON CHECKPOINT/ASSESSMENT CHANGE
    */
-  useEffect(() => {
-    // if (checkpoint.checkpoint.title) {
-    //   handleSetTitle(checkpoint.checkpoint.title);
-    // }
-    //
-    // if (input && checkpoint.checkpoint.questions.items) {
-    //   checkpoint.checkpoint.questions.items.forEach(
-    //     (item: { question: { id: string; type: string; label: string } }) => {
-    //       let inputKeys = Object.keys(input);
-    //       let found = inputKeys.some((key: string) => {
-    //         item.question.id === key;
-    //       });
-    //
-    //       if (!found) {
-    //         setInput((prev: any) => {
-    //           return {
-    //             ...prev,
-    //             [item.question.id]:
-    //               item.question.type === 'text'
-    //                 ? ''
-    //                 : item.question.type === 'input'
-    //                 ? ''
-    //                 : item.question.type === 'selectOne'
-    //                 ? null
-    //                 : item.question.type === 'selectMany'
-    //                 ? []
-    //                 : null,
-    //           };
-    //         });
-    //       }
-    //     }
-    //   );
-    // }
-  }, []);
-
-  // const handleSelect = (e: any) => {
-  //   const questionID = e.target.getAttribute('data-key');
-  //   const { id } = e.target;
-  //
-  //   let array;
-  //   let found = input[questionID].some((item: string) => {
-  //     return item === id;
-  //   });
-  //
-  //   if (found) {
-  //     array = input[questionID].filter((item: string) => {
-  //       return item !== id;
-  //     });
-  //   }
-  //
-  //   if (!found) {
-  //     array = input[questionID];
-  //     array.push(id);
-  //   }
-  //
-  //   setInput({
-  //     ...input,
-  //     [questionID]: array,
-  //   });
-  // };
+  useEffect(() => {}, []);
 
   /**
    * USEEFFECT for dispatching checkpoint question data to context
    */
   useEffect(() => {
-    // if (input && state.questionData[checkpoint.checkpoint.id] !== input) {
-    // let dispatchInput: any = {};
-    // checkpoint.checkpoint.questions.items.forEach(
-    //   (item: { question: { id: string; type: string; label: string } }) => {
-    //     if (
-    //       input[item.question.id] !== null &&
-    //       input[item.question.id] !== undefined &&
-    //       input[item.question.id] !== ''
-    //     ) {
-    //       dispatchInput[item.question.id] = input[item.question.id];
-    //     }
-    //   }
-    // );
-    //
-    //
-    //  the dispatch.payload.key below
-    //  will have to be changed to say 'doFirst' when swtching
-    //  between DOFIRST / CHECKPOINT / ASSESSMENT
-    //
-    // dispatch({
-    //   type: 'SET_QUESTION_DATA',
-    //   payload: {
-    //     key: checkpoint.checkpoint.id,
-    //     data: dispatchInput,
-    //   },
-    // });
-    // }
+    /**
+     * TODO:
+     *  questionDataKey logic needs refining when
+     *  more variables/columns are added to the DB.
+     *  In the future there'll only be doFirst/Checkpoint/Assessment
+     *  and they will have their respective ID's
+     */
+    const firstCheckpoint = state.data.lesson.checkpoints.items[0].checkpoint.id;
+    const questionDataKey =
+      checkpointType === 'doFirst'
+        ? 'doFirst'
+        : checkpointType === 'checkpoint' || checkpointType === 'survey'
+        ? `${checkpointType}_${firstCheckpoint}`
+        : 'unknown_checkpoint';
+
+    if(input){
+      dispatch({
+        type: 'SET_QUESTION_DATA',
+        payload: {
+          key: questionDataKey,
+          data: input,
+        },
+      });
+    }
   }, [input]);
 
   const handleInputChange = (id: number | string, value: string | string[]) => {
-    console.log('handleInputChange -> ', `id: ${id} :: value: ${value}`);
     setInput({
       ...input,
       [id]: value,
@@ -255,12 +192,12 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
         <div className="w-full h-full flex flex-col flex-wrap justify-around items-center">
           {questionSource.map((question: QuestionInterface, key: number) => {
             return (
-              <div key={`questionParent_${key}`}>
+              <div key={`questionParent_${key}`} id={`questionParent_${key}`}>
                 <Question
                   question={question}
                   questionIndex={key}
                   questionKey={`question_${key}`}
-                  value={input[key]}
+                  value={input}
                   handleInputChange={handleInputChange}
                 />
               </div>

@@ -23,15 +23,16 @@ const SelectOneQuestions = (props: QuestionProps) => {
   const questionId = question.question.id;
 
   // TODO: change this code for doFirst / Assessment / Checkpoint
-  const handleRadioSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, id } = e.target as HTMLInputElement;
-    console.log('lakert radio -> ', id)
-    setInput({ id: questionId, value: id });
+  const handleRadioSelect = (e: React.MouseEvent<HTMLElement>) => {
+    const { id } = e.target as HTMLElement;
+    // const val = e.target.getAttribute('data-value');
+
+    setInput({ id: questionId, value: id});
     handleInputChange(questionId, id);
   };
   return (
     <>
-      <div key={questionKey} className={'flex flex-col mb-3'}>
+      <div key={questionKey} className={'flex flex-col mb-3'} id={`question_${questionId}`}>
         <p className={theme.elem.text}>
           <b>{questionIndex + 1}. </b>
           {question.question.question}
@@ -48,20 +49,20 @@ const SelectOneQuestions = (props: QuestionProps) => {
               questionOptionIndex: number
             ) => {
               return (
-                <div key={`question_${questionId}_${questionOptionIndex}`} className={`${theme.elem.text} w-auto`}>
-                  <label className="w-auto cursor-pointer flex flex-row">
-                    <input
-                      id={option.label}
-                      className="w-12 my-auto mx-4 cursor-pointer"
-                      type="radio"
-                      name={option.label}
-                      value={option.label}
-                      onChange={handleRadioSelect}
-                      checked={input.value === option.label}
-                    />
-                    <span>{option.text}</span>
-                  </label>
-                </div>
+                <>
+                  <span
+                    id={option.label}
+                    key={`question_${questionId}_${questionOptionIndex}`}
+                    style={{width: '18px', height: '18px'}}
+                    className={`flex-shrink-0 mx-4 rounded-full cursor-pointer border 
+                    ${(input.value === option.label) 
+                      ? 'bg-sea-green border-white' 
+                      : 'bg-white border-black '}`}
+                    data-value={option.label}
+                    onClick={handleRadioSelect}
+                  />
+                  <span>{option.text}</span>
+                </>
               );
             }
           )}

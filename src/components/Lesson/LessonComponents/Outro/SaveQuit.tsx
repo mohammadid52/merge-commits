@@ -94,20 +94,20 @@ const SaveQuit = (props: SaveQuitProps) => {
     }
   };
 
-  const saveQuestionData = async (key: string, questionID: string) => {
+  const saveQuestionData = async (key: string, questionVal: any) => {
     let questiondDataObject = {
       questionID: key,
       classroomID: '1',
       authID: state.studentAuthID,
       email: state.studentUsername,
-      response: state.questionData[key][questionID],
+      response: questionVal,
     };
 
     try {
       const questionData = await API.graphql(
         graphqlOperation(customMutations.createQuestionData, { input: questiondDataObject })
       );
-      // console.log(questionData, 'questionData');
+      console.log(questionData, 'questionData');
     } catch (err) {
       console.error(err);
     }
@@ -130,16 +130,29 @@ const SaveQuit = (props: SaveQuitProps) => {
     }
   };
 
+  /**
+   * TODO:
+   *  - Optimize code below for new columns & 'response' type
+   *  - New columns: schedule_id, lesson_id
+   *  - Optimization?: instead of multiple queries for each question, there will only be a query for each checkpoint
+   */
   const handleSave = async () => {
     if (typeof state.questionData === 'object') {
-      let keys = Object.keys(state.questionData);
-      // console.log(Object.keys(state.questionData))
-      await keys.forEach(async (key: string) => {
-        let questionIDs = Object.keys(state.questionData[key]);
-        questionIDs.forEach(async (questionID: string) => {
-          await saveQuestionData(key, questionID);
-        });
-      });
+      let keys = Object.keys(state.questionData); // doFirst, checkpoint_1
+
+      await keys.reduce((_:any, key: string)=>{
+        Object.keys(state.questionData[key]).reduce((_2: any, questionID: string)=>{
+          console.log('questionSave -> ', `qID: ${questionID}  qAnswer: ${state.questionData[key][questionID]}`);
+          saveQuestionData(questionID, state.questionData[key][questionID]);
+        }, null)
+      },null)
+
+      // await keys.forEach(async (key: string) => {
+      //   let questionIDs = Object.keys(state.questionData[key]);
+      //   questionIDs.forEach(async (questionID: string) => {
+      //     await saveQuestionData(key, questionID);
+      //   });
+      // });
 
       if (typeof feedback !== 'undefined') {
         if (feedback?.like !== '' || feedback?.text !== '') {
