@@ -33,7 +33,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
 
   useEffect(() => {
     fetchList()
-  })
+  }, [])
   return (
     <div className="p-8 flex m-auto justify-center">
       <div className="">
