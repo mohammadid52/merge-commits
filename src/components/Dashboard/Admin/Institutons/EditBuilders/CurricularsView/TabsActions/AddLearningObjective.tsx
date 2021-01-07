@@ -28,7 +28,7 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [validation, setValidation] = useState({isValid: false, msg: 'sdfwfwfwe'})
+  const [validation, setValidation] = useState({isValid: true, msg: ''})
   
   const onInputChange = (e: any) => {
     if (e.target.name === 'name') {
@@ -50,7 +50,11 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
     };
     const item: any = await API.graphql(graphqlOperation(mutations.createLearningObjective, { input }));
     const addedItem = item.data.createLearningObjective
-    console.log('done', addedItem)
+    if (addedItem) {
+      history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
+    } else {
+      console.log('Could not add learning objective');
+    }
   }
 
   return (
