@@ -191,21 +191,21 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
                 {activeStaffList.length > 0 ? (
                   <Fragment>
-                    <div className="my-4 w-8/10 m-auto max-h-88 overflow-y-scroll">
+                    <div className="my-4 w-full m-auto max-h-88 overflow-y-scroll">
                       <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                         <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>No.</span>
                         </div>
-                        <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="w-5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>Name</span>
                         </div>
                         <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>Role</span>
                         </div>
-                        <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>Status</span>
                         </div>
-                        <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>Action</span>
                         </div>
                       </div>
@@ -215,7 +215,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
                           <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
 
-                          <div className="flex w-6/10 px-8 py-3 items-center text-left text-s leading-4 font-medium ">
+                          <div className="flex w-5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium ">
                             <div className="flex-shrink-0 h-10 w-10 flex items-center">
                               <div className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold" style={{ background: `${stringToHslColor(getInitialsFromString(item.name)[0] + ' ' + getInitialsFromString(item.name)[1])}`, textShadow: '0.1rem 0.1rem 2px #423939b3' }} >
                                 {item.name ? initials(getInitialsFromString(item.name)[0], getInitialsFromString(item.name)[1]) : initials('N', 'A')}
@@ -227,14 +227,14 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                           <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">{item.role ? getStaffRole(item.role) : ''}</div>
                           {
                             statusEdit === item.id ? (
-                              <div className="w-3/10 mr-6">
+                              <div className="flex w-4/10 mr-6 px-8 py-3 text-left text-s leading-4 items-center">
                                 <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={(val, name, id) => onStaffStatusChange(val, item.id, item.status)} />
                               </div>) :
-                              <div className="w-3/10">
+                              <div className="flex w-4/10 px-8 py-3 text-left text-s leading-4 items-center">
                                 {item.status || 'Active'}
                               </div>
                           }
-                          <div className="w-1/10">
+                          <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center">
                             {statusEdit === item.id ?
                               <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600">{updateStatus ? 'updating...' : ''}</span>
                               :

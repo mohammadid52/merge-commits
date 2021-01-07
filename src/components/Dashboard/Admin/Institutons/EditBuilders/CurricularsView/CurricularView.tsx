@@ -7,6 +7,7 @@ import { MdSpeakerNotes } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
 
 import * as queries from '../../../../../../graphql/queries';
+import { languageList } from '../../../../../../utilities/staticData';
 import BreadCrums from '../../../../../Atoms/BreadCrums';
 import SectionTitle from '../../../../../Atoms/SectionTitle';
 import Buttons from '../../../../../Atoms/Buttons';
@@ -19,7 +20,18 @@ import LearningObjectiveList from './TabsListing/learningObjective'
 interface CurricularViewProps {
 
 }
-
+interface InitialData {
+  id: string,
+  name: string,
+  description: string,
+  objectives: string,
+  languages: { id: string, name: string, value: string }[],
+  institute: {
+    id: string,
+    name: string,
+    value: string
+  }
+}
 const CurricularView = (props: CurricularViewProps) => {
   const { } = props;
 
@@ -38,17 +50,17 @@ const CurricularView = (props: CurricularViewProps) => {
   const initialData = {
     id: '',
     name: '',
-    description: '',
-    languages: [{ id: '1', name: "English", value: 'EN' }],
-    objectives: '',
     institute: {
       id: '',
       name: '',
       value: ''
-    }
+    },
+    description: '',
+    languages: [{ id: '1', name: "English", value: 'EN' }],
+    objectives: '',
   }
 
-  const [curricularData, setCurricularData] = useState(initialData);
+  const [curricularData, setCurricularData] = useState<InitialData>(initialData);
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Curricular Info', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
@@ -78,7 +90,7 @@ const CurricularView = (props: CurricularViewProps) => {
           },
           description: savedData.description,
           objectives: savedData.objectives,
-          languages: savedData.languages
+          languages: languageList.filter(item => savedData.languages.includes(item.value))
         })
       } catch {
         console.log('Error while fetching curricular data.')
@@ -92,6 +104,7 @@ const CurricularView = (props: CurricularViewProps) => {
     fetchCurricularData()
   }, [])
 
+  const { name, institute, description, objectives, languages } = curricularData;
   return (
     <div className="w-9/10 h-full mt-4 p-4">
 
@@ -124,19 +137,17 @@ const CurricularView = (props: CurricularViewProps) => {
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
                     <span className="text-gray-900 mr-2 w-3/10">Name:</span>
                     <span className="w-auto">
-                      Static curricular name
+                      {name || '--'}
                     </span>
                   </p>
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
                     <span className="text-gray-900 mr-2 w-3/10">Institution Name:</span>
-                    <span className="w-auto">Iconoclast artist.</span>
+                    <span className="w-auto">{institute.name || '--'}</span>
                   </p>
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
                     <span className="text-gray-900 mr-2 w-3/10">Description:</span>
                     <span className="w-7/10">
-                      Description...Lorem Ipsum is simply dummy text of the printing
-                      and typesetting industry. Lorem Ipsum has been the industry's
-                      standard dummy text ever since the 1500s, when an unknown printer
+                      {description || '--'}
                     </span>
                   </p>
                 </div>
@@ -149,15 +160,16 @@ const CurricularView = (props: CurricularViewProps) => {
                   </p>
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
                     <span className="text-gray-900 mr-2 w-3/10">Languages:</span>
-                    <span className="w-auto">Englist, Spanish</span>
+                    <span className="w-auto">{
+                      languages && languages.length > 0 ? (
+                        languages.map((item, index) => (item.name + `${languages.length - 1 === index ? '.' : ',' + ' '}`))
+                      ) : '--'}</span>
                   </p>
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
                     <span className="text-gray-900 mr-2 w-3/10">Objective:</span>
                     <span className="w-7/10">
-                      Objectives...Lorem Ipsum is simply dummy text of the printing
-                      and typesetting industry. Lorem Ipsum has been the industry's
-                      standard dummy text ever since the 1500s, when an unknown printer
-                      </span>
+                      {objectives.length ? objectives[0] : '--'}
+                    </span>
                   </p>
                 </div>
               </div>

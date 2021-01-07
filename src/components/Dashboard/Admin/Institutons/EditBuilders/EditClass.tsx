@@ -102,6 +102,7 @@ const EditClass = (props: EditClassProps) => {
       setLoading(false)
     } catch (err) {
       console.log('err', err)
+      setLoading(false)
       setMessages({
         show: true,
         message: 'Error while fetching class data,please try again later.',
@@ -272,12 +273,12 @@ const EditClass = (props: EditClassProps) => {
       </div>
 
       <PageWrapper>
-        <div className="w-6/10 m-auto">
+        <div className="w-7/10 m-auto">
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CLASS INFORMATION</h3>
           <div className="">
-            <div className="flex items-center w-6/10 m-auto px-2">
+            <div className="w-7/10 m-auto px-2">
               <FormInput value={classData.name} id='className' onChange={onNameChange} name='className' label={dictionary.NAME_INPUT_LABEL} isRequired />
-              <Buttons btnClass="ml-4 py-1" label="Save" onClick={saveClassDetails} />
+              <Buttons btnClass="my-6 mx-auto py-1" label="Save" onClick={saveClassDetails} />
             </div>
           </div>
         </div>
@@ -291,7 +292,7 @@ const EditClass = (props: EditClassProps) => {
 
         {classStudents ? (
           <Fragment>
-            <div className="mb-4 mt-8 w-full m-auto px-2 max-h-88 overflow-y-scroll">
+            <div className="mt-8 w-full m-auto px-2">
               <div className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200 text-sm text-gray-600">
                 <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{dictionary.TABLE.SNO}</div>
                 <div className="flex w-5/10 items-center px-4 py-2">{dictionary.TABLE.NAME}</div>
@@ -302,7 +303,7 @@ const EditClass = (props: EditClassProps) => {
 
             {
               !loading ?
-                <>
+                <div className="mb-4 w-full m-auto px-2 max-h-88 overflow-y-scroll">
                   {classStudents.length ? classStudents.map((item, index) =>
                     <div key={item.id} className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                       <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
@@ -338,10 +339,10 @@ const EditClass = (props: EditClassProps) => {
                           </span>
                         }
                       </div>
-                    </div>) : <div>No students</div>}
-                </> : <div>Loading class students...</div>
+                    </div>) : <div className="py-12 my-12 m-auto text-center">No students</div>}
+                </div> : <div className="py-12 my-12 m-auto text-center">Loading class students...</div>
             }
-            { messages.show && (
+            {messages.show && (
               <div className="py-2 m-auto text-center">
                 <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
               </div>)
