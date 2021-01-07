@@ -2104,6 +2104,7 @@ export const onCreateTopic = /* GraphQL */ `
     onCreateTopic {
       id
       curriculumID
+      learningObjectiveID
       curriculum {
         id
         institutionID
@@ -2133,6 +2134,14 @@ export const onCreateTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        createdAt
+        updatedAt
+      }
+      learningObjective {
+        id
+        name
+        description
+        curriculumID
         createdAt
         updatedAt
       }
@@ -2148,6 +2157,7 @@ export const onUpdateTopic = /* GraphQL */ `
     onUpdateTopic {
       id
       curriculumID
+      learningObjectiveID
       curriculum {
         id
         institutionID
@@ -2180,6 +2190,14 @@ export const onUpdateTopic = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      learningObjective {
+        id
+        name
+        description
+        curriculumID
+        createdAt
+        updatedAt
+      }
       name
       description
       createdAt
@@ -2192,6 +2210,7 @@ export const onDeleteTopic = /* GraphQL */ `
     onDeleteTopic {
       id
       curriculumID
+      learningObjectiveID
       curriculum {
         id
         institutionID
@@ -2221,6 +2240,14 @@ export const onDeleteTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        createdAt
+        updatedAt
+      }
+      learningObjective {
+        id
+        name
+        description
+        curriculumID
         createdAt
         updatedAt
       }
@@ -2237,6 +2264,7 @@ export const onCreateLearningObjective = /* GraphQL */ `
       id
       name
       description
+      curriculumID
       createdAt
       updatedAt
     }
@@ -2248,6 +2276,7 @@ export const onUpdateLearningObjective = /* GraphQL */ `
       id
       name
       description
+      curriculumID
       createdAt
       updatedAt
     }
@@ -2259,6 +2288,7 @@ export const onDeleteLearningObjective = /* GraphQL */ `
       id
       name
       description
+      curriculumID
       createdAt
       updatedAt
     }
@@ -2273,18 +2303,11 @@ export const onCreateRubric = /* GraphQL */ `
       excelled
       Adequite
       basic
-      learningObjectiveID
-      learningObjective {
-        id
-        name
-        description
-        createdAt
-        updatedAt
-      }
       topicID
       topic {
         id
         curriculumID
+        learningObjectiveID
         curriculum {
           id
           institutionID
@@ -2293,6 +2316,14 @@ export const onCreateRubric = /* GraphQL */ `
           description
           objectives
           languages
+          createdAt
+          updatedAt
+        }
+        learningObjective {
+          id
+          name
+          description
+          curriculumID
           createdAt
           updatedAt
         }
@@ -2315,18 +2346,11 @@ export const onUpdateRubric = /* GraphQL */ `
       excelled
       Adequite
       basic
-      learningObjectiveID
-      learningObjective {
-        id
-        name
-        description
-        createdAt
-        updatedAt
-      }
       topicID
       topic {
         id
         curriculumID
+        learningObjectiveID
         curriculum {
           id
           institutionID
@@ -2335,6 +2359,14 @@ export const onUpdateRubric = /* GraphQL */ `
           description
           objectives
           languages
+          createdAt
+          updatedAt
+        }
+        learningObjective {
+          id
+          name
+          description
+          curriculumID
           createdAt
           updatedAt
         }
@@ -2357,18 +2389,11 @@ export const onDeleteRubric = /* GraphQL */ `
       excelled
       Adequite
       basic
-      learningObjectiveID
-      learningObjective {
-        id
-        name
-        description
-        createdAt
-        updatedAt
-      }
       topicID
       topic {
         id
         curriculumID
+        learningObjectiveID
         curriculum {
           id
           institutionID
@@ -2377,6 +2402,14 @@ export const onDeleteRubric = /* GraphQL */ `
           description
           objectives
           languages
+          createdAt
+          updatedAt
+        }
+        learningObjective {
+          id
+          name
+          description
+          curriculumID
           createdAt
           updatedAt
         }

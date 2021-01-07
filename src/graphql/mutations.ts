@@ -1834,6 +1834,7 @@ export const createTopic = /* GraphQL */ `
     createTopic(input: $input, condition: $condition) {
       id
       curriculumID
+      learningObjectiveID
       curriculum {
         id
         institutionID
@@ -1863,6 +1864,14 @@ export const createTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        createdAt
+        updatedAt
+      }
+      learningObjective {
+        id
+        name
+        description
+        curriculumID
         createdAt
         updatedAt
       }
@@ -1881,6 +1890,7 @@ export const updateTopic = /* GraphQL */ `
     updateTopic(input: $input, condition: $condition) {
       id
       curriculumID
+      learningObjectiveID
       curriculum {
         id
         institutionID
@@ -1913,6 +1923,14 @@ export const updateTopic = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      learningObjective {
+        id
+        name
+        description
+        curriculumID
+        createdAt
+        updatedAt
+      }
       name
       description
       createdAt
@@ -1928,6 +1946,7 @@ export const deleteTopic = /* GraphQL */ `
     deleteTopic(input: $input, condition: $condition) {
       id
       curriculumID
+      learningObjectiveID
       curriculum {
         id
         institutionID
@@ -1957,6 +1976,14 @@ export const deleteTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        createdAt
+        updatedAt
+      }
+      learningObjective {
+        id
+        name
+        description
+        curriculumID
         createdAt
         updatedAt
       }
@@ -1976,6 +2003,7 @@ export const createLearningObjective = /* GraphQL */ `
       id
       name
       description
+      curriculumID
       createdAt
       updatedAt
     }
@@ -1990,6 +2018,7 @@ export const updateLearningObjective = /* GraphQL */ `
       id
       name
       description
+      curriculumID
       createdAt
       updatedAt
     }
@@ -2004,6 +2033,7 @@ export const deleteLearningObjective = /* GraphQL */ `
       id
       name
       description
+      curriculumID
       createdAt
       updatedAt
     }
@@ -2021,18 +2051,11 @@ export const createRubric = /* GraphQL */ `
       excelled
       Adequite
       basic
-      learningObjectiveID
-      learningObjective {
-        id
-        name
-        description
-        createdAt
-        updatedAt
-      }
       topicID
       topic {
         id
         curriculumID
+        learningObjectiveID
         curriculum {
           id
           institutionID
@@ -2041,6 +2064,14 @@ export const createRubric = /* GraphQL */ `
           description
           objectives
           languages
+          createdAt
+          updatedAt
+        }
+        learningObjective {
+          id
+          name
+          description
+          curriculumID
           createdAt
           updatedAt
         }
@@ -2066,18 +2097,11 @@ export const updateRubric = /* GraphQL */ `
       excelled
       Adequite
       basic
-      learningObjectiveID
-      learningObjective {
-        id
-        name
-        description
-        createdAt
-        updatedAt
-      }
       topicID
       topic {
         id
         curriculumID
+        learningObjectiveID
         curriculum {
           id
           institutionID
@@ -2086,6 +2110,14 @@ export const updateRubric = /* GraphQL */ `
           description
           objectives
           languages
+          createdAt
+          updatedAt
+        }
+        learningObjective {
+          id
+          name
+          description
+          curriculumID
           createdAt
           updatedAt
         }
@@ -2111,18 +2143,11 @@ export const deleteRubric = /* GraphQL */ `
       excelled
       Adequite
       basic
-      learningObjectiveID
-      learningObjective {
-        id
-        name
-        description
-        createdAt
-        updatedAt
-      }
       topicID
       topic {
         id
         curriculumID
+        learningObjectiveID
         curriculum {
           id
           institutionID
@@ -2131,6 +2156,14 @@ export const deleteRubric = /* GraphQL */ `
           description
           objectives
           languages
+          createdAt
+          updatedAt
+        }
+        learningObjective {
+          id
+          name
+          description
+          curriculumID
           createdAt
           updatedAt
         }

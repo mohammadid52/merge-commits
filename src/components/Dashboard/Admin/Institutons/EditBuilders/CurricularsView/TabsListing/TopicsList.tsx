@@ -1,8 +1,10 @@
-import React, { useEffect, Fragment } from 'react'
+import React, { useEffect, Fragment, useState } from 'react'
 import { useHistory } from 'react-router';
 
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import Buttons from '../../../../../../Atoms/Buttons';
+
+import API, { graphqlOperation } from '@aws-amplify/api';
 import * as queries from '../../../../../../../graphql/queries'
 import * as customQueries from '../../../../../../../customGraphql/customQueries'
 interface TopicsListProps {
@@ -11,21 +13,27 @@ interface TopicsListProps {
 }
 
 const TopicsList = (props: TopicsListProps) => {
-  const { topicsList } = props;
+  const { topicsList, curricularId } = props;
   const history = useHistory();
+
+  const [topics, setTopics] = useState([])
 
   const createNewTopic = () => {
     // need to check for route id
-    history.push(`/dashboard/manage-institutions/curricular/topic/add?id=${'_blank_'}`)
+    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/topic/add`)
   }
 
   const editCurrentTopic = (id: string) => {
     // need to check for route id
-    history.push(`/dashboard/manage-institutions/curricular/topic/edit?id=${'_blank_'}`)
+    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/topic/edit?id=${id}`)
   }
 
-  const fetchTopics = () => {
-    // 
+  const fetchTopics = async () => {
+    let list: any = await API.graphql(graphqlOperation(customQueries.listTopics, {
+      filter: { curriculumID: { eq: curricularId } },
+    }));
+    list = list.data.listTopics?.items || []
+    setTopics(list)
   }
 
   useEffect(() => {

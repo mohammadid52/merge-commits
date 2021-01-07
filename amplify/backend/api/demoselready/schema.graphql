@@ -253,7 +253,9 @@ type Topic
 {
   id: ID!
   curriculumID: ID!
+  learningObjectiveID: ID!
   curriculum: Curriculum @connection(fields: ["curriculumID"])
+  learningObjective: LearningObjective @connection(fields: ["learningObjectiveID"])
   name: String!
   description: String
 }
@@ -265,6 +267,7 @@ type LearningObjective
   id: ID!
   name: String!
   description: String
+  curriculumID: ID!
 }
 
 type Rubric
@@ -277,8 +280,6 @@ type Rubric
   excelled: String
   Adequite: String
   basic: String
-  learningObjectiveID: ID!
-  learningObjective: LearningObjective @connection(fields: ["learningObjectiveID"])
   topicID: ID!
   topic: Topic @connection(fields: ["topicID"])
 }

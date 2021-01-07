@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
+import API, { graphqlOperation } from '@aws-amplify/api';
 
 import BreadCrums from '../../../../../../Atoms/BreadCrums';
 import SectionTitle from '../../../../../../Atoms/SectionTitle';
@@ -8,13 +9,13 @@ import Buttons from '../../../../../../Atoms/Buttons';
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import FormInput from '../../../../../../Atoms/Form/FormInput';
 import TextArea from '../../../../../../Atoms/Form/TextArea';
-import Selector from '../../../../../../Atoms/Form/Selector';
 
-interface AddTopicProps {
+import * as mutations from '../../../../../../../graphql/mutations';
+interface AddLearningObjectiveProps {
 
 }
 
-const AddTopic = (props: AddTopicProps) => {
+const AddLearningObjective = (props: AddLearningObjectiveProps) => {
   const { } = props;
   const history = useHistory();
   const urlParams:any = useParams()
@@ -22,21 +23,34 @@ const AddTopic = (props: AddTopicProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Add Topic', url: `/dashboard/curricular/${curricularId}/topic/add`, last: true }
+    { title: 'Add Learning objective', url: `/dashboard/curricular/${curricularId}/learning-objective/add`, last: true }
   ];
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [validation, setValidation] = useState({isValid: false, msg: 'sdfwfwfwe'})
   
   const onInputChange = (e: any) => {
-    if (e.target.name === 'name') setName(e.target.value)
+    if (e.target.name === 'name') {
+      const value = e.target.value
+      setName(value)
+      if (!validation.isValid && value.length) setValidation({isValid: true, msg: ''})
+    }
     if (e.target.name === 'description') setDescription(e.target.value)
   }
 
-  const saveTopicDetails = () => {
-    const input = {
-      
+  const saveLearningObjectiveDetails = async () => {
+    if (!name.length) {
+      setValidation({isValid: false, msg: 'Name is required'})
+      return
     }
+    setValidation({isValid: true, msg: ''})
+    const input = {
+      name, description, curriculumID: curricularId
+    };
+    const item: any = await API.graphql(graphqlOperation(mutations.createLearningObjective, { input }));
+    const addedItem = item.data.createLearningObjective
+    console.log('done', addedItem)
   }
 
   return (
@@ -45,7 +59,7 @@ const AddTopic = (props: AddTopicProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Add Topic" subtitle="Add new topic to the curricular." />
+        <SectionTitle title="Add learning objective" subtitle="Add new learning objective." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -59,6 +73,9 @@ const AddTopic = (props: AddTopicProps) => {
             
             <div className="px-3 py-4">
               <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Topic Name" isRequired />
+              {
+                !validation.isValid ? <p className="text-red-600">{validation.msg}</p> : null 
+              }
             </div>
 
             {/* <div className="px-3 py-4">
@@ -75,11 +92,11 @@ const AddTopic = (props: AddTopicProps) => {
           </div>
         </div>
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-10" label="Save" onClick={saveTopicDetails} />
+          <Buttons btnClass="py-3 px-10" label="Save" onClick={saveLearningObjectiveDetails} />
         </div>
       </PageWrapper>
     </div>
   )
 }
 
-export default AddTopic
+export default AddLearningObjective

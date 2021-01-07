@@ -15,7 +15,7 @@ import UnderlinedTabs from '../../../../../Atoms/UnderlinedTabs';
 import SyllabusList from './TabsListing/SyllabusList';
 import TopicsList from './TabsListing/TopicsList';
 import MeasMntList from './TabsListing/MeasMntList';
-
+import LearningObjectiveList from './TabsListing/learningObjective'
 interface CurricularViewProps {
 
 }
@@ -47,16 +47,17 @@ const CurricularView = (props: CurricularViewProps) => {
       value: ''
     }
   }
-  const [curricularId, setCurricularId] = useState(currID);
+
   const [curricularData, setCurricularData] = useState(initialData);
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Curricular Info', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
   ]
   const tabs = [
-    { index: 0, title: 'Topics', icon: <MdSpeakerNotes />, active: true, content: <TopicsList curricularId={curricularId}/> },
-    { index: 1, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList /> },
-    { index: 2, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList /> },
+    { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjectiveList curricularId={currID}/> },
+    { index: 1, title: 'Topics', icon: <MdSpeakerNotes />, active: true, content: <TopicsList curricularId={currID}/> },
+    { index: 2, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList /> },
+    { index: 3, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList /> },
   ]
 
 

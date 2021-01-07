@@ -815,6 +815,7 @@ export const getTopic = /* GraphQL */ `
     getTopic(id: $id) {
       id
       curriculumID
+      learningObjectiveID
       curriculum {
         id
         institutionID
@@ -847,6 +848,14 @@ export const getTopic = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      learningObjective {
+        id
+        name
+        description
+        curriculumID
+        createdAt
+        updatedAt
+      }
       name
       description
       createdAt
@@ -872,6 +881,7 @@ export const listTopics = /* GraphQL */ `
       items {
         id
         curriculumID
+        learningObjectiveID
         curriculum {
           id
           institutionID
@@ -880,6 +890,14 @@ export const listTopics = /* GraphQL */ `
           description
           objectives
           languages
+          createdAt
+          updatedAt
+        }
+        learningObjective {
+          id
+          name
+          description
+          curriculumID
           createdAt
           updatedAt
         }
@@ -898,6 +916,7 @@ export const getLearningObjective = /* GraphQL */ `
       id
       name
       description
+      curriculumID
       createdAt
       updatedAt
     }
@@ -922,6 +941,7 @@ export const listLearningObjectives = /* GraphQL */ `
         id
         name
         description
+        curriculumID
         createdAt
         updatedAt
       }
@@ -938,18 +958,11 @@ export const getRubric = /* GraphQL */ `
       excelled
       Adequite
       basic
-      learningObjectiveID
-      learningObjective {
-        id
-        name
-        description
-        createdAt
-        updatedAt
-      }
       topicID
       topic {
         id
         curriculumID
+        learningObjectiveID
         curriculum {
           id
           institutionID
@@ -958,6 +971,14 @@ export const getRubric = /* GraphQL */ `
           description
           objectives
           languages
+          createdAt
+          updatedAt
+        }
+        learningObjective {
+          id
+          name
+          description
+          curriculumID
           createdAt
           updatedAt
         }
@@ -993,18 +1014,11 @@ export const listRubrics = /* GraphQL */ `
         excelled
         Adequite
         basic
-        learningObjectiveID
-        learningObjective {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
         topicID
         topic {
           id
           curriculumID
+          learningObjectiveID
           name
           description
           createdAt

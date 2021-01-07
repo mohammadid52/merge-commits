@@ -22,6 +22,8 @@ import AddSyllabus from './EditBuilders/CurricularsView/TabsActions/AddSyllabus'
 import EditTopic from './EditBuilders/CurricularsView/TabsActions/EditTopic';
 import EditMeasurement from './EditBuilders/CurricularsView/TabsActions/EditMeasurement';
 import EditSyllabus from './EditBuilders/CurricularsView/TabsActions/EditSyllabus';
+import AddLearningObjective from './EditBuilders/CurricularsView/TabsActions/AddLearningObjective';
+import EditLearningObjective from './EditBuilders/CurricularsView/TabsActions/EditLearningObjective';
 
 const InstitutionsHome = () => {
   const match = useRouteMatch();
@@ -72,11 +74,19 @@ const InstitutionsHome = () => {
           render={() => <EditCurricular />}     // Edit current curricular
         />
         <Route
-          path={`${match.url}/curricular/topic/add`}
+          path={`${match.url}/curricular/:curricularId/learning-objective/add`}
+          render={() => <AddLearningObjective />}           // Add new topic to curricular
+        />
+        <Route
+          path={`${match.url}/curricular/:curricularId/learning-objective/edit/:id`}
+          render={() => <EditLearningObjective />}          // Edit curricular topic
+        />
+        <Route
+          path={`${match.url}/curricular/:curricularId/topic/add`}
           render={() => <AddTopic />}           // Add new topic to curricular
         />
         <Route
-          path={`${match.url}/curricular/topic/edit`}
+          path={`${match.url}/curricular/:curricularId/topic/edit`}
           render={() => <EditTopic />}          // Edit curricular topic
         />
         <Route
