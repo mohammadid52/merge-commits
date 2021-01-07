@@ -1926,6 +1926,9 @@ export const onCreateCurriculum = /* GraphQL */ `
           name
           type
           description
+          methodology
+          policies
+          pupose
           objectives
           curriculumID
           languages
@@ -1988,6 +1991,9 @@ export const onUpdateCurriculum = /* GraphQL */ `
           name
           type
           description
+          methodology
+          policies
+          pupose
           objectives
           curriculumID
           languages
@@ -2050,6 +2056,9 @@ export const onDeleteCurriculum = /* GraphQL */ `
           name
           type
           description
+          methodology
+          policies
+          pupose
           objectives
           curriculumID
           languages
@@ -2688,6 +2697,9 @@ export const onCreateSyllabus = /* GraphQL */ `
       name
       type
       description
+      methodology
+      policies
+      pupose
       objectives
       curriculumID
       languages
@@ -2715,6 +2727,9 @@ export const onUpdateSyllabus = /* GraphQL */ `
       name
       type
       description
+      methodology
+      policies
+      pupose
       objectives
       curriculumID
       languages
@@ -2742,6 +2757,9 @@ export const onDeleteSyllabus = /* GraphQL */ `
       name
       type
       description
+      methodology
+      policies
+      pupose
       objectives
       curriculumID
       languages

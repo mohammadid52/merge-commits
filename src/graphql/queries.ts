@@ -707,6 +707,9 @@ export const getCurriculum = /* GraphQL */ `
           name
           type
           description
+          methodology
+          policies
+          pupose
           objectives
           curriculumID
           languages
@@ -1110,6 +1113,9 @@ export const getSyllabus = /* GraphQL */ `
       name
       type
       description
+      methodology
+      policies
+      pupose
       objectives
       curriculumID
       languages
@@ -1150,6 +1156,9 @@ export const listSyllabuss = /* GraphQL */ `
         name
         type
         description
+        methodology
+        policies
+        pupose
         objectives
         curriculumID
         languages
