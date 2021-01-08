@@ -19,9 +19,8 @@ interface EditTopicProps {
 }
 
 const EditTopic = (props: EditTopicProps) => {
-  const { } = props;
+  const {} = props;
   const urlParams: any = useParams()
-  console.log('urlParams', urlParams)
   const curricularId = urlParams.curricularId;
   const topicId = urlParams.id;
 
@@ -89,7 +88,7 @@ const EditTopic = (props: EditTopicProps) => {
     if (validation.learning) {
       setValidation({ ...validation, learning: '' })
     }
-    setTopic({ ...topic, learning: {...learnings, id, name, value: val} })
+    setTopic({ ...topic, learning: {...topic.learning, id, name, value: val} })
   }
 
   const fetchTopic = async () => {

@@ -536,3 +536,24 @@ export const createRubric = /* GraphQL */ `
     }
   }
 `;
+
+export const updateRubric = /* GraphQL */ `
+  mutation UpdateRubric(
+    $input: UpdateRubricInput!
+    $condition: ModelRubricConditionInput
+  ) {
+    updateRubric(input: $input, condition: $condition) {
+      id
+      name
+      criteria
+      distinguished
+      excelled
+      adequite
+      basic
+      topicID
+      curriculumID
+      createdAt
+      updatedAt
+    }
+  }
+`;

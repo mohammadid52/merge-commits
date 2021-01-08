@@ -180,7 +180,7 @@ const CurricularView = (props: CurricularViewProps) => {
             </div>
             <div className='bg-white shadow-5 sm:rounded-lg'>
               <div className='px-4 py-5 sm:px-6'>
-                <UnderlinedTabs tabs={tabs} activeTab={3}/>
+                <UnderlinedTabs tabs={tabs}/>
               </div>
             </div>
 

@@ -1241,3 +1241,25 @@ export const listRubrics = /* GraphQL */ `
     }
   }
 `;
+
+export const getRubric = /* GraphQL */ `
+  query GetRubric($id: ID!) {
+    getRubric(id: $id) {
+      id
+      name
+      criteria
+      distinguished
+      excelled
+      adequite
+      basic
+      topicID
+      topic {
+        id
+        name
+      }
+      curriculumID
+      createdAt
+      updatedAt
+    }
+  }
+`;
