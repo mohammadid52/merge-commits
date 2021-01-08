@@ -555,3 +555,25 @@ export const updateRubric = /* GraphQL */ `
     }
   }
 `;
+export const updateSyllabusLesson = /* GraphQL */ `
+  mutation UpdateSyllabusLesson(
+    $input: UpdateSyllabusLessonInput!
+    $condition: ModelSyllabusLessonConditionInput
+  ) {
+    updateSyllabusLesson(input: $input, condition: $condition) {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      status
+      lesson {
+        id
+        title
+        type    
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
