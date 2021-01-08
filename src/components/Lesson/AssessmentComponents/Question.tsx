@@ -40,6 +40,7 @@ const Question = (props: QuestionProps) => {
       case 'input':
         return (
           <InputQuestions
+            isTeacher={isTeacher}
             question={question}
             questionIndex={questionIndex}
             questionKey={key}
@@ -50,6 +51,7 @@ const Question = (props: QuestionProps) => {
       case 'text':
         return (
           <TextQuestions
+            isTeacher={isTeacher}
             question={question}
             questionIndex={questionIndex}
             questionKey={key}
@@ -60,6 +62,7 @@ const Question = (props: QuestionProps) => {
       case 'selectOne':
         return (
           <SelectOneQuestions
+            isTeacher={isTeacher}
             question={question}
             questionIndex={questionIndex}
             questionKey={key}
@@ -70,6 +73,7 @@ const Question = (props: QuestionProps) => {
       case 'selectMany':
         return (
           <SelectManyQuestions
+            isTeacher={isTeacher}
             question={question}
             questionIndex={questionIndex}
             questionKey={key}

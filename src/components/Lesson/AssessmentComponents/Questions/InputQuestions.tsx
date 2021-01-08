@@ -45,7 +45,7 @@ const InputQuestions = (props: QuestionProps) => {
           type="text"
           name={question.question.label}
           value={contents.value}
-          onChange={handleTextInputChange}
+          onChange={(e)=> (!isTeacher) ? handleTextInputChange(e): null}
         />
       </div>
     )

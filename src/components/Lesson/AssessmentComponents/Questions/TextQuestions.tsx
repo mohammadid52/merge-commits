@@ -52,7 +52,7 @@ const TextQuestions = (props: QuestionProps) => {
         id={questionId}
         className={`h-40 ${theme.elem.textInput} w-full rounded-xl`}
         value={contents.value}
-        onChange={handleTextInputChange}
+        onChange={(e)=> (!isTeacher) ? handleTextInputChange(e): null}
       />
     </div>
   );

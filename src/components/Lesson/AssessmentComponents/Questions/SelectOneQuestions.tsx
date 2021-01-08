@@ -59,7 +59,7 @@ const SelectOneQuestions = (props: QuestionProps) => {
                       ? 'bg-sea-green border-white' 
                       : 'bg-white border-black '}`}
                     data-value={option.label}
-                    onClick={handleRadioSelect}
+                    onClick={(e)=> (!isTeacher) ? handleRadioSelect(e): null}
                   />
                   <span>{option.text}</span>
                 </>

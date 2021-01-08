@@ -116,7 +116,8 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
    * ON CHECKPOINT MOUNT
    */
   useEffect(() => {
-    setInput(initialResponseState);
+    if (isTeacher) console.log('CP Questions - ', 'teacher CP questions loaded!');
+    if (!isTeacher) setInput(initialResponseState);
 
     // console.log('Initial response state --> ', initialResponseState)
 
@@ -158,22 +159,25 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
      *  In the future there'll only be doFirst/Checkpoint/Assessment
      *  and they will have their respective ID's
      */
-    const firstCheckpoint = state.data.lesson.checkpoints.items[0].checkpoint.id;
-    const questionDataKey =
-      checkpointType === 'doFirst'
-        ? 'doFirst'
-        : checkpointType === 'checkpoint' || checkpointType === 'survey'
-        ? `${checkpointType}_${firstCheckpoint}`
-        : 'unknown_checkpoint';
 
-    if(input){
-      dispatch({
-        type: 'SET_QUESTION_DATA',
-        payload: {
-          key: questionDataKey,
-          data: input,
-        },
-      });
+    if (!isTeacher) {
+      const firstCheckpoint = state.data.lesson.checkpoints.items[0].checkpoint.id;
+      const questionDataKey =
+        checkpointType === 'doFirst'
+          ? 'doFirst'
+          : checkpointType === 'checkpoint' || checkpointType === 'survey'
+          ? `${checkpointType}_${firstCheckpoint}`
+          : 'unknown_checkpoint';
+
+      if (input) {
+        dispatch({
+          type: 'SET_QUESTION_DATA',
+          payload: {
+            key: questionDataKey,
+            data: input,
+          },
+        });
+      }
     }
   }, [input]);
 
@@ -194,6 +198,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
             return (
               <div key={`questionParent_${key}`} id={`questionParent_${key}`}>
                 <Question
+                  isTeacher={isTeacher}
                   question={question}
                   questionIndex={key}
                   questionKey={`question_${key}`}

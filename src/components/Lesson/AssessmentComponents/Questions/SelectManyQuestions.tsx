@@ -56,7 +56,7 @@ const SelectManyQuestions = (props: QuestionProps) => {
             <div
               key={key}
               className={`w-3/4 flex justify-center items-center mb-2`}
-              onClick={handleMultiSelect}
+              onClick={(e)=> (!isTeacher) ? handleMultiSelect(e): null}
               data-key={questionId}>
               {input.value.indexOf(`${option.label}`) >= 0 ? (
                 <div
