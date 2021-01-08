@@ -791,7 +791,7 @@ type QuestionData @model {
   response: String
   componentType: String
   scheduleID: String
-  lessonID: String,
+  lessonID: String
   responseObject: [QuestionResponse]
 }
 
