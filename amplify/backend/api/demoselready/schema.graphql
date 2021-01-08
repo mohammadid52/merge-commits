@@ -243,7 +243,7 @@ type CurriculumSequences
   id: ID!
   curriculumID: ID!
   type: String!
-  sequence: AWSJSON
+  sequence: [String]
 }
 
 type Topic
