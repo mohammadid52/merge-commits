@@ -475,12 +475,10 @@ export const createSyllabusLesson = /* GraphQL */ `
       syllabusID
       lessonID
       unit
+      status
       sequence
-      lesson {
-        id
-        title
-        type
-      }
+      createdAt
+      updatedAt
     }
   }
 `;

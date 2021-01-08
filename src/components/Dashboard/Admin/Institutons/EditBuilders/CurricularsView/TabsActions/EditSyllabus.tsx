@@ -10,7 +10,7 @@ import PageWrapper from '../../../../../../Atoms/PageWrapper'
 import FormInput from '../../../../../../Atoms/Form/FormInput'
 import TextArea from '../../../../../../Atoms/Form/TextArea'
 import Selector from '../../../../../../Atoms/Form/Selector'
-import { languageList } from '../../../../../../../utilities/staticData'
+import { languageList, statusList } from '../../../../../../../utilities/staticData'
 import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector'
 
 // TODO: Check wether mutations and queries are needed for fetching all the data or not.
@@ -30,7 +30,13 @@ interface InitialData {
   purpose: string
   objectives: string
   languages: { id: string, name: string, value: string }[]
-  // lessonsList: any[]
+}
+
+interface UIMessages {
+  show: boolean,
+  message: string,
+  isError: boolean,
+  lessonError?: boolean
 }
 
 const EditSyllabus = (props: EditSyllabusProps) => {
@@ -46,21 +52,26 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     purpose: '',
     objectives: '',
     languages: [{ id: '1', name: "English", value: 'EN' }],
-    // lessonsList: []
   }
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
   const [loading, setIsLoading] = useState(false);
+  const [editState, setEditState] = useState({
+    id: ''
+  });
   const [allLessonsList, setAllLessonsList] = useState([]);
   const [dropdownLessonsList, setDropdownLessonsList] = useState([]);
+  const [selectedLessonsList, setSelectedLessonsList] = useState([]);
+  const [savedLessonsList, setSavedLessonsList] = useState([]);
   const [selecetedLesson, setSelectedLesson] = useState({
     id: '',
     name: '',
     value: ''
   });
-  const [messages, setMessages] = useState({
+  const [messages, setMessages] = useState<UIMessages>({
     show: false,
     message: '',
-    isError: false
+    isError: false,
+    lessonError: false
   });
 
   const useQuery = () => {
@@ -79,8 +90,6 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
   const sequenceList: any[] = [];
   const designersList: any[] = [];
-  const selectedLessonsList: any[] = [];
-  const lessonsList: any[] = [];
 
   const onInputChange = (e: any) => {
     setSyllabusData({
@@ -134,7 +143,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         const newSyllabus = await API.graphql(graphqlOperation(mutations.updateSyllabus, { input: input }));
         setMessages({
           show: true,
-          message: 'New syllabus has been saved.',
+          message: 'Syllabus details has been updated.',
           isError: false
         })
         setSyllabusData(initialData);
@@ -142,7 +151,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       } catch{
         setMessages({
           show: true,
-          message: 'Unable to save new syllabus please try again later.',
+          message: 'Unable to update syllabus details please try again later.',
           isError: true
         })
       }
@@ -176,22 +185,56 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       return true
     }
   }
+  const onStatusChange = () => {
+    setEditState({ id: '' });
+    // IN PROGRESS...
+  }
 
   const editCurrentLesson = (id: string) => {
+    setEditState({ id });
+    // IN PROGRESS...
 
   }
   const addNewLesson = async () => {
     try {
       const input = {
         syllabusID: syllabusId,
-        lessonID: selecetedLesson.id
+        lessonID: selecetedLesson.id,
+        status: 'Active'
       }
-      const newLesson = await API.graphql(graphqlOperation(customMutations.createSyllabusLesson, { input: input }));
-    
-      // IN PROGRESS....
+      const result: any = await API.graphql(graphqlOperation(customMutations.createSyllabusLesson, { input: input }));
+      const newLesson = result.data.createSyllabusLesson;
+      setSelectedLesson({ id: '', name: '', value: '' })
+      setSavedLessonsList([
+        ...savedLessonsList, newLesson
+      ]);
     } catch{
-
+      setMessages({
+        show: true,
+        message: 'Error while adding new lesson please try later.',
+        isError: true,
+        lessonError: true
+      })
     }
+  }
+
+  const updateListAndDropdown = async () => {
+    // To update table list and dropdown as per selected items.
+    const savedLessonIds = [...savedLessonsList];
+    const lessonsDetails = [...allLessonsList];
+    const filteredList = lessonsDetails.filter(item => savedLessonIds.some(lesson => lesson.lessonID === item.id));
+    const updatedTableList = filteredList.map(item => {
+      let tableList;
+      const selectedLesson = savedLessonIds.find(lesson => lesson.lessonID === item.id)
+      tableList = {
+        ...item,
+        status: selectedLesson?.status || ''
+      }
+      return tableList;
+    });
+    const filteredDropDownList = dropdownLessonsList.filter(item => updatedTableList.find(lesson => lesson.id === item.id) ? false : true)
+    setDropdownLessonsList(filteredDropDownList)
+    setSelectedLessonsList(updatedTableList);
   }
 
   const fetchSyllabusData = async () => {
@@ -209,9 +252,14 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           purpose: savedData.pupose,
           methodology: savedData.methodology,
           policies: savedData.policies,
-          // lessonsList: savedData.lessons?.items
         })
+        setSavedLessonsList([...savedData.lessons?.items]);
       } catch {
+        setMessages({
+          show: true,
+          message: 'Error while fetching syllabus data.',
+          isError: true
+        })
         console.log('Error while fetching syllabus data.')
       }
     } else {
@@ -229,14 +277,26 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       setAllLessonsList([...savedData?.items])
       setDropdownLessonsList([...updatedList])
     } catch {
-      console.log('Error while fetching lessons list data.')
+      setMessages({
+        show: true,
+        message: 'Error while fetching lessons list data.',
+        isError: true,
+        lessonError: true
+      })
     }
   }
 
   useEffect(() => {
+    const lessonsList = async () => {
+      await fetchLessonsList();
+    }
+    lessonsList();
     fetchSyllabusData();
-    fetchLessonsList();
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    updateListAndDropdown();
+  }, [savedLessonsList])
 
   const { name, languages, description, purpose, objectives, methodology, policies } = syllabusData;
   return (
@@ -312,7 +372,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                     <TextArea value={policies} rows={2} id='policies' onChange={onInputChange} name='policies' label="Policies" />
                   </div>
                 </div>
-                {messages.show ? (<div className="py-2 m-auto text-center">
+                {(messages.show && !messages.lessonError) ? (<div className="py-2 m-auto text-center">
                   <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
                 </div>) : null}
                 <div className="flex my-8 justify-center">
@@ -339,10 +399,12 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                     <Selector selectedItem={selecetedLesson.value} list={dropdownLessonsList} placeholder="Select Lesson" onChange={selectLesson} />
                   </div>
                   <div className="col-span-1">
-                    <Buttons btnClass="ml-4 py-1" label="Add" onClick={addNewLesson} />
+                    <Buttons btnClass="ml-4 py-1" label="Add" onClick={addNewLesson} disabled={selecetedLesson.value ? false : true} />
                   </div>
                 </div>
-
+                {(messages.show && messages.lessonError) ? (<div className="py-2 mb-4 m-auto text-center">
+                  <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
+                </div>) : null}
                 {/* Lessons list  */}
                 <div>
                   {(selectedLessonsList && selectedLessonsList.length > 0) ? (
@@ -365,24 +427,29 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                         </div>
                       </div>
 
-                      <div className="max-h-88 overflow-y-auto">
+                      <div className="max-h-88 overflow-y-auto mb-10">
                         {selectedLessonsList.map((item, index) => (
-                          // Modify fileds property as required.
-
                           <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                             <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
-                            <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
-                              {item.name ? item.name : ''}
+                            <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal">
+                              {item.title ? item.title : '--'}
                             </div>
                             <div className="flex w-3/10 items-center px-8 py-3 text-left text-s text-gray-500 leading-4 font-medium ">
-                              {item.type ? item.type : ''}
+                              {item.type ? item.type : '--'}
                             </div>
                             <div className="flex w-3/10 items-center px-8 py-3 text-left text-s text-gray-500 leading-4 font-medium ">
-                              {item.status ? item.status : ''}
+                              {(editState.id !== item.id) ?
+                                (item.status ? item.status : '')
+                                : (
+                                  <div className="text-gray-900">
+                                    <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={onStatusChange} />
+                                  </div>
+                                  //  <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={(val, name, id) => onLessonStatusChange(val, name, id, item.id)} /> */}
+                                )}
                             </div>
-                            <span className="w-2/10 h-6 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentLesson(item.id)}>
-                              edit
-                      </span>
+                            <span className="w-2/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentLesson(item.id)}>
+                              {(editState.id !== item.id) && ('edit')}
+                            </span>
                           </div>
                         ))}
 

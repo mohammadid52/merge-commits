@@ -1,6 +1,12 @@
-export   const languageList = [
-  { id: '1', name: "English", value: 'EN' },
-  { id: '2', name: "Spanish", value: 'ES' },
+export const languageList = [
+  { id: '1', name: 'English', value: 'EN' },
+  { id: '2', name: 'Spanish', value: 'ES' },
+];
+
+export const statusList = [
+  { id: 1, name: 'Active', value: 'Active' },
+  { id: 2, name: 'Inactive', value: 'Inactive' },
+  { id: 3, name: 'Dropped', value: 'Dropped' },
 ];
 
 export const statesList = [
