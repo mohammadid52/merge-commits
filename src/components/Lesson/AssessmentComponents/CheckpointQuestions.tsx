@@ -28,8 +28,12 @@ interface CheckpointQuestionsProps {
 }
 
 export interface ResponseState {
-  // [key: number]: string | number | [];
   [key: number]: any;
+}
+
+interface ResponseObject {
+  qid: string;
+  response: string[];
 }
 
 export interface QuestionInterface {
@@ -53,7 +57,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
    * State
    */
   const [status, setStatus] = useState('');
-  const [input, setInput] = useState<ResponseState>();
+  const [input, setInput] = useState<ResponseObject[]>();
 
   /**
    * Other
@@ -86,31 +90,16 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   })();
 
   /**
-   * Loop over questionSource(checkpointType) to create an object of question ID's
+   * Loop over questionSource(checkpointType) to create an array of question ID's
    * and their answers e.g:
    *
-   * { 2:'', 3:'', 6:[], 10:''}
+   * [..., {qid: "1", response: ['response']}]
    */
-  const initialResponseState = questionSource.reduce((acc: {}, questionObj: QuestionInterface) => {
-    const dataType = (questionType: string): string | [] => {
-      switch (questionType) {
-        case 'text':
-        case 'input':
-        case 'selectOne':
-          return '';
-          break;
-        case 'selectMany':
-          return [];
-          break;
-        default:
-          return '';
-      }
-    };
-
+  const initialResponseState = questionSource.reduce((acc: any[], questionObj: QuestionInterface) => {
     const questionIdString = questionObj.question.id.toString();
 
-    return { ...acc, [questionIdString]: dataType(questionObj.question.type) };
-  }, {});
+    return [...acc, { qid: questionIdString, response: [] }];
+  }, []);
 
   /**
    * ON CHECKPOINT MOUNT
@@ -182,10 +171,18 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   }, [input]);
 
   const handleInputChange = (id: number | string, value: string | string[]) => {
-    setInput({
-      ...input,
-      [id]: value,
+    const valueArray = typeof value === 'string' ? [value] : value;
+    const mappedInput = input.map((obj: ResponseObject) => {
+      if (obj.qid === id) {
+        return {
+          qid: id,
+          response: valueArray,
+        };
+      } else {
+        return obj;
+      }
     });
+    setInput(mappedInput);
   };
 
   if (status !== 'loaded') return null;
