@@ -13,7 +13,7 @@ interface TopicsListProps {
 }
 
 const TopicsList = (props: TopicsListProps) => {
-  const { topicsList, curricularId } = props;
+  const { curricularId } = props;
   const history = useHistory();
   const [loading, setLoading] = useState(false)
   const [topics, setTopics] = useState([])

@@ -538,21 +538,25 @@ export type DeleteLearningObjectiveInput = {
 
 export type CreateRubricInput = {
   id?: string | null,
+  name?: string | null,
   criteria?: string | null,
   distinguished?: string | null,
   excelled?: string | null,
-  Adequite?: string | null,
+  adequite?: string | null,
   basic?: string | null,
   topicID: string,
+  curriculumID: string,
 };
 
 export type ModelRubricConditionInput = {
+  name?: ModelStringInput | null,
   criteria?: ModelStringInput | null,
   distinguished?: ModelStringInput | null,
   excelled?: ModelStringInput | null,
-  Adequite?: ModelStringInput | null,
+  adequite?: ModelStringInput | null,
   basic?: ModelStringInput | null,
   topicID?: ModelIDInput | null,
+  curriculumID?: ModelIDInput | null,
   and?: Array< ModelRubricConditionInput | null > | null,
   or?: Array< ModelRubricConditionInput | null > | null,
   not?: ModelRubricConditionInput | null,
@@ -560,12 +564,14 @@ export type ModelRubricConditionInput = {
 
 export type UpdateRubricInput = {
   id: string,
+  name?: string | null,
   criteria?: string | null,
   distinguished?: string | null,
   excelled?: string | null,
-  Adequite?: string | null,
+  adequite?: string | null,
   basic?: string | null,
   topicID?: string | null,
+  curriculumID?: string | null,
 };
 
 export type DeleteRubricInput = {
@@ -671,6 +677,7 @@ export type CreateSyllabusLessonInput = {
   lessonID: string,
   unit?: string | null,
   sequence?: number | null,
+  status?: string | null,
 };
 
 export type ModelSyllabusLessonConditionInput = {
@@ -678,6 +685,7 @@ export type ModelSyllabusLessonConditionInput = {
   lessonID?: ModelIDInput | null,
   unit?: ModelStringInput | null,
   sequence?: ModelIntInput | null,
+  status?: ModelStringInput | null,
   and?: Array< ModelSyllabusLessonConditionInput | null > | null,
   or?: Array< ModelSyllabusLessonConditionInput | null > | null,
   not?: ModelSyllabusLessonConditionInput | null,
@@ -689,6 +697,7 @@ export type UpdateSyllabusLessonInput = {
   lessonID?: string | null,
   unit?: string | null,
   sequence?: number | null,
+  status?: string | null,
 };
 
 export type DeleteSyllabusLessonInput = {
@@ -1957,12 +1966,14 @@ export type ModelLearningObjectiveFilterInput = {
 
 export type ModelRubricFilterInput = {
   id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
   criteria?: ModelStringInput | null,
   distinguished?: ModelStringInput | null,
   excelled?: ModelStringInput | null,
-  Adequite?: ModelStringInput | null,
+  adequite?: ModelStringInput | null,
   basic?: ModelStringInput | null,
   topicID?: ModelIDInput | null,
+  curriculumID?: ModelIDInput | null,
   and?: Array< ModelRubricFilterInput | null > | null,
   or?: Array< ModelRubricFilterInput | null > | null,
   not?: ModelRubricFilterInput | null,
@@ -4592,10 +4603,11 @@ export type CreateRubricMutation = {
   createRubric:  {
     __typename: "Rubric",
     id: string,
+    name: string | null,
     criteria: string | null,
     distinguished: string | null,
     excelled: string | null,
-    Adequite: string | null,
+    adequite: string | null,
     basic: string | null,
     topicID: string,
     topic:  {
@@ -4629,6 +4641,7 @@ export type CreateRubricMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    curriculumID: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4643,10 +4656,11 @@ export type UpdateRubricMutation = {
   updateRubric:  {
     __typename: "Rubric",
     id: string,
+    name: string | null,
     criteria: string | null,
     distinguished: string | null,
     excelled: string | null,
-    Adequite: string | null,
+    adequite: string | null,
     basic: string | null,
     topicID: string,
     topic:  {
@@ -4680,6 +4694,7 @@ export type UpdateRubricMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    curriculumID: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4694,10 +4709,11 @@ export type DeleteRubricMutation = {
   deleteRubric:  {
     __typename: "Rubric",
     id: string,
+    name: string | null,
     criteria: string | null,
     distinguished: string | null,
     excelled: string | null,
-    Adequite: string | null,
+    adequite: string | null,
     basic: string | null,
     topicID: string,
     topic:  {
@@ -4731,6 +4747,7 @@ export type DeleteRubricMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    curriculumID: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5069,6 +5086,7 @@ export type CreateSyllabusMutation = {
         lessonID: string,
         unit: string | null,
         sequence: number | null,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -5106,6 +5124,7 @@ export type UpdateSyllabusMutation = {
         lessonID: string,
         unit: string | null,
         sequence: number | null,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -5143,6 +5162,7 @@ export type DeleteSyllabusMutation = {
         lessonID: string,
         unit: string | null,
         sequence: number | null,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -5166,6 +5186,7 @@ export type CreateSyllabusLessonMutation = {
     lessonID: string,
     unit: string | null,
     sequence: number | null,
+    status: string | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -5288,6 +5309,7 @@ export type UpdateSyllabusLessonMutation = {
     lessonID: string,
     unit: string | null,
     sequence: number | null,
+    status: string | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -5410,6 +5432,7 @@ export type DeleteSyllabusLessonMutation = {
     lessonID: string,
     unit: string | null,
     sequence: number | null,
+    status: string | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -12598,10 +12621,11 @@ export type GetRubricQuery = {
   getRubric:  {
     __typename: "Rubric",
     id: string,
+    name: string | null,
     criteria: string | null,
     distinguished: string | null,
     excelled: string | null,
-    Adequite: string | null,
+    adequite: string | null,
     basic: string | null,
     topicID: string,
     topic:  {
@@ -12635,6 +12659,7 @@ export type GetRubricQuery = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    curriculumID: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -12654,10 +12679,11 @@ export type ListRubricsQuery = {
     items:  Array< {
       __typename: "Rubric",
       id: string,
+      name: string | null,
       criteria: string | null,
       distinguished: string | null,
       excelled: string | null,
-      Adequite: string | null,
+      adequite: string | null,
       basic: string | null,
       topicID: string,
       topic:  {
@@ -12670,6 +12696,7 @@ export type ListRubricsQuery = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      curriculumID: string,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -12786,6 +12813,7 @@ export type GetSyllabusQuery = {
         lessonID: string,
         unit: string | null,
         sequence: number | null,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -17900,10 +17928,11 @@ export type OnCreateRubricSubscription = {
   onCreateRubric:  {
     __typename: "Rubric",
     id: string,
+    name: string | null,
     criteria: string | null,
     distinguished: string | null,
     excelled: string | null,
-    Adequite: string | null,
+    adequite: string | null,
     basic: string | null,
     topicID: string,
     topic:  {
@@ -17937,6 +17966,7 @@ export type OnCreateRubricSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    curriculumID: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -17946,10 +17976,11 @@ export type OnUpdateRubricSubscription = {
   onUpdateRubric:  {
     __typename: "Rubric",
     id: string,
+    name: string | null,
     criteria: string | null,
     distinguished: string | null,
     excelled: string | null,
-    Adequite: string | null,
+    adequite: string | null,
     basic: string | null,
     topicID: string,
     topic:  {
@@ -17983,6 +18014,7 @@ export type OnUpdateRubricSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    curriculumID: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -17992,10 +18024,11 @@ export type OnDeleteRubricSubscription = {
   onDeleteRubric:  {
     __typename: "Rubric",
     id: string,
+    name: string | null,
     criteria: string | null,
     distinguished: string | null,
     excelled: string | null,
-    Adequite: string | null,
+    adequite: string | null,
     basic: string | null,
     topicID: string,
     topic:  {
@@ -18029,6 +18062,7 @@ export type OnDeleteRubricSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    curriculumID: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -18332,6 +18366,7 @@ export type OnCreateSyllabusSubscription = {
         lessonID: string,
         unit: string | null,
         sequence: number | null,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -18364,6 +18399,7 @@ export type OnUpdateSyllabusSubscription = {
         lessonID: string,
         unit: string | null,
         sequence: number | null,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -18396,6 +18432,7 @@ export type OnDeleteSyllabusSubscription = {
         lessonID: string,
         unit: string | null,
         sequence: number | null,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -18414,6 +18451,7 @@ export type OnCreateSyllabusLessonSubscription = {
     lessonID: string,
     unit: string | null,
     sequence: number | null,
+    status: string | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -18531,6 +18569,7 @@ export type OnUpdateSyllabusLessonSubscription = {
     lessonID: string,
     unit: string | null,
     sequence: number | null,
+    status: string | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -18648,6 +18687,7 @@ export type OnDeleteSyllabusLessonSubscription = {
     lessonID: string,
     unit: string | null,
     sequence: number | null,
+    status: string | null,
     lesson:  {
       __typename: "Lesson",
       id: string,

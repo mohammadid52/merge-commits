@@ -1221,3 +1221,23 @@ export const getTopicDetails = /* GraphQL */ `
     }
   }
 `;
+
+export const listRubrics = /* GraphQL */ `
+  query ListRubrics($filter: ModelRubricFilterInput $sortDirection: ModelSortDirection) {
+    listRubrics(filter: $filter, sortDirection: $sortDirection) {
+      items {
+        id
+        name
+        criteria
+        distinguished
+        excelled
+        adequite
+        basic
+        topicID
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

@@ -80,7 +80,7 @@ const EditTopic = (props: EditTopicProps) => {
       if (updatedItem) {
         history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
       } else {
-        console.log('Could not add learning objective');
+        console.log('Could not update topic');
       }
     }
   }

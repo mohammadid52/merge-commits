@@ -2307,10 +2307,11 @@ export const onCreateRubric = /* GraphQL */ `
   subscription OnCreateRubric {
     onCreateRubric {
       id
+      name
       criteria
       distinguished
       excelled
-      Adequite
+      adequite
       basic
       topicID
       topic {
@@ -2341,6 +2342,7 @@ export const onCreateRubric = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      curriculumID
       createdAt
       updatedAt
     }
@@ -2350,10 +2352,11 @@ export const onUpdateRubric = /* GraphQL */ `
   subscription OnUpdateRubric {
     onUpdateRubric {
       id
+      name
       criteria
       distinguished
       excelled
-      Adequite
+      adequite
       basic
       topicID
       topic {
@@ -2384,6 +2387,7 @@ export const onUpdateRubric = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      curriculumID
       createdAt
       updatedAt
     }
@@ -2393,10 +2397,11 @@ export const onDeleteRubric = /* GraphQL */ `
   subscription OnDeleteRubric {
     onDeleteRubric {
       id
+      name
       criteria
       distinguished
       excelled
-      Adequite
+      adequite
       basic
       topicID
       topic {
@@ -2427,6 +2432,7 @@ export const onDeleteRubric = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      curriculumID
       createdAt
       updatedAt
     }
@@ -2710,6 +2716,7 @@ export const onCreateSyllabus = /* GraphQL */ `
           lessonID
           unit
           sequence
+          status
           createdAt
           updatedAt
         }
@@ -2740,6 +2747,7 @@ export const onUpdateSyllabus = /* GraphQL */ `
           lessonID
           unit
           sequence
+          status
           createdAt
           updatedAt
         }
@@ -2770,6 +2778,7 @@ export const onDeleteSyllabus = /* GraphQL */ `
           lessonID
           unit
           sequence
+          status
           createdAt
           updatedAt
         }
@@ -2788,6 +2797,7 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
       lessonID
       unit
       sequence
+      status
       lesson {
         id
         title
@@ -2895,6 +2905,7 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
       lessonID
       unit
       sequence
+      status
       lesson {
         id
         title
@@ -3002,6 +3013,7 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
       lessonID
       unit
       sequence
+      status
       lesson {
         id
         title

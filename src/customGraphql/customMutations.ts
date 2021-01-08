@@ -516,3 +516,23 @@ export const updateTopic = /* GraphQL */ `
     }
   }
 `;
+
+export const createRubric = /* GraphQL */ `
+  mutation CreateRubric(
+    $input: CreateRubricInput!
+    $condition: ModelRubricConditionInput
+  ) {
+    createRubric(input: $input, condition: $condition) {
+      id
+      name
+      criteria
+      distinguished
+      excelled
+      adequite
+      basic
+      topicID
+      createdAt
+      updatedAt
+    }
+  }
+`;
