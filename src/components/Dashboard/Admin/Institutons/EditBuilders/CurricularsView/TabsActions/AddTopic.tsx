@@ -11,6 +11,7 @@ import TextArea from '../../../../../../Atoms/Form/TextArea';
 import Selector from '../../../../../../Atoms/Form/Selector'
 import * as queries from '../../../../../../../graphql/queries';
 import * as mutations from '../../../../../../../graphql/mutations';
+import * as customMutations from '../../../../../../../customGraphql/customMutations'
 interface AddTopicProps {
 
 }
@@ -29,37 +30,50 @@ const AddTopic = (props: AddTopicProps) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [learning, setLearning] = useState({ id: '', name: '', value: '' });
-  const [validation, setValidation] = useState({ isValid: true, msgs: {name: '', learning: ''} })
+  const [validation, setValidation] = useState({ name: '', learning: ''})
   const [learnings, setLearnings] = useState([]);
 
   const onInputChange = (e: any) => {
     if (e.target.name === 'name') {
       const value = e.target.value
       setName(value)
-      // if (!validation.isValid && value.length) setValidation({ isValid: true, msgs: {...validation.msgs, name: ''} })
+      if (value.length && validation.name) setValidation({ ...validation, name: '' });
     }
     if (e.target.name === 'description') setDescription(e.target.value)
   }
 
-  const saveTopicDetails = async () => {
+  const validateForm = () => {
+    let isValid = true
+    const msgs = validation;
     if (!name.length) {
-      // setValidation({ isValid: false, msg: 'Name is required' })
-      return
+      isValid = false;
+      msgs.name = 'Name is required';
+    } else {
+      msgs.name = ''
     }
     if (!learning.id) {
-      // setValidation({ isValid: false, msg: 'Name is required' })
-      return
-    }
-    // setValidation({ isValid: true, msg: '' })
-    const input = {
-      name, description, curriculumID: curricularId, learningObjectiveID: learning.id
-    };
-    const item: any = await API.graphql(graphqlOperation(mutations.createTopic, { input }));
-    const addedItem = item.data.createTopic
-    if (addedItem) {
-      history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
+      isValid = false;
+      msgs.learning = 'learning objective is required';
     } else {
-      console.log('Could not add learning objective');
+      msgs.learning = ''
+    }
+    setValidation({ ...msgs });
+    return isValid;
+  }
+
+  const saveTopicDetails = async () => {
+    const isValid = validateForm()
+    if (isValid) {
+      const input = {
+        name, description, curriculumID: curricularId, learningObjectiveID: learning.id
+      };
+      const item: any = await API.graphql(graphqlOperation(customMutations.createTopic, { input }));
+      const addedItem = item.data.createTopic
+      if (addedItem) {
+        history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
+      } else {
+        console.log('Could not add learning objective');
+      }
     }
   }
 
@@ -77,18 +91,19 @@ const AddTopic = (props: AddTopicProps) => {
   }
 
   const selectLearning = (val: string, name: string, id: string) => {
-    
+    if (validation.learning) {
+      setValidation({ ...validation, learning: '' })
+    }
     setLearning({ id, name, value: val })
   }
 
-  // validateForm() {
-
-  // }
-
   useEffect(() => {
-    console.log('hereeeeeeeeeeeeeeeeeeeeeeee')
-    // fetchLearningObjectives()
+    fetchLearningObjectives()
   }, [])
+
+  const cancelEvent = () => {
+    history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
+  }
 
   return (
     <div className="w-8/10 h-full mt-4 p-4">
@@ -110,13 +125,19 @@ const AddTopic = (props: AddTopicProps) => {
 
             <div className="px-3 py-4">
               <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Topic Name" isRequired />
+              {
+                validation.name && <p className="text-red-600">{validation.name}</p>
+              }
             </div>
 
             <div className="px-3 py-4">
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Select Learning objective
+                Select Learning objective <span className="text-red-500">*</span>
               </label>
-              <Selector selectedItem={learning.value} placeholder="Learning objective" list={learnings} onChange={selectLearning} />
+              <Selector selectedItem={learning.value} placeholder="Learning objective" list={learnings} onChange={selectLearning}/>
+              {
+                validation.learning && <p className="text-red-600">{validation.learning}</p>
+              }
             </div>
 
             <div className="px-3 py-4">
@@ -127,6 +148,7 @@ const AddTopic = (props: AddTopicProps) => {
         </div>
         <div className="flex my-8 justify-center">
           <Buttons btnClass="py-3 px-10" label="Save" onClick={saveTopicDetails} />
+          <Buttons btnClass="py-3 px-10" label="Cancel" onClick={cancelEvent} />
         </div>
       </PageWrapper>
     </div>

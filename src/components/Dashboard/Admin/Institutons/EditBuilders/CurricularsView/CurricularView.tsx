@@ -56,7 +56,7 @@ const CurricularView = (props: CurricularViewProps) => {
       name: '',
       value: ''
     },
-    syllabusList: [],
+    syllabusList: [] as any,
     description: '',
     languages: [{ id: '1', name: "English", value: 'EN' }],
     objectives: '',

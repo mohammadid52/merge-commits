@@ -484,3 +484,19 @@ export const createSyllabusLesson = /* GraphQL */ `
     }
   }
 `;
+export const createTopic = /* GraphQL */ `
+mutation CreateTopic(
+    $input: CreateTopicInput!
+    $condition: ModelTopicConditionInput
+  ) {
+    createTopic(input: $input, condition: $condition) {
+      id
+      curriculumID
+      learningObjectiveID
+      name
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`;

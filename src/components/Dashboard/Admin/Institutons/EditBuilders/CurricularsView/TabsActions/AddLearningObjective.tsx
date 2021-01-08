@@ -72,11 +72,11 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">TOPIC INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LEARNING OBJECTIVE INFORMATION</h3>
           <div className="">
             
             <div className="px-3 py-4">
-              <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Topic Name" isRequired />
+              <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Learning objective Name" isRequired />
               {
                 !validation.isValid ? <p className="text-red-600">{validation.msg}</p> : null 
               }
