@@ -325,11 +325,16 @@ export const createQuestionData = /* GraphQL */ `
   mutation CreateQuestionData($input: CreateQuestionDataInput!, $condition: ModelQuestionDataConditionInput) {
     createQuestionData(input: $input, condition: $condition) {
       id
-      questionID
       classroomID
       email
       authID
-      response
+      componentType
+      lessonID
+      scheduleID
+      responseObject {
+        qid
+        response
+      }
       createdAt
       updatedAt
     }

@@ -4,7 +4,7 @@ import CheckpointQuestions from './CheckpointQuestions';
 import Banner from '../LessonComponents/Banner';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 
-const Checkpoint = (props: { isTeacher: boolean }) => {
+const Checkpoint = (props: { isTeacher?: boolean }) => {
   /**
    * Teacher switch
    */

@@ -94,13 +94,14 @@ const SaveQuit = (props: SaveQuitProps) => {
     }
   };
 
-  const saveQuestionData = async (key: string, questionVal: any) => {
+  const saveQuestionData = async (responseObj: any) => {
     let questiondDataObject = {
-      questionID: key,
       classroomID: '1',
+      componentType: 'checkpoint',
+      lessonID: state.data.lesson.id,
       authID: state.studentAuthID,
       email: state.studentUsername,
-      response: questionVal,
+      responseObject: responseObj,
     };
 
     try {
@@ -130,29 +131,16 @@ const SaveQuit = (props: SaveQuitProps) => {
     }
   };
 
-  /**
-   * TODO:
-   *  - Optimize code below for new columns & 'response' type
-   *  - New columns: schedule_id, lesson_id
-   *  - Optimization?: instead of multiple queries for each question, there will only be a query for each checkpoint
-   */
   const handleSave = async () => {
     if (typeof state.questionData === 'object') {
       let keys = Object.keys(state.questionData); // doFirst, checkpoint_1
 
       await keys.reduce((_:any, key: string)=>{
-        Object.keys(state.questionData[key]).reduce((_2: any, questionID: string)=>{
-          console.log('questionSave -> ', `qID: ${questionID}  qAnswer: ${state.questionData[key][questionID]}`);
-          saveQuestionData(questionID, state.questionData[key][questionID]);
-        }, null)
-      },null)
+        const responseObject = state.questionData[key];
 
-      // await keys.forEach(async (key: string) => {
-      //   let questionIDs = Object.keys(state.questionData[key]);
-      //   questionIDs.forEach(async (questionID: string) => {
-      //     await saveQuestionData(key, questionID);
-      //   });
-      // });
+          saveQuestionData(responseObject);
+
+      },null)
 
       if (typeof feedback !== 'undefined') {
         if (feedback?.like !== '' || feedback?.text !== '') {
