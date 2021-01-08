@@ -786,9 +786,10 @@ type QuestionData @model {
   authID: String!
   classroom: Classroom @connection(fields: ["classroomID"])
   person: Person @connection(fields: ["email", "authID"])
+  response: String
   componentType: String
   scheduleID: String
-  lessonID: String
+  lessonID: String,
   responseObject: [QuestionResponse]
 }
 
