@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import { useHistory } from 'react-router'
+import React, { useState, useEffect } from 'react'
+import { useHistory, useLocation, useParams } from 'react-router'
 import { IoArrowUndoCircleOutline } from 'react-icons/io5'
+import API, { graphqlOperation } from '@aws-amplify/api'
 
 import BreadCrums from '../../../../../../Atoms/BreadCrums'
 import SectionTitle from '../../../../../../Atoms/SectionTitle'
@@ -9,45 +10,235 @@ import PageWrapper from '../../../../../../Atoms/PageWrapper'
 import FormInput from '../../../../../../Atoms/Form/FormInput'
 import TextArea from '../../../../../../Atoms/Form/TextArea'
 import Selector from '../../../../../../Atoms/Form/Selector'
+import { languageList } from '../../../../../../../utilities/staticData'
+import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector'
+
+// TODO: Check wether mutations and queries are needed for fetching all the data or not.
+import * as mutations from '../../../../../../../graphql/mutations'
+import * as queries from '../../../../../../../graphql/queries'
+import * as customQueries from '../../../../../../../customGraphql/customQueries'
+import * as customMutations from '../../../../../../../customGraphql/customMutations'
 
 interface EditSyllabusProps {
 
+}
+interface InitialData {
+  name: string
+  description: string
+  methodology: string
+  policies: string
+  purpose: string
+  objectives: string
+  languages: { id: string, name: string, value: string }[]
+  // lessonsList: any[]
 }
 
 const EditSyllabus = (props: EditSyllabusProps) => {
   const { } = props;
   const history = useHistory();
-  const [measurementData, setMeasurementData] = useState();
+  const location = useLocation();
+
+  const initialData = {
+    name: '',
+    description: '',
+    methodology: '',
+    policies: '',
+    purpose: '',
+    objectives: '',
+    languages: [{ id: '1', name: "English", value: 'EN' }],
+    // lessonsList: []
+  }
+  const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
+  const [loading, setIsLoading] = useState(false);
+  const [allLessonsList, setAllLessonsList] = useState([]);
+  const [dropdownLessonsList, setDropdownLessonsList] = useState([]);
+  const [selecetedLesson, setSelectedLesson] = useState({
+    id: '',
+    name: '',
+    value: ''
+  });
   const [messages, setMessages] = useState({
     show: false,
     message: '',
     isError: false
   });
 
+  const useQuery = () => {
+    return new URLSearchParams(location.search);
+  };
+  const params = useQuery();
+  const urlParams: any = useParams();
+
+  const syllabusId = params.get('id');
+  const curricularId = urlParams.curricularId;
+
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Edit Syllabus', url: `/dashboard/curricular/syllabus/edit?id=${'_blank_'}`, last: true }
+    { title: 'Edit Syllabus', url: `/dashboard/curricular/${curricularId}/syllabus/edit?id=${syllabusId}`, last: true }
   ];
 
   const sequenceList: any[] = [];
-  const languageList: any[] = [];
   const designersList: any[] = [];
   const selectedLessonsList: any[] = [];
   const lessonsList: any[] = [];
 
-  const onInputChange = () => {
-
+  const onInputChange = (e: any) => {
+    setSyllabusData({
+      ...syllabusData,
+      [e.target.name]: e.target.value
+    })
+    if (messages.show) {
+      setMessages({
+        show: false,
+        message: '',
+        isError: false
+      })
+    }
   }
-  const saveSyllabusDetails = () => {
-
+  const selectLanguage = (id: string, name: string, value: string) => {
+    let updatedList;
+    const currentLanguages = syllabusData.languages;
+    const selectedItem = currentLanguages.find(item => item.id === id);
+    if (!selectedItem) {
+      updatedList = [...currentLanguages, { id, name, value }];
+    } else {
+      updatedList = currentLanguages.filter(item => item.id !== id);
+    }
+    setSyllabusData({
+      ...syllabusData,
+      languages: updatedList
+    })
   }
+
+  const selectLesson = (value: string, name: string, id: string) => {
+    setSelectedLesson({ id, name, value })
+  }
+
+  const saveSyllabusDetails = async () => {
+    const isValid = await validateForm();
+    if (isValid) {
+      try {
+        setIsLoading(true);
+        const languagesCode = syllabusData.languages.map((item: { value: string }) => item.value);
+        const input = {
+          id: syllabusId,
+          name: syllabusData.name,
+          curriculumID: curricularId,
+          description: syllabusData.description,
+          methodology: syllabusData.methodology,
+          policies: syllabusData.policies,
+          pupose: syllabusData.purpose,
+          objectives: syllabusData.objectives,
+          languages: languagesCode
+        }
+        const newSyllabus = await API.graphql(graphqlOperation(mutations.updateSyllabus, { input: input }));
+        setMessages({
+          show: true,
+          message: 'New syllabus has been saved.',
+          isError: false
+        })
+        setSyllabusData(initialData);
+        setIsLoading(false);
+      } catch{
+        setMessages({
+          show: true,
+          message: 'Unable to save new syllabus please try again later.',
+          isError: true
+        })
+      }
+    }
+  }
+  const validateForm = async () => {
+    if (syllabusData.name.trim() === '') {
+      setMessages({
+        show: true,
+        message: 'Syllabus name is required please enter name.',
+        isError: true
+      })
+      return false;
+    }
+    //  TODO: Need to confirm that syllabus name should be uniq or not?
+
+    // else if (syllabusData.name.trim() !== '') {
+    //   const isUniq = await checkUniqSyllabusName()
+    //   if (!isUniq) {
+    //     setMessages({
+    //       show: true,
+    //       message: 'This syllabus name is already exist, please add another name.',
+    //       isError: true
+    //     })
+    //     return false;
+    //   } else {
+    //     return true
+    //   }
+    // }
+    else {
+      return true
+    }
+  }
+
   const editCurrentLesson = (id: string) => {
 
   }
-  const addNewLesson = () => {
+  const addNewLesson = async () => {
+    try {
+      const input = {
+        syllabusID: syllabusId,
+        lessonID: selecetedLesson.id
+      }
+      const newLesson = await API.graphql(graphqlOperation(customMutations.createSyllabusLesson, { input: input }));
+    
+      // IN PROGRESS....
+    } catch{
+
+    }
+  }
+
+  const fetchSyllabusData = async () => {
+
+    if (syllabusId) {
+      try {
+        const result: any = await API.graphql(graphqlOperation(queries.getSyllabus, { id: syllabusId }))
+        const savedData = result.data.getSyllabus;
+        setSyllabusData({
+          ...syllabusData,
+          name: savedData.name,
+          languages: languageList.filter(item => savedData.languages.includes(item.value)),
+          description: savedData.description,
+          objectives: savedData.objectives,
+          purpose: savedData.pupose,
+          methodology: savedData.methodology,
+          policies: savedData.policies,
+          // lessonsList: savedData.lessons?.items
+        })
+      } catch {
+        console.log('Error while fetching syllabus data.')
+      }
+    } else {
+      console.log('can not find syllabus id')
+      history.push('/dashboard/manage-institutions')
+    }
 
   }
 
+  const fetchLessonsList = async () => {
+    try {
+      const result: any = await API.graphql(graphqlOperation(customQueries.listLessonsTitles))
+      const savedData = result.data.listLessons;
+      const updatedList = savedData?.items.map((item: { id: string, title: string }) => ({ id: item.id, name: item.title, value: item.title }))
+      setAllLessonsList([...savedData?.items])
+      setDropdownLessonsList([...updatedList])
+    } catch {
+      console.log('Error while fetching lessons list data.')
+    }
+  }
+
+  useEffect(() => {
+    fetchSyllabusData();
+    fetchLessonsList();
+  }, [])
+
+  const { name, languages, description, purpose, objectives, methodology, policies } = syllabusData;
   return (
     <div className="w-9/10 h-full mt-4 p-4">
 
@@ -75,7 +266,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
                 <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                   <div>
-                    <FormInput id='name' onChange={onInputChange} name='name' label="Syllabus Name" isRequired />
+                    <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Syllabus Name" isRequired />
                   </div>
                   <div>
                     <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
@@ -94,35 +285,38 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                   <div>
                     <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                       Select Language
-              </label>
-                    <Selector placeholder="Language" list={languageList} onChange={() => console.log('')} />
+                  </label>
+                    <MultipleSelector selectedItems={languages} placeholder="Language" list={languageList} onChange={selectLanguage} />
                   </div>
                 </div>
 
                 <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                   <div>
-                    <TextArea rows={2} id='description' onChange={onInputChange} name='description' label="Description" />
+                    <TextArea value={description} rows={2} id='description' onChange={onInputChange} name='description' label="Description" />
                   </div>
                   <div>
-                    <TextArea rows={2} id='purpose' onChange={onInputChange} name='purpose' label="Purpose" />
+                    <TextArea value={purpose} rows={2} id='purpose' onChange={onInputChange} name='purpose' label="Purpose" />
                   </div>
                 </div>
 
                 <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                   <div>
-                    <TextArea rows={2} id='objectives' onChange={onInputChange} name='objectives' label="Objectives" />
+                    <TextArea value={objectives} rows={2} id='objectives' onChange={onInputChange} name='objectives' label="Objectives" />
                   </div>
                   <div>
-                    <TextArea rows={2} id='methodologies' onChange={onInputChange} name='methodologies' label="Methodologies" />
+                    <TextArea value={methodology} rows={2} id='methodology' onChange={onInputChange} name='methodology' label="Methodology" />
                   </div>
                 </div>
                 <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                   <div>
-                    <TextArea rows={2} id='policies' onChange={onInputChange} name='policies' label="Policies" />
+                    <TextArea value={policies} rows={2} id='policies' onChange={onInputChange} name='policies' label="Policies" />
                   </div>
                 </div>
+                {messages.show ? (<div className="py-2 m-auto text-center">
+                  <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
+                </div>) : null}
                 <div className="flex my-8 justify-center">
-                  <Buttons btnClass="py-3 px-10" label="Save" onClick={saveSyllabusDetails} />
+                  <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveSyllabusDetails} disabled={loading ? true : false} />
                 </div>
               </div>
             </div>
@@ -142,7 +336,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                     <Selector list={sequenceList} placeholder="Select Sequence" onChange={() => console.log('')} />
                   </div>
                   <div className="col-span-5">
-                    <Selector list={lessonsList} placeholder="Select Lesson" onChange={() => console.log('')} />
+                    <Selector selectedItem={selecetedLesson.value} list={dropdownLessonsList} placeholder="Select Lesson" onChange={selectLesson} />
                   </div>
                   <div className="col-span-1">
                     <Buttons btnClass="ml-4 py-1" label="Add" onClick={addNewLesson} />
@@ -171,7 +365,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                         </div>
                       </div>
 
-                      <div className="max-h-88 overflow-y-scroll">
+                      <div className="max-h-88 overflow-y-auto">
                         {selectedLessonsList.map((item, index) => (
                           // Modify fileds property as required.
 

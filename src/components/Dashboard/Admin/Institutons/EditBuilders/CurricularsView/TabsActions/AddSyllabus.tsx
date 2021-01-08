@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { IoArrowUndoCircleOutline } from 'react-icons/io5'
+import API, { graphqlOperation } from '@aws-amplify/api'
 
 import BreadCrums from '../../../../../../Atoms/BreadCrums'
 import SectionTitle from '../../../../../../Atoms/SectionTitle'
@@ -9,17 +10,40 @@ import PageWrapper from '../../../../../../Atoms/PageWrapper'
 import FormInput from '../../../../../../Atoms/Form/FormInput'
 import TextArea from '../../../../../../Atoms/Form/TextArea'
 import Selector from '../../../../../../Atoms/Form/Selector'
+import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector'
+
+import * as mutations from '../../../../../../../graphql/mutations'
+import { languageList } from '../../../../../../../utilities/staticData';
 
 interface AddSyllabusProps {
 
+}
+interface InitialData {
+  name: string
+  description: string
+  methodology: string
+  policies: string
+  purpose: string
+  objectives: string
+  languages: { id: string, name: string, value: string }[]
 }
 
 const AddSyllabus = (props: AddSyllabusProps) => {
   const { } = props;
   const history = useHistory();
-  const urlParams:any = useParams()
-  const curricularId = urlParams.curricularId; 
-  const [measurementData, setMeasurementData] = useState();
+  const urlParams: any = useParams()
+  const curricularId = urlParams.curricularId;
+  const initialData = {
+    name: '',
+    description: '',
+    methodology: '',
+    policies: '',
+    purpose: '',
+    objectives: '',
+    languages: [{ id: '1', name: "English", value: 'EN' }]
+  }
+  const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
+  const [loading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -32,15 +56,100 @@ const AddSyllabus = (props: AddSyllabusProps) => {
   ];
 
   const sequenceList: any[] = [];
-  const languageList: any[] = [];
   const designersList: any[] = [];
 
-  const onInputChange = () => {
-
+  const onInputChange = (e: any) => {
+    setSyllabusData({
+      ...syllabusData,
+      [e.target.name]: e.target.value
+    })
+    if (messages.show) {
+      setMessages({
+        show: false,
+        message: '',
+        isError: false
+      })
+    }
   }
-  const saveSyllabusDetails = () => {
 
+  const selectLanguage = (id: string, name: string, value: string) => {
+    let updatedList;
+    const currentLanguages = syllabusData.languages;
+    const selectedItem = currentLanguages.find(item => item.id === id);
+    if (!selectedItem) {
+      updatedList = [...currentLanguages, { id, name, value }];
+    } else {
+      updatedList = currentLanguages.filter(item => item.id !== id);
+    }
+    setSyllabusData({
+      ...syllabusData,
+      languages: updatedList
+    })
   }
+  const saveSyllabusDetails = async () => {
+    const isValid = await validateForm();
+    if (isValid) {
+      try {
+        setIsLoading(true);
+        const languagesCode = syllabusData.languages.map((item: { value: string }) => item.value);
+        const input = {
+          name: syllabusData.name,
+          curriculumID: curricularId,
+          description: syllabusData.description,
+          methodology: syllabusData.methodology,
+          policies: syllabusData.policies,
+          pupose: syllabusData.purpose,
+          objectives: syllabusData.objectives,
+          languages: languagesCode
+        }
+        const newSyllabus = await API.graphql(graphqlOperation(mutations.createSyllabus, { input: input }));
+        setMessages({
+          show: true,
+          message: 'New syllabus has been saved.',
+          isError: false
+        })
+        setSyllabusData(initialData);
+        setIsLoading(false);
+      } catch{
+        setMessages({
+          show: true,
+          message: 'Unable to save new syllabus please try again later.',
+          isError: true
+        })
+      }
+    }
+  }
+
+  const validateForm = async () => {
+    if (syllabusData.name.trim() === '') {
+      setMessages({
+        show: true,
+        message: 'Syllabus name is required please enter name.',
+        isError: true
+      })
+      return false;
+    }
+    // TODO: Need to confirm that syllabus name should be uniq or not?
+
+    // else if (syllabusData.name.trim() !== '') {
+    //   const isUniq = await checkUniqSyllabusName()
+    //   if (!isUniq) {
+    //     setMessages({
+    //       show: true,
+    //       message: 'This syllabus name is already exist, please add another name.',
+    //       isError: true
+    //     })
+    //     return false;
+    //   } else {
+    //     return true
+    //   }
+    // }
+    else {
+      return true
+    }
+  }
+
+  const { name, languages, description, purpose, objectives, methodology, policies } = syllabusData;
 
   return (
     <div className="w-9/10 h-full mt-4 p-4">
@@ -62,7 +171,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
 
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
-                <FormInput id='name' onChange={onInputChange} name='name' label="Syllabus Name" isRequired />
+                <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Syllabus Name" isRequired />
               </div>
               <div>
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
@@ -82,39 +191,40 @@ const AddSyllabus = (props: AddSyllabusProps) => {
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Language
               </label>
-                <Selector placeholder="Language" list={languageList} onChange={() => console.log('')} />
+                <MultipleSelector selectedItems={languages} placeholder="Language" list={languageList} onChange={selectLanguage} />
               </div>
             </div>
 
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
-                <TextArea rows={2} id='description' onChange={onInputChange} name='description' label="Description" />
+                <TextArea value={description} rows={2} id='description' onChange={onInputChange} name='description' label="Description" />
               </div>
               <div>
-                <TextArea rows={2} id='purpose' onChange={onInputChange} name='purpose' label="Purpose" />
+                <TextArea value={purpose} rows={2} id='purpose' onChange={onInputChange} name='purpose' label="Purpose" />
               </div>
             </div>
 
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
-                <TextArea rows={2} id='objectives' onChange={onInputChange} name='objectives' label="Objectives" />
+                <TextArea value={objectives} rows={2} id='objectives' onChange={onInputChange} name='objectives' label="Objectives" />
               </div>
               <div>
-                <TextArea rows={2} id='methodologies' onChange={onInputChange} name='methodologies' label="Methodologies" />
+                <TextArea value={methodology} rows={2} id='methodology' onChange={onInputChange} name='methodology' label="Methodology" />
               </div>
             </div>
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
-                <TextArea rows={2} id='policies' onChange={onInputChange} name='policies' label="Policies" />
+                <TextArea value={policies} rows={2} id='policies' onChange={onInputChange} name='policies' label="Policies" />
               </div>
 
             </div>
-
-
           </div>
         </div>
+        {messages.show ? (<div className="py-2 m-auto text-center">
+          <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
+        </div>) : null}
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-10" label="Save" onClick={saveSyllabusDetails} />
+          <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveSyllabusDetails} disabled={loading ? true : false} />
         </div>
       </PageWrapper>
     </div>

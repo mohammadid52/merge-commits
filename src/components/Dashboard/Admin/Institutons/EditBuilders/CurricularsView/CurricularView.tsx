@@ -30,7 +30,8 @@ interface InitialData {
     id: string,
     name: string,
     value: string
-  }
+  },
+  syllabusList: any[]
 }
 const CurricularView = (props: CurricularViewProps) => {
   const { } = props;
@@ -55,6 +56,7 @@ const CurricularView = (props: CurricularViewProps) => {
       name: '',
       value: ''
     },
+    syllabusList: [] as any,
     description: '',
     languages: [{ id: '1', name: "English", value: 'EN' }],
     objectives: '',
@@ -66,9 +68,9 @@ const CurricularView = (props: CurricularViewProps) => {
     { title: 'Curricular Info', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
   ]
   const tabs = [
-    { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjectiveList curricularId={currID}/> },
-    { index: 1, title: 'Topics', icon: <MdSpeakerNotes />, active: true, content: <TopicsList curricularId={currID}/> },
-    { index: 2, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList curricularId={currID}/> },
+    { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjectiveList curricularId={currID} /> },
+    { index: 1, title: 'Topics', icon: <MdSpeakerNotes />, active: true, content: <TopicsList curricularId={currID} /> },
+    { index: 2, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList syllabusList={curricularData.syllabusList} curricularId={currID} /> },
     { index: 3, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList /> },
   ]
 
@@ -90,6 +92,7 @@ const CurricularView = (props: CurricularViewProps) => {
           },
           description: savedData.description,
           objectives: savedData.objectives,
+          syllabusList: savedData.syllabi?.items,
           languages: languageList.filter(item => savedData.languages.includes(item.value))
         })
       } catch {

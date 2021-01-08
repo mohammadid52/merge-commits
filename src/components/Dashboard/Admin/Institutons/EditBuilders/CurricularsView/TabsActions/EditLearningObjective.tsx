@@ -104,7 +104,7 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
               <div className="w-6/10 m-auto">
                 <div className="">
                   <div className="px-3 py-4">
-                    <FormInput id='name' value={learning.name} onChange={onInputChange} name='name' label="Topic Name" isRequired />
+                    <FormInput id='name' value={learning.name} onChange={onInputChange} name='name' label="Lerning objective name" isRequired />
                     {
                       !validation.isValid ? <p className="text-red-600">{validation.msg}</p> : null
                     }
