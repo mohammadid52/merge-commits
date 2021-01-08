@@ -2814,7 +2814,6 @@ export const getQuestionData = /* GraphQL */ `
   query GetQuestionData($id: ID!) {
     getQuestionData(id: $id) {
       id
-      questionID
       classroomID
       email
       authID
@@ -2882,20 +2881,6 @@ export const getQuestionData = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      question {
-        id
-        label
-        type
-        question
-        options {
-          text
-          label
-          icon
-          color
-        }
-        createdAt
-        updatedAt
-      }
       person {
         id
         authId
@@ -2926,7 +2911,13 @@ export const getQuestionData = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      response
+      componentType
+      scheduleID
+      lessonID
+      responseObject {
+        qid
+        response
+      }
       createdAt
       updatedAt
     }
@@ -2941,7 +2932,6 @@ export const listQuestionDatas = /* GraphQL */ `
     listQuestionDatas(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        questionID
         classroomID
         email
         authID
@@ -2958,14 +2948,6 @@ export const listQuestionDatas = /* GraphQL */ `
           SELStructure
           courseID
           lessonID
-          createdAt
-          updatedAt
-        }
-        question {
-          id
-          label
-          type
-          question
           createdAt
           updatedAt
         }
@@ -2993,7 +2975,13 @@ export const listQuestionDatas = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        response
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+        }
         createdAt
         updatedAt
       }

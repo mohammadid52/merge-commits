@@ -6549,7 +6549,6 @@ export const createQuestionData = /* GraphQL */ `
   ) {
     createQuestionData(input: $input, condition: $condition) {
       id
-      questionID
       classroomID
       email
       authID
@@ -6617,20 +6616,6 @@ export const createQuestionData = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      question {
-        id
-        label
-        type
-        question
-        options {
-          text
-          label
-          icon
-          color
-        }
-        createdAt
-        updatedAt
-      }
       person {
         id
         authId
@@ -6661,7 +6646,13 @@ export const createQuestionData = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      response
+      componentType
+      scheduleID
+      lessonID
+      responseObject {
+        qid
+        response
+      }
       createdAt
       updatedAt
     }
@@ -6674,7 +6665,6 @@ export const updateQuestionData = /* GraphQL */ `
   ) {
     updateQuestionData(input: $input, condition: $condition) {
       id
-      questionID
       classroomID
       email
       authID
@@ -6742,20 +6732,6 @@ export const updateQuestionData = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      question {
-        id
-        label
-        type
-        question
-        options {
-          text
-          label
-          icon
-          color
-        }
-        createdAt
-        updatedAt
-      }
       person {
         id
         authId
@@ -6786,7 +6762,13 @@ export const updateQuestionData = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      response
+      componentType
+      scheduleID
+      lessonID
+      responseObject {
+        qid
+        response
+      }
       createdAt
       updatedAt
     }
@@ -6799,7 +6781,6 @@ export const deleteQuestionData = /* GraphQL */ `
   ) {
     deleteQuestionData(input: $input, condition: $condition) {
       id
-      questionID
       classroomID
       email
       authID
@@ -6867,20 +6848,6 @@ export const deleteQuestionData = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      question {
-        id
-        label
-        type
-        question
-        options {
-          text
-          label
-          icon
-          color
-        }
-        createdAt
-        updatedAt
-      }
       person {
         id
         authId
@@ -6911,7 +6878,13 @@ export const deleteQuestionData = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      response
+      componentType
+      scheduleID
+      lessonID
+      responseObject {
+        qid
+        response
+      }
       createdAt
       updatedAt
     }
@@ -6998,7 +6971,6 @@ export const createQuestionDataStudentData = /* GraphQL */ `
       questionDataID
       questionData {
         id
-        questionID
         classroomID
         email
         authID
@@ -7015,14 +6987,6 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           SELStructure
           courseID
           lessonID
-          createdAt
-          updatedAt
-        }
-        question {
-          id
-          label
-          type
-          question
           createdAt
           updatedAt
         }
@@ -7050,7 +7014,13 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        response
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+        }
         createdAt
         updatedAt
       }
@@ -7140,7 +7110,6 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
       questionDataID
       questionData {
         id
-        questionID
         classroomID
         email
         authID
@@ -7157,14 +7126,6 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           SELStructure
           courseID
           lessonID
-          createdAt
-          updatedAt
-        }
-        question {
-          id
-          label
-          type
-          question
           createdAt
           updatedAt
         }
@@ -7192,7 +7153,13 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        response
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+        }
         createdAt
         updatedAt
       }
@@ -7282,7 +7249,6 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
       questionDataID
       questionData {
         id
-        questionID
         classroomID
         email
         authID
@@ -7299,14 +7265,6 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           SELStructure
           courseID
           lessonID
-          createdAt
-          updatedAt
-        }
-        question {
-          id
-          label
-          type
-          question
           createdAt
           updatedAt
         }
@@ -7334,7 +7292,13 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        response
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+        }
         createdAt
         updatedAt
       }

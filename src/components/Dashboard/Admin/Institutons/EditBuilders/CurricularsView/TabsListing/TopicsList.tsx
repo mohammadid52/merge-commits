@@ -7,8 +7,9 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import Buttons from '../../../../../../Atoms/Buttons';
-
+import * as queries from '../../../../../../../graphql/queries';
 import * as customQueries from '../../../../../../../customGraphql/customQueries'
+import * as mutations from '../../../../../../../graphql/mutations';
 interface TopicsListProps {
   topicsList?: any[]
   curricularId: string
@@ -19,13 +20,30 @@ const TopicsList = (props: TopicsListProps) => {
   const history = useHistory();
   const [loading, setLoading] = useState(false)
   const [topics, setTopics] = useState([])
+  const [topicIds, setTopicIds] = useState([])
+  const [sequenceId, setSequenceId] = useState('')
 
-  // Functions for drag and drop.
-
-  const onDragEnd = (result: any) => {
-    // Source and destination index of item.
-    console.log("**************************", result.source.index, result.destination.index)
+  const onDragEnd = async (result: any) => {
+    if (result.source.index !== result.destination.index) {
+      const list = reorder(topicIds, result.source.index, result.destination.index)
+      setTopicIds(list)
+      let topicsList = topics.map((t: any) => {
+        let index = list.indexOf(t.id)
+        return {...t, index }
+      }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+      setTopics(topicsList)
+      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCurriculumSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'topics', sequence: list }}));
+      seqItem = seqItem.data.createCurriculumSequences;
+      console.log('seq updated');
+    }
   }
+
+  const reorder = (list: any, startIndex: number, endIndex: number) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    return result;
+  };
 
   const createNewTopic = () => {
     history.push(`/dashboard/manage-institutions/curricular/${curricularId}/topic/add`)
@@ -41,7 +59,16 @@ const TopicsList = (props: TopicsListProps) => {
       filter: { curriculumID: { eq: curricularId } },
     }));
     list = list.data.listTopics?.items || []
+    let item: any = await API.graphql(graphqlOperation(queries.getCurriculumSequences,
+      { curriculumID: curricularId, type: 'topics' }))
+    item = item.data.getCurriculumSequences
+    list = list.map((t: any) => {
+      let index = item.sequence.indexOf(t.id)
+      return {...t, index }
+    }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
     setTopics(list)
+    setTopicIds(item.sequence)
+    setSequenceId(item.id)
     setLoading(false)
   }
 

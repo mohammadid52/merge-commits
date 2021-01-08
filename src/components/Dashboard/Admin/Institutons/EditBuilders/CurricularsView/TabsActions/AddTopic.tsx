@@ -30,8 +30,10 @@ const AddTopic = (props: AddTopicProps) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [learning, setLearning] = useState({ id: '', name: '', value: '' });
-  const [validation, setValidation] = useState({ name: '', learning: ''})
+  const [validation, setValidation] = useState({ name: '', learning: '' })
   const [learnings, setLearnings] = useState([]);
+  const [topicIds, setTopicIds] = useState([]);
+  const [sequenceId, setSequenceId] = useState('')
 
   const onInputChange = (e: any) => {
     if (e.target.name === 'name') {
@@ -69,10 +71,19 @@ const AddTopic = (props: AddTopicProps) => {
       };
       const item: any = await API.graphql(graphqlOperation(customMutations.createTopic, { input }));
       const addedItem = item.data.createTopic
+      if (!topicIds.length) {
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCurriculumSequences, { input: {curriculumID: curricularId, type: 'topics', sequence: [addedItem.id]}}));
+        seqItem = seqItem.data.createCurriculumSequences
+        console.log('seqItem', seqItem)
+      } else {
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCurriculumSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'topics', sequence: [...topicIds, addedItem.id]}}));
+        seqItem = seqItem.data.createCurriculumSequences
+        console.log('seqItem', seqItem)
+      }
       if (addedItem) {
         history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
       } else {
-        console.log('Could not add learning objective');
+        console.log('Could not add topic');
       }
     }
   }
@@ -97,8 +108,19 @@ const AddTopic = (props: AddTopicProps) => {
     setLearning({ id, name, value: val })
   }
 
+  const fetchTopicsSequence = async () => {
+    let item: any = await API.graphql(graphqlOperation(queries.getCurriculumSequences,
+      { curriculumID: curricularId, type: 'topics' }))
+    item = item.data.getCurriculumSequences
+    if (item) {
+      setTopicIds(item.sequence)
+      setSequenceId(item.id)
+    }
+  }
+
   useEffect(() => {
     fetchLearningObjectives()
+    fetchTopicsSequence()
   }, [])
 
   const cancelEvent = () => {
@@ -134,7 +156,7 @@ const AddTopic = (props: AddTopicProps) => {
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 Select Learning objective <span className="text-red-500">*</span>
               </label>
-              <Selector selectedItem={learning.value} placeholder="Learning objective" list={learnings} onChange={selectLearning}/>
+              <Selector selectedItem={learning.value} placeholder="Learning objective" list={learnings} onChange={selectLearning} />
               {
                 validation.learning && <p className="text-red-600">{validation.learning}</p>
               }

@@ -243,7 +243,7 @@ type CurriculumSequences
   id: ID!
   curriculumID: ID!
   type: String!
-  sequence: AWSJSON
+  sequence: [String]
 }
 
 type Topic
@@ -774,16 +774,22 @@ type Question @model {
   options: [Option]
 }
 
+type QuestionResponse {
+  qid: Int,
+  response: [String]
+}
+
 type QuestionData @model {
   id: ID!
-  questionID: ID!
   classroomID: ID!
   email: String!
   authID: String!
   classroom: Classroom @connection(fields: ["classroomID"])
-  question: Question @connection(fields: ["questionID"])
   person: Person @connection(fields: ["email", "authID"])
-  response: String
+  componentType: String
+  scheduleID: String
+  lessonID: String
+  responseObject: [QuestionResponse]
 }
 
 type QuestionDataStudentData

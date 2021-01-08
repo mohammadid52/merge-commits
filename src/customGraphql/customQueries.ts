@@ -1177,6 +1177,10 @@ export const listTopics = /* GraphQL */ `
         curriculumID
         name
         description
+        learningObjectiveID
+        learningObjective {
+          name
+        }
         createdAt
         updatedAt
       }
