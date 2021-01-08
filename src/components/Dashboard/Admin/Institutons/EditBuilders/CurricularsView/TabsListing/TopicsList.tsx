@@ -2,7 +2,7 @@ import React, { useEffect, Fragment, useState } from 'react'
 import { useHistory } from 'react-router';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { GrDrag } from 'react-icons/gr';
+import { FaGripVertical } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
@@ -97,7 +97,7 @@ const TopicsList = (props: TopicsListProps) => {
                                         {/* TODO: need to find some nice icon for drag and drop. */}
                                         {/* <div className="flex w-1/10 items-center px-2 py-8 text-left text-s leading-4 text-indigo-600">
                                           <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
-                                            <GrDrag />
+                                            <FaGripVertical />
                                           </IconContext.Provider>
                                         </div> */}
 
