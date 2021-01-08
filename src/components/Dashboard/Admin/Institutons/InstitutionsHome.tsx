@@ -1,17 +1,35 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
+
+// Instituttion 
 import InstitutionLookup from './InstitutionLookup';
 import Institution from './Institution';
 import InstitutionAdd from './InstitutionAdd';
+
+// Institute info tabs.
 import ClassBuilder from './Builders/ClassBuilder';
 import RoomBuilder from './Builders/RoomBuilder';
 import CurricularBuilder from './Builders/CurricularBuilder';
 import EditClass from './EditBuilders/EditClass';
 import EditCurricular from './EditBuilders/EditCurricular';
 import EditRoom from './EditBuilders/EditRoom';
+import CurricularView from './EditBuilders/CurricularsView/CurricularView';
+
+// Curricular tabs.
+import AddTopic from './EditBuilders/CurricularsView/TabsActions/AddTopic';
+import AddMeasurement from './EditBuilders/CurricularsView/TabsActions/AddMeasurement';
+import AddSyllabus from './EditBuilders/CurricularsView/TabsActions/AddSyllabus';
+import EditTopic from './EditBuilders/CurricularsView/TabsActions/EditTopic';
+import EditMeasurement from './EditBuilders/CurricularsView/TabsActions/EditMeasurement';
+import EditSyllabus from './EditBuilders/CurricularsView/TabsActions/EditSyllabus';
 
 const InstitutionsHome = () => {
   const match = useRouteMatch();
+
+  // TODO: Need to setup route saperately if required, 
+  // currently everything is tied to institutions.
+  // so curricular can be open after selecting any specific institute only.
+  // Need to discuss this with Mike.
 
   return (
     <div className={`w-full h-full p-8 flex justify-center`}>
@@ -19,39 +37,67 @@ const InstitutionsHome = () => {
         <Route
           exact
           path={`${match.url}`}
-          render={() => <InstitutionLookup />}
+          render={() => <InstitutionLookup />}    // Institutions list
         />
         <Route
           path={`${match.url}/add`}
-          render={() => <InstitutionAdd />}
+          render={() => <InstitutionAdd />}       // Create New institution.
         />
         <Route
           path={`${match.url}/institution/class-creation`}
-          render={() => <ClassBuilder />}
+          render={() => <ClassBuilder />}         // Create new class
         />
         <Route
           path={`${match.url}/institution/curricular-creation`}
-          render={() => <CurricularBuilder />}
+          render={() => <CurricularBuilder />}    // Create new curricular
         />
         <Route
           path={`${match.url}/institution/room-creation`}
-          render={() => <RoomBuilder />}
+          render={() => <RoomBuilder />}         // Create new room
         />
         <Route
           path={`${match.url}/institution`}
-          render={() => <Institution />}
+          render={() => <Institution />}        // Institution info page
         />
         <Route
           path={`${match.url}/class-edit`}
-          render={() => <EditClass />}
+          render={() => <EditClass />}          // Edit current class
         />
         <Route
           path={`${match.url}/room-edit`}
-          render={() => <EditRoom />}
+          render={() => <EditRoom />}           // Edit current room.
         />
         <Route
-          path={`${match.url}/curricular-edit`}
-          render={() => <EditCurricular />}
+          path={`${match.url}/curricular/edit`}
+          render={() => <EditCurricular />}     // Edit current curricular
+        />
+        <Route
+          path={`${match.url}/curricular/topic/add`}
+          render={() => <AddTopic />}           // Add new topic to curricular
+        />
+        <Route
+          path={`${match.url}/curricular/topic/edit`}
+          render={() => <EditTopic />}          // Edit curricular topic
+        />
+        <Route
+          path={`${match.url}/curricular/measurement/add`}
+          render={() => <AddMeasurement />}           // Add new measurement to curricular
+        />
+        <Route
+          path={`${match.url}/curricular/measurement/edit`}
+          render={() => <EditMeasurement />}          // Edit curricular measurement
+        />
+        <Route
+          path={`${match.url}/curricular/syllabus/add`}
+          render={() => <AddSyllabus />}           // Add new syllabus to curricular
+        />
+        <Route
+          path={`${match.url}/curricular/syllabus/edit`}
+          render={() => <EditSyllabus />}          // Edit curricular syllabus
+        />
+        <Route
+          path={`${match.url}/curricular`}
+          render={() => <CurricularView />}     // Curricular information view.
         />
       </Switch>
     </div>

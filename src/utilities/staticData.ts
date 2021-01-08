@@ -1,3 +1,8 @@
+export   const languageList = [
+  { id: '1', name: "English", value: 'EN' },
+  { id: '2', name: "Spanish", value: 'ES' },
+];
+
 export const statesList = [
   {
     id: 1,
