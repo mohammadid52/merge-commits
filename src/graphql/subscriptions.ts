@@ -5523,7 +5523,6 @@ export const onCreateQuestionData = /* GraphQL */ `
   subscription OnCreateQuestionData {
     onCreateQuestionData {
       id
-      questionID
       classroomID
       email
       authID
@@ -5591,20 +5590,6 @@ export const onCreateQuestionData = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      question {
-        id
-        label
-        type
-        question
-        options {
-          text
-          label
-          icon
-          color
-        }
-        createdAt
-        updatedAt
-      }
       person {
         id
         authId
@@ -5635,7 +5620,6 @@ export const onCreateQuestionData = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      response
       componentType
       scheduleID
       lessonID
@@ -5652,7 +5636,6 @@ export const onUpdateQuestionData = /* GraphQL */ `
   subscription OnUpdateQuestionData {
     onUpdateQuestionData {
       id
-      questionID
       classroomID
       email
       authID
@@ -5720,20 +5703,6 @@ export const onUpdateQuestionData = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      question {
-        id
-        label
-        type
-        question
-        options {
-          text
-          label
-          icon
-          color
-        }
-        createdAt
-        updatedAt
-      }
       person {
         id
         authId
@@ -5764,7 +5733,6 @@ export const onUpdateQuestionData = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      response
       componentType
       scheduleID
       lessonID
@@ -5781,7 +5749,6 @@ export const onDeleteQuestionData = /* GraphQL */ `
   subscription OnDeleteQuestionData {
     onDeleteQuestionData {
       id
-      questionID
       classroomID
       email
       authID
@@ -5849,20 +5816,6 @@ export const onDeleteQuestionData = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      question {
-        id
-        label
-        type
-        question
-        options {
-          text
-          label
-          icon
-          color
-        }
-        createdAt
-        updatedAt
-      }
       person {
         id
         authId
@@ -5893,7 +5846,6 @@ export const onDeleteQuestionData = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      response
       componentType
       scheduleID
       lessonID
@@ -5984,7 +5936,6 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
       questionDataID
       questionData {
         id
-        questionID
         classroomID
         email
         authID
@@ -6001,14 +5952,6 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           SELStructure
           courseID
           lessonID
-          createdAt
-          updatedAt
-        }
-        question {
-          id
-          label
-          type
-          question
           createdAt
           updatedAt
         }
@@ -6036,7 +5979,6 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        response
         componentType
         scheduleID
         lessonID
@@ -6130,7 +6072,6 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
       questionDataID
       questionData {
         id
-        questionID
         classroomID
         email
         authID
@@ -6147,14 +6088,6 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           SELStructure
           courseID
           lessonID
-          createdAt
-          updatedAt
-        }
-        question {
-          id
-          label
-          type
-          question
           createdAt
           updatedAt
         }
@@ -6182,7 +6115,6 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        response
         componentType
         scheduleID
         lessonID
@@ -6276,7 +6208,6 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
       questionDataID
       questionData {
         id
-        questionID
         classroomID
         email
         authID
@@ -6293,14 +6224,6 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           SELStructure
           courseID
           lessonID
-          createdAt
-          updatedAt
-        }
-        question {
-          id
-          label
-          type
-          question
           createdAt
           updatedAt
         }
@@ -6328,7 +6251,6 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        response
         componentType
         scheduleID
         lessonID

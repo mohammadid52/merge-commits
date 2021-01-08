@@ -14762,21 +14762,6 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "questionID",
-          "description" : null,
-          "args" : [ ],
-          "type" : {
-            "kind" : "NON_NULL",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "ID",
-              "ofType" : null
-            }
-          },
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        }, {
           "name" : "classroomID",
           "description" : null,
           "args" : [ ],
@@ -14833,34 +14818,12 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "question",
-          "description" : null,
-          "args" : [ ],
-          "type" : {
-            "kind" : "OBJECT",
-            "name" : "Question",
-            "ofType" : null
-          },
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        }, {
           "name" : "person",
           "description" : null,
           "args" : [ ],
           "type" : {
             "kind" : "OBJECT",
             "name" : "Person",
-            "ofType" : null
-          },
-          "isDeprecated" : false,
-          "deprecationReason" : null
-        }, {
-          "name" : "response",
-          "description" : null,
-          "args" : [ ],
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "String",
             "ofType" : null
           },
           "isDeprecated" : false,
@@ -17544,15 +17507,6 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "questionID",
-          "description" : null,
-          "type" : {
-            "kind" : "INPUT_OBJECT",
-            "name" : "ModelIDInput",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
           "name" : "classroomID",
           "description" : null,
           "type" : {
@@ -17572,15 +17526,6 @@
           "defaultValue" : null
         }, {
           "name" : "authID",
-          "description" : null,
-          "type" : {
-            "kind" : "INPUT_OBJECT",
-            "name" : "ModelStringInput",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "response",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -34742,19 +34687,6 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "questionID",
-          "description" : null,
-          "type" : {
-            "kind" : "NON_NULL",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "ID",
-              "ofType" : null
-            }
-          },
-          "defaultValue" : null
-        }, {
           "name" : "classroomID",
           "description" : null,
           "type" : {
@@ -34791,15 +34723,6 @@
               "name" : "String",
               "ofType" : null
             }
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "response",
-          "description" : null,
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "String",
-            "ofType" : null
           },
           "defaultValue" : null
         }, {
@@ -34883,15 +34806,6 @@
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
-          "name" : "questionID",
-          "description" : null,
-          "type" : {
-            "kind" : "INPUT_OBJECT",
-            "name" : "ModelIDInput",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
           "name" : "classroomID",
           "description" : null,
           "type" : {
@@ -34911,15 +34825,6 @@
           "defaultValue" : null
         }, {
           "name" : "authID",
-          "description" : null,
-          "type" : {
-            "kind" : "INPUT_OBJECT",
-            "name" : "ModelStringInput",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "response",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -35012,15 +34917,6 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "questionID",
-          "description" : null,
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "ID",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
           "name" : "classroomID",
           "description" : null,
           "type" : {
@@ -35040,15 +34936,6 @@
           "defaultValue" : null
         }, {
           "name" : "authID",
-          "description" : null,
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "String",
-            "ofType" : null
-          },
-          "defaultValue" : null
-        }, {
-          "name" : "response",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -39162,6 +39049,23 @@
         "onFragment" : false,
         "onField" : false
       }, {
+        "name" : "deprecated",
+        "description" : null,
+        "locations" : [ "FIELD_DEFINITION", "ENUM_VALUE" ],
+        "args" : [ {
+          "name" : "reason",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : "\"No longer supported\""
+        } ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
         "name" : "aws_subscribe",
         "description" : "Tells the service which mutation triggers this subscription.",
         "locations" : [ "FIELD_DEFINITION" ],
@@ -39228,23 +39132,6 @@
             }
           },
           "defaultValue" : null
-        } ],
-        "onOperation" : false,
-        "onFragment" : false,
-        "onField" : false
-      }, {
-        "name" : "deprecated",
-        "description" : null,
-        "locations" : [ "FIELD_DEFINITION", "ENUM_VALUE" ],
-        "args" : [ {
-          "name" : "reason",
-          "description" : null,
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "String",
-            "ofType" : null
-          },
-          "defaultValue" : "\"No longer supported\""
         } ],
         "onOperation" : false,
         "onFragment" : false,
