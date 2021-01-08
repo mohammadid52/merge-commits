@@ -5636,6 +5636,13 @@ export const onCreateQuestionData = /* GraphQL */ `
         updatedAt
       }
       response
+      componentType
+      scheduleID
+      lessonID
+      responseObject {
+        qid
+        response
+      }
       createdAt
       updatedAt
     }
@@ -5758,6 +5765,13 @@ export const onUpdateQuestionData = /* GraphQL */ `
         updatedAt
       }
       response
+      componentType
+      scheduleID
+      lessonID
+      responseObject {
+        qid
+        response
+      }
       createdAt
       updatedAt
     }
@@ -5880,6 +5894,13 @@ export const onDeleteQuestionData = /* GraphQL */ `
         updatedAt
       }
       response
+      componentType
+      scheduleID
+      lessonID
+      responseObject {
+        qid
+        response
+      }
       createdAt
       updatedAt
     }
@@ -6016,6 +6037,13 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           updatedAt
         }
         response
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+        }
         createdAt
         updatedAt
       }
@@ -6155,6 +6183,13 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           updatedAt
         }
         response
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+        }
         createdAt
         updatedAt
       }
@@ -6294,6 +6329,13 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           updatedAt
         }
         response
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+        }
         createdAt
         updatedAt
       }

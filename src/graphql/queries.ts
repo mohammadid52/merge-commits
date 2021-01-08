@@ -2927,6 +2927,13 @@ export const getQuestionData = /* GraphQL */ `
         updatedAt
       }
       response
+      componentType
+      scheduleID
+      lessonID
+      responseObject {
+        qid
+        response
+      }
       createdAt
       updatedAt
     }
@@ -2994,6 +3001,13 @@ export const listQuestionDatas = /* GraphQL */ `
           updatedAt
         }
         response
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+        }
         createdAt
         updatedAt
       }
