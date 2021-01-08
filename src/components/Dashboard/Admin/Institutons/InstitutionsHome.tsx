@@ -86,7 +86,7 @@ const InstitutionsHome = () => {
           render={() => <AddTopic />}           // Add new topic to curricular
         />
         <Route
-          path={`${match.url}/curricular/:curricularId/topic/edit`}
+          path={`${match.url}/curricular/:curricularId/topic/edit/:id`}
           render={() => <EditTopic />}          // Edit curricular topic
         />
         <Route

@@ -1203,3 +1203,21 @@ export const listLessonsTitles = /* GraphQL */ `
     }
   }
 `;
+
+export const getTopicDetails = /* GraphQL */ `
+  query GetTopic($id: ID!) {
+    getTopic(id: $id) {
+      id
+      curriculumID
+      learningObjectiveID
+      learningObjective {
+        id
+        name
+      }
+      name
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`;

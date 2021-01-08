@@ -500,3 +500,19 @@ mutation CreateTopic(
     }
   }
 `;
+
+export const updateTopic = /* GraphQL */ `
+  mutation UpdateTopic(
+    $input: UpdateTopicInput!
+    $condition: ModelTopicConditionInput
+  ) {
+    updateTopic(input: $input, condition: $condition) {
+      id
+      learningObjectiveID
+      name
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`;

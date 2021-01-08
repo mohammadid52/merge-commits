@@ -32,7 +32,7 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Edit Learning objective', url: `/dashboard/curricular/${curricularId}/topic/edit/${learningId}`, last: true }
+    { title: 'Edit Learning objective', url: `/dashboard/curricular/${curricularId}/learning-objective/edit/${learningId}`, last: true }
   ];
 
   const onInputChange = (e: any) => {
@@ -78,7 +78,6 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
   }
 
   useEffect(() => {
-    console.log('called')
     fetchLearningObjective()
   }, [])
   return (
