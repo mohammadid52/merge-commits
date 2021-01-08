@@ -340,6 +340,7 @@ type SyllabusLesson
   lessonID: ID!
   unit: String
   sequence: Int
+  status: String
   lesson: Lesson @connection(fields: ["lessonID"])
 }
 

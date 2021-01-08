@@ -1126,6 +1126,7 @@ export const getSyllabus = /* GraphQL */ `
           lessonID
           unit
           sequence
+          status
           createdAt
           updatedAt
         }

@@ -2710,6 +2710,7 @@ export const onCreateSyllabus = /* GraphQL */ `
           lessonID
           unit
           sequence
+          status
           createdAt
           updatedAt
         }
@@ -2740,6 +2741,7 @@ export const onUpdateSyllabus = /* GraphQL */ `
           lessonID
           unit
           sequence
+          status
           createdAt
           updatedAt
         }
@@ -2770,6 +2772,7 @@ export const onDeleteSyllabus = /* GraphQL */ `
           lessonID
           unit
           sequence
+          status
           createdAt
           updatedAt
         }
@@ -2788,6 +2791,7 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
       lessonID
       unit
       sequence
+      status
       lesson {
         id
         title
@@ -2895,6 +2899,7 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
       lessonID
       unit
       sequence
+      status
       lesson {
         id
         title
@@ -3002,6 +3007,7 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
       lessonID
       unit
       sequence
+      status
       lesson {
         id
         title

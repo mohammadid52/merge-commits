@@ -671,6 +671,7 @@ export type CreateSyllabusLessonInput = {
   lessonID: string,
   unit?: string | null,
   sequence?: number | null,
+  status?: string | null,
 };
 
 export type ModelSyllabusLessonConditionInput = {
@@ -678,6 +679,7 @@ export type ModelSyllabusLessonConditionInput = {
   lessonID?: ModelIDInput | null,
   unit?: ModelStringInput | null,
   sequence?: ModelIntInput | null,
+  status?: ModelStringInput | null,
   and?: Array< ModelSyllabusLessonConditionInput | null > | null,
   or?: Array< ModelSyllabusLessonConditionInput | null > | null,
   not?: ModelSyllabusLessonConditionInput | null,
@@ -689,6 +691,7 @@ export type UpdateSyllabusLessonInput = {
   lessonID?: string | null,
   unit?: string | null,
   sequence?: number | null,
+  status?: string | null,
 };
 
 export type DeleteSyllabusLessonInput = {
@@ -5069,6 +5072,7 @@ export type CreateSyllabusMutation = {
         lessonID: string,
         unit: string | null,
         sequence: number | null,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -5106,6 +5110,7 @@ export type UpdateSyllabusMutation = {
         lessonID: string,
         unit: string | null,
         sequence: number | null,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -5143,6 +5148,7 @@ export type DeleteSyllabusMutation = {
         lessonID: string,
         unit: string | null,
         sequence: number | null,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -5166,6 +5172,7 @@ export type CreateSyllabusLessonMutation = {
     lessonID: string,
     unit: string | null,
     sequence: number | null,
+    status: string | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -5288,6 +5295,7 @@ export type UpdateSyllabusLessonMutation = {
     lessonID: string,
     unit: string | null,
     sequence: number | null,
+    status: string | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -5410,6 +5418,7 @@ export type DeleteSyllabusLessonMutation = {
     lessonID: string,
     unit: string | null,
     sequence: number | null,
+    status: string | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -12786,6 +12795,7 @@ export type GetSyllabusQuery = {
         lessonID: string,
         unit: string | null,
         sequence: number | null,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -18332,6 +18342,7 @@ export type OnCreateSyllabusSubscription = {
         lessonID: string,
         unit: string | null,
         sequence: number | null,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -18364,6 +18375,7 @@ export type OnUpdateSyllabusSubscription = {
         lessonID: string,
         unit: string | null,
         sequence: number | null,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -18396,6 +18408,7 @@ export type OnDeleteSyllabusSubscription = {
         lessonID: string,
         unit: string | null,
         sequence: number | null,
+        status: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -18414,6 +18427,7 @@ export type OnCreateSyllabusLessonSubscription = {
     lessonID: string,
     unit: string | null,
     sequence: number | null,
+    status: string | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -18531,6 +18545,7 @@ export type OnUpdateSyllabusLessonSubscription = {
     lessonID: string,
     unit: string | null,
     sequence: number | null,
+    status: string | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -18648,6 +18663,7 @@ export type OnDeleteSyllabusLessonSubscription = {
     lessonID: string,
     unit: string | null,
     sequence: number | null,
+    status: string | null,
     lesson:  {
       __typename: "Lesson",
       id: string,
