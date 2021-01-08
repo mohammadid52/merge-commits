@@ -12734,6 +12734,17 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
+          "name" : "name",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
           "name" : "criteria",
           "description" : null,
           "args" : [ ],
@@ -12767,7 +12778,7 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
-          "name" : "Adequite",
+          "name" : "adequite",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -12811,6 +12822,21 @@
             "kind" : "OBJECT",
             "name" : "Topic",
             "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "curriculumID",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
           },
           "isDeprecated" : false,
           "deprecationReason" : null
@@ -12899,6 +12925,15 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "name",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
           "name" : "criteria",
           "description" : null,
           "type" : {
@@ -12926,7 +12961,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "Adequite",
+          "name" : "adequite",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -12945,6 +12980,15 @@
           "defaultValue" : null
         }, {
           "name" : "topicID",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelIDInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "curriculumID",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -26486,6 +26530,15 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "name",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
           "name" : "criteria",
           "description" : null,
           "type" : {
@@ -26513,7 +26566,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "Adequite",
+          "name" : "adequite",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -26543,6 +26596,19 @@
             }
           },
           "defaultValue" : null
+        }, {
+          "name" : "curriculumID",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
         } ],
         "interfaces" : null,
         "enumValues" : null,
@@ -26553,6 +26619,15 @@
         "description" : null,
         "fields" : null,
         "inputFields" : [ {
+          "name" : "name",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelStringInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
           "name" : "criteria",
           "description" : null,
           "type" : {
@@ -26580,7 +26655,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "Adequite",
+          "name" : "adequite",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -26599,6 +26674,15 @@
           "defaultValue" : null
         }, {
           "name" : "topicID",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelIDInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "curriculumID",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -26664,6 +26748,15 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "name",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
           "name" : "criteria",
           "description" : null,
           "type" : {
@@ -26691,7 +26784,7 @@
           },
           "defaultValue" : null
         }, {
-          "name" : "Adequite",
+          "name" : "adequite",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -26710,6 +26803,15 @@
           "defaultValue" : null
         }, {
           "name" : "topicID",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "ID",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "curriculumID",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -38830,6 +38932,33 @@
         "onFragment" : false,
         "onField" : false
       }, {
+<<<<<<< HEAD
+        "name" : "aws_subscribe",
+        "description" : "Tells the service which mutation triggers this subscription.",
+        "locations" : [ "FIELD_DEFINITION" ],
+=======
+        "name" : "aws_cognito_user_pools",
+        "description" : "Tells the service this field/object has access authorized by a Cognito User Pools token.",
+        "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
+>>>>>>> 9cae6e7dcfbc9f359efd58e7b828fef4876c521c
+        "args" : [ {
+          "name" : "mutations",
+          "description" : "List of mutations which will trigger this subscription when they are called.",
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "String",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        } ],
+        "onOperation" : false,
+        "onFragment" : false,
+        "onField" : false
+      }, {
         "name" : "aws_cognito_user_pools",
         "description" : "Tells the service this field/object has access authorized by a Cognito User Pools token.",
         "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
@@ -38880,6 +39009,7 @@
         "onFragment" : false,
         "onField" : false
       }, {
+<<<<<<< HEAD
         "name" : "aws_publish",
         "description" : "Tells the service which subscriptions will be published to when this mutation is called. This directive is deprecated use @aws_susbscribe directive instead.",
         "locations" : [ "FIELD_DEFINITION" ],
@@ -38897,18 +39027,22 @@
           },
           "defaultValue" : null
         } ],
-        "onOperation" : false,
-        "onFragment" : false,
-        "onField" : false
-      }, {
+=======
         "name" : "aws_oidc",
         "description" : "Tells the service this field/object has access authorized by an OIDC token.",
         "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
         "args" : [ ],
+>>>>>>> 9cae6e7dcfbc9f359efd58e7b828fef4876c521c
         "onOperation" : false,
         "onFragment" : false,
         "onField" : false
       }, {
+<<<<<<< HEAD
+        "name" : "aws_oidc",
+        "description" : "Tells the service this field/object has access authorized by an OIDC token.",
+        "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
+        "args" : [ ],
+=======
         "name" : "deprecated",
         "description" : null,
         "locations" : [ "FIELD_DEFINITION", "ENUM_VALUE" ],
@@ -38922,6 +39056,7 @@
           },
           "defaultValue" : "\"No longer supported\""
         } ],
+>>>>>>> 9cae6e7dcfbc9f359efd58e7b828fef4876c521c
         "onOperation" : false,
         "onFragment" : false,
         "onField" : false

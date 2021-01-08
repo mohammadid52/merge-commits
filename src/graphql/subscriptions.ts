@@ -2307,10 +2307,11 @@ export const onCreateRubric = /* GraphQL */ `
   subscription OnCreateRubric {
     onCreateRubric {
       id
+      name
       criteria
       distinguished
       excelled
-      Adequite
+      adequite
       basic
       topicID
       topic {
@@ -2341,6 +2342,7 @@ export const onCreateRubric = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      curriculumID
       createdAt
       updatedAt
     }
@@ -2350,10 +2352,11 @@ export const onUpdateRubric = /* GraphQL */ `
   subscription OnUpdateRubric {
     onUpdateRubric {
       id
+      name
       criteria
       distinguished
       excelled
-      Adequite
+      adequite
       basic
       topicID
       topic {
@@ -2384,6 +2387,7 @@ export const onUpdateRubric = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      curriculumID
       createdAt
       updatedAt
     }
@@ -2393,10 +2397,11 @@ export const onDeleteRubric = /* GraphQL */ `
   subscription OnDeleteRubric {
     onDeleteRubric {
       id
+      name
       criteria
       distinguished
       excelled
-      Adequite
+      adequite
       basic
       topicID
       topic {
@@ -2427,6 +2432,7 @@ export const onDeleteRubric = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      curriculumID
       createdAt
       updatedAt
     }

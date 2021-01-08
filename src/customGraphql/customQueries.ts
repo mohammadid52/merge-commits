@@ -1203,3 +1203,63 @@ export const listLessonsTitles = /* GraphQL */ `
     }
   }
 `;
+
+export const getTopicDetails = /* GraphQL */ `
+  query GetTopic($id: ID!) {
+    getTopic(id: $id) {
+      id
+      curriculumID
+      learningObjectiveID
+      learningObjective {
+        id
+        name
+      }
+      name
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const listRubrics = /* GraphQL */ `
+  query ListRubrics($filter: ModelRubricFilterInput $sortDirection: ModelSortDirection) {
+    listRubrics(filter: $filter, sortDirection: $sortDirection) {
+      items {
+        id
+        name
+        criteria
+        distinguished
+        excelled
+        adequite
+        basic
+        topicID
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getRubric = /* GraphQL */ `
+  query GetRubric($id: ID!) {
+    getRubric(id: $id) {
+      id
+      name
+      criteria
+      distinguished
+      excelled
+      adequite
+      basic
+      topicID
+      topic {
+        id
+        name
+      }
+      curriculumID
+      createdAt
+      updatedAt
+    }
+  }
+`;

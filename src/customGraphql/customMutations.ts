@@ -498,3 +498,60 @@ mutation CreateTopic(
     }
   }
 `;
+
+export const updateTopic = /* GraphQL */ `
+  mutation UpdateTopic(
+    $input: UpdateTopicInput!
+    $condition: ModelTopicConditionInput
+  ) {
+    updateTopic(input: $input, condition: $condition) {
+      id
+      learningObjectiveID
+      name
+      description
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const createRubric = /* GraphQL */ `
+  mutation CreateRubric(
+    $input: CreateRubricInput!
+    $condition: ModelRubricConditionInput
+  ) {
+    createRubric(input: $input, condition: $condition) {
+      id
+      name
+      criteria
+      distinguished
+      excelled
+      adequite
+      basic
+      topicID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const updateRubric = /* GraphQL */ `
+  mutation UpdateRubric(
+    $input: UpdateRubricInput!
+    $condition: ModelRubricConditionInput
+  ) {
+    updateRubric(input: $input, condition: $condition) {
+      id
+      name
+      criteria
+      distinguished
+      excelled
+      adequite
+      basic
+      topicID
+      curriculumID
+      createdAt
+      updatedAt
+    }
+  }
+`;

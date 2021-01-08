@@ -13,7 +13,7 @@ interface TopicsListProps {
 }
 
 const TopicsList = (props: TopicsListProps) => {
-  const { topicsList, curricularId } = props;
+  const { curricularId } = props;
   const history = useHistory();
   const [loading, setLoading] = useState(false)
   const [topics, setTopics] = useState([])
@@ -25,7 +25,7 @@ const TopicsList = (props: TopicsListProps) => {
 
   const editCurrentTopic = (id: string) => {
     // need to check for route id
-    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/topic/edit?id=${id}`)
+    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/topic/edit/${id}`)
   }
 
   const fetchTopics = async () => {

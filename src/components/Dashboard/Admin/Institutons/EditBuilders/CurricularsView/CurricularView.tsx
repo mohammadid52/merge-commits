@@ -71,7 +71,7 @@ const CurricularView = (props: CurricularViewProps) => {
     { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjectiveList curricularId={currID} /> },
     { index: 1, title: 'Topics', icon: <MdSpeakerNotes />, active: true, content: <TopicsList curricularId={currID} /> },
     { index: 2, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList syllabusList={curricularData.syllabusList} curricularId={currID} /> },
-    { index: 3, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList /> },
+    { index: 3, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList curricularId={currID}/> },
   ]
 
 
@@ -180,7 +180,7 @@ const CurricularView = (props: CurricularViewProps) => {
             </div>
             <div className='bg-white shadow-5 sm:rounded-lg'>
               <div className='px-4 py-5 sm:px-6'>
-                <UnderlinedTabs tabs={tabs} />
+                <UnderlinedTabs tabs={tabs}/>
               </div>
             </div>
 

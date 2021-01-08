@@ -3,6 +3,7 @@ import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { GlobalContext } from '../../contexts/GlobalContext';
 
 interface TabsProps {
+  activeTab?: number,
   tabs: {
     index: number,
     content: React.ReactNode,
@@ -13,10 +14,10 @@ interface TabsProps {
 }
 
 const UnderlinedTabs = (props: TabsProps) => {
-  const { tabs } = props;
+  const { tabs, activeTab} = props;
   const { theme } = useContext(GlobalContext);
 
-  const [openTab, setOpenTab] = React.useState(0)
+  const [openTab, setOpenTab] = React.useState(activeTab || 0)
   return (
     <div className="flex flex-wrap flex-col w-full ">
       <div className="flex flex-no-wrap flex-row mr-2 bg-white">

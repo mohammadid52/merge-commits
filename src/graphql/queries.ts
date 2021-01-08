@@ -956,10 +956,11 @@ export const getRubric = /* GraphQL */ `
   query GetRubric($id: ID!) {
     getRubric(id: $id) {
       id
+      name
       criteria
       distinguished
       excelled
-      Adequite
+      adequite
       basic
       topicID
       topic {
@@ -990,6 +991,7 @@ export const getRubric = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      curriculumID
       createdAt
       updatedAt
     }
@@ -1012,10 +1014,11 @@ export const listRubrics = /* GraphQL */ `
     ) {
       items {
         id
+        name
         criteria
         distinguished
         excelled
-        Adequite
+        adequite
         basic
         topicID
         topic {
@@ -1027,6 +1030,7 @@ export const listRubrics = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        curriculumID
         createdAt
         updatedAt
       }
