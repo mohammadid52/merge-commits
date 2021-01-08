@@ -63,7 +63,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const getPersonsList = async () => {
     try {
       const list: any = await API.graphql(graphqlOperation(customQueries.listPersons, {
-        filter: { role: { eq: ('TR' || 'CRD') } },
+        filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "CRD" } }] },
       }));
       const sortedList = list.data.listPersons.items.sort((a: any, b: any) => (a.firstName?.toLowerCase() > b.firstName?.toLowerCase()) ? 1 : -1);
       const personsList = sortedList.map((item: any, i: any) => ({

@@ -192,11 +192,11 @@ const EditRoom = (props: EditRoomProps) => {
       } else {
         const sortedList = listStaffs.sort((a: any, b: any) => (a.staffMember?.firstName?.toLowerCase() > b.staffMember?.firstName?.toLowerCase()) ? 1 : -1);
         const staffList = sortedList.map((item: any) => ({
-          id: item.staffMember.id,
-          name: `${item.staffMember.firstName || ''} ${item.staffMember.lastName || ''}`,
-          value: `${item.staffMember.firstName || ''} ${item.staffMember.lastName || ''}`,
-          email: item.staffMember.email ? item.staffMember.email : '',
-          authId: item.staffMember.authId ? item.staffMember.authId : ''
+          id: item.staffMember?.id,
+          name: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
+          value: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
+          email: item.staffMember?.email ? item.staffMember?.email : '',
+          authId: item.staffMember?.authId ? item.staffMember?.authId : ''
         }));
 
         // Removed duplicates from staff list.
@@ -434,19 +434,19 @@ const EditRoom = (props: EditRoomProps) => {
           id: savedData.id,
           name: savedData.name,
           institute: {
-            id: savedData.institution.id,
-            name: savedData.institution.name,
-            value: savedData.institution.name,
+            id: savedData.institution?.id,
+            name: savedData.institution?.name,
+            value: savedData.institution?.name,
           },
           teacher: {
-            id: savedData.teacher.id,
-            name: `${savedData.teacher.firstName || ''} ${savedData.teacher.lastName || ''}`,
-            value: `${savedData.teacher.firstName || ''} ${savedData.teacher.lastName || ''}`,
+            id: savedData.teacher?.id,
+            name: `${savedData.teacher?.firstName || ''} ${savedData.teacher?.lastName || ''}`,
+            value: `${savedData.teacher?.firstName || ''} ${savedData.teacher?.lastName || ''}`,
           },
           classRoom: {
-            id: savedData.class.id,
-            name: savedData.class.name,
-            value: savedData.class.name,
+            id: savedData.class?.id,
+            name: savedData.class?.name,
+            value: savedData.class?.name,
           },
           maxPersons: savedData.maxPersons
         })
