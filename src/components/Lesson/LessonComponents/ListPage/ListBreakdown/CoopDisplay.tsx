@@ -36,14 +36,6 @@ const CoopDisplay = () => {
     });
   };
 
-  const firstInitialFunc = (str: string) => {
-    if (typeof str !== 'string' || str === '') {
-      return 'Profile';
-    }
-    let firstInitial = str.charAt(0);
-    firstInitial = firstInitial.toUpperCase() + '.';
-    return firstInitial;
-  };
 
   useEffect(() => {
     dispatch({ type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown' });
