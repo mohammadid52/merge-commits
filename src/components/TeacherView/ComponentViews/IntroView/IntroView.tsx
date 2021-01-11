@@ -39,7 +39,7 @@ const IntroView = (props: props) => {
         <Keyword fullscreen={fullscreen} />
       </div>
       <div className='flex flex-col justify-between items-center mt-4'>
-        <DoFirst fullscreen={fullscreen} />
+        <DoFirst />
       </div>
     </div>
   );

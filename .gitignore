@@ -7,6 +7,7 @@ package-lock.json
 zjunk
 inspiration
 workspace.xml
+tsconfig.json
 
 #amplify
 amplify/\#current-cloud-backend

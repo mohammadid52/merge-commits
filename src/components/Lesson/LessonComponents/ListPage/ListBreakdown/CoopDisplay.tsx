@@ -55,12 +55,10 @@ const CoopDisplay = () => {
       state.displayData.breakdownComponent &&
       state.displayData.breakdownComponent === 'warmup/breakdown'
     ) {
-      // console.log( 'got it', state.displayData );
       setTeacherData(state.displayData);
     }
   }, [state.displayData]);
 
-  // {console.log(state.displayData.breakdownComponent, 'state and find name')}
 
   return (
     <div className={theme.section}>

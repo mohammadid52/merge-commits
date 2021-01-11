@@ -40,7 +40,8 @@ const SaveQuit = (props: SaveQuitProps) => {
   // }
 
   const updateStudentData = async () => {
-    let lessonProgress = state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
+    let lessonProgress =
+      state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
 
     let currentLocation = state.pages[state.currentPage].stage === '' ? 'intro' : state.pages[state.currentPage].stage;
 
@@ -57,15 +58,13 @@ const SaveQuit = (props: SaveQuitProps) => {
       studentAuthID: state.studentAuthID,
       warmupData: state.componentState.story ? state.componentState.story : null,
       corelessonData: state.componentState.lyrics ? state.componentState.lyrics : null,
-      activityData: state.componentState.poem ? state.componentState.poem : null
-    }
+      activityData: state.componentState.poem ? state.componentState.poem : null,
+    };
 
     // console.log('update', data);
 
     try {
-      const dataObject: any = await API.graphql(
-        graphqlOperation(customMutations.updateStudentData, { input: data })
-      );
+      const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
       // console.log(dataObject)
       dispatch({ type: 'SAVED_CHANGES' });
       // console.log('state', state)
@@ -94,22 +93,37 @@ const SaveQuit = (props: SaveQuitProps) => {
     }
   };
 
-  const saveQuestionData = async (key: string, questionID: string) => {
+  /**
+   * QUESTION SAVING
+   */
+
+  const clearQuestionData = () => {
+    dispatch({
+      type: 'CLEAR_QUESTION_DATA',
+      payload: {}
+    });
+  }
+
+  const saveQuestionData = async (responseObj: any) => {
     let questiondDataObject = {
-      questionID: key,
       classroomID: '1',
+      componentType: 'checkpoint',
+      lessonID: state.data.lesson.id,
       authID: state.studentAuthID,
       email: state.studentUsername,
-      response: state.questionData[key][questionID],
+      responseObject: responseObj,
     };
 
     try {
       const questionData = await API.graphql(
         graphqlOperation(customMutations.createQuestionData, { input: questiondDataObject })
       );
-      // console.log(questionData, 'questionData');
+      console.log(questionData, 'questionData');
     } catch (err) {
       console.error(err);
+    } finally {
+      clearQuestionData();
+      console.log('questionData cleared -> ', 'nothing...');
     }
   };
 
@@ -132,14 +146,13 @@ const SaveQuit = (props: SaveQuitProps) => {
 
   const handleSave = async () => {
     if (typeof state.questionData === 'object') {
-      let keys = Object.keys(state.questionData);
-      // console.log(Object.keys(state.questionData))
-      await keys.forEach(async (key: string) => {
-        let questionIDs = Object.keys(state.questionData[key]);
-        questionIDs.forEach(async (questionID: string) => {
-          await saveQuestionData(key, questionID);
-        });
-      });
+      let keys = Object.keys(state.questionData); // doFirst, checkpoint_1
+
+      await keys.reduce((_: any, key: string) => {
+        const responseObject = state.questionData[key];
+
+        saveQuestionData(responseObject);
+      }, null);
 
       if (typeof feedback !== 'undefined') {
         if (feedback?.like !== '' || feedback?.text !== '') {
@@ -155,41 +168,36 @@ const SaveQuit = (props: SaveQuitProps) => {
 
       history.push('/dashboard');
     }
-    handleClick
+    handleClick;
   };
 
   const handleClick = () => {
-    setVisible((prevState: any) => !prevState)
-  }
+    setVisible((prevState: any) => !prevState);
+  };
 
   return (
     <>
-      {
-        (alert)
-          ? (
-            <div className={`${alert ? 'absolute z-100 top-0' : 'hidden'}`} onClick={handleClick}>
-              <Popup
-                alert={visible}
-                setAlert={setVisible}
-                header='You have completed a lesson!'
-                button1='Save your lesson'
-                svg='smile'
-                handleButton1={handleSave}
-                fill='screen'
-              />
-            </div>
-          )
-          :
-          null
-      }
+      {alert ? (
+        <div className={`${alert ? 'absolute z-100 top-0' : 'hidden'}`} onClick={handleClick}>
+          <Popup
+            alert={visible}
+            setAlert={setVisible}
+            header="You have completed a lesson!"
+            button1="Save your lesson"
+            svg="smile"
+            handleButton1={handleSave}
+            fill="screen"
+          />
+        </div>
+      ) : null}
 
-      <div className='w-full flex flex-col mt-4'>
+      <div className="w-full flex flex-col mt-4">
         <button
-          type='submit'
+          type="submit"
           className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 font-bold flex justify-center items-center rounded-xl mt-4 ${theme.elem.text}`}
           onClick={handleClick}>
           Save and Go to Dashboard
-      </button>
+        </button>
       </div>
     </>
   );

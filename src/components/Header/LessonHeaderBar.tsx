@@ -1,14 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { NavLink, useHistory } from 'react-router-dom';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { useHistory } from 'react-router-dom';
 import { useOutsideAlerter } from '../General/hooks/outsideAlerter';
 import PositiveAlert from '../General/Popup';
-import { FaRegSave, FaHome, FaBook, FaRegThumbsUp } from 'react-icons/fa';
-import { AiOutlineSave, AiOutlineHome } from 'react-icons/ai';
 import { LessonContext } from '../../contexts/LessonContext';
 import TopMenu from '../Lesson/Header/TopMenu';
-import NotificationBar from '../Lesson/Header/NotificationBar';
 import SideMenu from '../Lesson/Header/SideMenu';
 
 const LessonHeaderBar = () => {
@@ -47,8 +43,8 @@ const LessonHeaderBar = () => {
 
   const handlePopup = () => {
     setVisible((prevState: any) => !prevState);
-    console.log('handlepopup: ');
-    console.log('visible?: ', visible);
+    // console.log('handlepopup: ');
+    // console.log('visible?: ', visible);
   };
 
   const handleSubmit = () => {

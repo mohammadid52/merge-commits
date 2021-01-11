@@ -7,7 +7,7 @@ import QuoteBlock from './QuoteBlock';
 import Keyword from './Keyword';
 import Block from './Block';
 import Banner from './Banner';
-import DoFirst from './DoFirst/DoFirst';
+import DoFirst from './DoFirst';
 import Connect from './Connect';
 
 const Intro = () => {
