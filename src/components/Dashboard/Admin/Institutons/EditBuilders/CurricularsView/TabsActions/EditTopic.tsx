@@ -19,7 +19,7 @@ interface EditTopicProps {
 }
 
 const EditTopic = (props: EditTopicProps) => {
-  const {} = props;
+  const { } = props;
   const urlParams: any = useParams()
   const curricularId = urlParams.curricularId;
   const topicId = urlParams.id;
@@ -40,10 +40,10 @@ const EditTopic = (props: EditTopicProps) => {
   const onInputChange = (e: any) => {
     const value = e.target.value
     if (e.target.name === 'name') {
-      setTopic({ ...topic, name: value})
+      setTopic({ ...topic, name: value })
       if (value.length && validation.name) setValidation({ ...validation, name: '' })
     }
-    if (e.target.name === 'description') setTopic({ ...topic, description: value})
+    if (e.target.name === 'description') setTopic({ ...topic, description: value })
   }
 
   const validateForm = () => {
@@ -88,7 +88,7 @@ const EditTopic = (props: EditTopicProps) => {
     if (validation.learning) {
       setValidation({ ...validation, learning: '' })
     }
-    setTopic({ ...topic, learning: {...topic.learning, id, name, value: val} })
+    setTopic({ ...topic, learning: { ...topic.learning, id, name, value: val } })
   }
 
   const fetchTopic = async () => {
@@ -100,7 +100,11 @@ const EditTopic = (props: EditTopicProps) => {
         ...topic,
         name: item.name,
         description: item.description,
-        learning: { id: item.learningObjective.id, name: item.learningObjective.name, value: item.learningObjective.name }
+        learning: {
+          id: item.learningObjective?.id || '',
+          name: item.learningObjective?.name || '',
+          value: item.learningObjective?.name || ''
+        }
       })
       setLoading(false)
     } else {
@@ -143,43 +147,43 @@ const EditTopic = (props: EditTopicProps) => {
         <div className="w-6/10 m-auto">
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">TOPIC INFORMATION</h3>
         </div>
-        { !loading ? <>
-        <div className="w-6/10 m-auto">
-          <div className="">
-            <div className="px-3 py-4">
-              <FormInput value={topic.name} id='name' onChange={onInputChange} name='name' label="Topic Name" isRequired />
-              {
-                validation.name && <p className="text-red-600">{validation.name}</p>
-              }
-            </div>
+        {!loading ? <>
+          <div className="w-6/10 m-auto">
+            <div className="">
+              <div className="px-3 py-4">
+                <FormInput value={topic.name} id='name' onChange={onInputChange} name='name' label="Topic Name" isRequired />
+                {
+                  validation.name && <p className="text-red-600">{validation.name}</p>
+                }
+              </div>
 
-            <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Select Learning objective <span className="text-red-500">*</span>
-              </label>
-              <Selector selectedItem={topic.learning.value} placeholder="Learning objective" list={learnings} onChange={selectLearning}/>
-              {
-                validation.learning && <p className="text-red-600">{validation.learning}</p>
-              }
-            </div>
+              <div className="px-3 py-4">
+                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                  Select Learning objective <span className="text-red-500">*</span>
+                </label>
+                <Selector selectedItem={topic.learning.value} placeholder="Learning objective" list={learnings} onChange={selectLearning} />
+                {
+                  validation.learning && <p className="text-red-600">{validation.learning}</p>
+                }
+              </div>
 
-            {/* <div className="px-3 py-4">
+              {/* <div className="px-3 py-4">
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 Select Sequence
               </label>
               <Selector placeholder="Sequence" list={sequenceList} onChange={() => console.log('')} />
             </div> */}
 
-            <div className="px-3 py-4">
-              <TextArea id='description' value={topic.description} onChange={onInputChange} name='description' label="Description" />
+              <div className="px-3 py-4">
+                <TextArea id='description' value={topic.description} onChange={onInputChange} name='description' label="Description" />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-10 mr-4" label="Cancel" onClick={history.goBack} transparent />
-          <Buttons btnClass="py-3 px-10 ml-4" label="Save" onClick={saveTopicDetails} />
-        </div>
-        </> : <div>Fetching data...</div> }
+          <div className="flex my-8 justify-center">
+            <Buttons btnClass="py-3 px-10 mr-4" label="Cancel" onClick={history.goBack} transparent />
+            <Buttons btnClass="py-3 px-10 ml-4" label="Save" onClick={saveTopicDetails} />
+          </div>
+        </> : <div className="py-12 my-12 m-auto text-center">Fetching data...</div>}
       </PageWrapper>
     </div>
   )
