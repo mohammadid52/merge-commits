@@ -202,31 +202,27 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   };
 
   return (
-    <div className='link  w-full h-12 z-40'>
-      {/* {state.user.role && links.length > 0 */}
-      {role && links.length > 0
-        ? links.map((link: { name: string; path: string, title: string }, key: number) => (
-          <React.Fragment key={key}>
-            <div
-              id={link.path}
-              key={key}
-              className={`w-full h-16 text-center text-sm mx-auto py-4 flex flex-col items-center justify-center ${getClassStyle(
-                link.name
-              )}`}
-              onClick={handleLink}>
-
-              <div id={link.path} className='w-full text-center'>
-                <IconContext.Provider value={{ size: '1.5rem' }}>
-                  {getMenuIcon(link.name, link.path)}
-                </IconContext.Provider>
+    <div className="link  w-full h-12 z-40">
+      {state.user.role && links.length > 0
+        ? links.map((link: { name: string; path: string }, key: number) => (
+            <div key={`link_${key}`}>
+              <div
+                id={link.path}
+                className={`w-full h-16 text-center text-sm mx-auto py-4 flex flex-col items-center justify-center ${getClassStyle(
+                  link.name
+                )}`}
+                onClick={handleLink}>
+                <div id={link.path} className="w-full text-center">
+                  <IconContext.Provider value={{ size: '1.5rem' }}>
+                    {getMenuIcon(link.name, link.path)}
+                  </IconContext.Provider>
+                </div>
+                {link.name}
               </div>
-              {sideBarLinksDict[userLanguage][link.title]}
+
+              <div className={`w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent`}></div>
             </div>
-
-            <div className={`w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent`}></div>
-
-          </React.Fragment>
-        ))
+          ))
         : null}
     </div>
   );

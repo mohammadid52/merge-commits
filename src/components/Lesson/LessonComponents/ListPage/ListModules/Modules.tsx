@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
-import { string } from 'prop-types';
 
 type InputProp = [{ name: string; example: string; prompt: string }];
 
@@ -29,8 +28,8 @@ const Modules = (props: ModulesProps) => {
       });
     });
 
-    if (cookies.story && cookies.story.additional && cookies.story.additional.length > 0) {
-      cookies.story.additional.forEach((item: { name: string; input: string }) => {
+    if (cookies.story && cookies.story?.additional && cookies.story?.additional?.length > 0) {
+      cookies.story?.additional?.forEach((item: { name: string; input: string }) => {
         setFormInputs((prev) => {
           return {
             ...prev,
@@ -42,10 +41,10 @@ const Modules = (props: ModulesProps) => {
 
     if (
       state.componentState.story &&
-      state.componentState.story.additional &&
+      state.componentState.story?.additional &&
       state.componentState.story?.additional?.length > 0
     ) {
-      state.componentState.story.additional.map((item: { name: string; input: string }) => {
+      state.componentState.story?.additional?.map((item: { name: string; input: string }) => {
         setFormInputs((prev) => {
           return {
             ...prev,
@@ -55,14 +54,11 @@ const Modules = (props: ModulesProps) => {
       });
     }
 
-    // if (inputs) {
-    //   console.log('list modules mounted --> ', inputs);
-    //   console.log('list modules formInputs --> ', formInputs);
-    // }
+
   }, []);
 
   useEffect(() => {
-    if (formInputs && state.componentState.story.additional && state.componentState.story.additional.length > 0) {
+    if (formInputs && state.componentState.story?.additional && state.componentState.story?.additional?.length > 0) {
       let tempArray: Array<{ name: string; input: string }> = [];
       inputs.forEach((input) => {
         let tempObj = {
@@ -70,7 +66,7 @@ const Modules = (props: ModulesProps) => {
           input: formInputs[input.name],
         };
 
-        console.log('list modules --> ', tempObj);
+        // console.log('list modules --> ', tempObj);
 
         tempArray.push(tempObj);
       });

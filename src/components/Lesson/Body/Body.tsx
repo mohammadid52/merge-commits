@@ -1,6 +1,7 @@
-import React, { useContext, useEffect, Suspense, lazy } from 'react';
+import React, { lazy, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../contexts/LessonContext';
-import { Switch, Route, useLocation, useRouteMatch, Redirect } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
+
 const Intro = lazy(() => import('../LessonComponents/Intro/Intro'));
 const Story = lazy(() => import('../LessonComponents/StoryPage/Story'));
 const Lyrics = lazy(() => import('../LessonComponents/LyricsPage/Lyrics'));
@@ -13,14 +14,28 @@ const MultiList = lazy(() => import('../LessonComponents/MultiListPage/MultiList
 const Adventure = lazy(() => import('../LessonComponents/AdventurePage/Adventure'));
 const Outro = lazy(() => import('../LessonComponents/Outro/Outro'));
 const LessonError = lazy(() => import('../../Error/LessonError'));
-const Checkpoint = lazy(() => import('../LessonComponents/Checkpoint/Checkpoint'));
-const Assessments = lazy(() => import('../LessonComponents/Checkpoint/Assessments'));
+const Checkpoint = lazy(() => import('../AssessmentComponents/Checkpoint'));
+// const Assessments = lazy(() => import('../LessonComponents/Checkpoint/Assessments'));
+
+/**
+ * TODO:
+ *  when the time comes to add the assessments,
+ *  add it back here
+ */
+
 
 const Body = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
   const location = useLocation();
   const match = useRouteMatch();
 
+  /**
+   * TODO:
+   *  list/tchart/multilist need to
+   *  redirect to list && any bugs
+   *  need to be fixed
+   * @param pageType
+   */
   const pageSwitch = (pageType: string) => {
     switch (pageType) {
       case 'story':
@@ -46,8 +61,6 @@ const Body = () => {
     }
   };
 
-  // console.log(state, 'state');
-
   const pageFetch = (stage: string) => {
     let pageMatch = state.pages
       .filter((page: { stage: string }) => {
@@ -60,18 +73,6 @@ const Body = () => {
     }
 
     return pageSwitch(pageMatch.type);
-  };
-
-  const urlParser = (str: string) => {
-    let temp = '';
-    let arr = Array.from(str);
-    arr.forEach((char) => {
-      if (char !== '/') {
-        temp = temp + char;
-      }
-      return temp;
-    });
-    return temp;
   };
 
   useEffect(() => {
@@ -101,9 +102,9 @@ const Body = () => {
         <Route path={`${match.url}/checkpoint`}>
           <Checkpoint />
         </Route>
-        <Route path={`${match.url}/assessment`}>
+        {/*<Route path={`${match.url}/assessment`}>
           <Assessments />
-        </Route>
+        </Route>*/}
         <Route
           path={`${match.url}/intro`}
           render={({ location }) => (

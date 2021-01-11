@@ -23,16 +23,6 @@ const ListForm = (props: ListFormProps) => {
       state.componentState.story && state.componentState.story.story ? state.componentState.story.story : listArray,
   });
 
-  // const [input, setInput] = useState<ListInput>();
-
-  // useEffect(() => {
-  //   if (!state.componentState?.story && !state.componentState?.story?.story) {
-  //     setInput({
-  //       ...input,
-  //       story: nrLists === null ? [''] : Array.from(Array(nrLists).keys()).map((elem: number) => ''),
-  //     });
-  //   }
-  // }, []);
 
   useEffect(() => {
     if (state.componentState.story) {

@@ -58,6 +58,13 @@ export const getClassroom = /* GraphQL */ `
             name
             input
           }
+          poll {
+            id
+            question
+            option {
+                id
+            }
+          }
         }
         corelessonData {
           selected {
@@ -208,6 +215,15 @@ export const getClassroom = /* GraphQL */ `
               prompt
               example
             }
+            pollInputs {
+              id
+              question
+              option {
+                id
+                option
+                isChoice
+              }
+            }
           }
           breakdown {
             reflectionQuestions
@@ -340,6 +356,13 @@ export const getClassroom = /* GraphQL */ `
               name
               input
             }
+            poll {
+              id
+              question
+              option {
+                id
+              }
+            }
           }
           corelessonData {
             selected {
@@ -411,6 +434,13 @@ export const getClassroomStudent = /* GraphQL */ `
           additional {
             name
             input
+          }
+          poll {
+            id
+            question
+            option {
+              id
+            }
           }
         }
         corelessonData {
@@ -563,6 +593,15 @@ export const getClassroomStudent = /* GraphQL */ `
               prompt
               example
             }
+            pollInputs {
+              id
+              question
+              option {
+                id
+                option
+                isChoice
+              }
+            }
           }
           breakdown {
             reflectionQuestions
@@ -692,6 +731,13 @@ export const getStudentData = /* GraphQL */ `
         additional {
           name
           input
+        }
+        poll {
+          id
+          question
+          option {
+            id
+          }
         }
       }
       corelessonData {

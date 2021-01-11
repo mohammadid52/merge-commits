@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
-import StageIcon from "./StageIcon";
-import { LessonContext } from "../../../../contexts/LessonContext";
+import React, { useContext, useEffect, useState } from 'react';
+import StageIcon from './StageIcon';
+import { LessonContext } from '../../../../contexts/LessonContext';
 
 interface Page {
   active: boolean;
@@ -24,27 +24,24 @@ const ProgressBar = () => {
      *
      */
 
-    const stoppingPoints = state.pages.reduce(
-      (acc: [], page: Page, i: number) => {
-        const pageBefore = state.pages[i - 1];
-        const isBreakdown = page.type === "breakdown";
-        const isDisabled = page.disabled;
-        const isClosed = !page.open;
+    const stoppingPoints = state.pages.reduce((acc: [], page: Page, i: number) => {
+      const pageBefore = state.pages[i - 1];
+      const isBreakdown = page.type === 'breakdown';
+      const isDisabled = page.disabled;
+      const isClosed = !page.open;
 
-        //  Disabled or closed = don't go
-        if ((i !== 0 && isDisabled) || (i !== 0 && isClosed)) {
-          return [...acc, i];
-        }
+      //  Disabled or closed = don't go
+      if ((i !== 0 && isDisabled) || (i !== 0 && isClosed)) {
+        return [...acc, i];
+      }
 
-        //  If breakdown exercise not completed, don't go because crash
-        if (isBreakdown && !pageBefore.active) {
-          return [...acc, i];
-        }
+      //  If breakdown exercise not completed, don't go because crash
+      if (isBreakdown && !pageBefore.active) {
+        return [...acc, i];
+      }
 
-        return acc;
-      },
-      []
-    );
+      return acc;
+    }, []);
 
     const earliestStoppingPoint = Math.min(...stoppingPoints);
     setClickable(earliestStoppingPoint);
@@ -66,24 +63,16 @@ const ProgressBar = () => {
    */
 
   const mapStages = state.pages.map(
-    (
-      page: { stage: string; type: string; open: boolean; disabled: boolean },
-      stageNr: number
-    ) => ({
+    (page: { stage: string; type: string; open: boolean; disabled: boolean }, stageNr: number) => ({
       ...page,
-      stageNr: stageNr
+      stageNr: stageNr,
     })
   );
 
   const checkIfMultipleStages = (type: string) => {
     return (
       state.pages.filter(
-        (page: {
-          stage: string;
-          type: string;
-          open: boolean;
-          disabled: boolean;
-        }) => page.type === type
+        (page: { stage: string; type: string; open: boolean; disabled: boolean }) => page.type === type
       ).length > 1
     );
   };
@@ -91,29 +80,12 @@ const ProgressBar = () => {
   const mapMultipleStages = (type: string) => {
     const out = mapStages
       .filter(
-        (page: {
-          stage: string;
-          type: string;
-          open: boolean;
-          disabled: boolean;
-          stageNr: number;
-        }) => page.type === type
+        (page: { stage: string; type: string; open: boolean; disabled: boolean; stageNr: number }) => page.type === type
       )
-      .map(
-        (
-          page: {
-            stage: string;
-            type: string;
-            open: boolean;
-            disabled: boolean;
-            stageNr: number;
-          },
-          i: number
-        ) => ({
-          ...page,
-          multipleCounter: i + 1
-        })
-      );
+      .map((page: { stage: string; type: string; open: boolean; disabled: boolean; stageNr: number }, i: number) => ({
+        ...page,
+        multipleCounter: i + 1,
+      }));
 
     return out;
   };
@@ -147,57 +119,32 @@ const ProgressBar = () => {
         <div className="w-full max-w-256 flex items-center justify-between">
           <div className="w-full flex flex-row items-center justify-between">
             {/* ICON */}
-            {state.pages.map(
-              (
-                page: {
-                  stage: string;
-                  type: string;
-                  open: boolean;
-                  disabled: boolean;
-                },
-                key: number
-              ) => (
-                <div
-                  className={`${
-                    key < state.pages.length - 1 ? "w-full" : "w-auto"
-                  } flex justify-center items-center`}
-                >
-                  {/* {console.log('checkIfMultipleStages : ', checkIfMultipleStages(page.type))} */}
+            {state.pages.map((page: { stage: string; type: string; open: boolean; disabled: boolean }, key: number) => (
+              <div
+                key={`${key}_bar`}
+                className={`${key < state.pages.length - 1 ? 'w-full' : 'w-auto'} flex justify-center items-center`}>
+                <StageIcon
+                  iconID={key}
+                  key={key}
+                  stage={page.stage}
+                  type={page.type}
+                  active={state.pages[key].active}
+                  open={page.open}
+                  disabled={page.disabled}
+                  counter={checkIfMultipleStages(page.type) ? getSpecificStage(page.type, key).multipleCounter : null}
+                  clickable={key < clickable}
+                />
 
-                  <StageIcon
-                    iconID={key}
-                    key={key}
-                    stage={page.stage}
-                    type={page.type}
-                    active={state.pages[key].active}
-                    open={page.open}
-                    disabled={page.disabled}
-                    counter={
-                      checkIfMultipleStages(page.type)
-                        ? getSpecificStage(page.type, key).multipleCounter
-                        : null
-                    }
-                    clickable={key < clickable}
-                  />
-
-                  {/* PROGRESS BAR */}
-                  {key < state.pages.length - 1 && (
-                    <div
-                      key={key + "bar"}
-                      className="relative h-2 w-full bg-dark-gray z-10 flex items-center justify-center transform scale-x-125 "
-                    >
-                      <div
-                        className={`h-2 w-full ${
-                          key < state.lessonProgress
-                            ? "bg-blueberry"
-                            : "bg-dark-gray"
-                        }`}
-                      />
-                    </div>
-                  )}
-                </div>
-              )
-            )}
+                {/* PROGRESS BAR */}
+                {key < state.pages.length - 1 && (
+                  <div
+                    key={`${key}_bar`}
+                    className="relative h-2 w-full bg-dark-gray z-10 flex items-center justify-center transform scale-x-125 ">
+                    <div className={`h-2 w-full ${key < state.lessonProgress ? 'bg-blueberry' : 'bg-dark-gray'}`} />
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </div>

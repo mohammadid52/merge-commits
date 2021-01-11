@@ -1,17 +1,18 @@
-import React, { useContext, useEffect, Suspense, lazy, useState } from 'react';
+import React, { lazy, useContext, useEffect, useState } from 'react';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
-import { Switch, Route, useLocation, useRouteMatch, Redirect } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
+
 const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
 const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
 const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
 const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'));
 const ListView = lazy(() => import('./ComponentViews/ListPageView/ListView'));
-// const Poll = lazy(() => import('./ComponentViews/PollPageView/PollView'));
-// const TChart = lazy(() => import('./ComponentViews/TChartPageView/TChartView'));
+const PollView = lazy(() => import('./ComponentViews/PollPageView/PollView'));
+
 const TruthGameView = lazy(() => import('./ComponentViews/TruthGamePageView/TruthGameView'));
 const OutroView = lazy(() => import('./ComponentViews/OutroView/OutroView'));
 const LessonError = lazy(() => import('./../Error/LessonError'));
-const Checkpoint = lazy(() => import('./ComponentViews/Checkpoint/Checkpoint'));
+const Checkpoint = lazy(() => import('../Lesson/AssessmentComponents/Checkpoint'));
 // const Assessments = lazy(() => import('./ComponentViews/Checkpoint/Assessments'));
 
 interface BodyProps {
@@ -45,6 +46,8 @@ const Body: React.FC<BodyProps> = (props: BodyProps) => {
         return <ListView fullscreen={fullscreen} />;
       case 'truthgame':
         return <TruthGameView fullscreen={fullscreen} />;
+      case 'poll':
+        return <PollView/>;
       default:
         return <LessonError />;
     }
@@ -62,18 +65,6 @@ const Body: React.FC<BodyProps> = (props: BodyProps) => {
     }
 
     return pageSwitch(pageMatch.type);
-  };
-
-  const urlParser = (str: string) => {
-    let temp = '';
-    let arr = Array.from(str);
-    arr.forEach((char) => {
-      if (char !== '/') {
-        temp = temp + char;
-      }
-      return temp;
-    });
-    return temp;
   };
 
   useEffect(() => {
@@ -96,7 +87,7 @@ const Body: React.FC<BodyProps> = (props: BodyProps) => {
       <Route path={`${match.url}/warmup`} render={() => pageFetch('warmup')} />
       <Route path={`${match.url}/corelesson`} render={() => pageFetch('corelesson')} />
       <Route path={`${match.url}/activity`} render={() => pageFetch('activity')} />
-      <Route path={`${match.url}/checkpoint`} render={() => <Checkpoint fullscreen={fullscreen} />} />
+      <Route path={`${match.url}/checkpoint`} render={() => <Checkpoint isTeacher={true}/>} />
       <Route path={`${match.url}/outro`} render={() => <OutroView fullscreen={fullscreen} />} />
       <Route
         exact

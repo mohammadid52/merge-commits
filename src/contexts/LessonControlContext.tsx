@@ -1,14 +1,12 @@
-import React, { useState, useReducer, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useReducer, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { lessonControlState } from '../state/LessonControlState';
 import { lessonControlReducer } from '../reducers/LessonControlReducer';
 import queryString from 'query-string';
 import * as customQueries from '../customGraphql/customQueries';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 // import { API, graphqlOperation } from 'aws-amplify';
-import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { useLocation } from 'react-router-dom';
 import { pageThemes } from './GlobalContext';
 
 interface LessonControlProps {
@@ -73,7 +71,7 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
       const studentDataSubscription = API.graphql(graphqlOperation(customSubscriptions.onChangeStudentData, { classroomID: queryParams.id })).subscribe({
           next: (studentData: any) => {
             let updatedData = studentData.value.data.onChangeStudentData
-            console.log(updatedData)
+            console.log('studentDataSubscription : ', updatedData)
 
             dispatch({ type: 'UPDATE_STUDENT_DATA', payload: updatedData })
             // console.log(found)
