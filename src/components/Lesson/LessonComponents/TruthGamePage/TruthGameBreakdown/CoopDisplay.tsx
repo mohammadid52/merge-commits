@@ -7,6 +7,8 @@ import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaExpand, FaCompress } from 'react-icons/fa';
 import TruthGameOutput from './TruthGameOutput';
 
+import { firstInitialFunc } from '../../../../../utilities/strings';
+
 interface teacherData {
   breakdownComponent: string;
   studentInfo?: {
@@ -23,7 +25,7 @@ interface teacherData {
 
 const CoopDisplay = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  const displayProps = state.componentState.truthGame;
+  const displayProps = state.componentState.truthGame.truthGameArray;
   const [fullscreen, setFullscreen] = useState(false);
 
   const [teacherData, setTeacherData] = useState<teacherData>();
@@ -35,14 +37,14 @@ const CoopDisplay = () => {
     });
   };
 
-  const firstInitialFunc = (str: string) => {
-    if (typeof str !== 'string' || str === '') {
-      return 'Profile';
-    }
-    let firstInitial = str.charAt(0);
-    firstInitial = firstInitial.toUpperCase() + '.';
-    return firstInitial;
-  };
+  // const firstInitialFunc = (str: string) => {
+  //   if (typeof str !== 'string' || str === '') {
+  //     return 'Profile';
+  //   }
+  //   let firstInitial = str.charAt(0);
+  //   firstInitial = firstInitial.toUpperCase() + '.';
+  //   return firstInitial;
+  // };
 
   useEffect(() => {
     dispatch({ type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown' });
@@ -99,7 +101,7 @@ const CoopDisplay = () => {
 
         <div className="w-full h-8.8/10 flex md:flex-col justify-between">
           <TruthGameOutput
-            truthGameData={teacherData && teacherData.warmUpData ? teacherData.warmUpData.truthGame : ''}
+            truthGameData={teacherData && teacherData.warmUpData ? teacherData.warmUpData.truthGame : []}
           />
         </div>
       </div>
@@ -127,7 +129,7 @@ const CoopDisplay = () => {
         />
 
         <div className="w-full h-8.8/10 flex flex-col justify-between">
-          <TruthGameOutput truthGameData={displayProps && displayProps.truthGameArray ? displayProps : ''} />
+          <TruthGameOutput truthGameData={displayProps ? displayProps : []} />
         </div>
       </div>
     </div>

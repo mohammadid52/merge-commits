@@ -1,31 +1,7 @@
 import React, { useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 
-const keywordCapitilizer = (str: string) => {
-  let capitalizedStr = str.replace(/^\w/, (char) => char.toUpperCase());
-  return capitalizedStr;
-};
-
-const keywordParser = (str: string) => {
-  if (typeof str !== 'string') {
-    return null;
-  }
-  let tempWord = '';
-  let initialArray = Array.from(str);
-  let finalArray = [];
-  initialArray.forEach((letter) => {
-    if (letter !== ',') {
-      tempWord = tempWord + letter;
-    } else {
-      finalArray.push(tempWord+',');
-      tempWord = '';
-    }
-  });
-
-  finalArray.push(tempWord);
-
-  return finalArray;
-};
+import { keywordParser, keywordCapitilizer } from '../../../../../utilities/strings';
 
 const Modules = (props: any) => {
   const { theme, state } = useContext(LessonContext);
@@ -48,18 +24,15 @@ const Modules = (props: any) => {
         {additional.map((item: any, key: number) => {
           let wordArray = keywordParser(item.input);
           return (
-            <div
-              key={key}
-              className={`font-open font-light h-auto rounded-lg py-2 ${key === additional.length - 1 ? '' : ''
-                }`}>
+            <div key={key} className={`font-open font-light h-auto rounded-lg py-2`}>
               <h3 className={`font-medium`}>{keywordCapitilizer(item.name)}:</h3>
-              <div className='w-full overflow-y-auto overflow-x-hidden'>
+              <div className="w-full overflow-y-auto overflow-x-hidden">
                 {item.input
                   ? wordArray.map((word: string, key: number) => (
-                    <p key={key} className={``}>
-                      {word}
-                    </p>
-                  ))
+                      <p key={key} className={``}>
+                        {word}
+                      </p>
+                    ))
                   : null}
               </div>
             </div>

@@ -1,128 +1,142 @@
-import React, { useContext, useEffect, Suspense, lazy } from 'react';
-import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
+import React, { useState, useContext, useEffect, Suspense } from 'react';
 import { Auth } from '@aws-amplify/auth';
 import { useCookies } from 'react-cookie';
-
+import API, { graphqlOperation } from '@aws-amplify/api';
+import * as queries from '../graphql/queries';
 import { GlobalContext } from '../contexts/GlobalContext';
-import Login from './Auth/Login';
-import Forgot from './Auth/Forgot';
-import Dashboard from './Dashboard/Dashboard';
 import useDeviceDetect from '../customHooks/deviceDetect';
 import MobileOops from '../components/Error/MobileOops';
-import PrivateRoute from './Auth/PrivateRoute';
 import ComponentLoading from './Lesson/Loading/ComponentLoading';
 
-const ConfirmCode = lazy(() => import('./Auth/ConfirmCode'));
-const PrivacyPolicy = lazy(() => import('./Auth/PrivacyPolicy'));
-const Registration = lazy(() => import('./Auth/Register'));
-const Lesson = lazy(() => import('./Lesson/Lesson'));
-const TeacherView = lazy(() => import('./TeacherView/TeacherView'));
+import AuthRoutes from './AppRoutes/AuthRoutes';
+import UnauthRoutes from './AppRoutes/UnauthRoutes';
 
+import * as customMutations from '../customGraphql/customMutations'
 
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
-  const { theme, state, dispatch } = useContext(GlobalContext);
-  const history = useHistory();
-  const [cookies] = useCookies(['auth']);
+  // const { theme, dispatch } = useContext(GlobalContext);
+  const { state, theme, dispatch } = useContext(GlobalContext);
+  const [cookies, setCookie, removeCookie] = useCookies();
+  const [authState, setAuthState] = useState('loading')
 
-  const checkUserAuthenticated = () => {
-    Auth.currentAuthenticatedUser()
-      .then((user) => {
-        console.log(user);
-        dispatch({
-          type: 'PREV_LOG_IN',
-          payload: {
-            email: user.attributes.email,
-            authId: user.attributes.sub,
-          },
-        });
-        history.push('/dashboard');
-      })
-      .catch((err) => console.error(err));
+  const checkUserAuthenticated = async () => {
+    try {
+        const user = await Auth.currentAuthenticatedUser()
+        if (user) {
+          const { email, sub } = user.attributes
+          let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }))
+          userInfo = userInfo.data.getPerson;
+          updateAuthState(true)
+          dispatch({
+            type: 'PREV_LOG_IN',
+            payload: { email, authId: sub },
+          });
+          dispatch({
+            type: 'SET_USER',
+            payload: {
+              id: userInfo.id,
+              firstName: userInfo.preferredName || userInfo.firstName,
+              lastName: userInfo.lastName,
+              language: userInfo.language,
+              onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
+              role: userInfo.role,
+              image: userInfo.image
+            }
+          });
+        } else {
+          updateAuthState(false)    
+        }
+    } catch (err) {
+      updateAuthState(false)
+    }
   };
+
+  const checkForUserInactivity = () => {
+    let idelTime = 0;
+    let timer: any;
+
+    window.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === 'visible') {
+        clearTimeout(timer);        //  Clear timer if user comes back to the app.
+      } else {
+        if (isUserLoggedIn()) {
+          idelTime = 30 * 60 * 1000;  // Timer for 30 mins to count if user not using the app.
+          timer = setTimeout(autoLogout, idelTime)
+        }
+      }
+    });
+
+  }
+  const autoLogout = async () => {
+    if (isUserLoggedIn()) {
+      const input = {
+        id: state.user.id,
+        authId: state.user.authId,
+        email: state.user.email,
+        lastLoggedOut: (new Date()).toISOString()
+      }
+      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, { input }));
+      await Auth.signOut();
+      updateAuthState(false)
+    }
+  }
+
+  const isUserLoggedIn = () => {
+    return authState === 'loggedIn'
+  }
+
+  const updateAuthState = (auth: boolean) => {
+    if (auth) {
+      setAuthState('loggedIn')
+    } else {
+      setAuthState('notLoggedIn')
+    }
+  }
+
+  useEffect(() => {
+    if (authState === 'loggedIn') {
+      checkForUserInactivity()
+    } else {
+      removeCookie('auth', { path: '/' });
+      dispatch({ type: 'CLEANUP' });
+      sessionStorage.removeItem('accessToken');
+    }
+  }, [authState]);
 
   useEffect(() => {
     checkUserAuthenticated();
   }, []);
 
-  return (
-    <div
-      className={`background-test h-screen md:max-w-full md:h-screen w-full overflow-x-hidden ${theme.bg} flex flex-col`}>
+  if (authState === 'loading') {
+    return <ComponentLoading />
+  }
+  {
+    return (
+      <div
+        className={`background-test h-screen md:max-w-full md:h-screen w-full overflow-x-hidden ${theme.bg} flex flex-col`}>
 
-      {deviceDetected.mobile ? (
-        <MobileOops userAgent={deviceDetected.device} />
-      ) : (
-          <Suspense
-            fallback={
-              <div className='min-h-screen w-full flex flex-col justify-center items-center'>
-                <ComponentLoading />
-              </div>
-            }>
-            <Switch>
-              <Route path='/login' render={() => <Login />} />
-              <Route path='/register' render={() => <Registration />} />
-              <Route
-                path='/confirm'
-                render={({ location }) => (
-                  <Redirect
-                    to={{
-                      pathname: '/confirm-code',
-                      state: { from: location },
-                    }}
-                  />
-                )}
-              />
-              <Route path='/confirm-code' render={() => <ConfirmCode />} />
-              <Route
-                path='/new-password'
-                render={({ location }) => (
-                  <Redirect
-                    to={{
-                      pathname: '/confirm-code',
-                      state: { from: location },
-                    }}
-                  />
-                )}
-              />
-              <Route path='/forgot-password' render={() => <Forgot />} />
-              <Route
-                path='/reset-password'
-                render={({ location }) => (
-                  <Redirect
-                    to={{
-                      pathname: '/confirm-code',
-                      state: { from: location },
-                    }}
-                  />
-                )}
-              />
-              <Route path='/privacy-policy' render={() => <PrivacyPolicy />} />
-              <PrivateRoute path='/dashboard'>
-                <Dashboard />
-              </PrivateRoute>
-              <PrivateRoute path='/lesson'>
-                <Lesson />
-              </PrivateRoute>
-              <PrivateRoute path='/lesson-control'>
-                <TeacherView />
-              </PrivateRoute>
-              <Route
-                exact
-                path='/'
-                render={({ location }) => (
-                  <Redirect
-                    to={{
-                      pathname: '/dashboard',
-                      state: { from: location },
-                    }}
-                  />
-                )}
-              />
-            </Switch>
-          </Suspense>
-        )}
-    </div>
-  );
+        {deviceDetected.mobile ? (
+          <MobileOops userAgent={deviceDetected.device} />
+        ) : (
+            <Suspense
+              fallback={
+                <div className='min-h-screen w-full flex flex-col justify-center items-center'>
+                  <ComponentLoading />
+                </div>
+              }>
+              {
+                authState === 'loggedIn' && <AuthRoutes updateAuthState={updateAuthState} />
+              }
+              {
+                authState === 'notLoggedIn' && <UnauthRoutes updateAuthState={updateAuthState} />
+              }
+            </Suspense>
+          )}
+      </div>
+    );
+  }
+
 };
 
 export default MainRouter;

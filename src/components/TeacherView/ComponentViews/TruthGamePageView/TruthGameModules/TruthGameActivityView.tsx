@@ -33,6 +33,7 @@ const TruthGame = (props: props) => {
   const video = state.data.lesson.warmUp.instructions.link;
   const [openPopup, setOpenPopup] = useState(false);
   const [dataProps, setDataProps] = useState<{ truthGameArray: Array<TruthInput>; [key: string]: any }>();
+
   let displayStudentData = state.studentViewing.live
     ? state.studentViewing.studentInfo.currentLocation
       ? state.studentViewing.studentInfo.currentLocation === 'warmup'
@@ -57,9 +58,9 @@ const TruthGame = (props: props) => {
           {/*<InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/>*/}
 
           <InstructionsBlock fullscreen={fullscreen} />
-          {inputs.additionalInputs.length > 0 ? (
-            <Modules dataProps={dataProps} inputs={inputs.additionalInputs} fullscreen={fullscreen} />
-          ) : null}
+          {/*{inputs.additionalInputs.length > 0 ? (*/}
+          {/*  <Modules dataProps={dataProps} inputs={inputs.additionalInputs} fullscreen={fullscreen} />*/}
+          {/*) : null}*/}
 
           <TruthGameForm dataProps={dataProps} fullscreen={fullscreen} />
         </div>

@@ -141,7 +141,7 @@ const User = () => {
           <div className="flex justify-end py-4 mb-4 w-5/10">
             <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
             {currentPath !== 'edit' ? (
-              <Buttons btnClass="mr-4" onClick={() => history.push(`${match.url}/edit`)} Icon={FaEdit} />
+              <Buttons btnClass="mr-4" onClick={() => history.push(`${match.url}/edit${location.search}`)} Icon={FaEdit} />
             ) : null
             }
           </div>
@@ -153,7 +153,7 @@ const User = () => {
                 user.image ? (
                   <img
                     src={imageUrl}
-                    className="w-20 h-20 md:w-40 md:h-40 rounded-full" />) :
+                    className="w-20 h-20 md:w-40 md:h-40 rounded-full flex flex-shrink-0" />) :
                   <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
                     <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{ background: `${stringToHslColor(user.firstName + ' ' + user.lastName)}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
                       {initials(user.preferredName ? user.preferredName : user.firstName, user.lastName)}

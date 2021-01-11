@@ -1,120 +1,142 @@
-import React from 'react';
-import ActionButton from '../Actions/ActionButton';
-import { NavLink, useRouteMatch, useHistory } from 'react-router-dom';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaGraduationCap } from 'react-icons/fa';
-import { InstitutionInfo } from './Institution';
+import React, { useState, useEffect, Fragment } from 'react';
+import { useRouteMatch } from 'react-router-dom';
+import { FaGraduationCap, FaChalkboardTeacher, FaHotel, FaHandshake } from 'react-icons/fa';
+
+import { initials, stringToHslColor, formatPhoneNumber, getHostNameFromUrl, getInitialsFromString } from '../../../../utilities/strings';
+import UnderlinedTabs from '../../../Atoms/UnderlinedTabs';
+import { IoPeople } from 'react-icons/io5';
+import { getImageFromS3 } from '../../../../utilities/services';
+import ClassList from './Listing/ClassList';
+import StaffBuilder from './Listing/StaffBuilder';
+import ServiceProviders from './Listing/ServiceProviders';
+import CurriculumList from './Listing/CurriculumList';
+import RoomsList from './Listing/RoomsList';
 
 interface InstitutionInfoProps {
-  institute: InstitutionInfo;
+  institute?: InstInfo;
+  updateServiceProviders: Function
+}
+interface InstInfo {
+  id: string
+  name: string
+  type: string
+  website: string
+  address: string
+  addressLine2: string
+  city: string
+  state: string
+  zip: string
+  image: string
+  phone: string
+  classes: { items: { name?: string, id: string }[] }
+  curricula: { items: { name?: string, id: string }[] }
+  isServiceProvider: boolean
+  serviceProviders?: { items: { id: string, providerID: string, providerInstitution?: any }[] }
 }
 
-const InstitutionInfo: React.FC<InstitutionInfoProps> = (
-  instPrps: InstitutionInfoProps
-) => {
+const InstitutionInfo = (instProps: InstitutionInfoProps) => {
+  const { institute } = instProps;
   const match = useRouteMatch();
+  const [imageUrl, setImageUrl] = useState();
 
+  const tabs = [
+    { index: 0, title: 'Service Providers', icon: <FaHandshake />, active: false, content: <ServiceProviders serviceProviders={institute.serviceProviders} instId={institute?.id} updateServiceProviders={instProps.updateServiceProviders} /> },
+    { index: 1, title: 'Staff', icon: <IoPeople />, active: true, content: <StaffBuilder serviceProviders={institute.serviceProviders} instituteId={instProps?.institute?.id} /> },
+    { index: 2, title: 'Classes', icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={institute?.classes} instId={institute?.id}/> },
+    { index: 3, title: 'Curricular', icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} instId={institute?.id}/> },
+    { index: 4, title: 'Rooms', icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id} /> }
+  ]
+
+  useEffect(() => {
+    async function getUrl() {
+      const imageUrl: any = await getImageFromS3(instProps?.institute.image);
+      setImageUrl(imageUrl);
+    }
+    getUrl();
+  }, [instProps?.institute.image]);
+
+  const { name, image, type, address, addressLine2, city, state, zip, phone, website, isServiceProvider } = instProps?.institute
   return (
-    <>
-      <div className='w-full'>
-        <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
+    <div>
+      <div className="h-9/10 flex flex-col md:flex-row">
 
-          <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              General Information
-            </h3>
-          </div>
+        {/* Profile section */}
+        <div className="w-2/10 p-4 mr-4 flex flex-col text-center items-center">
 
+          {image ?
+            <img
+              className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+              src={imageUrl}
+            /> : <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+              <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
+                style={{ background: `${name ? (stringToHslColor(getInitialsFromString(name)[0] + ' ' + getInitialsFromString(name)[1])) : null}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
+                {name && (
+                  initials(getInitialsFromString(name)[0], getInitialsFromString(name)[1])
+                )}
+              </div>
+            </div>}
 
-          <div className='px-4 py-5 sm:px-6'>
-            <dl className='grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2'>
-
-              <div className='sm:col-span-1 p-2'>
-                <dt className='text-base leading-5 font-medium text-gray-500'>
-                  Title
-                </dt>
-                <dd className='mt-2 text-base leading-5 text-gray-900'>
-                  {`${instPrps.institute.name ? instPrps.institute.name : '--'}`}
-                </dd>
-              </div>
-              <div className='sm:col-span-1 p-2'>
-                <dt className='text-base leading-5 font-medium text-gray-500'>
-                  Website
-                </dt>
-                <dd className='mt-2 text-base leading-5 text-gray-900'>
-                  {`${instPrps.institute.website ? instPrps.institute.website : '--'}`}
-                </dd>
-              </div>
-              <div className='sm:col-span-1 p-2'>
-                <dt className='text-base leading-5 font-medium text-gray-500'>
-                  Contact Person
-                </dt>
-                <dd className='mt-2 text-base leading-5 text-gray-900'>
-                  {`${instPrps.institute.contact.name ? instPrps.institute.contact.name : '--'}`}
-                </dd>
-              </div>
-              <div className='sm:col-span-1 p-2'>
-                <dt className='text-base leading-5 font-medium text-gray-500'>
-                  Email
-                </dt>
-                <dd className='mt-2 text-base leading-5 text-gray-900'>
-                  {`${instPrps.institute.contact.email ? instPrps.institute.contact.email : '--'}`}
-                </dd>
-              </div>
-              {/* <div className='sm:col-span-1'>
-                <dt className='text-base leading-5 font-medium text-gray-500'>
-                  Phone
-                </dt>
-                <dd className='mt-2 text-base leading-5 text-gray-900'>
-                  {`${instPrps.institute.phone ? instPrps.institute.phone : 'n/a'}`}
-                </dd>
-              </div> */}
-              <div className='sm:col-span-1 p-2'>
-                <dt className='text-base leading-5 font-medium text-gray-500'>
-                  State
-                </dt>
-                <dd className='mt-2 text-base leading-5 text-gray-900'>
-                  {`${instPrps.institute.state ? instPrps.institute.state : '--'}`}
-                </dd>
-              </div>
-              <div className='sm:col-span-1 p-2'>
-                <dt className='text-base leading-5 font-medium text-gray-500'>
-                  Address
-                </dt>
-                <dd className='mt-2 text-base leading-5 text-gray-900'>
-                  {`${instPrps.institute.address ? instPrps.institute.address : '--'}`}
-                </dd>
-              </div>
-            </dl>
+          <div className="text-xl font-bold font-open text-gray-900 mt-4">
+            <p>
+              {name ? name : ''}
+            </p>
           </div>
         </div>
 
-        <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg'>
+        {/* General information section */}
+        <div className='w-full'>
+          <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
-          <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Institute Classes
-            </h3>
+            <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                General Information
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-2 divide-x divide-gray-400 p-4">
+              <div className="p-8">
+                <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+                  <span className="text-gray-900 mr-2 w-3/10">Address:</span>
+                  <span className="w-auto">
+                    {address && (<Fragment>{address + ', '} <br /></Fragment>)}
+                    {addressLine2 && (<Fragment>{addressLine2 + ', '} <br /></Fragment>)}
+                    {city && (city + ', ')} {state && state} <br />
+                    {zip && zip}
+                  </span>
+                </p>
+                <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+                  <span className="text-gray-900 mr-2 w-3/10">Contact No:</span>
+                  <span className="w-auto">{phone ? formatPhoneNumber(phone) : '--'}</span>
+                </p>
+              </div>
+              <div className="p-8">
+                <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+                  <span className="text-gray-900 mr-2 w-3/10">Institution Type:</span>
+                  <span className="w-auto">{type ? type : '--'}</span>
+                </p>
+                <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+                  <span className="text-gray-900 mr-2 w-3/10">Website:</span>
+                  <span className="w-auto">{website ? getHostNameFromUrl(website) : '--'}</span>
+                </p>
+                <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+                  <span className="text-gray-900 mr-2 w-3/10">Service Provider:</span>
+                  <span className="w-auto">{isServiceProvider ? 'YES' : 'NO'}</span>
+                </p>
+              </div>
+            </div>
           </div>
-
-          <div className='px-4 py-5 sm:px-6'>
-            <dl className='grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2'>
-
-            </dl>
-          </div>
+          {
+            instProps?.institute?.id &&
+            <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg'>
+              <div className='px-4 py-5 sm:px-6'>
+                <UnderlinedTabs tabs={tabs} />
+              </div>
+            </div>
+          }
         </div>
 
       </div>
-      <div className='px-4 mt-4 flex justify-end'>
-        <NavLink to={`${match.url}/edit`} className='w-1/4'>
-          <ActionButton
-            label='Edit'
-            compClass='w-32 text-white bg-indigo-600 hover:bg-indigo-500 focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700
-          inline-flex justify-center py-2 px-4 border border-transparent text-m leading-5 font-medium rounded-md focus:outline-none transition duration-150 ease-in-out'
-          />
-        </NavLink>
-      </div>
-    </>
+    </div >
   );
 };
 

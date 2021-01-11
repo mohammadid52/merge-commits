@@ -5,7 +5,7 @@ interface props {
   fullscreen: boolean;
   dataProps?: {
     title?: string;
-    story?: string;
+    story?: string[];
     [key: string]: any;
   };
 }
@@ -15,13 +15,13 @@ const StoryForm = (props: props) => {
   const { fullscreen, dataProps } = props;
   const [input, setInput] = useState({
     title: '',
-    story: '',
+    story: [''],
   });
 
   useEffect(() => {
     setInput({
       title: dataProps && dataProps.title ? dataProps.title : '',
-      story: dataProps && dataProps.story ? dataProps.story : '',
+      story: dataProps && dataProps.story ? dataProps.story : [''],
     });
   }, [dataProps]);
 
@@ -48,7 +48,7 @@ const StoryForm = (props: props) => {
           className={`w-full h-64 py-2 px-4 text-gray-800 rounded-xl ${theme.elem.textInput}`}
           name="story"
           placeholder="Write your story here!"
-          value={input.story}
+          value={input.story[0]}
           // onChange={handleInputChange}
         />
       </div>

@@ -1,8 +1,5 @@
 export const updatePerson = /* GraphQL */ `
-  mutation UpdatePerson(
-    $input: UpdatePersonInput!
-    $condition: ModelPersonConditionInput
-  ) {
+  mutation UpdatePerson($input: UpdatePersonInput!, $condition: ModelPersonConditionInput) {
     updatePerson(input: $input, condition: $condition) {
       id
       authId
@@ -21,11 +18,32 @@ export const updatePerson = /* GraphQL */ `
   }
 `;
 
+export const updatePersonLoginTime = /* GraphQL */ `
+  mutation UpdatePerson($input: UpdatePersonInput!, $condition: ModelPersonConditionInput) {
+    updatePerson(input: $input, condition: $condition) {
+      id
+      authId
+      email
+      lastLoggedIn
+    }
+  }
+`;
+
+export const updatePersonLogoutTime = /* GraphQL */ `
+  mutation UpdatePerson($input: UpdatePersonInput!, $condition: ModelPersonConditionInput) {
+    updatePerson(input: $input, condition: $condition) {
+      id
+      authId
+      email
+      lastLoggedIn
+    }
+  }
+`;
+
+
+
 export const createStudentData = /* GraphQL */ `
-  mutation CreateStudentData(
-    $input: CreateStudentDataInput!
-    $condition: ModelStudentDataConditionInput
-  ) {
+  mutation CreateStudentData($input: CreateStudentDataInput!, $condition: ModelStudentDataConditionInput) {
     createStudentData(input: $input, condition: $condition) {
       id
       lessonProgress
@@ -51,6 +69,12 @@ export const createStudentData = /* GraphQL */ `
         additional {
           name
           input
+        }
+        truthGame {
+          id
+          label
+          isLie
+          text
         }
       }
       corelessonData {
@@ -108,10 +132,7 @@ export const createStudentData = /* GraphQL */ `
 `;
 
 export const updateStudentData = /* GraphQL */ `
-  mutation UpdateStudentData(
-    $input: UpdateStudentDataInput!
-    $condition: ModelStudentDataConditionInput
-  ) {
+  mutation UpdateStudentData($input: UpdateStudentDataInput!, $condition: ModelStudentDataConditionInput) {
     updateStudentData(input: $input, condition: $condition) {
       id
       lessonProgress
@@ -137,6 +158,12 @@ export const updateStudentData = /* GraphQL */ `
         additional {
           name
           input
+        }
+        truthGame {
+          id
+          label
+          isLie
+          text
         }
       }
       corelessonData {
@@ -174,10 +201,7 @@ export const updateStudentData = /* GraphQL */ `
 `;
 
 export const updateClassroom = /* GraphQL */ `
-  mutation UpdateClassroom(
-    $input: UpdateClassroomInput!
-    $condition: ModelClassroomConditionInput
-  ) {
+  mutation UpdateClassroom($input: UpdateClassroomInput!, $condition: ModelClassroomConditionInput) {
     updateClassroom(input: $input, condition: $condition) {
       id
       open
@@ -199,6 +223,12 @@ export const updateClassroom = /* GraphQL */ `
           additional {
             name
             input
+          }
+          truthGame {
+            id
+            label
+            isLie
+            text
           }
         }
         corelessonData {
@@ -246,10 +276,7 @@ export const updateClassroom = /* GraphQL */ `
 `;
 
 export const updateClassroomDate = /* GraphQL */ `
-  mutation UpdateClassroom(
-    $input: UpdateClassroomInput!
-    $condition: ModelClassroomConditionInput
-  ) {
+  mutation UpdateClassroom($input: UpdateClassroomInput!, $condition: ModelClassroomConditionInput) {
     updateClassroom(input: $input, condition: $condition) {
       id
       open
@@ -274,10 +301,7 @@ export const updateClassroomDate = /* GraphQL */ `
 `;
 
 export const createQuestionData = /* GraphQL */ `
-  mutation CreateQuestionData(
-    $input: CreateQuestionDataInput!
-    $condition: ModelQuestionDataConditionInput
-  ) {
+  mutation CreateQuestionData($input: CreateQuestionDataInput!, $condition: ModelQuestionDataConditionInput) {
     createQuestionData(input: $input, condition: $condition) {
       id
       questionID
@@ -292,10 +316,7 @@ export const createQuestionData = /* GraphQL */ `
 `;
 
 export const updateSurveyStatus = /* GraphQL */ `
-  mutation UpdatePerson(
-    $input: UpdatePersonInput!
-    $condition: ModelPersonConditionInput
-  ) {
+  mutation UpdatePerson($input: UpdatePersonInput!, $condition: ModelPersonConditionInput) {
     updatePerson(input: $input, condition: $condition) {
       id
       authId
@@ -306,10 +327,7 @@ export const updateSurveyStatus = /* GraphQL */ `
 `;
 
 export const createFeedback = /* GraphQL */ `
-  mutation CreateFeedback(
-    $input: CreateFeedbackInput!
-    $condition: ModelFeedbackConditionInput
-  ) {
+  mutation CreateFeedback($input: CreateFeedbackInput!, $condition: ModelFeedbackConditionInput) {
     createFeedback(input: $input, condition: $condition) {
       id
       classroomID
@@ -317,6 +335,131 @@ export const createFeedback = /* GraphQL */ `
       comment
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const createInstitution = /* GraphQL */ `
+  mutation CreateInstitution($input: CreateInstitutionInput!, $condition: ModelInstitutionConditionInput) {
+    createInstitution(input: $input, condition: $condition) {
+      id
+      name
+      type
+      district
+      address
+      addressLine2
+      city
+      state
+      zip
+      phone
+      website
+      image
+      isServiceProvider
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const updateInstitution = /* GraphQL */ `
+  mutation UpdateInstitution($input: UpdateInstitutionInput!, $condition: ModelInstitutionConditionInput) {
+    updateInstitution(input: $input, condition: $condition) {
+      id
+      name
+      type
+      district
+      address
+      addressLine2
+      city
+      state
+      zip
+      phone
+      website
+      image
+      isServiceProvider
+    }
+  }
+`;
+
+export const createCurriculum = /* GraphQL */ `
+  mutation CreateCurriculum($input: CreateCurriculumInput!, $condition: ModelCurriculumConditionInput) {
+    createCurriculum(input: $input, condition: $condition) {
+      id
+      name
+      institutionID
+    }
+  }
+`;
+
+export const createClass = /* GraphQL */ `
+  mutation CreateClass($input: CreateClassInput!, $condition: ModelClassConditionInput) {
+    createClass(input: $input, condition: $condition) {
+      id
+      institutionID
+      name
+      institution {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const createClassStudent = /* GraphQL */ `
+  mutation CreateClassStudent($input: CreateClassStudentInput!, $condition: ModelClassStudentConditionInput) {
+    createClassStudent(input: $input, condition: $condition) {
+      id
+      classID
+      studentID
+      status
+      studentEmail
+      studentAuthID
+    }
+  }
+`;
+
+export const updateClassStudent = /* GraphQL */ `
+  mutation UpdateClassStudent($input: UpdateClassStudentInput!, $condition: ModelClassStudentConditionInput) {
+    updateClassStudent(input: $input, condition: $condition) {
+      id
+      status
+    }
+  }
+`;
+
+export const createRoom = /* GraphQL */ `
+  mutation CreateRoom(
+    $input: CreateRoomInput!
+    $condition: ModelRoomConditionInput
+  ) {
+    createRoom(input: $input, condition: $condition) {
+      id
+      institutionID
+      classID
+      teacherAuthID
+      teacherEmail
+      name
+      maxPersons
+    }
+  }
+`;
+
+export const updateStaff = /* GraphQL */ `
+  mutation UpdateStaff($input: UpdateStaffInput!, $condition: ModelStaffConditionInput) {
+    updateStaff(input: $input, condition: $condition) {
+      id
+      status
+    }
+  }
+`;
+export const updateServiceProviderStatus = /* GraphQL */ `
+  mutation UpdateServiceProvider(
+    $input: UpdateServiceProviderInput!
+    $condition: ModelServiceProviderConditionInput
+  ) {
+    updateServiceProvider(input: $input, condition: $condition) {
+      id
+      status
     }
   }
 `;

@@ -26,7 +26,7 @@ const tempData = [
 
 const SelfDisplay = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  const displayProps = state.componentState.truthGame;
+  const displayProps = state.componentState.truthGame.truthGameArray;
   const inputs = state.data.lesson.warmUp.inputs;
 
   useEffect(() => {
@@ -39,9 +39,9 @@ const SelfDisplay = () => {
       <ReflectionQuestions questions={state.data.lesson.warmUp.breakdown.reflectionQuestions} />
       <Banner title={state.data.lesson.warmUp.title} display="SELF" fullscreen={fullscreen} />
 
-      <TruthGameOutput truthGameData={displayProps && displayProps.truthGameArray ? displayProps : ''} />
+      <TruthGameOutput truthGameData={displayProps ? displayProps : []} />
 
-      {inputs.additionalInputs.length > 0 ? <Modules additional={displayProps.additional} displayMode="SELF" /> : null}
+      {/*{inputs.additionalInputs.length > 0 ? <Modules additional={displayProps.additional} displayMode="SELF" /> : null}*/}
     </div>
   );
 };

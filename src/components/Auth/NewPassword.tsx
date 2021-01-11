@@ -34,7 +34,7 @@ const NewPassword = () => {
         const res = await Auth.changePassword(user, password, input.password);
         console.log(res);
         dispatch({ type: 'LOG_IN', payload: { email: username, authId: user.username } });
-        setCookie('auth', { email: username, authId: user.username }, { secure: false });
+        setCookie('auth', { email: username, authId: user.username }, { secure: false, path: '/' });
         history.push('/dashboard');
       } catch (error) {
         console.error('error signing in', error);
@@ -156,9 +156,9 @@ const NewPassword = () => {
                       message.type === 'success'
                         ? 'text-green-500'
                         : message.type === 'error'
-                        ? 'text-red-500'
-                        : null
-                    }`}>
+                          ? 'text-red-500'
+                          : null
+                      }`}>
                     {message.message}
                   </p>
                 ) : null}
@@ -174,10 +174,10 @@ const NewPassword = () => {
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
-                      <IconContext.Provider value={{ size: '1.5rem' }}>
-                        <AiOutlineEyeInvisible />
-                      </IconContext.Provider>
-                    )}
+                        <IconContext.Provider value={{ size: '1.5rem' }}>
+                          <AiOutlineEyeInvisible />
+                        </IconContext.Provider>
+                      )}
                   </div>
                 </div>
 
@@ -210,10 +210,10 @@ const NewPassword = () => {
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
-                      <IconContext.Provider value={{ size: '1.5rem' }}>
-                        <AiOutlineEyeInvisible />
-                      </IconContext.Provider>
-                    )}
+                        <IconContext.Provider value={{ size: '1.5rem' }}>
+                          <AiOutlineEyeInvisible />
+                        </IconContext.Provider>
+                      )}
                   </div>
                 </div>
                 <div className='icon'>
@@ -247,7 +247,7 @@ const NewPassword = () => {
             </div>
           </div>
         </div>
-          <div className='login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 bg-login-bg bg-cover bg-center'></div>
+        <div className='login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 bg-login-bg bg-cover bg-center'></div>
       </div>
     </div>
   );

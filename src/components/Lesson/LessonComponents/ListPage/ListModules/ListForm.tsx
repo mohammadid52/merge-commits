@@ -3,31 +3,26 @@ import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 
+interface ListFormProps {
+  nrLists: number | null;
+  listArray: string[];
+}
 
-const ListForm = () => {
+interface ListInput {
+  title: string;
+  story: string[];
+}
+
+const ListForm = (props: ListFormProps) => {
+  const { nrLists, listArray } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
-  // const [cookies, setCookie] = useCookies(['story']);
+  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
   const [input, setInput] = useState({
-    title:
-      state.componentState.story && state.componentState.story.title
-        ? state.componentState.story.title
-        : '',
+    title: state.componentState.story && state.componentState.story.title ? state.componentState.story.title : '',
     story:
-      state.componentState.story && state.componentState.story.story
-        ? state.componentState.story.story
-        : '',
+      state.componentState.story && state.componentState.story.story ? state.componentState.story.story : listArray,
   });
 
-  // useEffect(() => {
-  //   if (cookies.story) {
-  //     setInput(() => {
-  //       return {
-  //         title: cookies.story.title,
-  //         story: cookies.story.story,
-  //       };
-  //     });
-  //   }
-  // }, []);
 
   useEffect(() => {
     if (state.componentState.story) {
@@ -40,109 +35,110 @@ const ListForm = () => {
         },
       });
 
-      // setCookie('story', { ...cookies.story, title: input.title });
+      setCookie(`lesson-${state.classroomID}`, {
+        ...cookies[`lesson-${state.classroomID}`],
+        story: { ...cookies[`lesson-${state.classroomID}`].story, title: input.title },
+      });
     }
   }, [input.title]);
 
   useEffect(() => {
-    if (state.componentState.story) {
-      dispatch({
-        type: 'UPDATE_COMPONENT_STATE',
-        payload: {
-          componentName: 'story',
-          inputName: 'story',
-          content: input.story,
-        },
-      });
+    // if (state.componentState.story) {
+    dispatch({
+      type: 'UPDATE_COMPONENT_STATE',
+      payload: {
+        componentName: 'story',
+        inputName: 'story',
+        content: input.story,
+      },
+    });
 
-      // setCookie('story', { ...cookies.story, story: input.story });
-    }
+    setCookie(`lesson-${state.classroomID}`, {
+      ...cookies[`lesson-${state.classroomID}`],
+      story: { ...cookies[`lesson-${state.classroomID}`].story, story: input.story },
+    });
+    // }
   }, [input.story]);
 
   const handleInputChange = (e: { target: { id: string; value: string } }) => {
+    /**
+     *
+     * Updated inputchange so that the correct index
+     * in the story string array is modified...
+     * if there is a single list...
+     * or if there are multiple...
+     *
+     * */
+    const storyArrayID = parseInt(e.target.id.match(/[0-9]/)[0]);
+
+    console.log('changing multi list: ', storyArrayID);
+
     setInput({
       ...input,
-      [e.target.id]: e.target.value,
+      ['story']: input.story.map((item: string, index: number) => (index === storyArrayID ? e.target.value : item)),
     });
   };
 
-  
-  const bullet = "\u2022";
+  const bullet = '\u2022';
 
   const handleInput = (e: any) => {
     let previousLength = 0;
     e.preventDefault();
     const newLength = e.target.value.length;
     const characterCode = e.target.value.substr(-1).charCodeAt(0);
-    // console.log(characterCode, '?');
-  // console.log(e.currentTarget, 'value')
-  // console.log(newLength, 'newlength')
-  // console.log(previousLength, 'prev length')
     if (newLength > previousLength) {
       if (characterCode === 10) {
         e.target.value = `${e.target.value}${bullet} `;
-      } 
-      else if (newLength === 1) {
+      } else if (newLength === 1) {
         e.target.value = `${bullet} ${e.target.value}`;
       }
     }
-    // else if (newLength - 1 ) {
-    //   if(characterCode !== 8226) {
-    //     console.log(e.target.value, 'hello')
-    //   }
-     
+
     previousLength = newLength;
     // console.log(previousLength, 'prev')
-  }
-
-
-  // const bullet = "\u2022";
-  const enter = 13;
-  const bulletWithSpace = `${bullet} `;
-
-
-const handleInputTest = (e: KeyboardEvent<HTMLTextAreaElement>, event: ChangeEvent<HTMLTextAreaElement>) => {
-  e.preventDefault();
-  const { keyCode, target } = e;
-  const { selectionStart, value } = event.target;
-  
-  if (keyCode === enter) {
-    console.log('a');
-    event.target.value = [value]
-      .map((c, i) => i === selectionStart - 1
-        ? `\n${bulletWithSpace}`
-        : c
-      )
-      .join('');
-      console.log(event.target.value);
-      
-    event.target.selectionStart = selectionStart+bulletWithSpace.length;
-    event.target.selectionEnd = selectionStart+bulletWithSpace.length;
-  }
-  
-  if (value[0] !== bullet) {
-    event.target.value = `${bulletWithSpace}${value}`;
-  }
-}
-
+  };
 
   return (
-    <div className='w-full h-full rounded-xl'>
-      <h3
-        className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
-        List{' '}
-      </h3>
-      <div className='relative h-full flex flex-col mb-5 mt-2'>
-        <textarea
-          id='story'
-          className={`w-full h-64 py-2 px-4 text-gray-800 rounded-xl ${theme.elem.textInput}`}
-          name='list'
-          placeholder={`${bullet} ${state.data.lesson.warmUp.inputs.textExample}`}
-          defaultValue={`${input.story}`}
-          onChange={handleInputChange}
-          onInput={handleInput}
-        />
-      </div>
+    <div className="w-full h-full rounded-xl">
+      <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>List </h3>
+
+      {/**
+       *
+       * SUPPORT FOR MULTIPLE LISTS
+       * EITHER RETURN A SINGLE LIST...
+       * OR
+       * RETURN MULTIPLE LISTS FROM A MAP
+       *
+       * */}
+
+      {nrLists === null ? (
+        <div className="relative h-full flex flex-col mb-5 mt-2">
+          <textarea
+            id="list_0"
+            className={`w-full h-64 py-2 px-4 text-gray-800 rounded-xl ${theme.elem.textInput}`}
+            name="list"
+            placeholder={`${bullet} ${state.data.lesson.warmUp.inputs.textExample}`}
+            defaultValue={`${input.story}`}
+            onChange={handleInputChange}
+            onInput={handleInput}
+          />
+        </div>
+      ) : (
+        Array.from(Array(nrLists).keys()).map((elem: number, key: number) => {
+          return (
+            <textarea
+              key={`list_${key}`}
+              id={`list_${key}`}
+              className={`w-full h-64 py-2 px-4 text-gray-800 rounded-xl ${theme.elem.textInput}`}
+              name="list"
+              placeholder={`${bullet} ${state.data.lesson.warmUp.inputs.textExample}`}
+              defaultValue={``}
+              onChange={handleInputChange}
+              onInput={handleInput}
+            />
+          );
+        }, [])
+      )}
     </div>
   );
 };

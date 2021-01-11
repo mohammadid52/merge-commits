@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
-import { useCookies } from 'react-cookie';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaKey } from 'react-icons/fa';
 import { FaUnlockAlt } from 'react-icons/fa';
@@ -12,7 +11,6 @@ import { useHistory, Link, NavLink } from 'react-router-dom';
 import { Auth } from '@aws-amplify/auth';
 
 const Reset = () => {
-  const [cookies, setCookie] = useCookies(['auth']);
   const history = useHistory();
   const { theme, state, dispatch } = useContext(GlobalContext);
   const [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({

@@ -14,6 +14,25 @@ export const getPerson = /* GraphQL */ `
   }
 `;
 
+export const listPersons = /* GraphQL */ `
+  query ListPersons($filter: ModelPersonFilterInput, $sortDirection: ModelSortDirection) {
+    listPersons(filter: $filter, sortDirection: $sortDirection) {
+      items {
+        id
+        authId
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        image
+      }
+      nextToken
+    }
+  }
+`;
+
 export const getClassroom = /* GraphQL */ `
   query GetClassroom($id: ID!) {
     getClassroom(id: $id) {
@@ -38,6 +57,13 @@ export const getClassroom = /* GraphQL */ `
           additional {
             name
             input
+          }
+          poll {
+            id
+            question
+            option {
+                id
+            }
           }
         }
         corelessonData {
@@ -178,6 +204,7 @@ export const getClassroom = /* GraphQL */ `
             textExample
             titleExample
             example
+            listInputNumber
             truthGameInputs {
               id
               label
@@ -187,6 +214,15 @@ export const getClassroom = /* GraphQL */ `
               name
               prompt
               example
+            }
+            pollInputs {
+              id
+              question
+              option {
+                id
+                option
+                isChoice
+              }
             }
           }
           breakdown {
@@ -320,6 +356,13 @@ export const getClassroom = /* GraphQL */ `
               name
               input
             }
+            poll {
+              id
+              question
+              option {
+                id
+              }
+            }
           }
           corelessonData {
             selected {
@@ -391,6 +434,13 @@ export const getClassroomStudent = /* GraphQL */ `
           additional {
             name
             input
+          }
+          poll {
+            id
+            question
+            option {
+              id
+            }
           }
         }
         corelessonData {
@@ -532,6 +582,7 @@ export const getClassroomStudent = /* GraphQL */ `
             example
             textExample
             titleExample
+            listInputNumber
             truthGameInputs {
               id
               label
@@ -541,6 +592,15 @@ export const getClassroomStudent = /* GraphQL */ `
               name
               prompt
               example
+            }
+            pollInputs {
+              id
+              question
+              option {
+                id
+                option
+                isChoice
+              }
             }
           }
           breakdown {
@@ -672,6 +732,13 @@ export const getStudentData = /* GraphQL */ `
           name
           input
         }
+        poll {
+          id
+          question
+          option {
+            id
+          }
+        }
       }
       corelessonData {
         selected {
@@ -712,28 +779,7 @@ export const getCourse = /* GraphQL */ `
     getCourse(id: $id) {
       id
       name
-      classID
-      class {
-        id
-        name
-        students {
-          items {
-            student {
-              id
-              authId
-              status
-              email
-              firstName
-              preferredName
-              lastName
-              language
-            }
-          } 
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
+      type
       classrooms {
         items {
           id
@@ -750,24 +796,21 @@ export const getCourse = /* GraphQL */ `
           lessonID
           lesson {
             title
-              artist {
-                id
-                images
-                name
-                type
-              }
-              language
-              summary
+            artist {
+              id
+              images
+              name
+              type
+            }
+            language
+            summary
           }
           createdAt
           updatedAt
         }
         nextToken
       }
-      location
       startDate
-      endDate
-      duration
       createdAt
       updatedAt
     }
@@ -782,13 +825,7 @@ export const listCurriculums = /* GraphQL */ `
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listCurriculums(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
+    listCurriculums(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken, sortDirection: $sortDirection) {
       items {
         id
         name
@@ -812,11 +849,7 @@ export const listCurriculums = /* GraphQL */ `
 `;
 
 export const listWarmUps = /* GraphQL */ `
-  query ListWarmUps(
-    $filter: ModelWarmUpFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListWarmUps($filter: ModelWarmUpFilterInput, $limit: Int, $nextToken: String) {
     listWarmUps(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -829,11 +862,7 @@ export const listWarmUps = /* GraphQL */ `
 `;
 
 export const listCoreLessons = /* GraphQL */ `
-  query ListCoreLessons(
-    $filter: ModelCoreLessonFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListCoreLessons($filter: ModelCoreLessonFilterInput, $limit: Int, $nextToken: String) {
     listCoreLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -846,11 +875,7 @@ export const listCoreLessons = /* GraphQL */ `
 `;
 
 export const listActivitys = /* GraphQL */ `
-  query ListActivitys(
-    $filter: ModelActivityFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListActivitys($filter: ModelActivityFilterInput, $limit: Int, $nextToken: String) {
     listActivitys(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -863,11 +888,7 @@ export const listActivitys = /* GraphQL */ `
 `;
 
 export const listQuestions = /* GraphQL */ `
-  query ListQuestions(
-    $filter: ModelQuestionFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListQuestions($filter: ModelQuestionFilterInput, $limit: Int, $nextToken: String) {
     listQuestions(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -896,13 +917,7 @@ export const listLessons = /* GraphQL */ `
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listLessons(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
+    listLessons(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken, sortDirection: $sortDirection) {
       items {
         id
         title
@@ -929,11 +944,7 @@ export const listLessons = /* GraphQL */ `
 `;
 
 export const listFilters = /* GraphQL */ `
-  query ListFilters(
-    $filter: ModelFilterFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListFilters($filter: ModelFilterFilterInput, $limit: Int, $nextToken: String) {
     listFilters(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -957,13 +968,7 @@ export const listLessonFilters = /* GraphQL */ `
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listLessonFilters(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
+    listLessonFilters(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken, sortDirection: $sortDirection) {
       items {
         id
         lessonID
@@ -984,6 +989,147 @@ export const listLessonFilters = /* GraphQL */ `
         }
       }
       nextToken
+    }
+  }
+`;
+
+export const listServiceProviders = /* GraphQL */ `
+  query ListInstitutions(
+    $id: ID
+    $filter: ModelInstitutionFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInstitutions(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken, sortDirection: $sortDirection) {
+      items {
+        id
+        name
+        image
+        isServiceProvider
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getInstitution = /* GraphQL */ `
+  query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      name
+      isServiceProvider
+      serviceProviders {
+        items {
+          id
+          partnerID
+          providerID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+    }
+  }
+`;
+
+
+export const GetInstitutionDetails = /* GraphQL */ `
+query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      name
+      type
+      district
+      address
+      addressLine2
+      city
+      state
+      zip
+      phone
+      website
+      image
+      isServiceProvider
+      serviceProviders {
+        items {
+          id
+          partnerID
+          providerID
+          providerInstitution {
+            id
+            name
+            type
+            district
+            address
+            addressLine2
+            city
+            state
+            zip
+            phone
+            website
+            image
+          }
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      staff {
+        items {
+          id
+          institutionID
+          staffAuthID
+          staffEmail
+          status
+          statusChangeDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      rooms {
+        items {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      curricula {
+        items {
+          id
+          institutionID
+          name
+          type
+          description
+          objectives
+          languages
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      classes {
+        items {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters
+      createdAt
+      updatedAt
     }
   }
 `;

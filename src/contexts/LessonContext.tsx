@@ -1,4 +1,5 @@
 import React, { useReducer, useEffect, useState, } from 'react';
+import { useHistory } from 'react-router-dom';
 import { lessonState, PagesType } from '../state/LessonState'
 import { lessonReducer } from '../reducers/LessonReducer'
 import { pageThemes } from './GlobalContext';
@@ -7,13 +8,13 @@ import * as customSubscriptions from '../customGraphql/customSubscriptions';
 import * as customMutations from '../customGraphql/customMutations';
 import * as customQueries from '../customGraphql/customQueries';
 // import { API, graphqlOperation } from 'aws-amplify';
-import {Auth} from '@aws-amplify/auth';
+import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 
 const removeDisabled = (array: PagesType) => {
-    let updatedArray = array.filter((item: { disabled: boolean, [key: string]: any}) => {
+    let updatedArray = array.filter((item: { disabled: boolean, [key: string]: any }) => {
         return !item.disabled
     })
     // console.log('updatedPages', updatedArray)
@@ -35,12 +36,13 @@ interface DataObject {
 export const LessonContext = React.createContext(null);
 
 export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
-    const [ data, setData ] = useState<DataObject>();
-    const [ lesson, setLesson ] = useState<DataObject>();
+    const [data, setData] = useState<DataObject>();
+    const [lesson, setLesson] = useState<DataObject>();
     // const [ cookies ] = useCookies(['auth']);
-    const [ state, dispatch ] = useReducer(lessonReducer, lessonState);
-    const [ lightOn, setLightOn ] = useState(false);
+    const [state, dispatch] = useReducer(lessonReducer, lessonState);
+    const [lightOn, setLightOn] = useState(false);
     const location = useLocation();
+    const history = useHistory();
     let subscription: any;
 
     const lightSwitch = () => {
@@ -57,11 +59,11 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         let studentAuthID: string;
 
         await Auth.currentAuthenticatedUser()
-        .then(user => {
-            // console.log(user);
-            studentID = user.attributes.email
-            studentAuthID = user.attributes.sub
-        })
+            .then(user => {
+                // console.log(user);
+                studentID = user.attributes.email
+                studentAuthID = user.attributes.sub
+            })
 
         try {
             const studentData: any = await API.graphql(graphqlOperation(customQueries.getStudentData, {
@@ -71,56 +73,65 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
             // console.log(studentData)
 
-            if ( !studentData.data.getStudentData ) {
-                const newStudentData: any = await API.graphql(graphqlOperation(customMutations.createStudentData, { input: {
-                    lessonProgress: 'intro',
-                    currentLocation: 'intro',
-                    status: 'ACTIVE',
-                    classroomID: queryParams.id,
-                    studentID: studentID,
-                    studentAuthID: studentAuthID,
-                }}))
+            if (!studentData.data.getStudentData) {
+                const newStudentData: any = await API.graphql(graphqlOperation(customMutations.createStudentData, {
+                    input: {
+                        lessonProgress: 'intro',
+                        currentLocation: 'intro',
+                        status: 'ACTIVE',
+                        classroomID: queryParams.id,
+                        studentID: studentID,
+                        studentAuthID: studentAuthID,
+                    }
+                }))
                 // console.log(newStudentData)
-                dispatch({ type: 'SET_STUDENT_INFO', payload: {
-                    studentDataID: newStudentData.data.createStudentData.id,
-                    studentUsername: newStudentData.data.createStudentData.studentID,
-                    studentAuthID : newStudentData.data.createStudentData.studentAuthID
-                }})
+                dispatch({
+                    type: 'SET_STUDENT_INFO', payload: {
+                        studentDataID: newStudentData.data.createStudentData.id,
+                        studentUsername: newStudentData.data.createStudentData.studentID,
+                        studentAuthID: newStudentData.data.createStudentData.studentAuthID
+                    }
+                })
                 return setData(newStudentData.data.createStudentData)
-            } 
-            dispatch({ type: 'SET_STUDENT_INFO', payload: {
-                studentDataID: studentData.data.getStudentData.id,
-                studentUsername: studentData.data.getStudentData.studentID,
-                studentAuthID: studentData.data.getStudentData.studentAuthID
-            }})
+            }
+            dispatch({
+                type: 'SET_STUDENT_INFO', payload: {
+                    studentDataID: studentData.data.getStudentData.id,
+                    studentUsername: studentData.data.getStudentData.studentID,
+                    studentAuthID: studentData.data.getStudentData.studentAuthID
+                }
+            })
             return setData(studentData.data.getStudentData)
 
         } catch (err) {
             console.error(err);
         }
 
-        
+
         // console.log('student data', newStudentData);
     }
 
     async function getClassroom() {
         let queryParams = queryString.parse(location.search)
-        
-        try {
-            // this any needs to be changed once a solution is found!!!
-            const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroomStudent, { id: queryParams.id }))
-            console.log('classroom data', classroom);
-            setLesson(classroom.data.getClassroom)
-            getOrCreateStudentData()
-            subscription = subscribeToClassroom()
-        } catch (error) {
-            console.error(error)
+        if (Object.keys(queryParams).length && queryParams.id) {
+            try {
+                // this any needs to be changed once a solution is found!!!
+                const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroomStudent, { id: queryParams.id }))
+                console.log('classroom data', classroom);
+                setLesson(classroom.data.getClassroom)
+                getOrCreateStudentData()
+                subscription = subscribeToClassroom()
+            } catch (error) {
+                console.error(error)
+            }
+        } else {
+            history.push('/dashboard');
         }
     }
 
     const subscribeToClassroom = () => {
         let queryParams = queryString.parse(location.search)
-        
+
         // @ts-ignore
         const classroomSubscription = API.graphql(graphqlOperation(customSubscriptions.onUpdateClassroom, { id: queryParams.id })).subscribe({
             next: (classroomData: any) => {
@@ -131,12 +142,13 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                 // console.log('state,', state)
 
                 dispatch({
-                    type: 'UPDATE_LESSON_PLAN', 
-                    payload: { 
-                        pages: removeDisabled(updatedLessonPlan.lessonPlan), 
+                    type: 'UPDATE_LESSON_PLAN',
+                    payload: {
+                        pages: removeDisabled(updatedLessonPlan.lessonPlan),
                         displayData: updatedLessonPlan.displayData,
                         viewing: updatedLessonPlan.viewing
-                }})
+                    }
+                })
 
             }
         });
@@ -147,7 +159,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                 subscription: classroomSubscription,
             }
         })
-  
+
         // console.log('sub', classroomSubscription)
 
         return classroomSubscription;
@@ -156,8 +168,10 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     useEffect(() => {
         getClassroom()
 
-        return function cleanup() { 
-            subscription.unsubscribe()
+        return function cleanup() {
+            if (subscription) {
+                subscription.unsubscribe()
+            }
             dispatch({ type: 'CLEANUP' })
         };
     }, []);
@@ -168,23 +182,24 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             const wordBank: Array<string> = ['Mimo provoz'];
 
             dispatch({
-                type: 'SET_INITIAL_STATE', 
-                payload: { 
+                type: 'SET_INITIAL_STATE',
+                payload: {
                     classroomID: lesson.id,
                     data: lesson,
-                    pages: removeDisabled(lesson.lessonPlan), 
+                    pages: removeDisabled(lesson.lessonPlan),
                     displayData: lesson.displayData,
-                    word_bank: wordBank, 
+                    word_bank: wordBank,
                     subscribeFunc: subscribeToClassroom,
-            }})
+                }
+            })
         }
     }, [lesson])
 
     useEffect(() => {
-        if ( data ) {
+        if (data) {
             // console.log('data', data)
             let initialComponentState: any = {};
-            lesson.lessonPlan.forEach((item: { type: string, stage: string}) => {
+            lesson.lessonPlan.forEach((item: { type: string, stage: string }) => {
                 initialComponentState[item.type] = data[item.stage]
             })
             dispatch({
@@ -204,10 +219,10 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             state,
             dispatch,
             theme,
-            subscription, 
+            subscription,
             subscribeToClassroom,
         }}>
-            { children }
+            { children}
         </LessonContext.Provider>
     )
 }

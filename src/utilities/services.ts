@@ -7,7 +7,7 @@ export const getImageFromS3 = (key: string) => {
 if(key){  
   return new Promise((resolve, reject) => {
     Storage.get(key).then((result: string) => {
-      console.log('File successfully fetched from s3')
+      // console.log('File successfully fetched from s3')
       resolve(result)
     }).catch(err => {
       console.log('Error in fetching file to s3', err)
