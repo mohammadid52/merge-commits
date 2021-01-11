@@ -72,11 +72,11 @@ const AddTopic = (props: AddTopicProps) => {
       const item: any = await API.graphql(graphqlOperation(customMutations.createTopic, { input }));
       const addedItem = item.data.createTopic
       if (!topicIds.length) {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCurriculumSequences, { input: {curriculumID: curricularId, type: 'topics', sequence: [addedItem.id]}}));
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCurriculumSequences, { input: { curriculumID: curricularId, type: 'topics', sequence: [addedItem.id] } }));
         seqItem = seqItem.data.createCurriculumSequences
         console.log('seqItem', seqItem)
       } else {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCurriculumSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'topics', sequence: [...topicIds, addedItem.id]}}));
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCurriculumSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'topics', sequence: [...topicIds, addedItem.id] } }));
         seqItem = seqItem.data.updateCurriculumSequences
         console.log('seqItem', seqItem)
       }
@@ -169,8 +169,8 @@ const AddTopic = (props: AddTopicProps) => {
           </div>
         </div>
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-10" label="Save" onClick={saveTopicDetails} />
-          <Buttons btnClass="py-3 px-10" label="Cancel" onClick={cancelEvent} />
+          <Buttons btnClass="py-3 px-10 mr-4" label="Cancel" onClick={cancelEvent} transparent />
+          <Buttons btnClass="py-3 px-10 ml-4" label="Save" onClick={saveTopicDetails} />
         </div>
       </PageWrapper>
     </div>
