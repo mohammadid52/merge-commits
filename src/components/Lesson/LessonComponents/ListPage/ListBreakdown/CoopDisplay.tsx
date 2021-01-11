@@ -5,6 +5,8 @@ import Modules from './Modules';
 import Banner from './Banner';
 import ListOutput from './ListOutput';
 
+import {firstInitialFunc} from '../../../../../utilities/strings';
+
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaExpand, FaCompress } from 'react-icons/fa';
 
