@@ -60,9 +60,10 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
     list = list.data.listLearningObjectives?.items || []
     let item: any = await API.graphql(graphqlOperation(queries.getCurriculumSequences,
       { curriculumID: curricularId, type: 'learnings' }))
-    item = item.data.getCurriculumSequences
+
+    item = item.data.getCurriculumSequences || []
     list = list.map((t: any) => {
-      let index = item.sequence.indexOf(t.id)
+      let index = item?.sequence.indexOf(t.id)
       return { ...t, index }
     }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
     setLearnings(list)
