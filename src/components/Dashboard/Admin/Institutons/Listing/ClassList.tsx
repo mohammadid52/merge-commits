@@ -29,21 +29,22 @@ const ClassList = (props: ClassListProps) => {
                 <div className="flex justify-end w-8/10 m-auto ">
                   <Buttons btnClass="mx-4" label="Create new class" onClick={createNewClass} />
                 </div>
-                <div className="my-8 w-8/10 m-auto max-h-88 overflow-y-auto">
-                  <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                    <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>No.</span>
-                    </div>
-                    <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>Class Name</span>
-                    </div>
-                    {/* <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+
+                <div className="flex justify-between w-8/10 m-auto px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                  <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>No.</span>
+                  </div>
+                  <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>Class Name</span>
+                  </div>
+                  {/* <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>Active Students</span>
                     </div> */}
-                    <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>Actions</span>
-                    </div>
+                  <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>Actions</span>
                   </div>
+                </div>
+                <div className="w-8/10 m-auto max-h-88 overflow-y-auto">
                   {classes.items.map((item, index) => (
                     <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                       <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
