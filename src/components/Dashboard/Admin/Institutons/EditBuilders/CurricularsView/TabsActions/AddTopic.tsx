@@ -77,7 +77,7 @@ const AddTopic = (props: AddTopicProps) => {
         console.log('seqItem', seqItem)
       } else {
         let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCurriculumSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'topics', sequence: [...topicIds, addedItem.id]}}));
-        seqItem = seqItem.data.createCurriculumSequences
+        seqItem = seqItem.data.updateCurriculumSequences
         console.log('seqItem', seqItem)
       }
       if (addedItem) {

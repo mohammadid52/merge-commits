@@ -29,10 +29,10 @@ const TopicsList = (props: TopicsListProps) => {
       setTopicIds(list)
       let topicsList = topics.map((t: any) => {
         let index = list.indexOf(t.id)
-        return {...t, index }
+        return { ...t, index }
       }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
       setTopics(topicsList)
-      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCurriculumSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'topics', sequence: list }}));
+      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCurriculumSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'topics', sequence: list } }));
       seqItem = seqItem.data.createCurriculumSequences;
       console.log('seq updated');
     }
@@ -64,7 +64,7 @@ const TopicsList = (props: TopicsListProps) => {
     item = item.data.getCurriculumSequences
     list = list.map((t: any) => {
       let index = item.sequence.indexOf(t.id)
-      return {...t, index }
+      return { ...t, index }
     }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
     setTopics(list)
     setTopicIds(item.sequence)
@@ -155,7 +155,7 @@ const TopicsList = (props: TopicsListProps) => {
                       </div>
                       <p className="text-center p-16">  This curricular does not have any topics. Please create a new one.</p>
                     </Fragment>)}
-              </> : <div>Loading...</div>
+              </> : <div className="py-12 my-12 m-auto text-center">Fetching Data Please wait...</div>
           }
         </PageWrapper>
       </div>

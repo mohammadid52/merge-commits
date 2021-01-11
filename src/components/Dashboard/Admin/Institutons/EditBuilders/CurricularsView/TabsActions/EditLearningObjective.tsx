@@ -123,7 +123,7 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
                 <Buttons btnClass="py-3 px-10 mr-4" label="Cancel" onClick={history.goBack} transparent />
                 <Buttons btnClass="py-3 px-10 ml-4" label="Save" onClick={savelearning} />
               </div>
-            </> : <div>Fetching data...</div>
+            </> : <div className="py-12 my-12 m-auto text-center">Fetching data...</div>
         }
       </PageWrapper>
     </div>
