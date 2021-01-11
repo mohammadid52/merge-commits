@@ -4,8 +4,10 @@ import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 
 import * as customMutations from '../../../../../customGraphql/customMutations';
+import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as queries from '../../../../../graphql/queries';
 import { languageList } from '../../../../../utilities/staticData';
+
 import SectionTitle from '../../../../Atoms/SectionTitle';
 import PageWrapper from '../../../../Atoms/PageWrapper'
 import BreadCrums from '../../../../Atoms/BreadCrums';
@@ -46,6 +48,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const history = useHistory();
   const location = useLocation();
   const [institutionList, setInstitutionList] = useState(null);
+  const [designersList, setDesignersList] = useState([]);
+  const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [curricularData, setCurricularData] = useState<InitialData>(initialData);
   const [loading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState({
@@ -90,6 +94,17 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       ...curricularData,
       languages: updatedList
     })
+  }
+  const selectDesigner = (id: string, name: string, value: string) => {
+    let updatedList;
+    const currentDesigners = selectedDesigners;
+    const selectedItem = currentDesigners.find(item => item.id === id);
+    if (!selectedItem) {
+      updatedList = [...currentDesigners, { id, name, value }];
+    } else {
+      updatedList = currentDesigners.filter(item => item.id !== id);
+    }
+    setSelectedDesigners(updatedList)
   }
   const selectInstitute = (val: string, name: string, id: string) => {
     setCurricularData({
@@ -159,6 +174,27 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     }
   }
 
+  const fetchPersonsList = async () => {
+    try {
+      const result: any = await API.graphql(graphqlOperation(customQueries.listPersons, {
+        filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "BLD" } }] }
+      }))
+      const savedData = result.data.listPersons;
+      const updatedList = savedData?.items.map((item: { id: string, firstName: string, lastName: string }) => ({
+        id: item?.id,
+        name: `${item?.firstName || ''} ${item.lastName || ''}`,
+        value: `${item?.firstName || ''} ${item.lastName || ''}`
+      }))
+      setDesignersList(updatedList);
+    } catch {
+      setMessages({
+        show: true,
+        message: 'Error while fetching Designers list Please try again later.',
+        isError: true,
+      })
+    }
+  }
+
   const checkUniqCurricularName = async () => {
     try {
       const list: any = await API.graphql(graphqlOperation(queries.listCurriculums, {
@@ -223,7 +259,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           value: ''
         }
       })
-      getInstitutionList()
+      getInstitutionList();
+      fetchPersonsList();
     } else {
       history.push('/dashboard/manage-institutions')
     }
@@ -291,6 +328,12 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
                 Select Language
               </label>
               <MultipleSelector selectedItems={languages} placeholder="Select Language" list={languageList} onChange={selectLanguage} />
+            </div>
+            <div className="px-3 py-4">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                Select Designers
+              </label>
+              <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
             </div>
             <div className="px-3 py-4">
               <TextArea value={description} id='description' onChange={onChange} name='description' label="Description" />

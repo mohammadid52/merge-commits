@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { IoArrowUndoCircleOutline } from 'react-icons/io5'
 import API, { graphqlOperation } from '@aws-amplify/api'
@@ -12,8 +12,9 @@ import TextArea from '../../../../../../Atoms/Form/TextArea'
 import Selector from '../../../../../../Atoms/Form/Selector'
 import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector'
 
+import { languageList } from '../../../../../../../utilities/staticData'
 import * as mutations from '../../../../../../../graphql/mutations'
-import { languageList } from '../../../../../../../utilities/staticData';
+import * as customQueries from '../../../../../../../customGraphql/customQueries'
 
 interface AddSyllabusProps {
 
@@ -43,6 +44,8 @@ const AddSyllabus = (props: AddSyllabusProps) => {
     languages: [{ id: '1', name: "English", value: 'EN' }]
   }
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
+  const [designersList, setDesignersList] = useState([]);
+  const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [loading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState({
     show: false,
@@ -54,9 +57,6 @@ const AddSyllabus = (props: AddSyllabusProps) => {
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Add Syllabus', url: `/dashboard/manage-institutions/curricular/${curricularId}/syllabus/add`, last: true }
   ];
-
-  const sequenceList: any[] = [];
-  const designersList: any[] = [];
 
   const onInputChange = (e: any) => {
     setSyllabusData({
@@ -86,6 +86,40 @@ const AddSyllabus = (props: AddSyllabusProps) => {
       languages: updatedList
     })
   }
+
+  const selectDesigner = (id: string, name: string, value: string) => {
+    let updatedList;
+    const currentDesigners = selectedDesigners;
+    const selectedItem = currentDesigners.find(item => item.id === id);
+    if (!selectedItem) {
+      updatedList = [...currentDesigners, { id, name, value }];
+    } else {
+      updatedList = currentDesigners.filter(item => item.id !== id);
+    }
+    setSelectedDesigners(updatedList)
+  }
+
+  const fetchPersonsList = async () => {
+    try {
+      const result: any = await API.graphql(graphqlOperation(customQueries.listPersons, {
+        filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "BLD" } }] }
+      }))
+      const savedData = result.data.listPersons;
+      const updatedList = savedData?.items.map((item: { id: string, firstName: string, lastName: string }) => ({
+        id: item?.id,
+        name: `${item?.firstName || ''} ${item.lastName || ''}`,
+        value: `${item?.firstName || ''} ${item.lastName || ''}`
+      }))
+      setDesignersList(updatedList);
+    } catch {
+      setMessages({
+        show: true,
+        message: 'Error while fetching Designers list Please try again later.',
+        isError: true,
+      })
+    }
+  }
+
   const saveSyllabusDetails = async () => {
     const isValid = await validateForm();
     if (isValid) {
@@ -149,6 +183,10 @@ const AddSyllabus = (props: AddSyllabusProps) => {
     }
   }
 
+  useEffect(() => {
+    fetchPersonsList();
+  }, [])
+
   const { name, languages, description, purpose, objectives, methodology, policies } = syllabusData;
 
   return (
@@ -177,16 +215,10 @@ const AddSyllabus = (props: AddSyllabusProps) => {
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Designers
                 </label>
-                <Selector placeholder="Designers" list={designersList} onChange={() => console.log('')} />
+                <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
               </div>
             </div>
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-              <div>
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                  Select Sequence
-                </label>
-                <Selector placeholder="Sequence" list={sequenceList} onChange={() => console.log('')} />
-              </div>
               <div>
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Language

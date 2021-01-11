@@ -4,8 +4,10 @@ import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 
 import * as customMutations from '../../../../../customGraphql/customMutations';
+import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as mutation from '../../../../../graphql/mutations';
 import * as queries from '../../../../../graphql/queries';
+
 import { languageList } from '../../../../../utilities/staticData';
 import SectionTitle from '../../../../Atoms/SectionTitle';
 import PageWrapper from '../../../../Atoms/PageWrapper'
@@ -38,6 +40,8 @@ const EditCurricular = (props: EditCurricularProps) => {
   const location = useLocation();
   const [institutionList, setInstitutionList] = useState(null);
   const [curricularData, setCurricularData] = useState(initialData);
+  const [designersList, setDesignersList] = useState([]);
+  const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [previousName, setPreviousName] = useState('');
   const [messages, setMessages] = useState({
     show: false,
@@ -100,6 +104,38 @@ const EditCurricular = (props: EditCurricularProps) => {
     }
   }
 
+  const selectDesigner = (id: string, name: string, value: string) => {
+    let updatedList;
+    const currentDesigners = selectedDesigners;
+    const selectedItem = currentDesigners.find(item => item.id === id);
+    if (!selectedItem) {
+      updatedList = [...currentDesigners, { id, name, value }];
+    } else {
+      updatedList = currentDesigners.filter(item => item.id !== id);
+    }
+    setSelectedDesigners(updatedList)
+  }
+
+  const fetchPersonsList = async () => {
+    try {
+      const result: any = await API.graphql(graphqlOperation(customQueries.listPersons, {
+        filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "BLD" } }] }
+      }))
+      const savedData = result.data.listPersons;
+      const updatedList = savedData?.items.map((item: { id: string, firstName: string, lastName: string }) => ({
+        id: item?.id,
+        name: `${item?.firstName || ''} ${item.lastName || ''}`,
+        value: `${item?.firstName || ''} ${item.lastName || ''}`
+      }))
+      setDesignersList(updatedList);
+    } catch {
+      setMessages({
+        show: true,
+        message: 'Error while fetching Designers list Please try again later.',
+        isError: true,
+      })
+    }
+  }
   const saveCurriculum = async () => {
     const isValid = await validateForm();
     if (isValid) {
@@ -237,6 +273,7 @@ const EditCurricular = (props: EditCurricularProps) => {
   useEffect(() => {
     fetchCurricularData()
     getInstitutionList()
+    fetchPersonsList();
   }, [])
 
   const { name, description, objectives, languages, institute } = curricularData;
@@ -277,6 +314,12 @@ const EditCurricular = (props: EditCurricularProps) => {
                 Select Language
               </label>
               <MultipleSelector selectedItems={languages} placeholder="Select Languages" list={languageList} onChange={selectLanguage} />
+            </div>
+            <div className="px-3 py-4">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                Select Designers
+              </label>
+              <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
             </div>
             <div className="px-3 py-4">
               <TextArea value={description} id='description' onChange={onChange} name='description' label="Description" />
