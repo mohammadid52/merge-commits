@@ -341,10 +341,6 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     }
   }
   useEffect(() => {
-    // const lessonsList = async () => {
-    //   await fetchLessonsList();
-    // }
-    // lessonsList();
     fetchLessonsList();
     fetchPersonsList();
     fetchSyllabusData();
@@ -354,7 +350,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     if (savedLessonsList.length) {
       updateListAndDropdown();
     }
-  }, [savedLessonsList])
+  }, [savedLessonsList, allLessonsList])
 
   const { name, languages, description, purpose, objectives, methodology, policies } = syllabusData;
   return (
