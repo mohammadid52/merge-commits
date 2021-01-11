@@ -79,11 +79,9 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       case 'checkpoint':
         const checkpoints = state.data.lesson.checkpoints.items;
         return flattenCheckpoints(checkpoints);
-        break;
       case 'doFirst':
         const doFirst = state.data.lesson.doFirst.questions.items;
         return doFirst;
-        break;
       default:
         return null;
     }
@@ -150,22 +148,38 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
      */
 
     if (!isTeacher) {
-      const firstCheckpoint = state.data.lesson.checkpoints.items[0].checkpoint.id;
-      const questionDataKey =
-        checkpointType === 'doFirst'
-          ? 'doFirst'
-          : checkpointType === 'checkpoint' || checkpointType === 'survey'
-          ? `${checkpointType}_${firstCheckpoint}`
-          : 'unknown_checkpoint';
+      if (checkpointType !== 'doFirst') {
+        const firstCheckpoint = state.data.lesson.checkpoints.items[0].checkpoint.id;
+        const questionDataKey =
+          checkpointType === 'doFirst'
+            ? 'doFirst'
+            : checkpointType === 'checkpoint' || checkpointType === 'survey'
+            ? `${checkpointType}_${firstCheckpoint}`
+            : 'unknown_checkpoint';
 
-      if (input) {
-        dispatch({
-          type: 'SET_QUESTION_DATA',
-          payload: {
-            key: questionDataKey,
-            data: input,
-          },
-        });
+        if (input) {
+          dispatch({
+            type: 'SET_QUESTION_DATA',
+            payload: {
+              key: questionDataKey,
+              data: input,
+            },
+          });
+        }
+      }
+
+      if (checkpointType === 'doFirst') {
+        const questionDataKey = 'doFirst';
+
+        if (input) {
+          dispatch({
+            type: 'SET_QUESTION_DATA',
+            payload: {
+              key: questionDataKey,
+              data: input,
+            },
+          });
+        }
       }
     }
   }, [input]);
