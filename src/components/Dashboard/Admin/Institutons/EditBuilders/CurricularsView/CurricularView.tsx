@@ -71,7 +71,7 @@ const CurricularView = (props: CurricularViewProps) => {
     { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjectiveList curricularId={currID} /> },
     { index: 1, title: 'Topics', icon: <MdSpeakerNotes />, active: true, content: <TopicsList curricularId={currID} /> },
     { index: 2, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList syllabusList={curricularData.syllabusList} curricularId={currID} /> },
-    { index: 3, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList curricularId={currID}/> },
+    { index: 3, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList curricularId={currID} /> },
   ]
 
 
@@ -81,6 +81,7 @@ const CurricularView = (props: CurricularViewProps) => {
       try {
         const result: any = await API.graphql(graphqlOperation(queries.getCurriculum, { id: currID }))
         const savedData = result.data.getCurriculum;
+        const savedLanguages = languageList.filter(item => savedData.languages?.includes(item.value))
         setCurricularData({
           ...curricularData,
           id: savedData.id,
@@ -93,9 +94,10 @@ const CurricularView = (props: CurricularViewProps) => {
           description: savedData.description,
           objectives: savedData.objectives,
           syllabusList: savedData.syllabi?.items,
-          languages: languageList.filter(item => savedData.languages.includes(item.value))
+          languages: savedLanguages ? savedLanguages : []
         })
-      } catch {
+      } catch (err) {
+        console.log(err)
         console.log('Error while fetching curricular data.')
       }
     } else {
@@ -171,7 +173,7 @@ const CurricularView = (props: CurricularViewProps) => {
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
                     <span className="text-gray-900 mr-2 w-3/10">Objective:</span>
                     <span className="w-7/10">
-                      {objectives.length ? objectives[0] : '--'}
+                      {objectives?.length ? objectives[0] : '--'}
                     </span>
                   </p>
                 </div>
@@ -180,7 +182,7 @@ const CurricularView = (props: CurricularViewProps) => {
             </div>
             <div className='bg-white shadow-5 sm:rounded-lg'>
               <div className='px-4 py-5 sm:px-6'>
-                <UnderlinedTabs tabs={tabs}/>
+                <UnderlinedTabs tabs={tabs} />
               </div>
             </div>
 
