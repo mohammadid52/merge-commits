@@ -190,17 +190,27 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         })
       } else {
         const sortedList = listStaffs.sort((a: any, b: any) => (a.staffMember?.firstName?.toLowerCase() > b.staffMember?.firstName?.toLowerCase()) ? 1 : -1);
-        const staffList = sortedList.map((item: any) => ({
-          id: item.staffMember.id,
-          name: `${item.staffMember.firstName || ''} ${item.staffMember.lastName || ''}`,
-          value: `${item.staffMember.firstName || ''} ${item.staffMember.lastName || ''}`,
-          email: item.staffMember.email ? item.staffMember.email : '',
-          authId: item.staffMember.authId ? item.staffMember.authId : ''
+        const staffList = sortedList.filter((staff: any) => staff.staffMember).map((item: any) => ({
+          id: item.staffMember?.id,
+          name: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
+          value: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
+          email: item.staffMember?.email ? item.staffMember?.email : '',
+          authId: item.staffMember?.authId ? item.staffMember?.authId : ''
         }));
-        setTeachersList(staffList);
+
+        // Filter duplicate results.
+        const filteredIdList: Array<string> = [];
+        const updatedList = staffList.filter((item: any) => {
+          if (filteredIdList.indexOf(item.id) < 0) {
+            filteredIdList.push(item.id)
+            return item
+          }
+        });
+        setTeachersList(updatedList);
       }
 
-    } catch{
+    } catch (err) {
+      console.log(err)
       setMessages({
         show: true,
         message: 'Unable to fetch teachers list. Please try again later.',

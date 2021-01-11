@@ -138,29 +138,28 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
           {(partners && partners.length > 0) ? (
             <Fragment>
 
-              <div className="my-8 w-full m-auto max-h-88 overflow-y-scroll">
-
-                <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+              <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>NO.</span>
-                  </div>
-                  <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>Service Providers</span>
-                  </div>
-                  <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>Status</span>
-                  </div>
-                  <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>Actions</span>
-                  </div>
+                  <span>NO.</span>
                 </div>
+                <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>Service Providers</span>
+                </div>
+                <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>Status</span>
+                </div>
+                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>Actions</span>
+                </div>
+              </div>
 
+              <div className="w-full m-auto max-h-88 overflow-y-auto">
                 {partners.map((item, index) => (
                   <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                     <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                       {index + 1}.
                     </div>
-                    <div className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+                    <div className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal">
                       {item.partner.name || ''}
                     </div>
 
