@@ -58,6 +58,10 @@ export type LessonActions =
       };
     }
   | {
+      type: 'CLEAR_QUESTION_DATA';
+      payload: any;
+    }
+  | {
       type: 'SET_QUESTION_DATA';
       payload: {
         key: string;
@@ -293,6 +297,9 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
           }
         }),
       };
+    case 'CLEAR_QUESTION_DATA':
+      let clearQuestions = {};
+      return { ...state, questionData: clearQuestions };
     case 'SET_QUESTION_DATA':
       let payloadKeys = Object.keys(action.payload.data);
       let updatedQuestionData: any = state.questionData;
