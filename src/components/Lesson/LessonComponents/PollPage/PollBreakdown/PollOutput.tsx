@@ -6,17 +6,18 @@ import { LessonContext } from '../../../../../contexts/LessonContext';
  */
 import { PollInput } from '../PollModules/PollActivity';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
+import { PollBreakdownProps } from './PollBreakdown';
 
-interface PollOutputProps {
-  isTeacher?: boolean;
-  dataProps?: {
-    pollInputs?: PollInput[];
-    poll?: PollInput[];
-    additional: any;
-  };
-}
+// interface PollOutputProps {
+//   isTeacher?: boolean;
+//   dataProps?: {
+//     pollInputs?: PollInput[];
+//     poll?: PollInput[];
+//     additional: any;
+//   };
+// }
 
-const PollOutput = (props: PollOutputProps) => {
+const PollOutput = (props: PollBreakdownProps) => {
   /**
    * Teacher switch
    */
