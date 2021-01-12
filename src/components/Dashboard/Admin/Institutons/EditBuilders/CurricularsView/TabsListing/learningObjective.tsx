@@ -22,23 +22,20 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
 
   const onDragEnd = async (result: any) => {
     try {
-      console.log('result', result)
       if (result.source.index !== result.destination.index) {
         const list = reorder(learningIds, result.source.index, result.destination.index)
-        console.log('list', list)
         setLearningIds(list)
         let learningsList = learnings.map((t: any) => {
           let index = list.indexOf(t.id)
           return { ...t, index }
         }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-        console.log('learningsList', learningsList)
         setLearnings(learningsList)
         let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `l_${curricularId}`, sequence: list } }));
         seqItem = seqItem.data.updateCSequences;
         console.log('seq updated');
       }
     } catch (err) {
-      console.log('eeeeeee', err)
+      console.log('err', err)
     }
   }
 

@@ -32,7 +32,6 @@ const AddMeasurement = (props: AddMeasurementProps) => {
   const [topic, setTopic] = useState({ id: '', name: '', value: '' })
   const [validation, setValidation] = useState({ name: '', topic: '' })
   const [measurementIds, setMeasurementIds] = useState([]);
-  const [sequenceId, setSequenceId] = useState('')
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
@@ -73,11 +72,10 @@ const AddMeasurement = (props: AddMeasurementProps) => {
   }
   const fetchMeasurementSequence = async () => {
     let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
-      { curriculumID: curricularId, type: 'measurements' }))
-    item = item.data.getCSequences
+      { id: `m_${curricularId}` }))
+    item = item?.data.getCSequences?.sequence || []
     if (item) {
-      setMeasurementIds(item.sequence)
-      setSequenceId(item.id)
+      setMeasurementIds(item)
     }
   }
 
@@ -111,11 +109,11 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       const item: any = await API.graphql(graphqlOperation(customMutations.createRubric, { input }));
       const addedItem = item.data.createRubric
       if (!measurementIds.length) {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { curriculumID: curricularId, type: 'measurements', sequence: [addedItem.id] } }));
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `m_${curricularId}`, sequence: [addedItem.id] } }));
         seqItem = seqItem.data.createCSequences
         console.log('seqItem', seqItem)
       } else {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'measurements', sequence: [...measurementIds, addedItem.id] } }));
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `m_${curricularId}`, sequence: [...measurementIds, addedItem.id] } }));
         seqItem = seqItem.data.updateCSequences
         console.log('seqItem', seqItem)
       }
