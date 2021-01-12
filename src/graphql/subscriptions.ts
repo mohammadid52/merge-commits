@@ -2072,36 +2072,30 @@ export const onDeleteCurriculum = /* GraphQL */ `
     }
   }
 `;
-export const onCreateCurriculumSequences = /* GraphQL */ `
-  subscription OnCreateCurriculumSequences {
-    onCreateCurriculumSequences {
+export const onCreateCSequences = /* GraphQL */ `
+  subscription OnCreateCSequences {
+    onCreateCSequences {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateCurriculumSequences = /* GraphQL */ `
-  subscription OnUpdateCurriculumSequences {
-    onUpdateCurriculumSequences {
+export const onUpdateCSequences = /* GraphQL */ `
+  subscription OnUpdateCSequences {
+    onUpdateCSequences {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteCurriculumSequences = /* GraphQL */ `
-  subscription OnDeleteCurriculumSequences {
-    onDeleteCurriculumSequences {
+export const onDeleteCSequences = /* GraphQL */ `
+  subscription OnDeleteCSequences {
+    onDeleteCSequences {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt

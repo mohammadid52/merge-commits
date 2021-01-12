@@ -33,8 +33,8 @@ const MeasMntList = (props: MeasMntListProps) => {
         return { ...t, index }
       }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
       setMeasurements(measurementList)
-      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCurriculumSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'measurements', sequence: list } }));
-      seqItem = seqItem.data.createCurriculumSequences;
+      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: {  id: `m_${curricularId}`,  sequence: list } }));
+      seqItem = seqItem.data.updateCSequences;
       console.log('seq updated');
     }
   }
@@ -54,16 +54,15 @@ const MeasMntList = (props: MeasMntListProps) => {
     }));
     list = list.data.listRubrics?.items || []
 
-    let item: any = await API.graphql(graphqlOperation(queries.getCurriculumSequences,
-      { curriculumID: curricularId, type: 'measurements' }))
-    item = item.data.getCurriculumSequences || []
+    let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
+      { id: `m_${curricularId}` }))
+    item = item?.data.getCSequences?.sequence || []
     list = list.map((t: any) => {
-      let index = item?.sequence.indexOf(t.id)
+      let index = item.indexOf(t.id)
       return { ...t, index }
     }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
     setMeasurements(list)
-    setMeasrementIds(item.sequence)
-    setSequenceId(item.id)
+    setMeasrementIds(item)
     setLoading(false)
   }
 

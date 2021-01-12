@@ -1790,45 +1790,39 @@ export const deleteCurriculum = /* GraphQL */ `
     }
   }
 `;
-export const createCurriculumSequences = /* GraphQL */ `
-  mutation CreateCurriculumSequences(
-    $input: CreateCurriculumSequencesInput!
-    $condition: ModelCurriculumSequencesConditionInput
+export const createCSequences = /* GraphQL */ `
+  mutation CreateCSequences(
+    $input: CreateCSequencesInput!
+    $condition: ModelCSequencesConditionInput
   ) {
-    createCurriculumSequences(input: $input, condition: $condition) {
+    createCSequences(input: $input, condition: $condition) {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt
     }
   }
 `;
-export const updateCurriculumSequences = /* GraphQL */ `
-  mutation UpdateCurriculumSequences(
-    $input: UpdateCurriculumSequencesInput!
-    $condition: ModelCurriculumSequencesConditionInput
+export const updateCSequences = /* GraphQL */ `
+  mutation UpdateCSequences(
+    $input: UpdateCSequencesInput!
+    $condition: ModelCSequencesConditionInput
   ) {
-    updateCurriculumSequences(input: $input, condition: $condition) {
+    updateCSequences(input: $input, condition: $condition) {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteCurriculumSequences = /* GraphQL */ `
-  mutation DeleteCurriculumSequences(
-    $input: DeleteCurriculumSequencesInput!
-    $condition: ModelCurriculumSequencesConditionInput
+export const deleteCSequences = /* GraphQL */ `
+  mutation DeleteCSequences(
+    $input: DeleteCSequencesInput!
+    $condition: ModelCSequencesConditionInput
   ) {
-    deleteCurriculumSequences(input: $input, condition: $condition) {
+    deleteCSequences(input: $input, condition: $condition) {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt

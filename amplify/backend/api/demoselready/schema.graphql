@@ -236,13 +236,11 @@ type Curriculum
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
 }
 
-type CurriculumSequences
-@key(fields: ["curriculumID"])
+type CSequences
+@key(fields: ["id"])
 @model
 {
   id: ID!
-  curriculumID: ID!
-  type: String!
   sequence: [String]
 }
 
