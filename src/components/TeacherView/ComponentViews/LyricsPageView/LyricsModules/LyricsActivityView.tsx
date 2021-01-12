@@ -126,10 +126,6 @@ const Body = (props: props) => {
     }
   }, [state.studentViewing]);
 
-  // useEffect(() => {
-  //   console.log(initialSelectedText);
-  // }, [initialSelectedText]);
-
   const colorPicker = (colorName: string): string => {
     switch (colorName) {
       case 'dark-red':

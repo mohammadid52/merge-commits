@@ -211,7 +211,7 @@ const Body = () => {
                 finalText={finalText}
                 setFinalText={setFinalText}
                 selectGroup={selectGroup}
-                setSelectGroup={setSelectGroup}></LyricsBlock>
+                setSelectGroup={setSelectGroup}/>
             </div>
           </div>
         </div>
