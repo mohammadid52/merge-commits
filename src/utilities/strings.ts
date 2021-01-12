@@ -90,7 +90,6 @@ export const keywordCapitilizer = (str: string) => {
   return capitalizedStr;
 };
 
-
 /**
  * Function used in multiple places to
  * set array as a filter object while fetching data.
@@ -182,7 +181,6 @@ export const formatPhoneNumber = (str: string) => {
   return str;
 };
 
-
 /**
  * Function used in multiple places to
  * set array as a filter object while fetching data.
@@ -220,5 +218,19 @@ export const createFilterToFetchAllItemsExcept = (arr: any, key: string) => {
     });
     return { and: newArray };
   }
-  return {}
+  return {};
+};
+
+/**
+ * Function used in multiple places to
+ * reorder the list sequence while using drag and drop in table list.
+ * @param list
+ * @param startIndex
+ * @param endIndex
+ */
+export const reorder = (list: any, startIndex: number, endIndex: number) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  return result;
 };
