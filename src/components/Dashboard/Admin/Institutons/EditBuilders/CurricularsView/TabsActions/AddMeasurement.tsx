@@ -31,6 +31,8 @@ const AddMeasurement = (props: AddMeasurementProps) => {
   const [excelled, setExcelled] = useState('');
   const [topic, setTopic] = useState({ id: '', name: '', value: '' })
   const [validation, setValidation] = useState({ name: '', topic: '' })
+  const [measurementIds, setMeasurementIds] = useState([]);
+  const [sequenceId, setSequenceId] = useState('')
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
@@ -69,6 +71,15 @@ const AddMeasurement = (props: AddMeasurementProps) => {
     }));
     setTopics(list)
   }
+  const fetchMeasurementSequence = async () => {
+    let item: any = await API.graphql(graphqlOperation(queries.getCurriculumSequences,
+      { curriculumID: curricularId, type: 'measurements' }))
+    item = item.data.getCurriculumSequences
+    if (item) {
+      setMeasurementIds(item.sequence)
+      setSequenceId(item.id)
+    }
+  }
 
   const validateForm = () => {
     let isValid = true
@@ -99,6 +110,15 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       };
       const item: any = await API.graphql(graphqlOperation(customMutations.createRubric, { input }));
       const addedItem = item.data.createRubric
+      if (!measurementIds.length) {
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCurriculumSequences, { input: { curriculumID: curricularId, type: 'measurements', sequence: [addedItem.id] } }));
+        seqItem = seqItem.data.createCurriculumSequences
+        console.log('seqItem', seqItem)
+      } else {
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCurriculumSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'measurements', sequence: [...measurementIds, addedItem.id] } }));
+        seqItem = seqItem.data.updateCurriculumSequences
+        console.log('seqItem', seqItem)
+      }
       if (addedItem) {
         history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
       } else {
@@ -109,6 +129,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
 
   useEffect(() => {
     fetchTopics()
+    fetchMeasurementSequence()
   }, [])
 
   const cancelEvent = () => {
@@ -152,7 +173,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
               <div>
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Topic <span className="text-red-500">*</span>
-              </label>
+                </label>
                 <Selector selectedItem={topic.value} placeholder="Topic" list={topics} onChange={selectTopic} />
                 {
                   validation.topic && <p className="text-red-600">{validation.topic}</p>
@@ -178,8 +199,8 @@ const AddMeasurement = (props: AddMeasurementProps) => {
           </div>
         </div>
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-10" label="Save" onClick={saveMeasurementDetails} />
-          <Buttons btnClass="py-3 px-10" label="cancel" onClick={cancelEvent} />
+          <Buttons btnClass="py-3 px-10 mr-4" label="cancel" onClick={cancelEvent} transparent />
+          <Buttons btnClass="py-3 px-10 ml-4" label="Save" onClick={saveMeasurementDetails} />
         </div>
       </PageWrapper>
     </div>

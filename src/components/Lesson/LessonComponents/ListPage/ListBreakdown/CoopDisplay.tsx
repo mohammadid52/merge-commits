@@ -5,6 +5,8 @@ import Modules from './Modules';
 import Banner from './Banner';
 import ListOutput from './ListOutput';
 
+import {firstInitialFunc} from '../../../../../utilities/strings';
+
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaExpand, FaCompress } from 'react-icons/fa';
 
@@ -36,14 +38,6 @@ const CoopDisplay = () => {
     });
   };
 
-  const firstInitialFunc = (str: string) => {
-    if (typeof str !== 'string' || str === '') {
-      return 'Profile';
-    }
-    let firstInitial = str.charAt(0);
-    firstInitial = firstInitial.toUpperCase() + '.';
-    return firstInitial;
-  };
 
   useEffect(() => {
     dispatch({ type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown' });

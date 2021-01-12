@@ -64,7 +64,7 @@ const tempData2 = [
 
 const CoopDisplay = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  const displayProps = state.componentState.story;
+  const displayProps = state.componentState.poll;
   const [fullscreen, setFullscreen] = useState(false);
 
   const [teacherData, setTeacherData] = useState<teacherData>();
@@ -104,18 +104,8 @@ const CoopDisplay = () => {
        *
        */}
 
-      {/* SELF DISPLAY */}
-      <Banner title={state.data.lesson.warmUp.title} display="SELFinCOOP" />
-      <Modules
-        dataProps={displayProps ? displayProps : null}
-        displayMode="SELFinCOOP"
-      />
-      <PollOutput
-        dataProps={displayProps ? displayProps : null}
-      />
-
-        {/* TEACHER DISPLAY */}
-        {/*<div
+      {/* TEACHER DISPLAY */}
+      {/*<div
           className={`relative ${
             fullscreen ? 'w-full' : 'w-4.85/10'
           } h-full rounded-lg border shadow-inner-dark bg-darker-blue p-4`}>
@@ -172,6 +162,17 @@ const CoopDisplay = () => {
           </div>
         </div>*/}
 
+      <Banner title={state.data.lesson.warmUp.title} display="COOP" />
+      <Modules
+        dataProps={teacherData && teacherData.warmUpData ? teacherData.warmUpData : null}
+        displayMode="COOP"
+      />
+      <PollOutput dataProps={teacherData && teacherData.warmUpData ? teacherData.warmUpData : null} />
+
+      {/* SELF DISPLAY */}
+      <Banner title={state.data.lesson.warmUp.title} display="SELFinCOOP" />
+      <Modules dataProps={displayProps ? displayProps : null} displayMode="SELFinCOOP" />
+      <PollOutput dataProps={displayProps ? displayProps : null} />
     </div>
   );
 };
