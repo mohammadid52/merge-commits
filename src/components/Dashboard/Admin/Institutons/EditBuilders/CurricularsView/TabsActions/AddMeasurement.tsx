@@ -72,9 +72,9 @@ const AddMeasurement = (props: AddMeasurementProps) => {
     setTopics(list)
   }
   const fetchMeasurementSequence = async () => {
-    let item: any = await API.graphql(graphqlOperation(queries.getCurriculumSequences,
+    let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
       { curriculumID: curricularId, type: 'measurements' }))
-    item = item.data.getCurriculumSequences
+    item = item.data.getCSequences
     if (item) {
       setMeasurementIds(item.sequence)
       setSequenceId(item.id)
@@ -111,12 +111,12 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       const item: any = await API.graphql(graphqlOperation(customMutations.createRubric, { input }));
       const addedItem = item.data.createRubric
       if (!measurementIds.length) {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCurriculumSequences, { input: { curriculumID: curricularId, type: 'measurements', sequence: [addedItem.id] } }));
-        seqItem = seqItem.data.createCurriculumSequences
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { curriculumID: curricularId, type: 'measurements', sequence: [addedItem.id] } }));
+        seqItem = seqItem.data.createCSequences
         console.log('seqItem', seqItem)
       } else {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCurriculumSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'measurements', sequence: [...measurementIds, addedItem.id] } }));
-        seqItem = seqItem.data.updateCurriculumSequences
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'measurements', sequence: [...measurementIds, addedItem.id] } }));
+        seqItem = seqItem.data.updateCSequences
         console.log('seqItem', seqItem)
       }
       if (addedItem) {

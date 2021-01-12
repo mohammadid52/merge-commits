@@ -453,30 +453,25 @@ export type DeleteCurriculumInput = {
   id: string,
 };
 
-export type CreateCurriculumSequencesInput = {
+export type CreateCSequencesInput = {
   id?: string | null,
-  curriculumID: string,
-  type: string,
   sequence?: Array< string | null > | null,
 };
 
-export type ModelCurriculumSequencesConditionInput = {
-  type?: ModelStringInput | null,
+export type ModelCSequencesConditionInput = {
   sequence?: ModelStringInput | null,
-  and?: Array< ModelCurriculumSequencesConditionInput | null > | null,
-  or?: Array< ModelCurriculumSequencesConditionInput | null > | null,
-  not?: ModelCurriculumSequencesConditionInput | null,
+  and?: Array< ModelCSequencesConditionInput | null > | null,
+  or?: Array< ModelCSequencesConditionInput | null > | null,
+  not?: ModelCSequencesConditionInput | null,
 };
 
-export type UpdateCurriculumSequencesInput = {
+export type UpdateCSequencesInput = {
   id: string,
-  curriculumID: string,
-  type?: string | null,
   sequence?: Array< string | null > | null,
 };
 
-export type DeleteCurriculumSequencesInput = {
-  curriculumID: string,
+export type DeleteCSequencesInput = {
+  id: string,
 };
 
 export type CreateTopicInput = {
@@ -1943,14 +1938,12 @@ export type ModelCurriculumFilterInput = {
   not?: ModelCurriculumFilterInput | null,
 };
 
-export type ModelCurriculumSequencesFilterInput = {
+export type ModelCSequencesFilterInput = {
   id?: ModelIDInput | null,
-  curriculumID?: ModelIDInput | null,
-  type?: ModelStringInput | null,
   sequence?: ModelStringInput | null,
-  and?: Array< ModelCurriculumSequencesFilterInput | null > | null,
-  or?: Array< ModelCurriculumSequencesFilterInput | null > | null,
-  not?: ModelCurriculumSequencesFilterInput | null,
+  and?: Array< ModelCSequencesFilterInput | null > | null,
+  or?: Array< ModelCSequencesFilterInput | null > | null,
+  not?: ModelCSequencesFilterInput | null,
 };
 
 export type ModelTopicFilterInput = {
@@ -4317,51 +4310,45 @@ export type DeleteCurriculumMutation = {
   } | null,
 };
 
-export type CreateCurriculumSequencesMutationVariables = {
-  input: CreateCurriculumSequencesInput,
-  condition?: ModelCurriculumSequencesConditionInput | null,
+export type CreateCSequencesMutationVariables = {
+  input: CreateCSequencesInput,
+  condition?: ModelCSequencesConditionInput | null,
 };
 
-export type CreateCurriculumSequencesMutation = {
-  createCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type CreateCSequencesMutation = {
+  createCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdateCurriculumSequencesMutationVariables = {
-  input: UpdateCurriculumSequencesInput,
-  condition?: ModelCurriculumSequencesConditionInput | null,
+export type UpdateCSequencesMutationVariables = {
+  input: UpdateCSequencesInput,
+  condition?: ModelCSequencesConditionInput | null,
 };
 
-export type UpdateCurriculumSequencesMutation = {
-  updateCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type UpdateCSequencesMutation = {
+  updateCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteCurriculumSequencesMutationVariables = {
-  input: DeleteCurriculumSequencesInput,
-  condition?: ModelCurriculumSequencesConditionInput | null,
+export type DeleteCSequencesMutationVariables = {
+  input: DeleteCSequencesInput,
+  condition?: ModelCSequencesConditionInput | null,
 };
 
-export type DeleteCurriculumSequencesMutation = {
-  deleteCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type DeleteCSequencesMutation = {
+  deleteCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -12398,38 +12385,34 @@ export type ListCurriculumsQuery = {
   } | null,
 };
 
-export type GetCurriculumSequencesQueryVariables = {
-  curriculumID: string,
+export type GetCSequencesQueryVariables = {
+  id: string,
 };
 
-export type GetCurriculumSequencesQuery = {
-  getCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type GetCSequencesQuery = {
+  getCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListCurriculumSequencessQueryVariables = {
-  curriculumID?: string | null,
-  filter?: ModelCurriculumSequencesFilterInput | null,
+export type ListCSequencessQueryVariables = {
+  id?: string | null,
+  filter?: ModelCSequencesFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListCurriculumSequencessQuery = {
-  listCurriculumSequencess:  {
-    __typename: "ModelCurriculumSequencesConnection",
+export type ListCSequencessQuery = {
+  listCSequencess:  {
+    __typename: "ModelCSequencesConnection",
     items:  Array< {
-      __typename: "CurriculumSequences",
+      __typename: "CSequences",
       id: string,
-      curriculumID: string,
-      type: string,
       sequence: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -17640,36 +17623,30 @@ export type OnDeleteCurriculumSubscription = {
   } | null,
 };
 
-export type OnCreateCurriculumSequencesSubscription = {
-  onCreateCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type OnCreateCSequencesSubscription = {
+  onCreateCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateCurriculumSequencesSubscription = {
-  onUpdateCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type OnUpdateCSequencesSubscription = {
+  onUpdateCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteCurriculumSequencesSubscription = {
-  onDeleteCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type OnDeleteCSequencesSubscription = {
+  onDeleteCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,

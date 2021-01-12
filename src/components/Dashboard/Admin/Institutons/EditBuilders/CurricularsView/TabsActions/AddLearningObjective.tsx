@@ -31,7 +31,6 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
   const [description, setDescription] = useState('');
   const [validation, setValidation] = useState({ isValid: true, msg: '' })
   const [learningsIds, setLearningsIds] = useState([]);
-  const [sequenceId, setSequenceId] = useState('')
 
   const onInputChange = (e: any) => {
     if (e.target.name === 'name') {
@@ -54,12 +53,12 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
     const item: any = await API.graphql(graphqlOperation(mutations.createLearningObjective, { input }));
     const addedItem = item.data.createLearningObjective
     if (!learningsIds.length) {
-      let seqItem: any = await API.graphql(graphqlOperation(mutations.createCurriculumSequences, { input: { curriculumID: curricularId, type: 'learnings', sequence: [addedItem.id] } }));
-      seqItem = seqItem.data.createCurriculumSequences
+      let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `l_${curricularId}`, sequence: [addedItem.id] } }));
+      seqItem = seqItem.data.createCSequences
       console.log('seqItem', seqItem)
     } else {
-      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCurriculumSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'learnings', sequence: [...learningsIds, addedItem.id] } }));
-      seqItem = seqItem.data.updateCurriculumSequences
+      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `l_${curricularId}`, sequence: [...learningsIds, addedItem.id] } }));
+      seqItem = seqItem.data.updateCSequences
       console.log('seqItem', seqItem)
     }
     if (addedItem) {
@@ -70,12 +69,11 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
   }
 
   const fetchLOSequence = async () => {
-    let item: any = await API.graphql(graphqlOperation(queries.getCurriculumSequences,
-      { curriculumID: curricularId, type: 'learnings' }))
-    item = item.data.getCurriculumSequences
+    let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
+      { id: `l_${curricularId}` }))
+    item = item?.data.getCSequences?.sequence || []
     if (item) {
-      setLearningsIds(item.sequence)
-      setSequenceId(item.id)
+      setLearningsIds(item)
     }
   }
 
