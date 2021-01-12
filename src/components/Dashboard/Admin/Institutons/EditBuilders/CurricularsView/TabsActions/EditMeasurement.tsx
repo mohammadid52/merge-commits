@@ -174,7 +174,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
                       <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                         Select Topic
                     </label>
-                      <Selector selectedItem={measurement.topic.value} placeholder="Topic" list={topics} onChange={() => console.log('')} />
+                      <Selector selectedItem={measurement.topic.value} placeholder="Topic" list={topics} onChange={selectTopic} />
                     </div>
                   </div>
 
