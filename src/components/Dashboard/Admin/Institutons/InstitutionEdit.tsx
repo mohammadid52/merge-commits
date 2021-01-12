@@ -344,7 +344,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
                 <FormInput value={name} onChange={handleEditFormChange} id='name' name='name' label="Institution Name" placeHolder="i.e. Iconoclast Artist" isRequired />
               </div>
               <div className='sm:col-span-3 px-3 py-2'>
-                <FormInput value={website} onChange={handleEditFormChange} id='website' name='website' label="Website(*please enter complete url.) " placeHolder="i.e. Iconoclastartist.org" />
+                <FormInput value={website} onChange={handleEditFormChange} id='website' name='website' label="Website(*please enter complete url.) " placeHolder="i.e. https://iconoclastartists.org/" />
               </div>
               <div className='sm:col-span-3 px-3 py-2'>
                 <FormInput value={address} id='address' onChange={handleEditFormChange} name='address' label="Address line 1" />
