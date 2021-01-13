@@ -11,7 +11,7 @@ import useDictionary from '../../../customHooks/dictionary';
 type LinkObject = {
   name: string;
   path: string;
-  title: string
+  title: string;
 };
 
 export interface LinkProps {
@@ -20,17 +20,17 @@ export interface LinkProps {
   currentPage: string;
   image?: string;
   role?: string;
-  updateAuthState?: Function
-};
+  updateAuthState?: Function;
+}
 
 const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
-  const { sideBarLinksDict } = useDictionary()
+  const { sideBarLinksDict } = useDictionary();
   const history = useHistory();
   const match = useRouteMatch();
   const { state, userLanguage } = useContext(GlobalContext);
   const { role } = linkProps;
   const [links, setLinks] = useState<Array<LinkObject>>([]);
-  
+
   const userLinks = (role: string): void => {
     switch (role) {
       case 'SUP':
@@ -78,10 +78,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: 'People',
               path: 'manage-users',
             },
-            // {
-            //   name: 'Lesson Builder',
-            //   path: 'lesson-planner',
-            // },
             {
               title: 'LESSON_PLANNER',
               name: 'Lesson Planner',
@@ -98,10 +94,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         return setLinks((links) => {
           return [
             ...links,
-            // {
-            //   name: 'Registration',
-            //   path: 'registration',
-            // },
             {
               title: 'PEOPLE',
               name: 'People',
@@ -119,18 +111,9 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     }
   };
 
-  // useEffect(() => {
-  //   userLinks(state.user.role);
-  // }, [state.user.role]);
-
   useEffect(() => {
     userLinks(role);
   }, [role]);
-
-  // useEffect(() => {
-  //   console.log("initial useeffect in links has been called", role)
-  //   userLinks(role);
-  // }, [])
 
   const handleLink = (e: any) => {
     const id = e.target.id.toLowerCase();
@@ -173,28 +156,22 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const getClassStyle = (label: string) => {
     switch (label) {
       case 'People':
-        return `${linkProps.currentPage === 'manage-users' && 'bg-grayscale'
-          } border-l-4 border-mustard-yellow`;
+        return `${linkProps.currentPage === 'manage-users' && 'bg-grayscale'} border-l-4 border-mustard-yellow`;
         break;
       case 'Registration':
-        return `${linkProps.currentPage === 'registration' && 'bg-grayscale'
-          } border-l-4 border-ketchup`;
+        return `${linkProps.currentPage === 'registration' && 'bg-grayscale'} border-l-4 border-ketchup`;
         break;
       case 'Classroom':
-        return `${linkProps.currentPage === 'classroom' && 'bg-grayscale'
-          } border-l-4 border-blueberry`;
+        return `${linkProps.currentPage === 'classroom' && 'bg-grayscale'} border-l-4 border-blueberry`;
         break;
       case 'Lesson Planner':
-        return `${linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'
-          } border-l-4 border-sea-green`;
+        return `${linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'} border-l-4 border-sea-green`;
         break;
       case 'Lesson Builder':
-        return `${linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'
-          } border-l-4 border-sea-green`;
+        return `${linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'} border-l-4 border-sea-green`;
         break;
       case 'Institutions':
-        return `${linkProps.currentPage === 'manage-institutions' && 'bg-grayscale'
-          } border-l-4 border-ketchup`;
+        return `${linkProps.currentPage === 'manage-institutions' && 'bg-grayscale'} border-l-4 border-ketchup`;
         break;
       default:
         return '';

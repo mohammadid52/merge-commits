@@ -1,13 +1,12 @@
 import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
-
-import {LinkProps} from './Links';
+import SignOutButton from '../../Auth/SignOut';
 
 interface SideMenuProps {
     children: React.ReactNode;
     [key: string]: any;
-    // linkProps: LinkProps;
+    updateAuthState: Function
 }
 
 const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) => {
@@ -28,6 +27,9 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
             <div className={`sidebar w-full h-1/2 text-gray-200 cursor-pointer`}>
                 { children }
             </div>
+          <div className={`mt-auto mb-2 text-gray-200`}>
+            <SignOutButton updateAuthState={props.updateAuthState}/>
+          </div>
         </div>
     )
 }

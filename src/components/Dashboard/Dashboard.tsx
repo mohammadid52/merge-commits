@@ -1,18 +1,17 @@
-import React, { useContext, useEffect, useState, Suspense, lazy } from 'react';
+import React, { lazy, Suspense, useContext, useEffect, useState } from 'react';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { GlobalContext } from '../../contexts/GlobalContext';
-import {
-  useRouteMatch,
-  Switch,
-  Route,
-  Redirect,
-  useHistory
-} from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 // import PageHeaderBar from '../Header/PageHeaderBar';
 import SideMenu from './Menu/SideMenu';
 // import Classroom from './Classroom/Classroom';
 import { useCookies } from 'react-cookie';
+import * as queries from '../../graphql/queries';
+// import PageHeaderBar from '../Header/PageHeaderBar';
+import LessonPlanHome from './LessonPlanner/LessonPlanHome';
+import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
+import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'))
 const Profile = lazy(() => import('./Profile/Profile'))
@@ -20,11 +19,6 @@ const Links = lazy(() => import('./Menu/Links'))
 const ProfileLink = lazy(() => import('./Menu/ProfileLink'))
 const Registration = lazy(() => import('./Admin/UserManagement/Registration'))
 const UserManagement = lazy(() => import('./Admin/UserManagement/UserManagement'))
-import * as queries from '../../graphql/queries';
-import PageHeaderBar from '../Header/PageHeaderBar';
-import LessonPlanHome from './LessonPlanner/LessonPlanHome';
-import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
-import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 
 
 type userObject = {
@@ -101,17 +95,13 @@ const Dashboard = ({ updateAuthState }: DashboardProps) => {
 
   return (
     <div className={`w-screen md:w-full h-screen md:h-full flex`}>
-      <SideMenu setCurrentPage={setCurrentPage} currentPage={currentPage}>
+      <SideMenu setCurrentPage={setCurrentPage} currentPage={currentPage} updateAuthState={updateAuthState}>
         <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage} image={userData.image} />
         <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
       </SideMenu>
-      <PageHeaderBar setCurrentPage={setCurrentPage} currentPage={currentPage} updateAuthState={updateAuthState} />
       <div className={`height h-full overflow-x-hidden overflow-y-scroll flex flex-col`}>
         <Suspense fallback={
           <div className="min-h-screen w-full flex flex-col justify-center items-center">
-            {/* <div className="min-h-full w-full flex flex-col justify-center items-center">
-                        Give us one second! It is loading... 
-                    </div> */}
             <ComponentLoading />
           </div>
         }>
