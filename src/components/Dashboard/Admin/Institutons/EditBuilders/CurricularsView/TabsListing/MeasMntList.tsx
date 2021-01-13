@@ -5,6 +5,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import Buttons from '../../../../../../Atoms/Buttons';
+import { reorder } from '../../../../../../../utilities/strings';
 
 import * as customQueries from '../../../../../../../customGraphql/customQueries'
 import * as mutations from '../../../../../../../graphql/mutations';
@@ -32,18 +33,11 @@ const MeasMntList = (props: MeasMntListProps) => {
         return { ...t, index }
       }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
       setMeasurements(measurementList)
-      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCurriculumSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'measurements', sequence: list } }));
-      seqItem = seqItem.data.createCurriculumSequences;
+      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: {  id: `m_${curricularId}`,  sequence: list } }));
+      seqItem = seqItem.data.updateCSequences;
       console.log('seq updated');
     }
   }
-
-  const reorder = (list: any, startIndex: number, endIndex: number) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
-  };
 
   const createNewMeasurement = () => {
     history.push(`/dashboard/manage-institutions/curricular/${curricularId}/measurement/add`)
@@ -60,16 +54,15 @@ const MeasMntList = (props: MeasMntListProps) => {
     }));
     list = list.data.listRubrics?.items || []
 
-    let item: any = await API.graphql(graphqlOperation(queries.getCurriculumSequences,
-      { curriculumID: curricularId, type: 'measurements' }))
-    item = item.data.getCurriculumSequences || []
+    let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
+      { id: `m_${curricularId}` }))
+    item = item?.data.getCSequences?.sequence || []
     list = list.map((t: any) => {
-      let index = item?.sequence.indexOf(t.id)
+      let index = item.indexOf(t.id)
       return { ...t, index }
     }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
     setMeasurements(list)
-    setMeasrementIds(item.sequence)
-    setSequenceId(item.id)
+    setMeasrementIds(item)
     setLoading(false)
   }
 

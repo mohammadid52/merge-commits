@@ -1,0 +1,902 @@
+enum Language {
+  EN
+  ES
+  VT
+  TR
+  CZ
+}
+
+enum PersonStatus {
+  ACTIVE
+  SUSPENDED
+  INACTIVE
+  HOLD
+}
+
+enum Role {
+  SUP
+  ADM
+  BLD
+  FLW
+  CRD
+  TR
+  ST
+}
+
+### Institution:
+## Table defines a single institution. A query at the Institution level includes basic insitution information, as well as:
+# an array of ServiceProvider entries and their connecting Institution entry
+# an array of Staff entries and their connected Person entry
+# an array of Room's (with access to data from all connecting tables to Room)
+# an array of Curriculum's (with access to data from all connecting tables to Curriculum)
+# an array of Class's (with access to data from all connecting tables to Class)
+
+## Keys:
+# primary — id
+
+## Required fields:
+# id
+# name
+# type ( from Filter table )
+# address
+# city
+# zip
+
+## Associated tables:
+# Service Provider — connects institution entry to other institutions who provide services there — extends curricula / staff of an institution
+# Staff — connects institution entry to users who are employed at the institution. 
+
+type Institution 
+@model 
+@key(fields: ["id"]) 
+{
+  id: ID!
+  name: String!
+  type: String!
+  district: String
+  address: String!
+  addressLine2: String
+  city: String!
+  state: String
+  zip: String!
+  phone: String
+  website: String
+  image: String
+  isServiceProvider: Boolean
+  serviceProviders: [ServiceProvider] @connection(keyName: "providersByPartner", fields: ["id"])
+  staff: [Staff] @connection(keyName: "staffByInstitution", fields: ["id"])
+  rooms: [Room] @connection(keyName: "roomByInstitution", fields: ["id"])
+  curricula: [Curriculum] @connection(keyName: "curriculumByInstitution", fields: ["id"])
+  classes: [Class] @connection(keyName: "classByInstitution", fields: ["id"])
+  filters: [String]
+}
+
+type ServiceProvider 
+@model(queries: null)
+@key(name: "providersByPartner", fields: ["partnerID", "providerID"]) 
+{
+  id: ID!
+  partnerID: ID!
+  providerID: ID!
+  status: String
+  providerInstitution: Institution @connection(fields: ["providerID"])
+}
+
+type Staff
+@model
+@key(name: "staffByInstitution", fields: ["institutionID", "staffEmail"])
+{
+  id: ID!
+  institutionID: ID!
+  staffAuthID: String!
+  staffEmail: String!
+  status: String
+  statusChangeDate: AWSDate
+  staffMember: Person @connection(fields: ["staffEmail", "staffAuthID"])
+  curricula: [TeacherCurriculum] @connection(keyName: "curriculumByTeacher", fields: ["id"])
+}
+
+### Person
+## Table defines users. Users have different experiences of the app according to their 'role.' A query at the Person level includes basic user information, as well as:
+# 
+
+## Keys:
+# primary — email
+# secondary — authId
+# byContributor ** IGNORE **
+# byUserId — allows for queries by userID
+# byRole — allows for queries by role
+
+## Required fields:
+# id
+# authId
+# status ( ENUM )
+# role ( ENUM )
+# firstName
+# lastName
+# institutionID
+# language ( ENUM )
+
+type Person
+  @model
+  @key(fields: ["email", "authId"])
+  @key(name: "byUserId", fields: ["id"], queryField: "userById")
+  @key(name: "byRole", fields: ["role"], queryField: "usersByRole") {
+  id: ID!
+  authId: String!
+  status: PersonStatus!
+  email: String!
+  role: Role!
+  type: String
+  firstName: String!
+  preferredName: String
+  lastName: String!
+  externalId: String
+  grade: String
+  wordbank: [StudentWord] @connection(keyName: "wordsByStudent", fields: ["email"])
+  onBoardSurvey: Boolean
+  offBoardSurvey: Boolean
+  phone: String
+  birthdate: AWSDate
+  image: String
+  language: Language!
+  classes: [ClassStudent] @connection(keyName: "classByStudent", fields: ["email"])
+  filters: [String]
+  lastLoggedIn: AWSDateTime
+  lastLoggedOut: AWSDateTime
+}
+
+### Room
+## 
+
+## Keys:
+
+## Required fields:
+
+## Associated tables:
+
+type Room
+@model
+@key(name: "roomByInstitution", fields: ["institutionID"])
+@key(name: "roomByClass", fields: ["classID"])
+{
+  id: ID!
+  institutionID: ID!
+  classID: ID!
+  teacherAuthID: String!
+  teacherEmail: String!
+  name: String!
+  maxPersons: Int!
+  institution: Institution @connection(fields: ["institutionID"])
+  teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
+  class: Class @connection(fields: ["classID"])
+  curricula:[RoomCurriculum] @connection(keyName: "curriculumByRoom", fields: ["id"])
+  filters: [String]
+}
+
+### Class
+## 
+
+## Keys:
+
+## Required fields:
+
+## Associated tables:
+
+type Class 
+@model
+@key(name: "classByInstitution", fields: ["institutionID"])
+{
+  id: ID!
+  institutionID: ID!
+  type: String
+  name: String!
+  institution: Institution @connection(fields: ["institutionID"])
+  rooms: [Room] @connection(keyName: "roomByClass", fields: ["id"])
+  students: [ClassStudent]! @connection(keyName: "byClass", fields: ["id"])
+}
+
+type ClassStudent 
+@model(queries: null) 
+@key(name: "byClass", fields: ["classID", "studentID"])
+@key(name: "classByStudent", fields: ["studentEmail"])
+{
+  id: ID!
+  classID: ID!
+  studentID: ID!
+  studentEmail: String!
+  studentAuthID: String!
+  status: String
+  class: Class @connection(fields: ["classID"])
+  student: Person @connection(fields: ["studentEmail", "studentAuthID"])
+}
+
+### Curriculum
+## 
+
+## Keys:
+
+## Required fields:
+
+## Associated tables:
+
+type Curriculum 
+@model 
+@key(fields: ["id"]) 
+@key(name: "curriculumByInstitution", fields: ["institutionID"])
+{
+  id: ID!
+  institutionID: ID!
+  name: String!
+  type: String
+  description: String
+  objectives: [String]
+  languages: [Language]
+  institution: Institution @connection(fields: ["institutionID"])
+  syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
+}
+
+type CSequences
+@key(fields: ["id"])
+@model
+{
+  id: ID!
+  sequence: [String]
+}
+
+type Topic
+@model 
+@key(fields: ["id"])
+@key(name: "topicByCurriculum", fields: ["curriculumID"])
+{
+  id: ID!
+  curriculumID: ID!
+  learningObjectiveID: ID!
+  curriculum: Curriculum @connection(fields: ["curriculumID"])
+  learningObjective: LearningObjective @connection(fields: ["learningObjectiveID"])
+  name: String!
+  description: String
+}
+
+type LearningObjective
+@model
+@key(fields: ["id"])
+{
+  id: ID!
+  name: String!
+  description: String
+  curriculumID: ID!
+}
+
+type Rubric
+@model
+@key(fields: ["id"])
+{
+  id: ID!
+  name: String
+  criteria: String
+  distinguished: String
+  excelled: String
+  adequite: String
+  basic: String
+  topicID: ID!
+  topic: Topic @connection(fields: ["topicID"])
+  curriculumID: ID!
+}
+
+type TeacherCurriculum
+@model(queries: null)
+@key(name: "curriculumByTeacher", fields: ["staffID"])
+{
+  id: ID!
+  staffID: ID!
+  curriculumID: ID!
+  curriculum: Curriculum @connection(fields: ["curriculumID"])
+}
+
+type RoomCurriculum
+@model
+@key(name: "curriculumByRoom", fields: ["roomID"])
+{
+  id: ID!
+  roomID: ID!
+  curriculumID: ID!
+  curriculum: Curriculum @connection(fields: ["curriculumID"])
+}
+
+### Syllabus
+## 
+
+## Keys:
+
+## Required fields:
+
+## Associated tables:
+
+type Syllabus
+@model
+@key(fields: ["id"])
+@key(name: "syllabusByCurriculum", fields: ["curriculumID"])
+{
+  id: ID!
+  name: String!
+  type: String
+  description: String
+  methodology:String
+  policies: String
+  pupose: String
+  objectives: String
+  curriculumID: ID!
+  languages: [Language]
+  lessons: [SyllabusLesson] @connection(keyName: "lessonBySyllabus", fields: ["id"])
+  designers: [SyllabusDesigner] @connection(keyName: "designerBySyllabus", fields: ["id"])
+}
+
+type SyllabusDesigner
+@model(queries: null)
+@key(name: "designerBySyllabus", fields: ["syllabusID"])
+{
+  id: ID!
+  syllabusID: ID!
+  personEmail: String!
+  personAuthID: String!
+  person: Person @connection(fields: ["personEmail", "personAuthID"])
+}
+
+type SyllabusLesson
+@model(queries: null)
+@key(name: "lessonBySyllabus", fields: ["syllabusID", "lessonID"])
+{
+  id: ID!
+  syllabusID: ID!
+  lessonID: ID!
+  unit: String
+  sequence: Int
+  status: String
+  lesson: Lesson @connection(fields: ["lessonID"])
+}
+
+### Course
+## 
+
+## Keys:
+
+## Required fields:
+
+## Associated tables:
+
+type Course @model {
+  id: ID!
+  name: String!
+  type: String
+  classrooms: [Classroom] @connection(keyName: "byCourse", fields: ["id"])
+  startDate: AWSDate
+  duration: Int
+}
+
+type DataObject {
+  name: String!
+  data: String!
+}
+
+type AdditionalInputs {
+  name: String
+  input: String
+}
+
+type TruthGameInputs {
+  id: String
+  label: String
+  isLie: Boolean
+  text: String
+}
+
+type PollOption {
+  id: String
+  option: String
+  isChoice: Boolean
+}
+type PollInputs {
+  id: String
+  question: String
+  option: [PollOption]
+}
+
+type AdventureNodeOptions {
+  id: String
+	text: String
+	nextText: String
+}
+
+type AdventureGameInputs {
+  id: String
+	text: String
+	options: [AdventureNodeOptions]
+}
+
+type WarmUpData {
+  story: [String]
+  title: String
+  additional: [AdditionalInputs]
+  truthGame: [TruthGameInputs]
+  poll: [PollInputs]
+  adventureGame: [AdventureGameInputs]
+}
+
+type SelectedWord {
+  id: Int
+  text: String
+}
+
+type Selection {
+  anchor: String
+  color: String
+  content: [SelectedWord]
+  focus: String
+  id: Int
+}
+
+type RawSelection {
+  color: String
+  selected: [String]
+}
+
+type CoreLessonData {
+  selected: [Selection]
+  rawSelected: [RawSelection]
+  selectGroup: Int
+}
+
+type LineInput {
+  example: String
+  id: Int
+  menuOpen: Boolean
+  text: String
+}
+
+type ActivityData {
+  editInput: String
+  editMode: Boolean
+  lines: [LineInput]
+  title: String
+}
+
+type Subscription {
+  onUpdateClassroom(id: ID!): Classroom @aws_subscribe(mutations: ["updateClassroom"])
+  onChangeStudentData(classroomID: ID!): StudentData
+    @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
+}
+
+type StudentData
+  @model(subscriptions: null)
+  @key(fields: ["classroomID", "studentID"])
+  @key(name: "byClassroom", fields: ["classroomID", "studentID"]) {
+  id: ID!
+  lessonProgress: String!
+  currentLocation: String
+  status: String!
+  saveType: String
+  classroomID: ID!
+  classroom: Classroom @connection(fields: ["classroomID"])
+  studentID: String!
+  studentAuthID: String!
+  student: Person! @connection(fields: ["studentID", "studentAuthID"])
+  warmupData: WarmUpData
+  corelessonData: CoreLessonData
+  activityData: ActivityData
+  doFirstData: [QuestionDataStudentData]! @connection(name: "byStudentData", fields: ["id"])
+  checkpointData: [QuestionDataStudentData]! @connection(name: "byStudentData", fields: ["id"])
+}
+
+type ComponentSummary {
+  id: ID
+  disabled: Boolean!
+  open: Boolean!
+  active: Boolean!
+  stage: String!
+  type: String!
+  displayMode: String
+}
+
+type Quote {
+  id: String
+  source: String
+  text: String!
+}
+
+type Link {
+  id: String
+  type: String
+  text: String
+  link: String
+}
+
+type AdditionalContent {
+  video: String
+  links: [Link]
+}
+
+type Artist @model {
+  id: ID!
+  images: [String!]
+  name: String!
+  type: String!
+  bio: [String!]!
+  quotes: [Quote!]!
+  additionalContent: AdditionalContent
+}
+
+type StudentInfo {
+  id: String
+  firstName: String
+  preferredName: String
+  lastName: String
+}
+
+type DisplayData {
+  breakdownComponent: String
+  studentInfo: StudentInfo
+  warmUpData: WarmUpData
+  corelessonData: CoreLessonData
+  activityData: ActivityData
+}
+
+type Classroom @model(subscriptions: null) @key(name: "byCourse", fields: ["courseID", "lessonID"]) {
+  id: ID!
+  open: Boolean!
+  openedAt: AWSDate
+  closedAt: AWSDate
+  complete: Boolean
+  roster: [String!]!
+  viewing: String
+  displayData: DisplayData
+  expectedStartDate: AWSDate
+  expectedEndDate: AWSDate
+  SELStructure: String
+  courseID: ID!
+  course: Course @connection(fields: ["courseID"])
+  lessonID: ID!
+  lesson: Lesson @connection(fields: ["lessonID"])
+  lessonPlan: [ComponentSummary!]!
+  data: [StudentData]! @connection(keyName: "byClassroom", fields: ["id"])
+  feedback: [Feedback] @connection(fields: ["id"])
+}
+
+type Feedback @model {
+  id: ID!
+  classroomID: ID!
+  liked: String
+  comment: String
+  classroom: Classroom @connection(fields: ["classroomID"])
+}
+
+type SELStructure @model {
+  id: ID!
+  name: String!
+  description: String
+}
+
+type ThemeTemplate @model {
+  id: ID!
+  type: String
+  name: String!
+  summary: [String!]!
+  summaryLabel: String!
+  quote: [Quote]
+  keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
+  connection: String
+  images: [String!]!
+  additionalContent: AdditionalContent
+}
+
+type Theme {
+  type: String
+  name: String!
+  summary: [String!]!
+  summaryLabel: String!
+  quote: [Quote]
+  # keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
+  connection: String
+  images: [String!]!
+  additionalContent: AdditionalContent
+}
+
+type Lesson @model @key(fields: ["id"]) {
+  id: ID!
+  title: String!
+  type: String
+  instructions: [String]
+  theme: Theme
+  grades: [Int]
+  artistID: ID!
+  artist: Artist! @connection(fields: ["artistID"])
+  language: Language!
+  SELStructure: String
+  keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
+  connection: String
+  summary: String!
+  objectives: [String]!
+  checkpoints: [LessonCheckpoint]! @connection(keyName: "byLesson", fields: ["id"])
+  doFirstID: ID!
+  doFirst: DoFirst @connection(fields: ["doFirstID"])
+  warmUpId: ID!
+  warmUp: WarmUp @connection(fields: ["warmUpId"])
+  coreLessonId: ID!
+  coreLesson: CoreLesson @connection(fields: ["coreLessonId"])
+  activityId: ID!
+  activity: Activity @connection(fields: ["activityId"])
+  assessmentID: ID!
+  assessment: Assessment @connection(fields: ["assessmentID"])
+  filters: [String]
+}
+
+type LessonCheckpoint @model(queries: null) @key(name: "byLesson", fields: ["lessonID", "checkpointID"]) {
+  id: ID!
+  lessonID: ID!
+  checkpointID: ID!
+  position: Int!
+  lesson: Lesson @connection(fields: ["lessonID"])
+  checkpoint: Checkpoint @connection(fields: ["checkpointID"])
+}
+
+type DoFirst @model {
+  id: ID!
+  type: String!
+  required: Boolean!
+  questions: [DoFirstQuestion!]! @connection(keyName: "byDoFirst", fields: ["id"])
+}
+
+type DoFirstQuestion @model(queries: null) @key(name: "byDoFirst", fields: ["doFirstID", "questionID"]) {
+  id: ID!
+  doFirstID: ID!
+  questionID: ID!
+  doFirst: DoFirst @connection(fields: ["doFirstID"])
+  question: Question @connection(fields: ["questionID"])
+}
+
+type Instructions {
+  video: Boolean!
+  link: String
+  text: [String!]!
+}
+
+type Breakdown {
+  included: Boolean!
+  reflectionQuestions: [String]
+}
+
+type TruthGameInput {
+  id: String
+  label: String
+}
+
+type Inputs {
+  title: Boolean!
+  example: String
+  titleExample: String
+  textExample: String
+  listInputNumber: Int
+  truthGameInputs: [TruthGameInput]
+  additionalInputs: [WritingPrompts!]
+  pollInputs: [PollInputs]
+  adventureGameInputs: [AdventureGameInputs]
+}
+
+type WritingPrompts {
+  id: Int
+  name: String!
+  prompt: String!
+  example: String!
+}
+
+type WarmUp @model {
+  id: ID!
+  title: String!
+  label: String!
+  stage: String!
+  type: String!
+  language: Language!
+  SELTypes: [ID!]
+  instructions: Instructions!
+  inputs: Inputs!
+  breakdown: Breakdown!
+}
+
+type Content {
+  video: Boolean!
+  link: String
+  title: String!
+  artist: String!
+  text: [String!]!
+}
+
+type Tool {
+  id: String
+  name: String!
+  color: String!
+  icon: String!
+}
+
+type CoreLesson @model {
+  id: ID!
+  title: String!
+  label: String!
+  stage: String!
+  type: String!
+  language: Language!
+  SELTypes: [ID!]
+  instructions: Instructions!
+  content: Content!
+  tools: [Tool!]!
+  breakdown: Breakdown!
+}
+
+type Activity @model {
+  id: ID!
+  title: String!
+  label: String!
+  stage: String!
+  type: String!
+  language: Language!
+  SELTypes: [ID!]
+  instructions: Instructions!
+  lineNumber: Int
+  writingPrompts: [WritingPrompts!]!
+  breakdown: Breakdown!
+}
+
+type Checkpoint @model {
+  id: ID!
+  label: String!
+  title: String
+  subtitle: String
+  type: String!
+  instructions: String!
+  questions: [CheckpointQuestions]! @connection(keyName: "byCheckpoint", fields: ["id"])
+}
+
+type CheckpointQuestions
+  @model(queries: null)
+  @key(name: "byCheckpoint", fields: ["checkpointID", "questionID"])
+  @key(name: "byQuestion", fields: ["questionID", "checkpointID"]) {
+  id: ID!
+  checkpointID: ID!
+  questionID: ID!
+  required: Boolean!
+  checkpoint: Checkpoint @connection(fields: ["checkpointID"])
+  question: Question @connection(fields: ["questionID"])
+}
+
+type Assessment @model {
+  id: ID!
+  title: String!
+  type: String!
+  openingMessage: [String]
+  closingMessage: [String]
+  checkpoints: [AssessmentCheckpoint] @connection(keyName: "checkpointByAssessment", fields: ["id"])
+}
+
+type AssessmentCheckpoint @model @key(name: "checkpointByAssessment", fields: ["assessmentID", "checkpointID"]) {
+  id: ID!
+  assessmentID: ID!
+  checkpointID: ID!
+  assessment: Assessment @connection(fields: ["assessmentID"])
+  checkpoint: Checkpoint @connection(fields: ["checkpointID"])
+}
+
+type Option {
+  text: String!
+  label: String
+  icon: String
+  color: String
+}
+
+type Question @model {
+  id: ID!
+  label: String!
+  type: String!
+  question: String!
+  options: [Option]
+}
+
+type QuestionResponse {
+  qid: Int,
+  response: [String]
+}
+
+type QuestionData @model {
+  id: ID!
+  classroomID: ID!
+  email: String!
+  authID: String!
+  classroom: Classroom @connection(fields: ["classroomID"])
+  person: Person @connection(fields: ["email", "authID"])
+  componentType: String
+  scheduleID: String
+  lessonID: String
+  responseObject: [QuestionResponse]
+}
+
+type QuestionDataStudentData
+  @model(queries: null)
+  @key(name: "byStudentData", fields: ["studentDataID", "questionDataID"]) {
+  id: ID!
+  studentDataID: ID!
+  studentData: StudentData @connection(fields: ["studentDataID"])
+  questionDataID: ID!
+  questionData: QuestionData @connection(fields: ["questionDataID"])
+}
+
+type Word @model @key(name: "byWord", fields: ["word"], queryField: "searchByWord") {
+  id: ID!
+  word: String!
+  definition: String
+}
+
+type LessonKeyWord @model(queries: null) @key(name: "wordsByLesson", fields: ["lessonID", "wordID"]) {
+  id: ID!
+  wordID: ID!
+  lessonID: ID!
+  word: Word @connection(fields: ["wordID"])
+  lesson: Lesson @connection(fields: ["lessonID"])
+}
+
+type StudentWord @model(queries: null) @key(name: "wordsByStudent", fields: ["studentID", "wordID"]) {
+  id: ID!
+  wordID: ID!
+  studentID: String!
+  studentAuthID: String!
+  word: Word @connection(fields: ["wordID"])
+  student: Person @connection(fields: ["studentID", "studentAuthID"])
+}
+
+type FilterGroup 
+@model 
+{
+  id: ID!
+  name: String!
+  description: String!
+  filters: [FilterGroupFilter] @connection(keyName: "filtersByGroup", fields: ["id"])
+}
+
+type FilterGroupFilter
+@model
+@key(name: "filtersByGroup", fields: ["filterGroupID"])
+{
+  id: ID!
+  filterGroupID: ID!
+  filterID: ID!
+  zoiq: Boolean
+  admin: Boolean
+  show: Boolean
+  required: Boolean
+  filter: Filter @connection(fields: ["filterID"])
+}
+
+type Filter 
+@model
+{
+  id: ID!
+  name: String!
+  description: String
+  options: [FilterOption!]! @connection(keyName: "byFilter", fields: ["id"])
+}
+
+type FilterOption 
+@model 
+@key(fields: ["id"]) 
+@key(name: "byFilter", fields: ["filterID"]) {
+  id: ID!
+  filterID: ID!
+  text: String!
+}
+
+type Clients
+@model
+@key(fields: ["id"])
+{
+  id: ID!
+  name: String
+  subdomain: String
+  key: String
+}

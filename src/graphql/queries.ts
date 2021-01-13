@@ -774,28 +774,26 @@ export const listCurriculums = /* GraphQL */ `
     }
   }
 `;
-export const getCurriculumSequences = /* GraphQL */ `
-  query GetCurriculumSequences($curriculumID: ID!) {
-    getCurriculumSequences(curriculumID: $curriculumID) {
+export const getCSequences = /* GraphQL */ `
+  query GetCSequences($id: ID!) {
+    getCSequences(id: $id) {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt
     }
   }
 `;
-export const listCurriculumSequencess = /* GraphQL */ `
-  query ListCurriculumSequencess(
-    $curriculumID: ID
-    $filter: ModelCurriculumSequencesFilterInput
+export const listCSequencess = /* GraphQL */ `
+  query ListCSequencess(
+    $id: ID
+    $filter: ModelCSequencesFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listCurriculumSequencess(
-      curriculumID: $curriculumID
+    listCSequencess(
+      id: $id
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -803,8 +801,6 @@ export const listCurriculumSequencess = /* GraphQL */ `
     ) {
       items {
         id
-        curriculumID
-        type
         sequence
         createdAt
         updatedAt
@@ -1136,6 +1132,17 @@ export const getSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      designers {
+        items {
+          id
+          syllabusID
+          personEmail
+          personAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -1168,6 +1175,9 @@ export const listSyllabuss = /* GraphQL */ `
         curriculumID
         languages
         lessons {
+          nextToken
+        }
+        designers {
           nextToken
         }
         createdAt
@@ -1353,6 +1363,10 @@ export const getStudentData = /* GraphQL */ `
         poll {
           id
           question
+        }
+        adventureGame {
+          id
+          text
         }
       }
       corelessonData {
@@ -2396,6 +2410,10 @@ export const getWarmUp = /* GraphQL */ `
         pollInputs {
           id
           question
+        }
+        adventureGameInputs {
+          id
+          text
         }
       }
       breakdown {

@@ -1790,45 +1790,39 @@ export const deleteCurriculum = /* GraphQL */ `
     }
   }
 `;
-export const createCurriculumSequences = /* GraphQL */ `
-  mutation CreateCurriculumSequences(
-    $input: CreateCurriculumSequencesInput!
-    $condition: ModelCurriculumSequencesConditionInput
+export const createCSequences = /* GraphQL */ `
+  mutation CreateCSequences(
+    $input: CreateCSequencesInput!
+    $condition: ModelCSequencesConditionInput
   ) {
-    createCurriculumSequences(input: $input, condition: $condition) {
+    createCSequences(input: $input, condition: $condition) {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt
     }
   }
 `;
-export const updateCurriculumSequences = /* GraphQL */ `
-  mutation UpdateCurriculumSequences(
-    $input: UpdateCurriculumSequencesInput!
-    $condition: ModelCurriculumSequencesConditionInput
+export const updateCSequences = /* GraphQL */ `
+  mutation UpdateCSequences(
+    $input: UpdateCSequencesInput!
+    $condition: ModelCSequencesConditionInput
   ) {
-    updateCurriculumSequences(input: $input, condition: $condition) {
+    updateCSequences(input: $input, condition: $condition) {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteCurriculumSequences = /* GraphQL */ `
-  mutation DeleteCurriculumSequences(
-    $input: DeleteCurriculumSequencesInput!
-    $condition: ModelCurriculumSequencesConditionInput
+export const deleteCSequences = /* GraphQL */ `
+  mutation DeleteCSequences(
+    $input: DeleteCSequencesInput!
+    $condition: ModelCSequencesConditionInput
   ) {
-    deleteCurriculumSequences(input: $input, condition: $condition) {
+    deleteCSequences(input: $input, condition: $condition) {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt
@@ -2497,6 +2491,17 @@ export const createSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      designers {
+        items {
+          id
+          syllabusID
+          personEmail
+          personAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -2526,6 +2531,17 @@ export const updateSyllabus = /* GraphQL */ `
           unit
           sequence
           status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      designers {
+        items {
+          id
+          syllabusID
+          personEmail
+          personAuthID
           createdAt
           updatedAt
         }
@@ -2564,6 +2580,152 @@ export const deleteSyllabus = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      designers {
+        items {
+          id
+          syllabusID
+          personEmail
+          personAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createSyllabusDesigner = /* GraphQL */ `
+  mutation CreateSyllabusDesigner(
+    $input: CreateSyllabusDesignerInput!
+    $condition: ModelSyllabusDesignerConditionInput
+  ) {
+    createSyllabusDesigner(input: $input, condition: $condition) {
+      id
+      syllabusID
+      personEmail
+      personAuthID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateSyllabusDesigner = /* GraphQL */ `
+  mutation UpdateSyllabusDesigner(
+    $input: UpdateSyllabusDesignerInput!
+    $condition: ModelSyllabusDesignerConditionInput
+  ) {
+    updateSyllabusDesigner(input: $input, condition: $condition) {
+      id
+      syllabusID
+      personEmail
+      personAuthID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteSyllabusDesigner = /* GraphQL */ `
+  mutation DeleteSyllabusDesigner(
+    $input: DeleteSyllabusDesignerInput!
+    $condition: ModelSyllabusDesignerConditionInput
+  ) {
+    deleteSyllabusDesigner(input: $input, condition: $condition) {
+      id
+      syllabusID
+      personEmail
+      personAuthID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -3133,6 +3295,10 @@ export const createStudentData = /* GraphQL */ `
           id
           question
         }
+        adventureGame {
+          id
+          text
+        }
       }
       corelessonData {
         selected {
@@ -3308,6 +3474,10 @@ export const updateStudentData = /* GraphQL */ `
           id
           question
         }
+        adventureGame {
+          id
+          text
+        }
       }
       corelessonData {
         selected {
@@ -3482,6 +3652,10 @@ export const deleteStudentData = /* GraphQL */ `
         poll {
           id
           question
+        }
+        adventureGame {
+          id
+          text
         }
       }
       corelessonData {
@@ -5746,6 +5920,10 @@ export const createWarmUp = /* GraphQL */ `
           id
           question
         }
+        adventureGameInputs {
+          id
+          text
+        }
       }
       breakdown {
         included
@@ -5794,6 +5972,10 @@ export const updateWarmUp = /* GraphQL */ `
           id
           question
         }
+        adventureGameInputs {
+          id
+          text
+        }
       }
       breakdown {
         included
@@ -5841,6 +6023,10 @@ export const deleteWarmUp = /* GraphQL */ `
         pollInputs {
           id
           question
+        }
+        adventureGameInputs {
+          id
+          text
         }
       }
       breakdown {

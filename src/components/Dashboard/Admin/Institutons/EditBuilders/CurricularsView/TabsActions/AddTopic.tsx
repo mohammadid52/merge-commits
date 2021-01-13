@@ -33,7 +33,6 @@ const AddTopic = (props: AddTopicProps) => {
   const [validation, setValidation] = useState({ name: '', learning: '' })
   const [learnings, setLearnings] = useState([]);
   const [topicIds, setTopicIds] = useState([]);
-  const [sequenceId, setSequenceId] = useState('')
 
   const onInputChange = (e: any) => {
     if (e.target.name === 'name') {
@@ -72,12 +71,12 @@ const AddTopic = (props: AddTopicProps) => {
       const item: any = await API.graphql(graphqlOperation(customMutations.createTopic, { input }));
       const addedItem = item.data.createTopic
       if (!topicIds.length) {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCurriculumSequences, { input: { curriculumID: curricularId, type: 'topics', sequence: [addedItem.id] } }));
-        seqItem = seqItem.data.createCurriculumSequences
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `t_${curricularId}`, sequence: [addedItem.id] } }));
+        seqItem = seqItem.data.createCSequences
         console.log('seqItem', seqItem)
       } else {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCurriculumSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'topics', sequence: [...topicIds, addedItem.id] } }));
-        seqItem = seqItem.data.updateCurriculumSequences
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `t_${curricularId}`, sequence: [...topicIds, addedItem.id] } }));
+        seqItem = seqItem.data.updateCSequences
         console.log('seqItem', seqItem)
       }
       if (addedItem) {
@@ -89,6 +88,7 @@ const AddTopic = (props: AddTopicProps) => {
   }
 
   const fetchLearningObjectives = async () => {
+    console.log('jerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr')
     let list: any = await API.graphql(graphqlOperation(queries.listLearningObjectives, {
       filter: { curriculumID: { eq: curricularId } },
     }));
@@ -109,12 +109,11 @@ const AddTopic = (props: AddTopicProps) => {
   }
 
   const fetchTopicsSequence = async () => {
-    let item: any = await API.graphql(graphqlOperation(queries.getCurriculumSequences,
-      { curriculumID: curricularId, type: 'topics' }))
-    item = item.data.getCurriculumSequences
+    let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
+      { id: `t_${curricularId}` }))
+    item = item?.data.getCSequences?.sequence || []
     if (item) {
-      setTopicIds(item.sequence)
-      setSequenceId(item.id)
+      setTopicIds(item)
     }
   }
 

@@ -453,30 +453,25 @@ export type DeleteCurriculumInput = {
   id: string,
 };
 
-export type CreateCurriculumSequencesInput = {
+export type CreateCSequencesInput = {
   id?: string | null,
-  curriculumID: string,
-  type: string,
   sequence?: Array< string | null > | null,
 };
 
-export type ModelCurriculumSequencesConditionInput = {
-  type?: ModelStringInput | null,
+export type ModelCSequencesConditionInput = {
   sequence?: ModelStringInput | null,
-  and?: Array< ModelCurriculumSequencesConditionInput | null > | null,
-  or?: Array< ModelCurriculumSequencesConditionInput | null > | null,
-  not?: ModelCurriculumSequencesConditionInput | null,
+  and?: Array< ModelCSequencesConditionInput | null > | null,
+  or?: Array< ModelCSequencesConditionInput | null > | null,
+  not?: ModelCSequencesConditionInput | null,
 };
 
-export type UpdateCurriculumSequencesInput = {
+export type UpdateCSequencesInput = {
   id: string,
-  curriculumID: string,
-  type?: string | null,
   sequence?: Array< string | null > | null,
 };
 
-export type DeleteCurriculumSequencesInput = {
-  curriculumID: string,
+export type DeleteCSequencesInput = {
+  id: string,
 };
 
 export type CreateTopicInput = {
@@ -671,6 +666,33 @@ export type DeleteSyllabusInput = {
   id: string,
 };
 
+export type CreateSyllabusDesignerInput = {
+  id?: string | null,
+  syllabusID: string,
+  personEmail: string,
+  personAuthID: string,
+};
+
+export type ModelSyllabusDesignerConditionInput = {
+  syllabusID?: ModelIDInput | null,
+  personEmail?: ModelStringInput | null,
+  personAuthID?: ModelStringInput | null,
+  and?: Array< ModelSyllabusDesignerConditionInput | null > | null,
+  or?: Array< ModelSyllabusDesignerConditionInput | null > | null,
+  not?: ModelSyllabusDesignerConditionInput | null,
+};
+
+export type UpdateSyllabusDesignerInput = {
+  id: string,
+  syllabusID?: string | null,
+  personEmail?: string | null,
+  personAuthID?: string | null,
+};
+
+export type DeleteSyllabusDesignerInput = {
+  id?: string | null,
+};
+
 export type CreateSyllabusLessonInput = {
   id?: string | null,
   syllabusID: string,
@@ -754,6 +776,7 @@ export type WarmUpDataInput = {
   additional?: Array< AdditionalInputsInput | null > | null,
   truthGame?: Array< TruthGameInputsInput | null > | null,
   poll?: Array< PollInputsInput | null > | null,
+  adventureGame?: Array< AdventureGameInputsInput | null > | null,
 };
 
 export type AdditionalInputsInput = {
@@ -778,6 +801,18 @@ export type PollOptionInput = {
   id?: string | null,
   option?: string | null,
   isChoice?: boolean | null,
+};
+
+export type AdventureGameInputsInput = {
+  id?: string | null,
+  text?: string | null,
+  options?: Array< AdventureNodeOptionsInput | null > | null,
+};
+
+export type AdventureNodeOptionsInput = {
+  id?: string | null,
+  text?: string | null,
+  nextText?: string | null,
 };
 
 export type CoreLessonDataInput = {
@@ -1253,6 +1288,7 @@ export type InputsInput = {
   truthGameInputs?: Array< TruthGameInputInput | null > | null,
   additionalInputs?: Array< WritingPromptsInput > | null,
   pollInputs?: Array< PollInputsInput | null > | null,
+  adventureGameInputs?: Array< AdventureGameInputsInput | null > | null,
 };
 
 export type TruthGameInputInput = {
@@ -1943,14 +1979,12 @@ export type ModelCurriculumFilterInput = {
   not?: ModelCurriculumFilterInput | null,
 };
 
-export type ModelCurriculumSequencesFilterInput = {
+export type ModelCSequencesFilterInput = {
   id?: ModelIDInput | null,
-  curriculumID?: ModelIDInput | null,
-  type?: ModelStringInput | null,
   sequence?: ModelStringInput | null,
-  and?: Array< ModelCurriculumSequencesFilterInput | null > | null,
-  or?: Array< ModelCurriculumSequencesFilterInput | null > | null,
-  not?: ModelCurriculumSequencesFilterInput | null,
+  and?: Array< ModelCSequencesFilterInput | null > | null,
+  or?: Array< ModelCSequencesFilterInput | null > | null,
+  not?: ModelCSequencesFilterInput | null,
 };
 
 export type ModelTopicFilterInput = {
@@ -4317,51 +4351,45 @@ export type DeleteCurriculumMutation = {
   } | null,
 };
 
-export type CreateCurriculumSequencesMutationVariables = {
-  input: CreateCurriculumSequencesInput,
-  condition?: ModelCurriculumSequencesConditionInput | null,
+export type CreateCSequencesMutationVariables = {
+  input: CreateCSequencesInput,
+  condition?: ModelCSequencesConditionInput | null,
 };
 
-export type CreateCurriculumSequencesMutation = {
-  createCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type CreateCSequencesMutation = {
+  createCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdateCurriculumSequencesMutationVariables = {
-  input: UpdateCurriculumSequencesInput,
-  condition?: ModelCurriculumSequencesConditionInput | null,
+export type UpdateCSequencesMutationVariables = {
+  input: UpdateCSequencesInput,
+  condition?: ModelCSequencesConditionInput | null,
 };
 
-export type UpdateCurriculumSequencesMutation = {
-  updateCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type UpdateCSequencesMutation = {
+  updateCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteCurriculumSequencesMutationVariables = {
-  input: DeleteCurriculumSequencesInput,
-  condition?: ModelCurriculumSequencesConditionInput | null,
+export type DeleteCSequencesMutationVariables = {
+  input: DeleteCSequencesInput,
+  condition?: ModelCSequencesConditionInput | null,
 };
 
-export type DeleteCurriculumSequencesMutation = {
-  deleteCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type DeleteCSequencesMutation = {
+  deleteCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -5103,6 +5131,19 @@ export type CreateSyllabusMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers:  {
+      __typename: "ModelSyllabusDesignerConnection",
+      items:  Array< {
+        __typename: "SyllabusDesigner",
+        id: string,
+        syllabusID: string,
+        personEmail: string,
+        personAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5136,6 +5177,19 @@ export type UpdateSyllabusMutation = {
         unit: string | null,
         sequence: number | null,
         status: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    designers:  {
+      __typename: "ModelSyllabusDesignerConnection",
+      items:  Array< {
+        __typename: "SyllabusDesigner",
+        id: string,
+        syllabusID: string,
+        personEmail: string,
+        personAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -5178,6 +5232,169 @@ export type DeleteSyllabusMutation = {
         updatedAt: string,
       } | null > | null,
       nextToken: string | null,
+    } | null,
+    designers:  {
+      __typename: "ModelSyllabusDesignerConnection",
+      items:  Array< {
+        __typename: "SyllabusDesigner",
+        id: string,
+        syllabusID: string,
+        personEmail: string,
+        personAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateSyllabusDesignerMutationVariables = {
+  input: CreateSyllabusDesignerInput,
+  condition?: ModelSyllabusDesignerConditionInput | null,
+};
+
+export type CreateSyllabusDesignerMutation = {
+  createSyllabusDesigner:  {
+    __typename: "SyllabusDesigner",
+    id: string,
+    syllabusID: string,
+    personEmail: string,
+    personAuthID: string,
+    person:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateSyllabusDesignerMutationVariables = {
+  input: UpdateSyllabusDesignerInput,
+  condition?: ModelSyllabusDesignerConditionInput | null,
+};
+
+export type UpdateSyllabusDesignerMutation = {
+  updateSyllabusDesigner:  {
+    __typename: "SyllabusDesigner",
+    id: string,
+    syllabusID: string,
+    personEmail: string,
+    personAuthID: string,
+    person:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteSyllabusDesignerMutationVariables = {
+  input: DeleteSyllabusDesignerInput,
+  condition?: ModelSyllabusDesignerConditionInput | null,
+};
+
+export type DeleteSyllabusDesignerMutation = {
+  deleteSyllabusDesigner:  {
+    __typename: "SyllabusDesigner",
+    id: string,
+    syllabusID: string,
+    personEmail: string,
+    personAuthID: string,
+    person:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
@@ -5811,6 +6028,11 @@ export type CreateStudentDataMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     } | null,
     corelessonData:  {
       __typename: "CoreLessonData",
@@ -6011,6 +6233,11 @@ export type UpdateStudentDataMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     } | null,
     corelessonData:  {
       __typename: "CoreLessonData",
@@ -6210,6 +6437,11 @@ export type DeleteStudentDataMutation = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     } | null,
     corelessonData:  {
@@ -8790,6 +9022,11 @@ export type CreateWarmUpMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -8846,6 +9083,11 @@ export type UpdateWarmUpMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -8901,6 +9143,11 @@ export type DeleteWarmUpMutation = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     },
     breakdown:  {
@@ -12398,38 +12645,34 @@ export type ListCurriculumsQuery = {
   } | null,
 };
 
-export type GetCurriculumSequencesQueryVariables = {
-  curriculumID: string,
+export type GetCSequencesQueryVariables = {
+  id: string,
 };
 
-export type GetCurriculumSequencesQuery = {
-  getCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type GetCSequencesQuery = {
+  getCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListCurriculumSequencessQueryVariables = {
-  curriculumID?: string | null,
-  filter?: ModelCurriculumSequencesFilterInput | null,
+export type ListCSequencessQueryVariables = {
+  id?: string | null,
+  filter?: ModelCSequencesFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListCurriculumSequencessQuery = {
-  listCurriculumSequencess:  {
-    __typename: "ModelCurriculumSequencesConnection",
+export type ListCSequencessQuery = {
+  listCSequencess:  {
+    __typename: "ModelCSequencesConnection",
     items:  Array< {
-      __typename: "CurriculumSequences",
+      __typename: "CSequences",
       id: string,
-      curriculumID: string,
-      type: string,
       sequence: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -12791,6 +13034,19 @@ export type GetSyllabusQuery = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers:  {
+      __typename: "ModelSyllabusDesignerConnection",
+      items:  Array< {
+        __typename: "SyllabusDesigner",
+        id: string,
+        syllabusID: string,
+        personEmail: string,
+        personAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -12821,6 +13077,10 @@ export type ListSyllabussQuery = {
       languages: Array< Language | null > | null,
       lessons:  {
         __typename: "ModelSyllabusLessonConnection",
+        nextToken: string | null,
+      } | null,
+      designers:  {
+        __typename: "ModelSyllabusDesignerConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -13035,6 +13295,11 @@ export type GetStudentDataQuery = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     } | null,
     corelessonData:  {
@@ -14230,6 +14495,11 @@ export type GetWarmUpQuery = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     },
     breakdown:  {
@@ -15669,6 +15939,11 @@ export type OnChangeStudentDataSubscription = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     } | null,
     corelessonData:  {
@@ -17640,36 +17915,30 @@ export type OnDeleteCurriculumSubscription = {
   } | null,
 };
 
-export type OnCreateCurriculumSequencesSubscription = {
-  onCreateCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type OnCreateCSequencesSubscription = {
+  onCreateCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateCurriculumSequencesSubscription = {
-  onUpdateCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type OnUpdateCSequencesSubscription = {
+  onUpdateCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteCurriculumSequencesSubscription = {
-  onDeleteCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type OnDeleteCSequencesSubscription = {
+  onDeleteCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -18331,6 +18600,19 @@ export type OnCreateSyllabusSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers:  {
+      __typename: "ModelSyllabusDesignerConnection",
+      items:  Array< {
+        __typename: "SyllabusDesigner",
+        id: string,
+        syllabusID: string,
+        personEmail: string,
+        personAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -18359,6 +18641,19 @@ export type OnUpdateSyllabusSubscription = {
         unit: string | null,
         sequence: number | null,
         status: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    designers:  {
+      __typename: "ModelSyllabusDesignerConnection",
+      items:  Array< {
+        __typename: "SyllabusDesigner",
+        id: string,
+        syllabusID: string,
+        personEmail: string,
+        personAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -18396,6 +18691,154 @@ export type OnDeleteSyllabusSubscription = {
         updatedAt: string,
       } | null > | null,
       nextToken: string | null,
+    } | null,
+    designers:  {
+      __typename: "ModelSyllabusDesignerConnection",
+      items:  Array< {
+        __typename: "SyllabusDesigner",
+        id: string,
+        syllabusID: string,
+        personEmail: string,
+        personAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateSyllabusDesignerSubscription = {
+  onCreateSyllabusDesigner:  {
+    __typename: "SyllabusDesigner",
+    id: string,
+    syllabusID: string,
+    personEmail: string,
+    personAuthID: string,
+    person:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateSyllabusDesignerSubscription = {
+  onUpdateSyllabusDesigner:  {
+    __typename: "SyllabusDesigner",
+    id: string,
+    syllabusID: string,
+    personEmail: string,
+    personAuthID: string,
+    person:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteSyllabusDesignerSubscription = {
+  onDeleteSyllabusDesigner:  {
+    __typename: "SyllabusDesigner",
+    id: string,
+    syllabusID: string,
+    personEmail: string,
+    personAuthID: string,
+    person:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
@@ -20626,6 +21069,11 @@ export type OnCreateWarmUpSubscription = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -20677,6 +21125,11 @@ export type OnUpdateWarmUpSubscription = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -20727,6 +21180,11 @@ export type OnDeleteWarmUpSubscription = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     },
     breakdown:  {
