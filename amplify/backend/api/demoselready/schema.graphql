@@ -338,9 +338,9 @@ type SyllabusDesigner
 {
   id: ID!
   syllabusID: ID!
-  email: String!
-  authID: String!
-  person: Person @connection(fields: ["email", "authID"])
+  personEmail: String!
+  personAuthID: String!
+  person: Person @connection(fields: ["personEmail", "personAuthID"])
 }
 
 type SyllabusLesson

@@ -2495,8 +2495,8 @@ export const createSyllabus = /* GraphQL */ `
         items {
           id
           syllabusID
-          email
-          authID
+          personEmail
+          personAuthID
           createdAt
           updatedAt
         }
@@ -2540,8 +2540,8 @@ export const updateSyllabus = /* GraphQL */ `
         items {
           id
           syllabusID
-          email
-          authID
+          personEmail
+          personAuthID
           createdAt
           updatedAt
         }
@@ -2585,8 +2585,8 @@ export const deleteSyllabus = /* GraphQL */ `
         items {
           id
           syllabusID
-          email
-          authID
+          personEmail
+          personAuthID
           createdAt
           updatedAt
         }
@@ -2605,8 +2605,8 @@ export const createSyllabusDesigner = /* GraphQL */ `
     createSyllabusDesigner(input: $input, condition: $condition) {
       id
       syllabusID
-      email
-      authID
+      personEmail
+      personAuthID
       person {
         id
         authId
@@ -2650,8 +2650,8 @@ export const updateSyllabusDesigner = /* GraphQL */ `
     updateSyllabusDesigner(input: $input, condition: $condition) {
       id
       syllabusID
-      email
-      authID
+      personEmail
+      personAuthID
       person {
         id
         authId
@@ -2695,8 +2695,8 @@ export const deleteSyllabusDesigner = /* GraphQL */ `
     deleteSyllabusDesigner(input: $input, condition: $condition) {
       id
       syllabusID
-      email
-      authID
+      personEmail
+      personAuthID
       person {
         id
         authId

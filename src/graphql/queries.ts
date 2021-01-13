@@ -1136,8 +1136,8 @@ export const getSyllabus = /* GraphQL */ `
         items {
           id
           syllabusID
-          email
-          authID
+          personEmail
+          personAuthID
           createdAt
           updatedAt
         }
