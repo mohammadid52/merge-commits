@@ -66,6 +66,7 @@ export const getInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -713,11 +714,13 @@ export const getCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          designers
           createdAt
           updatedAt
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -767,6 +770,7 @@ export const listCurriculums = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -844,6 +848,7 @@ export const getTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -889,6 +894,7 @@ export const listTopics = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -971,6 +977,7 @@ export const getRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -1069,6 +1076,7 @@ export const getRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -1096,6 +1104,7 @@ export const listRoomCurriculums = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -1132,17 +1141,7 @@ export const getSyllabus = /* GraphQL */ `
         }
         nextToken
       }
-      designers {
-        items {
-          id
-          syllabusID
-          personEmail
-          personAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
+      designers
       createdAt
       updatedAt
     }
@@ -1177,9 +1176,7 @@ export const listSyllabuss = /* GraphQL */ `
         lessons {
           nextToken
         }
-        designers {
-          nextToken
-        }
+        designers
         createdAt
         updatedAt
       }

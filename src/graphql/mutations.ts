@@ -69,6 +69,7 @@ export const createInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -158,6 +159,7 @@ export const updateInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -247,6 +249,7 @@ export const deleteInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -1644,11 +1647,13 @@ export const createCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          designers
           createdAt
           updatedAt
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -1712,11 +1717,13 @@ export const updateCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          designers
           createdAt
           updatedAt
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -1780,11 +1787,13 @@ export const deleteCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          designers
           createdAt
           updatedAt
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -1867,6 +1876,7 @@ export const createTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -1923,6 +1933,7 @@ export const updateTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -1979,6 +1990,7 @@ export const deleteTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2068,6 +2080,7 @@ export const createRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -2116,6 +2129,7 @@ export const updateRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -2164,6 +2178,7 @@ export const deleteRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -2224,6 +2239,7 @@ export const createTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2270,6 +2286,7 @@ export const updateTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2316,6 +2333,7 @@ export const deleteTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2362,6 +2380,7 @@ export const createRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2408,6 +2427,7 @@ export const updateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2454,6 +2474,7 @@ export const deleteRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2491,17 +2512,7 @@ export const createSyllabus = /* GraphQL */ `
         }
         nextToken
       }
-      designers {
-        items {
-          id
-          syllabusID
-          personEmail
-          personAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
+      designers
       createdAt
       updatedAt
     }
@@ -2536,17 +2547,7 @@ export const updateSyllabus = /* GraphQL */ `
         }
         nextToken
       }
-      designers {
-        items {
-          id
-          syllabusID
-          personEmail
-          personAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
+      designers
       createdAt
       updatedAt
     }
@@ -2581,152 +2582,7 @@ export const deleteSyllabus = /* GraphQL */ `
         }
         nextToken
       }
-      designers {
-        items {
-          id
-          syllabusID
-          personEmail
-          personAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createSyllabusDesigner = /* GraphQL */ `
-  mutation CreateSyllabusDesigner(
-    $input: CreateSyllabusDesignerInput!
-    $condition: ModelSyllabusDesignerConditionInput
-  ) {
-    createSyllabusDesigner(input: $input, condition: $condition) {
-      id
-      syllabusID
-      personEmail
-      personAuthID
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateSyllabusDesigner = /* GraphQL */ `
-  mutation UpdateSyllabusDesigner(
-    $input: UpdateSyllabusDesignerInput!
-    $condition: ModelSyllabusDesignerConditionInput
-  ) {
-    updateSyllabusDesigner(input: $input, condition: $condition) {
-      id
-      syllabusID
-      personEmail
-      personAuthID
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteSyllabusDesigner = /* GraphQL */ `
-  mutation DeleteSyllabusDesigner(
-    $input: DeleteSyllabusDesignerInput!
-    $condition: ModelSyllabusDesignerConditionInput
-  ) {
-    deleteSyllabusDesigner(input: $input, condition: $condition) {
-      id
-      syllabusID
-      personEmail
-      personAuthID
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
+      designers
       createdAt
       updatedAt
     }
