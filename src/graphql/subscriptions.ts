@@ -2719,25 +2719,9 @@ export const onCreateSyllabus = /* GraphQL */ `
       designers {
         items {
           id
-          authId
-          status
+          syllabusID
           email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
+          authID
           createdAt
           updatedAt
         }
@@ -2777,25 +2761,9 @@ export const onUpdateSyllabus = /* GraphQL */ `
       designers {
         items {
           id
-          authId
-          status
+          syllabusID
           email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
+          authID
           createdAt
           updatedAt
         }
@@ -2835,29 +2803,139 @@ export const onDeleteSyllabus = /* GraphQL */ `
       designers {
         items {
           id
-          authId
-          status
+          syllabusID
           email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
+          authID
           createdAt
           updatedAt
         }
         nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateSyllabusDesigner = /* GraphQL */ `
+  subscription OnCreateSyllabusDesigner {
+    onCreateSyllabusDesigner {
+      id
+      syllabusID
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateSyllabusDesigner = /* GraphQL */ `
+  subscription OnUpdateSyllabusDesigner {
+    onUpdateSyllabusDesigner {
+      id
+      syllabusID
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteSyllabusDesigner = /* GraphQL */ `
+  subscription OnDeleteSyllabusDesigner {
+    onDeleteSyllabusDesigner {
+      id
+      syllabusID
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt

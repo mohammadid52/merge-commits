@@ -2494,25 +2494,9 @@ export const createSyllabus = /* GraphQL */ `
       designers {
         items {
           id
-          authId
-          status
+          syllabusID
           email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
+          authID
           createdAt
           updatedAt
         }
@@ -2555,25 +2539,9 @@ export const updateSyllabus = /* GraphQL */ `
       designers {
         items {
           id
-          authId
-          status
+          syllabusID
           email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
+          authID
           createdAt
           updatedAt
         }
@@ -2616,29 +2584,148 @@ export const deleteSyllabus = /* GraphQL */ `
       designers {
         items {
           id
-          authId
-          status
+          syllabusID
           email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
+          authID
           createdAt
           updatedAt
         }
         nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createSyllabusDesigner = /* GraphQL */ `
+  mutation CreateSyllabusDesigner(
+    $input: CreateSyllabusDesignerInput!
+    $condition: ModelSyllabusDesignerConditionInput
+  ) {
+    createSyllabusDesigner(input: $input, condition: $condition) {
+      id
+      syllabusID
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateSyllabusDesigner = /* GraphQL */ `
+  mutation UpdateSyllabusDesigner(
+    $input: UpdateSyllabusDesignerInput!
+    $condition: ModelSyllabusDesignerConditionInput
+  ) {
+    updateSyllabusDesigner(input: $input, condition: $condition) {
+      id
+      syllabusID
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteSyllabusDesigner = /* GraphQL */ `
+  mutation DeleteSyllabusDesigner(
+    $input: DeleteSyllabusDesignerInput!
+    $condition: ModelSyllabusDesignerConditionInput
+  ) {
+    deleteSyllabusDesigner(input: $input, condition: $condition) {
+      id
+      syllabusID
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt

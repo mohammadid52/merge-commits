@@ -1135,25 +1135,9 @@ export const getSyllabus = /* GraphQL */ `
       designers {
         items {
           id
-          authId
-          status
+          syllabusID
           email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
+          authID
           createdAt
           updatedAt
         }
