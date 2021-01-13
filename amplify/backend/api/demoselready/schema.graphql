@@ -236,13 +236,11 @@ type Curriculum
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
 }
 
-type CurriculumSequences
-@key(fields: ["curriculumID"])
+type CSequences
+@key(fields: ["id"])
 @model
 {
   id: ID!
-  curriculumID: ID!
-  type: String!
   sequence: [String]
 }
 
@@ -331,6 +329,18 @@ type Syllabus
   curriculumID: ID!
   languages: [Language]
   lessons: [SyllabusLesson] @connection(keyName: "lessonBySyllabus", fields: ["id"])
+  designers: [SyllabusDesigner] @connection(keyName: "designerBySyllabus", fields: ["id"])
+}
+
+type SyllabusDesigner
+@model(queries: null)
+@key(name: "designerBySyllabus", fields: ["syllabusID"])
+{
+  id: ID!
+  syllabusID: ID!
+  personEmail: String!
+  personAuthID: String!
+  person: Person @connection(fields: ["personEmail", "personAuthID"])
 }
 
 type SyllabusLesson
@@ -391,12 +401,26 @@ type PollInputs {
   question: String
   option: [PollOption]
 }
+
+type AdventureNodeOptions {
+  id: String
+	text: String
+	nextText: String
+}
+
+type AdventureGameInputs {
+  id: String
+	text: String
+	options: [AdventureNodeOptions]
+}
+
 type WarmUpData {
   story: [String]
   title: String
   additional: [AdditionalInputs]
   truthGame: [TruthGameInputs]
   poll: [PollInputs]
+  adventureGame: [AdventureGameInputs]
 }
 
 type SelectedWord {
@@ -654,7 +678,8 @@ type Inputs {
   listInputNumber: Int
   truthGameInputs: [TruthGameInput]
   additionalInputs: [WritingPrompts!]
-  pollInputs: [PollInputs] 
+  pollInputs: [PollInputs]
+  adventureGameInputs: [AdventureGameInputs]
 }
 
 type WritingPrompts {
