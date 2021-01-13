@@ -55,8 +55,7 @@ const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
       className="w-auto flex flex-row"
       onPointerOver={handleStarHover}
       onPointerLeave={handleStarLeave}
-      onClick={handleStarRate}
-    >
+      onClick={handleStarRate}>
       <div id={`1`} className={`w-auto`}>
         <IconContext.Provider value={{ color: '#ffffff', size: '1.5rem' }}>
           {whichStarHovered >= 1 || (isRated && rating >= 1) ? (
