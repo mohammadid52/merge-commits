@@ -424,6 +424,7 @@ export const onCreateInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -510,6 +511,7 @@ export const onUpdateInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -596,6 +598,7 @@ export const onDeleteInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -1942,6 +1945,7 @@ export const onCreateCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -2008,6 +2012,7 @@ export const onUpdateCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -2074,6 +2079,7 @@ export const onDeleteCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -2144,6 +2150,7 @@ export const onCreateTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2197,6 +2204,7 @@ export const onUpdateTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2250,6 +2258,7 @@ export const onDeleteTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2327,6 +2336,7 @@ export const onCreateRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -2372,6 +2382,7 @@ export const onUpdateRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -2417,6 +2428,7 @@ export const onDeleteRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -2474,6 +2486,7 @@ export const onCreateTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2517,6 +2530,7 @@ export const onUpdateTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2560,6 +2574,7 @@ export const onDeleteTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2603,6 +2618,7 @@ export const onCreateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2646,6 +2662,7 @@ export const onUpdateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2689,6 +2706,7 @@ export const onDeleteRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }

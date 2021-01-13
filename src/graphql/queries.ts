@@ -66,6 +66,7 @@ export const getInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -719,6 +720,7 @@ export const getCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -768,6 +770,7 @@ export const listCurriculums = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -845,6 +848,7 @@ export const getTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -890,6 +894,7 @@ export const listTopics = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -972,6 +977,7 @@ export const getRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -1070,6 +1076,7 @@ export const getRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -1097,6 +1104,7 @@ export const listRoomCurriculums = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
