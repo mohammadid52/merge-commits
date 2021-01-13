@@ -51,7 +51,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
   }, [props]);
 
   return (
-    <div className={``}>
+    <>
       {lessons
         ? lessons.map((value: any, key: number) => {
             return (
@@ -127,7 +127,7 @@ const Today: React.FC<ClassProps> = (props: ClassProps) => {
             );
           })
         : null}
-    </div>
+    </>
   );
 };
 
