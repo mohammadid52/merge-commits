@@ -20,8 +20,8 @@ const PoemOutput = (props: PoemOutputProps) => {
       <div className={`w-full flex flex-col ${theme.blockQuote}`}>
         {
           props.poem !== ''
-          ? <div className={`${theme.elem.text} align-middle text-left`} dangerouslySetInnerHTML={{__html: parseBlankLines(props.poem)}}></div>
-          : <div className={`${theme.elem.text} align-middle text-center`}>You didn't write a poem :)</div>
+          ? <div className={`${theme.elem.text} my-4 leading-7 align-middle text-left`} dangerouslySetInnerHTML={{__html: parseBlankLines(props.poem)}}></div>
+          : <div className={`${theme.elem.text} my-4 leading-7 align-middle text-center`}>You didn't write a poem :)</div>
         }
       </div>
     </>

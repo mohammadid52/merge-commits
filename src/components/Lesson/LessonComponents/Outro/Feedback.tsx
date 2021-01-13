@@ -19,16 +19,6 @@ const Feedback = (props: FeedbackProps) => {
   const [isRated, setIsRated] = useState<boolean>(false);
   const [rating, setRating] = useState<number>(0);
 
-  // const handleThumb = (item: string) => {
-  //     setThumb(() => {
-  //         if (item === thumb) {
-  //             return '';
-  //         }
-  //
-  //         return item;
-  //     });
-  // };
-
   const handleTextChange = (e: { target: { value: string } }) => {
     const { value } = e.target;
 

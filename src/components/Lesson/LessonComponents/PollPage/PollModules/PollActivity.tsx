@@ -29,11 +29,11 @@ const Poll = () => {
 
   return (
     <>
-      {state.componentState.poll && state.componentState.poll?.pollInputs ? (
+      {inputs ? (
         <>
           <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup} />
           <div className={theme.section}>
-            <Banner title={title} iconName={'FaPoll'}/>
+            <Banner title={title} iconName={'FaPoll'} />
 
             <div className="flex flex-col justify-between items-center">
               <InstructionsBlock />
