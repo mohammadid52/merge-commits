@@ -306,6 +306,10 @@ export const onChangeStudentData = /* GraphQL */ `
           id
           question
         }
+        adventureGame {
+          id
+          text
+        }
       }
       corelessonData {
         selected {
@@ -420,6 +424,7 @@ export const onCreateInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -506,6 +511,7 @@ export const onUpdateInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -592,6 +598,7 @@ export const onDeleteInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -1932,11 +1939,13 @@ export const onCreateCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          designers
           createdAt
           updatedAt
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -1997,11 +2006,13 @@ export const onUpdateCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          designers
           createdAt
           updatedAt
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -2062,46 +2073,42 @@ export const onDeleteCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          designers
           createdAt
           updatedAt
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
   }
 `;
-export const onCreateCurriculumSequences = /* GraphQL */ `
-  subscription OnCreateCurriculumSequences {
-    onCreateCurriculumSequences {
+export const onCreateCSequences = /* GraphQL */ `
+  subscription OnCreateCSequences {
+    onCreateCSequences {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateCurriculumSequences = /* GraphQL */ `
-  subscription OnUpdateCurriculumSequences {
-    onUpdateCurriculumSequences {
+export const onUpdateCSequences = /* GraphQL */ `
+  subscription OnUpdateCSequences {
+    onUpdateCSequences {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteCurriculumSequences = /* GraphQL */ `
-  subscription OnDeleteCurriculumSequences {
-    onDeleteCurriculumSequences {
+export const onDeleteCSequences = /* GraphQL */ `
+  subscription OnDeleteCSequences {
+    onDeleteCSequences {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt
@@ -2143,6 +2150,7 @@ export const onCreateTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2196,6 +2204,7 @@ export const onUpdateTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2249,6 +2258,7 @@ export const onDeleteTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2326,6 +2336,7 @@ export const onCreateRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -2371,6 +2382,7 @@ export const onUpdateRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -2416,6 +2428,7 @@ export const onDeleteRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -2473,6 +2486,7 @@ export const onCreateTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2516,6 +2530,7 @@ export const onUpdateTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2559,6 +2574,7 @@ export const onDeleteTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2602,6 +2618,7 @@ export const onCreateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2645,6 +2662,7 @@ export const onUpdateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2688,6 +2706,7 @@ export const onDeleteRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2722,6 +2741,7 @@ export const onCreateSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -2753,6 +2773,7 @@ export const onUpdateSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -2784,6 +2805,7 @@ export const onDeleteSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -4792,6 +4814,10 @@ export const onCreateWarmUp = /* GraphQL */ `
           id
           question
         }
+        adventureGameInputs {
+          id
+          text
+        }
       }
       breakdown {
         included
@@ -4837,6 +4863,10 @@ export const onUpdateWarmUp = /* GraphQL */ `
           id
           question
         }
+        adventureGameInputs {
+          id
+          text
+        }
       }
       breakdown {
         included
@@ -4881,6 +4911,10 @@ export const onDeleteWarmUp = /* GraphQL */ `
         pollInputs {
           id
           question
+        }
+        adventureGameInputs {
+          id
+          text
         }
       }
       breakdown {

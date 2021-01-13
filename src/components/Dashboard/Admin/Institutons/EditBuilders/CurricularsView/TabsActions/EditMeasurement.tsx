@@ -72,7 +72,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
     setLoading(true)
     let item: any = await API.graphql(graphqlOperation(customQueries.getRubric, { id: measurementId }));
     item = item.data.getRubric
-    if (item.curriculumID === curricularId) {
+    if (item?.curriculumID === curricularId) {
       setMeasurement({
         ...measurement,
         name: item.name,
@@ -170,11 +170,11 @@ const EditMeasurement = (props: EditMeasurementProps) => {
                     </label>
                     <Selector selectedItem={measurement.topic.value} placeholder="topic" list={topics} onChange={selectTopic} />
                   </div> */}
-                  <div>
-                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                      Select Topic
+                    <div>
+                      <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                        Select Topic
                     </label>
-                    <Selector selectedItem={measurement.topic.value} placeholder="Topic" list={topics} onChange={() => console.log('')} />
+                      <Selector selectedItem={measurement.topic.value} placeholder="Topic" list={topics} onChange={selectTopic} />
                     </div>
                   </div>
 
@@ -196,10 +196,10 @@ const EditMeasurement = (props: EditMeasurementProps) => {
                 </div>
               </div>
               <div className="flex my-8 justify-center">
-                <Buttons btnClass="py-3 px-10" label="Save" onClick={saveMeasurementDetails} />
-                <Buttons btnClass="py-3 px-10" label="Cancel" onClick={history.goBack} />
+                <Buttons btnClass="py-3 px-10 mr-4" label="Cancel" onClick={history.goBack} transparent />
+                <Buttons btnClass="py-3 px-10 ml-4" label="Save" onClick={saveMeasurementDetails} />
               </div>
-            </> : <div>Fetching data...</div>
+            </> : <div className="py-12 my-12 m-auto text-center">Fetching data...</div>
         }
       </PageWrapper>
     </div>

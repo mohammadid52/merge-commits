@@ -234,15 +234,14 @@ type Curriculum
   languages: [Language]
   institution: Institution @connection(fields: ["institutionID"])
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
+  designers: [String]
 }
 
-type CurriculumSequences
-@key(fields: ["curriculumID"])
+type CSequences
+@key(fields: ["id"])
 @model
 {
   id: ID!
-  curriculumID: ID!
-  type: String!
   sequence: [String]
 }
 
@@ -331,6 +330,7 @@ type Syllabus
   curriculumID: ID!
   languages: [Language]
   lessons: [SyllabusLesson] @connection(keyName: "lessonBySyllabus", fields: ["id"])
+  designers: [String]
 }
 
 type SyllabusLesson
@@ -391,12 +391,26 @@ type PollInputs {
   question: String
   option: [PollOption]
 }
+
+type AdventureNodeOptions {
+  id: String
+	text: String
+	nextText: String
+}
+
+type AdventureGameInputs {
+  id: String
+	text: String
+	options: [AdventureNodeOptions]
+}
+
 type WarmUpData {
   story: [String]
   title: String
   additional: [AdditionalInputs]
   truthGame: [TruthGameInputs]
   poll: [PollInputs]
+  adventureGame: [AdventureGameInputs]
 }
 
 type SelectedWord {
@@ -654,7 +668,8 @@ type Inputs {
   listInputNumber: Int
   truthGameInputs: [TruthGameInput]
   additionalInputs: [WritingPrompts!]
-  pollInputs: [PollInputs] 
+  pollInputs: [PollInputs]
+  adventureGameInputs: [AdventureGameInputs]
 }
 
 type WritingPrompts {

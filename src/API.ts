@@ -418,6 +418,7 @@ export type CreateCurriculumInput = {
   description?: string | null,
   objectives?: Array< string | null > | null,
   languages?: Array< Language | null > | null,
+  designers?: Array< string | null > | null,
 };
 
 export type ModelCurriculumConditionInput = {
@@ -427,6 +428,7 @@ export type ModelCurriculumConditionInput = {
   description?: ModelStringInput | null,
   objectives?: ModelStringInput | null,
   languages?: ModelLanguageListInput | null,
+  designers?: ModelStringInput | null,
   and?: Array< ModelCurriculumConditionInput | null > | null,
   or?: Array< ModelCurriculumConditionInput | null > | null,
   not?: ModelCurriculumConditionInput | null,
@@ -447,36 +449,32 @@ export type UpdateCurriculumInput = {
   description?: string | null,
   objectives?: Array< string | null > | null,
   languages?: Array< Language | null > | null,
+  designers?: Array< string | null > | null,
 };
 
 export type DeleteCurriculumInput = {
   id: string,
 };
 
-export type CreateCurriculumSequencesInput = {
+export type CreateCSequencesInput = {
   id?: string | null,
-  curriculumID: string,
-  type: string,
   sequence?: Array< string | null > | null,
 };
 
-export type ModelCurriculumSequencesConditionInput = {
-  type?: ModelStringInput | null,
+export type ModelCSequencesConditionInput = {
   sequence?: ModelStringInput | null,
-  and?: Array< ModelCurriculumSequencesConditionInput | null > | null,
-  or?: Array< ModelCurriculumSequencesConditionInput | null > | null,
-  not?: ModelCurriculumSequencesConditionInput | null,
+  and?: Array< ModelCSequencesConditionInput | null > | null,
+  or?: Array< ModelCSequencesConditionInput | null > | null,
+  not?: ModelCSequencesConditionInput | null,
 };
 
-export type UpdateCurriculumSequencesInput = {
+export type UpdateCSequencesInput = {
   id: string,
-  curriculumID: string,
-  type?: string | null,
   sequence?: Array< string | null > | null,
 };
 
-export type DeleteCurriculumSequencesInput = {
-  curriculumID: string,
+export type DeleteCSequencesInput = {
+  id: string,
 };
 
 export type CreateTopicInput = {
@@ -637,6 +635,7 @@ export type CreateSyllabusInput = {
   objectives?: string | null,
   curriculumID: string,
   languages?: Array< Language | null > | null,
+  designers?: Array< string | null > | null,
 };
 
 export type ModelSyllabusConditionInput = {
@@ -649,6 +648,7 @@ export type ModelSyllabusConditionInput = {
   objectives?: ModelStringInput | null,
   curriculumID?: ModelIDInput | null,
   languages?: ModelLanguageListInput | null,
+  designers?: ModelStringInput | null,
   and?: Array< ModelSyllabusConditionInput | null > | null,
   or?: Array< ModelSyllabusConditionInput | null > | null,
   not?: ModelSyllabusConditionInput | null,
@@ -665,6 +665,7 @@ export type UpdateSyllabusInput = {
   objectives?: string | null,
   curriculumID?: string | null,
   languages?: Array< Language | null > | null,
+  designers?: Array< string | null > | null,
 };
 
 export type DeleteSyllabusInput = {
@@ -754,6 +755,7 @@ export type WarmUpDataInput = {
   additional?: Array< AdditionalInputsInput | null > | null,
   truthGame?: Array< TruthGameInputsInput | null > | null,
   poll?: Array< PollInputsInput | null > | null,
+  adventureGame?: Array< AdventureGameInputsInput | null > | null,
 };
 
 export type AdditionalInputsInput = {
@@ -778,6 +780,18 @@ export type PollOptionInput = {
   id?: string | null,
   option?: string | null,
   isChoice?: boolean | null,
+};
+
+export type AdventureGameInputsInput = {
+  id?: string | null,
+  text?: string | null,
+  options?: Array< AdventureNodeOptionsInput | null > | null,
+};
+
+export type AdventureNodeOptionsInput = {
+  id?: string | null,
+  text?: string | null,
+  nextText?: string | null,
 };
 
 export type CoreLessonDataInput = {
@@ -1253,6 +1267,7 @@ export type InputsInput = {
   truthGameInputs?: Array< TruthGameInputInput | null > | null,
   additionalInputs?: Array< WritingPromptsInput > | null,
   pollInputs?: Array< PollInputsInput | null > | null,
+  adventureGameInputs?: Array< AdventureGameInputsInput | null > | null,
 };
 
 export type TruthGameInputInput = {
@@ -1938,19 +1953,18 @@ export type ModelCurriculumFilterInput = {
   description?: ModelStringInput | null,
   objectives?: ModelStringInput | null,
   languages?: ModelLanguageListInput | null,
+  designers?: ModelStringInput | null,
   and?: Array< ModelCurriculumFilterInput | null > | null,
   or?: Array< ModelCurriculumFilterInput | null > | null,
   not?: ModelCurriculumFilterInput | null,
 };
 
-export type ModelCurriculumSequencesFilterInput = {
+export type ModelCSequencesFilterInput = {
   id?: ModelIDInput | null,
-  curriculumID?: ModelIDInput | null,
-  type?: ModelStringInput | null,
   sequence?: ModelStringInput | null,
-  and?: Array< ModelCurriculumSequencesFilterInput | null > | null,
-  or?: Array< ModelCurriculumSequencesFilterInput | null > | null,
-  not?: ModelCurriculumSequencesFilterInput | null,
+  and?: Array< ModelCSequencesFilterInput | null > | null,
+  or?: Array< ModelCSequencesFilterInput | null > | null,
+  not?: ModelCSequencesFilterInput | null,
 };
 
 export type ModelTopicFilterInput = {
@@ -2009,6 +2023,7 @@ export type ModelSyllabusFilterInput = {
   objectives?: ModelStringInput | null,
   curriculumID?: ModelIDInput | null,
   languages?: ModelLanguageListInput | null,
+  designers?: ModelStringInput | null,
   and?: Array< ModelSyllabusFilterInput | null > | null,
   or?: Array< ModelSyllabusFilterInput | null > | null,
   not?: ModelSyllabusFilterInput | null,
@@ -2363,6 +2378,7 @@ export type CreateInstitutionMutation = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -2464,6 +2480,7 @@ export type UpdateInstitutionMutation = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -2565,6 +2582,7 @@ export type DeleteInstitutionMutation = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -4151,11 +4169,13 @@ export type CreateCurriculumMutation = {
         objectives: string | null,
         curriculumID: string,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4229,11 +4249,13 @@ export type UpdateCurriculumMutation = {
         objectives: string | null,
         curriculumID: string,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4307,61 +4329,57 @@ export type DeleteCurriculumMutation = {
         objectives: string | null,
         curriculumID: string,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type CreateCurriculumSequencesMutationVariables = {
-  input: CreateCurriculumSequencesInput,
-  condition?: ModelCurriculumSequencesConditionInput | null,
+export type CreateCSequencesMutationVariables = {
+  input: CreateCSequencesInput,
+  condition?: ModelCSequencesConditionInput | null,
 };
 
-export type CreateCurriculumSequencesMutation = {
-  createCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type CreateCSequencesMutation = {
+  createCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdateCurriculumSequencesMutationVariables = {
-  input: UpdateCurriculumSequencesInput,
-  condition?: ModelCurriculumSequencesConditionInput | null,
+export type UpdateCSequencesMutationVariables = {
+  input: UpdateCSequencesInput,
+  condition?: ModelCSequencesConditionInput | null,
 };
 
-export type UpdateCurriculumSequencesMutation = {
-  updateCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type UpdateCSequencesMutation = {
+  updateCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteCurriculumSequencesMutationVariables = {
-  input: DeleteCurriculumSequencesInput,
-  condition?: ModelCurriculumSequencesConditionInput | null,
+export type DeleteCSequencesMutationVariables = {
+  input: DeleteCSequencesInput,
+  condition?: ModelCSequencesConditionInput | null,
 };
 
-export type DeleteCurriculumSequencesMutation = {
-  deleteCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type DeleteCSequencesMutation = {
+  deleteCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -4411,6 +4429,7 @@ export type CreateTopicMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4473,6 +4492,7 @@ export type UpdateTopicMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4535,6 +4555,7 @@ export type DeleteTopicMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4635,6 +4656,7 @@ export type CreateRubricMutation = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -4688,6 +4710,7 @@ export type UpdateRubricMutation = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -4741,6 +4764,7 @@ export type DeleteRubricMutation = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -4807,6 +4831,7 @@ export type CreateTeacherCurriculumMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4858,6 +4883,7 @@ export type UpdateTeacherCurriculumMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4909,6 +4935,7 @@ export type DeleteTeacherCurriculumMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4960,6 +4987,7 @@ export type CreateRoomCurriculumMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5011,6 +5039,7 @@ export type UpdateRoomCurriculumMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5062,6 +5091,7 @@ export type DeleteRoomCurriculumMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5103,6 +5133,7 @@ export type CreateSyllabusMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5141,6 +5172,7 @@ export type UpdateSyllabusMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5179,6 +5211,7 @@ export type DeleteSyllabusMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5811,6 +5844,11 @@ export type CreateStudentDataMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     } | null,
     corelessonData:  {
       __typename: "CoreLessonData",
@@ -6011,6 +6049,11 @@ export type UpdateStudentDataMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     } | null,
     corelessonData:  {
       __typename: "CoreLessonData",
@@ -6210,6 +6253,11 @@ export type DeleteStudentDataMutation = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     } | null,
     corelessonData:  {
@@ -8790,6 +8838,11 @@ export type CreateWarmUpMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -8846,6 +8899,11 @@ export type UpdateWarmUpMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -8901,6 +8959,11 @@ export type DeleteWarmUpMutation = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     },
     breakdown:  {
@@ -11608,6 +11671,7 @@ export type GetInstitutionQuery = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -12338,11 +12402,13 @@ export type GetCurriculumQuery = {
         objectives: string | null,
         curriculumID: string,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -12391,6 +12457,7 @@ export type ListCurriculumsQuery = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -12398,38 +12465,34 @@ export type ListCurriculumsQuery = {
   } | null,
 };
 
-export type GetCurriculumSequencesQueryVariables = {
-  curriculumID: string,
+export type GetCSequencesQueryVariables = {
+  id: string,
 };
 
-export type GetCurriculumSequencesQuery = {
-  getCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type GetCSequencesQuery = {
+  getCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListCurriculumSequencessQueryVariables = {
-  curriculumID?: string | null,
-  filter?: ModelCurriculumSequencesFilterInput | null,
+export type ListCSequencessQueryVariables = {
+  id?: string | null,
+  filter?: ModelCSequencesFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListCurriculumSequencessQuery = {
-  listCurriculumSequencess:  {
-    __typename: "ModelCurriculumSequencesConnection",
+export type ListCSequencessQuery = {
+  listCSequencess:  {
+    __typename: "ModelCSequencesConnection",
     items:  Array< {
-      __typename: "CurriculumSequences",
+      __typename: "CSequences",
       id: string,
-      curriculumID: string,
-      type: string,
       sequence: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -12480,6 +12543,7 @@ export type GetTopicQuery = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -12524,6 +12588,7 @@ export type ListTopicsQuery = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -12614,6 +12679,7 @@ export type GetRubricQuery = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -12718,6 +12784,7 @@ export type GetRoomCurriculumQuery = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -12749,6 +12816,7 @@ export type ListRoomCurriculumsQuery = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -12791,6 +12859,7 @@ export type GetSyllabusQuery = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -12823,6 +12892,7 @@ export type ListSyllabussQuery = {
         __typename: "ModelSyllabusLessonConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -13035,6 +13105,11 @@ export type GetStudentDataQuery = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     } | null,
     corelessonData:  {
@@ -14230,6 +14305,11 @@ export type GetWarmUpQuery = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     },
     breakdown:  {
@@ -15670,6 +15750,11 @@ export type OnChangeStudentDataSubscription = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     } | null,
     corelessonData:  {
       __typename: "CoreLessonData",
@@ -15801,6 +15886,7 @@ export type OnCreateInstitutionSubscription = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -15897,6 +15983,7 @@ export type OnUpdateInstitutionSubscription = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -15993,6 +16080,7 @@ export type OnDeleteInstitutionSubscription = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -17484,11 +17572,13 @@ export type OnCreateCurriculumSubscription = {
         objectives: string | null,
         curriculumID: string,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -17557,11 +17647,13 @@ export type OnUpdateCurriculumSubscription = {
         objectives: string | null,
         curriculumID: string,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -17630,46 +17722,42 @@ export type OnDeleteCurriculumSubscription = {
         objectives: string | null,
         curriculumID: string,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnCreateCurriculumSequencesSubscription = {
-  onCreateCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type OnCreateCSequencesSubscription = {
+  onCreateCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateCurriculumSequencesSubscription = {
-  onUpdateCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type OnUpdateCSequencesSubscription = {
+  onUpdateCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteCurriculumSequencesSubscription = {
-  onDeleteCurriculumSequences:  {
-    __typename: "CurriculumSequences",
+export type OnDeleteCSequencesSubscription = {
+  onDeleteCSequences:  {
+    __typename: "CSequences",
     id: string,
-    curriculumID: string,
-    type: string,
     sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -17714,6 +17802,7 @@ export type OnCreateTopicSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -17771,6 +17860,7 @@ export type OnUpdateTopicSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -17828,6 +17918,7 @@ export type OnDeleteTopicSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -17908,6 +17999,7 @@ export type OnCreateRubricSubscription = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -17956,6 +18048,7 @@ export type OnUpdateRubricSubscription = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -18004,6 +18097,7 @@ export type OnDeleteRubricSubscription = {
         description: string | null,
         objectives: Array< string | null > | null,
         languages: Array< Language | null > | null,
+        designers: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -18065,6 +18159,7 @@ export type OnCreateTeacherCurriculumSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -18111,6 +18206,7 @@ export type OnUpdateTeacherCurriculumSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -18157,6 +18253,7 @@ export type OnDeleteTeacherCurriculumSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -18203,6 +18300,7 @@ export type OnCreateRoomCurriculumSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -18249,6 +18347,7 @@ export type OnUpdateRoomCurriculumSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -18295,6 +18394,7 @@ export type OnDeleteRoomCurriculumSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken: string | null,
       } | null,
+      designers: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -18331,6 +18431,7 @@ export type OnCreateSyllabusSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -18364,6 +18465,7 @@ export type OnUpdateSyllabusSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -18397,6 +18499,7 @@ export type OnDeleteSyllabusSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    designers: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -20626,6 +20729,11 @@ export type OnCreateWarmUpSubscription = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -20677,6 +20785,11 @@ export type OnUpdateWarmUpSubscription = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -20727,6 +20840,11 @@ export type OnDeleteWarmUpSubscription = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     },
     breakdown:  {

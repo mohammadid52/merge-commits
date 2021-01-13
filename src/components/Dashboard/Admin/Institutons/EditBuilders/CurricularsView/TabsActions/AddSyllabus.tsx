@@ -13,6 +13,7 @@ import Selector from '../../../../../../Atoms/Form/Selector'
 import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector'
 
 import { languageList } from '../../../../../../../utilities/staticData'
+import * as queries from '../../../../../../../graphql/queries'
 import * as mutations from '../../../../../../../graphql/mutations'
 import * as customQueries from '../../../../../../../customGraphql/customQueries'
 
@@ -46,6 +47,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
   const [designersList, setDesignersList] = useState([]);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
+  const [syllabusIds, setSyllabusIds] = useState([]);
   const [loading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState({
     show: false,
@@ -120,12 +122,22 @@ const AddSyllabus = (props: AddSyllabusProps) => {
     }
   }
 
+  const fetchSyllabusSequence = async () => {
+    let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
+      { id: `s_${curricularId}` }))
+    item = item?.data.getCSequences?.sequence || []
+    if (item) {
+      setSyllabusIds(item)
+    }
+  }
+
   const saveSyllabusDetails = async () => {
     const isValid = await validateForm();
     if (isValid) {
       try {
         setIsLoading(true);
         const languagesCode = syllabusData.languages.map((item: { value: string }) => item.value);
+        const designers = selectedDesigners.map(item => (item.id))
         const input = {
           name: syllabusData.name,
           curriculumID: curricularId,
@@ -134,9 +146,20 @@ const AddSyllabus = (props: AddSyllabusProps) => {
           policies: syllabusData.policies,
           pupose: syllabusData.purpose,
           objectives: syllabusData.objectives,
-          languages: languagesCode
+          languages: languagesCode,
+          designers: designers
         }
-        const newSyllabus = await API.graphql(graphqlOperation(mutations.createSyllabus, { input: input }));
+        const newSyllabus: any = await API.graphql(graphqlOperation(mutations.createSyllabus, { input: input }));
+        const newItem = newSyllabus.data.createSyllabus
+        if (!syllabusIds.length) {
+          let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `s_${curricularId}`, sequence: [newItem.id] } }));
+          seqItem = seqItem.data.createCSequences
+          console.log('seqItem', seqItem)
+        } else {
+          let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `s_${curricularId}`, sequence: [...syllabusIds, newItem.id] } }));
+          seqItem = seqItem.data.updateCSequences
+          console.log('seqItem', seqItem)
+        }
         setMessages({
           show: true,
           message: 'New syllabus has been saved.',
@@ -144,6 +167,11 @@ const AddSyllabus = (props: AddSyllabusProps) => {
         })
         setSyllabusData(initialData);
         setIsLoading(false);
+        if (newItem) {
+          history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
+        } else {
+          console.log('Could not add syllabus');
+        }
       } catch{
         setMessages({
           show: true,
@@ -185,6 +213,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
 
   useEffect(() => {
     fetchPersonsList();
+    fetchSyllabusSequence();
   }, [])
 
   const { name, languages, description, purpose, objectives, methodology, policies } = syllabusData;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useHistory, useLocation, useParams } from 'react-router'
 import { IoArrowUndoCircleOutline } from 'react-icons/io5'
 import API, { graphqlOperation } from '@aws-amplify/api'
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import BreadCrums from '../../../../../../Atoms/BreadCrums'
 import SectionTitle from '../../../../../../Atoms/SectionTitle'
@@ -10,8 +11,9 @@ import PageWrapper from '../../../../../../Atoms/PageWrapper'
 import FormInput from '../../../../../../Atoms/Form/FormInput'
 import TextArea from '../../../../../../Atoms/Form/TextArea'
 import Selector from '../../../../../../Atoms/Form/Selector'
-import { languageList, statusList } from '../../../../../../../utilities/staticData'
 import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector'
+import { languageList, statusList } from '../../../../../../../utilities/staticData'
+import { reorder } from '../../../../../../../utilities/strings';
 
 // TODO: Check wether mutations and queries are needed for fetching all the data or not.
 import * as mutations from '../../../../../../../graphql/mutations'
@@ -59,12 +61,15 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     id: '',
     action: ''
   });
+  const [designerIds, setDesignerIds] = useState([]);
   const [designersList, setDesignersList] = useState([]);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [allLessonsList, setAllLessonsList] = useState([]);
   const [dropdownLessonsList, setDropdownLessonsList] = useState([]);
   const [selectedLessonsList, setSelectedLessonsList] = useState([]);
   const [savedLessonsList, setSavedLessonsList] = useState([]);
+  const [lessonsIds, setLessonsIds] = useState([])
+  const [sequenceId, setSequenceId] = useState('')
   const [selecetedLesson, setSelectedLesson] = useState({
     id: '',
     name: '',
@@ -90,6 +95,22 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Edit Syllabus', url: `/dashboard/curricular/${curricularId}/syllabus/edit?id=${syllabusId}`, last: true }
   ];
+
+  const onDragEnd = async (result: any) => {
+    if (result.source.index !== result.destination.index) {
+      const list = reorder(lessonsIds, result.source.index, result.destination.index)
+      setLessonsIds(list);
+      let lessonsList = selectedLessonsList.map((t: any) => {
+        let index = list.indexOf(t.uniqlessonId)
+        return { ...t, index }
+      }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+
+      setSelectedLessonsList(lessonsList)
+      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `le_${curricularId}_sy_${syllabusId}`, sequence: list } }));
+      seqItem = seqItem.data.updateCSequences;
+      console.log('seq updated');
+    }
+  }
 
   const onInputChange = (e: any) => {
     setSyllabusData({
@@ -141,6 +162,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       try {
         setIsLoading(true);
         const languagesCode = syllabusData.languages.map((item: { value: string }) => item.value);
+        const designers = selectedDesigners.map(item => ({ id: item.id }))
         const input = {
           id: syllabusId,
           name: syllabusData.name,
@@ -150,7 +172,8 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           policies: syllabusData.policies,
           pupose: syllabusData.purpose,
           objectives: syllabusData.objectives,
-          languages: languagesCode
+          languages: languagesCode,
+          designers: designers
         }
         const newSyllabus = await API.graphql(graphqlOperation(mutations.updateSyllabus, { input: input }));
         setMessages({
@@ -237,6 +260,19 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       }
       const result: any = await API.graphql(graphqlOperation(customMutations.createSyllabusLesson, { input: input }));
       const newLesson = result.data.createSyllabusLesson;
+
+      if (!lessonsIds.length) {
+        setLessonsIds([newLesson.id])
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `le_${curricularId}_sy_${syllabusId}`, sequence: [newLesson.id] } }));
+        seqItem = seqItem.data.createCSequences
+        console.log('seqItem', seqItem)
+      } else {
+        setLessonsIds([...lessonsIds, newLesson.id])
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `le_${curricularId}_sy_${syllabusId}`, sequence: [...lessonsIds, newLesson.id] } }));
+        seqItem = seqItem.data.updateCSequences
+        console.log('seqItem', seqItem)
+      }
+
       setSelectedLesson({ id: '', name: '', value: '' })
       setSavedLessonsList([
         ...savedLessonsList, newLesson
@@ -256,7 +292,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     const savedLessonIds = [...savedLessonsList];
     const lessonsDetails = [...allLessonsList];
     const filteredList = lessonsDetails.filter(item => savedLessonIds.some(lesson => lesson.lessonID === item.id));
-    const updatedTableList = filteredList.map(item => {
+    let updatedTableList = filteredList.map(item => {
       let tableList;
       const selectedLesson = savedLessonIds.find(lesson => lesson.lessonID === item.id)
       tableList = {
@@ -267,8 +303,14 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       return tableList;
     });
     const filteredDropDownList = dropdownLessonsList.filter(item => updatedTableList.find(lesson => lesson.id === item.id) ? false : true)
+
+    updatedTableList = updatedTableList.map((t: any) => {
+      let index = lessonsIds?.indexOf(t.uniqlessonId)
+      return { ...t, index }
+    }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+
+    setSelectedLessonsList(updatedTableList)
     setDropdownLessonsList(filteredDropDownList)
-    setSelectedLessonsList(updatedTableList);
   }
 
   const fetchSyllabusData = async () => {
@@ -286,7 +328,8 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           purpose: savedData.pupose,
           methodology: savedData.methodology,
           policies: savedData.policies,
-        })
+        });
+        setDesignerIds([...savedData?.designers])
         setSavedLessonsList([...savedData.lessons?.items]);
       } catch {
         setMessages({
@@ -340,9 +383,20 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       })
     }
   }
+
+  const fetchLessonsSequence = async () => {
+    let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
+      { id: `le_${curricularId}_sy_${syllabusId}` }))
+    item = item?.data.getCSequences?.sequence || []
+    if (item) {
+      setLessonsIds(item)
+    }
+  }
+
   useEffect(() => {
     fetchLessonsList();
     fetchPersonsList();
+    fetchLessonsSequence();
     fetchSyllabusData();
   }, []);
 
@@ -351,6 +405,22 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       updateListAndDropdown();
     }
   }, [savedLessonsList, allLessonsList])
+
+  useEffect(() => {
+    if (designersList.length > 0) {
+      const designers = [...designerIds].map((desID: string) => {
+        const personData = designersList.find(per => per.id === desID)
+        const personObj = {
+          id: personData?.id,
+          name: personData?.name,
+          value: personData?.name
+        }
+        return personObj
+      })
+      setSelectedDesigners(designers);
+    }
+  }, [designersList, designerIds])
+
 
   const { name, languages, description, purpose, objectives, methodology, policies } = syllabusData;
   return (
@@ -462,41 +532,65 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                         <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>Lesson Name</span>
                         </div>
-                        <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>Type</span>
                         </div>
                         <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>Status</span>
                         </div>
-                        <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>Actions</span>
                         </div>
                       </div>
 
                       <div className="max-h-88 overflow-y-auto mb-10">
-                        {selectedLessonsList.map((item, index) => (
-                          <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                            <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
-                            <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal">
-                              {item.title ? item.title : '--'}
-                            </div>
-                            <div className="flex w-3/10 items-center px-8 py-3 text-left text-s text-gray-500 leading-4 font-medium ">
-                              {item.type ? item.type : '--'}
-                            </div>
-                            <div className="flex w-3/10 items-center px-8 py-3 text-left text-s text-gray-500 leading-4 font-medium ">
-                              {(editState.id !== item.id) ?
-                                (item.status ? item.status : '--')
-                                : (
-                                  <div className="text-gray-900">
-                                    <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={(val, name, id) => onStatusChange(val, name, id, item.uniqlessonId)} />
-                                  </div>
-                                )}
-                            </div>
-                            <span className="w-2/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentLesson(item.id)}>
-                              {(editState.id !== item.id) ? ('edit') : editState.action}
-                            </span>
-                          </div>
-                        ))}
+
+                        {/* Drag and drop listing */}
+                        <DragDropContext onDragEnd={onDragEnd}>
+                          <Droppable droppableId="droppable">
+                            {(provided, snapshot) => (
+                              <div
+                                {...provided.droppableProps}
+                                ref={provided.innerRef}
+                              >
+                                {selectedLessonsList.map((item, index) => (
+                                  <Draggable key={item.id} draggableId={item.id} index={index}>
+                                    {(provided, snapshot) => (
+                                      <div
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                      >
+                                        <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200 cursor-move">
+                                          <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
+                                          <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal">
+                                            {item.title ? item.title : '--'}
+                                          </div>
+                                          <div className="flex w-2/10 items-center px-8 py-3 text-left text-s text-gray-500 leading-4 font-medium whitespace-normal">
+                                            {item.type ? item.type : '--'}
+                                          </div>
+                                          <div className="flex w-3/10 items-center px-8 py-3 text-left text-s text-gray-500 leading-4 font-medium ">
+                                            {(editState.id !== item.id) ?
+                                              (item.status ? item.status : '--')
+                                              : (
+                                                <div className="text-gray-900">
+                                                  <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={(val, name, id) => onStatusChange(val, name, id, item.uniqlessonId)} />
+                                                </div>
+                                              )}
+                                          </div>
+                                          <span className="w-1/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentLesson(item.id)}>
+                                            {(editState.id !== item.id) ? ('edit') : editState.action}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </Draggable>
+                                ))}
+                                {provided.placeholder}
+                              </div>
+                            )}
+                          </Droppable>
+                        </DragDropContext>
 
                       </div>
 

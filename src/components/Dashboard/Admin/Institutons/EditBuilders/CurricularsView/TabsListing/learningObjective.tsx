@@ -5,6 +5,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import Buttons from '../../../../../../Atoms/Buttons';
+import { reorder } from '../../../../../../../utilities/strings';
 
 import * as mutations from '../../../../../../../graphql/mutations';
 import * as queries from '../../../../../../../graphql/queries';
@@ -18,31 +19,26 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
   const [loading, setLoading] = useState(false)
   const [learnings, setLearnings] = useState([])
   const [learningIds, setLearningIds] = useState([])
-  const [sequenceId, setSequenceId] = useState('')
   const history = useHistory();
 
   const onDragEnd = async (result: any) => {
-    if (result.source.index !== result.destination.index) {
-      const list = reorder(learningIds, result.source.index, result.destination.index)
-      setLearningIds(list)
-      let learningsList = learnings.map((t: any) => {
-        let index = list.indexOf(t.id)
-        return { ...t, index }
-      }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-      setLearnings(learningsList)
-      console.log(list, learningIds)
-      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCurriculumSequences, { input: { id: sequenceId, curriculumID: curricularId, type: 'learnings', sequence: list } }));
-      seqItem = seqItem.data.createCurriculumSequences;
-      console.log('seq updated');
+    try {
+      if (result.source.index !== result.destination.index) {
+        const list = reorder(learningIds, result.source.index, result.destination.index)
+        setLearningIds(list)
+        let learningsList = learnings.map((t: any) => {
+          let index = list.indexOf(t.id)
+          return { ...t, index }
+        }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+        setLearnings(learningsList)
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `l_${curricularId}`, sequence: list } }));
+        seqItem = seqItem.data.updateCSequences;
+        console.log('seq updated');
+      }
+    } catch (err) {
+      console.log('err', err)
     }
   }
-
-  const reorder = (list: any, startIndex: number, endIndex: number) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
-  };
 
   const createLearningObjective = () => {
     history.push(`/dashboard/manage-institutions/curricular/${curricularId}/learning-objective/add`)
@@ -58,17 +54,16 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
       filter: { curriculumID: { eq: curricularId } },
     }));
     list = list.data.listLearningObjectives?.items || []
-    let item: any = await API.graphql(graphqlOperation(queries.getCurriculumSequences,
-      { curriculumID: curricularId, type: 'learnings' }))
+    let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
+      { id: `l_${curricularId}` }))
 
-    item = item.data.getCurriculumSequences || []
+    item = item?.data.getCSequences?.sequence || []
     list = list.map((t: any) => {
-      let index = item?.sequence.indexOf(t.id)
+      let index = item.indexOf(t.id)
       return { ...t, index }
     }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
     setLearnings(list)
-    setLearningIds(item.sequence)
-    setSequenceId(item.id)
+    setLearningIds(item)
     setLoading(false)
   }
 

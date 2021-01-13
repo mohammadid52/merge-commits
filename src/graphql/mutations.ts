@@ -69,6 +69,7 @@ export const createInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -158,6 +159,7 @@ export const updateInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -247,6 +249,7 @@ export const deleteInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -1644,11 +1647,13 @@ export const createCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          designers
           createdAt
           updatedAt
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -1712,11 +1717,13 @@ export const updateCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          designers
           createdAt
           updatedAt
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -1780,55 +1787,51 @@ export const deleteCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          designers
           createdAt
           updatedAt
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
   }
 `;
-export const createCurriculumSequences = /* GraphQL */ `
-  mutation CreateCurriculumSequences(
-    $input: CreateCurriculumSequencesInput!
-    $condition: ModelCurriculumSequencesConditionInput
+export const createCSequences = /* GraphQL */ `
+  mutation CreateCSequences(
+    $input: CreateCSequencesInput!
+    $condition: ModelCSequencesConditionInput
   ) {
-    createCurriculumSequences(input: $input, condition: $condition) {
+    createCSequences(input: $input, condition: $condition) {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt
     }
   }
 `;
-export const updateCurriculumSequences = /* GraphQL */ `
-  mutation UpdateCurriculumSequences(
-    $input: UpdateCurriculumSequencesInput!
-    $condition: ModelCurriculumSequencesConditionInput
+export const updateCSequences = /* GraphQL */ `
+  mutation UpdateCSequences(
+    $input: UpdateCSequencesInput!
+    $condition: ModelCSequencesConditionInput
   ) {
-    updateCurriculumSequences(input: $input, condition: $condition) {
+    updateCSequences(input: $input, condition: $condition) {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteCurriculumSequences = /* GraphQL */ `
-  mutation DeleteCurriculumSequences(
-    $input: DeleteCurriculumSequencesInput!
-    $condition: ModelCurriculumSequencesConditionInput
+export const deleteCSequences = /* GraphQL */ `
+  mutation DeleteCSequences(
+    $input: DeleteCSequencesInput!
+    $condition: ModelCSequencesConditionInput
   ) {
-    deleteCurriculumSequences(input: $input, condition: $condition) {
+    deleteCSequences(input: $input, condition: $condition) {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt
@@ -1873,6 +1876,7 @@ export const createTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -1929,6 +1933,7 @@ export const updateTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -1985,6 +1990,7 @@ export const deleteTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2074,6 +2080,7 @@ export const createRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -2122,6 +2129,7 @@ export const updateRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -2170,6 +2178,7 @@ export const deleteRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -2230,6 +2239,7 @@ export const createTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2276,6 +2286,7 @@ export const updateTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2322,6 +2333,7 @@ export const deleteTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2368,6 +2380,7 @@ export const createRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2414,6 +2427,7 @@ export const updateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2460,6 +2474,7 @@ export const deleteRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2497,6 +2512,7 @@ export const createSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -2531,6 +2547,7 @@ export const updateSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -2565,6 +2582,7 @@ export const deleteSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -3133,6 +3151,10 @@ export const createStudentData = /* GraphQL */ `
           id
           question
         }
+        adventureGame {
+          id
+          text
+        }
       }
       corelessonData {
         selected {
@@ -3308,6 +3330,10 @@ export const updateStudentData = /* GraphQL */ `
           id
           question
         }
+        adventureGame {
+          id
+          text
+        }
       }
       corelessonData {
         selected {
@@ -3482,6 +3508,10 @@ export const deleteStudentData = /* GraphQL */ `
         poll {
           id
           question
+        }
+        adventureGame {
+          id
+          text
         }
       }
       corelessonData {
@@ -5746,6 +5776,10 @@ export const createWarmUp = /* GraphQL */ `
           id
           question
         }
+        adventureGameInputs {
+          id
+          text
+        }
       }
       breakdown {
         included
@@ -5794,6 +5828,10 @@ export const updateWarmUp = /* GraphQL */ `
           id
           question
         }
+        adventureGameInputs {
+          id
+          text
+        }
       }
       breakdown {
         included
@@ -5841,6 +5879,10 @@ export const deleteWarmUp = /* GraphQL */ `
         pollInputs {
           id
           question
+        }
+        adventureGameInputs {
+          id
+          text
         }
       }
       breakdown {

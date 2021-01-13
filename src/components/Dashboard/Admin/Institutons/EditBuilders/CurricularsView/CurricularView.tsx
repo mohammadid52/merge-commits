@@ -7,7 +7,10 @@ import { MdSpeakerNotes } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
 
 import * as queries from '../../../../../../graphql/queries';
+import * as customQueries from '../../../../../../customGraphql/customQueries';
+
 import { languageList } from '../../../../../../utilities/staticData';
+import { createFilterToFetchSpecificItemsOnly } from '../../../../../../utilities/strings';
 import BreadCrums from '../../../../../Atoms/BreadCrums';
 import SectionTitle from '../../../../../Atoms/SectionTitle';
 import Buttons from '../../../../../Atoms/Buttons';
@@ -63,6 +66,10 @@ const CurricularView = (props: CurricularViewProps) => {
   }
 
   const [curricularData, setCurricularData] = useState<InitialData>(initialData);
+  const [designersId, setDesignersID] = useState([]);
+  const [designersName, setDesignersName] = useState([]);
+  const [personsDataList, setPersonsDataList] = useState([]);
+
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Curricular Info', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
@@ -95,7 +102,8 @@ const CurricularView = (props: CurricularViewProps) => {
           objectives: savedData.objectives,
           syllabusList: savedData.syllabi?.items,
           languages: savedLanguages ? savedLanguages : []
-        })
+        });
+        setDesignersID(savedData?.designers);
       } catch (err) {
         console.log(err)
         console.log('Error while fetching curricular data.')
@@ -104,10 +112,26 @@ const CurricularView = (props: CurricularViewProps) => {
       history.push('/dashboard/manage-institutions')
     }
   }
+  const fetchPersonsData = async () => {
+    const result: any = await API.graphql(graphqlOperation(customQueries.listPersons, {
+      filter: { ...createFilterToFetchSpecificItemsOnly(designersId, 'id') },
+    }))
+    const personsData = result.data.listPersons.items.map((person: any) => {
+      const name = `${person.firstName || ''} ${person.lastName || ''}`
+      return name;
+    })
+    setPersonsDataList(personsData);
+  }
 
   useEffect(() => {
-    fetchCurricularData()
+    fetchCurricularData();
   }, [])
+
+  useEffect(() => {
+    if (designersId.length > 0) {
+      fetchPersonsData();
+    }
+  }, [designersId])
 
   const { name, institute, description, objectives, languages } = curricularData;
   return (
@@ -160,7 +184,7 @@ const CurricularView = (props: CurricularViewProps) => {
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
                     <span className="text-gray-900 mr-2 w-3/10">Designers:</span>
                     <span className="w-auto">
-                      Designer Name
+                      {personsDataList.map((person, i) => `${person} ${(i === personsDataList.length - 1) ? '.' : ','}`)}
                     </span>
                   </p>
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">

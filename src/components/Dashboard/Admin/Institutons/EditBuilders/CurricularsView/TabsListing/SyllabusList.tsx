@@ -1,8 +1,13 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import API, { graphqlOperation } from '@aws-amplify/api';
 
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import Buttons from '../../../../../../Atoms/Buttons';
+import { reorder } from '../../../../../../../utilities/strings';
+import * as mutations from '../../../../../../../graphql/mutations';
+import * as queries from '../../../../../../../graphql/queries';
 
 interface SyllabusListProps {
   syllabusList?: any[]
@@ -10,8 +15,26 @@ interface SyllabusListProps {
 }
 
 const SyllabusList = (props: SyllabusListProps) => {
-  const { syllabusList, curricularId } = props;
+  const { curricularId } = props;
+  const [] = useState([]);
+  const [syllabusList, setSyllabusList] = useState([]);
+  const [syllabusIds, setSyllabusIds] = useState([]);
   const history = useHistory();
+
+  const onDragEnd = async (result: any) => {
+    if (result.source.index !== result.destination.index) {
+      const list = reorder(syllabusIds, result.source.index, result.destination.index)
+      setSyllabusIds(list)
+      let updatedList = syllabusList.map((t: any) => {
+        let index = list.indexOf(t.id)
+        return { ...t, index }
+      }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+      setSyllabusList(updatedList)
+      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `s_${curricularId}`, sequence: list } }));
+      seqItem = seqItem.data.updateCSequences;
+      console.log('seq updated');
+    }
+  }
 
   const createNewSyllabus = () => {
     history.push(`/dashboard/manage-institutions/curricular/${curricularId}/syllabus/add`)
@@ -21,6 +44,22 @@ const SyllabusList = (props: SyllabusListProps) => {
     history.push(`/dashboard/manage-institutions/curricular/${curricularId}/syllabus/edit?id=${id}`)
   }
 
+  const setSyllabusSequence = async () => {
+
+    let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
+      { id: `s_${curricularId}` }))
+    item = item?.data.getCSequences?.sequence || []
+    let list = props.syllabusList?.map((t: any) => {
+      let index = item.indexOf(t.id)
+      return { ...t, index }
+    }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+    setSyllabusList(list)
+    setSyllabusIds(item)
+  }
+
+  useEffect(() => {
+    setSyllabusSequence()
+  }, [])
   return (
     <div className="p-8 flex m-auto justify-center">
       <div className="">
@@ -50,20 +89,46 @@ const SyllabusList = (props: SyllabusListProps) => {
 
                 <div className="max-h-88 overflow-y-auto">
 
-                  {syllabusList.map((item, index) => (
-                    <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                      <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
-                      <div className="flex w-7/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
-                        {item.name ? item.name : ''}
-                      </div>
-                      {/* <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
-                      {item.description ? item.description : ''}
-                    </div> */}
-                      <span className="w-2/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentSyllabus(item.id)}>
-                        edit
-                  </span>
-                    </div>
-                  ))}
+                  {/* Drag and drop listing */}
+                  <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable droppableId="droppable">
+                      {(provided, snapshot) => (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                        >
+                          {syllabusList.map((item, index) => (
+                            <Draggable key={item.id} draggableId={item.id} index={index}>
+                              {(provided, snapshot) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                >
+                                  <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200 cursor-move">
+                                    <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
+                                    <div className="flex w-7/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+                                      {item.name ? item.name : ''}
+                                    </div>
+                                    {/* <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+                                          {item.description ? item.description : ''}
+                                        </div> */}
+                                    <span className="w-2/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentSyllabus(item.id)}>
+                                      edit
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
+
+
+
                 </div>
               </div>
             </Fragment>

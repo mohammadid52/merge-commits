@@ -66,6 +66,7 @@ export const getInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -713,11 +714,13 @@ export const getCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          designers
           createdAt
           updatedAt
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -767,6 +770,7 @@ export const listCurriculums = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -774,28 +778,26 @@ export const listCurriculums = /* GraphQL */ `
     }
   }
 `;
-export const getCurriculumSequences = /* GraphQL */ `
-  query GetCurriculumSequences($curriculumID: ID!) {
-    getCurriculumSequences(curriculumID: $curriculumID) {
+export const getCSequences = /* GraphQL */ `
+  query GetCSequences($id: ID!) {
+    getCSequences(id: $id) {
       id
-      curriculumID
-      type
       sequence
       createdAt
       updatedAt
     }
   }
 `;
-export const listCurriculumSequencess = /* GraphQL */ `
-  query ListCurriculumSequencess(
-    $curriculumID: ID
-    $filter: ModelCurriculumSequencesFilterInput
+export const listCSequencess = /* GraphQL */ `
+  query ListCSequencess(
+    $id: ID
+    $filter: ModelCSequencesFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listCurriculumSequencess(
-      curriculumID: $curriculumID
+    listCSequencess(
+      id: $id
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -803,8 +805,6 @@ export const listCurriculumSequencess = /* GraphQL */ `
     ) {
       items {
         id
-        curriculumID
-        type
         sequence
         createdAt
         updatedAt
@@ -848,6 +848,7 @@ export const getTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -893,6 +894,7 @@ export const listTopics = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -975,6 +977,7 @@ export const getRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -1073,6 +1076,7 @@ export const getRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -1100,6 +1104,7 @@ export const listRoomCurriculums = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -1136,6 +1141,7 @@ export const getSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -1170,6 +1176,7 @@ export const listSyllabuss = /* GraphQL */ `
         lessons {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -1353,6 +1360,10 @@ export const getStudentData = /* GraphQL */ `
         poll {
           id
           question
+        }
+        adventureGame {
+          id
+          text
         }
       }
       corelessonData {
@@ -2396,6 +2407,10 @@ export const getWarmUp = /* GraphQL */ `
         pollInputs {
           id
           question
+        }
+        adventureGameInputs {
+          id
+          text
         }
       }
       breakdown {
