@@ -22,7 +22,6 @@ const PollPage = () => {
     dispatch({ type: 'ACTIVATE_LESSON', payload: 'warmup' });
   }, []);
 
-
   /**
    * ON MOUNT:
    *
@@ -39,8 +38,7 @@ const PollPage = () => {
         },
       });
     } else {
-
-      let inputsArray = inputs.pollInputs.map((item: { id: string; question: string; option: any }) => {
+      let inputsArray = inputs?.pollInputs.map((item: { id: string; question: string; option: any }) => {
         return {
           id: item.id,
           question: item.question,
@@ -72,9 +70,6 @@ const PollPage = () => {
       <Route exact path={`${match.url}`}>
         <PollActivity />
       </Route>
-      {/* <Route>
-                <ErrorPage />
-            </Route> */}
     </Switch>
   );
 };
