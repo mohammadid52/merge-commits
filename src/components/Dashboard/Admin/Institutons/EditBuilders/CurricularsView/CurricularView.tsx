@@ -128,7 +128,7 @@ const CurricularView = (props: CurricularViewProps) => {
   }, [])
 
   useEffect(() => {
-    if (designersId.length > 0) {
+    if (designersId && designersId.length > 0) {
       fetchPersonsData();
     }
   }, [designersId])

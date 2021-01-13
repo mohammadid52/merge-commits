@@ -44,13 +44,27 @@ const PollForm = (props: PollBreakdownProps) => {
      *
      */
     if (!isTeacher) {
-      if (cookies[`lesson-${state.classroomID}`]) {
-        setInput(() => {
-          return cookies[`lesson-${state.classroomID}`].poll;
-        });
-      } else {
-        setInput(state.componentState.poll);
-      }
+      // if (cookies[`lesson-${state.classroomID}`]) {
+      //   setInput(() => {
+      //     return cookies[`lesson-${state.classroomID}`].poll;
+      //   });
+      // } else {
+      //   console.log('setInput -- ', state.componentState.poll)
+      //   setInput(state.componentState.poll);
+      // }
+      let inputsArray = pollInputs.map((item: { id: string; question: string; option: any }) => {
+        return {
+          id: item.id,
+          question: item.question,
+          option: [{ id: item.option.id, isChoice: item.option.isChoice }],
+        };
+      });
+
+      let initialObject = {
+        pollInputs: inputsArray,
+      };
+
+      setInput(initialObject);
     }
 
     if (isTeacher) {
@@ -70,7 +84,7 @@ const PollForm = (props: PollBreakdownProps) => {
      *
      */
     if (!isTeacher) {
-      if (state.componentState.poll && input.pollInputs.length > 0) {
+      if (state.componentState.poll && input && input.pollInputs.length > 0) {
         dispatch({
           type: 'UPDATE_COMPONENT_STATE',
           payload: {
@@ -136,7 +150,7 @@ const PollForm = (props: PollBreakdownProps) => {
   const isSelected = (pollItemID: string, pollOptionID: string, pollKey: number) => {
     const inputsAvailable = input.pollInputs.filter((item: any) => item.hasOwnProperty('id'));
 
-    if (inputsAvailable.length > 0) {
+    if (input && inputsAvailable.length > 0) {
       const inputObject = JSON.parse(JSON.stringify(input.pollInputs[pollKey])); // Simple deep cloning, could not get the right nested values otherwise
       const id = inputObject['option'].length > 0 ? inputObject['option'][0].id : null;
 
@@ -152,11 +166,10 @@ const PollForm = (props: PollBreakdownProps) => {
 
   return (
     <>
-      {input.pollInputs.length > 0 ? (
-        <div className="w-full h-full rounded-xl">
-          <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>Poll</h3>
+      <div className="w-full h-full rounded-xl">
+        <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>Poll</h3>
           <div className="relative h-full flex flex-col items-center mb-5 mt-2">
-            {pollInputs
+            {input.pollInputs.length > 0
               ? pollInputs.map((item: { id: string; question: string; option: any }, pollKey: number) => {
                   return (
                     <div key={pollKey} className="flex flex-col items-center justify-between">
@@ -178,7 +191,6 @@ const PollForm = (props: PollBreakdownProps) => {
                                         name="choice"
                                         onClick={() => !isTeacher && handleRadioSelect(item.id, option.id)}
                                         className={`${theme.elem.text} w-auto px-4`}>
-                                        {/*{option.isChoice ? '❌' : '⚪️'}*/}
                                         {input && isSelected(item.id, option.id, pollKey) ? '❌' : '⚪️'}
                                       </button>
                                       {option.option}
@@ -186,7 +198,7 @@ const PollForm = (props: PollBreakdownProps) => {
                                   );
                                 }
                               )
-                            : null}
+                            : <h1>No poll inputs found.</h1>}
                         </div>
                       </div>
                     </div>
@@ -194,8 +206,7 @@ const PollForm = (props: PollBreakdownProps) => {
                 })
               : null}
           </div>
-        </div>
-      ) : null}
+      </div>
     </>
   );
 };

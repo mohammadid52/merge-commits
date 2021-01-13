@@ -1284,6 +1284,10 @@ export const listRubrics = /* GraphQL */ `
         adequite
         basic
         topicID
+        topic {
+          id
+          name
+        }
         createdAt
         updatedAt
       }
