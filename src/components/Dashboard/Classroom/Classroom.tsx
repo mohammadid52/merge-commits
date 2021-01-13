@@ -58,7 +58,6 @@ const Classroom: React.FC = () => {
       const surveyData: any = await API.graphql(
         graphqlOperation(customQueries.getClassroom, { id: 'on-boarding-survey-1' })
       );
-      // console.log('survey', surveyData)
       await setSurvey(() => {
         let surveyStatus: boolean = state.user.onBoardSurvey ? !state.user.onBoardSurvey : true;
         console.log(surveyStatus, 'status', state);

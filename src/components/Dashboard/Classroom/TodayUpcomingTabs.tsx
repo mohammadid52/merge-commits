@@ -26,22 +26,22 @@ const TodayUpcomingTabs = (props: TodayUpcomingTabs) => {
     <div id={`lessonGroupTabs`} onClick={handleTabClick}>
       <span
         id={`today`}
-        className={`text-xl w-full ${theme.dashboard.sectionTitle} ${
-          visibleLessonGroup === 'today' ? 'text-black' : 'text-gray-400'
+        className={`w-full cursor-pointer ${theme.dashboard.sectionTitle} ${
+          visibleLessonGroup === 'today' ? 'text-black' : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out text-sm font-semibold'
         }`}>
         Today's Lesson
       </span>
       <span
         id={`upcoming`}
-        className={`text-xl w-full ${theme.dashboard.sectionTitle} ${
-          visibleLessonGroup === 'upcoming' ? 'text-black' : 'text-gray-400'
+        className={`w-full ml-4 cursor-pointer ${theme.dashboard.sectionTitle} ${
+          visibleLessonGroup === 'upcoming' ? 'text-black' : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out text-sm font-semibold'
         }`}>
         Upcoming
       </span>
       <span
         id={`completed`}
-        className={`text-xl w-full ${theme.dashboard.sectionTitle} ${
-          visibleLessonGroup === 'completed' ? 'text-black' : 'text-gray-400'
+        className={`w-full ml-4 cursor-pointer ${theme.dashboard.sectionTitle} ${
+          visibleLessonGroup === 'completed' ? 'text-black' : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out text-sm font-semibold'
         }`}>
         Completed
       </span>
