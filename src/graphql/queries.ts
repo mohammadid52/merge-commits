@@ -713,6 +713,7 @@ export const getCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -1132,17 +1133,7 @@ export const getSyllabus = /* GraphQL */ `
         }
         nextToken
       }
-      designers {
-        items {
-          id
-          syllabusID
-          personEmail
-          personAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
+      designers
       createdAt
       updatedAt
     }
@@ -1177,9 +1168,7 @@ export const listSyllabuss = /* GraphQL */ `
         lessons {
           nextToken
         }
-        designers {
-          nextToken
-        }
+        designers
         createdAt
         updatedAt
       }

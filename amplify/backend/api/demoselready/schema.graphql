@@ -329,18 +329,7 @@ type Syllabus
   curriculumID: ID!
   languages: [Language]
   lessons: [SyllabusLesson] @connection(keyName: "lessonBySyllabus", fields: ["id"])
-  designers: [SyllabusDesigner] @connection(keyName: "designerBySyllabus", fields: ["id"])
-}
-
-type SyllabusDesigner
-@model(queries: null)
-@key(name: "designerBySyllabus", fields: ["syllabusID"])
-{
-  id: ID!
-  syllabusID: ID!
-  personEmail: String!
-  personAuthID: String!
-  person: Person @connection(fields: ["personEmail", "personAuthID"])
+  designers: [String]
 }
 
 type SyllabusLesson
