@@ -10,7 +10,7 @@ export interface PollBreakdownProps {
   dataProps?: {
     pollInputs?: PollInput[];
     poll?: PollInput[];
-    additional: any;
+    additional?: any;
   };
   displayMode?: string;
 }
