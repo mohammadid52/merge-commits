@@ -8,6 +8,7 @@ import Today from './TodayLesson';
 import Upcoming from './Upcoming';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 import SurveyCard from './SurveyCard';
+import TodayUpcomingTabs from './TodayUpcomingTabs';
 
 interface Artist {
   id: string;
@@ -35,9 +36,9 @@ const Classroom: React.FC = () => {
     display: false,
     data: null,
   });
-
+  const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('');
   const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState('today');
 
   async function getCourse(id: string) {
     try {
@@ -76,9 +77,7 @@ const Classroom: React.FC = () => {
 
   /**
    *
-   *
    * AUTO-PUSH TO SPECIFIC LESSON
-   *
    *
    */
 
@@ -90,9 +89,7 @@ const Classroom: React.FC = () => {
 
   /**
    *
-   *
    * ssSSSssHOW SURVEY IF IT HAS NOT BEEN COMPLETED
-   *
    *
    */
 
@@ -136,45 +133,48 @@ const Classroom: React.FC = () => {
   }
   {
     return (
-      <div className="">
+      <>
+        {/**
+         *  ASSESSMENTS/SURVEYS
+         */}
         {survey.display ? (
-          <div className={` bg-opacity-10`}>
-            <div className={`${theme.section} p-4`}>
+          <div className={`bg-opacity-10`}>
+            <div className={`${theme.section} p-4 text-xl m-auto`}>
               <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Welcome to Iconoclast Artists</h2>
-            </div>
-          </div>
-        ) : (
-          ''
-        )}
 
-        {survey.display ? (
-          <div>
-            <div className={`${theme.section} p-4`}>
               <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum} />
             </div>
           </div>
         ) : null}
 
-        {/* LETS GET THE TEST FORM HERE */}
-        {/* <TestForm/> */}
-
+        {/**
+         *  LESSON TAB TOGGLE
+         */}
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} p-4 text-xl m-auto`}>
-            <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Today's Lesson</h2>
-
-            <Today link={'/lesson?id=1'} curriculums={listCurriculum} />
+            <TodayUpcomingTabs visibleLessonGroup={visibleLessonGroup} setVisibleLessonGroup={setVisibleLessonGroup} />
           </div>
         </div>
 
-        <div className={`bg-grayscale-light bg-opacity-10`}>
-          <div className={`${theme.section} p-4 text-xl m-auto`}>
-            <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Upcoming Lessons</h2>
-
-            <Upcoming curriculum={listCurriculum} />
-            {/* <Dashboard /> */}
+        {/**
+         *  LESSONS
+         */}
+        {visibleLessonGroup === 'today' ? (
+          <div className={`bg-opacity-10`}>
+            <div className={`${theme.section} p-4 text-xl m-auto`}>
+              <Today link={'/lesson?id=1'} curriculums={listCurriculum} />
+            </div>
           </div>
-        </div>
-      </div>
+        ) : null}
+
+        {visibleLessonGroup === 'upcoming' ? (
+          <div className={`bg-grayscale-light bg-opacity-10`}>
+            <div className={`${theme.section} p-4 text-xl m-auto`}>
+              <Upcoming curriculum={listCurriculum} />
+            </div>
+          </div>
+        ) : null}
+      </>
     );
   }
 };
