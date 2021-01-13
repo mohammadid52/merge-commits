@@ -411,9 +411,9 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       const designers = [...designerIds].map((desID: string) => {
         const personData = designersList.find(per => per.id === desID)
         const personObj = {
-          id: personData.id,
-          name: personData.name,
-          value: personData.name
+          id: personData?.id,
+          name: personData?.name,
+          value: personData?.name
         }
         return personObj
       })

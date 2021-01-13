@@ -130,7 +130,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       try {
         setIsLoading(true);
         const languagesCode = curricularData.languages.map((item: { value: string }) => item.value);
-        const designers = selectedDesigners.map(item => ({ id: item.id }))
+        const designers = selectedDesigners.map(item => item.id)
         const input = {
           name: curricularData.name,
           institutionID: curricularData.institute.id,
