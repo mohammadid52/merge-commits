@@ -403,7 +403,7 @@ type PollInputs {
 }
 
 type AdventureNodeOptions {
-  id: String!
+  id: String
 	text: String
 	nextText: String
 }
