@@ -776,6 +776,7 @@ export type WarmUpDataInput = {
   additional?: Array< AdditionalInputsInput | null > | null,
   truthGame?: Array< TruthGameInputsInput | null > | null,
   poll?: Array< PollInputsInput | null > | null,
+  adventureGame?: Array< AdventureGameInputsInput | null > | null,
 };
 
 export type AdditionalInputsInput = {
@@ -800,6 +801,18 @@ export type PollOptionInput = {
   id?: string | null,
   option?: string | null,
   isChoice?: boolean | null,
+};
+
+export type AdventureGameInputsInput = {
+  id?: string | null,
+  text?: string | null,
+  options?: Array< AdventureNodeOptionsInput | null > | null,
+};
+
+export type AdventureNodeOptionsInput = {
+  id?: string | null,
+  text?: string | null,
+  nextText?: string | null,
 };
 
 export type CoreLessonDataInput = {
@@ -1275,6 +1288,7 @@ export type InputsInput = {
   truthGameInputs?: Array< TruthGameInputInput | null > | null,
   additionalInputs?: Array< WritingPromptsInput > | null,
   pollInputs?: Array< PollInputsInput | null > | null,
+  adventureGameInputs?: Array< AdventureGameInputsInput | null > | null,
 };
 
 export type TruthGameInputInput = {
@@ -6014,6 +6028,11 @@ export type CreateStudentDataMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     } | null,
     corelessonData:  {
       __typename: "CoreLessonData",
@@ -6214,6 +6233,11 @@ export type UpdateStudentDataMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     } | null,
     corelessonData:  {
       __typename: "CoreLessonData",
@@ -6413,6 +6437,11 @@ export type DeleteStudentDataMutation = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     } | null,
     corelessonData:  {
@@ -8993,6 +9022,11 @@ export type CreateWarmUpMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -9049,6 +9083,11 @@ export type UpdateWarmUpMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -9104,6 +9143,11 @@ export type DeleteWarmUpMutation = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     },
     breakdown:  {
@@ -13252,6 +13296,11 @@ export type GetStudentDataQuery = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     } | null,
     corelessonData:  {
       __typename: "CoreLessonData",
@@ -14446,6 +14495,11 @@ export type GetWarmUpQuery = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     },
     breakdown:  {
@@ -15885,6 +15939,11 @@ export type OnChangeStudentDataSubscription = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     } | null,
     corelessonData:  {
@@ -21010,6 +21069,11 @@ export type OnCreateWarmUpSubscription = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -21061,6 +21125,11 @@ export type OnUpdateWarmUpSubscription = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -21111,6 +21180,11 @@ export type OnDeleteWarmUpSubscription = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     },
     breakdown:  {

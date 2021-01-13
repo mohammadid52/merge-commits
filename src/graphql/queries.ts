@@ -1364,6 +1364,10 @@ export const getStudentData = /* GraphQL */ `
           id
           question
         }
+        adventureGame {
+          id
+          text
+        }
       }
       corelessonData {
         selected {
@@ -2406,6 +2410,10 @@ export const getWarmUp = /* GraphQL */ `
         pollInputs {
           id
           question
+        }
+        adventureGameInputs {
+          id
+          text
         }
       }
       breakdown {

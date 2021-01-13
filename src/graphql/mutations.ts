@@ -3295,6 +3295,10 @@ export const createStudentData = /* GraphQL */ `
           id
           question
         }
+        adventureGame {
+          id
+          text
+        }
       }
       corelessonData {
         selected {
@@ -3470,6 +3474,10 @@ export const updateStudentData = /* GraphQL */ `
           id
           question
         }
+        adventureGame {
+          id
+          text
+        }
       }
       corelessonData {
         selected {
@@ -3644,6 +3652,10 @@ export const deleteStudentData = /* GraphQL */ `
         poll {
           id
           question
+        }
+        adventureGame {
+          id
+          text
         }
       }
       corelessonData {
@@ -5908,6 +5920,10 @@ export const createWarmUp = /* GraphQL */ `
           id
           question
         }
+        adventureGameInputs {
+          id
+          text
+        }
       }
       breakdown {
         included
@@ -5956,6 +5972,10 @@ export const updateWarmUp = /* GraphQL */ `
           id
           question
         }
+        adventureGameInputs {
+          id
+          text
+        }
       }
       breakdown {
         included
@@ -6003,6 +6023,10 @@ export const deleteWarmUp = /* GraphQL */ `
         pollInputs {
           id
           question
+        }
+        adventureGameInputs {
+          id
+          text
         }
       }
       breakdown {

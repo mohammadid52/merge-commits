@@ -306,6 +306,10 @@ export const onChangeStudentData = /* GraphQL */ `
           id
           question
         }
+        adventureGame {
+          id
+          text
+        }
       }
       corelessonData {
         selected {
@@ -4945,6 +4949,10 @@ export const onCreateWarmUp = /* GraphQL */ `
           id
           question
         }
+        adventureGameInputs {
+          id
+          text
+        }
       }
       breakdown {
         included
@@ -4990,6 +4998,10 @@ export const onUpdateWarmUp = /* GraphQL */ `
           id
           question
         }
+        adventureGameInputs {
+          id
+          text
+        }
       }
       breakdown {
         included
@@ -5034,6 +5046,10 @@ export const onDeleteWarmUp = /* GraphQL */ `
         pollInputs {
           id
           question
+        }
+        adventureGameInputs {
+          id
+          text
         }
       }
       breakdown {
