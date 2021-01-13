@@ -306,6 +306,10 @@ export const onChangeStudentData = /* GraphQL */ `
           id
           question
         }
+        adventureGame {
+          id
+          text
+        }
       }
       corelessonData {
         selected {
@@ -2720,8 +2724,8 @@ export const onCreateSyllabus = /* GraphQL */ `
         items {
           id
           syllabusID
-          email
-          authID
+          personEmail
+          personAuthID
           createdAt
           updatedAt
         }
@@ -2762,8 +2766,8 @@ export const onUpdateSyllabus = /* GraphQL */ `
         items {
           id
           syllabusID
-          email
-          authID
+          personEmail
+          personAuthID
           createdAt
           updatedAt
         }
@@ -2804,8 +2808,8 @@ export const onDeleteSyllabus = /* GraphQL */ `
         items {
           id
           syllabusID
-          email
-          authID
+          personEmail
+          personAuthID
           createdAt
           updatedAt
         }
@@ -2821,8 +2825,8 @@ export const onCreateSyllabusDesigner = /* GraphQL */ `
     onCreateSyllabusDesigner {
       id
       syllabusID
-      email
-      authID
+      personEmail
+      personAuthID
       person {
         id
         authId
@@ -2863,8 +2867,8 @@ export const onUpdateSyllabusDesigner = /* GraphQL */ `
     onUpdateSyllabusDesigner {
       id
       syllabusID
-      email
-      authID
+      personEmail
+      personAuthID
       person {
         id
         authId
@@ -2905,8 +2909,8 @@ export const onDeleteSyllabusDesigner = /* GraphQL */ `
     onDeleteSyllabusDesigner {
       id
       syllabusID
-      email
-      authID
+      personEmail
+      personAuthID
       person {
         id
         authId
@@ -4945,6 +4949,10 @@ export const onCreateWarmUp = /* GraphQL */ `
           id
           question
         }
+        adventureGameInputs {
+          id
+          text
+        }
       }
       breakdown {
         included
@@ -4990,6 +4998,10 @@ export const onUpdateWarmUp = /* GraphQL */ `
           id
           question
         }
+        adventureGameInputs {
+          id
+          text
+        }
       }
       breakdown {
         included
@@ -5034,6 +5046,10 @@ export const onDeleteWarmUp = /* GraphQL */ `
         pollInputs {
           id
           question
+        }
+        adventureGameInputs {
+          id
+          text
         }
       }
       breakdown {

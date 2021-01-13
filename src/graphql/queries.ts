@@ -1136,8 +1136,8 @@ export const getSyllabus = /* GraphQL */ `
         items {
           id
           syllabusID
-          email
-          authID
+          personEmail
+          personAuthID
           createdAt
           updatedAt
         }
@@ -1363,6 +1363,10 @@ export const getStudentData = /* GraphQL */ `
         poll {
           id
           question
+        }
+        adventureGame {
+          id
+          text
         }
       }
       corelessonData {
@@ -2406,6 +2410,10 @@ export const getWarmUp = /* GraphQL */ `
         pollInputs {
           id
           question
+        }
+        adventureGameInputs {
+          id
+          text
         }
       }
       breakdown {

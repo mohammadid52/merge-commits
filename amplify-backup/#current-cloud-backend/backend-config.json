@@ -31,22 +31,5 @@
       "providerPlugin": "awscloudformation"
     }
   },
-  "function": {
-    "iconoclastproddb49cf1f": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "demoselready",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    }
-  }
+  "function": {}
 }

@@ -669,14 +669,14 @@ export type DeleteSyllabusInput = {
 export type CreateSyllabusDesignerInput = {
   id?: string | null,
   syllabusID: string,
-  email: string,
-  authID: string,
+  personEmail: string,
+  personAuthID: string,
 };
 
 export type ModelSyllabusDesignerConditionInput = {
   syllabusID?: ModelIDInput | null,
-  email?: ModelStringInput | null,
-  authID?: ModelStringInput | null,
+  personEmail?: ModelStringInput | null,
+  personAuthID?: ModelStringInput | null,
   and?: Array< ModelSyllabusDesignerConditionInput | null > | null,
   or?: Array< ModelSyllabusDesignerConditionInput | null > | null,
   not?: ModelSyllabusDesignerConditionInput | null,
@@ -685,8 +685,8 @@ export type ModelSyllabusDesignerConditionInput = {
 export type UpdateSyllabusDesignerInput = {
   id: string,
   syllabusID?: string | null,
-  email?: string | null,
-  authID?: string | null,
+  personEmail?: string | null,
+  personAuthID?: string | null,
 };
 
 export type DeleteSyllabusDesignerInput = {
@@ -776,6 +776,7 @@ export type WarmUpDataInput = {
   additional?: Array< AdditionalInputsInput | null > | null,
   truthGame?: Array< TruthGameInputsInput | null > | null,
   poll?: Array< PollInputsInput | null > | null,
+  adventureGame?: Array< AdventureGameInputsInput | null > | null,
 };
 
 export type AdditionalInputsInput = {
@@ -800,6 +801,18 @@ export type PollOptionInput = {
   id?: string | null,
   option?: string | null,
   isChoice?: boolean | null,
+};
+
+export type AdventureGameInputsInput = {
+  id?: string | null,
+  text?: string | null,
+  options?: Array< AdventureNodeOptionsInput | null > | null,
+};
+
+export type AdventureNodeOptionsInput = {
+  id?: string | null,
+  text?: string | null,
+  nextText?: string | null,
 };
 
 export type CoreLessonDataInput = {
@@ -1275,6 +1288,7 @@ export type InputsInput = {
   truthGameInputs?: Array< TruthGameInputInput | null > | null,
   additionalInputs?: Array< WritingPromptsInput > | null,
   pollInputs?: Array< PollInputsInput | null > | null,
+  adventureGameInputs?: Array< AdventureGameInputsInput | null > | null,
 };
 
 export type TruthGameInputInput = {
@@ -5123,8 +5137,8 @@ export type CreateSyllabusMutation = {
         __typename: "SyllabusDesigner",
         id: string,
         syllabusID: string,
-        email: string,
-        authID: string,
+        personEmail: string,
+        personAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -5174,8 +5188,8 @@ export type UpdateSyllabusMutation = {
         __typename: "SyllabusDesigner",
         id: string,
         syllabusID: string,
-        email: string,
-        authID: string,
+        personEmail: string,
+        personAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -5225,8 +5239,8 @@ export type DeleteSyllabusMutation = {
         __typename: "SyllabusDesigner",
         id: string,
         syllabusID: string,
-        email: string,
-        authID: string,
+        personEmail: string,
+        personAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -5247,8 +5261,8 @@ export type CreateSyllabusDesignerMutation = {
     __typename: "SyllabusDesigner",
     id: string,
     syllabusID: string,
-    email: string,
-    authID: string,
+    personEmail: string,
+    personAuthID: string,
     person:  {
       __typename: "Person",
       id: string,
@@ -5297,8 +5311,8 @@ export type UpdateSyllabusDesignerMutation = {
     __typename: "SyllabusDesigner",
     id: string,
     syllabusID: string,
-    email: string,
-    authID: string,
+    personEmail: string,
+    personAuthID: string,
     person:  {
       __typename: "Person",
       id: string,
@@ -5347,8 +5361,8 @@ export type DeleteSyllabusDesignerMutation = {
     __typename: "SyllabusDesigner",
     id: string,
     syllabusID: string,
-    email: string,
-    authID: string,
+    personEmail: string,
+    personAuthID: string,
     person:  {
       __typename: "Person",
       id: string,
@@ -6014,6 +6028,11 @@ export type CreateStudentDataMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     } | null,
     corelessonData:  {
       __typename: "CoreLessonData",
@@ -6214,6 +6233,11 @@ export type UpdateStudentDataMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     } | null,
     corelessonData:  {
       __typename: "CoreLessonData",
@@ -6413,6 +6437,11 @@ export type DeleteStudentDataMutation = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     } | null,
     corelessonData:  {
@@ -8993,6 +9022,11 @@ export type CreateWarmUpMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -9049,6 +9083,11 @@ export type UpdateWarmUpMutation = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -9104,6 +9143,11 @@ export type DeleteWarmUpMutation = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     },
     breakdown:  {
@@ -12996,8 +13040,8 @@ export type GetSyllabusQuery = {
         __typename: "SyllabusDesigner",
         id: string,
         syllabusID: string,
-        email: string,
-        authID: string,
+        personEmail: string,
+        personAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -13251,6 +13295,11 @@ export type GetStudentDataQuery = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     } | null,
     corelessonData:  {
@@ -14446,6 +14495,11 @@ export type GetWarmUpQuery = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     },
     breakdown:  {
@@ -15885,6 +15939,11 @@ export type OnChangeStudentDataSubscription = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGame:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     } | null,
     corelessonData:  {
@@ -18547,8 +18606,8 @@ export type OnCreateSyllabusSubscription = {
         __typename: "SyllabusDesigner",
         id: string,
         syllabusID: string,
-        email: string,
-        authID: string,
+        personEmail: string,
+        personAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -18593,8 +18652,8 @@ export type OnUpdateSyllabusSubscription = {
         __typename: "SyllabusDesigner",
         id: string,
         syllabusID: string,
-        email: string,
-        authID: string,
+        personEmail: string,
+        personAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -18639,8 +18698,8 @@ export type OnDeleteSyllabusSubscription = {
         __typename: "SyllabusDesigner",
         id: string,
         syllabusID: string,
-        email: string,
-        authID: string,
+        personEmail: string,
+        personAuthID: string,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -18656,8 +18715,8 @@ export type OnCreateSyllabusDesignerSubscription = {
     __typename: "SyllabusDesigner",
     id: string,
     syllabusID: string,
-    email: string,
-    authID: string,
+    personEmail: string,
+    personAuthID: string,
     person:  {
       __typename: "Person",
       id: string,
@@ -18701,8 +18760,8 @@ export type OnUpdateSyllabusDesignerSubscription = {
     __typename: "SyllabusDesigner",
     id: string,
     syllabusID: string,
-    email: string,
-    authID: string,
+    personEmail: string,
+    personAuthID: string,
     person:  {
       __typename: "Person",
       id: string,
@@ -18746,8 +18805,8 @@ export type OnDeleteSyllabusDesignerSubscription = {
     __typename: "SyllabusDesigner",
     id: string,
     syllabusID: string,
-    email: string,
-    authID: string,
+    personEmail: string,
+    personAuthID: string,
     person:  {
       __typename: "Person",
       id: string,
@@ -21010,6 +21069,11 @@ export type OnCreateWarmUpSubscription = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -21061,6 +21125,11 @@ export type OnUpdateWarmUpSubscription = {
         id: string | null,
         question: string | null,
       } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
+      } | null > | null,
     },
     breakdown:  {
       __typename: "Breakdown",
@@ -21111,6 +21180,11 @@ export type OnDeleteWarmUpSubscription = {
         __typename: "PollInputs",
         id: string | null,
         question: string | null,
+      } | null > | null,
+      adventureGameInputs:  Array< {
+        __typename: "AdventureGameInputs",
+        id: string | null,
+        text: string | null,
       } | null > | null,
     },
     breakdown:  {

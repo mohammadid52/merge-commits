@@ -338,9 +338,9 @@ type SyllabusDesigner
 {
   id: ID!
   syllabusID: ID!
-  email: String!
-  authID: String!
-  person: Person @connection(fields: ["email", "authID"])
+  personEmail: String!
+  personAuthID: String!
+  person: Person @connection(fields: ["personEmail", "personAuthID"])
 }
 
 type SyllabusLesson
@@ -401,12 +401,26 @@ type PollInputs {
   question: String
   option: [PollOption]
 }
+
+type AdventureNodeOptions {
+  id: String
+	text: String
+	nextText: String
+}
+
+type AdventureGameInputs {
+  id: String
+	text: String
+	options: [AdventureNodeOptions]
+}
+
 type WarmUpData {
   story: [String]
   title: String
   additional: [AdditionalInputs]
   truthGame: [TruthGameInputs]
   poll: [PollInputs]
+  adventureGame: [AdventureGameInputs]
 }
 
 type SelectedWord {
@@ -664,7 +678,8 @@ type Inputs {
   listInputNumber: Int
   truthGameInputs: [TruthGameInput]
   additionalInputs: [WritingPrompts!]
-  pollInputs: [PollInputs] 
+  pollInputs: [PollInputs]
+  adventureGameInputs: [AdventureGameInputs]
 }
 
 type WritingPrompts {
