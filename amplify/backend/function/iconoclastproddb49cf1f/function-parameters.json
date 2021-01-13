@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "api": {
+      "demoselready": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

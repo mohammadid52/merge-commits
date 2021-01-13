@@ -329,6 +329,7 @@ type Syllabus
   curriculumID: ID!
   languages: [Language]
   lessons: [SyllabusLesson] @connection(keyName: "lessonBySyllabus", fields: ["id"])
+  designers: [Person] @connection(keyName: "byUserId", fields: ["id"])
 }
 
 type SyllabusLesson

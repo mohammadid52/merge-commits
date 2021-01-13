@@ -2716,6 +2716,33 @@ export const onCreateSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      designers {
+        items {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -2747,6 +2774,33 @@ export const onUpdateSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      designers {
+        items {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -2773,6 +2827,33 @@ export const onDeleteSyllabus = /* GraphQL */ `
           unit
           sequence
           status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      designers {
+        items {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
           createdAt
           updatedAt
         }
