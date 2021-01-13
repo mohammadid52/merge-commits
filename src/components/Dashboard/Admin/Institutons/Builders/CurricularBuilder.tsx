@@ -130,14 +130,14 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       try {
         setIsLoading(true);
         const languagesCode = curricularData.languages.map((item: { value: string }) => item.value);
-        // const designers = selectedDesigners.map(item => ({ id: item.id, name: item.name }))
+        const designers = selectedDesigners.map(item => ({ id: item.id }))
         const input = {
           name: curricularData.name,
           institutionID: curricularData.institute.id,
           description: curricularData.description,
           objectives: [curricularData.objectives],
           languages: languagesCode,
-          // designers: designers
+          designers: designers
         }
         const newCurricular = await API.graphql(graphqlOperation(customMutations.createCurriculum, { input: input }));
         setMessages({
