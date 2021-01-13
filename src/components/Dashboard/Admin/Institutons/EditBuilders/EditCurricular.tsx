@@ -40,6 +40,7 @@ const EditCurricular = (props: EditCurricularProps) => {
   const location = useLocation();
   const [institutionList, setInstitutionList] = useState(null);
   const [curricularData, setCurricularData] = useState(initialData);
+  const [designerIds, setDesignerIds] = useState([]);
   const [designersList, setDesignersList] = useState([]);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [previousName, setPreviousName] = useState('');
@@ -141,6 +142,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     if (isValid) {
       try {
         const languagesCode = curricularData.languages.map((item: { value: string }) => item.value);
+        const designers = selectedDesigners.map(item => item.id)
         const input = {
           id: curricularData.id,
           name: curricularData.name,
@@ -148,6 +150,7 @@ const EditCurricular = (props: EditCurricularProps) => {
           description: curricularData.description,
           objectives: [curricularData.objectives],
           languages: languagesCode,
+          designers: designers
         }
         const newCurricular = await API.graphql(graphqlOperation(mutation.updateCurriculum, { input: input }));
         setMessages({
@@ -256,7 +259,8 @@ const EditCurricular = (props: EditCurricularProps) => {
           description: savedData.description,
           objectives: savedData.objectives[0],
           languages: languageList.filter(item => savedData.languages.includes(item.value))
-        })
+        });
+        setDesignerIds([...savedData?.designers])
         setPreviousName(savedData.name);
       } catch {
         setMessages({
@@ -275,6 +279,22 @@ const EditCurricular = (props: EditCurricularProps) => {
     getInstitutionList()
     fetchPersonsList();
   }, [])
+
+  useEffect(() => {
+    if (designersList.length > 0) {
+      const designers = [...designerIds].map((desID: string) => {
+        const personData = designersList.find(per => per.id === desID)
+        const personObj = {
+          id: personData?.id,
+          name: personData?.name,
+          value: personData?.name
+        }
+        return personObj
+      })
+      setSelectedDesigners(designers);
+    }
+  }, [designersList, designerIds])
+
 
   const { name, description, objectives, languages, institute } = curricularData;
   return (

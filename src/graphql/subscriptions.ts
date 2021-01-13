@@ -424,6 +424,7 @@ export const onCreateInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -510,6 +511,7 @@ export const onUpdateInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -596,6 +598,7 @@ export const onDeleteInstitution = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -1936,11 +1939,13 @@ export const onCreateCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          designers
           createdAt
           updatedAt
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -2001,11 +2006,13 @@ export const onUpdateCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          designers
           createdAt
           updatedAt
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -2066,11 +2073,13 @@ export const onDeleteCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          designers
           createdAt
           updatedAt
         }
         nextToken
       }
+      designers
       createdAt
       updatedAt
     }
@@ -2141,6 +2150,7 @@ export const onCreateTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2194,6 +2204,7 @@ export const onUpdateTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2247,6 +2258,7 @@ export const onDeleteTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2324,6 +2336,7 @@ export const onCreateRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -2369,6 +2382,7 @@ export const onUpdateRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -2414,6 +2428,7 @@ export const onDeleteRubric = /* GraphQL */ `
           description
           objectives
           languages
+          designers
           createdAt
           updatedAt
         }
@@ -2471,6 +2486,7 @@ export const onCreateTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2514,6 +2530,7 @@ export const onUpdateTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2557,6 +2574,7 @@ export const onDeleteTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2600,6 +2618,7 @@ export const onCreateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2643,6 +2662,7 @@ export const onUpdateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2686,6 +2706,7 @@ export const onDeleteRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        designers
         createdAt
         updatedAt
       }
@@ -2720,17 +2741,7 @@ export const onCreateSyllabus = /* GraphQL */ `
         }
         nextToken
       }
-      designers {
-        items {
-          id
-          syllabusID
-          personEmail
-          personAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
+      designers
       createdAt
       updatedAt
     }
@@ -2762,17 +2773,7 @@ export const onUpdateSyllabus = /* GraphQL */ `
         }
         nextToken
       }
-      designers {
-        items {
-          id
-          syllabusID
-          personEmail
-          personAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
+      designers
       createdAt
       updatedAt
     }
@@ -2804,143 +2805,7 @@ export const onDeleteSyllabus = /* GraphQL */ `
         }
         nextToken
       }
-      designers {
-        items {
-          id
-          syllabusID
-          personEmail
-          personAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateSyllabusDesigner = /* GraphQL */ `
-  subscription OnCreateSyllabusDesigner {
-    onCreateSyllabusDesigner {
-      id
-      syllabusID
-      personEmail
-      personAuthID
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateSyllabusDesigner = /* GraphQL */ `
-  subscription OnUpdateSyllabusDesigner {
-    onUpdateSyllabusDesigner {
-      id
-      syllabusID
-      personEmail
-      personAuthID
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteSyllabusDesigner = /* GraphQL */ `
-  subscription OnDeleteSyllabusDesigner {
-    onDeleteSyllabusDesigner {
-      id
-      syllabusID
-      personEmail
-      personAuthID
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
+      designers
       createdAt
       updatedAt
     }

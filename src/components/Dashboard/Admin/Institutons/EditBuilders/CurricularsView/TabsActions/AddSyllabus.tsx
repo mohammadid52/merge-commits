@@ -137,6 +137,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
       try {
         setIsLoading(true);
         const languagesCode = syllabusData.languages.map((item: { value: string }) => item.value);
+        const designers = selectedDesigners.map(item => (item.id))
         const input = {
           name: syllabusData.name,
           curriculumID: curricularId,
@@ -145,7 +146,8 @@ const AddSyllabus = (props: AddSyllabusProps) => {
           policies: syllabusData.policies,
           pupose: syllabusData.purpose,
           objectives: syllabusData.objectives,
-          languages: languagesCode
+          languages: languagesCode,
+          designers: designers
         }
         const newSyllabus: any = await API.graphql(graphqlOperation(mutations.createSyllabus, { input: input }));
         const newItem = newSyllabus.data.createSyllabus

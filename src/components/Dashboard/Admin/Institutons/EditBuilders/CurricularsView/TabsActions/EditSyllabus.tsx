@@ -61,6 +61,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     id: '',
     action: ''
   });
+  const [designerIds, setDesignerIds] = useState([]);
   const [designersList, setDesignersList] = useState([]);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [allLessonsList, setAllLessonsList] = useState([]);
@@ -161,6 +162,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       try {
         setIsLoading(true);
         const languagesCode = syllabusData.languages.map((item: { value: string }) => item.value);
+        const designers = selectedDesigners.map(item => ({ id: item.id }))
         const input = {
           id: syllabusId,
           name: syllabusData.name,
@@ -170,7 +172,8 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           policies: syllabusData.policies,
           pupose: syllabusData.purpose,
           objectives: syllabusData.objectives,
-          languages: languagesCode
+          languages: languagesCode,
+          designers: designers
         }
         const newSyllabus = await API.graphql(graphqlOperation(mutations.updateSyllabus, { input: input }));
         setMessages({
@@ -325,7 +328,8 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           purpose: savedData.pupose,
           methodology: savedData.methodology,
           policies: savedData.policies,
-        })
+        });
+        setDesignerIds([...savedData?.designers])
         setSavedLessonsList([...savedData.lessons?.items]);
       } catch {
         setMessages({
@@ -401,6 +405,22 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       updateListAndDropdown();
     }
   }, [savedLessonsList, allLessonsList])
+
+  useEffect(() => {
+    if (designersList.length > 0) {
+      const designers = [...designerIds].map((desID: string) => {
+        const personData = designersList.find(per => per.id === desID)
+        const personObj = {
+          id: personData?.id,
+          name: personData?.name,
+          value: personData?.name
+        }
+        return personObj
+      })
+      setSelectedDesigners(designers);
+    }
+  }, [designersList, designerIds])
+
 
   const { name, languages, description, purpose, objectives, methodology, policies } = syllabusData;
   return (
