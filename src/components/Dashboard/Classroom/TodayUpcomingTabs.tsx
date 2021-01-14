@@ -25,34 +25,34 @@ const TodayUpcomingTabs = (props: TodayUpcomingTabs) => {
   };
 
   return (
-    <div id={`lessonGroupTabs`} onClick={handleTabClick}>
-      <span
+    <div id={`lessonGroupTabs`} className={`flex flex-row`} onClick={handleTabClick}>
+      <h2
         id={`today`}
-        className={`w-full cursor-pointer ${theme.dashboard.sectionTitle} ${
+        className={`w-auto cursor-pointer ${theme.dashboard.sectionTitle} ${
           visibleLessonGroup === 'today'
             ? 'text-black'
-            : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out text-sm font-semibold'
+            : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
         }`}>
         Today's Lesson
-      </span>
-      <span
+      </h2>
+      <h2
         id={`upcoming`}
-        className={`w-full ml-4 cursor-pointer ${theme.dashboard.sectionTitle} ${
+        className={`w-auto ml-4 cursor-pointer ${theme.dashboard.sectionTitle} ${
           visibleLessonGroup === 'upcoming'
             ? 'text-black'
-            : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out text-sm font-semibold'
+            : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
         }`}>
         Upcoming
-      </span>
-      <span
+      </h2>
+      <h2
         id={`completed`}
-        className={`w-full ml-4 cursor-pointer ${theme.dashboard.sectionTitle} ${
+        className={`w-auto ml-4 cursor-pointer ${theme.dashboard.sectionTitle} ${
           visibleLessonGroup === 'completed'
             ? 'text-black'
-            : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out text-sm font-semibold'
+            : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
         }`}>
         Completed
-      </span>
+      </h2>
     </div>
   );
 };

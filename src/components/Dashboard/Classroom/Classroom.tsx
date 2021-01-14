@@ -201,7 +201,7 @@ const Classroom: React.FC = () => {
          *  ASSESSMENTS/SURVEYS
          */}
         <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} p-4 text-xl m-auto`}>
+          <div className={`${theme.section} px-4 text-xl m-auto`}>
             <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Surveys & Assessments</h2>
           </div>
         </div>
@@ -218,7 +218,7 @@ const Classroom: React.FC = () => {
          *  LESSON TAB TOGGLE
          */}
         <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} p-4 text-xl m-auto`}>
+          <div className={`${theme.section} px-4 text-xl m-auto`}>
             <TodayUpcomingTabs visibleLessonGroup={visibleLessonGroup} setVisibleLessonGroup={setVisibleLessonGroup} />
           </div>
         </div>
