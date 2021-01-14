@@ -14,17 +14,16 @@ import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import SideWidgetBar from './SideWidgetBar/SideWidgetBar';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
-const Classroom = lazy(() => import('./Classroom/Classroom'))
-const Profile = lazy(() => import('./Profile/Profile'))
-const Links = lazy(() => import('./Menu/Links'))
-const ProfileLink = lazy(() => import('./Menu/ProfileLink'))
-const Registration = lazy(() => import('./Admin/UserManagement/Registration'))
-const UserManagement = lazy(() => import('./Admin/UserManagement/UserManagement'))
-
+const Classroom = lazy(() => import('./Classroom/Classroom'));
+const Profile = lazy(() => import('./Profile/Profile'));
+const Links = lazy(() => import('./Menu/Links'));
+const ProfileLink = lazy(() => import('./Menu/ProfileLink'));
+const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
+const UserManagement = lazy(() => import('./Admin/UserManagement/UserManagement'));
 
 type userObject = {
-  [key: string]: any,
-}
+  [key: string]: any;
+};
 
 export interface DashboardProps {
   updateAuthState?: Function;
@@ -38,17 +37,17 @@ const Dashboard = ({ updateAuthState }: DashboardProps) => {
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
   const [userData, setUserData] = useState({
     role: '',
-    image: ''
-  })
+    image: '',
+  });
   const { state, dispatch } = useContext(GlobalContext);
   const [currentPage, setCurrentPage] = useState<string>('classroom');
 
   const setUser = (user: userObject) => {
     setUserData({
       role: user.role,
-      image: user.image
-    })
-    let firstName = user.preferredName ? user.preferredName : user.firstName
+      image: user.image,
+    });
+    let firstName = user.preferredName ? user.preferredName : user.firstName;
     dispatch({
       type: 'SET_USER',
       payload: {
@@ -58,43 +57,45 @@ const Dashboard = ({ updateAuthState }: DashboardProps) => {
         language: user.language,
         onBoardSurvey: user.onBoardSurvey ? user.onBoardSurvey : false,
         role: user.role,
-        image: user.image
-      }
-    })
+        image: user.image,
+      },
+    });
 
-    setCookie('auth', { ...cookies.auth, role: user.role, firstName: firstName, id: user.id }, { path: '/' })
-  }
+    setCookie('auth', { ...cookies.auth, role: user.role, firstName: firstName, id: user.id }, { path: '/' });
+  };
 
   async function getUser() {
-    console.log('get user is called')
-    const userEmail = (state.user?.email) ? (state.user?.email) : (cookies.auth?.email);
-    const userAuthId = (state.user?.authId) ? (state.user?.authId) : (cookies.auth?.authId);
+    console.log('get user is called');
+    const userEmail = state.user?.email ? state.user?.email : cookies.auth?.email;
+    const userAuthId = state.user?.authId ? state.user?.authId : cookies.auth?.authId;
     try {
       // this any needs to be changed once a solution is found!!!
-      const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: userEmail, authId: userAuthId }))
+      const user: any = await API.graphql(
+        graphqlOperation(queries.getPerson, { email: userEmail, authId: userAuthId })
+      );
       setUser(user.data.getPerson);
     } catch (error) {
-      console.log('Here in error')
+      console.log('Here in error');
       if (!userEmail && !userAuthId) {
         removeCookie('auth', { path: '/' });
         dispatch({ type: 'CLEANUP' });
         sessionStorage.removeItem('accessToken');
-        updateAuthState(false)
+        updateAuthState(false);
       }
-      console.error(error)
+      console.error(error);
     }
   }
 
   useEffect(() => {
     if (!state.user.firstName) {
-      getUser()
+      getUser();
     } else {
       setUserData({
         role: state.user?.role,
-        image: state.user?.image
-      })
+        image: state.user?.image,
+      });
     }
-  }, [])
+  }, []);
 
   return (
     <div className={`w-screen md:w-full h-screen md:h-full flex`}>
@@ -109,70 +110,45 @@ const Dashboard = ({ updateAuthState }: DashboardProps) => {
       {/**
        *  MAIN CONTENT
        */}
-      <div className={`height h-full overflow-x-hidden overflow-y-scroll flex flex-col`}>
-        <Suspense fallback={
-          <div className="min-h-screen w-full flex flex-col justify-center items-center">
-            <ComponentLoading />
-          </div>
-        }>
-          <Switch>
-            <Route
-              exact
-              path={`${match.url}`}
-              render={() => (
-                <Classroom/>
-              )}
-            />
-            <Route
-              path={`${match.url}/classroom`}
-              render={({ location }) => (
-                <Redirect
-                  to={{
-                    pathname: '/',
-                    state: { from: location }
-                  }} />
-              )}
-            />
-            <Route
-              path={`${match.url}/manage-users`}
-              render={() => (
-                <UserManagement />
-              )}
-            />
-            <Route
-              path={`${match.url}/registration`}
-              render={() => (
-                <Registration />
-              )}
-            />
-            <Route
-              path={`${match.url}/profile`}
-              render={() => (
-                <Profile />
-              )}
-            />
-            <Route
-              path={`${match.url}/lesson-planner`}
-              render={() => (
-                <LessonPlanHome />
-              )}
-            />
-            <Route
-              path={`${match.url}/manage-institutions`}
-              render={() => (
-                <InstitutionsHome />
-              )}
-            />
-          </Switch>
-        </Suspense>
-      </div>
+      <div className={`flex flex-row overflow-x-hidden overflow-y-scroll`}>
+        <div className={`height h-full flex flex-col`}>
+          <Suspense
+            fallback={
+              <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                <ComponentLoading />
+              </div>
+            }>
+            <Switch>
+              <Route exact path={`${match.url}`} render={() => <Classroom />} />
+              <Route
+                path={`${match.url}/classroom`}
+                render={({ location }) => (
+                  <Redirect
+                    to={{
+                      pathname: '/',
+                      state: { from: location },
+                    }}
+                  />
+                )}
+              />
+              <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
+              <Route path={`${match.url}/registration`} render={() => <Registration />} />
+              <Route path={`${match.url}/profile`} render={() => <Profile />} />
+              <Route path={`${match.url}/lesson-planner`} render={() => <LessonPlanHome />} />
+              <Route path={`${match.url}/manage-institutions`} render={() => <InstitutionsHome />} />
+            </Switch>
+          </Suspense>
+        </div>
 
-      {/**
-       *  SIDEWIDGETSBAR
-       */}
-       <SideWidgetBar/>
+        {/**
+         *  SIDEWIDGETSBAR
+         */}
+        {currentPage === 'lesson-planner' || currentPage === 'classroom' ? (
+          <SideWidgetBar currentPage={currentPage} />
+        ) : null}
+      </div>
     </div>
-  )
-}
+  );
+};
 
 export default Dashboard;

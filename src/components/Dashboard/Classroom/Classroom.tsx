@@ -109,7 +109,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    */
   const todayLessons = listCurriculum
     ? listCurriculum.filter((lesson: Lesson, index: number) => {
-        if (lesson.open) {
+        if (lesson.open && lesson.id !== 'on-boarding-survey-1') {
           if (!lesson.complete) {
             return lesson;
           }
@@ -123,7 +123,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    */
   const upcomingLessons = listCurriculum
     ? listCurriculum.filter((lesson: Lesson, index: number) => {
-        if (!lesson.open) {
+        if (!lesson.open && lesson.id !== 'on-boarding-survey-1') {
           if (!lesson.complete) {
             return lesson;
           }
