@@ -8,6 +8,8 @@ import SurveyCard from './SurveyCard';
 import Today from './TodayLesson';
 import UpcomingLessons from './UpcomingLessons';
 import CompletedLessons from './CompletedLessons';
+import { DashboardProps } from '../Dashboard';
+import { dispatch } from 'rxjs/internal-compatibility';
 
 interface Artist {
   id: string;
@@ -27,7 +29,7 @@ interface DataObject {
   [key: string]: any;
 }
 
-interface Lesson {
+export interface Lesson {
   id: string;
   open: boolean;
   openedAt: string;
@@ -54,8 +56,8 @@ export interface LessonProps {
   lessons: Lesson[];
 }
 
-const Classroom: React.FC = () => {
-  const { state, theme } = useContext(GlobalContext);
+const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
+  const { state, theme, dispatch } = useContext(GlobalContext);
   const [curriculum, setCurriculum] = useState<CurriculumInfo>();
   const [survey, setSurvey] = useState<any>({
     display: false,
@@ -107,12 +109,12 @@ const Classroom: React.FC = () => {
    */
   const todayLessons = listCurriculum
     ? listCurriculum.filter((lesson: Lesson, index: number) => {
-      if(lesson.open){
-        if(!lesson.complete){
-          return lesson;
+        if (lesson.open) {
+          if (!lesson.complete) {
+            return lesson;
+          }
         }
-      }
-    })
+      })
     : [];
 
   /**
@@ -120,13 +122,13 @@ const Classroom: React.FC = () => {
    *  This array is a filter of lessons which are closed, but not completed
    */
   const upcomingLessons = listCurriculum
-    ? listCurriculum.filter((lesson:Lesson, index: number ) => {
-      if(!lesson.open){
-        if(!lesson.complete){
-          return lesson;
+    ? listCurriculum.filter((lesson: Lesson, index: number) => {
+        if (!lesson.open) {
+          if (!lesson.complete) {
+            return lesson;
+          }
         }
-      }
-    })
+      })
     : [];
 
   /**
@@ -134,11 +136,11 @@ const Classroom: React.FC = () => {
    *  This array is a filter of lessons which are completed, closed or open
    */
   const completedLessons = listCurriculum
-    ? listCurriculum.filter((lesson:Lesson, index: number ) => {
-      if(lesson.complete){
+    ? listCurriculum.filter((lesson: Lesson, index: number) => {
+        if (lesson.complete) {
           return lesson;
-      }
-    })
+        }
+      })
     : [];
 
   /**
@@ -149,6 +151,18 @@ const Classroom: React.FC = () => {
     getCourse('1');
     // history.push('/lesson?id=2');
   }, []);
+
+  useEffect(() => {
+    if (listCurriculum && listCurriculum.length > 0) {
+      dispatch({
+        type: 'UPDATE_SIDEBAR',
+        payload: {
+          section: 'upcomingLessons',
+          data: upcomingLessons,
+        },
+      });
+    }
+  }, [listCurriculum]);
 
   /**
    * ssSSSssHOW SURVEY IF IT HAS NOT BEEN COMPLETED
@@ -193,7 +207,9 @@ const Classroom: React.FC = () => {
       <>
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 pb-4 m-auto`}>
-            <h2 className={`w-full text-xl border-b border-dark-gray ${theme.dashboard.sectionTitle} pb-1`}>Classroom</h2>
+            <h2 className={`w-full text-xl border-b border-dark-gray ${theme.dashboard.sectionTitle} pb-1`}>
+              Classroom
+            </h2>
           </div>
         </div>
 

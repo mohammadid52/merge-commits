@@ -12,6 +12,7 @@ import * as queries from '../../graphql/queries';
 import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
+import SideWidgetBar from './SideWidgetBar/SideWidgetBar';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'))
 const Profile = lazy(() => import('./Profile/Profile'))
@@ -25,8 +26,11 @@ type userObject = {
   [key: string]: any,
 }
 
-interface DashboardProps {
-  updateAuthState: Function
+export interface DashboardProps {
+  updateAuthState?: Function;
+  currentPageData?: any[];
+  setCurrentPageData?: React.Dispatch<any>;
+  currentPage?: string;
 }
 
 const Dashboard = ({ updateAuthState }: DashboardProps) => {
@@ -94,10 +98,17 @@ const Dashboard = ({ updateAuthState }: DashboardProps) => {
 
   return (
     <div className={`w-screen md:w-full h-screen md:h-full flex`}>
+      {/**
+       *  SIDEMENU
+       */}
       <SideMenu setCurrentPage={setCurrentPage} currentPage={currentPage} updateAuthState={updateAuthState}>
         <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage} image={userData.image} />
         <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
       </SideMenu>
+
+      {/**
+       *  MAIN CONTENT
+       */}
       <div className={`height h-full overflow-x-hidden overflow-y-scroll flex flex-col`}>
         <Suspense fallback={
           <div className="min-h-screen w-full flex flex-col justify-center items-center">
@@ -109,7 +120,7 @@ const Dashboard = ({ updateAuthState }: DashboardProps) => {
               exact
               path={`${match.url}`}
               render={() => (
-                <Classroom />
+                <Classroom/>
               )}
             />
             <Route
@@ -155,6 +166,11 @@ const Dashboard = ({ updateAuthState }: DashboardProps) => {
           </Switch>
         </Suspense>
       </div>
+
+      {/**
+       *  SIDEWIDGETSBAR
+       */}
+       <SideWidgetBar/>
     </div>
   )
 }
