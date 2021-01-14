@@ -31,14 +31,13 @@ interface DashboardProps {
 
 const Dashboard = ({ updateAuthState }: DashboardProps) => {
   const match = useRouteMatch();
-  const history = useHistory();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
   const [userData, setUserData] = useState({
     role: '',
     image: ''
   })
   const { state, dispatch } = useContext(GlobalContext);
-  const [currentPage, setCurrentPage] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<string>('classroom');
 
   const setUser = (user: userObject) => {
     setUserData({

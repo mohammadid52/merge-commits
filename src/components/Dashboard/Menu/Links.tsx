@@ -153,26 +153,35 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         return '';
     }
   };
+
+  const linkClass = 'w-full h-20 text-center text-sm mx-auto py-4 flex flex-col items-center justify-center';
+  const dividerClass = 'w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent';
+  const activeClass = 'bg-gray-200 text-dark-gray';
+
   const getClassStyle = (label: string) => {
     switch (label) {
       case 'People':
-        return `${linkProps.currentPage === 'manage-users' && 'bg-grayscale'} border-l-4 border-mustard-yellow`;
-        break;
+        return `${
+          linkProps.currentPage === 'manage-users' && activeClass
+        } w-full text-center border-l-4 border-mustard-yellow`;
       case 'Registration':
-        return `${linkProps.currentPage === 'registration' && 'bg-grayscale'} border-l-4 border-ketchup`;
-        break;
+        return `${
+          linkProps.currentPage === 'registration' && activeClass
+        } w-full text-center border-l-4 border-ketchup`;
       case 'Classroom':
-        return `${linkProps.currentPage === 'classroom' && 'bg-grayscale'} border-l-4 border-blueberry`;
-        break;
+        return `${linkProps.currentPage === 'classroom' && activeClass} w-full text-center border-l-4 border-blueberry`;
       case 'Lesson Planner':
-        return `${linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'} border-l-4 border-sea-green`;
-        break;
+        return `${
+          linkProps.currentPage === 'lesson-planner' && activeClass
+        } w-full text-center border-l-4 border-sea-green`;
       case 'Lesson Builder':
-        return `${linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'} border-l-4 border-sea-green`;
-        break;
+        return `${
+          linkProps.currentPage === 'lesson-builder' && activeClass
+        } w-full text-center border-l-4 border-sea-green`;
       case 'Institutions':
-        return `${linkProps.currentPage === 'manage-institutions' && 'bg-grayscale'} border-l-4 border-ketchup`;
-        break;
+        return `${
+          linkProps.currentPage === 'manage-institutions' && activeClass
+        } w-full text-center border-l-4 border-ketchup`;
       default:
         return '';
     }
@@ -182,23 +191,20 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     <div className="link  w-full h-12 z-40">
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
-            <div key={`link_${key}`}>
+            <>
               <div
+                key={`link_${key}`}
                 id={link.path}
-                className={`w-full h-16 text-center text-sm mx-auto py-4 flex flex-col items-center justify-center ${getClassStyle(
-                  link.name
-                )}`}
+                className={`${linkClass} ${getClassStyle(link.name)}`}
                 onClick={handleLink}>
-                <div id={link.path} className="w-full text-center">
-                  <IconContext.Provider value={{ size: '1.5rem' }}>
-                    {getMenuIcon(link.name, link.path)}
-                  </IconContext.Provider>
-                </div>
+                <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
+                  {getMenuIcon(link.name, link.path)}
+                </IconContext.Provider>
                 {link.name}
               </div>
 
-              <div className={`w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent`}></div>
-            </div>
+              <div className={dividerClass}></div>
+            </>
           ))
         : null}
     </div>
