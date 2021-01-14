@@ -191,14 +191,24 @@ const Classroom: React.FC = () => {
   {
     return (
       <>
+        <div className={`bg-opacity-10`}>
+          <div className={`${theme.section} px-4 pb-4 m-auto`}>
+            <h2 className={`w-full text-xl border-b border-dark-gray ${theme.dashboard.sectionTitle} pb-1`}>Classroom</h2>
+          </div>
+        </div>
+
         {/**
          *  ASSESSMENTS/SURVEYS
          */}
-        {survey.display ? (
+        <div className={`bg-opacity-10`}>
+          <div className={`${theme.section} p-4 text-xl m-auto`}>
+            <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Surveys & Assessments</h2>
+          </div>
+        </div>
+
+        {listCurriculum && survey.display ? (
           <div className={`bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
-              <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Welcome to Iconoclast Artists</h2>
-
               <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum} />
             </div>
           </div>
@@ -219,7 +229,7 @@ const Classroom: React.FC = () => {
          *    - upcoming
          *    - completed
          */}
-        {listCurriculum.length > 0 && visibleLessonGroup === 'today' ? (
+        {listCurriculum && listCurriculum.length > 0 && visibleLessonGroup === 'today' ? (
           <div className={`bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
               <Today lessons={todayLessons} />
@@ -227,7 +237,7 @@ const Classroom: React.FC = () => {
           </div>
         ) : null}
 
-        {visibleLessonGroup === 'upcoming' ? (
+        {listCurriculum && listCurriculum.length > 0 && visibleLessonGroup === 'upcoming' ? (
           <div className={`bg-grayscale-light bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
               <UpcomingLessons lessons={upcomingLessons} />
@@ -235,7 +245,7 @@ const Classroom: React.FC = () => {
           </div>
         ) : null}
 
-        {visibleLessonGroup === 'completed' ? (
+        {listCurriculum && listCurriculum.length > 0 && visibleLessonGroup === 'completed' ? (
           <div className={`bg-grayscale-light bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
               <CompletedLessons lessons={completedLessons} />
