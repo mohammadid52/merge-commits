@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
-import { useHistory } from 'react-router-dom';
 import * as customQueries from '../../../customGraphql/customQueries';
-// import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import Today from './TodayLesson';
-import Upcoming from './Upcoming';
+import TodayUpcomingTabs from './TodayUpcomingTabs';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 import SurveyCard from './SurveyCard';
-import TodayUpcomingTabs from './TodayUpcomingTabs';
+import Today from './TodayLesson';
+import UpcomingLessons from './UpcomingLessons';
+import CompletedLessons from './CompletedLessons';
 
 interface Artist {
   id: string;
@@ -28,8 +27,34 @@ interface DataObject {
   [key: string]: any;
 }
 
+interface Lesson {
+  id: string;
+  open: boolean;
+  openedAt: string;
+  closedAt: string;
+  complete: boolean;
+  roster: string[];
+  viewing: any;
+  expectedStartDate: string;
+  expectedEndDate: string;
+  SELStructure?: string;
+  courseID: string;
+  lessonID: string;
+  lesson: {
+    title: string;
+    artist?: any;
+    language: string;
+    summary: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LessonProps {
+  lessons: Lesson[];
+}
+
 const Classroom: React.FC = () => {
-  const history = useHistory();
   const { state, theme } = useContext(GlobalContext);
   const [curriculum, setCurriculum] = useState<CurriculumInfo>();
   const [survey, setSurvey] = useState<any>({
@@ -37,7 +62,7 @@ const Classroom: React.FC = () => {
     data: null,
   });
   const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('');
-  const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
+  const [listCurriculum, setListCurriculum] = useState<Lesson[]>();
   const [status, setStatus] = useState('today');
 
   async function getCourse(id: string) {
@@ -75,21 +100,58 @@ const Classroom: React.FC = () => {
   };
 
   /**
-   *
-   * AUTO-PUSH TO SPECIFIC LESSON
-   *
+   * Today's Lessons -
+   *  This array is a filter of lessons which are open & not completed
+   *  (If there were enough lessons, this array should
+   *  actually be a filter of lessons from today)
+   */
+  const todayLessons = listCurriculum
+    ? listCurriculum.filter((lesson: Lesson, index: number) => {
+      if(lesson.open){
+        if(!lesson.complete){
+          return lesson;
+        }
+      }
+    })
+    : [];
+
+  /**
+   * Upcoming Lessons -
+   *  This array is a filter of lessons which are closed, but not completed
+   */
+  const upcomingLessons = listCurriculum
+    ? listCurriculum.filter((lesson:Lesson, index: number ) => {
+      if(!lesson.open){
+        if(!lesson.complete){
+          return lesson;
+        }
+      }
+    })
+    : [];
+
+  /**
+   * Completed Lessons -
+   *  This array is a filter of lessons which are completed, closed or open
+   */
+  const completedLessons = listCurriculum
+    ? listCurriculum.filter((lesson:Lesson, index: number ) => {
+      if(lesson.complete){
+          return lesson;
+      }
+    })
+    : [];
+
+  /**
+   * LIFECYCLE - on mount
    */
 
   useEffect(() => {
     getCourse('1');
-
     // history.push('/lesson?id=2');
   }, []);
 
   /**
-   *
    * ssSSSssHOW SURVEY IF IT HAS NOT BEEN COMPLETED
-   *
    */
 
   useEffect(() => {
@@ -123,10 +185,6 @@ const Classroom: React.FC = () => {
     }
   }, [state]);
 
-  const handleLink = () => {
-    history.push('/lesson');
-  };
-
   if (status !== 'done') {
     return <ComponentLoading />;
   }
@@ -157,11 +215,14 @@ const Classroom: React.FC = () => {
 
         {/**
          *  LESSONS
+         *    - today
+         *    - upcoming
+         *    - completed
          */}
-        {visibleLessonGroup === 'today' ? (
+        {listCurriculum.length > 0 && visibleLessonGroup === 'today' ? (
           <div className={`bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
-              <Today link={'/lesson?id=1'} curriculums={listCurriculum} />
+              <Today lessons={todayLessons} />
             </div>
           </div>
         ) : null}
@@ -169,7 +230,15 @@ const Classroom: React.FC = () => {
         {visibleLessonGroup === 'upcoming' ? (
           <div className={`bg-grayscale-light bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
-              <Upcoming curriculum={listCurriculum} />
+              <UpcomingLessons lessons={upcomingLessons} />
+            </div>
+          </div>
+        ) : null}
+
+        {visibleLessonGroup === 'completed' ? (
+          <div className={`bg-grayscale-light bg-opacity-10`}>
+            <div className={`${theme.section} p-4 text-xl m-auto`}>
+              <CompletedLessons lessons={completedLessons} />
             </div>
           </div>
         ) : null}
