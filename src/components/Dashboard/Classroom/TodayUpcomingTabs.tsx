@@ -2,12 +2,13 @@ import React, { useContext, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 
 interface TodayUpcomingTabs {
+  lessonGroupCount: { today: string; upcoming: string; completed: string };
   visibleLessonGroup: string;
   setVisibleLessonGroup: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const TodayUpcomingTabs = (props: TodayUpcomingTabs) => {
-  const { visibleLessonGroup, setVisibleLessonGroup } = props;
+  const { lessonGroupCount, visibleLessonGroup, setVisibleLessonGroup } = props;
   const { state, theme } = useContext(GlobalContext);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ const TodayUpcomingTabs = (props: TodayUpcomingTabs) => {
             ? 'text-black'
             : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
         }`}>
-        Today's Lesson
+        Today's Lesson ({lessonGroupCount.today})
       </h2>
       <h2
         id={`upcoming`}
@@ -42,7 +43,7 @@ const TodayUpcomingTabs = (props: TodayUpcomingTabs) => {
             ? 'text-black'
             : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
         }`}>
-        Upcoming
+        Upcoming ({lessonGroupCount.upcoming})
       </h2>
       <h2
         id={`completed`}
@@ -51,7 +52,7 @@ const TodayUpcomingTabs = (props: TodayUpcomingTabs) => {
             ? 'text-black'
             : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
         }`}>
-        Completed
+        Completed ({lessonGroupCount.completed})
       </h2>
     </div>
   );

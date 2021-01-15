@@ -9,7 +9,6 @@ import Today from './TodayLesson';
 import UpcomingLessons from './UpcomingLessons';
 import CompletedLessons from './CompletedLessons';
 import { DashboardProps } from '../Dashboard';
-import { dispatch } from 'rxjs/internal-compatibility';
 
 interface Artist {
   id: string;
@@ -52,20 +51,34 @@ export interface Lesson {
   updatedAt: string;
 }
 
-export interface LessonProps {
+export interface LessonProps extends DashboardProps {
   lessons: Lesson[];
 }
 
+export interface LessonCardProps {
+  keyProps: string;
+  lessonProps: Lesson;
+  accessible?: boolean;
+  openCards?: string;
+  setOpenCards?: React.Dispatch<React.SetStateAction<string>>;
+}
+
 const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
+  const { visibleLessonGroup, setVisibleLessonGroup } = props;
   const { state, theme, dispatch } = useContext(GlobalContext);
   const [curriculum, setCurriculum] = useState<CurriculumInfo>();
   const [survey, setSurvey] = useState<any>({
     display: false,
     data: null,
   });
-  const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('');
+
   const [listCurriculum, setListCurriculum] = useState<Lesson[]>();
   const [status, setStatus] = useState('today');
+  const [lessonGroupCount, setLessonGroupCount] = useState<{ today: string; upcoming: string; completed: string }>({
+    today: '0',
+    upcoming: '0',
+    completed: '0',
+  });
 
   async function getCourse(id: string) {
     try {
@@ -154,6 +167,16 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   useEffect(() => {
     if (listCurriculum && listCurriculum.length > 0) {
+      const todayCount = todayLessons.length.toString();
+      const upcomingCount = upcomingLessons.length.toString();
+      const completedCount = completedLessons.length.toString();
+
+      setLessonGroupCount({
+        today: todayCount,
+        upcoming: upcomingCount,
+        completed: completedCount,
+      });
+
       dispatch({
         type: 'UPDATE_SIDEBAR',
         payload: {
@@ -202,7 +225,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   if (status !== 'done') {
     return <ComponentLoading />;
   }
-  {
+  if (status === 'done') {
     return (
       <>
         <div className={`bg-opacity-10`}>
@@ -216,11 +239,13 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         {/**
          *  ASSESSMENTS/SURVEYS
          */}
-        <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} px-4 text-xl m-auto`}>
-            <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Surveys & Assessments</h2>
+        {listCurriculum && survey.display ? (
+          <div className={`bg-opacity-10`}>
+            <div className={`${theme.section} px-4 text-xl m-auto`}>
+              <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Surveys & Assessments</h2>
+            </div>
           </div>
-        </div>
+        ) : null}
 
         {listCurriculum && survey.display ? (
           <div className={`bg-opacity-10`}>
@@ -235,7 +260,11 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
          */}
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 text-xl m-auto`}>
-            <TodayUpcomingTabs visibleLessonGroup={visibleLessonGroup} setVisibleLessonGroup={setVisibleLessonGroup} />
+            <TodayUpcomingTabs
+              lessonGroupCount={lessonGroupCount}
+              visibleLessonGroup={visibleLessonGroup}
+              setVisibleLessonGroup={setVisibleLessonGroup}
+            />
           </div>
         </div>
 

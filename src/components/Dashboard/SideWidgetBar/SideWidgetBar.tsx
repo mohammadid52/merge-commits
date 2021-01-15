@@ -10,7 +10,7 @@ import {
 import { GlobalContext } from '../../../contexts/GlobalContext';
 
 const SideWidgetBar = (props: DashboardProps) => {
-  const { currentPage } = props;
+  const { currentPage, setVisibleLessonGroup } = props;
   const { state } = useContext(GlobalContext);
   return (
     <div id={`sideWidgetBar`} className={`w-2/10 max-w-80 min-w-48`}>
@@ -24,7 +24,7 @@ const SideWidgetBar = (props: DashboardProps) => {
        * Upcoming Lessons
        */}
       {currentPage === 'classroom' && state.sidebar.upcomingLessons.length > 0 && (
-        <UpcomingLessonsWidget lessons={state.sidebar.upcomingLessons} />
+        <UpcomingLessonsWidget lessons={state.sidebar.upcomingLessons} setVisibleLessonGroup={setVisibleLessonGroup}/>
       )}
 
       {/**

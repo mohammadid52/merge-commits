@@ -7,7 +7,7 @@ export const ImageWidget = (props: { source: string; altdesc?: string; title?: s
   return (
     <div className={`p-2`}>
       <div className={`${card ? 'bg-white border border-dark-gray border-opacity-10' : ''} rounded`}>
-        {title && <p className={`text-sm p-2 font-semibold border-b border-dark-gray  border-opacity-10`}>{title}:</p>}
+        {title && <p className={`text-sm p-2 font-semibold border-b border-dark-gray border-opacity-10`}>{title}:</p>}
         <div className={`bg-white rounded`}>
           <img src={source} className={classProp} alt={altdesc} />
         </div>
@@ -17,15 +17,17 @@ export const ImageWidget = (props: { source: string; altdesc?: string; title?: s
 };
 
 export const UpcomingLessonsWidget = (props: LessonProps) => {
-  const { lessons } = props;
+  const { setVisibleLessonGroup, lessons } = props;
+  const upcomingCount = lessons.length.toString();
+
   return (
     <div className={`p-2`}>
       <div className={`bg-white border border-dark-gray border-opacity-10 rounded`}>
-        <p className={`text-sm p-2 font-semibold border-b border-dark-gray  border-opacity-10`}>Upcoming Lessons:</p>
+        <p className={`text-sm p-2 font-semibold border-b border-dark-gray  border-opacity-10 cursor-pointer`} onClick={()=>setVisibleLessonGroup('upcoming')}>Upcoming Lessons ({upcomingCount ? upcomingCount : '0'}):</p>
         {lessons && lessons.length > 0
           ? lessons.map((lesson: Lesson, index: number) => {
               return (
-                <div key={`upcoming_side_${index}`} className={`ml-2 p-2 border-b border-dark-gray  border-opacity-10`}>
+                <div key={`upcoming_side_${index}`} className={`p-2 ${index !== lessons.length -1 ? 'border-b border-dark-gray border-opacity-10' : ''}`}>
                   <p className={`text-sm font-semibold text-dark-gray`}>{lesson.lesson.title}</p>
                   <p className={`text-xs text-dark-gray`}>{lesson.lesson.artist.name}</p>
                 </div>
@@ -41,7 +43,7 @@ export const TeacherNotifications = () => {
   return (
     <div className={`p-2`}>
       <div className={`bg-white border border-dark-gray border-opacity-10 rounded`}>
-        <p className={`text-sm p-2 font-semibold border-b border-dark-gray  border-opacity-10`}>Teacher's Note:</p>
+        <p className={`text-sm p-2 font-semibold border-b border-dark-gray border-opacity-10`}>Teacher's Note:</p>
         <div key={`teacher_side_note`} className={`p-2 border-b border-dark-gray  border-opacity-10`}>
           <p className={`text-xs text-dark-gray`}>
             Please complete the remaining parts of the lessons and be prepared to discuss what you've learnt next class.

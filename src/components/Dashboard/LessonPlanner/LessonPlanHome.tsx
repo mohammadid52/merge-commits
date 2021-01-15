@@ -5,7 +5,6 @@ import Today from '../Classroom/TodayLessonTeacher';
 import * as customQueries from '../../../customGraphql/customQueries';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
-import Dashboard from '../Classroom/Dashboard';
 
 export interface Artist {
   id: string;
@@ -68,7 +67,6 @@ const LessonPlanHome = () => {
                 Teacher View 
             </Link> */}
             {/* <Upcoming curriculum={listCurriculum}/> */}
-            <Dashboard />
           </div>
         </div>
       </div>

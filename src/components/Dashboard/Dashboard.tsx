@@ -2,7 +2,7 @@ import React, { lazy, Suspense, useContext, useEffect, useState } from 'react';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { GlobalContext } from '../../contexts/GlobalContext';
-import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 // import PageHeaderBar from '../Header/PageHeaderBar';
 import SideMenu from './Menu/SideMenu';
 // import Classroom from './Classroom/Classroom';
@@ -30,9 +30,13 @@ export interface DashboardProps {
   currentPageData?: any[];
   setCurrentPageData?: React.Dispatch<any>;
   currentPage?: string;
+  setCurrentPage?: React.Dispatch<React.SetStateAction<string>>;
+  visibleLessonGroup?: string;
+  setVisibleLessonGroup?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const Dashboard = ({ updateAuthState }: DashboardProps) => {
+const Dashboard = (props: DashboardProps) => {
+  const { updateAuthState} = props;
   const match = useRouteMatch();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
   const [userData, setUserData] = useState({
@@ -41,6 +45,7 @@ const Dashboard = ({ updateAuthState }: DashboardProps) => {
   });
   const { state, dispatch } = useContext(GlobalContext);
   const [currentPage, setCurrentPage] = useState<string>('classroom');
+  const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('today')
 
   const setUser = (user: userObject) => {
     setUserData({
@@ -119,7 +124,13 @@ const Dashboard = ({ updateAuthState }: DashboardProps) => {
               </div>
             }>
             <Switch>
-              <Route exact path={`${match.url}`} render={() => <Classroom />} />
+              <Route
+                exact
+                path={`${match.url}`}
+                render={() => (
+                  <Classroom visibleLessonGroup={visibleLessonGroup} setVisibleLessonGroup={setVisibleLessonGroup} />
+                )}
+              />
               <Route
                 path={`${match.url}/classroom`}
                 render={({ location }) => (
@@ -144,7 +155,11 @@ const Dashboard = ({ updateAuthState }: DashboardProps) => {
          *  SIDEWIDGETSBAR
          */}
         {currentPage === 'lesson-planner' || currentPage === 'classroom' ? (
-          <SideWidgetBar currentPage={currentPage} />
+          <SideWidgetBar
+            currentPage={currentPage}
+            visibleLessonGroup={visibleLessonGroup}
+            setVisibleLessonGroup={setVisibleLessonGroup}
+          />
         ) : null}
       </div>
     </div>
