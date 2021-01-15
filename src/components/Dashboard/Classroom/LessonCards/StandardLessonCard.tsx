@@ -61,7 +61,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
             {lessonProps.lesson && lessonProps.lesson.summary ? lessonProps.lesson.summary : null}
           </p>
         </div>
-        <div className={`h-8 ${theme.dashboard.bg} flex justify-between text-sm  rounded-br`}>
+        <div className={`h-8 ${theme.dashboard.bg} flex justify-between text-sm  rounded-b`}>
           {/* FILLER */}
           {isSurvey && (
             <div className={`flex justify-center items-center my-2 w-3.3/10 text-gray-300`}/>
