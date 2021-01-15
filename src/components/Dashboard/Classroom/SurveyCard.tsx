@@ -5,14 +5,18 @@ import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/ai';
 import ProgressRing from './ProgressRing';
 import { CurriculumInfo } from './Classroom';
+import StandardLessonCard from './LessonCards/StandardLessonCard';
 
 interface ClassProps {
   link: string;
   curriculum: CurriculumInfo;
+  lessons: any;
+  lessonType: string;
+  accessible: boolean;
 }
 
 const SurveyCard: React.FC<ClassProps> = (props: ClassProps) => {
-  const { link, curriculum } = props;
+  const { link, curriculum, lessons, accessible } = props;
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
 
@@ -22,7 +26,8 @@ const SurveyCard: React.FC<ClassProps> = (props: ClassProps) => {
   };
 
   return (
-    <div className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} h-auto flex mb-8`}>
+    <>
+      {/*<div className={`relative bg-white rounded-xl shadow-container ${theme.elem.text} h-auto flex mb-8`}>
       <div className="w-full flex flex-col ">
         <div className="h-8.7/10 p-4 flex flex-col justify-center items-center">
           <h1 className={`text-2xl text-black font-open text-left`}>Onboarding Survey</h1>
@@ -62,6 +67,14 @@ const SurveyCard: React.FC<ClassProps> = (props: ClassProps) => {
         </div>
       </div>
     </div>
+*/}
+
+      {lessons && lessons.length > 0
+        ? lessons.map((value: any, key: number) => {
+            return <StandardLessonCard keyProps={`survey-${key}`} lessonProps={value} lessonType={`survey`} accessible={accessible}/>;
+          })
+        : null}
+    </>
   );
 };
 

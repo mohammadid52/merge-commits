@@ -61,6 +61,7 @@ export interface LessonCardProps {
   accessible?: boolean;
   openCards?: string;
   setOpenCards?: React.Dispatch<React.SetStateAction<string>>;
+  lessonType?: string;
 }
 
 const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
@@ -113,6 +114,18 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       console.error(error);
     }
   };
+
+  /**
+   * ASSESSMENTS & SURVEYS
+   *  Array which filters out only surveys/assessments
+   */
+  const assessmentsSurveys = listCurriculum
+    ? listCurriculum.filter((lesson: Lesson, index: number) => {
+      if (lesson.id.includes('on-boarding-survey-1') || lesson.id.includes('assessment')) {
+          return lesson;
+      }
+    })
+    : [];
 
   /**
    * Today's Lessons -
@@ -250,7 +263,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         {listCurriculum && survey.display ? (
           <div className={`bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
-              <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum} />
+              <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum} lessons={assessmentsSurveys} lessonType={`survey`} accessible={survey.display}/>
             </div>
           </div>
         ) : null}
