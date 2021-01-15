@@ -57,7 +57,7 @@ export const QuoteWidget = () => {
       }, 1000);
       setTimeout(() => {
         setTWClass('opacity-100');
-      }, 1000);
+      }, 1200);
     }, 4000);
   }, []);
 
