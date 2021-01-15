@@ -34,7 +34,7 @@ const TodayUpcomingTabs = (props: TodayUpcomingTabs) => {
             ? 'text-black'
             : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
         }`}>
-        Today's Lesson ({lessonGroupCount.today})
+        Today's Lesson
       </h2>
       <h2
         id={`upcoming`}

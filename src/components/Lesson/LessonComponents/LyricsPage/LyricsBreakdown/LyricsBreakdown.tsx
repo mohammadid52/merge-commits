@@ -1,6 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
-import ReflectionQuestions from '../../ReflectionQuestions';
-import Banner from './Banner';
+import React, { useContext, useEffect, useState } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import SelfDisplay from './SelfDisplay';
 import CoopDisplay from './CoopDisplay';
