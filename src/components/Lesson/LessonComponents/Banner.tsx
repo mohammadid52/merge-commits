@@ -30,10 +30,8 @@ const Banner = (props: BannerProps) => {
     switch (nameString) {
       case 'FaPoll':
         return <FaPoll/>;
-        break;
       case 'FaCheck':
         return <FaCheck/>
-        break;
       default:
         return <FaQuestion/>
     }
