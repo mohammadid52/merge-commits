@@ -4,13 +4,14 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import ProgressBar from './ProgressBar/ProgressBar';
 
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
+import { AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineHome } from 'react-icons/ai';
 
-const TopMenu = () => {
+const TopMenu = (props: { handlePopup: () => void }) => {
   const { state, dispatch, theme } = useContext(LessonContext);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const history = useHistory();
   const match = useRouteMatch();
+  const userAtEnd = state.currentPage + 1 === state.pages.length;
 
   useEffect(() => {
     if (state.pages[state.currentPage + 1]) {
@@ -27,6 +28,9 @@ const TopMenu = () => {
     if (state.canContinue && state.currentPage < state.pages.length - 1) {
       history.push(`${match.url}/${state.pages[state.currentPage + 1].stage}`);
       dispatch({ type: 'PAGE_FORWARD' });
+    }
+    if(userAtEnd){
+      props.handlePopup();
     }
   };
 
@@ -73,7 +77,7 @@ const TopMenu = () => {
 
             <div
               className={`ml-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
-                state.canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark-gray cursor-default'
+                state.canContinue || userAtEnd ? 'bg-sea-green cursor-pointer' : 'bg-dark-gray cursor-default'
               } `}
               onClick={handleForward}>
               <IconContext.Provider
