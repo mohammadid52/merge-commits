@@ -58,6 +58,7 @@ export interface LessonProps extends DashboardProps {
 }
 
 export interface LessonCardProps {
+  isTeacher?: boolean;
   keyProps: string;
   lessonProps: Lesson;
   accessible?: boolean;

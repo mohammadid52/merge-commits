@@ -3,20 +3,37 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
 
 interface StartProps {
+  isTeacher?: boolean;
   lessonKey: any;
   open: boolean;
   accessible: boolean;
-  type?: string
+  type?: string;
 }
 
 const Start: React.FC<StartProps> = (props: StartProps) => {
-  const { lessonKey, open, accessible, type } = props;
+  const { isTeacher, lessonKey, open, accessible, type } = props;
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
 
   const handleLink = () => {
     if (accessible && open) {
       history.push(`${`/lesson?id=${lessonKey}`}`);
+    }
+  };
+
+  const firstPart = () => {
+    if (isTeacher) {
+      return 'TEACH';
+    } else {
+      return 'START';
+    }
+  };
+
+  const secondPart = () => {
+    if (type === 'survey' || type === 'assessment') {
+      return type.toUpperCase();
+    } else {
+      return 'LESSON';
     }
   };
 
@@ -31,7 +48,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
             : 'bg-gray-500 text-gray-700 cursor-default'
         }
                               h-full w-full text-white rounded-br focus:outline-none transition duration-150 ease-in-out`}>
-        <span className="w-auto h-auto">START {(type === 'survey' || type === 'assessment') ? type.toUpperCase() : 'LESSON'}</span>
+        <span className="w-auto h-auto">{`${firstPart()} ${secondPart()}`}</span>
       </button>
     </div>
   );

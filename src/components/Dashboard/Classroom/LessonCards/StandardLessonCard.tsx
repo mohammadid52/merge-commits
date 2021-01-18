@@ -7,7 +7,7 @@ import { LessonCardProps } from '../Classroom';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 const StandardLessonCard = (props: LessonCardProps) => {
-  const { keyProps, lessonProps, accessible, lessonType } = props;
+  const { isTeacher, keyProps, lessonProps, accessible, lessonType } = props;
   const { theme } = useContext(GlobalContext);
 
   const isSurvey = keyProps.includes('survey') || keyProps.includes('assessment');
@@ -52,7 +52,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
       {/**
        *  RIGHT SECTION
        */}
-      <div className={`${!isSurvey ? 'w-7.5/10' : 'w-full'} flex flex-col`}>
+      <div className={`${!isSurvey ? 'w-7.5/10' : 'w-full'} flex flex-col rounded-b`}>
         <div className={`${!isSurvey ? 'h-44' : 'h-auto'} p-4 flex flex-col justify-start items-center`}>
           <h1 className={`text-2xl text-black font-open text-left`}>
             {lessonProps.lesson && lessonProps.lesson.title ? lessonProps.lesson.title : null}
@@ -61,11 +61,9 @@ const StandardLessonCard = (props: LessonCardProps) => {
             {lessonProps.lesson && lessonProps.lesson.summary ? lessonProps.lesson.summary : null}
           </p>
         </div>
-        <div className={`h-8 ${theme.dashboard.bg} flex justify-between text-sm  rounded-b`}>
+        <div className={`h-8 ${theme.dashboard.bg} flex justify-between text-sm ${isSurvey ? 'rounded-b' : 'rounded-br'}`}>
           {/* FILLER */}
-          {isSurvey && (
-            <div className={`flex justify-center items-center my-2 w-3.3/10 text-gray-300`}/>
-          )}
+          {isSurvey && <div className={`flex justify-center items-center my-2 w-3.3/10 text-gray-300`} />}
 
           {/* TIME */}
           <div className={`flex justify-center items-center my-2 w-3.3/10 text-gray-300`}>
@@ -92,13 +90,13 @@ const StandardLessonCard = (props: LessonCardProps) => {
           {/* START */}
           <div className="flex w-3.3/10">
             <Start
+              isTeacher={isTeacher}
               lessonKey={lessonProps ? lessonProps.lessonID : null}
               open={lessonProps ? lessonProps.open : null}
               accessible={accessible}
               type={lessonType}
             />
           </div>
-
         </div>
       </div>
     </div>
