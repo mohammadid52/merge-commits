@@ -70,8 +70,8 @@ const InstitutionRow: React.FC<InstitutionRowProps> = (
         </div>
       </div>
       <div className="w-3.5/10 flex justify-center px-8 py-4 whitespace-no-wrap">
-        <div className="flex flex-col justify-center items-center">
-          <div id={instRowPrps.id} className="w-auto text-sm leading-5 text-gray-900"><a href={instRowPrps.website} target="_blank">{instRowPrps.website ? getHostNameFromUrl(instRowPrps.website) : '--'}</a></div>
+        <div className="flex flex-col justify-center items-center cursor-pointer" onClick={handleInstitutionView}>
+          <div id={instRowPrps.id} className="w-auto text-sm leading-5 text-gray-900 hover:text-gray-600 ">{instRowPrps.website ? getHostNameFromUrl(instRowPrps.website) : '--'}</div>
         </div>
       </div>
       <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-no-wrap">
