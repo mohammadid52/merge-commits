@@ -55,13 +55,20 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         return 'Coordinator';
       case 'TR':
         return 'Teacher';
+      case 'FLW':
+        return 'Fellow';
+      case 'BLD':
+        return 'Builder';
+      case 'ADM':
+        return 'Admin';
     }
   }
 
   const getPersonsList = async () => {
     try {
       const list: any = await API.graphql(graphqlOperation(customQueries.listPersons, {
-        filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "CRD" } }] },
+        // filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "FLW" } }, { role: { eq: "CRD" } }] },
+        filter: { role: { ne: "ST" } },
       }));
       const sortedList = list.data.listPersons.items.sort((a: any, b: any) => (a.firstName?.toLowerCase() > b.firstName?.toLowerCase()) ? 1 : -1);
       const personsList = sortedList.map((item: any, i: any) => ({
