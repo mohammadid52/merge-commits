@@ -103,7 +103,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
    * ON CHECKPOINT MOUNT
    */
   useEffect(() => {
-    if (isTeacher) console.log('CP Questions - ', 'teacher CP questions loaded!');
     if (!isTeacher) setInput(initialResponseState);
 
     // console.log('Initial response state --> ', initialResponseState)

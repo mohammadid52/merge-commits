@@ -276,6 +276,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
       return {
         ...state,
         open: true,
+        complete: false,
         unsavedChanges: true,
       };
     case 'COMPLETE_CLASSROOM':

@@ -1,24 +1,22 @@
-import React, { useContext, useState, useEffect, Suspense, lazy } from "react";
-import { LessonControlContext } from "../../contexts/LessonControlContext";
+import React, { useContext } from 'react';
+import { LessonControlContext } from '../../contexts/LessonControlContext';
 
-import LessonInfoTitleBar from "./TopMenu/LessonInfoTitleBar";
-import LessonControlBar from "./LessonControlBar/LessonControlBar";
-import PlayComplete from "./TopMenu/PlayComplete";
+import LessonInfoTitleBar from './TopMenu/LessonInfoTitleBar';
+import LessonControlBar from './LessonControlBar/LessonControlBar';
 
-import HamburgerMenu from "./TopMenu/HamburgerMenu";
-import { WritingAlertProps } from "../General/Popup";
+import HamburgerMenu from './TopMenu/HamburgerMenu';
 /**
  * IMPORT FUNCTIONS
  */
-import { firstInitialFunc } from "../../utilities/strings";
-import {formatPattern} from '../../utilities/strings';
+import { formatPattern } from '../../utilities/strings';
 
 interface TopMenuControlProps {
   shareable: boolean;
   setShareable: React.Dispatch<React.SetStateAction<boolean>>;
   isSameStudentShared: boolean;
-  handleOpen: () => void;
-  handleLessonButton: () => void;
+  handleOpen?: () => void;
+  handleComplete?: () => void;
+  handleLessonButton?: () => void;
   handleQuitViewing: () => void;
   handleShareStudentData: () => void;
   handleQuitShare: () => void;
@@ -29,6 +27,8 @@ interface TopMenuControlProps {
   setQuickRegister: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+export type LessonInfoTitleBarProps = Pick<TopMenuControlProps, 'handleOpen' | 'handleComplete' | 'handleLessonButton'>;
+
 const TopMenuControl: React.FC<TopMenuControlProps> = (
   props: TopMenuControlProps
 ) => {
@@ -37,6 +37,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
     setShareable,
     isSameStudentShared,
     handleOpen,
+    handleComplete,
     handleLessonButton,
     handleQuitViewing,
     handleShareStudentData,
@@ -60,6 +61,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
         {/* LEFT */}
         <LessonInfoTitleBar
           handleOpen={handleOpen}
+          handleComplete={handleComplete}
           handleLessonButton={handleLessonButton}
         />
 

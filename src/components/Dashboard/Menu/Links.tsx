@@ -191,12 +191,11 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     <div className="link  w-full h-12 z-40">
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
-            <>
+            <div key={`link_${key}`} id={link.path} onClick={handleLink}>
               <div
-                key={`link_${key}`}
                 id={link.path}
                 className={`${linkClass} ${getClassStyle(link.name)}`}
-                onClick={handleLink}>
+                >
                 <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
                   {getMenuIcon(link.name, link.path)}
                 </IconContext.Provider>
@@ -204,7 +203,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               </div>
 
               <div className={dividerClass}></div>
-            </>
+            </div>
           ))
         : null}
     </div>
