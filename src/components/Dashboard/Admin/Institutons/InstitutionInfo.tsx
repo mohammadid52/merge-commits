@@ -42,8 +42,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const tabs = [
     { index: 0, title: 'Service Providers', icon: <FaHandshake />, active: false, content: <ServiceProviders serviceProviders={institute.serviceProviders} instId={institute?.id} updateServiceProviders={instProps.updateServiceProviders} /> },
     { index: 1, title: 'Staff', icon: <IoPeople />, active: true, content: <StaffBuilder serviceProviders={institute.serviceProviders} instituteId={instProps?.institute?.id} /> },
-    { index: 2, title: 'Classes', icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={institute?.classes} instId={institute?.id}/> },
-    { index: 3, title: 'Curricular', icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} instId={institute?.id}/> },
+    { index: 2, title: 'Classes', icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={institute?.classes} instId={institute?.id} /> },
+    { index: 3, title: 'Curricular', icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} instId={institute?.id} /> },
     { index: 4, title: 'Rooms', icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id} /> }
   ]
 
@@ -116,7 +116,11 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                 </p>
                 <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
                   <span className="text-gray-900 mr-2 w-3/10">Website:</span>
-                  <span className="w-auto">{website ? getHostNameFromUrl(website) : '--'}</span>
+                  {
+                    website ?
+                      <span className="w-auto hover:text-blue-700"><a href={website} target="_blank">{getHostNameFromUrl(website)}</a></span>
+                      : '--'
+                  }
                 </p>
                 <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
                   <span className="text-gray-900 mr-2 w-3/10">Service Provider:</span>

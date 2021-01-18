@@ -76,9 +76,9 @@ const CurricularView = (props: CurricularViewProps) => {
   ]
   const tabs = [
     { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjectiveList curricularId={currID} /> },
-    { index: 1, title: 'Topics', icon: <MdSpeakerNotes />, active: true, content: <TopicsList curricularId={currID} /> },
-    { index: 2, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList syllabusList={curricularData.syllabusList} curricularId={currID} /> },
-    { index: 3, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList curricularId={currID} /> },
+    { index: 1, title: 'Topics', icon: <MdSpeakerNotes />, active: false, content: <TopicsList curricularId={currID} /> },
+    { index: 2, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList curricularId={currID} /> },
+    { index: 3, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList syllabusList={curricularData.syllabusList} curricularId={currID} /> },
   ]
 
 
