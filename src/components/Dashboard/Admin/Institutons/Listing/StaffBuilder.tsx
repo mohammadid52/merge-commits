@@ -8,6 +8,7 @@ import PageWrapper from '../../../../Atoms/PageWrapper';
 
 import { getInitialsFromString, initials, stringToHslColor, createFilterToFetchSpecificItemsOnly } from '../../../../../utilities/strings';
 import { getImageFromS3 } from '../../../../../utilities/services';
+import { statusList } from '../../../../../utilities/staticData';
 
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
@@ -38,11 +39,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const [showModal, setShowModal] = useState<{ show: boolean; item: any; }>({ show: false, item: {} })
   const [statusEdit, setStatusEdit] = useState('');
   const [updateStatus, setUpdateStatus] = useState(false)
-  const statusList = [
-    { id: 1, name: 'Active', value: 'Active' },
-    { id: 2, name: 'Inactive', value: 'Inactive' },
-    { id: 3, name: 'Dropped', value: 'Dropped' }
-  ]
+
   const onChange = (str: string, name: string, id: string, avatar: string) => {
     setNewMember({
       name: name,
@@ -244,7 +241,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                           }
                           <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center">
                             {statusEdit === item.id ?
-                              <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600">{updateStatus ? 'updating...' : ' '}</span>
+                              <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
                               :
                               <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit(item.id)}>
                                 Edit

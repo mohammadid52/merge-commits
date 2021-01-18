@@ -251,6 +251,11 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   const editCurrentLesson = (id: string) => {
     setEditState({ id });
   }
+
+  const cancelEdit = () => {
+    setEditState({ id: '', action: '' })
+  }
+
   const addNewLesson = async () => {
     try {
       const input = {
@@ -585,9 +590,16 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                                                 </div>
                                               )}
                                           </div>
-                                          <span className="w-1/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentLesson(item.id)}>
-                                            {(editState.id !== item.id) ? ('edit') : editState.action}
-                                          </span>
+                                          {
+                                            (editState.id !== item.id) ?
+                                              <span className="w-1/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentLesson(item.id)}>
+                                                edit
+                                              </span>
+                                              :
+                                              <span className="w-1/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={cancelEdit}>
+                                                {editState.action ? editState.action : 'Cancel'}
+                                              </span>
+                                          }
                                         </div>
                                       </div>
                                     )}
