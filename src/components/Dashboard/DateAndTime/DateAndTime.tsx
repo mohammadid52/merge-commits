@@ -1,9 +1,8 @@
 import React from 'react';
+import {dateString} from '../../../utilities/time';
 
 const DateAndTime = () => {
   const d = new Date();
-  const localeDate = d.toLocaleDateString();
-
   const day = d.getDay();
 
   const daySwitch = () => {
@@ -26,7 +25,7 @@ const DateAndTime = () => {
   }
 
   return (
-    <>{`${daySwitch()} - ${localeDate}`}</>
+    <>{`${daySwitch()} - ${dateString('/', 'US')}`}</>
   )
 }
 

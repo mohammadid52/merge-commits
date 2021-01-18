@@ -54,14 +54,16 @@ const StandardLessonCard = (props: LessonCardProps) => {
        */}
       <div className={`${!isSurvey ? 'w-7.5/10' : 'w-full'} flex flex-col rounded-b`}>
         <div className={`${!isSurvey ? 'h-44' : 'h-auto'} p-4 flex flex-col justify-start items-center`}>
-          <h1 className={`text-2xl text-black font-open text-left`}>
-            {lessonProps.lesson && lessonProps.lesson.title ? lessonProps.lesson.title : null}
+          <h1 className={`flex text-2xl text-black font-open text-left`}>
+            <span>{lessonProps.lesson && lessonProps.lesson.title ? lessonProps.lesson.title : null}</span>
+            <span className={`text-sm text-gray-400 text-right`}>Completed on {lessonProps.complete && lessonProps.expectedEndDate}</span>
           </h1>
           <p className="text-sm text-left">
             {lessonProps.lesson && lessonProps.lesson.summary ? lessonProps.lesson.summary : null}
           </p>
         </div>
-        <div className={`h-8 ${theme.dashboard.bg} flex justify-between text-sm ${isSurvey ? 'rounded-b' : 'rounded-br'}`}>
+        <div
+          className={`h-8 ${theme.dashboard.bg} flex justify-between text-sm ${isSurvey ? 'rounded-b' : 'rounded-br'}`}>
           {/* FILLER */}
           {isSurvey && <div className={`flex justify-center items-center my-2 w-3.3/10 text-gray-300`} />}
 

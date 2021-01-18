@@ -11,6 +11,8 @@ import Body from './Body';
 import TopMenu from './TopMenu';
 import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
 import QuickRegister from '../Auth/QuickRegister';
+import { awsFormatDate, dateString } from '../../utilities/time';
+
 
 const LessonControl = () => {
   const { state, theme, dispatch } = useContext(LessonControlContext);
@@ -36,7 +38,6 @@ const LessonControl = () => {
   };
 
   useEffect(() => {
-    // console.log('changes', state)
     if (state.pages.length > 0 && state.unsavedChanges) {
       handleUpdateClassroom();
     }
@@ -121,7 +122,6 @@ const LessonControl = () => {
     };
 
     try {
-      console.log('handleUpdateClassroom -> ', updatedClassroomData)
       const updatedClassroom = await API.graphql(
         graphqlOperation(customMutations.updateClassroom, {
           input: updatedClassroomData,
@@ -166,6 +166,10 @@ const LessonControl = () => {
     }
   };
 
+  /**
+   * USEEFFECT that listens for changes to expected end date in state,
+   * and then triggers the save mutation
+   */
   const handleQuitShare = () => {
     dispatch({ type: 'QUIT_SHARE_MODE' });
     setIsSameStudentShared(false);
@@ -183,11 +187,14 @@ const LessonControl = () => {
   const handleCompleteClassroom = async () => {
     let completedClassroomData: any = {
       id: state.classroomID,
-      open: false
+      open: false,
+      complete: true,
+      expectedEndDate: awsFormatDate(dateString('-', 'WORLD')),
     };
 
     try {
-      const updatedClassroom = await API.graphql(
+      console.log('complete!!! ', completedClassroomData);
+      const completedClassroom = await API.graphql(
         graphqlOperation(customMutations.updateClassroom, {
           input: completedClassroomData,
         })
@@ -212,10 +219,10 @@ const LessonControl = () => {
   };
 
   const handleComplete = async () => {
-    dispatch({ type: 'COMPLETE_CLASSROOM' });
+    dispatch({ type: 'COMPLETE_CLASSROOM', payload: dateString('-', 'US') });
     await handleCompleteClassroom();
-    handleHome();
     setOpen(true);
+    handleHome();
   };
 
   const { visible, setVisible, ref } = useOutsideAlerter(false);
@@ -255,20 +262,13 @@ const LessonControl = () => {
     <div className={`w-full h-screen bg-gray-200 overflow-hidden`}>
       <div className={`relative w-full h-full flex flex-col`}>
         {/**
-         *
-         *
          * POPUPS SECTION:
          * DEFINITELY NEEDS SOME RESTRUCTURING AND OPTIMIZATION
-         *
          * /}
 
         {/* QUICK REGISTER */}
 
         <QuickRegister active={quickRegister} setQuickRegister={setQuickRegister} />
-
-        {/* POPUP IMPLEMENTATIONS BELOW NEED REFACTORING
-              see above for optimized
-        */}
 
         {/* USER MANAGEMENT */}
         <div className={`${visible ? 'absolute z-100 h-full' : 'hidden'}`} onClick={handleClick}>

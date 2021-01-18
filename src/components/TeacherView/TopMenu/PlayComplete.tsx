@@ -10,21 +10,21 @@ const PlayComplete: React.FC<LessonInfoTitleBarProps> = (props: LessonInfoTitleB
   return (
     <>
       {/* START / COMPLETE BUTTON */}
-      {!state.open ? (
+      {!state.open || state.complete ? (
         <span
           className="w-auto h-6 my-auto mr-2 leading-4 text-xs text-white bg-sea-green hover:bg-green-500 hover:text-underline p-1 rounded-lg cursor-pointer"
           onClick={() => {
-            !state.open ? handleOpen() : null;
+            !state.open || state.complete ? handleOpen() : null;
           }}>
           Start
         </span>
       ) : null}
 
-      {state.open ? (
+      {!state.complete ? (
         <span
           className="w-auto h-6 my-auto  mr-2 leading-4 text-xs text-white bg-blueberry hover:bg-blue-500 hover:text-underline p-1 rounded-lg cursor-pointer"
           onClick={() => {
-            state.open ? handleLessonButton() : null;
+            !state.complete ? handleLessonButton() : null;
           }}>
           Complete
         </span>

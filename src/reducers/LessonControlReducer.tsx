@@ -151,8 +151,6 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         }
       }
 
-      // let viewing = state.studentViewing.studentInfo && state.studentViewing.studentInfo.id ? state.studentViewing.studentInfo.id === action.payload.id : null;
-
       let viewing = state.studentViewing.studentInfo?.id === action.payload.id;
 
       if (foundInRoster) {
@@ -282,8 +280,10 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
     case 'COMPLETE_CLASSROOM':
       return {
         ...state,
+        open: false,
         complete: true,
         unsavedChanges: true,
+        expectedEndDate: action.payload
       };
     case 'CLEANUP':
       return lessonControlState;
