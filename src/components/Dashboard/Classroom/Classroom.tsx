@@ -10,6 +10,7 @@ import UpcomingLessons from './UpcomingLessons';
 import CompletedLessons from './CompletedLessons';
 import { DashboardProps } from '../Dashboard';
 import TopWidgetBar from '../TopWidgetBar/TopWidgetBar';
+import DateAndTime from '../DateAndTime/DateAndTime';
 
 interface Artist {
   id: string;
@@ -244,8 +245,9 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       <>
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 pb-4 m-auto`}>
-            <h2 className={`w-full text-xl border-b border-dark-gray ${theme.dashboard.sectionTitle} pb-1`}>
-              Classroom
+            <h2 className={`w-full flex text-xl border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
+              <span>Classroom</span>
+              <span className={`mr-0 text-right`}><DateAndTime/></span>
             </h2>
           </div>
         </div>
