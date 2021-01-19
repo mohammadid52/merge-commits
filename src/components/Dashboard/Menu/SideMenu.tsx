@@ -20,7 +20,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
   };
 
   return (
-    <div className={`z-50 min-h-screen w-44 md:flex flex-row md:flex-col  ${theme.sidemenu.bg}`}>
+    <div className={`z-50 min-h-screen w-32 md:flex flex-row md:flex-col  ${theme.sidemenu.bg}`}>
       <div
         className={`hidden w-full h-12 ${theme.sidemenu.bg} md:flex justify-center items-center text-2xl font-bold z-50`}>
         <NavLink id="dashboard" to="/dashboard" onClick={handleLink}>

@@ -28,7 +28,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const { sideBarLinksDict } = useDictionary();
   const history = useHistory();
   const match = useRouteMatch();
-  const { state, userLanguage } = useContext(GlobalContext);
+  const { state, theme, userLanguage } = useContext(GlobalContext);
   const { role } = linkProps;
   const [links, setLinks] = useState<Array<LinkObject>>([]);
 
@@ -182,42 +182,21 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     }
   };
 
-  const linkClass = 'w-full h-20 text-center text-sm mx-auto py-4 flex flex-col items-center justify-center';
+  const linkClass = 'w-full h-20 text-center text-xs tracking-wider mx-auto py-4 flex flex-col items-center justify-center';
   const dividerClass = 'w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent';
   const activeClass = 'bg-gray-200 text-dark-gray';
 
-  const getClassStyle = (label: string) => {
-    switch (label) {
-      case 'People':
-        return `${currentPage === 'manage-users' && activeClass} w-full text-center border-l-4 border-mustard-yellow`;
-      case 'Registration':
-        return `${currentPage === 'registration' && activeClass} w-full text-center border-l-4 border-ketchup`;
-      case 'Classroom':
-        return `${currentPage === 'classroom' && activeClass} w-full text-center border-l-4 border-blueberry`;
-      case 'Lesson Planner':
-        return `${currentPage === 'lesson-planner' && activeClass} w-full text-center border-l-4 border-sea-green`;
-      case 'Lesson Builder':
-        return `${currentPage === 'lesson-builder' && activeClass} w-full text-center border-l-4 border-sea-green`;
-      case 'Institutions':
-        return `${currentPage === 'manage-institutions' && activeClass} w-full text-center border-l-4 border-ketchup`;
-      default:
-        return '';
-    }
-  };
-
   return (
-    <div className="link  w-full h-12 z-40">
+    <div className={`link w-full h-12 z-40`}>
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
             <div key={`link_${key}`} id={link.path} onClick={handleLink}>
-              <div id={link.path} className={`${linkClass} ${getClassStyle(link.name)}`}>
+              <div id={link.path} className={`${linkClass} ${currentPage === link.path && activeClass} border-b-2 border-black border-opacity-40`}>
                 <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
                   {getMenuIcon(link.name, link.path)}
                 </IconContext.Provider>
                 {link.name}
               </div>
-
-              <div className={dividerClass}></div>
             </div>
           ))
         : null}

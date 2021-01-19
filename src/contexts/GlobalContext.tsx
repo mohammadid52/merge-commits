@@ -32,6 +32,7 @@ export const pageThemes = {
     },
     sidemenu: {
       bg: 'bg-darker-gray',
+      darktone: 'bg-black bg-opacity-80'
     },
     block: {
       bg: 'bg-gray-200',
@@ -89,6 +90,7 @@ export const pageThemes = {
     },
     sidemenu: {
       bg: 'bg-darker-gray',
+      darktone: 'bg-black bg-opacity-80'
     },
     block: {
       bg: 'bg-dark-blue',
