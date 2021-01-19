@@ -12,6 +12,12 @@ const StandardLessonCard = (props: LessonCardProps) => {
 
   const isSurvey = keyProps.includes('survey') || keyProps.includes('assessment');
 
+  const reverseDateString = () => {
+    if (lessonProps.hasOwnProperty('expectedEndDate')) {
+      return lessonProps.expectedEndDate.split('-').reverse().join('-');
+    }
+  };
+
   return (
     <div
       key={keyProps}
@@ -57,7 +63,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
           <h1 className={`flex text-2xl text-black font-open text-left`}>
             <span>{lessonProps.lesson && lessonProps.lesson.title ? lessonProps.lesson.title : null}</span>
             <span className={`text-sm text-gray-400 text-right`}>
-              {lessonProps.complete ? 'Completed on ' + lessonProps.expectedEndDate : ''}
+              {lessonProps.complete && lessonProps.expectedEndDate ? 'Completed on ' + reverseDateString() : ''}
             </span>
           </h1>
           <p className="text-sm text-left">

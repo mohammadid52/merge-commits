@@ -2,13 +2,14 @@ import React, { useContext, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 
 interface TodayUpcomingTabs {
+  isTeacher?: boolean;
   lessonGroupCount: { today: string; upcoming: string; completed: string };
   visibleLessonGroup: string;
   setVisibleLessonGroup: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const TodayUpcomingTabs = (props: TodayUpcomingTabs) => {
-  const { lessonGroupCount, visibleLessonGroup, setVisibleLessonGroup } = props;
+  const { isTeacher, lessonGroupCount, visibleLessonGroup, setVisibleLessonGroup } = props;
   const { state, theme } = useContext(GlobalContext);
 
   useEffect(() => {
@@ -34,17 +35,21 @@ const TodayUpcomingTabs = (props: TodayUpcomingTabs) => {
             ? 'text-black'
             : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
         }`}>
-        Today's Lesson
+        {!isTeacher ? "Today's Lesson" : 'Teach Lessons'}
       </h2>
-      <h2
-        id={`upcoming`}
-        className={`w-auto ml-4 cursor-pointer ${theme.dashboard.sectionTitle} ${
-          visibleLessonGroup === 'upcoming'
-            ? 'text-black'
-            : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
-        }`}>
-        Upcoming ({lessonGroupCount.upcoming})
-      </h2>
+
+      {!isTeacher ? (
+        <h2
+          id={`upcoming`}
+          className={`w-auto ml-4 cursor-pointer ${theme.dashboard.sectionTitle} ${
+            visibleLessonGroup === 'upcoming'
+              ? 'text-black'
+              : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
+          }`}>
+          Upcoming ({lessonGroupCount.upcoming})
+        </h2>
+      ) : null}
+
       <h2
         id={`completed`}
         className={`w-auto ml-4 cursor-pointer ${theme.dashboard.sectionTitle} ${

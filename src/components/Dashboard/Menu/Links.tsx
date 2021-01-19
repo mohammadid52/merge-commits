@@ -16,7 +16,7 @@ type LinkObject = {
 
 export interface LinkProps {
   children?: React.ReactNode;
-  setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
+  setCurrentPage?: React.Dispatch<React.SetStateAction<string>>;
   currentPage: string;
   image?: string;
   role?: string;
@@ -24,12 +24,21 @@ export interface LinkProps {
 }
 
 const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
+  const { currentPage, setCurrentPage } = linkProps;
   const { sideBarLinksDict } = useDictionary();
   const history = useHistory();
   const match = useRouteMatch();
-  const { state, userLanguage } = useContext(GlobalContext);
+  const { state, theme, userLanguage } = useContext(GlobalContext);
   const { role } = linkProps;
   const [links, setLinks] = useState<Array<LinkObject>>([]);
+
+  /**
+   * DISPLAY OTHER MENU ITEMS FOR
+   * DIFFERENT USERS
+   */
+  useEffect(() => {
+    userLinks(role);
+  }, [role]);
 
   const userLinks = (role: string): void => {
     switch (role) {
@@ -116,10 +125,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     }
   };
 
-  useEffect(() => {
-    userLinks(role);
-  }, [role]);
-
   const handleLink = (e: any) => {
     const id = e.target.id.toLowerCase();
     const lastCharacter = match.url.charAt(match.url.length - 1);
@@ -134,26 +139,49 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     linkProps.setCurrentPage(id);
   };
 
+  /**
+   * HANDLE MENU LINK COLORS
+   */
+  useEffect(() => {
+    if (pageUrlContains('manage-users')) {
+      setCurrentPage('manage-users');
+    }
+    if (pageUrlContains('registration')) {
+      setCurrentPage('registration');
+    }
+    if (pageUrlContains('classroom') || pageUrlContains('dashboard')) {
+      setCurrentPage('classroom');
+    }
+    if (pageUrlContains('lesson-planner')) {
+      setCurrentPage('lesson-planner');
+    }
+    if (pageUrlContains('lesson-builder')) {
+      setCurrentPage('lesson-builder');
+    }
+    if (pageUrlContains('manage-institutions')) {
+      setCurrentPage('manage-institutions');
+    }
+  }, []);
+
+  const pageUrlContains = (pageLabel: string) => {
+    const pageUrl = window.location.href;
+    return pageUrl.indexOf(pageLabel) !== -1;
+  };
+
   const getMenuIcon = (label: string, url: string) => {
     switch (label) {
       case 'People':
         return <FiUsers id={url} />;
-        break;
       case 'Registration':
         return <AiOutlineUsergroupAdd id={url} />;
-        break;
       case 'Classroom':
         return <AiOutlineAudit id={url} />;
-        break;
       case 'Lesson Planner':
         return <AiOutlineSchedule id={url} />;
-        break;
       case 'Lesson Builder':
         return <FaRulerVertical id={url} />;
-        break;
       case 'Institutions':
         return <FaUniversity id={url} />;
-        break;
       case 'Question Bank':
         return <FaQuestionCircle id={url} />;
         break;
@@ -162,59 +190,21 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     }
   };
 
-  const linkClass = 'w-full h-20 text-center text-sm mx-auto py-4 flex flex-col items-center justify-center';
+  const linkClass = 'w-full h-20 text-center text-xs tracking-wider mx-auto py-4 flex flex-col items-center justify-center';
   const dividerClass = 'w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent';
   const activeClass = 'bg-gray-200 text-dark-gray';
 
-  const getClassStyle = (label: string) => {
-    switch (label) {
-      case 'People':
-        return `${
-          linkProps.currentPage === 'manage-users' && activeClass
-          } w-full text-center border-l-4 border-mustard-yellow`;
-      case 'Registration':
-        return `${
-          linkProps.currentPage === 'registration' && activeClass
-          } w-full text-center border-l-4 border-ketchup`;
-      case 'Classroom':
-        return `${linkProps.currentPage === 'classroom' && activeClass} w-full text-center border-l-4 border-blueberry`;
-      case 'Lesson Planner':
-        return `${
-          linkProps.currentPage === 'lesson-planner' && activeClass
-          } w-full text-center border-l-4 border-sea-green`;
-      case 'Lesson Builder':
-        return `${
-          linkProps.currentPage === 'lesson-builder' && activeClass
-          } w-full text-center border-l-4 border-sea-green`;
-      case 'Institutions':
-        return `${
-          linkProps.currentPage === 'manage-institutions' && activeClass
-          } w-full text-center border-l-4 border-ketchup`;
-      case 'Question Bank':
-        return `${
-          linkProps.currentPage === 'question-bank' && activeClass
-          } w-full text-center border-l-4 border-ketchup`;
-      default:
-        return '';
-    }
-  };
-
   return (
-    <div className="link  w-full h-12 z-40">
+    <div className={`link w-full h-12 z-40`}>
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
           <div key={`link_${key}`} id={link.path} onClick={handleLink}>
-            <div
-              id={link.path}
-              className={`${linkClass} ${getClassStyle(link.name)}`}
-            >
+            <div id={link.path} className={`${linkClass} ${currentPage === link.path && activeClass} border-b-2 border-black border-opacity-40`}>
               <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
                 {getMenuIcon(link.name, link.path)}
               </IconContext.Provider>
               {link.name}
             </div>
-
-            <div className={dividerClass}></div>
           </div>
         ))
         : null}

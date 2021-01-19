@@ -48,7 +48,7 @@ const SmallLessonCard = (props: LessonCardProps) => {
       key={keyProps}
       className={`${openCards.includes(keyProps) ? 'z-50' : 'z-10'} ${
         theme.elem.text
-      } relative pl-2 pr-2 w-2.5/10 h-100 transition ease-in-out duration-500`}>
+      } `}>
       <div
         className={`${
           openCards.includes(keyProps) ? 'absolute h-auto' : 'absolute h-100'

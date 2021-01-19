@@ -8,10 +8,10 @@ import { firstInitialFunc } from '../../../utilities/strings';
 import { LinkProps } from './Links';
 
 const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
-  const { state } = useContext(GlobalContext);
+  const { state, theme } = useContext(GlobalContext);
   const match = useRouteMatch();
   const history = useHistory();
-  const [imageUrl, setImageUrl] = useState('')
+  const [imageUrl, setImageUrl] = useState('');
 
   const initials = (firstName: string, lastName: string) => {
     let firstInitial = firstName.charAt(0).toUpperCase();
@@ -30,8 +30,6 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
     return 'hsl(' + h + ', 70%, 72%)';
   };
 
-
-
   const handleLink = (e: any) => {
     const id = e.target.id.toLowerCase();
     linkProps.setCurrentPage(id);
@@ -39,35 +37,37 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
   useEffect(() => {
     async function getUrl() {
-      const imageUrl: any = await getImageFromS3(state.user.image)
+      const imageUrl: any = await getImageFromS3(state.user.image);
       setImageUrl(imageUrl);
     }
     getUrl();
-
-  }, [state.user])
-
+  }, [state.user]);
 
   return (
-    <NavLink id='profile' to={`${match.url}/profile`} onClick={handleLink}>
-      <div className='size flex flex-col text-center justify-center items-center py-4 border-b border-t border-white20'>
-        <div className='w-8 h-8'>
+    <NavLink id="profile" to={`${match.url}/profile`} onClick={handleLink}>
+      <div className={`size flex flex-col text-center justify-center items-center py-4 ${theme.sidemenu.darktone}`}>
+        <div className="w-8 h-8">
           {
             // state.user.image ?
-            linkProps.image ?
-              <img
-                className="w-8 h-8 rounded-full"
-                src={imageUrl}
-              /> :
+            linkProps.image ? (
+              <img className="w-8 h-8 rounded-full" src={imageUrl} />
+            ) : (
               <div
-                className='w-8 h-8 rounded-full flex justify-center items-center text-sm font-bold text-white font-sans'
+                className="w-8 h-8 rounded-full flex justify-center items-center text-xs text-white font-sans"
                 style={{
-                  background: `${state.user.firstName ? stringToHslColor(state.user.firstName + ' ' + state.user.lastName) : '#272730'}`,
+                  background: `${
+                    state.user.firstName
+                      ? stringToHslColor(state.user.firstName + ' ' + state.user.lastName)
+                      : '#272730'
+                  }`,
                   textShadow: '0.1rem 0.1rem 2px #423939b3',
                 }}>
                 {`${initials(state.user.firstName, state.user.lastName)}`}
-              </div>}
+              </div>
+            )
+          }
         </div>
-        <div className='flex-grow w-auto flex justify-start overflow-hidden'>
+        <div className="flex-grow w-auto flex justify-start overflow-hidden text-xs text-white font-sans tracking-wider">
           {`${state.user.firstName} ${firstInitialFunc(state.user.lastName)}`}
         </div>
       </div>
