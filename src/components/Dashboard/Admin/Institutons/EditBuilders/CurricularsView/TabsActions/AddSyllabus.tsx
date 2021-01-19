@@ -219,7 +219,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
   const { name, languages, description, purpose, objectives, methodology, policies } = syllabusData;
 
   return (
-    <div className="w-9/10 h-full mt-4 p-4">
+    <div className="w-9/10 h-full p-4">
 
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
