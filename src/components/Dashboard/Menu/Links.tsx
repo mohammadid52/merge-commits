@@ -139,7 +139,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
    * HANDLE MENU LINK COLORS
    */
   useEffect(() => {
-    if (pageUrlContains('dashboard')) {
+    if (pageUrlEndsWith('dashboard')) {
       setCurrentPage('classroom');
     }
     if (pageUrlContains('/dashboard/manage-users')) {
