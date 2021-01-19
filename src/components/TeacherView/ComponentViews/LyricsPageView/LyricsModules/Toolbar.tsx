@@ -33,7 +33,7 @@ const ToolBar = (props: ToolbarProps) => {
         className={`w-full rounded-xl flex flex-row w-auto text-xl ${theme.banner} flex flex-row`}
         style={{ marginTop: '0', paddingBottom: '0' }}>
         <div className="w-3.3/10 h-16 flex flex-col justify-center items-center">
-          <span>Highlighters:</span>
+          <span>Select Highlighter:</span>
         </div>
         <div className={`w-3.3/10 h-16 flex  justify-center items-center pt-2 z-50`}>
           <div
@@ -48,7 +48,7 @@ const ToolBar = (props: ToolbarProps) => {
                 id={button.color}
                 className={`${color === button.color ? 'border-2 border-white' : ''} 
                   bg-${button.color} 
-                  relative h-12 w-12 text-3xl rounded-lg mb-2 mx-4 flex flex-row justify-center items-center animate-fadeIn
+                  relative h-12 w-12 text-3xl rounded-lg mb-2 mx-2 flex flex-row justify-center items-center animate-fadeIn
                   `}
                 onClick={handleClick}>
                 <ToolTip
@@ -70,7 +70,7 @@ const ToolBar = (props: ToolbarProps) => {
 
             <div
               id="erase"
-              className={`relative bg-gray-200 h-12 w-12 text-3xl rounded-lg mb-2 mx-4 flex flex-row justify-center items-center`}
+              className={`relative bg-gray-200 h-12 w-12 text-3xl rounded-lg mb-2 mx-2 flex flex-row justify-center items-center`}
               onClick={handleClick}>
               <ToolTip
                 position="bottom"
@@ -88,7 +88,7 @@ const ToolBar = (props: ToolbarProps) => {
             </div>
           </div>
         </div>
-        <div className="hidden w-3.3/10 h-16 w-16 flex items-center">
+        {/*<div className="hidden w-3.3/10 h-16 w-16 flex items-center">
           <IconContext.Provider
             value={{
               className: 'ml-auto mr-0',
@@ -98,15 +98,15 @@ const ToolBar = (props: ToolbarProps) => {
             }}>
             <FaHighlighter />
           </IconContext.Provider>
-        </div>
+        </div>*/}
       </div>
 
       <div className="w-full leading-6 border-b border-t border-white border-opacity-10 mb-4">
-        <p className="pl-2 text-sm text-left  text-white ">
-          1. To select a <b>sentence/phrase</b>, click the 'first word' and the 'last word'.
+        <p className="pl-2 text-sm text-left text-white">
+          1. <b>Click 2 separate words</b> to select a sentence.
         </p>
-        <p className="pl-2 text-sm text-left  text-white ">
-          2. To select <b>one</b> word, double click the word.
+        <p className="pl-2 text-sm text-left text-white">
+          2. <b>Double-Click 1 word</b> to select a word.
         </p>
       </div>
     </div>

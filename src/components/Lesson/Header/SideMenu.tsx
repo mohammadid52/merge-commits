@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { NavLink } from 'react-router-dom';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaRegSave, FaHome, FaBook, FaRegThumbsUp } from 'react-icons/fa';
-import { AiOutlineSave, AiOutlineHome } from 'react-icons/ai';
-import { FiClock } from 'react-icons/fi';
+import { FaRegThumbsUp } from 'react-icons/fa';
+import { AiOutlineHome } from 'react-icons/ai';
 import { LessonContext } from '../../../contexts/LessonContext';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../customGraphql/customMutations';

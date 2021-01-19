@@ -18,6 +18,16 @@ const Checkpoint = (props: { isTeacher?: boolean }) => {
     setTitle(title);
   };
 
+  useEffect(()=>{
+    const lessonType = state.data.lesson.type;
+
+    if (lessonType === 'lesson'){
+      setTitle('Checkpoint Questions');
+    } else {
+      setTitle('Assessment Questions');
+    }
+  },[])
+
   useEffect(() => {
     if (!isTeacher) {
       if (!state.pages[state.currentPage].active) {

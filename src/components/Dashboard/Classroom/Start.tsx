@@ -1,50 +1,59 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-// import { FaClock, FaUserAlt } from 'react-icons/fa';
-import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/ai';
-import ProgressRing from './ProgressRing';
-import { CurriculumInfo } from './Classroom';
-import ToolTip from '../../General/ToolTip/ToolTip';
-import * as customQueries from '../../../customGraphql/customQueries';
-// import { API, graphqlOperation } from 'aws-amplify';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { start } from 'repl';
 
-interface Props {
-    lessonKey: any
-    open: boolean
-    accessible: boolean
+interface StartProps {
+  isTeacher?: boolean;
+  lessonKey: any;
+  open: boolean;
+  accessible: boolean;
+  type?: string;
 }
 
-const Today: React.FC<Props> = (props: Props) => {
-  const { lessonKey, open, accessible } = props;
+const Start: React.FC<StartProps> = (props: StartProps) => {
+  const { isTeacher, lessonKey, open, accessible, type } = props;
   const history = useHistory();
-  const { theme } = useContext(GlobalContext);
 
   const handleLink = () => {
-    if (accessible && open ) {
-      history.push((`${`/lesson?id=${lessonKey}`}`));
+    if (!isTeacher && accessible && open) {
+      history.push(`${`/lesson?id=${lessonKey}`}`);
+    }
+
+    if (isTeacher) {
+      history.push(`${`/lesson-control?id=${lessonKey}`}`);
     }
   };
 
+  const firstPart = () => {
+    if (isTeacher) {
+      return 'TEACH';
+    } else {
+      return 'START';
+    }
+  };
+
+  const secondPart = () => {
+    if (type === 'survey' || type === 'assessment') {
+      return type.toUpperCase();
+    } else {
+      return 'LESSON';
+    }
+  };
 
   return (
     <div>
-        <button
-              type='submit'
-              onClick={handleLink}
-              className={`${
-                accessible && open
-                  ? 'bg-ketchup hover:bg-red-300 focus:border-red-700 focus:shadow-outline-red active:bg-red-500 text-white'
-                  : 'bg-gray-500 text-gray-700 cursor-default'
-              }
-                              h-full w-full text-white rounded-br-xl focus:outline-none transition duration-150 ease-in-out`}>
-              <span className='w-auto h-auto'>START LESSON</span>
-            </button>
+      <button
+        type="submit"
+        onClick={handleLink}
+        className={`${
+          isTeacher || (accessible && open)
+            ? 'bg-ketchup hover:bg-red-300 focus:border-red-700 focus:shadow-outline-red active:bg-red-500 text-white'
+            : 'bg-gray-500 text-gray-700 cursor-default'
+        } h-full w-full text-white rounded-br focus:outline-none transition duration-150 ease-in-out`}>
+        <span className="w-auto h-auto">{`${firstPart()} ${secondPart()}`}</span>
+      </button>
     </div>
   );
 };
 
-export default Today;
+export default Start;

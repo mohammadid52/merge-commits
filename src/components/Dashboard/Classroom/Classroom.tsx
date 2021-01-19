@@ -1,13 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
-import { useHistory } from 'react-router-dom';
 import * as customQueries from '../../../customGraphql/customQueries';
-// import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import Today from './TodayLesson';
-import Upcoming from './Upcoming';
+import TodayUpcomingTabs from './TodayUpcomingTabs';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 import SurveyCard from './SurveyCard';
+import Today from './TodayLesson';
+import UpcomingLessons from './UpcomingLessons';
+import CompletedLessons from './CompletedLessons';
+import { DashboardProps } from '../Dashboard';
+import TopWidgetBar from '../TopWidgetBar/TopWidgetBar';
+import DateAndTime from '../DateAndTime/DateAndTime';
 
 interface Artist {
   id: string;
@@ -27,17 +30,59 @@ interface DataObject {
   [key: string]: any;
 }
 
-const Classroom: React.FC = () => {
-  const history = useHistory();
-  const { state, theme } = useContext(GlobalContext);
+export interface Lesson {
+  id: string;
+  open: boolean;
+  openedAt: string;
+  closedAt: string;
+  complete: boolean;
+  roster: string[];
+  viewing: any;
+  expectedStartDate: string;
+  expectedEndDate: string;
+  SELStructure?: string;
+  courseID: string;
+  lessonID: string;
+  lesson: {
+    title: string;
+    artist?: any;
+    language: string;
+    summary: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LessonProps extends DashboardProps {
+  lessons: Lesson[];
+}
+
+export interface LessonCardProps {
+  isTeacher?: boolean;
+  keyProps: string;
+  lessonProps: Lesson;
+  accessible?: boolean;
+  openCards?: string;
+  setOpenCards?: React.Dispatch<React.SetStateAction<string>>;
+  lessonType?: string;
+}
+
+const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
+  const { visibleLessonGroup, setVisibleLessonGroup } = props;
+  const { state, theme, dispatch } = useContext(GlobalContext);
   const [curriculum, setCurriculum] = useState<CurriculumInfo>();
   const [survey, setSurvey] = useState<any>({
     display: false,
     data: null,
   });
 
-  const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
-  const [status, setStatus] = useState('');
+  const [listCurriculum, setListCurriculum] = useState<Lesson[]>();
+  const [status, setStatus] = useState('today');
+  const [lessonGroupCount, setLessonGroupCount] = useState<{ today: string; upcoming: string; completed: string }>({
+    today: '0',
+    upcoming: '0',
+    completed: '0',
+  });
 
   async function getCourse(id: string) {
     try {
@@ -57,7 +102,6 @@ const Classroom: React.FC = () => {
       const surveyData: any = await API.graphql(
         graphqlOperation(customQueries.getClassroom, { id: 'on-boarding-survey-1' })
       );
-      // console.log('survey', surveyData)
       await setSurvey(() => {
         let surveyStatus: boolean = state.user.onBoardSurvey ? !state.user.onBoardSurvey : true;
         console.log(surveyStatus, 'status', state);
@@ -75,25 +119,92 @@ const Classroom: React.FC = () => {
   };
 
   /**
-   *
-   *
-   * AUTO-PUSH TO SPECIFIC LESSON
-   *
-   *
+   * ASSESSMENTS & SURVEYS
+   *  Array which filters out only surveys/assessments
+   */
+  const assessmentsSurveys = listCurriculum
+    ? listCurriculum.filter((lesson: Lesson, index: number) => {
+      if (lesson.id.includes('on-boarding-survey-1') || lesson.id.includes('assessment')) {
+          return lesson;
+      }
+    })
+    : [];
+
+  /**
+   * Today's Lessons -
+   *  This array is a filter of lessons which are open & not completed
+   *  (If there were enough lessons, this array should
+   *  actually be a filter of lessons from today)
+   */
+  const todayLessons = listCurriculum
+    ? listCurriculum.filter((lesson: Lesson, index: number) => {
+        if (lesson.open && lesson.id !== 'on-boarding-survey-1') {
+          if (!lesson.complete) {
+            return lesson;
+          }
+        }
+      })
+    : [];
+
+  /**
+   * Upcoming Lessons -
+   *  This array is a filter of lessons which are closed, but not completed
+   */
+  const upcomingLessons = listCurriculum
+    ? listCurriculum.filter((lesson: Lesson, index: number) => {
+        if (!lesson.open && lesson.id !== 'on-boarding-survey-1') {
+          if (!lesson.complete) {
+            return lesson;
+          }
+        }
+      })
+    : [];
+
+  /**
+   * Completed Lessons -
+   *  This array is a filter of lessons which are completed, closed or open
+   */
+  const completedLessons = listCurriculum
+    ? listCurriculum.filter((lesson: Lesson, index: number) => {
+        if (lesson.complete) {
+          return lesson;
+        }
+      })
+    : [];
+
+  /**
+   * LIFECYCLE - on mount
    */
 
   useEffect(() => {
     getCourse('1');
-
     // history.push('/lesson?id=2');
   }, []);
 
+  useEffect(() => {
+    if (listCurriculum && listCurriculum.length > 0) {
+      const todayCount = todayLessons.length.toString();
+      const upcomingCount = upcomingLessons.length.toString();
+      const completedCount = completedLessons.length.toString();
+
+      setLessonGroupCount({
+        today: todayCount,
+        upcoming: upcomingCount,
+        completed: completedCount,
+      });
+
+      dispatch({
+        type: 'UPDATE_SIDEBAR',
+        payload: {
+          section: 'upcomingLessons',
+          data: upcomingLessons,
+        },
+      });
+    }
+  }, [listCurriculum]);
+
   /**
-   *
-   *
    * ssSSSssHOW SURVEY IF IT HAS NOT BEEN COMPLETED
-   *
-   *
    */
 
   useEffect(() => {
@@ -127,54 +238,92 @@ const Classroom: React.FC = () => {
     }
   }, [state]);
 
-  const handleLink = () => {
-    history.push('/lesson');
-  };
-
   if (status !== 'done') {
     return <ComponentLoading />;
   }
-  {
+  if (status === 'done') {
     return (
-      <div className="transform translate-y-12">
-        {survey.display ? (
-          <div className={` bg-opacity-10`}>
-            <div className={`${theme.section} p-4`}>
-              <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Welcome to Iconoclast Artists</h2>
-            </div>
+      <>
+        <div className={`bg-opacity-10`}>
+          <div className={`${theme.section} px-4 pb-4 m-auto`}>
+            <h2 className={`w-full flex text-xl border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
+              <span>Classroom</span>
+              <span className={`mr-0 text-right`}><DateAndTime/></span>
+            </h2>
           </div>
-        ) : (
-          ''
-        )}
+        </div>
 
-        {survey.display ? (
-          <div>
-            <div className={`${theme.section} p-4`}>
-              <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum} />
+        {/**
+         *  TOP WIDGET BAR
+         */}
+        <div className={`bg-opacity-10`}>
+          <div className={`${theme.section} px-4 pb-4 m-auto`}>
+            <TopWidgetBar/>
+          </div>
+        </div>
+
+        {/**
+         *  ASSESSMENTS/SURVEYS
+         */}
+        {listCurriculum && survey.display ? (
+          <div className={`bg-opacity-10`}>
+            <div className={`${theme.section} px-4 text-xl m-auto`}>
+              <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Surveys & Assessments</h2>
             </div>
           </div>
         ) : null}
 
-        {/* LETS GET THE TEST FORM HERE */}
-        {/* <TestForm/> */}
+        {listCurriculum && survey.display ? (
+          <div className={`bg-opacity-10`}>
+            <div className={`${theme.section} p-4 text-xl m-auto`}>
+              <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum} lessons={assessmentsSurveys} lessonType={`survey`} accessible={survey.display}/>
+            </div>
+          </div>
+        ) : null}
 
+        {/**
+         *  LESSON TAB TOGGLE
+         */}
         <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} p-4 text-xl m-auto`}>
-            <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Today's Lesson</h2>
-
-            <Today link={'/lesson?id=1'} curriculums={listCurriculum} />
+          <div className={`${theme.section} px-4 text-xl m-auto`}>
+            <TodayUpcomingTabs
+              lessonGroupCount={lessonGroupCount}
+              visibleLessonGroup={visibleLessonGroup}
+              setVisibleLessonGroup={setVisibleLessonGroup}
+            />
           </div>
         </div>
 
-        <div className={`bg-grayscale-light bg-opacity-10`}>
-          <div className={`${theme.section} p-4 text-xl m-auto`}>
-            <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Upcoming Lessons</h2>
-
-            <Upcoming curriculum={listCurriculum} />
-            {/* <Dashboard /> */}
+        {/**
+         *  LESSONS
+         *    - today
+         *    - upcoming
+         *    - completed
+         */}
+        {listCurriculum && listCurriculum.length > 0 && visibleLessonGroup === 'today' ? (
+          <div className={`bg-opacity-10`}>
+            <div className={`${theme.section} p-4 text-xl m-auto`}>
+              <Today lessons={todayLessons} />
+            </div>
           </div>
-        </div>
-      </div>
+        ) : null}
+
+        {listCurriculum && listCurriculum.length > 0 && visibleLessonGroup === 'upcoming' ? (
+          <div className={`bg-grayscale-light bg-opacity-10`}>
+            <div className={`${theme.section} p-4 text-xl m-auto`}>
+              <UpcomingLessons lessons={upcomingLessons} />
+            </div>
+          </div>
+        ) : null}
+
+        {listCurriculum && listCurriculum.length > 0 && visibleLessonGroup === 'completed' ? (
+          <div className={`bg-grayscale-light bg-opacity-10`}>
+            <div className={`${theme.section} p-4 text-xl m-auto`}>
+              <CompletedLessons lessons={completedLessons} />
+            </div>
+          </div>
+        ) : null}
+      </>
     );
   }
 };

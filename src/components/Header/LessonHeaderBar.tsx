@@ -73,7 +73,7 @@ const LessonHeaderBar = () => {
         />
       </div>
 
-      <TopMenu />
+      <TopMenu handlePopup={handlePopup} />
 
       {/*<NotificationBar />*/}
 

@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { useHistory, NavLink, useRouteMatch } from 'react-router-dom';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaUserCircle } from 'react-icons/fa';
+import React, { useContext, useEffect, useState } from 'react';
+import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../utilities/services';
+
+import { firstInitialFunc } from '../../../utilities/strings';
 
 import { LinkProps } from './Links';
 
@@ -30,14 +30,7 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
     return 'hsl(' + h + ', 70%, 72%)';
   };
 
-  const firstInitialFunc = (str: string) => {
-    if (typeof str !== 'string' || str === '') {
-      return 'Profile';
-    }
-    let firstInitial = str.charAt(0);
-    firstInitial = firstInitial.toUpperCase() + '.';
-    return firstInitial;
-  };
+
 
   const handleLink = (e: any) => {
     const id = e.target.id.toLowerCase();
@@ -53,14 +46,6 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
   }, [state.user])
 
-  // useEffect(() => {
-  //   async function getUrl() {
-  //     const imageUrl: any = await getImageFromS3(state.user.image)
-  //     setImageUrl(imageUrl);
-  //   }
-  //   getUrl();
-
-  // }, [linkProps.image])
 
   return (
     <NavLink id='profile' to={`${match.url}/profile`} onClick={handleLink}>
