@@ -54,6 +54,7 @@ export interface Lesson {
 }
 
 export interface LessonProps extends DashboardProps {
+  isTeacher?: boolean;
   lessons: Lesson[];
 }
 
@@ -68,7 +69,7 @@ export interface LessonCardProps {
 }
 
 const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
-  const { visibleLessonGroup, setVisibleLessonGroup } = props;
+  const { isTeacher, visibleLessonGroup, setVisibleLessonGroup } = props;
   const { state, theme, dispatch } = useContext(GlobalContext);
   const [curriculum, setCurriculum] = useState<CurriculumInfo>();
   const [survey, setSurvey] = useState<any>({
@@ -124,10 +125,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    */
   const assessmentsSurveys = listCurriculum
     ? listCurriculum.filter((lesson: Lesson, index: number) => {
-      if (lesson.id.includes('on-boarding-survey-1') || lesson.id.includes('assessment')) {
+        if (lesson.id.includes('on-boarding-survey-1') || lesson.id.includes('assessment')) {
           return lesson;
-      }
-    })
+        }
+      })
     : [];
 
   /**
@@ -160,6 +161,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       })
     : [];
 
+  const todayAndUpcomingLessons = [...todayLessons, ...upcomingLessons];
+
   /**
    * Completed Lessons -
    *  This array is a filter of lessons which are completed, closed or open
@@ -172,13 +175,28 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       })
     : [];
 
+  const sortedLessons = (lessonArray: any[], sortProperty: string) => {
+    return lessonArray.sort((a: any, b: any) => {
+      if (a[sortProperty] > b[sortProperty]) {
+        return 1;
+      }
+      if (a[sortProperty] < b[sortProperty]) {
+        return -1;
+      }
+    });
+  };
+
   /**
    * LIFECYCLE - on mount
+   *
+   * TODO:
+   *  Tell Mike about the getCourse('1') below
+   *  This will essentially fetch the lessons associated
+   *  with a course or room
    */
 
   useEffect(() => {
     getCourse('1');
-    // history.push('/lesson?id=2');
   }, []);
 
   useEffect(() => {
@@ -212,15 +230,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       getSurvey();
     }
 
-    // if (true) {
-    //   setSurvey(() => {
-    //     return {
-    //       ...survey,
-    //       display: false,
-    //     };
-    //   });
-    // }
-
     if (!state.user.onBoardSurvey) {
       setSurvey(() => {
         return {
@@ -247,25 +256,30 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 pb-4 m-auto`}>
             <h2 className={`w-full flex text-xl border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
-              <span>Classroom</span>
-              <span className={`mr-0 text-right`}><DateAndTime/></span>
+              <span>{!isTeacher ? 'Classroom' : 'Lesson Planner'}</span>
+              <span className={`mr-0 text-right`}>
+                <DateAndTime />
+              </span>
             </h2>
           </div>
         </div>
 
         {/**
          *  TOP WIDGET BAR
+         *  - Hide for teacher
          */}
-        <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} px-4 pb-4 m-auto`}>
-            <TopWidgetBar/>
+        {!isTeacher && (
+          <div className={`bg-opacity-10`}>
+            <div className={`${theme.section} px-4 pb-4 m-auto`}>
+              <TopWidgetBar />
+            </div>
           </div>
-        </div>
+        )}
 
         {/**
          *  ASSESSMENTS/SURVEYS
          */}
-        {listCurriculum && survey.display ? (
+        {!isTeacher && listCurriculum && survey.display ? (
           <div className={`bg-opacity-10`}>
             <div className={`${theme.section} px-4 text-xl m-auto`}>
               <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Surveys & Assessments</h2>
@@ -273,10 +287,16 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           </div>
         ) : null}
 
-        {listCurriculum && survey.display ? (
+        {!isTeacher && listCurriculum && survey.display ? (
           <div className={`bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
-              <SurveyCard link={'/lesson?id=on-boarding-survey-1'} curriculum={curriculum} lessons={assessmentsSurveys} lessonType={`survey`} accessible={survey.display}/>
+              <SurveyCard
+                link={'/lesson?id=on-boarding-survey-1'}
+                curriculum={curriculum}
+                lessons={assessmentsSurveys}
+                lessonType={`survey`}
+                accessible={survey.display}
+              />
             </div>
           </div>
         ) : null}
@@ -287,6 +307,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 text-xl m-auto`}>
             <TodayUpcomingTabs
+              isTeacher={isTeacher}
               lessonGroupCount={lessonGroupCount}
               visibleLessonGroup={visibleLessonGroup}
               setVisibleLessonGroup={setVisibleLessonGroup}
@@ -303,12 +324,12 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         {listCurriculum && listCurriculum.length > 0 && visibleLessonGroup === 'today' ? (
           <div className={`bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
-              <Today lessons={todayLessons} />
+              <Today isTeacher={isTeacher} lessons={!isTeacher ? todayLessons : todayAndUpcomingLessons} />
             </div>
           </div>
         ) : null}
 
-        {listCurriculum && listCurriculum.length > 0 && visibleLessonGroup === 'upcoming' ? (
+        {!isTeacher && listCurriculum && listCurriculum.length > 0 && visibleLessonGroup === 'upcoming' ? (
           <div className={`bg-grayscale-light bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
               <UpcomingLessons lessons={upcomingLessons} />
@@ -319,7 +340,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         {listCurriculum && listCurriculum.length > 0 && visibleLessonGroup === 'completed' ? (
           <div className={`bg-grayscale-light bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
-              <CompletedLessons lessons={completedLessons} />
+              <CompletedLessons isTeacher={isTeacher} lessons={sortedLessons(completedLessons, 'expectedEndDate')} />
             </div>
           </div>
         ) : null}

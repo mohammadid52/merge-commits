@@ -26,6 +26,7 @@ type userObject = {
 };
 
 export interface DashboardProps {
+  isTeacher?: boolean;
   updateAuthState?: Function;
   currentPageData?: any[];
   setCurrentPageData?: React.Dispatch<any>;
@@ -36,7 +37,7 @@ export interface DashboardProps {
 }
 
 const Dashboard = (props: DashboardProps) => {
-  const { updateAuthState} = props;
+  const { updateAuthState } = props;
   const match = useRouteMatch();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
   const [userData, setUserData] = useState({
@@ -44,8 +45,8 @@ const Dashboard = (props: DashboardProps) => {
     image: '',
   });
   const { state, dispatch } = useContext(GlobalContext);
-  const [currentPage, setCurrentPage] = useState<string>('classroom');
-  const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('today')
+  const [currentPage, setCurrentPage] = useState<string>('');
+  const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('today');
 
   const setUser = (user: userObject) => {
     setUserData({
@@ -145,7 +146,7 @@ const Dashboard = (props: DashboardProps) => {
               <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
               <Route path={`${match.url}/registration`} render={() => <Registration />} />
               <Route path={`${match.url}/profile`} render={() => <Profile />} />
-              <Route path={`${match.url}/lesson-planner`} render={() => <LessonPlanHome />} />
+              <Route path={`${match.url}/lesson-planner`} render={() => <LessonPlanHome visibleLessonGroup={visibleLessonGroup} setVisibleLessonGroup={setVisibleLessonGroup}/>} />
               <Route path={`${match.url}/manage-institutions`} render={() => <InstitutionsHome />} />
             </Switch>
           </Suspense>

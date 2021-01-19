@@ -12,12 +12,14 @@ const UpcomingLessons: React.FC<LessonProps> = (props: LessonProps) => {
     <div className={`relative h-auto flex flex-wrap justify-start`}>
       {lessons && lessons.length > 0
         ? lessons.map((lesson: any, i: number) => (
-            <SmallLessonCard
-              keyProps={`upcoming-${i}`}
-              lessonProps={lesson}
-              openCards={openCards}
-              setOpenCards={setOpenCards}
-            />
+            <div key={`upcoming-${i}_parent`} className={`relative pl-2 pr-2 w-2.5/10 h-100 transition ease-in-out duration-500`}>
+              <SmallLessonCard
+                keyProps={`upcoming-${i}`}
+                lessonProps={lesson}
+                openCards={openCards}
+                setOpenCards={setOpenCards}
+              />
+            </div>
           ))
         : null}
     </div>
