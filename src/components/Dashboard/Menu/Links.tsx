@@ -1,12 +1,13 @@
-import React, { useContext, useState, useEffect, SetStateAction } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 // Iconz
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FiUsers } from 'react-icons/fi';
-import { FaUniversity, FaRulerVertical } from 'react-icons/fa';
-import { AiOutlineSchedule, AiOutlineAudit, AiOutlineUsergroupAdd } from 'react-icons/ai';
+import { FaRulerVertical } from 'react-icons/fa';
+import { AiOutlineSchedule, AiOutlineUsergroupAdd } from 'react-icons/ai';
 import useDictionary from '../../../customHooks/dictionary';
+import { IoIosPeople } from 'react-icons/io';
+import { IoBookOutline, IoSchoolOutline } from 'react-icons/io5';
 
 type LinkObject = {
   name: string;
@@ -138,25 +139,34 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
    * HANDLE MENU LINK COLORS
    */
   useEffect(() => {
-    if (pageUrlContains('manage-users')) {
-      setCurrentPage('manage-users');
-    }
-    if (pageUrlContains('registration')) {
-      setCurrentPage('registration');
-    }
-    if (pageUrlContains('classroom') || pageUrlContains('dashboard')) {
+    if (pageUrlContains('dashboard')) {
       setCurrentPage('classroom');
     }
-    if (pageUrlContains('lesson-planner')) {
+    if (pageUrlContains('/dashboard/manage-users')) {
+      setCurrentPage('manage-users');
+    }
+    if (pageUrlContains('/dashboard/registration')) {
+      setCurrentPage('registration');
+    }
+    if (pageUrlContains('/dashboard/classroom')) {
+      setCurrentPage('classroom');
+    }
+    if (pageUrlContains('/dashboard/lesson-planner')) {
       setCurrentPage('lesson-planner');
     }
-    if (pageUrlContains('lesson-builder')) {
+    if (pageUrlContains('/dashboard/lesson-builder')) {
       setCurrentPage('lesson-builder');
     }
-    if (pageUrlContains('manage-institutions')) {
+    if (pageUrlContains('/dashboard/manage-institutions')) {
       setCurrentPage('manage-institutions');
     }
   }, []);
+
+  const pageUrlEndsWith = (pageLabel: string) => {
+    const pageUrl = window.location.href;
+    const lastPart = pageUrl.match(/[^/]+$/g);
+    return lastPart.includes(pageLabel);
+  };
 
   const pageUrlContains = (pageLabel: string) => {
     const pageUrl = window.location.href;
@@ -166,23 +176,24 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const getMenuIcon = (label: string, url: string) => {
     switch (label) {
       case 'People':
-        return <FiUsers id={url} />;
+        return <IoIosPeople id={url} />;
       case 'Registration':
         return <AiOutlineUsergroupAdd id={url} />;
       case 'Classroom':
-        return <AiOutlineAudit id={url} />;
+        return <IoBookOutline id={url} />;
       case 'Lesson Planner':
         return <AiOutlineSchedule id={url} />;
       case 'Lesson Builder':
         return <FaRulerVertical id={url} />;
       case 'Institutions':
-        return <FaUniversity id={url} />;
+        return <IoSchoolOutline id={url} />;
       default:
         return '';
     }
   };
 
-  const linkClass = 'w-full h-20 text-center text-xs tracking-wider mx-auto py-4 flex flex-col items-center justify-center';
+  const linkClass =
+    'w-full h-20 text-center text-xs tracking-wider mx-auto py-4 flex flex-col items-center justify-center';
   const dividerClass = 'w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent';
   const activeClass = 'bg-gray-200 text-dark-gray';
 
@@ -191,7 +202,11 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
             <div key={`link_${key}`} id={link.path} onClick={handleLink}>
-              <div id={link.path} className={`${linkClass} ${currentPage === link.path && activeClass} border-b-2 border-black border-opacity-40`}>
+              <div
+                id={link.path}
+                className={`${linkClass} ${
+                  currentPage === link.path && activeClass
+                } border-b-2 border-black border-opacity-40`}>
                 <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
                   {getMenuIcon(link.name, link.path)}
                 </IconContext.Provider>
