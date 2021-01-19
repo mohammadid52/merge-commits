@@ -216,7 +216,7 @@ const UserLookup = () => {
 	}
 	{
 		return (
-			<div className={`w-full h-full mt-4`}>
+			<div className={`w-full h-full`}>
 
 				{/* Header Section */}
 				<BreadCrums items={breadCrumsList} />

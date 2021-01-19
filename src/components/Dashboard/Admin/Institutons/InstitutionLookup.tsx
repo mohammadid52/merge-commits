@@ -219,7 +219,7 @@ const InstitutionLookup: React.FC = () => {
   }
   {
     return (
-      <div className={`w-full h-full mt-4`}>
+      <div className={`w-full h-full`}>
 
         {/* Header section */}
         <BreadCrums items={breadCrumsList} />

@@ -125,7 +125,7 @@ const Institution: React.FC = () => {
   }, [isNewUpdate]);
 
   return (
-    <div className={`w-full h-full mt-4`}>
+    <div className={`w-full h-full`}>
 
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
