@@ -1,15 +1,12 @@
 import React, { useContext } from 'react';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 
-import  PlayComplete from './PlayComplete';
+import PlayComplete from './PlayComplete';
 
-interface LessonInfoTitleBarProps {
-  handleOpen: () => void;
-  handleLessonButton: () => void;
-}
+import { LessonInfoTitleBarProps } from '../TopMenu';
 
 const LessonInfoTitleBar: React.FC<LessonInfoTitleBarProps> = (props: LessonInfoTitleBarProps) => {
-  const { handleOpen, handleLessonButton } = props;
+  const { handleOpen, handleComplete, handleLessonButton } = props;
   const { state, theme, dispatch } = useContext(LessonControlContext);
 
   return (

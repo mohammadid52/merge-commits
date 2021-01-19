@@ -11,8 +11,12 @@ import Body from './Body';
 import TopMenu from './TopMenu';
 import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
 import QuickRegister from '../Auth/QuickRegister';
-import { awsFormatDate, dateString } from '../../utilities/time';
 
+const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
+const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
+const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
+const OutroView = lazy(() => import('./ComponentViews/OutroView/OutroView'));
+const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'));
 
 const LessonControl = () => {
   const { state, theme, dispatch } = useContext(LessonControlContext);
@@ -37,11 +41,132 @@ const LessonControl = () => {
     });
   };
 
+  const handleUpdateClassroom = async () => {
+    let updatedClassroomData: any = {
+      id: state.classroomID,
+      open: state.open ? state.open : false,
+      viewing:
+        state.studentViewing.studentInfo && state.studentViewing.studentInfo.studentAuthID
+          ? state.studentViewing.studentInfo.studentAuthID
+          : null,
+      displayData: state.displayData,
+      lessonPlan: state.pages,
+    };
+
+    try {
+      const updatedClassroom = await API.graphql(
+        graphqlOperation(customMutations.updateClassroom, {
+          input: updatedClassroomData,
+        })
+      );
+      dispatch({ type: 'SAVED_CHANGES' });
+      // console.log(updatedClassroom);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleUpdateClassroomDate = async () => {
+    let updatedClassroomDateData: any = {
+      id: state.classroomID,
+      open: state.open ? state.open : false,
+      lessonPlan: state.pages,
+      complete: state.complete,
+      expectedStartDate: state.expectedStartDate,
+      expectedEndDate: state.expectedEndDate,
+    };
+
+    try {
+      const updatedClassroomDate = await API.graphql(
+        graphqlOperation(customMutations.updateClassroomDate, {
+          input: updatedClassroomDateData,
+        })
+      );
+      dispatch({ type: 'SAVED_CHANGES' });
+      // console.log(updatedClassroom);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleShareStudentData = async () => {
+    if (state.studentViewing.studentInfo) {
+      let displayData = {
+        breakdownComponent: state.studentViewing.studentInfo.currentLocation
+          ? state.studentViewing.studentInfo.currentLocation
+          : state.studentViewing.studentInfo.lessonProgress,
+        studentInfo: {
+          id: state.studentViewing.studentInfo.student.id,
+          firstName: state.studentViewing.studentInfo.student.firstName,
+          preferredName: state.studentViewing.studentInfo.student.preferredName
+            ? state.studentViewing.studentInfo.student.preferredName
+            : null,
+          lastName: state.studentViewing.studentInfo.student.lastName,
+        },
+        warmUpData: state.studentViewing.studentInfo.warmupData ? state.studentViewing.studentInfo.warmupData : null,
+        corelessonData: state.studentViewing.studentInfo.corelessonData
+          ? state.studentViewing.studentInfo.corelessonData
+          : null,
+        activityData: state.studentViewing.studentInfo.activityData
+          ? state.studentViewing.studentInfo.activityData
+          : null,
+      };
+      console.log(displayData);
+      dispatch({
+        type: 'SET_SHARE_MODE',
+        payload: state.studentViewing.studentInfo.currentLocation
+          ? state.studentViewing.studentInfo.currentLocation
+          : state.studentViewing.studentInfo.lessonProgress,
+      });
+      dispatch({ type: 'SET_DISPLAY_DATA', payload: displayData });
+    }
+  };
+
+  const handleOpen = () => {
+    dispatch({ type: 'START_CLASSROOM' });
+    setOpen(true);
+    // console.log(state)
+  };
+
+  const handleComplete = () => {
+    dispatch({ type: 'COMPLETE_CLASSROOM' });
+    console.log('handleComplete -> state.complete =>', state.complete)
+    setOpen(true);
+  };
+
+  const handleQuitShare = () => {
+    dispatch({ type: 'QUIT_SHARE_MODE' });
+    setIsSameStudentShared(false);
+  };
+
+  const handleQuitViewing = () => {
+    dispatch({ type: 'QUIT_STUDENT_VIEWING' });
+    setIsSameStudentShared(false);
+  };
+
+  const handleResetDoneCounter = () => {
+    dispatch({ type: 'RESET_DONE' });
+  };
+
+  // const handleQuitAll = () => {
+  //     dispatch({ type: 'QUIT_STUDENT_VIEWING'})
+  // }
+
   useEffect(() => {
+    // console.log('changes', state)
     if (state.pages.length > 0 && state.unsavedChanges) {
       handleUpdateClassroom();
     }
   }, [state.unsavedChanges]);
+
+  useEffect(() => {
+    // if ( !state.studentDataUpdated ) {
+    //     setStudentDataLoading('loading')
+    // }
+    // if ( state.studentDataUpdated ) {
+    //     setStudentDataLoading('')
+    // }
+  }, [state.studentDataUpdated]);
 
   useEffect(() => {
     let result = /.+\/(breakdown)\/*.*/.test(location.pathname);
@@ -105,126 +230,6 @@ const LessonControl = () => {
     }
   }, [state.displayData, state.studentViewing]);
 
-  /**
-   * CLASSROOM DATE && STUDENT SHARING
-   */
-  const handleUpdateClassroom = async () => {
-    let updatedClassroomData: any = {
-      id: state.classroomID,
-      open: state.open ? state.open : false,
-      complete: state.complete ? state.complete : false,
-      viewing:
-        state.studentViewing.studentInfo && state.studentViewing.studentInfo.studentAuthID
-          ? state.studentViewing.studentInfo.studentAuthID
-          : null,
-      displayData: state.displayData,
-      lessonPlan: state.pages,
-    };
-
-    try {
-      const updatedClassroom = await API.graphql(
-        graphqlOperation(customMutations.updateClassroom, {
-          input: updatedClassroomData,
-        })
-      );
-      dispatch({ type: 'SAVED_CHANGES' });
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleShareStudentData = async () => {
-    if (state.studentViewing.studentInfo) {
-      let displayData = {
-        breakdownComponent: state.studentViewing.studentInfo.currentLocation
-          ? state.studentViewing.studentInfo.currentLocation
-          : state.studentViewing.studentInfo.lessonProgress,
-        studentInfo: {
-          id: state.studentViewing.studentInfo.student.id,
-          firstName: state.studentViewing.studentInfo.student.firstName,
-          preferredName: state.studentViewing.studentInfo.student.preferredName
-            ? state.studentViewing.studentInfo.student.preferredName
-            : null,
-          lastName: state.studentViewing.studentInfo.student.lastName,
-        },
-        warmUpData: state.studentViewing.studentInfo.warmupData ? state.studentViewing.studentInfo.warmupData : null,
-        corelessonData: state.studentViewing.studentInfo.corelessonData
-          ? state.studentViewing.studentInfo.corelessonData
-          : null,
-        activityData: state.studentViewing.studentInfo.activityData
-          ? state.studentViewing.studentInfo.activityData
-          : null,
-      };
-      // console.log(displayData);
-      dispatch({
-        type: 'SET_SHARE_MODE',
-        payload: state.studentViewing.studentInfo.currentLocation
-          ? state.studentViewing.studentInfo.currentLocation
-          : state.studentViewing.studentInfo.lessonProgress,
-      });
-      dispatch({ type: 'SET_DISPLAY_DATA', payload: displayData });
-    }
-  };
-
-  /**
-   * USEEFFECT that listens for changes to expected end date in state,
-   * and then triggers the save mutation
-   */
-  const handleQuitShare = () => {
-    dispatch({ type: 'QUIT_SHARE_MODE' });
-    setIsSameStudentShared(false);
-  };
-
-  const handleQuitViewing = () => {
-    dispatch({ type: 'QUIT_STUDENT_VIEWING' });
-    setIsSameStudentShared(false);
-  };
-
-  /**
-   * LESSON CONTROL
-   */
-
-  const handleCompleteClassroom = async () => {
-    let completedClassroomData: any = {
-      id: state.classroomID,
-      open: false,
-      complete: true,
-      expectedEndDate: awsFormatDate(dateString('-', 'WORLD')),
-    };
-
-    try {
-      console.log('complete!!! ', completedClassroomData);
-      const completedClassroom = await API.graphql(
-        graphqlOperation(customMutations.updateClassroom, {
-          input: completedClassroomData,
-        })
-      );
-      dispatch({ type: 'SAVED_CHANGES' });
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleGoToUserManagement = () => {
-    history.push('/dashboard/manage-users');
-  };
-
-  const handleHome = () => {
-    history.push('/dashboard/lesson-planner');
-  };
-
-  const handleOpen = () => {
-    dispatch({ type: 'START_CLASSROOM' });
-    setOpen(true);
-  };
-
-  const handleComplete = async () => {
-    dispatch({ type: 'COMPLETE_CLASSROOM', payload: dateString('-', 'US') });
-    await handleCompleteClassroom();
-    setOpen(true);
-    handleHome();
-  };
-
   const { visible, setVisible, ref } = useOutsideAlerter(false);
 
   /*
@@ -254,6 +259,14 @@ const LessonControl = () => {
     setLessonButton((prevState: any) => !prevState);
   };
 
+  const handleGoToUserManagement = () => {
+    history.push('/dashboard/manage-users');
+  };
+
+  const handleHome = () => {
+    history.push('/dashboard/lesson-planner');
+  };
+
   if (state.status !== 'loaded') {
     return <ComponentLoading />;
   }
@@ -262,13 +275,20 @@ const LessonControl = () => {
     <div className={`w-full h-screen bg-gray-200 overflow-hidden`}>
       <div className={`relative w-full h-full flex flex-col`}>
         {/**
+         *
+         *
          * POPUPS SECTION:
          * DEFINITELY NEEDS SOME RESTRUCTURING AND OPTIMIZATION
+         *
          * /}
 
         {/* QUICK REGISTER */}
 
         <QuickRegister active={quickRegister} setQuickRegister={setQuickRegister} />
+
+        {/* POPUP IMPLEMENTATIONS BELOW NEED REFACTORING
+              see above for optimized
+        */}
 
         {/* USER MANAGEMENT */}
         <div className={`${visible ? 'absolute z-100 h-full' : 'hidden'}`} onClick={handleClick}>
@@ -307,7 +327,7 @@ const LessonControl = () => {
             identifier={''}
             alert={lessonButton}
             setAlert={setLessonButton}
-            header="Are you sure you want to complete this lesson?"
+            header="Are you sure you want to close this lesson?"
             button1="Complete lesson"
             button2="Cancel"
             svg="question"

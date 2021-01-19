@@ -20,7 +20,7 @@ const LyricsOutput = (props: LyricsOutputProps) => {
               <div className='w-full h-16 flex flex-row justify-between items-center pb-2 border-b border-white border-opacity-10'>
                 <div
                   className={`w-12 h-12 p-2 text-3xl rounded-lg bg-${module.color} flex justify-center items-center`}>
-                  {module.label}
+                  {/*{module.label}*/}
                 </div>
                 <div className='w-full pl-4 text-gray-200 font-open text-xl font-light'>
                   {module.name}

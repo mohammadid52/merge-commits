@@ -162,12 +162,6 @@ const AddMeasurement = (props: AddMeasurementProps) => {
               }
             </div>
             <div className="px-3 py-4 grid gap-x-4 grid-cols-2">
-              {/* <div>
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                  Select Sequence
-              </label>
-                <Selector placeholder="Sequence" list={sequenceList} onChange={() => console.log('')} />
-              </div> */}
               <div>
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Topic <span className="text-red-500">*</span>
