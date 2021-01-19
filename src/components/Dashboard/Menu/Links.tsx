@@ -163,25 +163,25 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       case 'People':
         return `${
           linkProps.currentPage === 'manage-users' && activeClass
-        } w-full text-center border-l-4 border-mustard-yellow`;
+          } w-full text-center border-l-4 border-mustard-yellow`;
       case 'Registration':
         return `${
           linkProps.currentPage === 'registration' && activeClass
-        } w-full text-center border-l-4 border-ketchup`;
+          } w-full text-center border-l-4 border-ketchup`;
       case 'Classroom':
         return `${linkProps.currentPage === 'classroom' && activeClass} w-full text-center border-l-4 border-blueberry`;
       case 'Lesson Planner':
         return `${
           linkProps.currentPage === 'lesson-planner' && activeClass
-        } w-full text-center border-l-4 border-sea-green`;
+          } w-full text-center border-l-4 border-sea-green`;
       case 'Lesson Builder':
         return `${
           linkProps.currentPage === 'lesson-builder' && activeClass
-        } w-full text-center border-l-4 border-sea-green`;
+          } w-full text-center border-l-4 border-sea-green`;
       case 'Institutions':
         return `${
           linkProps.currentPage === 'manage-institutions' && activeClass
-        } w-full text-center border-l-4 border-ketchup`;
+          } w-full text-center border-l-4 border-ketchup`;
       default:
         return '';
     }
@@ -191,20 +191,20 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     <div className="link  w-full h-12 z-40">
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
-            <div key={`link_${key}`} id={link.path} onClick={handleLink}>
-              <div
-                id={link.path}
-                className={`${linkClass} ${getClassStyle(link.name)}`}
-                >
-                <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
-                  {getMenuIcon(link.name, link.path)}
-                </IconContext.Provider>
-                {link.name}
-              </div>
-
-              <div className={dividerClass}></div>
+          <div key={`link_${key}`} id={link.path} onClick={handleLink}>
+            <div
+              id={link.path}
+              className={`${linkClass} ${getClassStyle(link.name)}`}
+            >
+              <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
+                {getMenuIcon(link.name, link.path)}
+              </IconContext.Provider>
+              {link.name}
             </div>
-          ))
+
+            <div className={dividerClass}></div>
+          </div>
+        ))
         : null}
     </div>
   );
