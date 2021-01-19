@@ -11,6 +11,7 @@ import * as queries from '../../graphql/queries';
 // import PageHeaderBar from '../Header/PageHeaderBar';
 import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
+import QuestionBank from './Admin/Questions/QuestionBank';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import SideWidgetBar from './SideWidgetBar/SideWidgetBar';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
@@ -36,7 +37,7 @@ export interface DashboardProps {
 }
 
 const Dashboard = (props: DashboardProps) => {
-  const { updateAuthState} = props;
+  const { updateAuthState } = props;
   const match = useRouteMatch();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
   const [userData, setUserData] = useState({
@@ -147,6 +148,7 @@ const Dashboard = (props: DashboardProps) => {
               <Route path={`${match.url}/profile`} render={() => <Profile />} />
               <Route path={`${match.url}/lesson-planner`} render={() => <LessonPlanHome />} />
               <Route path={`${match.url}/manage-institutions`} render={() => <InstitutionsHome />} />
+              <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
             </Switch>
           </Suspense>
         </div>

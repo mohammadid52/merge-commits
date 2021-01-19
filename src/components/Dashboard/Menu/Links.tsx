@@ -4,7 +4,7 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 // Iconz
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FiUsers } from 'react-icons/fi';
-import { FaUniversity, FaRulerVertical } from 'react-icons/fa';
+import { FaUniversity, FaRulerVertical, FaQuestionCircle } from 'react-icons/fa';
 import { AiOutlineSchedule, AiOutlineAudit, AiOutlineUsergroupAdd } from 'react-icons/ai';
 import useDictionary from '../../../customHooks/dictionary';
 
@@ -88,6 +88,11 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: 'Classroom',
               path: 'classroom',
             },
+            {
+              title: 'QUESTION_BANK',
+              name: 'Question Bank',
+              path: 'question-bank',
+            },
           ];
         });
       case 'FLW':
@@ -149,6 +154,9 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       case 'Institutions':
         return <FaUniversity id={url} />;
         break;
+      case 'Question Bank':
+        return <FaQuestionCircle id={url} />;
+        break;
       default:
         return '';
     }
@@ -181,6 +189,10 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       case 'Institutions':
         return `${
           linkProps.currentPage === 'manage-institutions' && activeClass
+          } w-full text-center border-l-4 border-ketchup`;
+      case 'Question Bank':
+        return `${
+          linkProps.currentPage === 'question-bank' && activeClass
           } w-full text-center border-l-4 border-ketchup`;
       default:
         return '';
