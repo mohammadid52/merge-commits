@@ -184,7 +184,10 @@ const CurricularView = (props: CurricularViewProps) => {
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
                     <span className="text-gray-900 mr-2 w-3/10">Designers:</span>
                     <span className="w-auto">
-                      {personsDataList.map((person, i) => `${person} ${(i === personsDataList.length - 1) ? '.' : ','}`)}
+                      {personsDataList && personsDataList.length > 0 ? (
+                        personsDataList.map((person, i) => `${person} ${(i === personsDataList.length - 1) ? '.' : ','}`)
+                      ) : '--'
+                      }
                     </span>
                   </p>
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
@@ -209,7 +212,6 @@ const CurricularView = (props: CurricularViewProps) => {
                 <UnderlinedTabs tabs={tabs} />
               </div>
             </div>
-
           </div>
         </div>
       </PageWrapper>

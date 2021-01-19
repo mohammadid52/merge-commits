@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 
 interface MultipleSelectorProps {
   list?: { id: string, name: string, value?: string }[]
@@ -12,11 +12,27 @@ interface MultipleSelectorProps {
 const MultipleSelector = (props: MultipleSelectorProps) => {
   const { list, selectedItems, btnClass, arrowHidden, placeholder, onChange } = props;
   const [showList, setShowList] = useState(false);
+  const currentRef: any = useRef(null);
+
+  const onFocus = () => {
+    if (!showList) {
+      window.addEventListener("click", handleOutsideClick, false);
+      setShowList(true)
+    }
+  }
+
+  const handleOutsideClick = (e: any) => {
+    const stringElement = e.target.innerHTML;
+    if (!stringElement || currentRef.current.outerHTML.indexOf(stringElement) === -1) {
+      window.removeEventListener("click", handleOutsideClick, false);
+      setShowList(false);
+    };
+  }
 
   return (
-    <div className="relative">
+    <div className="relative" ref={currentRef} onFocus={() => onFocus()}>
       <span className="inline-block w-full h-full rounded-md shadow-sm">
-        <button onClick={() => setShowList(!showList)} type="button" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label"
+        <button type="button" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label"
           className={`flex items-center cursor-pointer relative w-full h-full rounded-md border border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${btnClass ? btnClass : ''}`}
         >
           <span className="block truncate text-gray-700" >
