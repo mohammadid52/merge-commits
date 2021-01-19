@@ -334,9 +334,12 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           methodology: savedData.methodology,
           policies: savedData.policies,
         });
-        setDesignerIds([...savedData?.designers])
+        if (savedData.designers) {
+          setDesignerIds([...savedData?.designers])
+        }
         setSavedLessonsList([...savedData.lessons?.items]);
-      } catch {
+      } catch(err) {
+        console.log('err', err)
         setMessages({
           show: true,
           message: 'Error while fetching syllabus data.',
@@ -413,13 +416,13 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   }, []);
 
   useEffect(() => {
-    if (savedLessonsList.length) {
+    if (Array.isArray(savedLessonsList) && savedLessonsList.length) {
       updateListAndDropdown();
     }
   }, [savedLessonsList, allLessonsList])
 
   useEffect(() => {
-    if (designersList.length > 0) {
+    if (designersList && designersList.length > 0) {
       const designers = [...designerIds].map((desID: string) => {
         const personData = designersList.find(per => per.id === desID)
         const personObj = {
