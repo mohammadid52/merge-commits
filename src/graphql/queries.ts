@@ -2789,6 +2789,10 @@ export const getQuestion = /* GraphQL */ `
       label
       type
       question
+      designers
+      language
+      sourceId
+      note
       options {
         text
         label
@@ -2812,12 +2816,70 @@ export const listQuestions = /* GraphQL */ `
         label
         type
         question
+        designers
+        language
+        sourceId
+        note
         options {
           text
           label
           icon
           color
         }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getQuestionSource = /* GraphQL */ `
+  query GetQuestionSource($id: ID!) {
+    getQuestionSource(id: $id) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listQuestionSources = /* GraphQL */ `
+  query ListQuestionSources(
+    $filter: ModelQuestionSourceFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listQuestionSources(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getQuestionType = /* GraphQL */ `
+  query GetQuestionType($id: ID!) {
+    getQuestionType(id: $id) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listQuestionTypes = /* GraphQL */ `
+  query ListQuestionTypes(
+    $filter: ModelQuestionTypeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listQuestionTypes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
         createdAt
         updatedAt
       }

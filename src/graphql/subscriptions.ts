@@ -4695,6 +4695,10 @@ export const onCreateDoFirstQuestion = /* GraphQL */ `
         label
         type
         question
+        designers
+        language
+        sourceId
+        note
         options {
           text
           label
@@ -4730,6 +4734,10 @@ export const onUpdateDoFirstQuestion = /* GraphQL */ `
         label
         type
         question
+        designers
+        language
+        sourceId
+        note
         options {
           text
           label
@@ -4765,6 +4773,10 @@ export const onDeleteDoFirstQuestion = /* GraphQL */ `
         label
         type
         question
+        designers
+        language
+        sourceId
+        note
         options {
           text
           label
@@ -5230,6 +5242,10 @@ export const onCreateCheckpointQuestions = /* GraphQL */ `
         label
         type
         question
+        designers
+        language
+        sourceId
+        note
         options {
           text
           label
@@ -5269,6 +5285,10 @@ export const onUpdateCheckpointQuestions = /* GraphQL */ `
         label
         type
         question
+        designers
+        language
+        sourceId
+        note
         options {
           text
           label
@@ -5308,6 +5328,10 @@ export const onDeleteCheckpointQuestions = /* GraphQL */ `
         label
         type
         question
+        designers
+        language
+        sourceId
+        note
         options {
           text
           label
@@ -5506,6 +5530,10 @@ export const onCreateQuestion = /* GraphQL */ `
       label
       type
       question
+      designers
+      language
+      sourceId
+      note
       options {
         text
         label
@@ -5524,6 +5552,10 @@ export const onUpdateQuestion = /* GraphQL */ `
       label
       type
       question
+      designers
+      language
+      sourceId
+      note
       options {
         text
         label
@@ -5542,12 +5574,76 @@ export const onDeleteQuestion = /* GraphQL */ `
       label
       type
       question
+      designers
+      language
+      sourceId
+      note
       options {
         text
         label
         icon
         color
       }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateQuestionSource = /* GraphQL */ `
+  subscription OnCreateQuestionSource {
+    onCreateQuestionSource {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateQuestionSource = /* GraphQL */ `
+  subscription OnUpdateQuestionSource {
+    onUpdateQuestionSource {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteQuestionSource = /* GraphQL */ `
+  subscription OnDeleteQuestionSource {
+    onDeleteQuestionSource {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateQuestionType = /* GraphQL */ `
+  subscription OnCreateQuestionType {
+    onCreateQuestionType {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateQuestionType = /* GraphQL */ `
+  subscription OnUpdateQuestionType {
+    onUpdateQuestionType {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteQuestionType = /* GraphQL */ `
+  subscription OnDeleteQuestionType {
+    onDeleteQuestionType {
+      id
+      name
       createdAt
       updatedAt
     }

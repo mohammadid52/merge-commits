@@ -1539,6 +1539,10 @@ export type CreateQuestionInput = {
   label: string,
   type: string,
   question: string,
+  designers?: Array< string | null > | null,
+  language?: string | null,
+  sourceId?: string | null,
+  note?: string | null,
   options?: Array< OptionInput | null > | null,
 };
 
@@ -1553,6 +1557,10 @@ export type ModelQuestionConditionInput = {
   label?: ModelStringInput | null,
   type?: ModelStringInput | null,
   question?: ModelStringInput | null,
+  designers?: ModelStringInput | null,
+  language?: ModelStringInput | null,
+  sourceId?: ModelStringInput | null,
+  note?: ModelStringInput | null,
   and?: Array< ModelQuestionConditionInput | null > | null,
   or?: Array< ModelQuestionConditionInput | null > | null,
   not?: ModelQuestionConditionInput | null,
@@ -1563,10 +1571,56 @@ export type UpdateQuestionInput = {
   label?: string | null,
   type?: string | null,
   question?: string | null,
+  designers?: Array< string | null > | null,
+  language?: string | null,
+  sourceId?: string | null,
+  note?: string | null,
   options?: Array< OptionInput | null > | null,
 };
 
 export type DeleteQuestionInput = {
+  id?: string | null,
+};
+
+export type CreateQuestionSourceInput = {
+  id?: string | null,
+  name: string,
+};
+
+export type ModelQuestionSourceConditionInput = {
+  name?: ModelStringInput | null,
+  and?: Array< ModelQuestionSourceConditionInput | null > | null,
+  or?: Array< ModelQuestionSourceConditionInput | null > | null,
+  not?: ModelQuestionSourceConditionInput | null,
+};
+
+export type UpdateQuestionSourceInput = {
+  id: string,
+  name?: string | null,
+};
+
+export type DeleteQuestionSourceInput = {
+  id?: string | null,
+};
+
+export type CreateQuestionTypeInput = {
+  id?: string | null,
+  name: string,
+};
+
+export type ModelQuestionTypeConditionInput = {
+  name?: ModelStringInput | null,
+  and?: Array< ModelQuestionTypeConditionInput | null > | null,
+  or?: Array< ModelQuestionTypeConditionInput | null > | null,
+  not?: ModelQuestionTypeConditionInput | null,
+};
+
+export type UpdateQuestionTypeInput = {
+  id: string,
+  name?: string | null,
+};
+
+export type DeleteQuestionTypeInput = {
   id?: string | null,
 };
 
@@ -2224,9 +2278,29 @@ export type ModelQuestionFilterInput = {
   label?: ModelStringInput | null,
   type?: ModelStringInput | null,
   question?: ModelStringInput | null,
+  designers?: ModelStringInput | null,
+  language?: ModelStringInput | null,
+  sourceId?: ModelStringInput | null,
+  note?: ModelStringInput | null,
   and?: Array< ModelQuestionFilterInput | null > | null,
   or?: Array< ModelQuestionFilterInput | null > | null,
   not?: ModelQuestionFilterInput | null,
+};
+
+export type ModelQuestionSourceFilterInput = {
+  id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  and?: Array< ModelQuestionSourceFilterInput | null > | null,
+  or?: Array< ModelQuestionSourceFilterInput | null > | null,
+  not?: ModelQuestionSourceFilterInput | null,
+};
+
+export type ModelQuestionTypeFilterInput = {
+  id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  and?: Array< ModelQuestionTypeFilterInput | null > | null,
+  or?: Array< ModelQuestionTypeFilterInput | null > | null,
+  not?: ModelQuestionTypeFilterInput | null,
 };
 
 export type ModelQuestionDataFilterInput = {
@@ -8690,6 +8764,10 @@ export type CreateDoFirstQuestionMutation = {
       label: string,
       type: string,
       question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
       options:  Array< {
         __typename: "Option",
         text: string,
@@ -8734,6 +8812,10 @@ export type UpdateDoFirstQuestionMutation = {
       label: string,
       type: string,
       question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
       options:  Array< {
         __typename: "Option",
         text: string,
@@ -8778,6 +8860,10 @@ export type DeleteDoFirstQuestionMutation = {
       label: string,
       type: string,
       question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
       options:  Array< {
         __typename: "Option",
         text: string,
@@ -9360,6 +9446,10 @@ export type CreateCheckpointQuestionsMutation = {
       label: string,
       type: string,
       question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
       options:  Array< {
         __typename: "Option",
         text: string,
@@ -9408,6 +9498,10 @@ export type UpdateCheckpointQuestionsMutation = {
       label: string,
       type: string,
       question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
       options:  Array< {
         __typename: "Option",
         text: string,
@@ -9456,6 +9550,10 @@ export type DeleteCheckpointQuestionsMutation = {
       label: string,
       type: string,
       question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
       options:  Array< {
         __typename: "Option",
         text: string,
@@ -9708,6 +9806,10 @@ export type CreateQuestionMutation = {
     label: string,
     type: string,
     question: string,
+    designers: Array< string | null > | null,
+    language: string | null,
+    sourceId: string | null,
+    note: string | null,
     options:  Array< {
       __typename: "Option",
       text: string,
@@ -9732,6 +9834,10 @@ export type UpdateQuestionMutation = {
     label: string,
     type: string,
     question: string,
+    designers: Array< string | null > | null,
+    language: string | null,
+    sourceId: string | null,
+    note: string | null,
     options:  Array< {
       __typename: "Option",
       text: string,
@@ -9756,6 +9862,10 @@ export type DeleteQuestionMutation = {
     label: string,
     type: string,
     question: string,
+    designers: Array< string | null > | null,
+    language: string | null,
+    sourceId: string | null,
+    note: string | null,
     options:  Array< {
       __typename: "Option",
       text: string,
@@ -9763,6 +9873,96 @@ export type DeleteQuestionMutation = {
       icon: string | null,
       color: string | null,
     } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateQuestionSourceMutationVariables = {
+  input: CreateQuestionSourceInput,
+  condition?: ModelQuestionSourceConditionInput | null,
+};
+
+export type CreateQuestionSourceMutation = {
+  createQuestionSource:  {
+    __typename: "QuestionSource",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateQuestionSourceMutationVariables = {
+  input: UpdateQuestionSourceInput,
+  condition?: ModelQuestionSourceConditionInput | null,
+};
+
+export type UpdateQuestionSourceMutation = {
+  updateQuestionSource:  {
+    __typename: "QuestionSource",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteQuestionSourceMutationVariables = {
+  input: DeleteQuestionSourceInput,
+  condition?: ModelQuestionSourceConditionInput | null,
+};
+
+export type DeleteQuestionSourceMutation = {
+  deleteQuestionSource:  {
+    __typename: "QuestionSource",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateQuestionTypeMutationVariables = {
+  input: CreateQuestionTypeInput,
+  condition?: ModelQuestionTypeConditionInput | null,
+};
+
+export type CreateQuestionTypeMutation = {
+  createQuestionType:  {
+    __typename: "QuestionType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateQuestionTypeMutationVariables = {
+  input: UpdateQuestionTypeInput,
+  condition?: ModelQuestionTypeConditionInput | null,
+};
+
+export type UpdateQuestionTypeMutation = {
+  updateQuestionType:  {
+    __typename: "QuestionType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteQuestionTypeMutationVariables = {
+  input: DeleteQuestionTypeInput,
+  condition?: ModelQuestionTypeConditionInput | null,
+};
+
+export type DeleteQuestionTypeMutation = {
+  deleteQuestionType:  {
+    __typename: "QuestionType",
+    id: string,
+    name: string,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -14756,6 +14956,10 @@ export type GetQuestionQuery = {
     label: string,
     type: string,
     question: string,
+    designers: Array< string | null > | null,
+    language: string | null,
+    sourceId: string | null,
+    note: string | null,
     options:  Array< {
       __typename: "Option",
       text: string,
@@ -14783,6 +14987,10 @@ export type ListQuestionsQuery = {
       label: string,
       type: string,
       question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
       options:  Array< {
         __typename: "Option",
         text: string,
@@ -14790,6 +14998,74 @@ export type ListQuestionsQuery = {
         icon: string | null,
         color: string | null,
       } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetQuestionSourceQueryVariables = {
+  id: string,
+};
+
+export type GetQuestionSourceQuery = {
+  getQuestionSource:  {
+    __typename: "QuestionSource",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListQuestionSourcesQueryVariables = {
+  filter?: ModelQuestionSourceFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListQuestionSourcesQuery = {
+  listQuestionSources:  {
+    __typename: "ModelQuestionSourceConnection",
+    items:  Array< {
+      __typename: "QuestionSource",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetQuestionTypeQueryVariables = {
+  id: string,
+};
+
+export type GetQuestionTypeQuery = {
+  getQuestionType:  {
+    __typename: "QuestionType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListQuestionTypesQueryVariables = {
+  filter?: ModelQuestionTypeFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListQuestionTypesQuery = {
+  listQuestionTypes:  {
+    __typename: "ModelQuestionTypeConnection",
+    items:  Array< {
+      __typename: "QuestionType",
+      id: string,
+      name: string,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -20596,6 +20872,10 @@ export type OnCreateDoFirstQuestionSubscription = {
       label: string,
       type: string,
       question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
       options:  Array< {
         __typename: "Option",
         text: string,
@@ -20635,6 +20915,10 @@ export type OnUpdateDoFirstQuestionSubscription = {
       label: string,
       type: string,
       question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
       options:  Array< {
         __typename: "Option",
         text: string,
@@ -20674,6 +20958,10 @@ export type OnDeleteDoFirstQuestionSubscription = {
       label: string,
       type: string,
       question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
       options:  Array< {
         __typename: "Option",
         text: string,
@@ -21191,6 +21479,10 @@ export type OnCreateCheckpointQuestionsSubscription = {
       label: string,
       type: string,
       question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
       options:  Array< {
         __typename: "Option",
         text: string,
@@ -21234,6 +21526,10 @@ export type OnUpdateCheckpointQuestionsSubscription = {
       label: string,
       type: string,
       question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
       options:  Array< {
         __typename: "Option",
         text: string,
@@ -21277,6 +21573,10 @@ export type OnDeleteCheckpointQuestionsSubscription = {
       label: string,
       type: string,
       question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
       options:  Array< {
         __typename: "Option",
         text: string,
@@ -21494,6 +21794,10 @@ export type OnCreateQuestionSubscription = {
     label: string,
     type: string,
     question: string,
+    designers: Array< string | null > | null,
+    language: string | null,
+    sourceId: string | null,
+    note: string | null,
     options:  Array< {
       __typename: "Option",
       text: string,
@@ -21513,6 +21817,10 @@ export type OnUpdateQuestionSubscription = {
     label: string,
     type: string,
     question: string,
+    designers: Array< string | null > | null,
+    language: string | null,
+    sourceId: string | null,
+    note: string | null,
     options:  Array< {
       __typename: "Option",
       text: string,
@@ -21532,6 +21840,10 @@ export type OnDeleteQuestionSubscription = {
     label: string,
     type: string,
     question: string,
+    designers: Array< string | null > | null,
+    language: string | null,
+    sourceId: string | null,
+    note: string | null,
     options:  Array< {
       __typename: "Option",
       text: string,
@@ -21539,6 +21851,66 @@ export type OnDeleteQuestionSubscription = {
       icon: string | null,
       color: string | null,
     } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateQuestionSourceSubscription = {
+  onCreateQuestionSource:  {
+    __typename: "QuestionSource",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateQuestionSourceSubscription = {
+  onUpdateQuestionSource:  {
+    __typename: "QuestionSource",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteQuestionSourceSubscription = {
+  onDeleteQuestionSource:  {
+    __typename: "QuestionSource",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateQuestionTypeSubscription = {
+  onCreateQuestionType:  {
+    __typename: "QuestionType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateQuestionTypeSubscription = {
+  onUpdateQuestionType:  {
+    __typename: "QuestionType",
+    id: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteQuestionTypeSubscription = {
+  onDeleteQuestionType:  {
+    __typename: "QuestionType",
+    id: string,
+    name: string,
     createdAt: string,
     updatedAt: string,
   } | null,

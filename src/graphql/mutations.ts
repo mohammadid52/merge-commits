@@ -5648,6 +5648,10 @@ export const createDoFirstQuestion = /* GraphQL */ `
         label
         type
         question
+        designers
+        language
+        sourceId
+        note
         options {
           text
           label
@@ -5686,6 +5690,10 @@ export const updateDoFirstQuestion = /* GraphQL */ `
         label
         type
         question
+        designers
+        language
+        sourceId
+        note
         options {
           text
           label
@@ -5724,6 +5732,10 @@ export const deleteDoFirstQuestion = /* GraphQL */ `
         label
         type
         question
+        designers
+        language
+        sourceId
+        note
         options {
           text
           label
@@ -6228,6 +6240,10 @@ export const createCheckpointQuestions = /* GraphQL */ `
         label
         type
         question
+        designers
+        language
+        sourceId
+        note
         options {
           text
           label
@@ -6270,6 +6286,10 @@ export const updateCheckpointQuestions = /* GraphQL */ `
         label
         type
         question
+        designers
+        language
+        sourceId
+        note
         options {
           text
           label
@@ -6312,6 +6332,10 @@ export const deleteCheckpointQuestions = /* GraphQL */ `
         label
         type
         question
+        designers
+        language
+        sourceId
+        note
         options {
           text
           label
@@ -6531,6 +6555,10 @@ export const createQuestion = /* GraphQL */ `
       label
       type
       question
+      designers
+      language
+      sourceId
+      note
       options {
         text
         label
@@ -6552,6 +6580,10 @@ export const updateQuestion = /* GraphQL */ `
       label
       type
       question
+      designers
+      language
+      sourceId
+      note
       options {
         text
         label
@@ -6573,12 +6605,94 @@ export const deleteQuestion = /* GraphQL */ `
       label
       type
       question
+      designers
+      language
+      sourceId
+      note
       options {
         text
         label
         icon
         color
       }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createQuestionSource = /* GraphQL */ `
+  mutation CreateQuestionSource(
+    $input: CreateQuestionSourceInput!
+    $condition: ModelQuestionSourceConditionInput
+  ) {
+    createQuestionSource(input: $input, condition: $condition) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateQuestionSource = /* GraphQL */ `
+  mutation UpdateQuestionSource(
+    $input: UpdateQuestionSourceInput!
+    $condition: ModelQuestionSourceConditionInput
+  ) {
+    updateQuestionSource(input: $input, condition: $condition) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteQuestionSource = /* GraphQL */ `
+  mutation DeleteQuestionSource(
+    $input: DeleteQuestionSourceInput!
+    $condition: ModelQuestionSourceConditionInput
+  ) {
+    deleteQuestionSource(input: $input, condition: $condition) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createQuestionType = /* GraphQL */ `
+  mutation CreateQuestionType(
+    $input: CreateQuestionTypeInput!
+    $condition: ModelQuestionTypeConditionInput
+  ) {
+    createQuestionType(input: $input, condition: $condition) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateQuestionType = /* GraphQL */ `
+  mutation UpdateQuestionType(
+    $input: UpdateQuestionTypeInput!
+    $condition: ModelQuestionTypeConditionInput
+  ) {
+    updateQuestionType(input: $input, condition: $condition) {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteQuestionType = /* GraphQL */ `
+  mutation DeleteQuestionType(
+    $input: DeleteQuestionTypeInput!
+    $condition: ModelQuestionTypeConditionInput
+  ) {
+    deleteQuestionType(input: $input, condition: $condition) {
+      id
+      name
       createdAt
       updatedAt
     }

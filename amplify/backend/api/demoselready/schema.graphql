@@ -786,8 +786,23 @@ type Question @model {
   label: String!
   type: String!
   question: String!
+  designers: [String]
+  language: String
+  sourceId: String
+  note: String
   options: [Option]
 }
+
+type QuestionSource @model {
+  id: ID!
+  name: String!
+}
+
+type QuestionType @model {
+  id: ID!
+  name: String!
+}
+
 
 type QuestionResponse {
   qid: Int,
