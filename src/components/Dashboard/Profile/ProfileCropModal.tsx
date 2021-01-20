@@ -62,7 +62,7 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (props: ProfileCropMod
           src={upImg}
           onImageLoaded={onLoad}
           crop={crop}
-          // imageStyle={{ width: '28rem', maxHeight: '25rem', objectFit: 'contain' }}        // style for the image tag in cropper
+          // imageStyle={{ width: 'auto', margin: 'auto', height: '25rem' }}        // style for the image tag in cropper
           onChange={(c: any) => setCrop(c)}
           onComplete={(c: any) => setCompletedCrop(c)}
         />
