@@ -53,8 +53,8 @@ const InstitutionLookup: React.FC = () => {
   const sortByList = [
     { id: 1, name: 'Institute Name', value: 'name' },
     { id: 2, name: 'Type', value: 'type' },
-    { id: 2, name: 'Website', value: 'website' },
-    { id: 2, name: 'Contact No.', value: 'phone' },
+    { id: 3, name: 'Website', value: 'website' },
+    { id: 4, name: 'Contact No.', value: 'phone' },
   ]
 
   const goNextPage = () => {
