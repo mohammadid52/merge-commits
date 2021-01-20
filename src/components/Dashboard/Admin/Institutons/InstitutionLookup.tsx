@@ -195,6 +195,10 @@ const InstitutionLookup: React.FC = () => {
     } else {
       setTotalPages(totalListPages + 1)
     }
+    if (totalPages === 1 && totalListPages === 0) {
+      setFirstPage(true);
+      setLastPage(true);
+    }
   }, [userCount]);
 
   useEffect(() => {
