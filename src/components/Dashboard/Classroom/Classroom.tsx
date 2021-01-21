@@ -104,7 +104,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       );
       await setSurvey(() => {
         let surveyStatus: boolean = state.user.onBoardSurvey ? !state.user.onBoardSurvey : true;
-        console.log(surveyStatus, 'status', state);
+        // console.log(surveyStatus, 'status', state);
 
         return {
           ...survey,

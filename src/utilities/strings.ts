@@ -16,11 +16,6 @@ export const formatPattern = (pattern: string, separator: string, inputPattern: 
   }, {});
   const outputTime = outputPattern.split(separator).map((val: string, i: number) => originalTime[val]);
 
-  // console.log('formatpattern', patternStringObject);
-  // console.log('formatpattern', originalTime);
-  // console.log('formatpattern', outputTime);
-
-  // The final; string
   return outputTime.join(separator);
 };
 
