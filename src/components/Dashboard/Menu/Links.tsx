@@ -98,10 +98,15 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: 'Classroom',
               path: 'classroom',
             },
+            // {
+            //   title: 'QUESTION_BANK',
+            //   name: 'Question Bank',
+            //   path: 'question-bank',
+            // },
             {
-              title: 'QUESTION_BANK',
-              name: 'Question Bank',
-              path: 'question-bank',
+              title: 'LESSON_BUILDER',
+              name: 'Lesson Builder',
+              path: 'lesson-builder',
             },
           ];
         });
@@ -165,6 +170,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     if (pageUrlContains('/dashboard/manage-institutions')) {
       setCurrentPage('manage-institutions');
     }
+    // if (pageUrlContains('/dashboard/question-bank')) {
+    //   setCurrentPage('question-bank');
+    // }
+    if (pageUrlContains('/dashboard/assessments')) {
+      setCurrentPage('assessments');
+    }
   }, []);
 
   const pageUrlEndsWith = (pageLabel: string) => {
@@ -192,9 +203,8 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         return <FaRulerVertical id={url} />;
       case 'Institutions':
         return <IoSchoolOutline id={url} />;
-      case 'Question Bank':
-        return <FaQuestionCircle id={url} />;
-        break;
+      // case 'Question Bank':
+      //   return <FaQuestionCircle id={url} />;
       default:
         return '';
     }

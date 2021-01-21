@@ -186,7 +186,7 @@ const QuestionAdd = (props: QuestionAddProps) => {
 
   const { question, notes, label, type, language } = questionData;
   return (
-    <div className="w-9/10 h-full p-4">
+    <div className="w-9/10 h-full">
 
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />

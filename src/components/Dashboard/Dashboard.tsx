@@ -12,6 +12,7 @@ import * as queries from '../../graphql/queries';
 import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
 import QuestionBank from './Admin/Questions/QuestionBank';
+import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import SideWidgetBar from './SideWidgetBar/SideWidgetBar';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
@@ -147,9 +148,10 @@ const Dashboard = (props: DashboardProps) => {
               <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
               <Route path={`${match.url}/registration`} render={() => <Registration />} />
               <Route path={`${match.url}/profile`} render={() => <Profile />} />
-              <Route path={`${match.url}/lesson-planner`} render={() => <LessonPlanHome visibleLessonGroup={visibleLessonGroup} setVisibleLessonGroup={setVisibleLessonGroup}/>} />
+              <Route path={`${match.url}/lesson-planner`} render={() => <LessonPlanHome visibleLessonGroup={visibleLessonGroup} setVisibleLessonGroup={setVisibleLessonGroup} />} />
               <Route path={`${match.url}/manage-institutions`} render={() => <InstitutionsHome />} />
               <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
+              <Route path={`${match.url}/lesson-builder`} render={() => <LessonsBuilderHome />} />
             </Switch>
           </Suspense>
         </div>
