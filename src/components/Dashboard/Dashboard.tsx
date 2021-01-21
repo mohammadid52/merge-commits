@@ -13,6 +13,7 @@ import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import SideWidgetBar from './SideWidgetBar/SideWidgetBar';
+import SideMenuSecondary from './Menu/SideMenuSecondary';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Profile = lazy(() => import('./Profile/Profile'));
@@ -34,6 +35,11 @@ export interface DashboardProps {
   setCurrentPage?: React.Dispatch<React.SetStateAction<string>>;
   visibleLessonGroup?: string;
   setVisibleLessonGroup?: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export interface SideMenuProps extends DashboardProps {
+  children?: React.ReactNode;
+  [key: string]: any;
 }
 
 const Dashboard = (props: DashboardProps) => {
@@ -113,6 +119,8 @@ const Dashboard = (props: DashboardProps) => {
         <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
       </SideMenu>
 
+      <SideMenuSecondary/>
+
       {/**
        *  MAIN CONTENT
        */}
@@ -146,7 +154,15 @@ const Dashboard = (props: DashboardProps) => {
               <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
               <Route path={`${match.url}/registration`} render={() => <Registration />} />
               <Route path={`${match.url}/profile`} render={() => <Profile />} />
-              <Route path={`${match.url}/lesson-planner`} render={() => <LessonPlanHome visibleLessonGroup={visibleLessonGroup} setVisibleLessonGroup={setVisibleLessonGroup}/>} />
+              <Route
+                path={`${match.url}/lesson-planner`}
+                render={() => (
+                  <LessonPlanHome
+                    visibleLessonGroup={visibleLessonGroup}
+                    setVisibleLessonGroup={setVisibleLessonGroup}
+                  />
+                )}
+              />
               <Route path={`${match.url}/manage-institutions`} render={() => <InstitutionsHome />} />
             </Switch>
           </Suspense>

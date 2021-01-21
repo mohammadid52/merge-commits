@@ -54,7 +54,6 @@ export interface Lesson {
 }
 
 export interface LessonProps extends DashboardProps {
-  isTeacher?: boolean;
   lessons: Lesson[];
 }
 

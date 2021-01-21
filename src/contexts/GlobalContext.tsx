@@ -32,6 +32,8 @@ export const pageThemes = {
     },
     sidemenu: {
       bg: 'bg-darker-gray',
+      primary: 'z-50 min-h-screen w-32 flex flex-col bg-darker-gray',
+      secondary: 'z-50 min-h-screen w-32 flex flex-col bg-gray-200 border-r border-white',
       darktone: 'bg-black bg-opacity-80'
     },
     block: {
@@ -90,6 +92,8 @@ export const pageThemes = {
     },
     sidemenu: {
       bg: 'bg-darker-gray',
+      primary: 'z-50 min-h-screen w-32 flex flex-col bg-darker-gray',
+      secondary: 'z-50 min-h-screen w-32 flex flex-col bg-gray-200 border-r border-white',
       darktone: 'bg-black bg-opacity-80'
     },
     block: {

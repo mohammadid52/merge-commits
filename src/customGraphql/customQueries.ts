@@ -62,7 +62,7 @@ export const getClassroom = /* GraphQL */ `
             id
             question
             option {
-                id
+              id
             }
           }
         }
@@ -714,6 +714,18 @@ export const getClassroomStudent = /* GraphQL */ `
   }
 `;
 
+export const listClassStudents = /* Graph QL */ `
+  query ListClassStudents($studentID: String!) {
+    listClassStudents(filter: {studentID: {contains: $studentID}}) {
+      items {
+        classID
+        studentID
+      }
+    }
+}
+
+`;
+
 export const getStudentData = /* GraphQL */ `
   query GetStudentData($classroomID: ID!, $studentID: String!) {
     getStudentData(classroomID: $classroomID, studentID: $studentID) {
@@ -1273,7 +1285,7 @@ export const getTopicDetails = /* GraphQL */ `
 `;
 
 export const listRubrics = /* GraphQL */ `
-  query ListRubrics($filter: ModelRubricFilterInput $sortDirection: ModelSortDirection) {
+  query ListRubrics($filter: ModelRubricFilterInput, $sortDirection: ModelSortDirection) {
     listRubrics(filter: $filter, sortDirection: $sortDirection) {
       items {
         id

@@ -172,6 +172,13 @@ type Room
   class: Class @connection(fields: ["classID"])
   curricula:[RoomCurriculum] @connection(keyName: "curriculumByRoom", fields: ["id"])
   filters: [String]
+  location: String
+  startDate: AWSDate
+  startTime: AWSTime
+  length: Int
+  repeat: String
+  notes: String
+  activeSyllabus: Int
 }
 
 ### Class
@@ -197,7 +204,7 @@ type Class
 }
 
 type ClassStudent 
-@model(queries: null) 
+@model
 @key(name: "byClass", fields: ["classID", "studentID"])
 @key(name: "classByStudent", fields: ["studentEmail"])
 {
@@ -334,7 +341,7 @@ type Syllabus
 }
 
 type SyllabusLesson
-@model(queries: null)
+@model
 @key(name: "lessonBySyllabus", fields: ["syllabusID", "lessonID"])
 {
   id: ID!
@@ -786,8 +793,23 @@ type Question @model {
   label: String!
   type: String!
   question: String!
+  designers: [String]
+  language: String
+  sourceId: String
+  note: String
   options: [Option]
 }
+
+type QuestionSource @model {
+  id: ID!
+  name: String!
+}
+
+type QuestionType @model {
+  id: ID!
+  name: String!
+}
+
 
 type QuestionResponse {
   qid: Int,
