@@ -410,6 +410,13 @@ export const onCreateInstitution = /* GraphQL */ `
           name
           maxPersons
           filters
+          location
+          startDate
+          startTime
+          length
+          repeat
+          notes
+          activeSyllabus
           createdAt
           updatedAt
         }
@@ -497,6 +504,13 @@ export const onUpdateInstitution = /* GraphQL */ `
           name
           maxPersons
           filters
+          location
+          startDate
+          startTime
+          length
+          repeat
+          notes
+          activeSyllabus
           createdAt
           updatedAt
         }
@@ -584,6 +598,13 @@ export const onDeleteInstitution = /* GraphQL */ `
           name
           maxPersons
           filters
+          location
+          startDate
+          startTime
+          length
+          repeat
+          notes
+          activeSyllabus
           createdAt
           updatedAt
         }
@@ -1190,6 +1211,13 @@ export const onCreateRoom = /* GraphQL */ `
         nextToken
       }
       filters
+      location
+      startDate
+      startTime
+      length
+      repeat
+      notes
+      activeSyllabus
       createdAt
       updatedAt
     }
@@ -1311,6 +1339,13 @@ export const onUpdateRoom = /* GraphQL */ `
         nextToken
       }
       filters
+      location
+      startDate
+      startTime
+      length
+      repeat
+      notes
+      activeSyllabus
       createdAt
       updatedAt
     }
@@ -1432,6 +1467,13 @@ export const onDeleteRoom = /* GraphQL */ `
         nextToken
       }
       filters
+      location
+      startDate
+      startTime
+      length
+      repeat
+      notes
+      activeSyllabus
       createdAt
       updatedAt
     }
@@ -1487,6 +1529,13 @@ export const onCreateClass = /* GraphQL */ `
           name
           maxPersons
           filters
+          location
+          startDate
+          startTime
+          length
+          repeat
+          notes
+          activeSyllabus
           createdAt
           updatedAt
         }
@@ -1560,6 +1609,13 @@ export const onUpdateClass = /* GraphQL */ `
           name
           maxPersons
           filters
+          location
+          startDate
+          startTime
+          length
+          repeat
+          notes
+          activeSyllabus
           createdAt
           updatedAt
         }
@@ -1633,6 +1689,13 @@ export const onDeleteClass = /* GraphQL */ `
           name
           maxPersons
           filters
+          location
+          startDate
+          startTime
+          length
+          repeat
+          notes
+          activeSyllabus
           createdAt
           updatedAt
         }

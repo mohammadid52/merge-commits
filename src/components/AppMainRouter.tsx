@@ -22,31 +22,31 @@ const MainRouter: React.FC = () => {
 
   const checkUserAuthenticated = async () => {
     try {
-        const user = await Auth.currentAuthenticatedUser()
-        if (user) {
-          const { email, sub } = user.attributes
-          let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }))
-          userInfo = userInfo.data.getPerson;
-          updateAuthState(true)
-          dispatch({
-            type: 'PREV_LOG_IN',
-            payload: { email, authId: sub },
-          });
-          dispatch({
-            type: 'SET_USER',
-            payload: {
-              id: userInfo.id,
-              firstName: userInfo.preferredName || userInfo.firstName,
-              lastName: userInfo.lastName,
-              language: userInfo.language,
-              onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
-              role: userInfo.role,
-              image: userInfo.image
-            }
-          });
-        } else {
-          updateAuthState(false)    
-        }
+      const user = await Auth.currentAuthenticatedUser()
+      if (user) {
+        const { email, sub } = user.attributes
+        let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }))
+        userInfo = userInfo.data.getPerson;
+        updateAuthState(true)
+        dispatch({
+          type: 'PREV_LOG_IN',
+          payload: { email, authId: sub },
+        });
+        dispatch({
+          type: 'SET_USER',
+          payload: {
+            id: userInfo.id,
+            firstName: userInfo.preferredName || userInfo.firstName,
+            lastName: userInfo.lastName,
+            language: userInfo.language,
+            onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
+            role: userInfo.role,
+            image: userInfo.image
+          }
+        });
+      } else {
+        updateAuthState(false)
+      }
     } catch (err) {
       updateAuthState(false)
     }
