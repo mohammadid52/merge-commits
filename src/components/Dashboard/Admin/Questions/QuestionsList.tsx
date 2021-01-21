@@ -282,7 +282,7 @@ const QuestionsList = (props: QuestionsListProps) => {
                 {(currentList && currentList.length) ?
                   currentList.map((questionObject, i) => (
                     <QuestionListRow
-                      key={`instituteRow${i}`}
+                      key={`questionRow${i}`}
                       index={currentPage * pageCount + i}
                       id={questionObject.id}
                       question={questionObject.question}
