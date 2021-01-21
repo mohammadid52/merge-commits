@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api'
 
-import * as queries from '../../../../graphql/queries';
+import * as customQueries from '../../../../customGraphql/customQueries';
 import * as mutations from '../../../../graphql/mutations';
 
 import Buttons from '../../../Atoms/Buttons';
@@ -22,6 +22,13 @@ interface InitialState {
   question: string
   notes: string
   label: string
+  type: InputValue
+  language: InputValue
+}
+interface InputValue {
+  id: string,
+  name: string,
+  value: string
 }
 
 const QuestionAdd = (props: QuestionAddProps) => {
@@ -30,7 +37,9 @@ const QuestionAdd = (props: QuestionAddProps) => {
   const initialState = {
     question: '',
     notes: '',
-    label: ''
+    label: '',
+    type: { id: '', name: '', value: '' },
+    language: { id: '', name: '', value: '' },
   }
   const [questionData, setQuestionData] = useState<InitialState>(initialState)
   const [validation, setValidation] = useState({
@@ -40,17 +49,21 @@ const QuestionAdd = (props: QuestionAddProps) => {
     isError: true
   });
   const [loading, setLoading] = useState(false);
-
+  const [designersList, setDesignersList] = useState([]);
+  const [selectedDesigners, setSelectedDesigners] = useState([]);
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Question Bank', url: '/dashboard/question-bank', last: false },
     { title: 'Add New Question', url: '/dashboard/question-bank/question/add', last: true },
   ]
-  const selectedDesigners: any = [];
-  const designersList: any = [];
   const topicsList: any = [];
   const sourceList: any = [];
-  const typeList: any = [];
+  const typeList: any = [
+    { id: '1', name: 'Text', value: 'text' },
+    { id: '2', name: 'Input', value: 'input' },
+    { id: '3', name: 'Select Many', value: 'selectMany' },
+    { id: '4', name: 'Select One', value: 'selectOne' },
+  ];
   const languageList = [
     { id: 1, name: 'English', value: 'EN' },
     { id: 2, name: 'Spanish', value: 'ES' },
@@ -62,14 +75,27 @@ const QuestionAdd = (props: QuestionAddProps) => {
     })
   }
 
-  const selectDesigner = () => {
-
+  const selectDesigner = (id: string, name: string, value: string) => {
+    let updatedList;
+    const currentDesigners = selectedDesigners;
+    const selectedItem = currentDesigners.find(item => item.id === id);
+    if (!selectedItem) {
+      updatedList = [...currentDesigners, { id, name, value }];
+    } else {
+      updatedList = currentDesigners.filter(item => item.id !== id);
+    }
+    setSelectedDesigners(updatedList)
   }
-  const selectLanguage = () => {
 
-  }
-  const selectTopic = () => {
-
+  const onSelectOption = (val: string, name: string, id: string, field: string) => {
+    setQuestionData({
+      ...questionData,
+      [field]: {
+        id: id,
+        name: name,
+        value: val
+      }
+    })
   }
 
   const validateForm = () => {
@@ -101,7 +127,9 @@ const QuestionAdd = (props: QuestionAddProps) => {
           question: questionData.question,
           label: questionData.label,
           note: questionData.notes,
-          type: 'text' // added static type.
+          type: questionData.type.value,
+          language: questionData.language.value,
+          designers: selectedDesigners.map(item => item.id)
         }
         const results: any = await API.graphql(
           graphqlOperation(mutations.createQuestion, { input: input })
@@ -116,11 +144,8 @@ const QuestionAdd = (props: QuestionAddProps) => {
             isError: false
           })
         }
-        setQuestionData({
-          question: '',
-          notes: '',
-          label: ''
-        })
+        setQuestionData(initialState);
+        setSelectedDesigners([])
       } catch{
         setValidation({
           question: '',
@@ -133,7 +158,33 @@ const QuestionAdd = (props: QuestionAddProps) => {
     }
   }
 
-  const { question, notes, label } = questionData;
+  const fetchPersonsList = async () => {
+    try {
+      const result: any = await API.graphql(graphqlOperation(customQueries.listPersons, {
+        filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "BLD" } }] }
+      }))
+      const savedData = result.data.listPersons;
+      const updatedList = savedData?.items.map((item: { id: string, firstName: string, lastName: string }) => ({
+        id: item?.id,
+        name: `${item?.firstName || ''} ${item.lastName || ''}`,
+        value: `${item?.firstName || ''} ${item.lastName || ''}`
+      }))
+      setDesignersList(updatedList);
+    } catch {
+      setValidation({
+        question: '',
+        label: '',
+        message: 'Error while fetching designers list, you can add them later.',
+        isError: true
+      });
+    }
+  }
+
+  useEffect(() => {
+    fetchPersonsList();
+  }, [])
+
+  const { question, notes, label, type, language } = questionData;
   return (
     <div className="w-9/10 h-full p-4">
 
@@ -171,7 +222,7 @@ const QuestionAdd = (props: QuestionAddProps) => {
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Topics
                 </label>
-                <Selector selectedItem={''} placeholder="Topics" list={topicsList} onChange={selectTopic} />
+                <Selector selectedItem={''} placeholder="Topics" list={topicsList} onChange={(val, name, id) => onSelectOption(val, name, id, 'topics')} />
               </div>
             </div>
 
@@ -180,13 +231,13 @@ const QuestionAdd = (props: QuestionAddProps) => {
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Source
                 </label>
-                <Selector selectedItem={''} placeholder="Source" list={sourceList} onChange={selectLanguage} />
+                <Selector selectedItem={''} placeholder="Source" list={sourceList} onChange={(val, name, id) => onSelectOption(val, name, id, 'source')} />
               </div>
               <div>
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Type
                 </label>
-                <Selector selectedItem={''} placeholder="Type" list={typeList} onChange={selectLanguage} />
+                <Selector selectedItem={type.name} placeholder="Type" list={typeList} onChange={(val, name, id) => onSelectOption(val, name, id, 'type')} />
               </div>
             </div>
 
@@ -195,7 +246,7 @@ const QuestionAdd = (props: QuestionAddProps) => {
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Language
                 </label>
-                <Selector selectedItem={''} placeholder="Language" list={languageList} onChange={selectLanguage} />
+                <Selector selectedItem={language.name} placeholder="Language" list={languageList} onChange={(val, name, id) => onSelectOption(val, name, id, 'language')} />
               </div>
               <div>
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
