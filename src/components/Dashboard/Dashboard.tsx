@@ -35,6 +35,7 @@ export interface DashboardProps {
   setCurrentPage?: React.Dispatch<React.SetStateAction<string>>;
   visibleLessonGroup?: string;
   setVisibleLessonGroup?: React.Dispatch<React.SetStateAction<string>>;
+  uiLoading?: string[];
 }
 
 export interface SideMenuProps extends DashboardProps {
@@ -51,6 +52,11 @@ const Dashboard = (props: DashboardProps) => {
     image: '',
   });
   const { state, dispatch } = useContext(GlobalContext);
+
+  // For controlling loading transitions
+  const [uiLoading, setUiLoading] = useState<string[]>([]);
+
+  // Page switching
   const [currentPage, setCurrentPage] = useState<string>('');
   const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('today');
 
@@ -119,7 +125,7 @@ const Dashboard = (props: DashboardProps) => {
         <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
       </SideMenu>
 
-      <SideRoomSelector/>
+      <SideRoomSelector uiLoading={uiLoading} setUiLoading={setUiLoading}/>
 
       {/**
        *  MAIN CONTENT
@@ -137,7 +143,7 @@ const Dashboard = (props: DashboardProps) => {
                 exact
                 path={`${match.url}`}
                 render={() => (
-                  <Classroom visibleLessonGroup={visibleLessonGroup} setVisibleLessonGroup={setVisibleLessonGroup} />
+                  <Classroom visibleLessonGroup={visibleLessonGroup} setVisibleLessonGroup={setVisibleLessonGroup} uiLoading={uiLoading}/>
                 )}
               />
               <Route

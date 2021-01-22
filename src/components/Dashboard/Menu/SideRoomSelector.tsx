@@ -4,7 +4,7 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import { API, graphqlOperation } from '@aws-amplify/api';
 import * as customQueries from '../../../customGraphql/customQueries';
 import * as queries from '../../../graphql/queries';
-import { getArrayOfUniqueValueByProperty } from '../../../utilities/arrays';
+import { getArrayOfUniqueValueByProperty, removeFromArray } from '../../../utilities/arrays';
 import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
 
 interface Room {
@@ -16,7 +16,7 @@ interface Room {
 
 const SideRoomSelector = (props: SideMenuProps) => {
   // Essentials
-  const { isTeacher, currentPage, setCurrentPage } = props;
+  const { isTeacher, currentPage, setCurrentPage, uiLoading, setUiLoading } = props;
   const { state, theme, dispatch } = useContext(GlobalContext);
   // Fetching results
   const [classIds, setClassIds] = useState<string[]>([]);
@@ -136,11 +136,13 @@ const SideRoomSelector = (props: SideMenuProps) => {
             type: 'UPDATE_ROOM',
             payload: {
               property: 'lessons',
-              data: arrayOfResponseObjects
-            }
-          })
+              data: arrayOfResponseObjects,
+            },
+          });
         } catch (e) {
           console.error('syllabus lessons: ', e);
+        } finally {
+          setUiLoading(removeFromArray(uiLoading, 'testLesson'));
         }
       }
     };
@@ -149,7 +151,10 @@ const SideRoomSelector = (props: SideMenuProps) => {
 
   const handleRoomSelection = (e: React.MouseEvent) => {
     const { id } = e.target as HTMLElement;
-    if (activeRoom !== id) setActiveRoom(id);
+    if (activeRoom !== id) {
+      setActiveRoom(id);
+      setUiLoading([...uiLoading, 'testLesson']); // Trigger loading ui element
+    }
   };
 
   return (

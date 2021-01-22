@@ -18,3 +18,7 @@ export const getArrayOfUniqueValueByProperty = (arrOfObjects: any[], property: s
     }
   }, []);
 };
+
+export const removeFromArray = (arr: any, target: any) => {
+  return arr.filter((item: any) => item !== target);
+}

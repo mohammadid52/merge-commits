@@ -44,6 +44,7 @@ export interface Lesson {
   courseID: string;
   lessonID: string;
   lesson: {
+    id?: string;
     title: string;
     artist?: any;
     language: string;
@@ -68,7 +69,7 @@ export interface LessonCardProps {
 }
 
 const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
-  const { isTeacher, visibleLessonGroup, setVisibleLessonGroup } = props;
+  const { isTeacher, visibleLessonGroup, setVisibleLessonGroup, uiLoading } = props;
   const { state, theme, dispatch } = useContext(GlobalContext);
   const [curriculum, setCurriculum] = useState<CurriculumInfo>();
   const [survey, setSurvey] = useState<any>({
@@ -252,6 +253,32 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   if (status === 'done') {
     return (
       <>
+        {
+          /**
+           * TEST DIV FOR ROOM SWITCHING AND LOADING LESSONS/SYLLABUS
+           */
+          state.roomData?.lessons?.length > 0 ? (
+            <div className={`bg-opacity-10`}>
+              <div className={`${theme.section} px-4 pb-4 m-auto`}>
+                <div className={`p-4 bg-mustard-yellow bg-opacity-20`}>
+                  {!uiLoading.includes('testLesson') ? (
+                    state.roomData.lessons.map((lesson: Lesson, i: number) => {
+                      return (
+                        <div key={`testLesson_${i}`} id={`testLesson_${i}`}>
+                          <p className={`text-xs text-darker-gray`}>{lesson.lesson.id}</p>
+                          <p className={`text-sm text-darker-gray`}>{lesson.lesson.title}</p>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div>Loading test lessons...</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : null
+        }
+
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 pb-4 m-auto`}>
             <h2 className={`w-full flex text-xl border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
