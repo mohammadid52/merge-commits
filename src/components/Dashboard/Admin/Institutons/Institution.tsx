@@ -16,6 +16,9 @@ import SectionTitle from '../../../Atoms/SectionTitle';
 import Buttons from '../../../Atoms/Buttons';
 import PageWrapper from '../../../Atoms/PageWrapper';
 
+interface InstitutionProps {
+  tabProps?: any
+}
 
 export interface InstitutionInfo {
   id: string;
@@ -45,7 +48,7 @@ export interface InstitutionInfo {
  * Responsible for fetching institution data and populating the component
  * with data from the API
  */
-const Institution: React.FC = () => {
+const Institution = (props: InstitutionProps) => {
   const [institutionData, setInstitutionData] = useState({
     id: '',
     name: '',
@@ -76,11 +79,13 @@ const Institution: React.FC = () => {
   const pathName = location.pathname.replace(/\/$/, "");
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const urlQueryParams = queryString.parse(location.search);
+  const [tabsData, setTabsData] = useState({ inst: 0, instCurr: 0 })
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Institution Management', url: '/dashboard/manage-institutions', last: false },
     { title: 'Institute Info', url: `${location.pathname}${location.search}`, last: true }
   ];
+
 
   const toggleUpdateState = () => {
     setISNewUpdate(!isNewUpdate);
@@ -150,7 +155,7 @@ const Institution: React.FC = () => {
           <Route
             path={`${match.url}/`}
             render={() => (
-              <InstitutionInfo institute={institutionData} updateServiceProviders={updateServiceProviders} />
+              <InstitutionInfo institute={institutionData} updateServiceProviders={updateServiceProviders} tabProps={props.tabProps} />
             )}
           />
         </Switch>
