@@ -21,7 +21,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
   return (
     <div
       key={keyProps}
-      className={`relative bg-white rounded border border-dark-gray border-opacity-10 h-auto flex mb-8 ${theme.elem.text} `}>
+      className={`relative bg-white rounded border border-dark-gray border-opacity-10 h-auto flex mb-8 ${theme.elem.textDark} `}>
       {/**
        *  LEFT SECTION IMAGE
        */}

@@ -14,7 +14,7 @@ interface Room {
   name: string;
 }
 
-const SideMenuSecondary = (props: SideMenuProps) => {
+const SideRoomSelector = (props: SideMenuProps) => {
   // Essentials
   const { isTeacher, currentPage, setCurrentPage } = props;
   const { state, theme, dispatch } = useContext(GlobalContext);
@@ -23,11 +23,9 @@ const SideMenuSecondary = (props: SideMenuProps) => {
   const [rooms, setRooms] = useState<any[]>([]);
   const [curriculumIds, setCurriculumIds] = useState<string[]>([]);
   const [syllabusId, setSyllabusId] = useState<string[]>([]);
-  const [syllabusLessons, setSyllabusLessons] = useState<any>([]);
   // Menu state
   const [loaded, setLoaded] = useState<boolean>(false);
-  const [menuItems, setMenuItems] = useState<any[]>([]);
-  const [activeMenuItem, setActiveMenuItem] = useState<string[]>([]);
+  const [activeRoom, setActiveRoom] = useState<string>('');
 
   useEffect(() => {
     const listClassStudents = async () => {
@@ -72,12 +70,12 @@ const SideMenuSecondary = (props: SideMenuProps) => {
 
   useEffect(() => {
     const listRoomCurriculums = async () => {
-      if (rooms.length > 0) {
+      if (rooms.length > 0 && activeRoom !== '') {
         try {
           const roomIds = getArrayOfUniqueValueByProperty(rooms, 'id');
           const roomCurriculumsFetch: any = API.graphql(
             graphqlOperation(customQueries.listRoomCurriculums, {
-              filter: { ...createFilterToFetchSpecificItemsOnly(roomIds, 'roomID') },
+              filter: { roomID: { contains: activeRoom } },
             })
           );
           const response = await roomCurriculumsFetch;
@@ -93,7 +91,7 @@ const SideMenuSecondary = (props: SideMenuProps) => {
       }
     };
     listRoomCurriculums();
-  }, [rooms]);
+  }, [activeRoom]);
 
   useEffect(() => {
     const listSyllabus = async () => {
@@ -109,7 +107,7 @@ const SideMenuSecondary = (props: SideMenuProps) => {
           const arrayOfSyllabusIds = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'id');
           setSyllabusId(arrayOfSyllabusIds);
         } catch (e) {
-          console.error('Curriculum ids: ', e);
+          console.error('Curriculum ids ERR: ', e);
         }
       }
     };
@@ -121,10 +119,10 @@ const SideMenuSecondary = (props: SideMenuProps) => {
       if (syllabusId.length > 0) {
         // BELOW SHOULD BE REMOVED WHEN THERE ARE MULTIPLE SYLLABUSES
         const getActiveSyllabus = syllabusId.filter((syllabusObject: any) => {
-          if(syllabusObject.hasOwnProperty('active') && syllabusObject.active){
+          if (syllabusObject.hasOwnProperty('active') && syllabusObject.active) {
             return syllabusObject;
           }
-        })
+        });
         const syllabusIdSource = getActiveSyllabus.length > 0 ? getActiveSyllabus[0] : syllabusId[0];
         try {
           const syllabusLessonFetch: any = API.graphql(
@@ -134,8 +132,13 @@ const SideMenuSecondary = (props: SideMenuProps) => {
           );
           const response = await syllabusLessonFetch;
           const arrayOfResponseObjects = response?.data?.listSyllabusLessons?.items;
-          // const arrayOfSyllabusLessons = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'id');
-          setSyllabusLessons(arrayOfResponseObjects);
+          dispatch({
+            type: 'UPDATE_ROOM',
+            payload: {
+              property: 'lessons',
+              data: arrayOfResponseObjects
+            }
+          })
         } catch (e) {
           console.error('syllabus lessons: ', e);
         }
@@ -144,6 +147,11 @@ const SideMenuSecondary = (props: SideMenuProps) => {
     listSyllabusLessons();
   }, [syllabusId]);
 
+  const handleRoomSelection = (e: React.MouseEvent) => {
+    const { id } = e.target as HTMLElement;
+    if (activeRoom !== id) setActiveRoom(id);
+  };
+
   return (
     <div className={`${theme.sidemenu.secondary} mr-2`}>
       {rooms.length > 0 ? (
@@ -151,7 +159,9 @@ const SideMenuSecondary = (props: SideMenuProps) => {
           return (
             <div
               key={`room_button_sb${i}`}
-              className={`p-2 bg-white border border-dark-gray border-opacity-10 truncate ...`}>
+              id={room.id}
+              onClick={handleRoomSelection}
+              className={`cursor-pointer p-2 bg-white border border-dark-gray border-opacity-10 truncate ...`}>
               {room.name}
             </div>
           );
@@ -169,4 +179,4 @@ const SideMenuSecondary = (props: SideMenuProps) => {
   );
 };
 
-export default SideMenuSecondary;
+export default SideRoomSelector;

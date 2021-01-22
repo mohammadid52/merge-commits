@@ -7,7 +7,7 @@ import * as customQueries from '../customGraphql/customQueries';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { pageThemes } from './GlobalContext';
+import { standardTheme } from './GlobalContext';
 
 interface LessonControlProps {
     children: React.ReactNode;
@@ -22,18 +22,11 @@ export const LessonControlContext = React.createContext(null);
 export const LessonControlContextProvider = ({ children }: LessonControlProps) => {
     const [ state, dispatch ] = useReducer(lessonControlReducer, lessonControlState);
     const [ lesson, setLesson ] = useState<LessonObject>()
-    const [ lightOn, setLightOn ] = useState(false);
     const history = useHistory();
     const location = useLocation();
     let subscription: any;
 
-    const lightSwitch = () => {
-        setLightOn(prev => {
-            return !prev
-        })
-    }
-
-    const theme = lightOn ? pageThemes.light : pageThemes.dark;
+    const theme = standardTheme
 
     async function getClassroom() {
       let queryParams = queryString.parse(location.search)
@@ -44,10 +37,10 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
             // console.log('classroom data', classroom);
             setLesson(classroom.data.getClassroom)
             dispatch({
-              type: 'INITIAL_LESSON_SETUP', 
-              payload: { 
+              type: 'INITIAL_LESSON_SETUP',
+              payload: {
                 classroomID: queryParams.id,
-                pages: classroom.data.getClassroom.lessonPlan, 
+                pages: classroom.data.getClassroom.lessonPlan,
                 data: classroom.data.getClassroom,
                 students: classroom.data.getClassroom.data.items,
                 open: classroom.data.getClassroom.open,
@@ -85,7 +78,7 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
 
     useEffect(() => {
       getClassroom()
-      
+
       return function cleanup() {
         if (subscription) {
           subscription.unsubscribe();
@@ -97,8 +90,8 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
 
     useEffect(() => {
       // console.log(lesson);
-      
-      
+
+
     }, [lesson])
 
 

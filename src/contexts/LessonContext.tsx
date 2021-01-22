@@ -2,7 +2,6 @@ import React, { useReducer, useEffect, useState, } from 'react';
 import { useHistory } from 'react-router-dom';
 import { lessonState, PagesType } from '../state/LessonState'
 import { lessonReducer } from '../reducers/LessonReducer'
-import { pageThemes } from './GlobalContext';
 // import { useCookies } from 'react-cookie';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 import * as customMutations from '../customGraphql/customMutations';
@@ -12,6 +11,7 @@ import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
+import { standardTheme } from './GlobalContext';
 
 const removeDisabled = (array: PagesType) => {
     let updatedArray = array.filter((item: { disabled: boolean, [key: string]: any }) => {
@@ -40,18 +40,11 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     const [lesson, setLesson] = useState<DataObject>();
     // const [ cookies ] = useCookies(['auth']);
     const [state, dispatch] = useReducer(lessonReducer, lessonState);
-    const [lightOn, setLightOn] = useState(false);
     const location = useLocation();
     const history = useHistory();
     let subscription: any;
 
-    const lightSwitch = () => {
-        setLightOn(prev => {
-            return !prev
-        })
-    }
-
-    const theme = lightOn ? pageThemes.light : pageThemes.dark;
+    const theme = standardTheme;
 
     async function getOrCreateStudentData() {
         let queryParams = queryString.parse(location.search)

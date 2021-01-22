@@ -47,7 +47,7 @@ const SmallLessonCard = (props: LessonCardProps) => {
       id={keyProps}
       key={keyProps}
       className={`${openCards.includes(keyProps) ? 'z-50' : 'z-10'} ${
-        theme.elem.text
+        theme.elem.textDark
       } `}>
       <div
         className={`${

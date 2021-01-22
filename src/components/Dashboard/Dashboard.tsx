@@ -13,7 +13,7 @@ import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import SideWidgetBar from './SideWidgetBar/SideWidgetBar';
-import SideMenuSecondary from './Menu/SideMenuSecondary';
+import SideRoomSelector from './Menu/SideRoomSelector';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Profile = lazy(() => import('./Profile/Profile'));
@@ -119,7 +119,7 @@ const Dashboard = (props: DashboardProps) => {
         <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
       </SideMenu>
 
-      <SideMenuSecondary/>
+      <SideRoomSelector/>
 
       {/**
        *  MAIN CONTENT
