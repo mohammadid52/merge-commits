@@ -85,7 +85,6 @@ const CurricularView = (props: CurricularViewProps) => {
     tabProps.setTabsData({...tabProps.tabsData, instCurr: tab})
   }
 
-
   const fetchCurricularData = async () => {
     const currID = params.get('id');
     if (currID) {

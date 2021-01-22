@@ -50,20 +50,21 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
 
   const fetchList = async () => {
     setLoading(true)
-    let list: any = await API.graphql(graphqlOperation(queries.listLearningObjectives, {
-      filter: { curriculumID: { eq: curricularId } },
-    }));
-    list = list.data.listLearningObjectives?.items || []
-    let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
-      { id: `l_${curricularId}` }))
-
-    item = item?.data.getCSequences?.sequence || []
+    let [list, seq]:any = await Promise.all([
+      await API.graphql(graphqlOperation(queries.listLearningObjectives, {
+        filter: { curriculumID: { eq: curricularId } },
+      })),
+      await API.graphql(graphqlOperation(queries.getCSequences,
+        { id: `l_${curricularId}` }))
+    ]);
+    seq = seq?.data?.getCSequences?.sequence || []
+    list = list?.data?.listLearningObjectives?.items || []
     list = list.map((t: any) => {
-      let index = item.indexOf(t.id)
+      let index = seq.indexOf(t.id)
       return { ...t, index }
     }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
     setLearnings(list)
-    setLearningIds(item)
+    setLearningIds(seq)
     setLoading(false)
   }
 
@@ -95,9 +96,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                     <span>Actions</span>
                   </div>
                 </div>
-
                 <div className="w-8/10 m-auto max-h-88 overflow-y-auto">
-
                   {/* Drag and drop listing */}
                   <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable">
@@ -106,9 +105,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                           {...provided.droppableProps}
                           ref={provided.innerRef}
                         >
-
                           {learnings.map((item, index) => (
-
                             <Draggable key={item.id} draggableId={item.id} index={index}>
                               {(provided, snapshot) => (
                                 <div
@@ -131,15 +128,12 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                 </div>
                               )}
                             </Draggable>
-
                           ))}
                           {provided.placeholder}
                         </div>
                       )}
                     </Droppable>
                   </DragDropContext>
-
-
                 </div>
               </Fragment>
             ) : (
