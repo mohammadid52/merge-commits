@@ -28,7 +28,7 @@ const RoomChat = (props: RoomChatProps) => {
                 createdAt: (new Date()).toISOString()
             }
             let msgItem: any = await API.graphql(graphqlOperation(mutations.createRoomMsgs, { input }));
-            setMsgs([...msgs, { id: msgs.length + 1, author: 'Dave', body: msg }])
+            setMsgs([...msgs, { id: msgs.length + 1, body: msg }])
             setMsg('')
         } catch (err) {
             console.log('err', err)
@@ -38,7 +38,6 @@ const RoomChat = (props: RoomChatProps) => {
     const fetchMsgs = async () => {
         setLoading(true)
         let msgs: any = await API.graphql(graphqlOperation(customQueries.messagesByRoomId, { roomID: '06263081-3fb9-4b4b-be13-d1753297d3d3' }))
-        console.log('msgs', msgs)
         msgs = msgs?.data.messagesByRoomID?.items || []
         setMsgs(msgs)
         setLoading(false)
