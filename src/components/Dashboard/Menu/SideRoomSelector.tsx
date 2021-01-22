@@ -16,7 +16,15 @@ interface Room {
 
 const SideRoomSelector = (props: SideMenuProps) => {
   // Essentials
-  const { isTeacher, currentPage, setCurrentPage, uiLoading, setUiLoading } = props;
+  const {
+    isTeacher,
+    currentPage,
+    setCurrentPage,
+    lessonLoading,
+    setLessonLoading,
+    syllabusLoading,
+    setSyllabusLoading,
+  } = props;
   const { state, theme, dispatch } = useContext(GlobalContext);
   // Fetching results
   const [classIds, setClassIds] = useState<string[]>([]);
@@ -79,7 +87,6 @@ const SideRoomSelector = (props: SideMenuProps) => {
             })
           );
           const response = await roomCurriculumsFetch;
-          console.log('list room curriculums : ', response);
           const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
           const arrayOfCurriculumIds = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'curriculumID');
           setCurriculumIds(arrayOfCurriculumIds);
@@ -104,8 +111,16 @@ const SideRoomSelector = (props: SideMenuProps) => {
           );
           const response = await syllabusMultiFetch;
           const arrayOfResponseObjects = response?.data?.listSyllabuss?.items;
-          const arrayOfSyllabusIds = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'id');
-          setSyllabusId(arrayOfSyllabusIds);
+
+          dispatch({
+            type: 'UPDATE_ROOM',
+            payload: {
+              property: 'syllabus',
+              data: arrayOfResponseObjects,
+            },
+          });
+
+          setSyllabusLoading(false);
         } catch (e) {
           console.error('Curriculum ids ERR: ', e);
         }
@@ -116,44 +131,49 @@ const SideRoomSelector = (props: SideMenuProps) => {
 
   useEffect(() => {
     const listSyllabusLessons = async () => {
-      if (syllabusId.length > 0) {
+      if (state.roomData.syllabus.length > 0) {
         // BELOW SHOULD BE REMOVED WHEN THERE ARE MULTIPLE SYLLABUSES
-        const getActiveSyllabus = syllabusId.filter((syllabusObject: any) => {
+        const getActiveSyllabus = state.roomData.syllabus.filter((syllabusObject: any) => {
           if (syllabusObject.hasOwnProperty('active') && syllabusObject.active) {
             return syllabusObject;
           }
         });
-        const syllabusIdSource = getActiveSyllabus.length > 0 ? getActiveSyllabus[0] : syllabusId[0];
-        try {
-          const syllabusLessonFetch: any = API.graphql(
-            graphqlOperation(customQueries.listSyllabusLessons, {
-              syllabusID: syllabusIdSource,
-            })
-          );
-          const response = await syllabusLessonFetch;
-          const arrayOfResponseObjects = response?.data?.listSyllabusLessons?.items;
-          dispatch({
-            type: 'UPDATE_ROOM',
-            payload: {
-              property: 'lessons',
-              data: arrayOfResponseObjects,
-            },
-          });
-        } catch (e) {
-          console.error('syllabus lessons: ', e);
-        } finally {
-          setUiLoading(removeFromArray(uiLoading, 'testLesson'));
+
+        if (getActiveSyllabus.length > 0) {
+          try {
+            const syllabusLessonFetch: any = API.graphql(
+              graphqlOperation(customQueries.listSyllabusLessons, {
+                syllabusID: getActiveSyllabus[0].id,
+              })
+            );
+            const response = await syllabusLessonFetch;
+            const arrayOfResponseObjects = response?.data?.listSyllabusLessons?.items;
+
+            dispatch({
+              type: 'UPDATE_ROOM',
+              payload: {
+                property: 'lessons',
+                data: arrayOfResponseObjects,
+              },
+            });
+          } catch (e) {
+            console.error('syllabus lessons: ', e);
+          } finally {
+            setLessonLoading(false);
+          }
         }
       }
     };
+
     listSyllabusLessons();
-  }, [syllabusId]);
+  }, [state.roomData.syllabus]);
 
   const handleRoomSelection = (e: React.MouseEvent) => {
     const { id } = e.target as HTMLElement;
     if (activeRoom !== id) {
       setActiveRoom(id);
-      setUiLoading([...uiLoading, 'testLesson']); // Trigger loading ui element
+      setSyllabusLoading(true); // Trigger loading ui element
+      setLessonLoading(true);
     }
   };
 
@@ -166,7 +186,11 @@ const SideRoomSelector = (props: SideMenuProps) => {
               key={`room_button_sb${i}`}
               id={room.id}
               onClick={handleRoomSelection}
-              className={`cursor-pointer p-2 bg-white border border-dark-gray border-opacity-10 truncate ...`}>
+              className={`cursor-pointer p-2 bg-white ${
+                activeRoom === room.id
+                  ? 'border border-blueberry border-opacity-80'
+                  : 'border border-dark-gray border-opacity-10'
+              } truncate ...`}>
               {room.name}
             </div>
           );

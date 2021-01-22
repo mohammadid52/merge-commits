@@ -35,7 +35,11 @@ export interface DashboardProps {
   setCurrentPage?: React.Dispatch<React.SetStateAction<string>>;
   visibleLessonGroup?: string;
   setVisibleLessonGroup?: React.Dispatch<React.SetStateAction<string>>;
-  uiLoading?: string[];
+  handleSyllabusActivation?: (syllabusID: string) => void;
+  lessonLoading?: boolean;
+  setLessonLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+  syllabusLoading?: boolean;
+  setSyllabusLoading?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface SideMenuProps extends DashboardProps {
@@ -54,7 +58,8 @@ const Dashboard = (props: DashboardProps) => {
   const { state, dispatch } = useContext(GlobalContext);
 
   // For controlling loading transitions
-  const [uiLoading, setUiLoading] = useState<string[]>([]);
+  const [lessonLoading, setLessonLoading] = useState<boolean>(false);
+  const [syllabusLoading, setsyllabusLoading] = useState<boolean>(false);
 
   // Page switching
   const [currentPage, setCurrentPage] = useState<string>('');
@@ -125,7 +130,15 @@ const Dashboard = (props: DashboardProps) => {
         <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
       </SideMenu>
 
-      <SideRoomSelector uiLoading={uiLoading} setUiLoading={setUiLoading}/>
+      {currentPage === 'lesson-planner' || currentPage === 'classroom' ? (
+        <SideRoomSelector
+          currentPage={currentPage}
+          lessonLoading={lessonLoading}
+          setLessonLoading={setLessonLoading}
+          syllabusLoading={syllabusLoading}
+          setSyllabusLoading={setsyllabusLoading}
+        />
+      ) : null}
 
       {/**
        *  MAIN CONTENT
@@ -143,7 +156,13 @@ const Dashboard = (props: DashboardProps) => {
                 exact
                 path={`${match.url}`}
                 render={() => (
-                  <Classroom visibleLessonGroup={visibleLessonGroup} setVisibleLessonGroup={setVisibleLessonGroup} uiLoading={uiLoading}/>
+                  <Classroom
+                    currentPage={currentPage}
+                    visibleLessonGroup={visibleLessonGroup}
+                    setVisibleLessonGroup={setVisibleLessonGroup}
+                    lessonLoading={lessonLoading}
+                    syllabusLoading={syllabusLoading}
+                  />
                 )}
               />
               <Route
@@ -164,8 +183,13 @@ const Dashboard = (props: DashboardProps) => {
                 path={`${match.url}/lesson-planner`}
                 render={() => (
                   <LessonPlanHome
+                    currentPage={currentPage}
                     visibleLessonGroup={visibleLessonGroup}
                     setVisibleLessonGroup={setVisibleLessonGroup}
+                    lessonLoading={lessonLoading}
+                    setLessonLoading={setLessonLoading}
+                    syllabusLoading={syllabusLoading}
+                    setSyllabusLoading={setsyllabusLoading}
                   />
                 )}
               />

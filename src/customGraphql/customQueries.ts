@@ -713,7 +713,6 @@ export const listPersons = /* GraphQL */ `
   }
 `;
 
-
 export const listClassStudents = /* Graph QL */ `
   query ListClassStudents($studentID: ID) {
     listClassStudents(filter: {studentID: {contains: $studentID}}) {
@@ -729,11 +728,7 @@ export const listClassStudents = /* Graph QL */ `
  * QUERY BELOW MADE BY AMAN, THE KING
  */
 export const listRooms = /* GraphQL */ `
-  query ListRooms(
-    $filter: ModelRoomFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
     listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -747,11 +742,7 @@ export const listRooms = /* GraphQL */ `
 `;
 
 export const listRoomCurriculums = /* GraphQL */ `
-  query ListRoomCurriculums(
-    $filter: ModelRoomCurriculumFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListRoomCurriculums($filter: ModelRoomCurriculumFilterInput, $limit: Int, $nextToken: String) {
     listRoomCurriculums(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -770,12 +761,7 @@ export const listSyllabuss = /* GraphQL */ `
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listSyllabuss(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
+    listSyllabuss(filter: $filter, limit: $limit, nextToken: $nextToken, sortDirection: $sortDirection) {
       items {
         id
         name
@@ -801,13 +787,21 @@ export const listSyllabuss = /* GraphQL */ `
 
 export const listSyllabusLessons = /* GraphQL */ `
   query ListSyllabusLessons($syllabusID: ID) {
-    listSyllabusLessons(filter: {syllabusID: {contains: $syllabusID}}) {
+    listSyllabusLessons(filter: { syllabusID: { contains: $syllabusID } }) {
       nextToken
       items {
         id
         lesson {
-          id
+          SELStructure
           title
+          type
+          updatedAt
+          theme {
+            images
+            summary
+            summaryLabel  
+          }
+          summary
         }
         createdAt
         updatedAt
