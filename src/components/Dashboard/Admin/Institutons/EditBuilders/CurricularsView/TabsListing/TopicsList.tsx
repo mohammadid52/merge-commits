@@ -58,7 +58,7 @@ const TopicsList = (props: TopicsListProps) => {
       await API.graphql(graphqlOperation(queries.getCSequences,
         { id: `t_${curricularId}` }))
     ]);
-    list = list.data.listTopics?.items || []
+    list = list?.data.listTopics?.items || []
     seq = seq?.data.getCSequences?.sequence || []
     // sort list as per the seq
     list = list.map((t: any) => {

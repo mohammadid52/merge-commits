@@ -872,6 +872,7 @@ export const getCurriculum = /* GraphQL */ `
           curriculumID
           languages
           designers
+          status
           createdAt
           updatedAt
         }
@@ -1299,6 +1300,7 @@ export const getSyllabus = /* GraphQL */ `
         nextToken
       }
       designers
+      status
       createdAt
       updatedAt
     }
@@ -1334,6 +1336,7 @@ export const listSyllabuss = /* GraphQL */ `
           nextToken
         }
         designers
+        status
         createdAt
         updatedAt
       }

@@ -338,6 +338,7 @@ type Syllabus
   languages: [Language]
   lessons: [SyllabusLesson] @connection(keyName: "lessonBySyllabus", fields: ["id"])
   designers: [String]
+  status: Boolean
 }
 
 type SyllabusLesson
