@@ -15,6 +15,7 @@ import SectionTitle from '../../../Atoms/SectionTitle';
 import PageWrapper from '../../../Atoms/PageWrapper';
 
 import { languageList } from '../../../../utilities/staticData'
+import RichTextEditor from '../../../Atoms/RichTextEditor';
 
 interface InitialData {
   name: string
@@ -33,8 +34,8 @@ const LessonBuilder = () => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: '**', url: '**', last: false },
-    { title: '**', url: '**', last: true },
+    { title: 'Lesson Builder', url: '/dashborad/lesson-builder', last: false },
+    { title: 'Add New Lesson ', url: '/dashborad/lesson-builder/add', last: true },
   ]
   const initialData = {
     name: '',
@@ -141,7 +142,7 @@ const LessonBuilder = () => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="**TITLE--" subtitle="**Subtitle--" />
+        <SectionTitle title="ADD NEW LESSONS" subtitle="Add lessons, surveys or assessments." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -149,54 +150,71 @@ const LessonBuilder = () => {
 
       {/* Body */}
       <PageWrapper>
-        <div className="m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">** TITLE ** </h3>
-          <div className="">
-
-            <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-              <div>
-                <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Name" isRequired />
-                {/* {validation.question && <p className="text-red-600 text-sm">{validation.question}</p>} */}
-              </div>
-              <div>
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                  Select Type
-                </label>
-                <Selector selectedItem={type.name} placeholder="Type" list={typeList} onChange={(val, name, id) => onSelectOption(val, name, id, 'type')} />
-              </div>
-            </div>
-
-            <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-              <div>
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                  Select Designers
-                </label>
-                <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
-              </div>
-              <div>
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                  Select Language
-              </label>
-                <MultipleSelector selectedItems={languages} placeholder="Language" list={languageList} onChange={selectLanguage} />
-              </div>
-            </div>
-
-            <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-              <div>
-
-              </div>
-              <div>
-
-              </div>
-            </div>
-
-          </div>
+        <div className="px-4 py-5 sm:px-6">
+          <h3 className="text-lg text-center leading-6 font-medium text-gray-900">
+            LESSON BUILDER
+          </h3>
         </div>
-        {/* {validation.message && <div className="py-2 m-auto mt-2 text-center">
-          <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
-        </div>} */}
-        <div className="flex mb-8 mt-4 justify-center">
-          <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveFormData} disabled={loading ? true : false} />
+
+        <div className="h-9/10 flex flex-col md:flex-row">
+          <div className="w-full">
+            <div className='bg-white shadow-5 sm:rounded-lg mb-4'>
+
+              <div className="px-4 py-5 border-b border-gray-200 sm:px-6 flex justify-between items-center">
+                <h3 className="text-lg flex leading-6 font-medium text-gray-900">
+                  GENERAL INFORMATION
+                </h3>
+                <p>Icons</p>
+              </div>
+              <div className="w-9/10 m-auto p-4">
+
+                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+                  <div>
+                    <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Name" isRequired />
+                    {/* {validation.question && <p className="text-red-600 text-sm">{validation.question}</p>} */}
+                  </div>
+                  <div>
+                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                      Select Type
+                      </label>
+                    <Selector selectedItem={type.name} placeholder="Type" list={typeList} onChange={(val, name, id) => onSelectOption(val, name, id, 'type')} />
+                  </div>
+                </div>
+
+                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+                  <div>
+                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                      Select Designers
+                </label>
+                    <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
+                  </div>
+                  <div>
+                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                      Select Language
+              </label>
+                    <MultipleSelector selectedItems={languages} placeholder="Language" list={languageList} onChange={selectLanguage} />
+                  </div>
+                </div>
+
+                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+                  <div>
+                    {/* <RichTextEditor initialValue='' onChange={(htmlContent)=>console.log(htmlContent)} /> */}
+                  </div>
+                  <div>
+
+                  </div>
+                </div>
+
+                {/* {validation.message && <div className="py-2 m-auto mt-2 text-center">
+                      <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
+                    </div>} */}
+                <div className="flex mb-8 mt-4 justify-center">
+                  <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveFormData} disabled={loading ? true : false} />
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
       </PageWrapper>
     </div>
