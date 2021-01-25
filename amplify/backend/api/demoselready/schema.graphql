@@ -178,7 +178,7 @@ type Room
   length: Int
   repeat: String
   notes: String
-  activeSyllabus: Int
+  activeSyllabus: String
 }
 
 ### Class
@@ -628,6 +628,7 @@ type Lesson @model @key(fields: ["id"]) {
   assessmentID: ID!
   assessment: Assessment @connection(fields: ["assessmentID"])
   filters: [String]
+  coverImage: String
 }
 
 type LessonCheckpoint @model(queries: null) @key(name: "byLesson", fields: ["lessonID", "checkpointID"]) {

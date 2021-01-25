@@ -1444,6 +1444,7 @@ export const getSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -1484,6 +1485,7 @@ export const listSyllabusLessons = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -1601,6 +1603,7 @@ export const getStudentData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -2010,6 +2013,7 @@ export const getClassroom = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -2103,6 +2107,7 @@ export const listClassrooms = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -2178,6 +2183,7 @@ export const getFeedback = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -2523,6 +2529,7 @@ export const getLesson = /* GraphQL */ `
         updatedAt
       }
       filters
+      coverImage
       createdAt
       updatedAt
     }
@@ -2634,6 +2641,7 @@ export const listLessons = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -3247,6 +3255,7 @@ export const getQuestionData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }

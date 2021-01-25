@@ -2760,6 +2760,7 @@ export const createSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -2871,6 +2872,7 @@ export const updateSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -2982,6 +2984,7 @@ export const deleteSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -3150,6 +3153,7 @@ export const createStudentData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -3329,6 +3333,7 @@ export const updateStudentData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -3508,6 +3513,7 @@ export const deleteStudentData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -3864,6 +3870,7 @@ export const createClassroom = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -4049,6 +4056,7 @@ export const updateClassroom = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -4234,6 +4242,7 @@ export const deleteClassroom = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -4330,6 +4339,7 @@ export const createFeedback = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -4409,6 +4419,7 @@ export const updateFeedback = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -4488,6 +4499,7 @@ export const deleteFeedback = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -4868,6 +4880,7 @@ export const createLesson = /* GraphQL */ `
         updatedAt
       }
       filters
+      coverImage
       createdAt
       updatedAt
     }
@@ -5059,6 +5072,7 @@ export const updateLesson = /* GraphQL */ `
         updatedAt
       }
       filters
+      coverImage
       createdAt
       updatedAt
     }
@@ -5250,6 +5264,7 @@ export const deleteLesson = /* GraphQL */ `
         updatedAt
       }
       filters
+      coverImage
       createdAt
       updatedAt
     }
@@ -5356,6 +5371,7 @@ export const createLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -5478,6 +5494,7 @@ export const updateLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -5600,6 +5617,7 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -6820,6 +6838,7 @@ export const createQuestionData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -6936,6 +6955,7 @@ export const updateQuestionData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -7052,6 +7072,7 @@ export const deleteQuestionData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -7681,6 +7702,7 @@ export const createLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -7796,6 +7818,7 @@ export const updateLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -7911,6 +7934,7 @@ export const deleteLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }

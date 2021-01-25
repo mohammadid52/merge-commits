@@ -141,6 +141,7 @@ export const onUpdateClassroom = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -236,6 +237,7 @@ export const onChangeStudentData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -3095,6 +3097,7 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -3203,6 +3206,7 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -3311,6 +3315,7 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -3546,6 +3551,7 @@ export const onCreateFeedback = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -3622,6 +3628,7 @@ export const onUpdateFeedback = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -3698,6 +3705,7 @@ export const onDeleteFeedback = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -4057,6 +4065,7 @@ export const onCreateLesson = /* GraphQL */ `
         updatedAt
       }
       filters
+      coverImage
       createdAt
       updatedAt
     }
@@ -4245,6 +4254,7 @@ export const onUpdateLesson = /* GraphQL */ `
         updatedAt
       }
       filters
+      coverImage
       createdAt
       updatedAt
     }
@@ -4433,6 +4443,7 @@ export const onDeleteLesson = /* GraphQL */ `
         updatedAt
       }
       filters
+      coverImage
       createdAt
       updatedAt
     }
@@ -4536,6 +4547,7 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -4655,6 +4667,7 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -4774,6 +4787,7 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -5883,6 +5897,7 @@ export const onCreateQuestionData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -5996,6 +6011,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -6109,6 +6125,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -6717,6 +6734,7 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -6829,6 +6847,7 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -6941,6 +6960,7 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
