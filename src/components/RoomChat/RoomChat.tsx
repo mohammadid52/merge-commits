@@ -48,6 +48,7 @@ const RoomChat = (props: RoomChatProps) => {
     }, []);
 
     useEffect(() => {
+        // @ts-ignore
         const subscription = API.graphql(graphqlOperation(subscriptions.onNewRoomMsg, { roomID: '06263081-3fb9-4b4b-be13-d1753297d3d3' })).subscribe({
             next: (event: any) => {
                 setMsgs([...msgs, event.value.data.onNewRoomMsg]);
