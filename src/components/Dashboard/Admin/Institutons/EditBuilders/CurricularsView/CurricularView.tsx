@@ -21,7 +21,7 @@ import TopicsList from './TabsListing/TopicsList';
 import MeasMntList from './TabsListing/MeasMntList';
 import LearningObjectiveList from './TabsListing/learningObjective'
 interface CurricularViewProps {
-
+  tabProps?: any
 }
 interface InitialData {
   id: string,
@@ -37,7 +37,7 @@ interface InitialData {
   syllabusList: any[]
 }
 const CurricularView = (props: CurricularViewProps) => {
-  const { } = props;
+  const { tabProps } = props;
 
   const match = useRouteMatch();
   const history = useHistory();
@@ -81,6 +81,9 @@ const CurricularView = (props: CurricularViewProps) => {
     { index: 3, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList syllabusList={curricularData.syllabusList} curricularId={currID} /> },
   ]
 
+  const updateTab = (tab: number) => {
+    tabProps.setTabsData({...tabProps.tabsData, instCurr: tab})
+  }
 
   const fetchCurricularData = async () => {
     const currID = params.get('id');
@@ -209,7 +212,7 @@ const CurricularView = (props: CurricularViewProps) => {
             </div>
             <div className='bg-white shadow-5 sm:rounded-lg'>
               <div className='px-4 py-5 sm:px-6'>
-                <UnderlinedTabs tabs={tabs} />
+                <UnderlinedTabs tabs={tabs} activeTab={tabProps.tabsData.instCurr} updateTab={updateTab} />
               </div>
             </div>
           </div>

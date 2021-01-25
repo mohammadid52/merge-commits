@@ -1711,6 +1711,7 @@ export const createCurriculum = /* GraphQL */ `
           curriculumID
           languages
           designers
+          status
           createdAt
           updatedAt
         }
@@ -1781,6 +1782,7 @@ export const updateCurriculum = /* GraphQL */ `
           curriculumID
           languages
           designers
+          status
           createdAt
           updatedAt
         }
@@ -1851,6 +1853,7 @@ export const deleteCurriculum = /* GraphQL */ `
           curriculumID
           languages
           designers
+          status
           createdAt
           updatedAt
         }
@@ -2576,6 +2579,7 @@ export const createSyllabus = /* GraphQL */ `
         nextToken
       }
       designers
+      status
       createdAt
       updatedAt
     }
@@ -2611,6 +2615,7 @@ export const updateSyllabus = /* GraphQL */ `
         nextToken
       }
       designers
+      status
       createdAt
       updatedAt
     }
@@ -2646,6 +2651,7 @@ export const deleteSyllabus = /* GraphQL */ `
         nextToken
       }
       designers
+      status
       createdAt
       updatedAt
     }

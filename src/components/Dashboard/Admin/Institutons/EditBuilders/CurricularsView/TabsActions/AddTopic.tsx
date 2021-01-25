@@ -87,20 +87,6 @@ const AddTopic = (props: AddTopicProps) => {
     }
   }
 
-  const fetchLearningObjectives = async () => {
-    console.log('jerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr')
-    let list: any = await API.graphql(graphqlOperation(queries.listLearningObjectives, {
-      filter: { curriculumID: { eq: curricularId } },
-    }));
-    list = list.data.listLearningObjectives?.items || []
-    list = list.map((item: any) => ({
-      id: item.id,
-      name: item.name,
-      value: item.name
-    }));
-    setLearnings(list)
-  }
-
   const selectLearning = (val: string, name: string, id: string) => {
     if (validation.learning) {
       setValidation({ ...validation, learning: '' })
@@ -108,18 +94,23 @@ const AddTopic = (props: AddTopicProps) => {
     setLearning({ id, name, value: val })
   }
 
-  const fetchTopicsSequence = async () => {
-    let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
-      { id: `t_${curricularId}` }))
-    item = item?.data.getCSequences?.sequence || []
-    if (item) {
-      setTopicIds(item)
-    }
+  const fetchData = async () => {
+    let [list, seq]:any = await Promise.all([
+      await API.graphql(graphqlOperation(queries.listLearningObjectives, {
+        filter: { curriculumID: { eq: curricularId } },
+      })),
+      await API.graphql(graphqlOperation(queries.getCSequences,
+        { id: `t_${curricularId}` })),
+    ]);
+    list = list?.data?.listLearningObjectives?.items || []
+    list = list.map((item: any) => ({ id: item.id, name: item.name, value: item.name }));
+    seq = seq?.data?.getCSequences?.sequence || []
+    setLearnings(list)
+    setTopicIds(seq)
   }
 
   useEffect(() => {
-    fetchLearningObjectives()
-    fetchTopicsSequence()
+    fetchData()
   }, [])
 
   const cancelEvent = () => {

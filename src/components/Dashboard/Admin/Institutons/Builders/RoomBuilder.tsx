@@ -46,6 +46,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     message: '',
     isError: false
   })
+  const [loading, setLoading] = useState(false)
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
@@ -326,7 +327,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         isError: true
       })
       return false;
-    } else if (roomData.maxPersons > '30') {
+    } else if (parseInt(roomData.maxPersons) < 1 || parseInt(roomData.maxPersons) > 30) {
       setMessages({
         show: true,
         message: 'One room can allow max. 30 students.',
@@ -365,12 +366,14 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           isError: false
         })
         setRoomData(initialData)
+        setLoading(false)
       } catch {
         setMessages({
           show: true,
           message: 'Error while adding room curricular. Please try again later.',
           isError: true
         })
+        setLoading(false)
       }
     } else {
       setMessages({
@@ -378,6 +381,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         message: 'Error while adding room curricular. Please try again later.',
         isError: true
       })
+      setLoading(false)
     }
 
   }
@@ -386,6 +390,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     const isValid = await validateForm();
     if (isValid) {
       try {
+        setLoading(true)
         const input = {
           institutionID: roomData.institute.id,
           classID: roomData.classRoom.id,
@@ -405,14 +410,15 @@ const RoomBuilder = (props: RoomBuilderProps) => {
             isError: false
           })
           setRoomData(initialData)
+          setLoading(false)
         }
-
       } catch{
         setMessages({
           show: true,
           message: 'Error while creating room. Please try again later.',
           isError: true
         })
+        setLoading(false)
       }
     }
   }
@@ -544,7 +550,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
         </div>) : null}
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-12 text-sm" label="Save" onClick={createNewRoom} />
+          <Buttons btnClass="py-3 px-12 text-sm" label={!loading ? 'Save': 'Saving...'} onClick={createNewRoom} />
         </div>
       </PageWrapper>
     </div>
