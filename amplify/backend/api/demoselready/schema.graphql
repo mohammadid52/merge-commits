@@ -338,6 +338,7 @@ type Syllabus
   languages: [Language]
   lessons: [SyllabusLesson] @connection(keyName: "lessonBySyllabus", fields: ["id"])
   designers: [String]
+  status: Boolean
 }
 
 type SyllabusLesson
@@ -462,6 +463,8 @@ type Subscription {
   onUpdateClassroom(id: ID!): Classroom @aws_subscribe(mutations: ["updateClassroom"])
   onChangeStudentData(classroomID: ID!): StudentData
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
+  onNewRoomMsg(roomID: ID!): RoomMsgs
+    @aws_subscribe(mutations: ["createRoomMsgs"])
 }
 
 type StudentData
@@ -911,4 +914,18 @@ type Clients
   name: String
   subdomain: String
   key: String
+}
+
+type RoomMsgs
+@model
+@key(name: "byRoomID", fields: ["roomID", "createdAt"], queryField: "messagesByRoomID")
+{
+  id: ID!
+  roomID: ID!
+  senderAuthID: String!
+  senderEmail: String!
+  body: String!
+  createdAt: AWSDateTime
+  sender: Person @connection(fields: ["senderEmail", "senderAuthID"])
+  room: Room @connection(fields: ["roomID"])
 }
