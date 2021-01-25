@@ -62,6 +62,36 @@
   border: 1.5px solid #f1f1f1;
 }
 
+.toolItemClassName {
+  width: auto;
+}
+
+.toolItemClassName > div {
+  width: auto;
+}
+
+.toolbarClassName > div {
+  width: auto;
+}
+
+.dropdownClassName {
+  width: 50px !important;
+  z-index: unset !important;
+}
+
+.dropdownBlockClassName {
+  width: 100px !important;
+}
+
+.dropdownClassName img {
+  width: unset;
+}
+
+.plainText a {
+  text-decoration: none;
+  color: black;
+}
+
 .wrapperClassName {
   background-color: white;
   min-height: 15rem;
@@ -69,12 +99,15 @@
 }
 
 .editorClassName {
-  min-height: 12rem;
-  max-height: 12rem;
+  height: 12rem !important;
   border: 1.5px solid #f1f1f1;
   padding: 5px;
   border-radius: 2px;
 }
+
+/* .editorClassName h1 h2 h3 h4 h5 h6 {
+  font-size: initial;
+} */
 
 .editorClassName p,
 span {
