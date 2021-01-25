@@ -1317,3 +1317,39 @@ export const getRubric = /* GraphQL */ `
     }
   }
 `;
+
+export const messagesByRoomId = /* GraphQL */ `
+  query MessagesByRoomId(
+    $roomID: ID
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelRoomMsgsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    messagesByRoomID(
+      roomID: $roomID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        body
+        createdAt
+        sender {
+          id
+          email
+          firstName
+          preferredName
+          lastName
+          image
+        }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

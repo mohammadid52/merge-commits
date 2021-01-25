@@ -141,6 +141,7 @@ export const onUpdateClassroom = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -236,6 +237,7 @@ export const onChangeStudentData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -356,6 +358,121 @@ export const onChangeStudentData = /* GraphQL */ `
         nextToken
       }
       createdAt
+      updatedAt
+    }
+  }
+`;
+export const onNewRoomMsg = /* GraphQL */ `
+  subscription OnNewRoomMsg($roomID: ID!) {
+    onNewRoomMsg(roomID: $roomID) {
+      id
+      roomID
+      senderAuthID
+      senderEmail
+      body
+      createdAt
+      sender {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        createdAt
+        updatedAt
+      }
       updatedAt
     }
   }
@@ -2980,6 +3097,7 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -3088,6 +3206,7 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -3196,6 +3315,7 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -3431,6 +3551,7 @@ export const onCreateFeedback = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -3507,6 +3628,7 @@ export const onUpdateFeedback = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -3583,6 +3705,7 @@ export const onDeleteFeedback = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -3942,6 +4065,7 @@ export const onCreateLesson = /* GraphQL */ `
         updatedAt
       }
       filters
+      coverImage
       createdAt
       updatedAt
     }
@@ -4130,6 +4254,7 @@ export const onUpdateLesson = /* GraphQL */ `
         updatedAt
       }
       filters
+      coverImage
       createdAt
       updatedAt
     }
@@ -4318,6 +4443,7 @@ export const onDeleteLesson = /* GraphQL */ `
         updatedAt
       }
       filters
+      coverImage
       createdAt
       updatedAt
     }
@@ -4421,6 +4547,7 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -4540,6 +4667,7 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -4659,6 +4787,7 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -5768,6 +5897,7 @@ export const onCreateQuestionData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -5881,6 +6011,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -5994,6 +6125,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
           activityId
           assessmentID
           filters
+          coverImage
           createdAt
           updatedAt
         }
@@ -6602,6 +6734,7 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -6714,6 +6847,7 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -6826,6 +6960,7 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         filters
+        coverImage
         createdAt
         updatedAt
       }
@@ -7259,6 +7394,351 @@ export const onDeleteClients = /* GraphQL */ `
       subdomain
       key
       createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateRoomMsgs = /* GraphQL */ `
+  subscription OnCreateRoomMsgs {
+    onCreateRoomMsgs {
+      id
+      roomID
+      senderAuthID
+      senderEmail
+      body
+      createdAt
+      sender {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        createdAt
+        updatedAt
+      }
+      updatedAt
+    }
+  }
+`;
+export const onUpdateRoomMsgs = /* GraphQL */ `
+  subscription OnUpdateRoomMsgs {
+    onUpdateRoomMsgs {
+      id
+      roomID
+      senderAuthID
+      senderEmail
+      body
+      createdAt
+      sender {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        createdAt
+        updatedAt
+      }
+      updatedAt
+    }
+  }
+`;
+export const onDeleteRoomMsgs = /* GraphQL */ `
+  subscription OnDeleteRoomMsgs {
+    onDeleteRoomMsgs {
+      id
+      roomID
+      senderAuthID
+      senderEmail
+      body
+      createdAt
+      sender {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        wordbank {
+          nextToken
+        }
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        classes {
+          nextToken
+        }
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        createdAt
+        updatedAt
+      }
       updatedAt
     }
   }
