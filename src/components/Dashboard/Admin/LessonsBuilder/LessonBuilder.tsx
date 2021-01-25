@@ -4,12 +4,12 @@ import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api'
 
 import * as customQueries from '../../../../customGraphql/customQueries';
+import * as mutations from '../../../../graphql/mutations';
 
 import Buttons from '../../../Atoms/Buttons';
 import Selector from '../../../Atoms/Form/Selector';
 import MultipleSelector from '../../../Atoms/Form/MultipleSelector';
 import FormInput from '../../../Atoms/Form/FormInput';
-import TextArea from '../../../Atoms/Form/TextArea';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageWrapper from '../../../Atoms/PageWrapper';
@@ -21,7 +21,9 @@ interface InitialData {
   name: string
   type: InputValue,
   purpose: string,
-  objectives: string,
+  purposeHtml: string,
+  objective: string,
+  objectiveHtml: string,
   languages: { id: string, name: string, value: string }[]
 }
 interface InputValue {
@@ -41,7 +43,9 @@ const LessonBuilder = () => {
     name: '',
     type: { id: '', name: '', value: '' },
     purpose: '',
-    objectives: '',
+    purposeHtml: '<p></p>',
+    objective: '',
+    objectiveHtml: '<p></p>',
     languages: [{ id: '1', name: "English", value: 'EN' }]
   }
   const [formData, setFormData] = useState<InitialData>(initialData);
@@ -49,8 +53,8 @@ const LessonBuilder = () => {
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({
-    question: '',
-    label: '',
+    name: '',
+    type: '',
     message: '',
     isError: true
   });
@@ -65,6 +69,10 @@ const LessonBuilder = () => {
       ...formData,
       [e.target.name]: e.target.value
     })
+    setValidation({
+      ...validation,
+      name: ''
+    })
   }
 
   const onSelectOption = (val: string, name: string, id: string, field: string) => {
@@ -75,6 +83,10 @@ const LessonBuilder = () => {
         name: name,
         value: val
       }
+    });
+    setValidation({
+      ...validation,
+      type: ''
     })
   }
 
@@ -104,10 +116,75 @@ const LessonBuilder = () => {
     }
     setSelectedDesigners(updatedList)
   }
-  const saveFormData = () => {
-
+  const validateForm = () => {
+    let isValid = true
+    const msgs = validation;
+    if (!formData.name?.trim().length) {
+      isValid = false;
+      msgs.name = 'Lessson name is required';
+    } else {
+      msgs.name = ''
+    }
+    if (!formData.type?.value.trim().length) {
+      isValid = false;
+      msgs.type = 'Lesson type is required';
+    } else {
+      msgs.type = ''
+    }
+    // TODO: Add validation for repeating lesson names.
+    setValidation({ ...msgs });
+    return isValid;
   }
 
+  const saveFormData = async () => {
+    const isValid = validateForm();
+    if (isValid) {
+      try {
+        setLoading(true)
+        const input = {
+          title: formData.name,
+          type: formData.type?.value,
+          purpose: formData.purpose,
+          purposeHtml: formData.purposeHtml,
+          objective: formData.objective,
+          objectiveHtml: formData.objectiveHtml,
+          language: formData.languages.map(item => item.value),
+          designers: selectedDesigners.map(item => item.id)
+        }
+        const results: any = await API.graphql(
+          graphqlOperation(mutations.createLesson, { input: input })
+        );
+        const savedData = results?.data?.createLesson;
+        setLoading(false);
+        if (savedData) {
+          setValidation({
+            name: '',
+            type: '',
+            message: 'Lesson details saved successfully.',
+            isError: false
+          })
+        }
+        setFormData(initialData);
+        setSelectedDesigners([])
+      } catch{
+        setValidation({
+          name: '',
+          type: '',
+          message: 'Unable to save Lesson details, Please try again later.',
+          isError: true
+        });
+        setLoading(false)
+      }
+    }
+  }
+
+  const setEditorContent = (html: string, text: string, fieldHtml: string, field: string) => {
+    setFormData({
+      ...formData,
+      [fieldHtml]: html,
+      [field]: text
+    })
+  }
 
   const fetchPersonsList = async () => {
     try {
@@ -123,8 +200,8 @@ const LessonBuilder = () => {
       setDesignersList(updatedList);
     } catch {
       setValidation({
-        question: '',
-        label: '',
+        name: '',
+        type: '',
         message: 'Error while fetching designers list, you can add them later.',
         isError: true
       });
@@ -135,9 +212,9 @@ const LessonBuilder = () => {
     fetchPersonsList();
   }, [])
 
-  const { name, type, languages } = formData;
+  const { name, type, languages, purpose, purposeHtml, objective, objectiveHtml } = formData;
   return (
-    <div className="w-full h-full">
+    <div className="w-8/10 h-full">
 
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
@@ -150,72 +227,64 @@ const LessonBuilder = () => {
 
       {/* Body */}
       <PageWrapper>
-        <div className="px-4 py-5 sm:px-6">
-          <h3 className="text-lg text-center leading-6 font-medium text-gray-900">
-            LESSON BUILDER
-          </h3>
-        </div>
 
-        <div className="h-9/10 flex flex-col md:flex-row">
-          <div className="w-full">
-            <div className='bg-white shadow-5 sm:rounded-lg mb-4'>
+        <div className="w-7/10 m-auto">
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON INFORMATION</h3>
+          <div className="">
 
-              <div className="px-4 py-5 border-b border-gray-200 sm:px-6 flex justify-between items-center">
-                <h3 className="text-lg flex leading-6 font-medium text-gray-900">
-                  GENERAL INFORMATION
-                </h3>
-                <p>Icons</p>
+            <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+              <div>
+                <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Name" isRequired />
+                {validation.name && <p className="text-red-600 text-sm">{validation.name}</p>}
               </div>
-              <div className="w-9/10 m-auto p-4">
-
-                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-                  <div>
-                    <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Name" isRequired />
-                    {/* {validation.question && <p className="text-red-600 text-sm">{validation.question}</p>} */}
-                  </div>
-                  <div>
-                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                      Select Type
-                      </label>
-                    <Selector selectedItem={type.name} placeholder="Type" list={typeList} onChange={(val, name, id) => onSelectOption(val, name, id, 'type')} />
-                  </div>
-                </div>
-
-                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-                  <div>
-                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                      Select Designers
+              <div>
+                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                  Select Type
                 </label>
-                    <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
-                  </div>
-                  <div>
-                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                      Select Language
-              </label>
-                    <MultipleSelector selectedItems={languages} placeholder="Language" list={languageList} onChange={selectLanguage} />
-                  </div>
-                </div>
-
-                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-                  <div>
-                    {/* <RichTextEditor initialValue='' onChange={(htmlContent)=>console.log(htmlContent)} /> */}
-                  </div>
-                  <div>
-
-                  </div>
-                </div>
-
-                {/* {validation.message && <div className="py-2 m-auto mt-2 text-center">
-                      <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
-                    </div>} */}
-                <div className="flex mb-8 mt-4 justify-center">
-                  <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveFormData} disabled={loading ? true : false} />
-                </div>
+                <Selector selectedItem={type.name} placeholder="Type" list={typeList} onChange={(val, name, id) => onSelectOption(val, name, id, 'type')} />
+                {validation.type && <p className="text-red-600 text-sm">{validation.type}</p>}
               </div>
-
             </div>
+
+            <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+              <div>
+                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                  Select Designers
+                </label>
+                <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
+              </div>
+              <div>
+                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                  Select Language
+                    </label>
+                <MultipleSelector selectedItems={languages} placeholder="Language" list={languageList} onChange={selectLanguage} />
+              </div>
+            </div>
+
+            <div className="px-3 py-4">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                Purpose
+              </label>
+              <RichTextEditor initialValue={purposeHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'purposeHtml', 'purpose')} />
+            </div>
+
+            <div className="px-3 py-4">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                Objective
+              </label>
+              <RichTextEditor initialValue={objectiveHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')} />
+            </div>
+
           </div>
         </div>
+
+        {validation.message && <div className="py-2 m-auto mt-2 text-center">
+          <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
+        </div>}
+        <div className="flex mb-8 mt-4 justify-center">
+          <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveFormData} disabled={loading ? true : false} />
+        </div>
+
       </PageWrapper>
     </div>
   )

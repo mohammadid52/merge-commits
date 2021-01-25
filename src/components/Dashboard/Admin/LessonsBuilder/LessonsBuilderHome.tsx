@@ -2,7 +2,7 @@ import React from 'react'
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
 import LessonBuilder from './LessonBuilder';
-import Lessons from './Lessons';
+import LessonsList from './LessonsList';
 
 const LessonsBuilderHome = () => {
   const match = useRouteMatch();
@@ -13,7 +13,7 @@ const LessonsBuilderHome = () => {
         <Route
           exact
           path={`${match.url}`}
-          render={() => <Lessons />}    // Lessons builder Home
+          render={() => <LessonsList />}    // Lessons builder List Home
         />
         <Route
           exact
