@@ -33,6 +33,8 @@ export interface DashboardProps {
   setCurrentPageData?: React.Dispatch<any>;
   currentPage?: string;
   setCurrentPage?: React.Dispatch<React.SetStateAction<string>>;
+  activeRoom?: string;
+  setActiveRoom?: React.Dispatch<React.SetStateAction<string>>;
   visibleLessonGroup?: string;
   setVisibleLessonGroup?: React.Dispatch<React.SetStateAction<string>>;
   handleSyllabusActivation?: (syllabusID: string) => void;
@@ -64,6 +66,7 @@ const Dashboard = (props: DashboardProps) => {
   // Page switching
   const [currentPage, setCurrentPage] = useState<string>('');
   const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('today');
+  const [activeRoom, setActiveRoom] = useState<string>('');
 
   const setUser = (user: userObject) => {
     setUserData({
@@ -133,6 +136,8 @@ const Dashboard = (props: DashboardProps) => {
       {currentPage === 'lesson-planner' || currentPage === 'classroom' ? (
         <SideRoomSelector
           currentPage={currentPage}
+          activeRoom={activeRoom}
+          setActiveRoom={setActiveRoom}
           lessonLoading={lessonLoading}
           setLessonLoading={setLessonLoading}
           syllabusLoading={syllabusLoading}
@@ -158,6 +163,8 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <Classroom
                     currentPage={currentPage}
+                    activeRoom={activeRoom}
+                    setActiveRoom={setActiveRoom}
                     visibleLessonGroup={visibleLessonGroup}
                     setVisibleLessonGroup={setVisibleLessonGroup}
                     lessonLoading={lessonLoading}
@@ -184,6 +191,7 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <LessonPlanHome
                     currentPage={currentPage}
+                    activeRoom={activeRoom}
                     visibleLessonGroup={visibleLessonGroup}
                     setVisibleLessonGroup={setVisibleLessonGroup}
                     lessonLoading={lessonLoading}

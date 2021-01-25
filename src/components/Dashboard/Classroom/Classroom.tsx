@@ -74,6 +74,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const {
     isTeacher,
     currentPage,
+    activeRoom,
+    setActiveRoom,
     visibleLessonGroup,
     setVisibleLessonGroup,
     handleSyllabusActivation,
@@ -308,26 +310,24 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
               {/**
                *  LESSON BOX
                */}
-              {!lessonLoading && state.roomData?.lessons?.length > 0 ? (
-                currentPage === 'lesson-planner' || currentPage === 'classroom' ? (
-                  <div className={`p-4 bg-mustard-yellow bg-opacity-20`}>
-                    <p>Lessons: </p>
-                    {!lessonLoading ? (
-                      state.roomData.lessons.map((lesson: Lesson, i: number) => {
-                        return (
-                          <div key={`testLesson_${i}`} id={`testLesson_${i}`} className={`p-2 mb-1 bg-white rounded`}>
-                            <p className={`text-xs text-darker-gray`}>ID: {lesson.lesson.id}</p>
-                            <p className={`text-sm text-darker-gray`}>Title: {lesson.lesson.title}</p>
-                          </div>
-                        );
-                      })
-                    ) : !lessonLoading && state.roomData?.lessons?.length === 0 ? (
-                      <div>No lessons...</div>
-                    ) : (
-                      <div>Loading test lessons...</div>
-                    )}
-                  </div>
-                ) : null
+              {currentPage === 'lesson-planner' || currentPage === 'classroom' ? (
+                <div className={`p-4 bg-mustard-yellow bg-opacity-20`}>
+                  <p>Lessons: </p>
+                  {!lessonLoading && state.roomData?.lessons?.length > 0 ? (
+                    state.roomData.lessons.map((lesson: Lesson, i: number) => {
+                      return (
+                        <div key={`testLesson_${i}`} id={`testLesson_${i}`} className={`p-2 mb-1 bg-white rounded`}>
+                          <p className={`text-xs text-darker-gray`}>ID: {lesson.lesson.id}</p>
+                          <p className={`text-sm text-darker-gray`}>Title: {lesson.lesson.title}</p>
+                        </div>
+                      );
+                    })
+                  ) : !lessonLoading && state.roomData?.lessons?.length === 0 ? (
+                    <div>No lessons...</div>
+                  ) : (
+                    <div>Loading test lessons...</div>
+                  )}
+                </div>
               ) : null}
             </div>
           </div>

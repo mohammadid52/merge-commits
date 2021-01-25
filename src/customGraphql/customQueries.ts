@@ -732,9 +732,13 @@ export const listRooms = /* GraphQL */ `
     listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        institutionID
         classID
         teacherAuthID
+        teacherEmail
         name
+        maxPersons
+        activeSyllabus
       }
       nextToken
     }
@@ -796,10 +800,12 @@ export const listSyllabusLessons = /* GraphQL */ `
           title
           type
           updatedAt
-          theme {
+          artist {
+            id
             images
-            summary
-            summaryLabel  
+            name
+            type
+            bio
           }
           summary
         }

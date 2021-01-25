@@ -20,6 +20,8 @@ const SideRoomSelector = (props: SideMenuProps) => {
     isTeacher,
     currentPage,
     setCurrentPage,
+    activeRoom,
+    setActiveRoom,
     lessonLoading,
     setLessonLoading,
     syllabusLoading,
@@ -33,7 +35,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
   const [syllabusId, setSyllabusId] = useState<string[]>([]);
   // Menu state
   const [loaded, setLoaded] = useState<boolean>(false);
-  const [activeRoom, setActiveRoom] = useState<string>('');
+  // const [activeRoom, setActiveRoom] = useState<string>('');
 
   useEffect(() => {
     const listClassStudents = async () => {
@@ -66,6 +68,15 @@ const SideRoomSelector = (props: SideMenuProps) => {
           const response = await roomsFetch;
           const arrayOfResponseObjects = response?.data?.listRooms?.items;
           setRooms(arrayOfResponseObjects);
+          // Dispatch to context
+          // TODO: remove storage of rooms in SideRoomSelector.tsx
+          dispatch({
+            type: 'UPDATE_ROOM',
+            payload: {
+              property: 'rooms',
+              data: arrayOfResponseObjects,
+            },
+          });
         } catch (e) {
           console.error('Rooms Fetch ERR: ', e);
         } finally {
@@ -100,6 +111,9 @@ const SideRoomSelector = (props: SideMenuProps) => {
     listRoomCurriculums();
   }, [activeRoom]);
 
+  /**
+   * LISTSYLLABUS SHOULD ONLY BE DONE FOR TEACHER
+   */
   useEffect(() => {
     const listSyllabus = async () => {
       if (curriculumIds.length > 0) {
@@ -112,11 +126,35 @@ const SideRoomSelector = (props: SideMenuProps) => {
           const response = await syllabusMultiFetch;
           const arrayOfResponseObjects = response?.data?.listSyllabuss?.items;
 
+          /**
+           * mappedResponseObjects explanation:
+           *   the activeSyllabusAll reduce loops over all the rooms in the array of room objects
+           *    IF the activeSyllabus property which comes from the database, is set with a string ->
+           *    return that string.
+           *      SO if any rooms come from the database with activeSyllabus ID's, the context will
+           *      show this
+           *      OTHERWISE no syllabus will be active on mount
+           */
+          const mappedResponseObjects = arrayOfResponseObjects.map((responseObject: any) => {
+            const activeSyllabusAll = rooms.reduce((acc: string[], room: any) => {
+              if (room.activeSyllabus !== null) {
+                return [...acc, room.activeSyllabus];
+              } else {
+                return acc;
+              }
+            }, []);
+            if (activeSyllabusAll.includes(responseObject.id)) {
+              return { ...responseObject, active: true };
+            } else {
+              return { ...responseObject, active: false };
+            }
+          });
+
           dispatch({
             type: 'UPDATE_ROOM',
             payload: {
               property: 'syllabus',
-              data: arrayOfResponseObjects,
+              data: mappedResponseObjects,
             },
           });
 
@@ -126,47 +164,75 @@ const SideRoomSelector = (props: SideMenuProps) => {
         }
       }
     };
-    listSyllabus();
+
+    if (currentPage === 'lesson-planner') {
+      listSyllabus();
+    }
   }, [curriculumIds]);
 
   useEffect(() => {
     const listSyllabusLessons = async () => {
-      if (state.roomData.syllabus.length > 0) {
-        // BELOW SHOULD BE REMOVED WHEN THERE ARE MULTIPLE SYLLABUSES
-        const getActiveSyllabus = state.roomData.syllabus.filter((syllabusObject: any) => {
-          if (syllabusObject.hasOwnProperty('active') && syllabusObject.active) {
-            return syllabusObject;
-          }
+      /**
+       * getActiveSyllabus explanation:
+       *  IF we're on the lesson-planner page, that means the teacher has the ability to activate
+       *  a syllabus
+       *    SO the first filter will return an array with max length 1 if any syllabus for that room are active
+       *    BUT it will return array with length 0 if no syllabus for that room are active
+       *  IF we're on the classroom page, multiple syllabus will not be loaded
+       *    SO the room objects in room array should contain an activeSyllabus property
+       *    THEREFORE if there is an active syllabus, this filter will return a string OR []
+       *  FINALLY if there are no active syllabus anywhere, return empty array
+       */
+      const lessonPlannerSyllabus =
+        state.roomData.syllabus.length > 0
+          ? state.roomData.syllabus.filter((syllabusObject: any) => {
+              if (syllabusObject.hasOwnProperty('active') && syllabusObject.active) {
+                return syllabusObject;
+              }
+            })
+          : [];
+      const classRoomActiveSyllabus = rooms
+        .filter((room: any) => room.id === activeRoom)
+        .map((room: any) => {
+          return { id: room.activeSyllabus };
         });
 
-        if (getActiveSyllabus.length > 0) {
-          try {
-            const syllabusLessonFetch: any = API.graphql(
-              graphqlOperation(customQueries.listSyllabusLessons, {
-                syllabusID: getActiveSyllabus[0].id,
-              })
-            );
-            const response = await syllabusLessonFetch;
-            const arrayOfResponseObjects = response?.data?.listSyllabusLessons?.items;
+      const getActiveSyllabus = currentPage === 'lesson-planner' ? lessonPlannerSyllabus : classRoomActiveSyllabus;
+      /**
+       * IF there are any syllabus active, do a fetch for lessons
+       */
+      if (getActiveSyllabus.length > 0) {
+        try {
+          console.log('try list lessons 0: ', getActiveSyllabus[0].id);
+          const syllabusLessonFetch: any = API.graphql(
+            graphqlOperation(customQueries.listSyllabusLessons, {
+              syllabusID: getActiveSyllabus[0].id,
+            })
+          );
+          const response = await syllabusLessonFetch;
+          const arrayOfResponseObjects = response?.data?.listSyllabusLessons?.items;
 
-            dispatch({
-              type: 'UPDATE_ROOM',
-              payload: {
-                property: 'lessons',
-                data: arrayOfResponseObjects,
-              },
-            });
-          } catch (e) {
-            console.error('syllabus lessons: ', e);
-          } finally {
-            setLessonLoading(false);
-          }
+          console.log('try list lessons: ', response);
+
+          dispatch({
+            type: 'UPDATE_ROOM',
+            payload: {
+              property: 'lessons',
+              data: arrayOfResponseObjects,
+            },
+          });
+        } catch (e) {
+          console.error('syllabus lessons: ', e);
+        } finally {
+          setLessonLoading(false);
         }
       }
     };
 
     listSyllabusLessons();
-  }, [state.roomData.syllabus]);
+
+    // TODO: update listener below for activeRoom state
+  }, [curriculumIds, state.roomData.syllabus]);
 
   const handleRoomSelection = (e: React.MouseEvent) => {
     const { id } = e.target as HTMLElement;
