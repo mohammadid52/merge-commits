@@ -35,6 +35,8 @@ export interface DashboardProps {
   setCurrentPage?: React.Dispatch<React.SetStateAction<string>>;
   activeRoom?: string;
   setActiveRoom?: React.Dispatch<React.SetStateAction<string>>;
+  activeRoomName?: string;
+  setActiveRoomName?: React.Dispatch<React.SetStateAction<string>>;
   visibleLessonGroup?: string;
   setVisibleLessonGroup?: React.Dispatch<React.SetStateAction<string>>;
   handleSyllabusActivation?: (syllabusID: string) => void;
@@ -67,6 +69,7 @@ const Dashboard = (props: DashboardProps) => {
   const [currentPage, setCurrentPage] = useState<string>('');
   const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('today');
   const [activeRoom, setActiveRoom] = useState<string>('');
+  const [activeRoomName, setActiveRoomName] = useState<string>('');
 
   const setUser = (user: userObject) => {
     setUserData({
@@ -136,6 +139,7 @@ const Dashboard = (props: DashboardProps) => {
           currentPage={currentPage}
           activeRoom={activeRoom}
           setActiveRoom={setActiveRoom}
+          setActiveRoomName={setActiveRoomName}
           lessonLoading={lessonLoading}
           setLessonLoading={setLessonLoading}
           syllabusLoading={syllabusLoading}
@@ -163,6 +167,8 @@ const Dashboard = (props: DashboardProps) => {
                     currentPage={currentPage}
                     activeRoom={activeRoom}
                     setActiveRoom={setActiveRoom}
+                    activeRoomName={activeRoomName}
+                    setActiveRoomName={setActiveRoomName}
                     visibleLessonGroup={visibleLessonGroup}
                     setVisibleLessonGroup={setVisibleLessonGroup}
                     lessonLoading={lessonLoading}
@@ -190,6 +196,8 @@ const Dashboard = (props: DashboardProps) => {
                   <LessonPlanHome
                     currentPage={currentPage}
                     activeRoom={activeRoom}
+                    activeRoomName={activeRoomName}
+                    setActiveRoomName={setActiveRoomName}
                     visibleLessonGroup={visibleLessonGroup}
                     setVisibleLessonGroup={setVisibleLessonGroup}
                     lessonLoading={lessonLoading}

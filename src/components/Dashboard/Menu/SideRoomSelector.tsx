@@ -21,6 +21,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
     setCurrentPage,
     activeRoom,
     setActiveRoom,
+    setActiveRoomName,
     lessonLoading,
     setLessonLoading,
     syllabusLoading,
@@ -234,9 +235,11 @@ const SideRoomSelector = (props: SideMenuProps) => {
   }, [curriculumIds, state.roomData.syllabus]);
 
   const handleRoomSelection = (e: React.MouseEvent) => {
-    const { id } = e.target as HTMLElement;
-    if (activeRoom !== id) {
-      setActiveRoom(id);
+    const t = e.target as HTMLElement;
+    const name = t.getAttribute('data-name');
+    if (activeRoom !== t.id) {
+      setActiveRoom(t.id);
+      setActiveRoomName(name);
       setSyllabusLoading(true); // Trigger loading ui element
       setLessonLoading(true);
     }
@@ -253,6 +256,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
             <div
               key={`room_button_sb${i}`}
               id={room.id}
+              data-name={room.name}
               onClick={handleRoomSelection}
               className={`cursor-pointer ${linkClass} ${
                 activeRoom === room.id

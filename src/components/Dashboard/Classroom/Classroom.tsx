@@ -78,6 +78,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     currentPage,
     activeRoom,
     setActiveRoom,
+    activeRoomName,
     visibleLessonGroup,
     setVisibleLessonGroup,
     handleSyllabusActivation,
@@ -87,13 +88,11 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     setSyllabusLoading,
   } = props;
   const { state, theme, dispatch } = useContext(GlobalContext);
-  const [curriculum, setCurriculum] = useState<CurriculumInfo>();
   const [survey, setSurvey] = useState<any>({
     display: false,
     data: null,
   });
 
-  const [listCurriculum, setListCurriculum] = useState<Lesson[]>();
   const [status, setStatus] = useState('today');
   const [lessonGroupCount, setLessonGroupCount] = useState<{ today: string; upcoming: string; completed: string }>({
     today: '0',
@@ -286,7 +285,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 pb-4 m-auto`}>
             <h2 className={`w-full flex text-xl border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
-              <span>{!isTeacher ? 'Classroom' : 'Lesson Planner'}</span>
+              <span>
+                {!isTeacher && activeRoomName !== '' ? activeRoomName : 'Classroom'}
+                {isTeacher ? 'Lesson Planner' : null}
+              </span>
               <span className={`mr-0 text-right`}>
                 <DateAndTime />
               </span>
