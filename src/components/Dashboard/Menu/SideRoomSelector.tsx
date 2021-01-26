@@ -3,8 +3,7 @@ import { SideMenuProps } from '../Dashboard';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { API, graphqlOperation } from '@aws-amplify/api';
 import * as customQueries from '../../../customGraphql/customQueries';
-import * as queries from '../../../graphql/queries';
-import { getArrayOfUniqueValueByProperty, removeFromArray } from '../../../utilities/arrays';
+import { getArrayOfUniqueValueByProperty } from '../../../utilities/arrays';
 import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
 
 interface Room {
@@ -243,6 +242,9 @@ const SideRoomSelector = (props: SideMenuProps) => {
     }
   };
 
+
+  const linkClass = 'w-full text-xs tracking-wider mx-auto p-2 bg-white';
+
   return (
     <div className={`${theme.sidemenu.secondary} mr-2`}>
       {rooms.length > 0 ? (
@@ -252,7 +254,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
               key={`room_button_sb${i}`}
               id={room.id}
               onClick={handleRoomSelection}
-              className={`cursor-pointer p-2 bg-white ${
+              className={`cursor-pointer ${linkClass} ${
                 activeRoom === room.id
                   ? 'border border-blueberry border-opacity-80'
                   : 'border border-dark-gray border-opacity-10'
@@ -263,11 +265,11 @@ const SideRoomSelector = (props: SideMenuProps) => {
         })
       ) : loaded === false ? (
         <>
-          <p className={`w-full p-2`}>Loading rooms...</p>
+          <p className={`${linkClass}`}>Loading rooms...</p>
         </>
       ) : (
         <>
-          <p className={`w-full p-2`}>No available rooms.</p>
+          <p className={`${linkClass}`}>No available rooms.</p>
         </>
       )}
     </div>

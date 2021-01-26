@@ -202,11 +202,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
             <div key={`link_${key}`} id={link.path} onClick={handleLink}>
-              <div
-                id={link.path}
-                className={`${linkClass} ${
-                  currentPage === link.path && activeClass
-                } border-b-2 border-black border-opacity-40`}>
+              <div id={link.path} className={`${linkClass} ${currentPage === link.path && activeClass}`}>
                 <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
                   {getMenuIcon(link.name, link.path)}
                 </IconContext.Provider>
