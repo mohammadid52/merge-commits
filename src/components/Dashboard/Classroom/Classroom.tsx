@@ -11,6 +11,7 @@ import CompletedLessons from './CompletedLessons';
 import { DashboardProps } from '../Dashboard';
 import TopWidgetBar from '../TopWidgetBar/TopWidgetBar';
 import DateAndTime from '../DateAndTime/DateAndTime';
+import SyllabusSwitch from './SyllabusSwitch';
 
 interface Artist {
   id: string;
@@ -162,19 +163,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   }, [state]);
 
-  // async function getCourse(id: string) {
-  //   try {
-  //     const course: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: id }));
-  //     const lessonsInfo = course.data.getCourse.classrooms.items;
-  //     const nextLesson = lessonsInfo.lesson;
-  //     setCurriculum(nextLesson);
-  //     setListCurriculum(lessonsInfo);
-  //     if (state.user.onBoardSurvey) setStatus('done');
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
   const getSurvey = async () => {
     try {
       const surveyData: any = await API.graphql(
@@ -199,13 +187,14 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    * ASSESSMENTS & SURVEYS
    *  Array which filters out only surveys/assessments
    */
-  const assessmentsSurveys = state.roomData.lessons.length > 0
-    ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
-        if (lesson.lessonID.includes('on-boarding-survey-1') || lesson.lessonID.includes('assessment')) {
-          return lesson;
-        }
-      })
-    : [];
+  const assessmentsSurveys =
+    state.roomData.lessons.length > 0
+      ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
+          if (lesson.lessonID.includes('on-boarding-survey-1') || lesson.lessonID.includes('assessment')) {
+            return lesson;
+          }
+        })
+      : [];
 
   /**
    * Today's Lessons -
@@ -228,15 +217,16 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    * Upcoming Lessons -
    *  This array is a filter of lessons which are closed, but not completed
    */
-  const upcomingLessons = state.roomData.lessons.length > 0
-    ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
-        if (lesson.status === 'Inactive' && lesson.id !== 'on-boarding-survey-1') {
-          if (!lesson.complete) {
-            return lesson;
+  const upcomingLessons =
+    state.roomData.lessons.length > 0
+      ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
+          if (lesson.status === 'Inactive' && lesson.id !== 'on-boarding-survey-1') {
+            if (!lesson.complete) {
+              return lesson;
+            }
           }
-        }
-      })
-    : [];
+        })
+      : [];
 
   const todayAndUpcomingLessons = [...todayLessons, ...upcomingLessons];
 
@@ -244,13 +234,14 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    * Completed Lessons -
    *  This array is a filter of lessons which are completed, closed or open
    */
-  const completedLessons = state.roomData.lessons.length > 0
-    ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
-        if (lesson.complete) {
-          return lesson;
-        }
-      })
-    : [];
+  const completedLessons =
+    state.roomData.lessons.length > 0
+      ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
+          if (lesson.complete) {
+            return lesson;
+          }
+        })
+      : [];
 
   const sortedLessons = (lessonArray: any[], sortProperty: string) => {
     return lessonArray.sort((a: any, b: any) => {
@@ -269,48 +260,28 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   if (status === 'done') {
     return (
       <>
-        {
-          /**
-           * TEST DIV FOR ROOM SWITCHING AND LOADING LESSONS/SYLLABUS
-           */
-
+        {isTeacher && currentPage === 'lesson-planner' ? (
           <div className={`bg-opacity-10`}>
-            <div className={`${theme.section} px-4 pb-4 m-auto`}>
-              {/**
-               *  SYLLABUS BOX
-               */}
-              {currentPage === 'lesson-planner' ? (
-                <div className={`p-4 mb-2 bg-mustard-yellow bg-opacity-20`}>
-                  <p>Syllabus: </p>
-                  {!syllabusLoading && state.roomData?.syllabus?.length > 0 ? (
-                    state.roomData.syllabus.map((syllabus: Syllabus, i: number) => {
-                      return (
-                        <div
-                          key={`testSyllabus_${i}`}
-                          id={`testSyllabus_${i}`}
-                          className={`p-2 mb-1 flex flex-row bg-white rounded`}>
-                          <div>
-                            <p className={`text-sm text-darker-gray`}>Name: {syllabus.name}</p>
-                            <p className={`text-sm text-darker-gray`}>Description: {syllabus.description}</p>
-                          </div>
-                          <div
-                            className={`cursor-pointer text-xl text-blueberry font-semibold`}
-                            onClick={() => handleSyllabusActivation(syllabus.id)}>
-                            Activate
-                          </div>
-                        </div>
-                      );
-                    })
-                  ) : !syllabusLoading && state.roomData?.syllabus?.length === 0 ? (
-                    <div>No syllabus...</div>
-                  ) : (
-                    <div>Loading test syllabus...</div>
-                  )}
-                </div>
-              ) : null}
+            <div className={`${theme.section} px-4 text-xl m-auto`}>
+              <h2 className={`text-xl w-full border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
+                Syllabus Control:
+              </h2>
             </div>
           </div>
-        }
+        ) : null}
+
+        {isTeacher && currentPage === 'lesson-planner' ? (
+          <div className={`bg-opacity-10`}>
+            <div className={`${theme.section} px-4 pb-4 m-auto`}>
+              <SyllabusSwitch
+                activeRoom={activeRoom}
+                currentPage={currentPage}
+                syllabusLoading={syllabusLoading}
+                handleSyllabusActivation={handleSyllabusActivation}
+              />
+            </div>
+          </div>
+        ) : null}
 
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 pb-4 m-auto`}>
@@ -379,15 +350,23 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
          *    - upcoming
          *    - completed
          */}
-        {state.roomData.lessons && state.roomData.lessons.length > 0 && visibleLessonGroup === 'today' ? (
+        {visibleLessonGroup === 'today' ? (
           <div className={`bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
-              <Today isTeacher={isTeacher} lessons={!isTeacher ? todayLessons : todayAndUpcomingLessons} />
+              <Today
+                activeRoom={activeRoom}
+                isTeacher={isTeacher}
+                lessonLoading={lessonLoading}
+                lessons={!isTeacher ? todayLessons : todayAndUpcomingLessons}
+              />
             </div>
           </div>
         ) : null}
 
-        {!isTeacher && state.roomData.lessons && state.roomData.lessons.length > 0 && visibleLessonGroup === 'upcoming' ? (
+        {!isTeacher &&
+        state.roomData.lessons &&
+        state.roomData.lessons.length > 0 &&
+        visibleLessonGroup === 'upcoming' ? (
           <div className={`bg-grayscale-light bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
               <UpcomingLessons lessons={upcomingLessons} />

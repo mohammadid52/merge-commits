@@ -91,7 +91,6 @@ const Dashboard = (props: DashboardProps) => {
   };
 
   async function getUser() {
-    console.log('get user is called');
     const userEmail = state.user?.email ? state.user?.email : cookies.auth?.email;
     const userAuthId = state.user?.authId ? state.user?.authId : cookies.auth?.authId;
     try {
@@ -101,14 +100,13 @@ const Dashboard = (props: DashboardProps) => {
       );
       setUser(user.data.getPerson);
     } catch (error) {
-      console.log('Here in error');
       if (!userEmail && !userAuthId) {
         removeCookie('auth', { path: '/' });
         dispatch({ type: 'CLEANUP' });
         sessionStorage.removeItem('accessToken');
         updateAuthState(false);
       }
-      console.error(error);
+      console.error('Dashboard - getUser(): ', error);
     }
   }
 

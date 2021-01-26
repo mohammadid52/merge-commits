@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LessonProps } from './Classroom';
 import StandardLessonCard from './LessonCards/StandardLessonCard';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 
 const Today: React.FC<LessonProps> = (props: LessonProps) => {
-  const { isTeacher, lessons } = props;
+  const { theme } = useContext(GlobalContext);
+  const { activeRoom, isTeacher, lessonLoading, lessons } = props;
   const [accessible, setAccessible] = useState<boolean>(true);
 
   useEffect(() => {
@@ -12,15 +14,32 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
 
   return (
     <>
-      {lessons && lessons.length > 0
+      {lessonLoading ? (
+        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>Loading lessons...</div>
+      ) : null}
+
+      {!lessonLoading && lessons.length > 0
         ? lessons.map((value: any, key: number) => {
             return (
               <div id={`todayLesson_${key}_wrapper`} key={`todayLesson_${key}_wrapper`}>
-                <StandardLessonCard isTeacher={isTeacher} keyProps={`todayLesson_${key}`} lessonProps={value} accessible={accessible} />
+                <StandardLessonCard
+                  isTeacher={isTeacher}
+                  keyProps={`todayLesson_${key}`}
+                  lessonProps={value}
+                  accessible={accessible}
+                />
               </div>
             );
           })
         : null}
+
+      {activeRoom === '' ? (
+        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>Select a room...</div>
+      ) : null}
+
+      {activeRoom !== '' && !lessonLoading && lessons.length === 0 ? (
+        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>No lessons...</div>
+      ) : null}
     </>
   );
 };

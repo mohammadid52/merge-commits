@@ -29,6 +29,7 @@ export const standardTheme = {
   dashboard: {
     sectionTitle: 'w-auto text-black pb-2 font-medium mt-4 mb-1 text-left',
     bg: 'bg-darker-gray',
+    card: 'p-2 relative bg-white rounded border border-dark-gray border-opacity-10 h-auto flex'
   },
   sidemenu: {
     bg: 'bg-darker-gray',

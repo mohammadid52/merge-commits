@@ -107,6 +107,7 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   {
     return (
       <Classroom
+        activeRoom={activeRoom}
         currentPage={currentPage}
         isTeacher={true}
         visibleLessonGroup={visibleLessonGroup}
