@@ -35,6 +35,7 @@ export interface Syllabus {
 export interface Lesson {
   id: string;
   open: boolean;
+  status?: string;
   openedAt: string;
   closedAt: string;
   complete: boolean;
@@ -108,12 +109,13 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    *  with a course or room
    */
 
-  useEffect(() => {
-    getCourse('1');
-  }, []);
+  // LEGACY CODE
+  // useEffect(() => {
+  //   getCourse('1');
+  // }, []);
 
   useEffect(() => {
-    if (listCurriculum && listCurriculum.length > 0) {
+    if (state.roomData.lessons && state.roomData.lessons.length > 0) {
       const todayCount = todayLessons.length.toString();
       const upcomingCount = upcomingLessons.length.toString();
       const completedCount = completedLessons.length.toString();
@@ -132,7 +134,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         },
       });
     }
-  }, [listCurriculum]);
+  }, [state.roomData.lessons]);
 
   /**
    * ssSSSssHOW SURVEY IF IT HAS NOT BEEN COMPLETED
@@ -160,18 +162,18 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   }, [state]);
 
-  async function getCourse(id: string) {
-    try {
-      const course: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: id }));
-      const lessonsInfo = course.data.getCourse.classrooms.items;
-      const nextLesson = lessonsInfo.lesson;
-      setCurriculum(nextLesson);
-      setListCurriculum(lessonsInfo);
-      if (state.user.onBoardSurvey) setStatus('done');
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  // async function getCourse(id: string) {
+  //   try {
+  //     const course: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: id }));
+  //     const lessonsInfo = course.data.getCourse.classrooms.items;
+  //     const nextLesson = lessonsInfo.lesson;
+  //     setCurriculum(nextLesson);
+  //     setListCurriculum(lessonsInfo);
+  //     if (state.user.onBoardSurvey) setStatus('done');
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
   const getSurvey = async () => {
     try {
@@ -180,7 +182,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       );
       await setSurvey(() => {
         let surveyStatus: boolean = state.user.onBoardSurvey ? !state.user.onBoardSurvey : true;
-        // console.log(surveyStatus, 'status', state);
 
         return {
           ...survey,
@@ -198,9 +199,9 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    * ASSESSMENTS & SURVEYS
    *  Array which filters out only surveys/assessments
    */
-  const assessmentsSurveys = listCurriculum
-    ? listCurriculum.filter((lesson: Lesson, index: number) => {
-        if (lesson.id.includes('on-boarding-survey-1') || lesson.id.includes('assessment')) {
+  const assessmentsSurveys = state.roomData.lessons.length > 0
+    ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
+        if (lesson.lessonID.includes('on-boarding-survey-1') || lesson.lessonID.includes('assessment')) {
           return lesson;
         }
       })
@@ -212,23 +213,24 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    *  (If there were enough lessons, this array should
    *  actually be a filter of lessons from today)
    */
-  const todayLessons = listCurriculum
-    ? listCurriculum.filter((lesson: Lesson, index: number) => {
-        if (lesson.open && lesson.id !== 'on-boarding-survey-1') {
-          if (!lesson.complete) {
-            return lesson;
+  const todayLessons =
+    state.roomData.lessons.length > 0
+      ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
+          if (lesson.status === 'Active' && lesson.id !== 'on-boarding-survey-1') {
+            if (!lesson.complete) {
+              return lesson;
+            }
           }
-        }
-      })
-    : [];
+        })
+      : [];
 
   /**
    * Upcoming Lessons -
    *  This array is a filter of lessons which are closed, but not completed
    */
-  const upcomingLessons = listCurriculum
-    ? listCurriculum.filter((lesson: Lesson, index: number) => {
-        if (!lesson.open && lesson.id !== 'on-boarding-survey-1') {
+  const upcomingLessons = state.roomData.lessons.length > 0
+    ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
+        if (lesson.status === 'Inactive' && lesson.id !== 'on-boarding-survey-1') {
           if (!lesson.complete) {
             return lesson;
           }
@@ -242,8 +244,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    * Completed Lessons -
    *  This array is a filter of lessons which are completed, closed or open
    */
-  const completedLessons = listCurriculum
-    ? listCurriculum.filter((lesson: Lesson, index: number) => {
+  const completedLessons = state.roomData.lessons.length > 0
+    ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
         if (lesson.complete) {
           return lesson;
         }
@@ -306,29 +308,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   )}
                 </div>
               ) : null}
-
-              {/**
-               *  LESSON BOX
-               */}
-              {currentPage === 'lesson-planner' || currentPage === 'classroom' ? (
-                <div className={`p-4 bg-mustard-yellow bg-opacity-20`}>
-                  <p>Lessons: </p>
-                  {!lessonLoading && state.roomData?.lessons?.length > 0 ? (
-                    state.roomData.lessons.map((lesson: Lesson, i: number) => {
-                      return (
-                        <div key={`testLesson_${i}`} id={`testLesson_${i}`} className={`p-2 mb-1 bg-white rounded`}>
-                          <p className={`text-xs text-darker-gray`}>ID: {lesson.lesson.id}</p>
-                          <p className={`text-sm text-darker-gray`}>Title: {lesson.lesson.title}</p>
-                        </div>
-                      );
-                    })
-                  ) : !lessonLoading && state.roomData?.lessons?.length === 0 ? (
-                    <div>No lessons...</div>
-                  ) : (
-                    <div>Loading test lessons...</div>
-                  )}
-                </div>
-              ) : null}
             </div>
           </div>
         }
@@ -359,7 +338,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         {/**
          *  ASSESSMENTS/SURVEYS
          */}
-        {!isTeacher && listCurriculum && survey.display ? (
+        {!isTeacher && state.roomData.lessons.length > 0 && survey.display ? (
           <div className={`bg-opacity-10`}>
             <div className={`${theme.section} px-4 text-xl m-auto`}>
               <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Surveys & Assessments</h2>
@@ -367,12 +346,11 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           </div>
         ) : null}
 
-        {!isTeacher && listCurriculum && survey.display ? (
+        {!isTeacher && state.roomData.lessons.length > 0 && survey.display ? (
           <div className={`bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
               <SurveyCard
                 link={'/lesson?id=on-boarding-survey-1'}
-                curriculum={curriculum}
                 lessons={assessmentsSurveys}
                 lessonType={`survey`}
                 accessible={survey.display}
@@ -401,7 +379,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
          *    - upcoming
          *    - completed
          */}
-        {listCurriculum && listCurriculum.length > 0 && visibleLessonGroup === 'today' ? (
+        {state.roomData.lessons && state.roomData.lessons.length > 0 && visibleLessonGroup === 'today' ? (
           <div className={`bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
               <Today isTeacher={isTeacher} lessons={!isTeacher ? todayLessons : todayAndUpcomingLessons} />
@@ -409,7 +387,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           </div>
         ) : null}
 
-        {!isTeacher && listCurriculum && listCurriculum.length > 0 && visibleLessonGroup === 'upcoming' ? (
+        {!isTeacher && state.roomData.lessons && state.roomData.lessons.length > 0 && visibleLessonGroup === 'upcoming' ? (
           <div className={`bg-grayscale-light bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
               <UpcomingLessons lessons={upcomingLessons} />
@@ -417,7 +395,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           </div>
         ) : null}
 
-        {listCurriculum && listCurriculum.length > 0 && visibleLessonGroup === 'completed' ? (
+        {state.roomData.lessons && state.roomData.lessons.length > 0 && visibleLessonGroup === 'completed' ? (
           <div className={`bg-grayscale-light bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
               <CompletedLessons isTeacher={isTeacher} lessons={sortedLessons(completedLessons, 'expectedEndDate')} />

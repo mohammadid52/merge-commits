@@ -81,8 +81,6 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
       activeSyllabus: syllabusID,
     }
 
-    console.log('updateRoomMutation input -- ', input)
-
     try {
       const updateRoomMutation: any = API.graphql(
         graphqlOperation(customMutations.updateRoom,

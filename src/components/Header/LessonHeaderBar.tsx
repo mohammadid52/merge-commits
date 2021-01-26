@@ -43,8 +43,6 @@ const LessonHeaderBar = () => {
 
   const handlePopup = () => {
     setVisible((prevState: any) => !prevState);
-    // console.log('handlepopup: ');
-    // console.log('visible?: ', visible);
   };
 
   const handleSubmit = () => {

@@ -57,7 +57,6 @@ const LessonControl = () => {
 
   useEffect(() => {
     if (state.studentViewing.live) {
-      // console.log(state.studentViewing.live)
       let hasCurrentLocation = typeof state.studentViewing.studentInfo.currentLocation === 'string';
 
       console.log(typeof state.studentViewing.studentInfo.currentLocation, hasCurrentLocation);
@@ -185,21 +184,34 @@ const LessonControl = () => {
    */
 
   const handleCompleteClassroom = async () => {
-    let completedClassroomData: any = {
+    let completedClassroomData = {
       id: state.classroomID,
       open: false,
       complete: true,
       expectedEndDate: awsFormatDate(dateString('-', 'WORLD')),
     };
 
+    let completedSyllabusLessonData = {
+      id: state.classroomID,
+      open: false,
+      complete: true,
+      // expectedEndDate: awsFormatDate(dateString('-', 'WORLD')),
+    };
+
     try {
-      console.log('complete!!! ', completedClassroomData);
-      const completedClassroom = await API.graphql(
-        graphqlOperation(customMutations.updateClassroom, {
-          input: completedClassroomData,
+      // const completedClassroom = await API.graphql(
+      //   graphqlOperation(customMutations.updateClassroom, {
+      //     input: completedClassroomData,
+      //   })
+      // );
+
+      const completedSyllabusLesson = await API.graphql(
+        graphqlOperation(customMutations.updateSyllabusLesson, {
+          input: completedSyllabusLessonData,
         })
       );
       dispatch({ type: 'SAVED_CHANGES' });
+      console.log('Lesson completed: ', completedSyllabusLessonData)
     } catch (err) {
       console.error(err);
     }

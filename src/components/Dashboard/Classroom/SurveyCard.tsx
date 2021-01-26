@@ -9,14 +9,14 @@ import StandardLessonCard from './LessonCards/StandardLessonCard';
 
 interface ClassProps {
   link: string;
-  curriculum: CurriculumInfo;
+  curriculum?: CurriculumInfo;
   lessons: any;
   lessonType: string;
   accessible: boolean;
 }
 
 const SurveyCard: React.FC<ClassProps> = (props: ClassProps) => {
-  const { link, curriculum, lessons, accessible } = props;
+  const { link, lessons, accessible } = props;
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
 

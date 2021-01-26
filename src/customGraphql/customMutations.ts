@@ -577,6 +577,8 @@ export const updateSyllabusLesson = /* GraphQL */ `
   mutation UpdateSyllabusLesson($input: UpdateSyllabusLessonInput!, $condition: ModelSyllabusLessonConditionInput) {
     updateSyllabusLesson(input: $input, condition: $condition) {
       id
+      status
+      complete
       syllabusID
       lessonID
       unit

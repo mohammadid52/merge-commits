@@ -795,6 +795,8 @@ export const listSyllabusLessons = /* GraphQL */ `
       nextToken
       items {
         id
+        status
+        complete
         lesson {
           SELStructure
           title

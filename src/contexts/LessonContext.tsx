@@ -64,8 +64,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                 studentID: studentID,
             }))
 
-            // console.log(studentData)
-
             if (!studentData.data.getStudentData) {
                 const newStudentData: any = await API.graphql(graphqlOperation(customMutations.createStudentData, {
                     input: {
@@ -77,7 +75,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                         studentAuthID: studentAuthID,
                     }
                 }))
-                // console.log(newStudentData)
                 dispatch({
                     type: 'SET_STUDENT_INFO', payload: {
                         studentDataID: newStudentData.data.createStudentData.id,
@@ -101,7 +98,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         }
 
 
-        // console.log('student data', newStudentData);
     }
 
     async function getClassroom() {
@@ -130,10 +126,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             next: (classroomData: any) => {
                 const updatedLessonPlan = classroomData.value.data.onUpdateClassroom
 
-                // console.log('updated', updatedLessonPlan)
-                // dispatch({ type: 'SET_LOADING' })
-                // console.log('state,', state)
-
                 dispatch({
                     type: 'UPDATE_LESSON_PLAN',
                     payload: {
@@ -153,8 +145,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             }
         })
 
-        // console.log('sub', classroomSubscription)
-
         return classroomSubscription;
     }
 
@@ -171,7 +161,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
     useEffect(() => {
         if (lesson) {
-            // console.log('lesson', lesson);
             const wordBank: Array<string> = ['Mimo provoz'];
 
             dispatch({
@@ -190,7 +179,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
     useEffect(() => {
         if (data) {
-            // console.log('data', data)
             let initialComponentState: any = {};
             lesson.lessonPlan.forEach((item: { type: string, stage: string }) => {
                 initialComponentState[item.type] = data[item.stage]
@@ -199,11 +187,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                 type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB',
                 payload: initialComponentState,
             })
-
-            // dispatch({
-            //     type: 'SET_LESSON_PROGRESS',
-            //     payload: data.lessonProgress
-            // })
         }
     }, [data])
 
