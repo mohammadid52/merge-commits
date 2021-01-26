@@ -352,6 +352,7 @@ type SyllabusLesson
   sequence: Int
   status: String
   lesson: Lesson @connection(fields: ["lessonID"])
+  complete: Boolean
 }
 
 ### Course

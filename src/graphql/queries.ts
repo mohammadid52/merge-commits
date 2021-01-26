@@ -1294,6 +1294,7 @@ export const getSyllabus = /* GraphQL */ `
           unit
           sequence
           status
+          complete
           createdAt
           updatedAt
         }
@@ -1448,6 +1449,7 @@ export const getSyllabusLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      complete
       createdAt
       updatedAt
     }
@@ -1489,6 +1491,7 @@ export const listSyllabusLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        complete
         createdAt
         updatedAt
       }
