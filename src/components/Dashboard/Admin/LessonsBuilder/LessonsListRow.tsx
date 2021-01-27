@@ -14,7 +14,7 @@ const LessonsListRow = (props: LessonsListRow) => {
   const history = useHistory();
 
   const handleLessonsEdit = () => {
-    // history.push(`${match.url}/lesson/edit?id=${id}`);
+    history.push(`${match.url}/lesson/edit?lessonId=${id}`);
   }
 
   const getLanguageString = (language: string) => {
@@ -58,7 +58,7 @@ const LessonsListRow = (props: LessonsListRow) => {
           {type ? getType(type) : '--'}
         </span>
       </div>
-      
+
       <div className="w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap text-indigo-600 hover:text-indigo-900 text-sm leading-5 font-medium" onClick={handleLessonsEdit} >
         <span className="w-auto">Edit</span>
       </div>

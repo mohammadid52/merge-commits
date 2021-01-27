@@ -96,7 +96,7 @@ const LessonsList = () => {
   }
 
   const buildLesson = () => {
-    history.push(`${match.url}/add`);
+    history.push(`${match.url}/lesson/add`);
   }
 
   const getLessonsList = async () => {

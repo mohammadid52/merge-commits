@@ -37,7 +37,7 @@ const LessonBuilder = () => {
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Lesson Builder', url: '/dashborad/lesson-builder', last: false },
-    { title: 'Add New Lesson ', url: '/dashborad/lesson-builder/add', last: true },
+    { title: 'Add New Lesson ', url: '/dashborad/lesson-builder/lesson/add', last: true },
   ]
   const initialData = {
     name: '',
@@ -262,14 +262,14 @@ const LessonBuilder = () => {
             </div>
 
             <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
                 Purpose
               </label>
               <RichTextEditor initialValue={purposeHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'purposeHtml', 'purpose')} />
             </div>
 
             <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
                 Objective
               </label>
               <RichTextEditor initialValue={objectiveHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')} />

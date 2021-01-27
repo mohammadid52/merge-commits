@@ -3,6 +3,7 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
 import LessonBuilder from './LessonBuilder';
 import LessonsList from './LessonsList';
+import LessonEdit from './LessonEdit';
 
 const LessonsBuilderHome = () => {
   const match = useRouteMatch();
@@ -17,8 +18,13 @@ const LessonsBuilderHome = () => {
         />
         <Route
           exact
-          path={`${match.url}/add`}
+          path={`${match.url}/lesson/add`}
           render={() => <LessonBuilder />}    // Add new lesson form
+        />
+        <Route
+          exact
+          path={`${match.url}/lesson/edit`}
+          render={() => <LessonEdit />}    // Edit lesson, assessment or survey form
         />
       </Switch>
     </div>

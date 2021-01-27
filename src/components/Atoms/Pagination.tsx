@@ -22,7 +22,7 @@ const Active = (activeProps: { page: number }) => {
   const { theme } = useContext(GlobalContext);
 
   return (
-    <button className={`${theme.btn.indigo} w-auto py-2 px-4 rounded-full ml-2 cursor-default`}>
+    <button className={`${theme.btn.indigo} w-auto py-2 px-4 rounded-full ml-2 cursor-default hover:outline-none focus:outline-none `}>
       {activeProps.page}
     </button>
   )
