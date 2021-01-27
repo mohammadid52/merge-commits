@@ -32,18 +32,17 @@ const syllabusLessonIdsAndPlanIds = async (arr: any) => {
 };
 
 const loopSyllabusLessonIdAndMutate = async (arrIdsAndPlanIdd: any, lessonPlans: any) => {
-  try {
-    arrIdsAndPlanIdd.reduce((_: any, idPlanIdArr: any, iKey: number) => {
-      const lessonPlanLessonIds = lessonPlans.map((lpObj: any) => lpObj.lessonID);
-      const lessonPlanExists = lessonPlanLessonIds.indexOf(idPlanIdArr.lessonID) !== -1 ? true : false;
-      if (lessonPlanExists) {
-        const lessonPlan = lessonPlans[lessonPlanLessonIds.indexOf(idPlanIdArr.lessonID)].lessonPlan;
-        mutateSingleSyllabusLesson(idPlanIdArr.id, lessonPlan);
-      }
-    });
-  } catch (e) {
-    console.error('loop mutate: ', e);
-  }
+  console.log('before try mutate: ', arrIdsAndPlanIdd);
+  arrIdsAndPlanIdd.reduce((_: any, idPlanIdArr: any, iKey: number) => {
+    const lessonPlanLessonIds = lessonPlans.map((lpObj: any) => lpObj.lessonID);
+    const lessonPlanExists = lessonPlans.filter((arr: any) => arr.lessonID === idPlanIdArr.lessonID).length > 0;
+
+    if (lessonPlanExists) {
+      const lessonPlan = lessonPlans[lessonPlanLessonIds.indexOf(idPlanIdArr.lessonID)].lessonPlan;
+      mutateSingleSyllabusLesson(idPlanIdArr.id, lessonPlan);
+      // console.log(idPlanIdArr.lessonID)
+    }
+  }, []);
 };
 
 const mutateSingleSyllabusLesson = async (sylID: string, lessonPlan: any[]) => {
@@ -70,7 +69,6 @@ export const copyLessonPlans = async () => {
   Promise.all([lessonPlans, syllabusLessons, reducedIdsAndSyllabus]).then(() => {
     if (typeof lessonPlans !== 'undefined') {
       loopSyllabusLessonIdAndMutate(reducedIdsAndSyllabus, lessonPlans);
-      // console.log('lesson plans...', lessonPlans)
     } else {
       console.log('Promise.all  ', 'could not mutate...');
     }

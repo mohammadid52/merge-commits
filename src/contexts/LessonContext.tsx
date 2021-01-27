@@ -12,6 +12,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import { standardTheme } from './GlobalContext';
+import { initRosterSyllabusLessons } from '../uniqueScripts/InitRoster_in_SyllabusLessons';
 
 const removeDisabled = (array: PagesType) => {
     let updatedArray = array.filter((item: { disabled: boolean, [key: string]: any }) => {
@@ -100,15 +101,21 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
     }
 
+    /**
+     * TODO:
+     *  getClassroom() has been updated to use the new query 'getSyllabusLesson' instead of
+     *  the deprecated 'getClassroom'
+     *  ALL subscriptions will be frozen until the lessons are loading properly from the new query
+     */
     async function getClassroom() {
         let queryParams = queryString.parse(location.search)
         if (Object.keys(queryParams).length && queryParams.id) {
             try {
-                const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroomStudent, { id: queryParams.id }))
+                const classroom: any = await API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id }))
                 console.log('classroom data', classroom);
-                setLesson(classroom.data.getClassroom)
-                getOrCreateStudentData()
-                subscription = subscribeToClassroom()
+                // setLesson(classroom.data.getClassroom)
+                // getOrCreateStudentData()
+                // subscription = subscribeToClassroom()
             } catch (error) {
                 console.error(error)
             }

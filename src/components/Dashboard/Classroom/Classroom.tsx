@@ -12,6 +12,7 @@ import { DashboardProps } from '../Dashboard';
 import TopWidgetBar from '../TopWidgetBar/TopWidgetBar';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SyllabusSwitch from './SyllabusSwitch';
+import { initRosterSyllabusLessons } from '../../../uniqueScripts/InitRoster_in_SyllabusLessons';
 
 interface Artist {
   id: string;

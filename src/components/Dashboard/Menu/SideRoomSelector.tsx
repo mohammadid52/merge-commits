@@ -103,8 +103,6 @@ const SideRoomSelector = (props: SideMenuProps) => {
           setCurriculumIds(arrayOfCurriculumIds);
         } catch (e) {
           console.error('RoomCurriculums fetch ERR: ', e);
-        } finally {
-          console.log('curriculum ids: ', curriculumIds);
         }
       }
     };
@@ -203,7 +201,6 @@ const SideRoomSelector = (props: SideMenuProps) => {
        */
       if (getActiveSyllabus.length > 0) {
         try {
-          console.log('try list lessons 0: ', getActiveSyllabus[0].id);
           const syllabusLessonFetch: any = API.graphql(
             graphqlOperation(customQueries.listSyllabusLessons, {
               syllabusID: getActiveSyllabus[0].id,
@@ -211,8 +208,6 @@ const SideRoomSelector = (props: SideMenuProps) => {
           );
           const response = await syllabusLessonFetch;
           const arrayOfResponseObjects = response?.data?.listSyllabusLessons?.items;
-
-          console.log('try list lessons: ', response);
 
           dispatch({
             type: 'UPDATE_ROOM',

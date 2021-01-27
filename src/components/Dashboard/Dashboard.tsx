@@ -15,6 +15,7 @@ import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import SideWidgetBar from './SideWidgetBar/SideWidgetBar';
 import SideRoomSelector from './Menu/SideRoomSelector';
 import { copyLessonPlans } from '../../uniqueScripts/CopyLessonPlans_to_SyllabusLessons';
+import { initRosterSyllabusLessons } from '../../uniqueScripts/InitRoster_in_SyllabusLessons';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Profile = lazy(() => import('./Profile/Profile'));
@@ -77,6 +78,9 @@ const Dashboard = (props: DashboardProps) => {
   //   copyLessonPlans();
   // },[])
 
+  // useEffect(()=>{
+  //   initRosterSyllabusLessons();
+  // },[])
 
   const setUser = (user: userObject) => {
     setUserData({

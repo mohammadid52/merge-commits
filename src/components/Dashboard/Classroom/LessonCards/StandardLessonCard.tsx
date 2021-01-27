@@ -101,7 +101,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
           <div className="flex w-3.3/10">
             <Start
               isTeacher={isTeacher}
-              lessonKey={lessonProps ? lessonProps.lessonID : null}
+              lessonKey={lessonProps ? lessonProps.id : null}
               open={lessonProps && lessonProps.status === 'Active' ? true : false}
               accessible={accessible}
               type={lessonType}

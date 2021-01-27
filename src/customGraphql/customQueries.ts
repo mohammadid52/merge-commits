@@ -809,10 +809,10 @@ export const listSyllabuss = /* GraphQL */ `
 `;
 
 export const getSyllabusLesson = /* GraphQL */ `
-  query GetSyllabusLesson($id: ID) {
+  query GetSyllabusLesson($id: ID!) {
     getSyllabusLesson(id: $id) {
       id
-      open
+      status
       roster
       viewing
       displayData {
