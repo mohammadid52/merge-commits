@@ -353,6 +353,12 @@ type SyllabusLesson
   status: String
   lesson: Lesson @connection(fields: ["lessonID"])
   complete: Boolean
+  roster: [String!]!
+  viewing: String
+  displayData: DisplayData
+  lessonPlan: [ComponentSummary!]!
+  startDate: AWSDate
+  endDate: AWSDate
 }
 
 ### Course
@@ -548,7 +554,7 @@ type Classroom @model(subscriptions: null) @key(name: "byCourse", fields: ["cour
   openedAt: AWSDate
   closedAt: AWSDate
   complete: Boolean
-  roster: [String!]!
+  roster: [String!]
   viewing: String
   displayData: DisplayData
   expectedStartDate: AWSDate
@@ -558,7 +564,7 @@ type Classroom @model(subscriptions: null) @key(name: "byCourse", fields: ["cour
   course: Course @connection(fields: ["courseID"])
   lessonID: ID!
   lesson: Lesson @connection(fields: ["lessonID"])
-  lessonPlan: [ComponentSummary!]!
+  lessonPlan: [ComponentSummary!]
   data: [StudentData]! @connection(keyName: "byClassroom", fields: ["id"])
   feedback: [Feedback] @connection(fields: ["id"])
 }

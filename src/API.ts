@@ -704,76 +704,27 @@ export type CreateSyllabusLessonInput = {
   sequence?: number | null,
   status?: string | null,
   complete?: boolean | null,
-};
-
-export type ModelSyllabusLessonConditionInput = {
-  syllabusID?: ModelIDInput | null,
-  lessonID?: ModelIDInput | null,
-  unit?: ModelStringInput | null,
-  sequence?: ModelIntInput | null,
-  status?: ModelStringInput | null,
-  complete?: ModelBooleanInput | null,
-  and?: Array< ModelSyllabusLessonConditionInput | null > | null,
-  or?: Array< ModelSyllabusLessonConditionInput | null > | null,
-  not?: ModelSyllabusLessonConditionInput | null,
-};
-
-export type UpdateSyllabusLessonInput = {
-  id: string,
-  syllabusID?: string | null,
-  lessonID?: string | null,
-  unit?: string | null,
-  sequence?: number | null,
-  status?: string | null,
-  complete?: boolean | null,
-};
-
-export type DeleteSyllabusLessonInput = {
-  id?: string | null,
-};
-
-export type CreateCourseInput = {
-  id?: string | null,
-  name: string,
-  type?: string | null,
+  roster: Array< string >,
+  viewing?: string | null,
+  displayData?: DisplayDataInput | null,
+  lessonPlan: Array< ComponentSummaryInput >,
   startDate?: string | null,
-  duration?: number | null,
+  endDate?: string | null,
 };
 
-export type ModelCourseConditionInput = {
-  name?: ModelStringInput | null,
-  type?: ModelStringInput | null,
-  startDate?: ModelStringInput | null,
-  duration?: ModelIntInput | null,
-  and?: Array< ModelCourseConditionInput | null > | null,
-  or?: Array< ModelCourseConditionInput | null > | null,
-  not?: ModelCourseConditionInput | null,
-};
-
-export type UpdateCourseInput = {
-  id: string,
-  name?: string | null,
-  type?: string | null,
-  startDate?: string | null,
-  duration?: number | null,
-};
-
-export type DeleteCourseInput = {
-  id?: string | null,
-};
-
-export type CreateStudentDataInput = {
-  id?: string | null,
-  lessonProgress: string,
-  currentLocation?: string | null,
-  status: string,
-  saveType?: string | null,
-  classroomID: string,
-  studentID: string,
-  studentAuthID: string,
-  warmupData?: WarmUpDataInput | null,
+export type DisplayDataInput = {
+  breakdownComponent?: string | null,
+  studentInfo?: StudentInfoInput | null,
+  warmUpData?: WarmUpDataInput | null,
   corelessonData?: CoreLessonDataInput | null,
   activityData?: ActivityDataInput | null,
+};
+
+export type StudentInfoInput = {
+  id?: string | null,
+  firstName?: string | null,
+  preferredName?: string | null,
+  lastName?: string | null,
 };
 
 export type WarmUpDataInput = {
@@ -857,6 +808,96 @@ export type LineInputInput = {
   id?: number | null,
   menuOpen?: boolean | null,
   text?: string | null,
+};
+
+export type ComponentSummaryInput = {
+  id?: string | null,
+  disabled: boolean,
+  open: boolean,
+  active: boolean,
+  stage: string,
+  type: string,
+  displayMode?: string | null,
+};
+
+export type ModelSyllabusLessonConditionInput = {
+  syllabusID?: ModelIDInput | null,
+  lessonID?: ModelIDInput | null,
+  unit?: ModelStringInput | null,
+  sequence?: ModelIntInput | null,
+  status?: ModelStringInput | null,
+  complete?: ModelBooleanInput | null,
+  roster?: ModelStringInput | null,
+  viewing?: ModelStringInput | null,
+  startDate?: ModelStringInput | null,
+  endDate?: ModelStringInput | null,
+  and?: Array< ModelSyllabusLessonConditionInput | null > | null,
+  or?: Array< ModelSyllabusLessonConditionInput | null > | null,
+  not?: ModelSyllabusLessonConditionInput | null,
+};
+
+export type UpdateSyllabusLessonInput = {
+  id: string,
+  syllabusID?: string | null,
+  lessonID?: string | null,
+  unit?: string | null,
+  sequence?: number | null,
+  status?: string | null,
+  complete?: boolean | null,
+  roster?: Array< string > | null,
+  viewing?: string | null,
+  displayData?: DisplayDataInput | null,
+  lessonPlan?: Array< ComponentSummaryInput > | null,
+  startDate?: string | null,
+  endDate?: string | null,
+};
+
+export type DeleteSyllabusLessonInput = {
+  id?: string | null,
+};
+
+export type CreateCourseInput = {
+  id?: string | null,
+  name: string,
+  type?: string | null,
+  startDate?: string | null,
+  duration?: number | null,
+};
+
+export type ModelCourseConditionInput = {
+  name?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  startDate?: ModelStringInput | null,
+  duration?: ModelIntInput | null,
+  and?: Array< ModelCourseConditionInput | null > | null,
+  or?: Array< ModelCourseConditionInput | null > | null,
+  not?: ModelCourseConditionInput | null,
+};
+
+export type UpdateCourseInput = {
+  id: string,
+  name?: string | null,
+  type?: string | null,
+  startDate?: string | null,
+  duration?: number | null,
+};
+
+export type DeleteCourseInput = {
+  id?: string | null,
+};
+
+export type CreateStudentDataInput = {
+  id?: string | null,
+  lessonProgress: string,
+  currentLocation?: string | null,
+  status: string,
+  saveType?: string | null,
+  classroomID: string,
+  studentID: string,
+  studentAuthID: string,
+  warmupData?: WarmUpDataInput | null,
+  corelessonData?: CoreLessonDataInput | null,
+  activityData?: ActivityDataInput | null,
 };
 
 export type ModelStudentDataConditionInput = {
@@ -947,7 +988,7 @@ export type CreateClassroomInput = {
   openedAt?: string | null,
   closedAt?: string | null,
   complete?: boolean | null,
-  roster: Array< string >,
+  roster?: Array< string > | null,
   viewing?: string | null,
   displayData?: DisplayDataInput | null,
   expectedStartDate?: string | null,
@@ -955,32 +996,7 @@ export type CreateClassroomInput = {
   SELStructure?: string | null,
   courseID: string,
   lessonID: string,
-  lessonPlan: Array< ComponentSummaryInput >,
-};
-
-export type DisplayDataInput = {
-  breakdownComponent?: string | null,
-  studentInfo?: StudentInfoInput | null,
-  warmUpData?: WarmUpDataInput | null,
-  corelessonData?: CoreLessonDataInput | null,
-  activityData?: ActivityDataInput | null,
-};
-
-export type StudentInfoInput = {
-  id?: string | null,
-  firstName?: string | null,
-  preferredName?: string | null,
-  lastName?: string | null,
-};
-
-export type ComponentSummaryInput = {
-  id?: string | null,
-  disabled: boolean,
-  open: boolean,
-  active: boolean,
-  stage: string,
-  type: string,
-  displayMode?: string | null,
+  lessonPlan?: Array< ComponentSummaryInput > | null,
 };
 
 export type ModelClassroomConditionInput = {
@@ -2174,6 +2190,10 @@ export type ModelSyllabusLessonFilterInput = {
   sequence?: ModelIntInput | null,
   status?: ModelStringInput | null,
   complete?: ModelBooleanInput | null,
+  roster?: ModelStringInput | null,
+  viewing?: ModelStringInput | null,
+  startDate?: ModelStringInput | null,
+  endDate?: ModelStringInput | null,
   and?: Array< ModelSyllabusLessonFilterInput | null > | null,
   or?: Array< ModelSyllabusLessonFilterInput | null > | null,
   not?: ModelSyllabusLessonFilterInput | null,
@@ -5378,6 +5398,10 @@ export type CreateSyllabusMutation = {
         sequence: number | null,
         status: string | null,
         complete: boolean | null,
+        roster: Array< string >,
+        viewing: string | null,
+        startDate: string | null,
+        endDate: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -5419,6 +5443,10 @@ export type UpdateSyllabusMutation = {
         sequence: number | null,
         status: string | null,
         complete: boolean | null,
+        roster: Array< string >,
+        viewing: string | null,
+        startDate: string | null,
+        endDate: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -5460,6 +5488,10 @@ export type DeleteSyllabusMutation = {
         sequence: number | null,
         status: string | null,
         complete: boolean | null,
+        roster: Array< string >,
+        viewing: string | null,
+        startDate: string | null,
+        endDate: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -5592,6 +5624,46 @@ export type CreateSyllabusLessonMutation = {
       updatedAt: string,
     } | null,
     complete: boolean | null,
+    roster: Array< string >,
+    viewing: string | null,
+    displayData:  {
+      __typename: "DisplayData",
+      breakdownComponent: string | null,
+      studentInfo:  {
+        __typename: "StudentInfo",
+        id: string | null,
+        firstName: string | null,
+        preferredName: string | null,
+        lastName: string | null,
+      } | null,
+      warmUpData:  {
+        __typename: "WarmUpData",
+        story: Array< string | null > | null,
+        title: string | null,
+      } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
+      } | null,
+      activityData:  {
+        __typename: "ActivityData",
+        editInput: string | null,
+        editMode: boolean | null,
+        title: string | null,
+      } | null,
+    } | null,
+    lessonPlan:  Array< {
+      __typename: "ComponentSummary",
+      id: string | null,
+      disabled: boolean,
+      open: boolean,
+      active: boolean,
+      stage: string,
+      type: string,
+      displayMode: string | null,
+    } >,
+    startDate: string | null,
+    endDate: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5717,6 +5789,46 @@ export type UpdateSyllabusLessonMutation = {
       updatedAt: string,
     } | null,
     complete: boolean | null,
+    roster: Array< string >,
+    viewing: string | null,
+    displayData:  {
+      __typename: "DisplayData",
+      breakdownComponent: string | null,
+      studentInfo:  {
+        __typename: "StudentInfo",
+        id: string | null,
+        firstName: string | null,
+        preferredName: string | null,
+        lastName: string | null,
+      } | null,
+      warmUpData:  {
+        __typename: "WarmUpData",
+        story: Array< string | null > | null,
+        title: string | null,
+      } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
+      } | null,
+      activityData:  {
+        __typename: "ActivityData",
+        editInput: string | null,
+        editMode: boolean | null,
+        title: string | null,
+      } | null,
+    } | null,
+    lessonPlan:  Array< {
+      __typename: "ComponentSummary",
+      id: string | null,
+      disabled: boolean,
+      open: boolean,
+      active: boolean,
+      stage: string,
+      type: string,
+      displayMode: string | null,
+    } >,
+    startDate: string | null,
+    endDate: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5842,6 +5954,46 @@ export type DeleteSyllabusLessonMutation = {
       updatedAt: string,
     } | null,
     complete: boolean | null,
+    roster: Array< string >,
+    viewing: string | null,
+    displayData:  {
+      __typename: "DisplayData",
+      breakdownComponent: string | null,
+      studentInfo:  {
+        __typename: "StudentInfo",
+        id: string | null,
+        firstName: string | null,
+        preferredName: string | null,
+        lastName: string | null,
+      } | null,
+      warmUpData:  {
+        __typename: "WarmUpData",
+        story: Array< string | null > | null,
+        title: string | null,
+      } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
+      } | null,
+      activityData:  {
+        __typename: "ActivityData",
+        editInput: string | null,
+        editMode: boolean | null,
+        title: string | null,
+      } | null,
+    } | null,
+    lessonPlan:  Array< {
+      __typename: "ComponentSummary",
+      id: string | null,
+      disabled: boolean,
+      open: boolean,
+      active: boolean,
+      stage: string,
+      type: string,
+      displayMode: string | null,
+    } >,
+    startDate: string | null,
+    endDate: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5867,7 +6019,7 @@ export type CreateCourseMutation = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -5906,7 +6058,7 @@ export type UpdateCourseMutation = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -5945,7 +6097,7 @@ export type DeleteCourseMutation = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -5985,7 +6137,7 @@ export type CreateStudentDataMutation = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -6038,7 +6190,7 @@ export type CreateStudentDataMutation = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -6191,7 +6343,7 @@ export type UpdateStudentDataMutation = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -6244,7 +6396,7 @@ export type UpdateStudentDataMutation = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -6397,7 +6549,7 @@ export type DeleteStudentDataMutation = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -6450,7 +6602,7 @@ export type DeleteStudentDataMutation = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -6700,7 +6852,7 @@ export type CreateClassroomMutation = {
     openedAt: string | null,
     closedAt: string | null,
     complete: boolean | null,
-    roster: Array< string >,
+    roster: Array< string > | null,
     viewing: string | null,
     displayData:  {
       __typename: "DisplayData",
@@ -6861,7 +7013,7 @@ export type CreateClassroomMutation = {
       stage: string,
       type: string,
       displayMode: string | null,
-    } >,
+    } > | null,
     data:  {
       __typename: "ModelStudentDataConnection",
       items:  Array< {
@@ -6910,7 +7062,7 @@ export type UpdateClassroomMutation = {
     openedAt: string | null,
     closedAt: string | null,
     complete: boolean | null,
-    roster: Array< string >,
+    roster: Array< string > | null,
     viewing: string | null,
     displayData:  {
       __typename: "DisplayData",
@@ -7071,7 +7223,7 @@ export type UpdateClassroomMutation = {
       stage: string,
       type: string,
       displayMode: string | null,
-    } >,
+    } > | null,
     data:  {
       __typename: "ModelStudentDataConnection",
       items:  Array< {
@@ -7120,7 +7272,7 @@ export type DeleteClassroomMutation = {
     openedAt: string | null,
     closedAt: string | null,
     complete: boolean | null,
-    roster: Array< string >,
+    roster: Array< string > | null,
     viewing: string | null,
     displayData:  {
       __typename: "DisplayData",
@@ -7281,7 +7433,7 @@ export type DeleteClassroomMutation = {
       stage: string,
       type: string,
       displayMode: string | null,
-    } >,
+    } > | null,
     data:  {
       __typename: "ModelStudentDataConnection",
       items:  Array< {
@@ -7336,7 +7488,7 @@ export type CreateFeedbackMutation = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -7389,7 +7541,7 @@ export type CreateFeedbackMutation = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -7425,7 +7577,7 @@ export type UpdateFeedbackMutation = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -7478,7 +7630,7 @@ export type UpdateFeedbackMutation = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -7514,7 +7666,7 @@ export type DeleteFeedbackMutation = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -7567,7 +7719,7 @@ export type DeleteFeedbackMutation = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -10189,7 +10341,7 @@ export type CreateQuestionDataMutation = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -10242,7 +10394,7 @@ export type CreateQuestionDataMutation = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -10319,7 +10471,7 @@ export type UpdateQuestionDataMutation = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -10372,7 +10524,7 @@ export type UpdateQuestionDataMutation = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -10449,7 +10601,7 @@ export type DeleteQuestionDataMutation = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -10502,7 +10654,7 @@ export type DeleteQuestionDataMutation = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -10585,7 +10737,7 @@ export type CreateQuestionDataStudentDataMutation = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -10662,7 +10814,7 @@ export type CreateQuestionDataStudentDataMutation = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -10738,7 +10890,7 @@ export type UpdateQuestionDataStudentDataMutation = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -10815,7 +10967,7 @@ export type UpdateQuestionDataStudentDataMutation = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -10891,7 +11043,7 @@ export type DeleteQuestionDataStudentDataMutation = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -10968,7 +11120,7 @@ export type DeleteQuestionDataStudentDataMutation = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -13821,6 +13973,10 @@ export type GetSyllabusQuery = {
         sequence: number | null,
         status: string | null,
         complete: boolean | null,
+        roster: Array< string >,
+        viewing: string | null,
+        startDate: string | null,
+        endDate: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -13988,6 +14144,46 @@ export type GetSyllabusLessonQuery = {
       updatedAt: string,
     } | null,
     complete: boolean | null,
+    roster: Array< string >,
+    viewing: string | null,
+    displayData:  {
+      __typename: "DisplayData",
+      breakdownComponent: string | null,
+      studentInfo:  {
+        __typename: "StudentInfo",
+        id: string | null,
+        firstName: string | null,
+        preferredName: string | null,
+        lastName: string | null,
+      } | null,
+      warmUpData:  {
+        __typename: "WarmUpData",
+        story: Array< string | null > | null,
+        title: string | null,
+      } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
+      } | null,
+      activityData:  {
+        __typename: "ActivityData",
+        editInput: string | null,
+        editMode: boolean | null,
+        title: string | null,
+      } | null,
+    } | null,
+    lessonPlan:  Array< {
+      __typename: "ComponentSummary",
+      id: string | null,
+      disabled: boolean,
+      open: boolean,
+      active: boolean,
+      stage: string,
+      type: string,
+      displayMode: string | null,
+    } >,
+    startDate: string | null,
+    endDate: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -14034,6 +14230,24 @@ export type ListSyllabusLessonsQuery = {
         updatedAt: string,
       } | null,
       complete: boolean | null,
+      roster: Array< string >,
+      viewing: string | null,
+      displayData:  {
+        __typename: "DisplayData",
+        breakdownComponent: string | null,
+      } | null,
+      lessonPlan:  Array< {
+        __typename: "ComponentSummary",
+        id: string | null,
+        disabled: boolean,
+        open: boolean,
+        active: boolean,
+        stage: string,
+        type: string,
+        displayMode: string | null,
+      } >,
+      startDate: string | null,
+      endDate: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -14060,7 +14274,7 @@ export type GetCourseQuery = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -14127,7 +14341,7 @@ export type GetStudentDataQuery = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -14180,7 +14394,7 @@ export type GetStudentDataQuery = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -14339,7 +14553,7 @@ export type ListStudentDatasQuery = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -14485,7 +14699,7 @@ export type GetClassroomQuery = {
     openedAt: string | null,
     closedAt: string | null,
     complete: boolean | null,
-    roster: Array< string >,
+    roster: Array< string > | null,
     viewing: string | null,
     displayData:  {
       __typename: "DisplayData",
@@ -14646,7 +14860,7 @@ export type GetClassroomQuery = {
       stage: string,
       type: string,
       displayMode: string | null,
-    } >,
+    } > | null,
     data:  {
       __typename: "ModelStudentDataConnection",
       items:  Array< {
@@ -14698,7 +14912,7 @@ export type ListClassroomsQuery = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -14751,7 +14965,7 @@ export type ListClassroomsQuery = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -14785,7 +14999,7 @@ export type GetFeedbackQuery = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -14838,7 +15052,7 @@ export type GetFeedbackQuery = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -14877,7 +15091,7 @@ export type ListFeedbacksQuery = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -16038,7 +16252,7 @@ export type GetQuestionDataQuery = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -16091,7 +16305,7 @@ export type GetQuestionDataQuery = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -16171,7 +16385,7 @@ export type ListQuestionDatasQuery = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -16904,7 +17118,7 @@ export type OnUpdateClassroomSubscription = {
     openedAt: string | null,
     closedAt: string | null,
     complete: boolean | null,
-    roster: Array< string >,
+    roster: Array< string > | null,
     viewing: string | null,
     displayData:  {
       __typename: "DisplayData",
@@ -17065,7 +17279,7 @@ export type OnUpdateClassroomSubscription = {
       stage: string,
       type: string,
       displayMode: string | null,
-    } >,
+    } > | null,
     data:  {
       __typename: "ModelStudentDataConnection",
       items:  Array< {
@@ -17121,7 +17335,7 @@ export type OnChangeStudentDataSubscription = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -17174,7 +17388,7 @@ export type OnChangeStudentDataSubscription = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -20112,6 +20326,10 @@ export type OnCreateSyllabusSubscription = {
         sequence: number | null,
         status: string | null,
         complete: boolean | null,
+        roster: Array< string >,
+        viewing: string | null,
+        startDate: string | null,
+        endDate: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -20148,6 +20366,10 @@ export type OnUpdateSyllabusSubscription = {
         sequence: number | null,
         status: string | null,
         complete: boolean | null,
+        roster: Array< string >,
+        viewing: string | null,
+        startDate: string | null,
+        endDate: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -20184,6 +20406,10 @@ export type OnDeleteSyllabusSubscription = {
         sequence: number | null,
         status: string | null,
         complete: boolean | null,
+        roster: Array< string >,
+        viewing: string | null,
+        startDate: string | null,
+        endDate: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -20311,6 +20537,46 @@ export type OnCreateSyllabusLessonSubscription = {
       updatedAt: string,
     } | null,
     complete: boolean | null,
+    roster: Array< string >,
+    viewing: string | null,
+    displayData:  {
+      __typename: "DisplayData",
+      breakdownComponent: string | null,
+      studentInfo:  {
+        __typename: "StudentInfo",
+        id: string | null,
+        firstName: string | null,
+        preferredName: string | null,
+        lastName: string | null,
+      } | null,
+      warmUpData:  {
+        __typename: "WarmUpData",
+        story: Array< string | null > | null,
+        title: string | null,
+      } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
+      } | null,
+      activityData:  {
+        __typename: "ActivityData",
+        editInput: string | null,
+        editMode: boolean | null,
+        title: string | null,
+      } | null,
+    } | null,
+    lessonPlan:  Array< {
+      __typename: "ComponentSummary",
+      id: string | null,
+      disabled: boolean,
+      open: boolean,
+      active: boolean,
+      stage: string,
+      type: string,
+      displayMode: string | null,
+    } >,
+    startDate: string | null,
+    endDate: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -20431,6 +20697,46 @@ export type OnUpdateSyllabusLessonSubscription = {
       updatedAt: string,
     } | null,
     complete: boolean | null,
+    roster: Array< string >,
+    viewing: string | null,
+    displayData:  {
+      __typename: "DisplayData",
+      breakdownComponent: string | null,
+      studentInfo:  {
+        __typename: "StudentInfo",
+        id: string | null,
+        firstName: string | null,
+        preferredName: string | null,
+        lastName: string | null,
+      } | null,
+      warmUpData:  {
+        __typename: "WarmUpData",
+        story: Array< string | null > | null,
+        title: string | null,
+      } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
+      } | null,
+      activityData:  {
+        __typename: "ActivityData",
+        editInput: string | null,
+        editMode: boolean | null,
+        title: string | null,
+      } | null,
+    } | null,
+    lessonPlan:  Array< {
+      __typename: "ComponentSummary",
+      id: string | null,
+      disabled: boolean,
+      open: boolean,
+      active: boolean,
+      stage: string,
+      type: string,
+      displayMode: string | null,
+    } >,
+    startDate: string | null,
+    endDate: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -20551,6 +20857,46 @@ export type OnDeleteSyllabusLessonSubscription = {
       updatedAt: string,
     } | null,
     complete: boolean | null,
+    roster: Array< string >,
+    viewing: string | null,
+    displayData:  {
+      __typename: "DisplayData",
+      breakdownComponent: string | null,
+      studentInfo:  {
+        __typename: "StudentInfo",
+        id: string | null,
+        firstName: string | null,
+        preferredName: string | null,
+        lastName: string | null,
+      } | null,
+      warmUpData:  {
+        __typename: "WarmUpData",
+        story: Array< string | null > | null,
+        title: string | null,
+      } | null,
+      corelessonData:  {
+        __typename: "CoreLessonData",
+        selectGroup: number | null,
+      } | null,
+      activityData:  {
+        __typename: "ActivityData",
+        editInput: string | null,
+        editMode: boolean | null,
+        title: string | null,
+      } | null,
+    } | null,
+    lessonPlan:  Array< {
+      __typename: "ComponentSummary",
+      id: string | null,
+      disabled: boolean,
+      open: boolean,
+      active: boolean,
+      stage: string,
+      type: string,
+      displayMode: string | null,
+    } >,
+    startDate: string | null,
+    endDate: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -20571,7 +20917,7 @@ export type OnCreateCourseSubscription = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -20605,7 +20951,7 @@ export type OnUpdateCourseSubscription = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -20639,7 +20985,7 @@ export type OnDeleteCourseSubscription = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -20762,7 +21108,7 @@ export type OnCreateFeedbackSubscription = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -20815,7 +21161,7 @@ export type OnCreateFeedbackSubscription = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -20846,7 +21192,7 @@ export type OnUpdateFeedbackSubscription = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -20899,7 +21245,7 @@ export type OnUpdateFeedbackSubscription = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -20930,7 +21276,7 @@ export type OnDeleteFeedbackSubscription = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -20983,7 +21329,7 @@ export type OnDeleteFeedbackSubscription = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -23360,7 +23706,7 @@ export type OnCreateQuestionDataSubscription = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -23413,7 +23759,7 @@ export type OnCreateQuestionDataSubscription = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -23485,7 +23831,7 @@ export type OnUpdateQuestionDataSubscription = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -23538,7 +23884,7 @@ export type OnUpdateQuestionDataSubscription = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -23610,7 +23956,7 @@ export type OnDeleteQuestionDataSubscription = {
       openedAt: string | null,
       closedAt: string | null,
       complete: boolean | null,
-      roster: Array< string >,
+      roster: Array< string > | null,
       viewing: string | null,
       displayData:  {
         __typename: "DisplayData",
@@ -23663,7 +24009,7 @@ export type OnDeleteQuestionDataSubscription = {
         stage: string,
         type: string,
         displayMode: string | null,
-      } >,
+      } > | null,
       data:  {
         __typename: "ModelStudentDataConnection",
         nextToken: string | null,
@@ -23741,7 +24087,7 @@ export type OnCreateQuestionDataStudentDataSubscription = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -23818,7 +24164,7 @@ export type OnCreateQuestionDataStudentDataSubscription = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -23889,7 +24235,7 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -23966,7 +24312,7 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -24037,7 +24383,7 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
@@ -24114,7 +24460,7 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         openedAt: string | null,
         closedAt: string | null,
         complete: boolean | null,
-        roster: Array< string >,
+        roster: Array< string > | null,
         viewing: string | null,
         expectedStartDate: string | null,
         expectedEndDate: string | null,
