@@ -886,7 +886,7 @@ type Clients
 @key(fields: ["id"])
 {
   id: ID!
-  name: String
+  name: String!
   subdomain: String
   key: String
 }

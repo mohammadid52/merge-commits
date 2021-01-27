@@ -1822,7 +1822,7 @@ export type DeleteFilterOptionInput = {
 
 export type CreateClientsInput = {
   id?: string | null,
-  name?: string | null,
+  name: string,
   subdomain?: string | null,
   key?: string | null,
 };
@@ -11553,7 +11553,7 @@ export type CreateClientsMutation = {
   createClients:  {
     __typename: "Clients",
     id: string,
-    name: string | null,
+    name: string,
     subdomain: string | null,
     key: string | null,
     createdAt: string,
@@ -11570,7 +11570,7 @@ export type UpdateClientsMutation = {
   updateClients:  {
     __typename: "Clients",
     id: string,
-    name: string | null,
+    name: string,
     subdomain: string | null,
     key: string | null,
     createdAt: string,
@@ -11587,7 +11587,7 @@ export type DeleteClientsMutation = {
   deleteClients:  {
     __typename: "Clients",
     id: string,
-    name: string | null,
+    name: string,
     subdomain: string | null,
     key: string | null,
     createdAt: string,
@@ -15251,7 +15251,7 @@ export type GetClientsQuery = {
   getClients:  {
     __typename: "Clients",
     id: string,
-    name: string | null,
+    name: string,
     subdomain: string | null,
     key: string | null,
     createdAt: string,
@@ -15273,7 +15273,7 @@ export type ListClientssQuery = {
     items:  Array< {
       __typename: "Clients",
       id: string,
-      name: string | null,
+      name: string,
       subdomain: string | null,
       key: string | null,
       createdAt: string,
@@ -23189,7 +23189,7 @@ export type OnCreateClientsSubscription = {
   onCreateClients:  {
     __typename: "Clients",
     id: string,
-    name: string | null,
+    name: string,
     subdomain: string | null,
     key: string | null,
     createdAt: string,
@@ -23201,7 +23201,7 @@ export type OnUpdateClientsSubscription = {
   onUpdateClients:  {
     __typename: "Clients",
     id: string,
-    name: string | null,
+    name: string,
     subdomain: string | null,
     key: string | null,
     createdAt: string,
@@ -23213,7 +23213,7 @@ export type OnDeleteClientsSubscription = {
   onDeleteClients:  {
     __typename: "Clients",
     id: string,
-    name: string | null,
+    name: string,
     subdomain: string | null,
     key: string | null,
     createdAt: string,
