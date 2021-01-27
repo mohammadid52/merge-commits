@@ -20,6 +20,20 @@ const MainRouter: React.FC = () => {
   const [cookies, setCookie, removeCookie] = useCookies();
   const [authState, setAuthState] = useState('loading')
 
+  useEffect(() => {
+    if (authState === 'loggedIn') {
+      checkForUserInactivity()
+    } else {
+      removeCookie('auth', { path: '/' });
+      dispatch({ type: 'CLEANUP' });
+      sessionStorage.removeItem('accessToken');
+    }
+  }, [authState]);
+
+  useEffect(() => {
+    checkUserAuthenticated();
+  }, []);
+
   const checkUserAuthenticated = async () => {
     try {
         const user = await Auth.currentAuthenticatedUser()
@@ -93,20 +107,6 @@ const MainRouter: React.FC = () => {
       setAuthState('notLoggedIn')
     }
   }
-
-  useEffect(() => {
-    if (authState === 'loggedIn') {
-      checkForUserInactivity()
-    } else {
-      removeCookie('auth', { path: '/' });
-      dispatch({ type: 'CLEANUP' });
-      sessionStorage.removeItem('accessToken');
-    }
-  }, [authState]);
-
-  useEffect(() => {
-    checkUserAuthenticated();
-  }, []);
 
   if (authState === 'loading') {
     return <ComponentLoading />

@@ -102,7 +102,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
             <Start
               isTeacher={isTeacher}
               lessonKey={lessonProps ? lessonProps.lessonID : null}
-              open={lessonProps ? lessonProps.open : null}
+              open={lessonProps && lessonProps.status === 'Active' ? true : false}
               accessible={accessible}
               type={lessonType}
             />

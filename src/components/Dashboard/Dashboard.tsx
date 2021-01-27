@@ -14,6 +14,7 @@ import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import SideWidgetBar from './SideWidgetBar/SideWidgetBar';
 import SideRoomSelector from './Menu/SideRoomSelector';
+import { copyLessonPlans } from '../../uniqueScripts/CopyLessonPlans_to_SyllabusLessons';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Profile = lazy(() => import('./Profile/Profile'));
@@ -70,6 +71,12 @@ const Dashboard = (props: DashboardProps) => {
   const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('today');
   const [activeRoom, setActiveRoom] = useState<string>('');
   const [activeRoomName, setActiveRoomName] = useState<string>('');
+
+
+  // useEffect(()=>{
+  //   copyLessonPlans();
+  // },[])
+
 
   const setUser = (user: userObject) => {
     setUserData({

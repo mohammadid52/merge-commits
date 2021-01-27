@@ -393,6 +393,25 @@ export const getClassroom = /* GraphQL */ `
   }
 `;
 
+export const listLessonPlans = /* GraphQL */ `
+  query ListClassrooms {
+    listClassrooms {
+      items {
+        lessonPlan {
+          active
+          disabled
+          displayMode
+          id
+          open
+          stage
+          type
+        }
+        lessonID
+      }
+    }
+  }
+`;
+
 export const getClassroomStudent = /* GraphQL */ `
   query GetClassroom($id: ID!) {
     getClassroom(id: $id) {
@@ -811,6 +830,23 @@ export const listSyllabusLessons = /* GraphQL */ `
           }
           summary
         }
+        createdAt
+        updatedAt
+        syllabusID
+        lessonID
+      }
+    }
+  }
+`;
+
+export const listAllSyllabusLessons = /* GraphQL */ `
+  query ListSyllabusLessons {
+    listSyllabusLessons {
+      nextToken
+      items {
+        id
+        status
+        complete
         createdAt
         updatedAt
         syllabusID

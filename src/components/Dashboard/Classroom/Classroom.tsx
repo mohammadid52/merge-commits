@@ -102,17 +102,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   /**
    * LIFECYCLE - on mount
-   *
-   * TODO:
-   *  Tell Mike about the getCourse('1') below
-   *  This will essentially fetch the lessons associated
-   *  with a course or room
    */
 
-  // LEGACY CODE
-  // useEffect(() => {
-  //   getCourse('1');
-  // }, []);
 
   useEffect(() => {
     if (state.roomData.lessons && state.roomData.lessons.length > 0) {

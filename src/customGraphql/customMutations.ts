@@ -512,6 +512,7 @@ export const createSyllabusLesson = /* GraphQL */ `
     }
   }
 `;
+
 export const createTopic = /* GraphQL */ `
   mutation CreateTopic($input: CreateTopicInput!, $condition: ModelTopicConditionInput) {
     createTopic(input: $input, condition: $condition) {
@@ -573,6 +574,7 @@ export const updateRubric = /* GraphQL */ `
     }
   }
 `;
+
 export const updateSyllabusLesson = /* GraphQL */ `
   mutation UpdateSyllabusLesson($input: UpdateSyllabusLessonInput!, $condition: ModelSyllabusLessonConditionInput) {
     updateSyllabusLesson(input: $input, condition: $condition) {
@@ -581,6 +583,15 @@ export const updateSyllabusLesson = /* GraphQL */ `
       complete
       syllabusID
       lessonID
+      lessonPlan {
+        id
+        disabled
+        open
+        active
+        stage
+        type
+        displayMode
+      }
       unit
       sequence
       status

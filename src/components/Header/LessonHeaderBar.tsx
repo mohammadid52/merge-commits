@@ -14,11 +14,7 @@ const LessonHeaderBar = () => {
   const { visible, setVisible, ref } = useOutsideAlerter(false);
 
   /**
-   *
-   *
    * AUTO-PUSH TO SPECIFIC LESSON
-   *
-   *
    */
 
   useEffect(() => {

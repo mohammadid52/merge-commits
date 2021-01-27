@@ -104,7 +104,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         let queryParams = queryString.parse(location.search)
         if (Object.keys(queryParams).length && queryParams.id) {
             try {
-                // this any needs to be changed once a solution is found!!!
                 const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroomStudent, { id: queryParams.id }))
                 console.log('classroom data', classroom);
                 setLesson(classroom.data.getClassroom)
