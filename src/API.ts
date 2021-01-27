@@ -1920,33 +1920,6 @@ export type DeleteFilterOptionInput = {
   id: string,
 };
 
-export type CreateClientsInput = {
-  id?: string | null,
-  name?: string | null,
-  subdomain?: string | null,
-  key?: string | null,
-};
-
-export type ModelClientsConditionInput = {
-  name?: ModelStringInput | null,
-  subdomain?: ModelStringInput | null,
-  key?: ModelStringInput | null,
-  and?: Array< ModelClientsConditionInput | null > | null,
-  or?: Array< ModelClientsConditionInput | null > | null,
-  not?: ModelClientsConditionInput | null,
-};
-
-export type UpdateClientsInput = {
-  id: string,
-  name?: string | null,
-  subdomain?: string | null,
-  key?: string | null,
-};
-
-export type DeleteClientsInput = {
-  id: string,
-};
-
 export type CreateRoomMsgsInput = {
   id?: string | null,
   roomID: string,
@@ -1978,6 +1951,29 @@ export type UpdateRoomMsgsInput = {
 
 export type DeleteRoomMsgsInput = {
   id?: string | null,
+};
+
+export type CreateAppClientsInput = {
+  id?: string | null,
+  key: string,
+  name: string,
+};
+
+export type ModelAppClientsConditionInput = {
+  name?: ModelStringInput | null,
+  and?: Array< ModelAppClientsConditionInput | null > | null,
+  or?: Array< ModelAppClientsConditionInput | null > | null,
+  not?: ModelAppClientsConditionInput | null,
+};
+
+export type UpdateAppClientsInput = {
+  id: string,
+  key: string,
+  name?: string | null,
+};
+
+export type DeleteAppClientsInput = {
+  key: string,
 };
 
 export type ModelInstitutionFilterInput = {
@@ -2482,16 +2478,6 @@ export type ModelFilterOptionFilterInput = {
   not?: ModelFilterOptionFilterInput | null,
 };
 
-export type ModelClientsFilterInput = {
-  id?: ModelIDInput | null,
-  name?: ModelStringInput | null,
-  subdomain?: ModelStringInput | null,
-  key?: ModelStringInput | null,
-  and?: Array< ModelClientsFilterInput | null > | null,
-  or?: Array< ModelClientsFilterInput | null > | null,
-  not?: ModelClientsFilterInput | null,
-};
-
 export type ModelRoomMsgsFilterInput = {
   id?: ModelIDInput | null,
   roomID?: ModelIDInput | null,
@@ -2502,6 +2488,15 @@ export type ModelRoomMsgsFilterInput = {
   and?: Array< ModelRoomMsgsFilterInput | null > | null,
   or?: Array< ModelRoomMsgsFilterInput | null > | null,
   not?: ModelRoomMsgsFilterInput | null,
+};
+
+export type ModelAppClientsFilterInput = {
+  id?: ModelIDInput | null,
+  key?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  and?: Array< ModelAppClientsFilterInput | null > | null,
+  or?: Array< ModelAppClientsFilterInput | null > | null,
+  not?: ModelAppClientsFilterInput | null,
 };
 
 export type CreateInstitutionMutationVariables = {
@@ -12104,57 +12099,6 @@ export type DeleteFilterOptionMutation = {
   } | null,
 };
 
-export type CreateClientsMutationVariables = {
-  input: CreateClientsInput,
-  condition?: ModelClientsConditionInput | null,
-};
-
-export type CreateClientsMutation = {
-  createClients:  {
-    __typename: "Clients",
-    id: string,
-    name: string | null,
-    subdomain: string | null,
-    key: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateClientsMutationVariables = {
-  input: UpdateClientsInput,
-  condition?: ModelClientsConditionInput | null,
-};
-
-export type UpdateClientsMutation = {
-  updateClients:  {
-    __typename: "Clients",
-    id: string,
-    name: string | null,
-    subdomain: string | null,
-    key: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteClientsMutationVariables = {
-  input: DeleteClientsInput,
-  condition?: ModelClientsConditionInput | null,
-};
-
-export type DeleteClientsMutation = {
-  deleteClients:  {
-    __typename: "Clients",
-    id: string,
-    name: string | null,
-    subdomain: string | null,
-    key: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type CreateRoomMsgsMutationVariables = {
   input: CreateRoomMsgsInput,
   condition?: ModelRoomMsgsConditionInput | null,
@@ -12535,6 +12479,54 @@ export type DeleteRoomMsgsMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateAppClientsMutationVariables = {
+  input: CreateAppClientsInput,
+  condition?: ModelAppClientsConditionInput | null,
+};
+
+export type CreateAppClientsMutation = {
+  createAppClients:  {
+    __typename: "AppClients",
+    id: string,
+    key: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateAppClientsMutationVariables = {
+  input: UpdateAppClientsInput,
+  condition?: ModelAppClientsConditionInput | null,
+};
+
+export type UpdateAppClientsMutation = {
+  updateAppClients:  {
+    __typename: "AppClients",
+    id: string,
+    key: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteAppClientsMutationVariables = {
+  input: DeleteAppClientsInput,
+  condition?: ModelAppClientsConditionInput | null,
+};
+
+export type DeleteAppClientsMutation = {
+  deleteAppClients:  {
+    __typename: "AppClients",
+    id: string,
+    key: string,
+    name: string,
+    createdAt: string,
     updatedAt: string,
   } | null,
 };
@@ -16681,46 +16673,6 @@ export type ListFilterOptionsQuery = {
   } | null,
 };
 
-export type GetClientsQueryVariables = {
-  id: string,
-};
-
-export type GetClientsQuery = {
-  getClients:  {
-    __typename: "Clients",
-    id: string,
-    name: string | null,
-    subdomain: string | null,
-    key: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListClientssQueryVariables = {
-  id?: string | null,
-  filter?: ModelClientsFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListClientssQuery = {
-  listClientss:  {
-    __typename: "ModelClientsConnection",
-    items:  Array< {
-      __typename: "Clients",
-      id: string,
-      name: string | null,
-      subdomain: string | null,
-      key: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken: string | null,
-  } | null,
-};
-
 export type GetRoomMsgsQueryVariables = {
   id: string,
 };
@@ -16910,6 +16862,44 @@ export type ListRoomMsgssQuery = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetAppClientsQueryVariables = {
+  key: string,
+};
+
+export type GetAppClientsQuery = {
+  getAppClients:  {
+    __typename: "AppClients",
+    id: string,
+    key: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListAppClientssQueryVariables = {
+  key?: string | null,
+  filter?: ModelAppClientsFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListAppClientssQuery = {
+  listAppClientss:  {
+    __typename: "ModelAppClientsConnection",
+    items:  Array< {
+      __typename: "AppClients",
+      id: string,
+      key: string,
+      name: string,
+      createdAt: string,
       updatedAt: string,
     } | null > | null,
     nextToken: string | null,
@@ -25339,42 +25329,6 @@ export type OnDeleteFilterOptionSubscription = {
   } | null,
 };
 
-export type OnCreateClientsSubscription = {
-  onCreateClients:  {
-    __typename: "Clients",
-    id: string,
-    name: string | null,
-    subdomain: string | null,
-    key: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateClientsSubscription = {
-  onUpdateClients:  {
-    __typename: "Clients",
-    id: string,
-    name: string | null,
-    subdomain: string | null,
-    key: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteClientsSubscription = {
-  onDeleteClients:  {
-    __typename: "Clients",
-    id: string,
-    name: string | null,
-    subdomain: string | null,
-    key: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type OnCreateRoomMsgsSubscription = {
   onCreateRoomMsgs:  {
     __typename: "RoomMsgs",
@@ -25740,6 +25694,39 @@ export type OnDeleteRoomMsgsSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateAppClientsSubscription = {
+  onCreateAppClients:  {
+    __typename: "AppClients",
+    id: string,
+    key: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateAppClientsSubscription = {
+  onUpdateAppClients:  {
+    __typename: "AppClients",
+    id: string,
+    key: string,
+    name: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteAppClientsSubscription = {
+  onDeleteAppClients:  {
+    __typename: "AppClients",
+    id: string,
+    key: string,
+    name: string,
+    createdAt: string,
     updatedAt: string,
   } | null,
 };

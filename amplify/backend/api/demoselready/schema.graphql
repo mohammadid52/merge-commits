@@ -913,17 +913,6 @@ type FilterOption
   filterID: ID!
   text: String!
 }
-
-type Clients
-@model
-@key(fields: ["id"])
-{
-  id: ID!
-  name: String
-  subdomain: String
-  key: String
-}
-
 type RoomMsgs
 @model
 @key(name: "byRoomID", fields: ["roomID", "createdAt"], queryField: "messagesByRoomID")
@@ -936,4 +925,12 @@ type RoomMsgs
   createdAt: AWSDateTime
   sender: Person @connection(fields: ["senderEmail", "senderAuthID"])
   room: Room @connection(fields: ["roomID"])
+}
+
+type AppClients
+@model
+@key(fields: ["key"]) {
+  id: ID!
+  key: String!
+  name: String! 
 }

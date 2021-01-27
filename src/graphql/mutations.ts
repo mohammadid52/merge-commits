@@ -8501,51 +8501,6 @@ export const deleteFilterOption = /* GraphQL */ `
     }
   }
 `;
-export const createClients = /* GraphQL */ `
-  mutation CreateClients(
-    $input: CreateClientsInput!
-    $condition: ModelClientsConditionInput
-  ) {
-    createClients(input: $input, condition: $condition) {
-      id
-      name
-      subdomain
-      key
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateClients = /* GraphQL */ `
-  mutation UpdateClients(
-    $input: UpdateClientsInput!
-    $condition: ModelClientsConditionInput
-  ) {
-    updateClients(input: $input, condition: $condition) {
-      id
-      name
-      subdomain
-      key
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteClients = /* GraphQL */ `
-  mutation DeleteClients(
-    $input: DeleteClientsInput!
-    $condition: ModelClientsConditionInput
-  ) {
-    deleteClients(input: $input, condition: $condition) {
-      id
-      name
-      subdomain
-      key
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createRoomMsgs = /* GraphQL */ `
   mutation CreateRoomMsgs(
     $input: CreateRoomMsgsInput!
@@ -8896,6 +8851,48 @@ export const deleteRoomMsgs = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      updatedAt
+    }
+  }
+`;
+export const createAppClients = /* GraphQL */ `
+  mutation CreateAppClients(
+    $input: CreateAppClientsInput!
+    $condition: ModelAppClientsConditionInput
+  ) {
+    createAppClients(input: $input, condition: $condition) {
+      id
+      key
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAppClients = /* GraphQL */ `
+  mutation UpdateAppClients(
+    $input: UpdateAppClientsInput!
+    $condition: ModelAppClientsConditionInput
+  ) {
+    updateAppClients(input: $input, condition: $condition) {
+      id
+      key
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAppClients = /* GraphQL */ `
+  mutation DeleteAppClients(
+    $input: DeleteAppClientsInput!
+    $condition: ModelAppClientsConditionInput
+  ) {
+    deleteAppClients(input: $input, condition: $condition) {
+      id
+      key
+      name
+      createdAt
       updatedAt
     }
   }

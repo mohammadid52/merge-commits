@@ -3654,45 +3654,6 @@ export const listFilterOptions = /* GraphQL */ `
     }
   }
 `;
-export const getClients = /* GraphQL */ `
-  query GetClients($id: ID!) {
-    getClients(id: $id) {
-      id
-      name
-      subdomain
-      key
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listClientss = /* GraphQL */ `
-  query ListClientss(
-    $id: ID
-    $filter: ModelClientsFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listClientss(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        name
-        subdomain
-        key
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getRoomMsgs = /* GraphQL */ `
   query GetRoomMsgs($id: ID!) {
     getRoomMsgs(id: $id) {
@@ -3865,6 +3826,43 @@ export const listRoomMsgss = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getAppClients = /* GraphQL */ `
+  query GetAppClients($key: String!) {
+    getAppClients(key: $key) {
+      id
+      key
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAppClientss = /* GraphQL */ `
+  query ListAppClientss(
+    $key: String
+    $filter: ModelAppClientsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listAppClientss(
+      key: $key
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        key
+        name
+        createdAt
         updatedAt
       }
       nextToken

@@ -7482,42 +7482,6 @@ export const onDeleteFilterOption = /* GraphQL */ `
     }
   }
 `;
-export const onCreateClients = /* GraphQL */ `
-  subscription OnCreateClients {
-    onCreateClients {
-      id
-      name
-      subdomain
-      key
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateClients = /* GraphQL */ `
-  subscription OnUpdateClients {
-    onUpdateClients {
-      id
-      name
-      subdomain
-      key
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteClients = /* GraphQL */ `
-  subscription OnDeleteClients {
-    onDeleteClients {
-      id
-      name
-      subdomain
-      key
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateRoomMsgs = /* GraphQL */ `
   subscription OnCreateRoomMsgs {
     onCreateRoomMsgs {
@@ -7859,6 +7823,39 @@ export const onDeleteRoomMsgs = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      updatedAt
+    }
+  }
+`;
+export const onCreateAppClients = /* GraphQL */ `
+  subscription OnCreateAppClients {
+    onCreateAppClients {
+      id
+      key
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAppClients = /* GraphQL */ `
+  subscription OnUpdateAppClients {
+    onUpdateAppClients {
+      id
+      key
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAppClients = /* GraphQL */ `
+  subscription OnDeleteAppClients {
+    onDeleteAppClients {
+      id
+      key
+      name
+      createdAt
       updatedAt
     }
   }
