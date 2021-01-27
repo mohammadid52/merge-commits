@@ -808,6 +808,307 @@ export const listSyllabuss = /* GraphQL */ `
   }
 `;
 
+export const getSyllabusLesson = /* GraphQL */ `
+  query GetSyllabusLesson($id: ID) {
+    getSyllabusLesson(id: $id) {
+      id
+      open
+      roster
+      viewing
+      displayData {
+        breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
+        warmUpData {
+          story
+          title
+          additional {
+            name
+            input
+          }
+          poll {
+            id
+            question
+            option {
+              id
+            }
+          }
+        }
+        corelessonData {
+          selected {
+            anchor
+            color
+            content {
+              id
+              text
+            }
+            focus
+            id
+          }
+          rawSelected {
+            color
+            selected
+          }
+          selectGroup
+        }
+        activityData {
+          editInput
+          editMode
+          lines {
+            example
+            id
+            menuOpen
+            text
+          }
+          title
+        }
+      }
+      lessonID
+      lesson {
+        id
+        title
+        type
+        instructions
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          quotes {
+            source
+            text
+          }
+          additionalContent {
+            video
+            links {
+              type
+              text
+              link
+            }
+          }
+        }
+        language
+        connection
+        keywords {
+          items {
+            wordID
+            word {
+              word
+              definition
+            }
+          }
+        }
+        summary
+        objectives
+        checkpoints {
+          items {
+            position
+            checkpoint {
+              id
+              title
+              instructions
+              label
+              type
+              questions {
+                items {
+                  required
+                  question {
+                    id
+                    label
+                    type
+                    question
+                    options {
+                      text
+                      icon
+                      label
+                      color
+                    }
+                  }
+                }
+                nextToken
+              }
+            }
+          }
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          questions {
+            items {
+              question {
+                id
+                label
+                type
+                question
+                options {
+                  text
+                  icon
+                  label
+                  color
+                }
+              }
+            }
+            nextToken
+          }
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          instructions {
+            video
+            link
+            text
+          }
+          inputs {
+            title
+            example
+            textExample
+            titleExample
+            listInputNumber
+            truthGameInputs {
+              id
+              label
+            }
+            additionalInputs {
+              id
+              name
+              prompt
+              example
+            }
+            pollInputs {
+              id
+              question
+              option {
+                id
+                option
+                isChoice
+              }
+            }
+          }
+          breakdown {
+            reflectionQuestions
+          }
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          instructions {
+            video
+            link
+            text
+          }
+          content {
+            video
+            link
+            title
+            artist
+            text
+          }
+          tools {
+            name
+            color
+            icon
+          }
+          breakdown {
+            reflectionQuestions
+          }
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          lineNumber
+          instructions {
+            video
+            link
+            text
+          }
+          writingPrompts {
+            id
+            name
+            prompt
+            example
+          }
+          breakdown {
+            reflectionQuestions
+          }
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          checkpoints {
+            items {
+              checkpoint {
+                id
+                instructions
+                label
+                type
+                questions {
+                  items {
+                    required
+                    question {
+                      id
+                      label
+                      type
+                      question
+                      options {
+                        text
+                        icon
+                        label
+                        color
+                      }
+                    }
+                  }
+                  nextToken
+                }
+              }
+            }
+            nextToken
+          }
+        }
+        createdAt
+        updatedAt
+      }
+      lessonPlan {
+        disabled
+        open
+        active
+        stage
+        type
+        displayMode
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const listSyllabusLessons = /* GraphQL */ `
   query ListSyllabusLessons($syllabusID: ID) {
     listSyllabusLessons(filter: { syllabusID: { contains: $syllabusID } }) {
