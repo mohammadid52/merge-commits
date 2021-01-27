@@ -1294,6 +1294,11 @@ export const getSyllabus = /* GraphQL */ `
           unit
           sequence
           status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
           createdAt
           updatedAt
         }
@@ -1448,6 +1453,41 @@ export const getSyllabusLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      complete
+      roster
+      viewing
+      displayData {
+        breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
+        warmUpData {
+          story
+          title
+        }
+        corelessonData {
+          selectGroup
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+      }
+      lessonPlan {
+        id
+        disabled
+        open
+        active
+        stage
+        type
+        displayMode
+      }
+      startDate
+      endDate
       createdAt
       updatedAt
     }
@@ -1489,6 +1529,23 @@ export const listSyllabusLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
         createdAt
         updatedAt
       }

@@ -2919,6 +2919,11 @@ export const onCreateSyllabus = /* GraphQL */ `
           unit
           sequence
           status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
           createdAt
           updatedAt
         }
@@ -2952,6 +2957,11 @@ export const onUpdateSyllabus = /* GraphQL */ `
           unit
           sequence
           status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
           createdAt
           updatedAt
         }
@@ -2985,6 +2995,11 @@ export const onDeleteSyllabus = /* GraphQL */ `
           unit
           sequence
           status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
           createdAt
           updatedAt
         }
@@ -3101,6 +3116,41 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      complete
+      roster
+      viewing
+      displayData {
+        breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
+        warmUpData {
+          story
+          title
+        }
+        corelessonData {
+          selectGroup
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+      }
+      lessonPlan {
+        id
+        disabled
+        open
+        active
+        stage
+        type
+        displayMode
+      }
+      startDate
+      endDate
       createdAt
       updatedAt
     }
@@ -3210,6 +3260,41 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      complete
+      roster
+      viewing
+      displayData {
+        breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
+        warmUpData {
+          story
+          title
+        }
+        corelessonData {
+          selectGroup
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+      }
+      lessonPlan {
+        id
+        disabled
+        open
+        active
+        stage
+        type
+        displayMode
+      }
+      startDate
+      endDate
       createdAt
       updatedAt
     }
@@ -3319,6 +3404,41 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      complete
+      roster
+      viewing
+      displayData {
+        breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
+        warmUpData {
+          story
+          title
+        }
+        corelessonData {
+          selectGroup
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+      }
+      lessonPlan {
+        id
+        disabled
+        open
+        active
+        stage
+        type
+        displayMode
+      }
+      startDate
+      endDate
       createdAt
       updatedAt
     }
