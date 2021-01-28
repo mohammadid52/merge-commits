@@ -234,3 +234,11 @@ export const reorder = (list: any, startIndex: number, endIndex: number) => {
   result.splice(endIndex, 0, removed);
   return result;
 };
+
+export const getClientKey = () => {
+  const url = window.location.href;
+  if (url.indexOf('localhost') >= 0) return 'iconoclast'
+  if (url.indexOf('iconoclast') >= 0) return 'iconoclast'
+  if (url.indexOf('curate') >= 0) return 'curate'
+  else '' 
+}

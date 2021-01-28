@@ -24,8 +24,14 @@ const Forgot = () => {
 
     try {
       const user = await Auth.forgotPassword(username);
-      console.log({ user });
-      history.push('/confirm-code');
+      setMessage(() => {
+        return {
+          show: true,
+          type: 'success',
+          message: 'Please check your email for further instructions.',
+        };
+      })
+      
     } catch (error) {
       console.error('error signing in', error);
       setMessage(() => {

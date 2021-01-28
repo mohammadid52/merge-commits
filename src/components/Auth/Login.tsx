@@ -12,6 +12,8 @@ import { useHistory, Link, NavLink } from 'react-router-dom';
 import Auth from '@aws-amplify/auth';
 import * as queries from '../../graphql/queries'
 import * as customMutations from '../../customGraphql/customMutations';
+import { getAsset } from '../../assets';
+
 interface LoginProps {
   updateAuthState: Function
 }
@@ -20,7 +22,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const [cookies, setCookie, removeCookie] = useCookies();
   const history = useHistory();
-  const { theme, state, dispatch } = useContext(GlobalContext);
+  const { theme, state, clientKey, dispatch } = useContext(GlobalContext);
   let [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
     show: false,
     type: '',
@@ -199,8 +201,8 @@ const Login = ({ updateAuthState }: LoginProps) => {
             <div className='h-24 w-56'>
               <img
                 className=''
-                src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg'
-                alt='Iconoclast Artists'
+                src={getAsset(clientKey, 'login_page_logo')}
+                alt='login_page_logo'
               />
             </div>
 
