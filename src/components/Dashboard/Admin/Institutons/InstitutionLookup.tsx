@@ -47,7 +47,7 @@ const InstitutionLookup: React.FC = () => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Institution Management', url: '/dashboard/manage-institutions', last: true },
+    { title: 'Institution Management', url: `${match.url}`, last: true },
   ]
 
   const sortByList = [

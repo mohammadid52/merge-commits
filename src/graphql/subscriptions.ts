@@ -82,6 +82,8 @@ export const onUpdateClassroom = /* GraphQL */ `
         }
         connection
         summary
+        purpose
+        designers
         objectives
         checkpoints {
           nextToken
@@ -232,6 +234,8 @@ export const onChangeStudentData = /* GraphQL */ `
           SELStructure
           connection
           summary
+          purpose
+          designers
           objectives
           doFirstID
           warmUpId
@@ -3055,6 +3059,8 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
         }
         connection
         summary
+        purpose
+        designers
         objectives
         checkpoints {
           nextToken
@@ -3200,6 +3206,8 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
         }
         connection
         summary
+        purpose
+        designers
         objectives
         checkpoints {
           nextToken
@@ -3345,6 +3353,8 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
         }
         connection
         summary
+        purpose
+        designers
         objectives
         checkpoints {
           nextToken
@@ -3670,6 +3680,8 @@ export const onCreateFeedback = /* GraphQL */ `
           SELStructure
           connection
           summary
+          purpose
+          designers
           objectives
           doFirstID
           warmUpId
@@ -3748,6 +3760,8 @@ export const onUpdateFeedback = /* GraphQL */ `
           SELStructure
           connection
           summary
+          purpose
+          designers
           objectives
           doFirstID
           warmUpId
@@ -3826,6 +3840,8 @@ export const onDeleteFeedback = /* GraphQL */ `
           SELStructure
           connection
           summary
+          purpose
+          designers
           objectives
           doFirstID
           warmUpId
@@ -4067,6 +4083,8 @@ export const onCreateLesson = /* GraphQL */ `
       }
       connection
       summary
+      purpose
+      designers
       objectives
       checkpoints {
         items {
@@ -4257,6 +4275,8 @@ export const onUpdateLesson = /* GraphQL */ `
       }
       connection
       summary
+      purpose
+      designers
       objectives
       checkpoints {
         items {
@@ -4447,6 +4467,8 @@ export const onDeleteLesson = /* GraphQL */ `
       }
       connection
       summary
+      purpose
+      designers
       objectives
       checkpoints {
         items {
@@ -4619,6 +4641,8 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
         }
         connection
         summary
+        purpose
+        designers
         objectives
         checkpoints {
           nextToken
@@ -4740,6 +4764,8 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
         }
         connection
         summary
+        purpose
+        designers
         objectives
         checkpoints {
           nextToken
@@ -4861,6 +4887,8 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
         }
         connection
         summary
+        purpose
+        designers
         objectives
         checkpoints {
           nextToken
@@ -6025,6 +6053,8 @@ export const onCreateQuestionData = /* GraphQL */ `
           SELStructure
           connection
           summary
+          purpose
+          designers
           objectives
           doFirstID
           warmUpId
@@ -6140,6 +6170,8 @@ export const onUpdateQuestionData = /* GraphQL */ `
           SELStructure
           connection
           summary
+          purpose
+          designers
           objectives
           doFirstID
           warmUpId
@@ -6255,6 +6287,8 @@ export const onDeleteQuestionData = /* GraphQL */ `
           SELStructure
           connection
           summary
+          purpose
+          designers
           objectives
           doFirstID
           warmUpId
@@ -6812,6 +6846,8 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
         }
         connection
         summary
+        purpose
+        designers
         objectives
         checkpoints {
           nextToken
@@ -6926,6 +6962,8 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
         }
         connection
         summary
+        purpose
+        designers
         objectives
         checkpoints {
           nextToken
@@ -7040,6 +7078,8 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
         }
         connection
         summary
+        purpose
+        designers
         objectives
         checkpoints {
           nextToken

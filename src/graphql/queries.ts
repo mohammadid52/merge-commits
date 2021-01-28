@@ -1390,6 +1390,8 @@ export const getSyllabusLesson = /* GraphQL */ `
         }
         connection
         summary
+        purpose
+        designers
         objectives
         checkpoints {
           nextToken
@@ -1520,6 +1522,8 @@ export const listSyllabusLessons = /* GraphQL */ `
           SELStructure
           connection
           summary
+          purpose
+          designers
           objectives
           doFirstID
           warmUpId
@@ -1656,6 +1660,8 @@ export const getStudentData = /* GraphQL */ `
           SELStructure
           connection
           summary
+          purpose
+          designers
           objectives
           doFirstID
           warmUpId
@@ -2014,6 +2020,8 @@ export const getClassroom = /* GraphQL */ `
         }
         connection
         summary
+        purpose
+        designers
         objectives
         checkpoints {
           nextToken
@@ -2162,6 +2170,8 @@ export const listClassrooms = /* GraphQL */ `
           SELStructure
           connection
           summary
+          purpose
+          designers
           objectives
           doFirstID
           warmUpId
@@ -2239,6 +2249,8 @@ export const getFeedback = /* GraphQL */ `
           SELStructure
           connection
           summary
+          purpose
+          designers
           objectives
           doFirstID
           warmUpId
@@ -2466,6 +2478,8 @@ export const getLesson = /* GraphQL */ `
       }
       connection
       summary
+      purpose
+      designers
       objectives
       checkpoints {
         items {
@@ -2646,6 +2660,8 @@ export const listLessons = /* GraphQL */ `
         }
         connection
         summary
+        purpose
+        designers
         objectives
         checkpoints {
           nextToken
@@ -3314,6 +3330,8 @@ export const getQuestionData = /* GraphQL */ `
           SELStructure
           connection
           summary
+          purpose
+          designers
           objectives
           doFirstID
           warmUpId
