@@ -105,6 +105,10 @@ const MainRouter: React.FC = () => {
   }, [authState]);
 
   useEffect(() => {
+    loadLessons();
+  }, []);
+
+  useEffect(() => {
     checkUserAuthenticated();
   }, []);
 

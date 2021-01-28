@@ -611,18 +611,19 @@ type Theme {
 type Lesson @model @key(fields: ["id"]) {
   id: ID!
   title: String!
-  type: String
+  type: String!
+  label: String
   instructions: [String]
   theme: Theme
   grades: [Int]
   artistID: ID!
   artist: Artist! @connection(fields: ["artistID"])
-  language: Language!
+  language: [Language!]
   SELStructure: String
   keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
   connection: String
-  summary: String!
-  objectives: [String]!
+  summary: String
+  objectives: [String]
   checkpoints: [LessonCheckpoint]! @connection(keyName: "byLesson", fields: ["id"])
   doFirstID: ID!
   doFirst: DoFirst @connection(fields: ["doFirstID"])

@@ -54,6 +54,7 @@ export const onUpdateClassroom = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -223,6 +224,7 @@ export const onChangeStudentData = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -3025,6 +3027,7 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -3169,6 +3172,7 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -3313,6 +3317,7 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -3657,6 +3662,7 @@ export const onCreateFeedback = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -3734,6 +3740,7 @@ export const onUpdateFeedback = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -3811,6 +3818,7 @@ export const onDeleteFeedback = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -4008,6 +4016,7 @@ export const onCreateLesson = /* GraphQL */ `
       id
       title
       type
+      label
       instructions
       theme {
         type
@@ -4197,6 +4206,7 @@ export const onUpdateLesson = /* GraphQL */ `
       id
       title
       type
+      label
       instructions
       theme {
         type
@@ -4386,6 +4396,7 @@ export const onDeleteLesson = /* GraphQL */ `
       id
       title
       type
+      label
       instructions
       theme {
         type
@@ -4580,6 +4591,7 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -4700,6 +4712,7 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -4820,6 +4833,7 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -6003,6 +6017,7 @@ export const onCreateQuestionData = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -6117,6 +6132,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -6231,6 +6247,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -6767,6 +6784,7 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -6880,6 +6898,7 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -6993,6 +7012,7 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type

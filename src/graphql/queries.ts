@@ -1362,6 +1362,7 @@ export const getSyllabusLesson = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -1511,6 +1512,7 @@ export const listSyllabusLessons = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -1646,6 +1648,7 @@ export const getStudentData = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -1983,6 +1986,7 @@ export const getClassroom = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -2150,6 +2154,7 @@ export const listClassrooms = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -2226,6 +2231,7 @@ export const getFeedback = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -2409,6 +2415,7 @@ export const getLesson = /* GraphQL */ `
       id
       title
       type
+      label
       instructions
       theme {
         type
@@ -2611,6 +2618,7 @@ export const listLessons = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -3298,6 +3306,7 @@ export const getQuestionData = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID

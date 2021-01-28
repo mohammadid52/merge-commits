@@ -2688,6 +2688,7 @@ export const createSyllabusLesson = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -2835,6 +2836,7 @@ export const updateSyllabusLesson = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -2982,6 +2984,7 @@ export const deleteSyllabusLesson = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -3259,6 +3262,7 @@ export const createStudentData = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -3439,6 +3443,7 @@ export const updateStudentData = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -3619,6 +3624,7 @@ export const deleteStudentData = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -3903,6 +3909,7 @@ export const createClassroom = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -4089,6 +4096,7 @@ export const updateClassroom = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -4275,6 +4283,7 @@ export const deleteClassroom = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -4445,6 +4454,7 @@ export const createFeedback = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -4525,6 +4535,7 @@ export const updateFeedback = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -4605,6 +4616,7 @@ export const deleteFeedback = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -4823,6 +4835,7 @@ export const createLesson = /* GraphQL */ `
       id
       title
       type
+      label
       instructions
       theme {
         type
@@ -5015,6 +5028,7 @@ export const updateLesson = /* GraphQL */ `
       id
       title
       type
+      label
       instructions
       theme {
         type
@@ -5207,6 +5221,7 @@ export const deleteLesson = /* GraphQL */ `
       id
       title
       type
+      label
       instructions
       theme {
         type
@@ -5404,6 +5419,7 @@ export const createLessonCheckpoint = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -5527,6 +5543,7 @@ export const updateLessonCheckpoint = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -5650,6 +5667,7 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -6944,6 +6962,7 @@ export const createQuestionData = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -7061,6 +7080,7 @@ export const updateQuestionData = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -7178,6 +7198,7 @@ export const deleteQuestionData = /* GraphQL */ `
           id
           title
           type
+          label
           instructions
           grades
           artistID
@@ -7735,6 +7756,7 @@ export const createLessonKeyWord = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -7851,6 +7873,7 @@ export const updateLessonKeyWord = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
@@ -7967,6 +7990,7 @@ export const deleteLessonKeyWord = /* GraphQL */ `
         id
         title
         type
+        label
         instructions
         theme {
           type
