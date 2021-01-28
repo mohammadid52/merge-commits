@@ -623,6 +623,8 @@ type Lesson @model @key(fields: ["id"]) {
   keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
   connection: String
   summary: String
+  purpose: String
+  designers: [String]
   objectives: [String]
   checkpoints: [LessonCheckpoint]! @connection(keyName: "byLesson", fields: ["id"])
   doFirstID: ID!
