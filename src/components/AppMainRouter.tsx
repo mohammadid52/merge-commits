@@ -16,7 +16,8 @@ import * as customMutations from '../customGraphql/customMutations'
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
   // const { theme, dispatch } = useContext(GlobalContext);
-  const { state, theme, dispatch } = useContext(GlobalContext);
+  const { state, theme, clientKey, dispatch } = useContext(GlobalContext);
+  console.log('clientKey......', clientKey)
   const [cookies, setCookie, removeCookie] = useCookies();
   const [authState, setAuthState] = useState('loading')
 
