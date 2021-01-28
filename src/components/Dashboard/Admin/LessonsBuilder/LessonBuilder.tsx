@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api'
+import { v4 as uuidv4 } from 'uuid';
 
 import * as customQueries from '../../../../customGraphql/customQueries';
 import * as mutations from '../../../../graphql/mutations';
@@ -145,18 +146,33 @@ const LessonBuilder = () => {
           title: formData.name,
           type: formData.type?.value,
           purpose: formData.purpose,
-          purposeHtml: formData.purposeHtml,
-          objective: formData.objective,
-          objectiveHtml: formData.objectiveHtml,
+          objectives: [formData.objective],
           language: formData.languages.map(item => item.value),
-          designers: selectedDesigners.map(item => item.id)
+          designers: selectedDesigners.map(item => item.id),
+          artistID: "0",
+          doFirstID: "0",
+          warmUpId: "0",
+          coreLessonId: "0",
+          activityId: "0",
+          assessmentID: formData.type?.value === 'lesson' ? "0" : uuidv4(),
         }
         const results: any = await API.graphql(
           graphqlOperation(mutations.createLesson, { input: input })
         );
-        const savedData = results?.data?.createLesson;
+        const lessonsData = results?.data?.createLesson;
+        // if (formData.type?.value !== 'lesson') {
+        //   const assessmentInput = {
+        //     id: lessonsData.assessmentID,
+        //     title: formData.name,
+        //     type: formData.type?.value,
+        //   }
+        //   const results: any = await API.graphql(
+        //     graphqlOperation(mutations.createAssessment, { input: assessmentInput })
+        //   );
+        //   const assessmentData = results?.data?.createAssessment;
+        // }
         setLoading(false);
-        if (savedData) {
+        if (lessonsData) {
           setValidation({
             name: '',
             type: '',

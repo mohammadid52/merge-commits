@@ -11,15 +11,22 @@ import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageWrapper from '../../../Atoms/PageWrapper';
 import WizardScroller from '../../../Atoms/WizardScroller';
-import { match } from 'assert';
+
+import GeneralInformation from './StepActionComponent/GeneralInformation';
+import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
+import QuestionBuilder from './StepActionComponent/QuestionBuilder';
+import PreviewForm from './StepActionComponent/PreviewForm';
 
 const LessonEdit = () => {
 
-  const urlParams: any = useParams()
-  const lessonId = urlParams.lessonId;
-  const assessmentId = urlParams.assessmentId
   const history = useHistory();
   const match = useRouteMatch();
+  const useQuery = () => {
+    return new URLSearchParams(location.search);
+  };
+  const params = useQuery();
+  const lessonId = params.get('lessonId');
+  const assessmentId = params.get('assessmentId');
   const lessonType = (!lessonId && assessmentId) ? 'assessment' : 'lesson';
   const [activeStep, setActivetep] = useState('General Information');
   const [loading, setLoading] = useState(false);
@@ -36,15 +43,34 @@ const LessonEdit = () => {
   const lessonScrollerStep = ["General Information", "Preview Details"];
 
   const fetchLessonDetails = async () => {
-    if ((!lessonId && !assessmentId) || (lessonId && assessmentId)) {
-      history.push(`/dashborad/lesson-builder`)
-    } else {
 
+  }
+  const checkValidUrl = async () => {
+    if ((!lessonId && !assessmentId) || (lessonId && assessmentId)) {
+      console.log('Invalid url')
+      history.push(`/dashboard/lesson-builder`)
+    } else {
+      fetchLessonDetails();
     }
   }
   useEffect(() => {
-    fetchLessonDetails();
+    checkValidUrl();
   }, [])
+
+  const currentStepComp = (currentStep: string) => {
+    switch (currentStep) {
+      case 'General Information':
+        return <GeneralInformation />;
+      case 'Instructions':
+        return <AssessmentInstuctions />;
+      case 'Question Builder':
+        return <QuestionBuilder />;
+      case 'Preview Details':
+        return <PreviewForm />;
+      default:
+        return <GeneralInformation />;
+    }
+  }
 
   return (
     <div className="w-full h-full">
@@ -71,7 +97,7 @@ const LessonEdit = () => {
                 <p className="h-100 flex justify-center items-center">Fetching lesson details pleas wait...</p>
               ) : (
                   <Fragment>
-
+                    {currentStepComp(activeStep)}
                   </Fragment>
                 )}
             </div>
