@@ -6,6 +6,7 @@ interface LessonsListRow {
   index: number,
   title: string,
   type: string,
+  languages: string[]
 }
 
 const LessonsListRow = (props: LessonsListRow) => {
@@ -21,27 +22,8 @@ const LessonsListRow = (props: LessonsListRow) => {
     }
   }
 
-  const getLanguageString = (language: string) => {
-    switch (language) {
-      case 'EN':
-        return 'English';
-      case 'ES':
-        return 'Spanish';
-    }
-  }
 
-  const getType = (type: string) => {
-    switch (type) {
-      case 'lesson':
-        return 'Lesson';
-      case 'survey':
-        return 'Survey';
-      case 'assessment':
-        return 'AssessMent';
-    }
-  }
-
-  const { id, index, title, type } = props;
+  const { id, index, title, type, languages } = props;
   return (
     <div id={id} className="flex justify-between bg-white w-full border-b border-gray-200">
       <div className="w-.5/10 flex justify-center items-center px-4 py-4 whitespace-normal text-sm leading-5 font-medium" >
@@ -59,7 +41,13 @@ const LessonsListRow = (props: LessonsListRow) => {
       </div> */}
       <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">
-          {type ? getType(type) : '--'}
+          {type ? type : '--'}
+        </span>
+      </div>
+
+      <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+        <span className="w-auto">
+          {languages?.length ? languages.map((language, index) => language + `${index === (languages.length - 1) ? '.' : ', '}`) : '--'}
         </span>
       </div>
 

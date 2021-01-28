@@ -1,7 +1,8 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
-import { IoArrowUndoCircleOutline } from 'react-icons/io5';
-import API, { graphqlOperation } from '@aws-amplify/api'
+import { IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp } from 'react-icons/io5';
+import { FaRegEye, FaQuestionCircle } from 'react-icons/fa';
+import API, { graphqlOperation } from '@aws-amplify/api';
 
 import Buttons from '../../../Atoms/Buttons';
 import Selector from '../../../Atoms/Form/Selector';
@@ -39,8 +40,16 @@ const LessonEdit = () => {
       last: true
     },
   ]
-  const assessmentScrollerStep = ["General Information", "Instructions", "Question Builder", "Preview Details"];
-  const lessonScrollerStep = ["General Information", "Preview Details"];
+  const assessmentScrollerStep = [
+    { name: "General Information", icon: <IoCardSharp /> },
+    { name: "Instructions", icon: <IoDocumentText /> },
+    { name: "Question Builder", icon: <FaQuestionCircle /> },
+    { name: "Preview Details", icon: <FaRegEye /> }
+  ];
+  const lessonScrollerStep = [
+    { name: "General Information", icon: <IoCardSharp /> },
+    { name: "Preview Details", icon: <FaRegEye /> }
+  ];
 
   const fetchLessonDetails = async () => {
 
@@ -87,17 +96,19 @@ const LessonEdit = () => {
       {/* Body */}
       <PageWrapper>
         <div className="w-full m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">EDIT INFORMATION</h3>
-          <div className="grid grid-cols-4 divide-x divide-gray-400 p-4">
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3>
+          <div className="grid grid-cols-5 divide-x divide-gray-400 p-4">
             <div className="sm:col-span-1">
               <WizardScroller stepsList={lessonType === 'lesson' ? lessonScrollerStep : assessmentScrollerStep} activeStep={activeStep} setActiveStep={(step) => setActivetep(step)} />
             </div>
-            <div className="sm:col-span-3">
+            <div className="sm:col-span-4">
               {loading ? (
                 <p className="h-100 flex justify-center items-center">Fetching lesson details pleas wait...</p>
               ) : (
                   <Fragment>
-                    {currentStepComp(activeStep)}
+                    <div className="mx-6">
+                      {currentStepComp(activeStep)}
+                    </div>
                   </Fragment>
                 )}
             </div>

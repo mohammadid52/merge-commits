@@ -18,7 +18,7 @@ import PageWrapper from '../../../Atoms/PageWrapper';
 import { languageList } from '../../../../utilities/staticData'
 import RichTextEditor from '../../../Atoms/RichTextEditor';
 
-interface InitialData {
+export interface InitialData {
   name: string
   type: InputValue,
   purpose: string,
@@ -70,10 +70,12 @@ const LessonBuilder = () => {
       ...formData,
       [e.target.name]: e.target.value
     })
-    setValidation({
-      ...validation,
-      name: ''
-    })
+    if (validation.name) {
+      setValidation({
+        ...validation,
+        name: ''
+      })
+    }
   }
 
   const onSelectOption = (val: string, name: string, id: string, field: string) => {
@@ -85,10 +87,12 @@ const LessonBuilder = () => {
         value: val
       }
     });
-    setValidation({
-      ...validation,
-      type: ''
-    })
+    if (validation.type) {
+      setValidation({
+        ...validation,
+        type: ''
+      })
+    }
   }
 
   const selectLanguage = (id: string, name: string, value: string) => {
@@ -117,6 +121,7 @@ const LessonBuilder = () => {
     }
     setSelectedDesigners(updatedList)
   }
+  
   const validateForm = () => {
     let isValid = true
     const msgs = validation;
