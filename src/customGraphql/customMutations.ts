@@ -581,6 +581,8 @@ export const updateSyllabusLesson = /* GraphQL */ `
       id
       status
       complete
+      startDate
+      endDate
       syllabusID
       lessonID
       lessonPlan {

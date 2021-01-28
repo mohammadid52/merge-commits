@@ -6,7 +6,7 @@ import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/ai';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 const SmallLessonCard = (props: LessonCardProps) => {
-  const { keyProps, lessonProps, openCards, setOpenCards } = props;
+  const { keyProps, lessonProps, openCards, setOpenCards, lessonType } = props;
   const { theme } = useContext(GlobalContext);
 
   /**

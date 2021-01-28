@@ -5,16 +5,13 @@ import Start from '../Start';
 
 import { LessonCardProps } from '../Classroom';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
+import SideImage from './StandardLessonCard/SideImage';
+import BottomBar from './StandardLessonCard/BottomBar';
+import MainSummary from './StandardLessonCard/MainSummary';
 
 const StandardLessonCard = (props: LessonCardProps) => {
   const { isTeacher, keyProps, lessonProps, accessible, lessonType } = props;
   const { theme } = useContext(GlobalContext);
-
-  const reverseDateString = () => {
-    if (lessonProps.hasOwnProperty('endDate')) {
-      return lessonProps.endDate.split('-').reverse().join('-');
-    }
-  };
 
   return (
     <div
@@ -23,103 +20,14 @@ const StandardLessonCard = (props: LessonCardProps) => {
       {/**
        *  LEFT SECTION IMAGE
        */}
-      {lessonType !== 'survey' && (
-        <div
-          className={`w-2.5/10 ${theme.dashboard.bg} rounded-tl rounded-bl`}
-          style={{
-            backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${
-              lessonProps && lessonProps.lesson.artist.images ? lessonProps.lesson.artist.images : null
-            })`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}>
-          <div className="h-6/10 flex justify-center items-center"></div>
-
-          <>
-            <div className="h-1/10 pl-6">
-              <div
-                className="tracking-widest border-b text-gray-300 border-ketchup"
-                style={{ textShadow: '1px 1px black' }}>
-                FEATURED ARTIST
-              </div>
-            </div>
-            <div className="h-3/10 flex flex-row-reverse">
-              <h2
-                className={`first w-full text-2xl text-right font-open font-medium tracking-widest mt-2 mr-1 text-gray-200`}
-                style={{ textShadow: '1px 1px black' }}>
-                {lessonProps && lessonProps.lesson.artist.name ? lessonProps.lesson.artist.name : null}
-              </h2>
-            </div>
-          </>
-        </div>
-      )}
+      {lessonType !== 'survey' && <SideImage lessonProps={lessonProps} />}
       {/**
        *  RIGHT SECTION
        */}
       <div className={`${lessonType !== 'survey' ? 'w-7.5/10' : 'w-full'} flex flex-col rounded-b`}>
-        <div className={`${lessonType !== 'survey' ? 'h-44' : 'h-auto'} p-4 flex flex-col justify-start items-center`}>
-          <h1 className={`flex text-2xl text-black font-open text-left`}>
-            <span>{lessonProps.lesson && lessonProps.lesson.title ? lessonProps.lesson.title : null}</span>
-            <span className={`text-sm text-gray-400 text-right`}>
-              {lessonProps.complete && lessonProps.endDate ? 'Completed on ' + reverseDateString() : ''}
-            </span>
-          </h1>
-          <p className="overflow-ellipsis overflow-hidden ... text-sm text-left">
-            {lessonProps.lesson && lessonProps.lesson.summary ? lessonProps.lesson.summary : null}
-          </p>
-        </div>
-        <div
-          className={`h-8 ${theme.dashboard.bg} flex justify-between text-sm ${
-            lessonType === 'survey' ? 'rounded-b' : 'rounded-br'
-          }`}>
-          {/* FILLER */}
-          {lessonType === 'survey' && (
-            <div className={`flex justify-center items-center my-2 w-3.3/10 text-gray-300`} />
-          )}
+        <MainSummary lessonType={lessonType} lessonProps={lessonProps} />
 
-          {/* TIME */}
-          <div className={`flex justify-center items-center my-2 w-3.3/10 text-gray-300`}>
-            <div className="w-auto text-gray-300">
-              <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
-                <AiOutlineClockCircle />
-              </IconContext.Provider>
-            </div>
-            <div className={`w-auto mx-4 text-xs text-gray-300`}>45 min.</div>
-          </div>
-
-          {/* TEACHER */}
-          <div className={`flex justify-center items-center my-2 w-3.3/10`}>
-            <div className="w-auto text-gray-300">
-              {lessonType !== 'survey' && (
-                <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
-                  <AiOutlineUser />
-                </IconContext.Provider>
-              )}
-              {lessonType === 'survey' && (
-                <p className="overflow-ellipsis overflow-hidden ... text-xs text-left">
-                  Status:
-                  {accessible ? (
-                    <span className="ml-2 text-xs font-semibold text-green-400">Open</span>
-                  ) : (
-                    <span className="ml-2 text-xs font-semibold text-gray-400">Closed</span>
-                  )}
-                </p>
-              )}
-            </div>
-            <div className={`w-auto mx-4 text-xs text-gray-200`}>{lessonType !== 'survey' && 'Marlon'}</div>
-          </div>
-
-          {/* START */}
-          <div className="flex w-3.3/10">
-            <Start
-              isTeacher={isTeacher}
-              lessonKey={lessonProps ? lessonProps.id : null}
-              open={lessonProps && lessonProps.status === 'Active' ? true : false}
-              accessible={accessible}
-              type={lessonType}
-            />
-          </div>
-        </div>
+        <BottomBar lessonProps={lessonProps} isTeacher={isTeacher} accessible={accessible} lessonType={lessonType} />
       </div>
     </div>
   );

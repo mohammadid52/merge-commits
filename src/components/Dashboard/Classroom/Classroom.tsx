@@ -66,7 +66,7 @@ export interface LessonProps extends DashboardProps {
 
 export interface LessonCardProps {
   isTeacher?: boolean;
-  keyProps: string;
+  keyProps?: string;
   lessonProps: Lesson;
   accessible?: boolean;
   openCards?: string;
@@ -373,7 +373,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         {state.roomData.lessons && state.roomData.lessons.length > 0 && visibleLessonGroup === 'completed' ? (
           <div className={`bg-grayscale-light bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
-              <CompletedLessons isTeacher={isTeacher} lessons={sortedLessons(completedLessons, 'expectedEndDate')} />
+              <CompletedLessons isTeacher={isTeacher} lessons={sortedLessons(completedLessons, 'expectedEndDate')}/>
             </div>
           </div>
         ) : null}

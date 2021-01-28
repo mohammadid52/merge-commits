@@ -13,7 +13,6 @@ import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
 import QuickRegister from '../Auth/QuickRegister';
 import { awsFormatDate, dateString } from '../../utilities/time';
 
-
 const LessonControl = () => {
   const { state, theme, dispatch } = useContext(LessonControlContext);
   const match = useRouteMatch();
@@ -119,7 +118,7 @@ const LessonControl = () => {
       displayData: state.displayData,
       lessonPlan: state.pages,
       startDate: '',
-      endDate: ''
+      endDate: '',
     };
 
     try {
@@ -205,24 +204,45 @@ const LessonControl = () => {
     }
   };
 
+  const handleOpenSyllabusLesson = async () => {
+    let startedSyllabusLessonData = {
+      id: state.syllabusLessonID,
+      status: 'Active',
+      complete: false,
+      startDate: awsFormatDate(dateString('-', 'WORLD')),
+    };
+
+    try {
+      console.log(startedSyllabusLessonData);
+      const startedSyllabusLesson = await API.graphql(
+        graphqlOperation(customMutations.updateSyllabusLesson, {
+          input: startedSyllabusLessonData,
+        })
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleOpen = async () => {
+    await handleOpenSyllabusLesson();
+    dispatch({ type: 'START_CLASSROOM' });
+    setOpen(true);
+  };
+
+  const handleComplete = async () => {
+    await handleCompleteClassroom();
+    dispatch({ type: 'COMPLETE_CLASSROOM', payload: dateString('-', 'US') });
+    setOpen(true);
+    handleHome();
+  };
+
   const handleGoToUserManagement = () => {
     history.push('/dashboard/manage-users');
   };
 
   const handleHome = () => {
     history.push('/dashboard/lesson-planner');
-  };
-
-  const handleOpen = () => {
-    dispatch({ type: 'START_CLASSROOM' });
-    setOpen(true);
-  };
-
-  const handleComplete = async () => {
-    dispatch({ type: 'COMPLETE_CLASSROOM', payload: dateString('-', 'US') });
-    await handleCompleteClassroom();
-    setOpen(true);
-    handleHome();
   };
 
   const { visible, setVisible, ref } = useOutsideAlerter(false);

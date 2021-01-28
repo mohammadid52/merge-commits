@@ -11,7 +11,7 @@ const CompletedLessons: React.FC<LessonProps> = (props: LessonProps) => {
         ? lessons.map((value: any, key: number) => {
             return (
               <div id={`completedLesson_${key}_wrapper`} key={`completedLesson_${key}_wrapper`}>
-                <StandardLessonCard isTeacher={isTeacher} keyProps={`completedLesson_${key}`} lessonProps={value} accessible={false} />
+                <StandardLessonCard isTeacher={isTeacher} keyProps={`completedLesson_${key}`} lessonProps={value} accessible={false} lessonType={value.lesson.type}/>
               </div>
             );
           })

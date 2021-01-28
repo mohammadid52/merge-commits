@@ -27,6 +27,7 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
                   keyProps={`todayLesson_${key}`}
                   lessonProps={value}
                   accessible={accessible}
+                  lessonType={value.type}
                 />
               </div>
             );
