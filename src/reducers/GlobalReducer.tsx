@@ -15,6 +15,12 @@ type globalActions =
         property: string;
         data: any;
       };
+    }| {
+      type: 'TOGGLE_LESSON';
+      payload: {
+        property: string;
+        data: any;
+      };
     }
   | {
       type: 'SET_USER';
@@ -62,6 +68,14 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           ...state.roomData,
           [action.payload.property]: action.payload.data,
         },
+      };
+      case 'TOGGLE_LESSON':
+      return {
+        ...state,
+        roomData: {
+          ...state.roomData,
+          [action.payload.property]: action.payload.data,
+        }
       };
     case 'SET_USER':
       return {

@@ -39,7 +39,7 @@ const LessonControl = () => {
 
   useEffect(() => {
     if (state.pages.length > 0 && state.unsavedChanges) {
-      handleUpdateClassroom();
+      handleUpdateSyllabusLesson();
     }
   }, [state.unsavedChanges]);
 
@@ -107,10 +107,10 @@ const LessonControl = () => {
   /**
    * CLASSROOM DATE && STUDENT SHARING
    */
-  const handleUpdateClassroom = async () => {
-    let updatedClassroomData: any = {
-      id: state.classroomID,
-      open: state.open ? state.open : false,
+  const handleUpdateSyllabusLesson = async () => {
+    let updatedSyllabusLessonData: any = {
+      id: state.syllabusLessonID,
+      status: state.open ? 'Active' : 'Inactive',
       complete: state.complete ? state.complete : false,
       viewing:
         state.studentViewing.studentInfo && state.studentViewing.studentInfo.studentAuthID
@@ -118,12 +118,14 @@ const LessonControl = () => {
           : null,
       displayData: state.displayData,
       lessonPlan: state.pages,
+      startDate: '',
+      endDate: ''
     };
 
     try {
-      const updatedClassroom = await API.graphql(
-        graphqlOperation(customMutations.updateClassroom, {
-          input: updatedClassroomData,
+      const updatedSyllabusLesson = await API.graphql(
+        graphqlOperation(customMutations.updateSyllabusLesson, {
+          input: updatedSyllabusLessonData,
         })
       );
       dispatch({ type: 'SAVED_CHANGES' });
@@ -184,34 +186,20 @@ const LessonControl = () => {
    */
 
   const handleCompleteClassroom = async () => {
-    let completedClassroomData = {
-      id: state.classroomID,
-      open: false,
-      complete: true,
-      expectedEndDate: awsFormatDate(dateString('-', 'WORLD')),
-    };
-
     let completedSyllabusLessonData = {
-      id: state.classroomID,
-      open: false,
+      id: state.syllabusLessonID,
+      status: 'Inactive',
       complete: true,
-      // expectedEndDate: awsFormatDate(dateString('-', 'WORLD')),
+      endDate: awsFormatDate(dateString('-', 'WORLD')),
     };
 
     try {
-      // const completedClassroom = await API.graphql(
-      //   graphqlOperation(customMutations.updateClassroom, {
-      //     input: completedClassroomData,
-      //   })
-      // );
-
       const completedSyllabusLesson = await API.graphql(
         graphqlOperation(customMutations.updateSyllabusLesson, {
           input: completedSyllabusLessonData,
         })
       );
       dispatch({ type: 'SAVED_CHANGES' });
-      console.log('Lesson completed: ', completedSyllabusLessonData)
     } catch (err) {
       console.error(err);
     }
@@ -360,7 +348,7 @@ const LessonControl = () => {
 
               <div className={`h-full`}>
                 <ClassRoster
-                  handleUpdateClassroom={handleUpdateClassroom}
+                  handleUpdateSyllabusLesson={handleUpdateSyllabusLesson}
                   handleShareStudentData={handleShareStudentData}
                   isSameStudentShared={isSameStudentShared}
                   handleQuitShare={handleQuitShare}

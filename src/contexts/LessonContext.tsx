@@ -103,21 +103,21 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
     /**
      * TODO:
-     *  getClassroom() has been updated to use the new query 'getSyllabusLesson' instead of
+     *  getClassroom() has been renamed to getSyllabusLesson()  updated to use the new query 'getSyllabusLesson' instead of
      *  the deprecated 'getClassroom'
      *  ALL subscriptions will be frozen until the lessons are loading properly from the new query
      */
-    async function getClassroom() {
-        let queryParams = queryString.parse(location.search)
+    async function getSyllabusLesson() {
+        let queryParams = queryString.parse(location.search);
         if (Object.keys(queryParams).length && queryParams.id) {
             try {
-                const classroom: any = await API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id }))
+                const classroom: any = await API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id }));
                 console.log('classroom data', classroom);
                 // setLesson(classroom.data.getClassroom)
                 // getOrCreateStudentData()
                 // subscription = subscribeToClassroom()
             } catch (error) {
-                console.error(error)
+                console.error(error);
             }
         } else {
             history.push('/dashboard');
@@ -155,7 +155,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     }
 
     useEffect(() => {
-        getClassroom()
+        getSyllabusLesson()
 
         return function cleanup() {
             if (subscription) {

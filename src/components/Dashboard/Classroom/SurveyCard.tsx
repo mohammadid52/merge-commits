@@ -6,8 +6,10 @@ import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/ai';
 import ProgressRing from './ProgressRing';
 import { CurriculumInfo } from './Classroom';
 import StandardLessonCard from './LessonCards/StandardLessonCard';
+import { isTextFile } from '@aws-amplify/core';
 
 interface ClassProps {
+  isTeacher: boolean;
   link: string;
   curriculum?: CurriculumInfo;
   lessons: any;
@@ -16,7 +18,7 @@ interface ClassProps {
 }
 
 const SurveyCard: React.FC<ClassProps> = (props: ClassProps) => {
-  const { link, lessons, accessible } = props;
+  const { isTeacher, link, lessons, accessible, lessonType } = props;
   const history = useHistory();
   const { theme } = useContext(GlobalContext);
 
@@ -28,14 +30,15 @@ const SurveyCard: React.FC<ClassProps> = (props: ClassProps) => {
   return (
     <>
       {lessons && lessons.length > 0
-        ? lessons.map((value: any, key: number) => {
+        ? lessons.map((lesson: any, key: number) => {
             return (
               <div key={`survey-${key}_wrapper`} id={`survey-${key}_wrapper`}>
                 <StandardLessonCard
+                  isTeacher={isTeacher}
                   keyProps={`survey-${key}`}
-                  lessonProps={value}
-                  lessonType={`survey`}
-                  accessible={accessible}
+                  lessonProps={lesson}
+                  lessonType={lessonType}
+                  accessible={lesson.status === 'Active'}
                 />
               </div>
             );

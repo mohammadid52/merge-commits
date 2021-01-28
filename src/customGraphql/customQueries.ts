@@ -813,6 +813,8 @@ export const getSyllabusLesson = /* GraphQL */ `
     getSyllabusLesson(id: $id) {
       id
       status
+      endDate
+      startDate
       roster
       viewing
       displayData {
@@ -1131,6 +1133,8 @@ export const listSyllabusLessons = /* GraphQL */ `
           }
           summary
         }
+        endDate
+        startDate
         createdAt
         updatedAt
         syllabusID

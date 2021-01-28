@@ -10,11 +10,9 @@ const StandardLessonCard = (props: LessonCardProps) => {
   const { isTeacher, keyProps, lessonProps, accessible, lessonType } = props;
   const { theme } = useContext(GlobalContext);
 
-  const isSurvey = keyProps.includes('survey') || keyProps.includes('assessment');
-
   const reverseDateString = () => {
-    if (lessonProps.hasOwnProperty('expectedEndDate')) {
-      return lessonProps.expectedEndDate.split('-').reverse().join('-');
+    if (lessonProps.hasOwnProperty('endDate')) {
+      return lessonProps.endDate.split('-').reverse().join('-');
     }
   };
 
@@ -25,7 +23,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
       {/**
        *  LEFT SECTION IMAGE
        */}
-      {!isSurvey && (
+      {lessonType !== 'survey' && (
         <div
           className={`w-2.5/10 ${theme.dashboard.bg} rounded-tl rounded-bl`}
           style={{
@@ -58,22 +56,26 @@ const StandardLessonCard = (props: LessonCardProps) => {
       {/**
        *  RIGHT SECTION
        */}
-      <div className={`${!isSurvey ? 'w-7.5/10' : 'w-full'} flex flex-col rounded-b`}>
-        <div className={`${!isSurvey ? 'h-44' : 'h-auto'} p-4 flex flex-col justify-start items-center`}>
+      <div className={`${lessonType !== 'survey' ? 'w-7.5/10' : 'w-full'} flex flex-col rounded-b`}>
+        <div className={`${lessonType !== 'survey' ? 'h-44' : 'h-auto'} p-4 flex flex-col justify-start items-center`}>
           <h1 className={`flex text-2xl text-black font-open text-left`}>
             <span>{lessonProps.lesson && lessonProps.lesson.title ? lessonProps.lesson.title : null}</span>
             <span className={`text-sm text-gray-400 text-right`}>
-              {lessonProps.complete && lessonProps.expectedEndDate ? 'Completed on ' + reverseDateString() : ''}
+              {lessonProps.complete && lessonProps.endDate ? 'Completed on ' + reverseDateString() : ''}
             </span>
           </h1>
-          <p className="text-sm text-left">
+          <p className="overflow-ellipsis overflow-hidden ... text-sm text-left">
             {lessonProps.lesson && lessonProps.lesson.summary ? lessonProps.lesson.summary : null}
           </p>
         </div>
         <div
-          className={`h-8 ${theme.dashboard.bg} flex justify-between text-sm ${isSurvey ? 'rounded-b' : 'rounded-br'}`}>
+          className={`h-8 ${theme.dashboard.bg} flex justify-between text-sm ${
+            lessonType === 'survey' ? 'rounded-b' : 'rounded-br'
+          }`}>
           {/* FILLER */}
-          {isSurvey && <div className={`flex justify-center items-center my-2 w-3.3/10 text-gray-300`} />}
+          {lessonType === 'survey' && (
+            <div className={`flex justify-center items-center my-2 w-3.3/10 text-gray-300`} />
+          )}
 
           {/* TIME */}
           <div className={`flex justify-center items-center my-2 w-3.3/10 text-gray-300`}>
@@ -82,19 +84,29 @@ const StandardLessonCard = (props: LessonCardProps) => {
                 <AiOutlineClockCircle />
               </IconContext.Provider>
             </div>
-            <div className={`w-auto mx-4 text-gray-300`}>45 min.</div>
+            <div className={`w-auto mx-4 text-xs text-gray-300`}>45 min.</div>
           </div>
 
           {/* TEACHER */}
           <div className={`flex justify-center items-center my-2 w-3.3/10`}>
             <div className="w-auto text-gray-300">
-              {!isSurvey && (
+              {lessonType !== 'survey' && (
                 <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
                   <AiOutlineUser />
                 </IconContext.Provider>
               )}
+              {lessonType === 'survey' && (
+                <p className="overflow-ellipsis overflow-hidden ... text-xs text-left">
+                  Status:
+                  {accessible ? (
+                    <span className="ml-2 text-xs font-semibold text-green-400">Open</span>
+                  ) : (
+                    <span className="ml-2 text-xs font-semibold text-gray-400">Closed</span>
+                  )}
+                </p>
+              )}
             </div>
-            <div className={`w-auto mx-4 text-gray-200`}>{!isSurvey && 'Marlon'}</div>
+            <div className={`w-auto mx-4 text-xs text-gray-200`}>{lessonType !== 'survey' && 'Marlon'}</div>
           </div>
 
           {/* START */}

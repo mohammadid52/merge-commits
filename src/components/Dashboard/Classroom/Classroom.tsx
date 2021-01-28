@@ -43,13 +43,14 @@ export interface Lesson {
   complete: boolean;
   roster: string[];
   viewing: any;
-  expectedStartDate: string;
-  expectedEndDate: string;
+  startDate: string;
+  endDate: string;
   SELStructure?: string;
   courseID: string;
   lessonID: string;
   lesson: {
     id?: string;
+    type?: string;
     title: string;
     artist?: any;
     language: string;
@@ -196,7 +197,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const todayLessons =
     state.roomData.lessons.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
-          if (lesson.status === 'Active' && lesson.id !== 'on-boarding-survey-1') {
+          if (lesson.status === 'Active' && lesson.lesson.type !== 'survey') {
             if (!lesson.complete) {
               return lesson;
             }
@@ -211,7 +212,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const upcomingLessons =
     state.roomData.lessons.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
-          if (lesson.status === 'Inactive' && lesson.id !== 'on-boarding-survey-1') {
+          if (lesson.status === 'Inactive' && lesson.lesson.type !== 'survey') {
             if (!lesson.complete) {
               return lesson;
             }
@@ -278,7 +279,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           <div className={`${theme.section} px-4 pb-4 m-auto`}>
             <h2 className={`w-full flex text-xl border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
               <span>
-                {!isTeacher && activeRoomName !== '' ? activeRoomName : 'Classroom'}
+                {!isTeacher ? activeRoomName !== '' ? activeRoomName : 'Classroom' : null}
                 {isTeacher ? 'Lesson Planner' : null}
               </span>
               <span className={`mr-0 text-right`}>
@@ -311,10 +312,11 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           </div>
         ) : null}
 
-        {!isTeacher && state.roomData.lessons.length > 0 && survey.display ? (
+        {state.roomData.lessons.length > 0 && survey.display ? (
           <div className={`bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
               <SurveyCard
+                isTeacher={isTeacher}
                 link={'/lesson?id=on-boarding-survey-1'}
                 lessons={assessmentsSurveys}
                 lessonType={`survey`}
