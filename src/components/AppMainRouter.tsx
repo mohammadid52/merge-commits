@@ -3,6 +3,7 @@ import { Auth } from '@aws-amplify/auth';
 import { useCookies } from 'react-cookie';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as queries from '../graphql/queries';
+import * as mutations from '../graphql/mutations';
 import { GlobalContext } from '../contexts/GlobalContext';
 import useDeviceDetect from '../customHooks/deviceDetect';
 import MobileOops from '../components/Error/MobileOops';
@@ -15,9 +16,7 @@ import * as customMutations from '../customGraphql/customMutations'
 
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
-  // const { theme, dispatch } = useContext(GlobalContext);
   const { state, theme, clientKey, dispatch } = useContext(GlobalContext);
-  console.log('clientKey......', clientKey)
   const [cookies, setCookie, removeCookie] = useCookies();
   const [authState, setAuthState] = useState('loading')
 
@@ -31,8 +30,15 @@ const MainRouter: React.FC = () => {
     }
   }, [authState]);
 
+  // const loadItems = async () => {
+  //   await Promise.all(items.map(async item => {
+  //     // await API.graphql(graphqlOperation(mutations.createLesson, { input: items }));
+  //   }))
+  // }
+
   useEffect(() => {
     checkUserAuthenticated();
+    // loadItems()
   }, []);
 
   const checkUserAuthenticated = async () => {
