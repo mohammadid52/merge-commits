@@ -6339,6 +6339,32 @@ export const createSyllabusLesson = /* GraphQL */ `
       }
       startDate
       endDate
+      data {
+        items {
+          id
+          lessonProgress
+          currentLocation
+          status
+          saveType
+          syllabusLessonID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      feedback {
+        items {
+          id
+          syllabusLessonID
+          liked
+          comment
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -6489,6 +6515,32 @@ export const updateSyllabusLesson = /* GraphQL */ `
       }
       startDate
       endDate
+      data {
+        items {
+          id
+          lessonProgress
+          currentLocation
+          status
+          saveType
+          syllabusLessonID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      feedback {
+        items {
+          id
+          syllabusLessonID
+          liked
+          comment
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -6639,6 +6691,32 @@ export const deleteSyllabusLesson = /* GraphQL */ `
       }
       startDate
       endDate
+      data {
+        items {
+          id
+          lessonProgress
+          currentLocation
+          status
+          saveType
+          syllabusLessonID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      feedback {
+        items {
+          id
+          syllabusLessonID
+          liked
+          comment
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -6705,6 +6783,12 @@ export const createStudentData = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6872,6 +6956,12 @@ export const updateStudentData = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7039,6 +7129,12 @@ export const deleteStudentData = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7241,6 +7337,12 @@ export const createQuestionData = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7345,6 +7447,12 @@ export const updateQuestionData = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7449,6 +7557,12 @@ export const deleteQuestionData = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7927,6 +8041,12 @@ export const createFeedback = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7994,6 +8114,12 @@ export const updateFeedback = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -8061,6 +8187,12 @@ export const deleteFeedback = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }

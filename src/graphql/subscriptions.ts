@@ -175,6 +175,12 @@ export const onChangeStudentData = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6246,6 +6252,32 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
       }
       startDate
       endDate
+      data {
+        items {
+          id
+          lessonProgress
+          currentLocation
+          status
+          saveType
+          syllabusLessonID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      feedback {
+        items {
+          id
+          syllabusLessonID
+          liked
+          comment
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -6393,6 +6425,32 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
       }
       startDate
       endDate
+      data {
+        items {
+          id
+          lessonProgress
+          currentLocation
+          status
+          saveType
+          syllabusLessonID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      feedback {
+        items {
+          id
+          syllabusLessonID
+          liked
+          comment
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -6540,6 +6598,32 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
       }
       startDate
       endDate
+      data {
+        items {
+          id
+          lessonProgress
+          currentLocation
+          status
+          saveType
+          syllabusLessonID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      feedback {
+        items {
+          id
+          syllabusLessonID
+          liked
+          comment
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -6638,6 +6722,12 @@ export const onCreateQuestionData = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6739,6 +6829,12 @@ export const onUpdateQuestionData = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6840,6 +6936,12 @@ export const onDeleteQuestionData = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7306,6 +7408,12 @@ export const onCreateFeedback = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7370,6 +7478,12 @@ export const onUpdateFeedback = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7434,6 +7548,12 @@ export const onDeleteFeedback = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }

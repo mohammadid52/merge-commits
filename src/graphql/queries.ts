@@ -2900,6 +2900,32 @@ export const getSyllabusLesson = /* GraphQL */ `
       }
       startDate
       endDate
+      data {
+        items {
+          id
+          lessonProgress
+          currentLocation
+          status
+          saveType
+          syllabusLessonID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      feedback {
+        items {
+          id
+          syllabusLessonID
+          liked
+          comment
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -2961,6 +2987,12 @@ export const listSyllabusLessons = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3026,6 +3058,12 @@ export const getStudentData = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3315,6 +3353,12 @@ export const getQuestionData = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3444,6 +3488,12 @@ export const getFeedback = /* GraphQL */ `
         }
         startDate
         endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
         createdAt
         updatedAt
       }

@@ -742,12 +742,14 @@ type SyllabusLesson
   status: String
   lesson: Lesson @connection(fields: ["lessonID"])
   complete: Boolean
-  roster: [String!]!
+  roster: [String!]
   viewing: String
   displayData: DisplayData
-  lessonPlan: [ComponentSummary!]!
+  lessonPlan: [ComponentSummary!]
   startDate: AWSDate
   endDate: AWSDate
+  data: [StudentData] @connection(keyName: "bySyllabusLesson", fields: ["id"])
+  feedback: [Feedback] @connection(fields: ["id"])
 }
 
 type StudentData
