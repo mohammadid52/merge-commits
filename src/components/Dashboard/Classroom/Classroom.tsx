@@ -106,7 +106,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    * LIFECYCLE - on mount
    */
 
-
   useEffect(() => {
     if (state.roomData.lessons && state.roomData.lessons.length > 0) {
       const todayCount = todayLessons.length.toString();
@@ -128,52 +127,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       });
     }
   }, [state.roomData.lessons]);
-
-  /**
-   * ssSSSssHOW SURVEY IF IT HAS NOT BEEN COMPLETED
-   */
-
-  useEffect(() => {
-    if (!state.user.onBoardSurvey && !survey.data) {
-      getSurvey();
-    }
-
-    if (!state.user.onBoardSurvey) {
-      setSurvey(() => {
-        return {
-          ...survey,
-          display: true,
-        };
-      });
-    } else {
-      setSurvey(() => {
-        return {
-          ...survey,
-          display: false,
-        };
-      });
-    }
-  }, [state]);
-
-  const getSurvey = async () => {
-    try {
-      // const surveyData: any = await API.graphql(
-      //   graphqlOperation(customQueries.getClassroom, { id: 'on-boarding-survey-1' })
-      // );
-      // await setSurvey(() => {
-      //   let surveyStatus: boolean = state.user.onBoardSurvey ? !state.user.onBoardSurvey : true;
-      //
-      //   return {
-      //     ...survey,
-      //     display: surveyStatus,
-      //     data: surveyData.data.getClassroom,
-      //   };
-      // });
-      setStatus('done');
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   /**
    * ASSESSMENTS & SURVEYS
@@ -246,140 +199,135 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     });
   };
 
-  if (status !== 'done') {
-    return <ComponentLoading />;
-  }
-  if (status === 'done') {
-    return (
-      <>
-        {isTeacher && currentPage === 'lesson-planner' ? (
-          <div className={`bg-opacity-10`}>
-            <div className={`${theme.section} px-4 text-xl m-auto`}>
-              <h2 className={`text-xl w-full border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
-                Syllabus Control:
-              </h2>
-            </div>
-          </div>
-        ) : null}
-
-        {isTeacher && currentPage === 'lesson-planner' ? (
-          <div className={`bg-opacity-10`}>
-            <div className={`${theme.section} px-4 pb-4 m-auto`}>
-              <SyllabusSwitch
-                activeRoom={activeRoom}
-                currentPage={currentPage}
-                syllabusLoading={syllabusLoading}
-                handleSyllabusActivation={handleSyllabusActivation}
-              />
-            </div>
-          </div>
-        ) : null}
-
+  return (
+    <>
+      {isTeacher && currentPage === 'lesson-planner' ? (
         <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} px-4 pb-4 m-auto`}>
-            <h2 className={`w-full flex text-xl border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
-              <span>
-                {!isTeacher ? activeRoomName !== '' ? activeRoomName : 'Classroom' : null}
-                {isTeacher ? 'Lesson Planner' : null}
-              </span>
-              <span className={`mr-0 text-right`}>
-                <DateAndTime />
-              </span>
+          <div className={`${theme.section} px-4 text-xl m-auto`}>
+            <h2 className={`text-xl w-full border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
+              Syllabus Control:
             </h2>
           </div>
         </div>
+      ) : null}
 
-        {/**
-         *  TOP WIDGET BAR
-         *  - Hide for teacher
-         */}
-        {!isTeacher && (
-          <div className={`bg-opacity-10`}>
-            <div className={`${theme.section} px-4 pb-4 m-auto`}>
-              <TopWidgetBar />
-            </div>
-          </div>
-        )}
-
-        {/**
-         *  ASSESSMENTS/SURVEYS
-         */}
-        {!isTeacher && state.roomData.lessons.length > 0 && survey.display ? (
-          <div className={`bg-opacity-10`}>
-            <div className={`${theme.section} px-4 text-xl m-auto`}>
-              <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Surveys & Assessments</h2>
-            </div>
-          </div>
-        ) : null}
-
-        {state.roomData.lessons.length > 0 && survey.display ? (
-          <div className={`bg-opacity-10`}>
-            <div className={`${theme.section} p-4 text-xl m-auto`}>
-              <SurveyCard
-                isTeacher={isTeacher}
-                link={'/lesson?id=on-boarding-survey-1'}
-                lessons={assessmentsSurveys}
-                lessonType={`survey`}
-                accessible={survey.display}
-              />
-            </div>
-          </div>
-        ) : null}
-
-        {/**
-         *  LESSON TAB TOGGLE
-         */}
+      {isTeacher && currentPage === 'lesson-planner' ? (
         <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} px-4 text-xl m-auto`}>
-            <TodayUpcomingTabs
-              isTeacher={isTeacher}
-              lessonGroupCount={lessonGroupCount}
-              visibleLessonGroup={visibleLessonGroup}
-              setVisibleLessonGroup={setVisibleLessonGroup}
+          <div className={`${theme.section} px-4 pb-4 m-auto`}>
+            <SyllabusSwitch
+              activeRoom={activeRoom}
+              currentPage={currentPage}
+              syllabusLoading={syllabusLoading}
+              handleSyllabusActivation={handleSyllabusActivation}
             />
           </div>
         </div>
+      ) : null}
 
-        {/**
-         *  LESSONS
-         *    - today
-         *    - upcoming
-         *    - completed
-         */}
-        {visibleLessonGroup === 'today' ? (
-          <div className={`bg-opacity-10`}>
-            <div className={`${theme.section} p-4 text-xl m-auto`}>
-              <Today
-                activeRoom={activeRoom}
-                isTeacher={isTeacher}
-                lessonLoading={lessonLoading}
-                lessons={!isTeacher ? todayLessons : todayAndUpcomingLessons}
-              />
-            </div>
-          </div>
-        ) : null}
+      <div className={`bg-opacity-10`}>
+        <div className={`${theme.section} px-4 pb-4 m-auto`}>
+          <h2 className={`w-full flex text-xl border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
+            <span>
+              {!isTeacher ? (activeRoomName !== '' ? activeRoomName : 'Classroom') : null}
+              {isTeacher ? 'Lesson Planner' : null}
+            </span>
+            <span className={`mr-0 text-right`}>
+              <DateAndTime />
+            </span>
+          </h2>
+        </div>
+      </div>
 
-        {!isTeacher &&
-        state.roomData.lessons &&
-        state.roomData.lessons.length > 0 &&
-        visibleLessonGroup === 'upcoming' ? (
-          <div className={`bg-grayscale-light bg-opacity-10`}>
-            <div className={`${theme.section} p-4 text-xl m-auto`}>
-              <UpcomingLessons lessons={upcomingLessons} />
-            </div>
+      {/**
+       *  TOP WIDGET BAR
+       *  - Hide for teacher
+       */}
+      {!isTeacher && (
+        <div className={`bg-opacity-10`}>
+          <div className={`${theme.section} px-4 pb-4 m-auto`}>
+            <TopWidgetBar />
           </div>
-        ) : null}
+        </div>
+      )}
 
-        {state.roomData.lessons && state.roomData.lessons.length > 0 && visibleLessonGroup === 'completed' ? (
-          <div className={`bg-grayscale-light bg-opacity-10`}>
-            <div className={`${theme.section} p-4 text-xl m-auto`}>
-              <CompletedLessons isTeacher={isTeacher} lessons={sortedLessons(completedLessons, 'expectedEndDate')}/>
-            </div>
+      {/**
+       *  ASSESSMENTS/SURVEYS
+       */}
+      {!isTeacher && state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
+        <div className={`bg-opacity-10`}>
+          <div className={`${theme.section} px-4 text-xl m-auto`}>
+            <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}>Surveys & Assessments</h2>
           </div>
-        ) : null}
-      </>
-    );
-  }
+        </div>
+      ) : null}
+
+      {state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
+        <div className={`bg-opacity-10`}>
+          <div className={`${theme.section} p-4 text-xl m-auto`}>
+            <SurveyCard
+              isTeacher={isTeacher}
+              link={'/lesson?id=on-boarding-survey-1'}
+              lessons={assessmentsSurveys}
+              lessonType={`survey`}
+              accessible={survey.display}
+            />
+          </div>
+        </div>
+      ) : null}
+
+      {/**
+       *  LESSON TAB TOGGLE
+       */}
+      <div className={`bg-opacity-10`}>
+        <div className={`${theme.section} px-4 text-xl m-auto`}>
+          <TodayUpcomingTabs
+            isTeacher={isTeacher}
+            lessonGroupCount={lessonGroupCount}
+            visibleLessonGroup={visibleLessonGroup}
+            setVisibleLessonGroup={setVisibleLessonGroup}
+          />
+        </div>
+      </div>
+
+      {/**
+       *  LESSONS
+       *    - today
+       *    - upcoming
+       *    - completed
+       */}
+      {visibleLessonGroup === 'today' ? (
+        <div className={`bg-opacity-10`}>
+          <div className={`${theme.section} p-4 text-xl m-auto`}>
+            <Today
+              activeRoom={activeRoom}
+              isTeacher={isTeacher}
+              lessonLoading={lessonLoading}
+              lessons={!isTeacher ? todayLessons : todayAndUpcomingLessons}
+            />
+          </div>
+        </div>
+      ) : null}
+
+      {!isTeacher &&
+      state.roomData.lessons &&
+      state.roomData.lessons.length > 0 &&
+      visibleLessonGroup === 'upcoming' ? (
+        <div className={`bg-grayscale-light bg-opacity-10`}>
+          <div className={`${theme.section} p-4 text-xl m-auto`}>
+            <UpcomingLessons lessons={upcomingLessons} />
+          </div>
+        </div>
+      ) : null}
+
+      {state.roomData.lessons && state.roomData.lessons.length > 0 && visibleLessonGroup === 'completed' ? (
+        <div className={`bg-grayscale-light bg-opacity-10`}>
+          <div className={`${theme.section} p-4 text-xl m-auto`}>
+            <CompletedLessons isTeacher={isTeacher} lessons={sortedLessons(completedLessons, 'expectedEndDate')} />
+          </div>
+        </div>
+      ) : null}
+    </>
+  );
 };
 
 export default Classroom;
