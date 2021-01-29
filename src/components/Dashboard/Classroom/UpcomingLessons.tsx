@@ -18,6 +18,7 @@ const UpcomingLessons: React.FC<LessonProps> = (props: LessonProps) => {
                 lessonProps={lesson}
                 openCards={openCards}
                 setOpenCards={setOpenCards}
+                lessonType={lesson.lesson.type}
               />
             </div>
           ))

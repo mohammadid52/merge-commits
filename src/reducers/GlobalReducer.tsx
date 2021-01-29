@@ -10,6 +10,19 @@ type globalActions =
       };
     }
   | {
+      type: 'UPDATE_ROOM';
+      payload: {
+        property: string;
+        data: any;
+      };
+    }| {
+      type: 'TOGGLE_LESSON';
+      payload: {
+        property: string;
+        data: any;
+      };
+    }
+  | {
       type: 'SET_USER';
       payload: {
         id: string;
@@ -45,8 +58,24 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         ...state,
         sidebar: {
           ...state.sidebar,
-          [action.payload.section]:action.payload.data
+          [action.payload.section]: action.payload.data,
         },
+      };
+    case 'UPDATE_ROOM':
+      return {
+        ...state,
+        roomData: {
+          ...state.roomData,
+          [action.payload.property]: action.payload.data,
+        },
+      };
+      case 'TOGGLE_LESSON':
+      return {
+        ...state,
+        roomData: {
+          ...state.roomData,
+          [action.payload.property]: action.payload.data,
+        }
       };
     case 'SET_USER':
       return {

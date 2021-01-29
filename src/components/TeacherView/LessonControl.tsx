@@ -13,7 +13,6 @@ import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
 import QuickRegister from '../Auth/QuickRegister';
 import { awsFormatDate, dateString } from '../../utilities/time';
 
-
 const LessonControl = () => {
   const { state, theme, dispatch } = useContext(LessonControlContext);
   const match = useRouteMatch();
@@ -39,7 +38,7 @@ const LessonControl = () => {
 
   useEffect(() => {
     if (state.pages.length > 0 && state.unsavedChanges) {
-      handleUpdateClassroom();
+      handleUpdateSyllabusLesson();
     }
   }, [state.unsavedChanges]);
 
@@ -57,7 +56,6 @@ const LessonControl = () => {
 
   useEffect(() => {
     if (state.studentViewing.live) {
-      // console.log(state.studentViewing.live)
       let hasCurrentLocation = typeof state.studentViewing.studentInfo.currentLocation === 'string';
 
       console.log(typeof state.studentViewing.studentInfo.currentLocation, hasCurrentLocation);
@@ -108,10 +106,10 @@ const LessonControl = () => {
   /**
    * CLASSROOM DATE && STUDENT SHARING
    */
-  const handleUpdateClassroom = async () => {
-    let updatedClassroomData: any = {
-      id: state.classroomID,
-      open: state.open ? state.open : false,
+  const handleUpdateSyllabusLesson = async () => {
+    let updatedSyllabusLessonData: any = {
+      id: state.syllabusLessonID,
+      status: state.open ? 'Active' : 'Inactive',
       complete: state.complete ? state.complete : false,
       viewing:
         state.studentViewing.studentInfo && state.studentViewing.studentInfo.studentAuthID
@@ -119,12 +117,14 @@ const LessonControl = () => {
           : null,
       displayData: state.displayData,
       lessonPlan: state.pages,
+      startDate: '',
+      endDate: '',
     };
 
     try {
-      const updatedClassroom = await API.graphql(
-        graphqlOperation(customMutations.updateClassroom, {
-          input: updatedClassroomData,
+      const updatedSyllabusLesson = await API.graphql(
+        graphqlOperation(customMutations.updateSyllabusLesson, {
+          input: updatedSyllabusLessonData,
         })
       );
       dispatch({ type: 'SAVED_CHANGES' });
@@ -185,18 +185,17 @@ const LessonControl = () => {
    */
 
   const handleCompleteClassroom = async () => {
-    let completedClassroomData: any = {
-      id: state.classroomID,
-      open: false,
+    let completedSyllabusLessonData = {
+      id: state.syllabusLessonID,
+      status: 'Inactive',
       complete: true,
-      expectedEndDate: awsFormatDate(dateString('-', 'WORLD')),
+      endDate: awsFormatDate(dateString('-', 'WORLD')),
     };
 
     try {
-      console.log('complete!!! ', completedClassroomData);
-      const completedClassroom = await API.graphql(
-        graphqlOperation(customMutations.updateClassroom, {
-          input: completedClassroomData,
+      const completedSyllabusLesson = await API.graphql(
+        graphqlOperation(customMutations.updateSyllabusLesson, {
+          input: completedSyllabusLessonData,
         })
       );
       dispatch({ type: 'SAVED_CHANGES' });
@@ -205,24 +204,45 @@ const LessonControl = () => {
     }
   };
 
+  const handleOpenSyllabusLesson = async () => {
+    let startedSyllabusLessonData = {
+      id: state.syllabusLessonID,
+      status: 'Active',
+      complete: false,
+      startDate: awsFormatDate(dateString('-', 'WORLD')),
+    };
+
+    try {
+      console.log(startedSyllabusLessonData);
+      const startedSyllabusLesson = await API.graphql(
+        graphqlOperation(customMutations.updateSyllabusLesson, {
+          input: startedSyllabusLessonData,
+        })
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleOpen = async () => {
+    await handleOpenSyllabusLesson();
+    dispatch({ type: 'START_CLASSROOM' });
+    setOpen(true);
+  };
+
+  const handleComplete = async () => {
+    await handleCompleteClassroom();
+    dispatch({ type: 'COMPLETE_CLASSROOM', payload: dateString('-', 'US') });
+    setOpen(true);
+    handleHome();
+  };
+
   const handleGoToUserManagement = () => {
     history.push('/dashboard/manage-users');
   };
 
   const handleHome = () => {
     history.push('/dashboard/lesson-planner');
-  };
-
-  const handleOpen = () => {
-    dispatch({ type: 'START_CLASSROOM' });
-    setOpen(true);
-  };
-
-  const handleComplete = async () => {
-    dispatch({ type: 'COMPLETE_CLASSROOM', payload: dateString('-', 'US') });
-    await handleCompleteClassroom();
-    setOpen(true);
-    handleHome();
   };
 
   const { visible, setVisible, ref } = useOutsideAlerter(false);
@@ -348,7 +368,7 @@ const LessonControl = () => {
 
               <div className={`h-full`}>
                 <ClassRoster
-                  handleUpdateClassroom={handleUpdateClassroom}
+                  handleUpdateSyllabusLesson={handleUpdateSyllabusLesson}
                   handleShareStudentData={handleShareStudentData}
                   isSameStudentShared={isSameStudentShared}
                   handleQuitShare={handleQuitShare}

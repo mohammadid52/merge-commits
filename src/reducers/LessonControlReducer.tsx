@@ -32,15 +32,15 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
     case 'INITIAL_LESSON_SETUP':
       return {
         ...state,
-        classroomID: action.payload.classroomID,
+        syllabusLessonID: action.payload.syllabusLessonID,
         status: 'loaded',
         pages: action.payload.pages,
         data: action.payload.data,
         roster: action.payload.students,
         open: action.payload.open,
         complete: action.payload.complete,
-        expectedStartDate: action.payload.expectedStartDate,
-        expectedEndDate: action.payload.expectedEndDate,
+        startDate: action.payload.startDate,
+        endDate: action.payload.endDate,
       };
     case 'OPEN_LESSON':
       return {
@@ -283,7 +283,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         open: false,
         complete: true,
         unsavedChanges: true,
-        expectedEndDate: action.payload
+        endDate: action.payload
       };
     case 'CLEANUP':
       return lessonControlState;

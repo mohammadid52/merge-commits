@@ -21,7 +21,7 @@ const TruthGameForm = (props: props) => {
   const { fullscreen, dataProps } = props;
   const { state, theme, dispatch } = useContext(LessonControlContext);
   const gameInputs = state.data.lesson.warmUp.inputs.truthGameInputs;
-  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const [input, setInput] = useState({
     truthGame: [],
   });

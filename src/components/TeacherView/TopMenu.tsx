@@ -89,7 +89,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
           <div className="w-full flex flex-col my-auto">
             <p className="text-xs">Students Online: {state.roster.length}</p>
             <p className="text-xs">Topic: Identity</p>
-            <p className="text-xs">Start Date: {formatPattern(state.expectedStartDate, '-','aaaa-bb-cc','bb-cc-aaaa')}</p>
+            <p className="text-xs">Start Date: {formatPattern(state.startDate, '-','aaaa-bb-cc','bb-cc-aaaa')}</p>
             <p className="text-xs">Estimated Time: 1 hr 15 mins</p>
           </div>
         </div>

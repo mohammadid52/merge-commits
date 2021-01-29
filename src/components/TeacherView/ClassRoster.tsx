@@ -11,7 +11,7 @@ import RosterRow from './ClassRoster/RosterRow';
 import {lc} from '../../utilities/strings';
 
 interface classRosterProps {
-  handleUpdateClassroom: () => Promise<void>;
+  handleUpdateSyllabusLesson: () => Promise<void>;
   handleShareStudentData: () => Promise<void>;
   handleQuitShare: () => void;
   handleQuitViewing: () => void;
@@ -26,7 +26,7 @@ enum SortByEnum {
 }
 
 const ClassRoster = (props: classRosterProps) => {
-  const { handleUpdateClassroom, handleShareStudentData, isSameStudentShared, handleQuitShare, handleQuitViewing, setPageViewed } = props;
+  const { handleUpdateSyllabusLesson, handleShareStudentData, isSameStudentShared, handleQuitShare, handleQuitViewing, setPageViewed } = props;
   const { state, dispatch } = useContext(LessonControlContext);
   const [sortBy, setSortBy] = useState<string>('');
 

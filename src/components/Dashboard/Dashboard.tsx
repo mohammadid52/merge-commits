@@ -11,7 +11,9 @@ import QuestionBank from './Admin/Questions/QuestionBank';
 import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import SideWidgetBar from './SideWidgetBar/SideWidgetBar';
-import SideMenuSecondary from './Menu/SideMenuSecondary';
+import SideRoomSelector from './Menu/SideRoomSelector';
+import { copyLessonPlans } from '../../uniqueScripts/CopyLessonPlans_to_SyllabusLessons';
+import { initRosterSyllabusLessons } from '../../uniqueScripts/InitRoster_in_SyllabusLessons';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Profile = lazy(() => import('./Profile/Profile'));
@@ -31,8 +33,17 @@ export interface DashboardProps {
   setCurrentPageData?: React.Dispatch<any>;
   currentPage?: string;
   setCurrentPage?: React.Dispatch<React.SetStateAction<string>>;
+  activeRoom?: string;
+  setActiveRoom?: React.Dispatch<React.SetStateAction<string>>;
+  activeRoomName?: string;
+  setActiveRoomName?: React.Dispatch<React.SetStateAction<string>>;
   visibleLessonGroup?: string;
   setVisibleLessonGroup?: React.Dispatch<React.SetStateAction<string>>;
+  handleSyllabusActivation?: (syllabusID: string) => void;
+  lessonLoading?: boolean;
+  setLessonLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+  syllabusLoading?: boolean;
+  setSyllabusLoading?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface SideMenuProps extends DashboardProps {
@@ -49,8 +60,25 @@ const Dashboard = (props: DashboardProps) => {
     image: '',
   });
   const { state, dispatch } = useContext(GlobalContext);
+
+  // For controlling loading transitions
+  const [lessonLoading, setLessonLoading] = useState<boolean>(false);
+  const [syllabusLoading, setsyllabusLoading] = useState<boolean>(false);
+
+  // Page switching
   const [currentPage, setCurrentPage] = useState<string>('');
   const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('today');
+  const [activeRoom, setActiveRoom] = useState<string>('');
+  const [activeRoomName, setActiveRoomName] = useState<string>('');
+
+
+  // useEffect(()=>{
+  //   copyLessonPlans();
+  // },[])
+
+  // useEffect(()=>{
+  //   initRosterSyllabusLessons();
+  // },[])
 
   const setUser = (user: userObject) => {
     setUserData({
@@ -75,7 +103,6 @@ const Dashboard = (props: DashboardProps) => {
   };
 
   async function getUser() {
-    console.log('get user is called');
     const userEmail = state.user?.email ? state.user?.email : cookies.auth?.email;
     const userAuthId = state.user?.authId ? state.user?.authId : cookies.auth?.authId;
     try {
@@ -85,14 +112,13 @@ const Dashboard = (props: DashboardProps) => {
       );
       setUser(user.data.getPerson);
     } catch (error) {
-      console.log('Here in error');
       if (!userEmail && !userAuthId) {
         removeCookie('auth', { path: '/' });
         dispatch({ type: 'CLEANUP' });
         sessionStorage.removeItem('accessToken');
         updateAuthState(false);
       }
-      console.error(error);
+      console.error('Dashboard - getUser(): ', error);
     }
   }
 
@@ -117,7 +143,18 @@ const Dashboard = (props: DashboardProps) => {
         <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
       </SideMenu>
 
-      <SideMenuSecondary/>
+      {currentPage === 'lesson-planner' || currentPage === 'classroom' ? (
+        <SideRoomSelector
+          currentPage={currentPage}
+          activeRoom={activeRoom}
+          setActiveRoom={setActiveRoom}
+          setActiveRoomName={setActiveRoomName}
+          lessonLoading={lessonLoading}
+          setLessonLoading={setLessonLoading}
+          syllabusLoading={syllabusLoading}
+          setSyllabusLoading={setsyllabusLoading}
+        />
+      ) : null}
 
       {/**
        *  MAIN CONTENT
@@ -135,7 +172,17 @@ const Dashboard = (props: DashboardProps) => {
                 exact
                 path={`${match.url}`}
                 render={() => (
-                  <Classroom visibleLessonGroup={visibleLessonGroup} setVisibleLessonGroup={setVisibleLessonGroup} />
+                  <Classroom
+                    currentPage={currentPage}
+                    activeRoom={activeRoom}
+                    setActiveRoom={setActiveRoom}
+                    activeRoomName={activeRoomName}
+                    setActiveRoomName={setActiveRoomName}
+                    visibleLessonGroup={visibleLessonGroup}
+                    setVisibleLessonGroup={setVisibleLessonGroup}
+                    lessonLoading={lessonLoading}
+                    syllabusLoading={syllabusLoading}
+                  />
                 )}
               />
               <Route
@@ -156,8 +203,16 @@ const Dashboard = (props: DashboardProps) => {
                 path={`${match.url}/lesson-planner`}
                 render={() => (
                   <LessonPlanHome
+                    currentPage={currentPage}
+                    activeRoom={activeRoom}
+                    activeRoomName={activeRoomName}
+                    setActiveRoomName={setActiveRoomName}
                     visibleLessonGroup={visibleLessonGroup}
                     setVisibleLessonGroup={setVisibleLessonGroup}
+                    lessonLoading={lessonLoading}
+                    setLessonLoading={setLessonLoading}
+                    syllabusLoading={syllabusLoading}
+                    setSyllabusLoading={setsyllabusLoading}
                   />
                 )}
               />
