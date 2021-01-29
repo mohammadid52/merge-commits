@@ -617,7 +617,7 @@ type Lesson @model @key(fields: ["id"]) {
   theme: Theme
   grades: [Int]
   artistID: ID!
-  artist: Artist! @connection(fields: ["artistID"])
+  artist: Artist @connection(fields: ["artistID"])
   language: [Language!]
   SELStructure: String
   keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
