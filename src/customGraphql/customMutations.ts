@@ -48,7 +48,7 @@ export const createStudentData = /* GraphQL */ `
       currentLocation
       status
       saveType
-      classroomID
+      syllabusLessonID
       studentID
       studentAuthID
       student {
@@ -144,7 +144,7 @@ export const updateStudentData = /* GraphQL */ `
       currentLocation
       status
       saveType
-      classroomID
+      syllabusLessonID
       studentID
       studentAuthID
       student {
@@ -323,7 +323,7 @@ export const createQuestionData = /* GraphQL */ `
   mutation CreateQuestionData($input: CreateQuestionDataInput!, $condition: ModelQuestionDataConditionInput) {
     createQuestionData(input: $input, condition: $condition) {
       id
-      classroomID
+      syllabusLessonID
       email
       authID
       componentType
@@ -354,7 +354,7 @@ export const createFeedback = /* GraphQL */ `
   mutation CreateFeedback($input: CreateFeedbackInput!, $condition: ModelFeedbackConditionInput) {
     createFeedback(input: $input, condition: $condition) {
       id
-      classroomID
+      syllabusLessonID
       liked
       comment
       createdAt

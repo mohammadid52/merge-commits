@@ -331,7 +331,7 @@ type Subscription {
   onNewRoomMsg(roomID: ID!): RoomMsgs
     @aws_subscribe(mutations: ["createRoomMsgs"])
   onChangeStudentData(syllabusLessonID: ID!): StudentData
-    @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
+    @aws_subscribe(mutations: ["createStudentData", "updateupdateupdateStudentData"])
 }
 
 type ComponentSummary {

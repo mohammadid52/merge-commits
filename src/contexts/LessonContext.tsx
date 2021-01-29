@@ -14,11 +14,11 @@ import queryString from 'query-string';
 import { standardTheme } from './GlobalContext';
 import { initRosterSyllabusLessons } from '../uniqueScripts/InitRoster_in_SyllabusLessons';
 
-const removeDisabled = (array: PagesType) => {
+const removeDisabled = (array: PagesType):any[] => {
     let updatedArray = array.filter((item: { disabled: boolean, [key: string]: any }) => {
         return !item.disabled
     })
-    // console.log('updatedPages', updatedArray)
+
     return updatedArray
 }
 
@@ -61,7 +61,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
         try {
             const studentData: any = await API.graphql(graphqlOperation(customQueries.getStudentData, {
-                classroomID: queryParams.id,
+                syllabusLessonID: queryParams.id,
                 studentID: studentID,
             }))
 
@@ -71,7 +71,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                         lessonProgress: 'intro',
                         currentLocation: 'intro',
                         status: 'ACTIVE',
-                        classroomID: queryParams.id,
+                        syllabusLessonID: queryParams.id,
                         studentID: studentID,
                         studentAuthID: studentAuthID,
                     }
@@ -113,9 +113,9 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             try {
                 const classroom: any = await API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id }));
                 console.log('classroom data', classroom);
-                // setLesson(classroom.data.getClassroom)
-                // getOrCreateStudentData()
-                // subscription = subscribeToClassroom()
+                setLesson(classroom.data.getSyllabusLesson)
+                getOrCreateStudentData()
+                subscription = subscribeToClassroom()
             } catch (error) {
                 console.error(error);
             }
@@ -124,13 +124,14 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         }
     }
 
+    // TODO: rename to subscribeToSyllabusLesson
     const subscribeToClassroom = () => {
         let queryParams = queryString.parse(location.search)
 
         // @ts-ignore
-        const classroomSubscription = API.graphql(graphqlOperation(customSubscriptions.onUpdateClassroom, { id: queryParams.id })).subscribe({
-            next: (classroomData: any) => {
-                const updatedLessonPlan = classroomData.value.data.onUpdateClassroom
+        const syllabusLessonSubscription = API.graphql(graphqlOperation(customSubscriptions.onUpdateSyllabusLesson, { id: queryParams.id })).subscribe({
+            next: (syllabusLessonData: any) => {
+                const updatedLessonPlan = syllabusLessonData.value.data.onUpdateClassroom
 
                 dispatch({
                     type: 'UPDATE_LESSON_PLAN',
@@ -147,11 +148,11 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         dispatch({
             type: 'SET_SUBSCRIPTION',
             payload: {
-                subscription: classroomSubscription,
+                subscription: syllabusLessonSubscription,
             }
         })
 
-        return classroomSubscription;
+        return syllabusLessonSubscription;
     }
 
     useEffect(() => {

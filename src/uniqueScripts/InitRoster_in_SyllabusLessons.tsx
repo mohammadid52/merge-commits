@@ -38,6 +38,7 @@ const mutateSingleSyllabusLesson = async (sylID: string, content: any[]) => {
       graphqlOperation(customMutations.updateSyllabusLesson, {
         input: {
           id: sylID,
+          displayData:{},
           roster: content,
         },
       })

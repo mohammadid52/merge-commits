@@ -2,12 +2,14 @@ import React from 'react';
 import * as customQueries from '../customGraphql/customQueries';
 import * as customMutations from '../customGraphql/customMutations';
 import { API, graphqlOperation } from '@aws-amplify/api';
+import {classroom} from './classroom';
 
 // query classroom, separate out lesson plans
 const getClassroomLessonplans = async () => {
   try {
-    const getQuery: any = await API.graphql(graphqlOperation(customQueries.listLessonPlans));
-    return getQuery?.data?.listClassrooms?.items;
+    // const getQuery: any = await API.graphql(graphqlOperation(customQueries.listLessonPlans));
+    // return getQuery?.data?.listClassrooms?.items;
+    return classroom;
   } catch (e) {
     console.error('getClassroomLessonPlans - ', e);
   }
@@ -37,10 +39,12 @@ const loopSyllabusLessonIdAndMutate = async (arrIdsAndPlanIdd: any, lessonPlans:
     const lessonPlanLessonIds = lessonPlans.map((lpObj: any) => lpObj.lessonID);
     const lessonPlanExists = lessonPlans.filter((arr: any) => arr.lessonID === idPlanIdArr.lessonID).length > 0;
 
+    console.log('loop -> ', lessonPlanLessonIds)
+
     if (lessonPlanExists) {
       const lessonPlan = lessonPlans[lessonPlanLessonIds.indexOf(idPlanIdArr.lessonID)].lessonPlan;
       mutateSingleSyllabusLesson(idPlanIdArr.id, lessonPlan);
-      // console.log(idPlanIdArr.lessonID)
+      console.log(idPlanIdArr.lessonID)
     }
   }, []);
 };

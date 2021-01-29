@@ -1162,14 +1162,14 @@ export const listAllSyllabusLessons = /* GraphQL */ `
 `;
 
 export const getStudentData = /* GraphQL */ `
-  query GetStudentData($classroomID: ID!, $studentID: String!) {
-    getStudentData(classroomID: $classroomID, studentID: $studentID) {
+  query GetStudentData($syllabusLessonID: ID!, $studentID: String!) {
+    getStudentData(syllabusLessonID: $syllabusLessonID, studentID: $studentID) {
       id
       lessonProgress
       currentLocation
       status
       saveType
-      classroomID
+      syllabusLessonID
       studentID
       studentAuthID
       warmupData {
