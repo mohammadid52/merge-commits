@@ -15,7 +15,7 @@ const LessonsListRow = (props: LessonsListRow) => {
   const history = useHistory();
 
   const handleLessonsEdit = (type: string) => {
-    if (type === 'lesson') {
+    if (type === 'Lesson') {
       history.push(`${match.url}/lesson/edit?lessonId=${id}`);
     } else {
       history.push(`${match.url}/lesson/edit?assessmentId=${id}`);
