@@ -163,7 +163,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
                   <div className="px-3 py-4">
                     <FormInput id='name' value={measurement.name} onChange={onInputChange} name='name' label="Measurement Name" isRequired />
                   </div>
-                  <div className="px-3 py-4 grid gap-x-4 grid-cols-2">
+                  <div className="px-3 py-4">
                     {/* <div>
                     <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                       Select Sequence

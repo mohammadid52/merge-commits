@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
 // Instituttion 
@@ -27,7 +27,8 @@ import EditLearningObjective from './EditBuilders/CurricularsView/TabsActions/Ed
 
 const InstitutionsHome = () => {
   const match = useRouteMatch();
-
+  const [tabsData, setTabsData] = useState({ inst: 0, instCurr: 0 })
+  const tabProps = { tabsData, setTabsData }
   // TODO: Need to setup route saperately if required, 
   // currently everything is tied to institutions.
   // so curricular can be open after selecting any specific institute only.
@@ -59,7 +60,7 @@ const InstitutionsHome = () => {
         />
         <Route
           path={`${match.url}/institution`}
-          render={() => <Institution />}        // Institution info page
+          render={() => <Institution tabProps={tabProps} />}        // Institution info page
         />
         <Route
           path={`${match.url}/class-edit`}
@@ -107,7 +108,7 @@ const InstitutionsHome = () => {
         />
         <Route
           path={`${match.url}/curricular`}
-          render={() => <CurricularView />}     // Curricular information view.
+          render={() => <CurricularView tabProps={tabProps} />}     // Curricular information view.
         />
       </Switch>
     </div>

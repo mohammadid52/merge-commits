@@ -70,7 +70,7 @@ const Profile: React.FC = () => {
       birthdate: null,
     }
   );
-  const { dashboardProfileDict } = useDictionary();
+  const { dashboardProfileDict, BreadcrumsTitles } = useDictionary();
   const match = useRouteMatch();
   const history = useHistory();
   const pathName = location.pathname.replace(/\/$/, "");
@@ -82,9 +82,10 @@ const Profile: React.FC = () => {
   const [imageLoading, setImageLoading] = useState(false);
   const [upImage, setUpImage] = useState(null);
   const [imageUrl, setImageUrl] = useState('')
+
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Profile', url: '/dashboard/profile', last: true },
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['PROFILE'], url: '/dashboard/profile', last: true },
   ]
 
   // TODO: 

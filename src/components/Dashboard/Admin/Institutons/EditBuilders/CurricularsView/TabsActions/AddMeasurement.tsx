@@ -161,7 +161,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
                 validation.name && <p className="text-red-600">{validation.name}</p>
               }
             </div>
-            <div className="px-3 py-4 grid gap-x-4 grid-cols-2">
+            <div className="px-3 py-4">
               <div>
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Topic <span className="text-red-500">*</span>

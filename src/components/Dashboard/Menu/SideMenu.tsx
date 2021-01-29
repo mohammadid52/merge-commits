@@ -2,12 +2,16 @@ import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import SignOutButton from '../../Auth/SignOut';
-import { SideMenuProps } from '../Dashboard';
-
+import { getAsset } from '../../../assets';
+interface SideMenuProps {
+  children: React.ReactNode;
+  [key: string]: any;
+  updateAuthState: Function;
+}
 
 const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps) => {
   const { currentPage, setCurrentPage } = props;
-  const { theme } = useContext(GlobalContext);
+  const { theme, clientKey } = useContext(GlobalContext);
 
   const handleLink = (e: React.MouseEvent) => {
     const {id} = e.target as HTMLElement;
@@ -23,8 +27,8 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
           <img
             id="dashboard"
             className="p-2 h-full"
-            src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-WHITE.svg"
-            alt="Iconoclast Artists"
+            src={getAsset(clientKey, 'main_logo')}
+            alt="Logo"
           />
         </NavLink>
       </div>

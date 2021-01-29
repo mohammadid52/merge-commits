@@ -48,20 +48,26 @@ const TopicsList = (props: TopicsListProps) => {
   }
 
   const fetchTopics = async () => {
+    // set loader true
     setLoading(true)
-    let list: any = await API.graphql(graphqlOperation(customQueries.listTopics, {
-      filter: { curriculumID: { eq: curricularId } },
-    }));
-    list = list.data.listTopics?.items || []
-    let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
-      { id: `t_${curricularId}` }))
-    item = item?.data.getCSequences?.sequence || []
+    // fetch topics list and its sequence
+    let [list, seq]:any = await Promise.all([
+      await API.graphql(graphqlOperation(customQueries.listTopics, {
+        filter: { curriculumID: { eq: curricularId } },
+      })),
+      await API.graphql(graphqlOperation(queries.getCSequences,
+        { id: `t_${curricularId}` }))
+    ]);
+    list = list?.data.listTopics?.items || []
+    seq = seq?.data.getCSequences?.sequence || []
+    // sort list as per the seq
     list = list.map((t: any) => {
-      let index = item.indexOf(t.id)
+      let index = seq.indexOf(t.id)
       return { ...t, index }
     }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+
     setTopics(list)
-    setTopicIds(item)
+    setTopicIds(seq)
     setLoading(false)
   }
 

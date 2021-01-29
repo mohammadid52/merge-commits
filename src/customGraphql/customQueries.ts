@@ -1260,6 +1260,8 @@ export const listLessonsTitles = /* GraphQL */ `
         id
         title
         type
+        language
+        designers
       }
       nextToken
     }
@@ -1326,6 +1328,42 @@ export const getRubric = /* GraphQL */ `
       curriculumID
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const messagesByRoomId = /* GraphQL */ `
+  query MessagesByRoomId(
+    $roomID: ID
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelRoomMsgsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    messagesByRoomID(
+      roomID: $roomID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        body
+        createdAt
+        sender {
+          id
+          email
+          firstName
+          preferredName
+          lastName
+          image
+        }
+        updatedAt
+      }
+      nextToken
     }
   }
 `;

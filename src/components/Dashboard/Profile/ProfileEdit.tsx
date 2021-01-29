@@ -98,11 +98,7 @@ const ProfileEdit = (props: UserInfoProps) => {
         {
             code: 'ES',
             name: 'Spanish'
-        },
-        // {
-        //     code: 'VT',
-        //     name: 'Vietnamese'
-        // },
+        }
     ];
 
     let [imagePreviewURL, setImagePreviewURL] = useState(user.image);

@@ -1,16 +1,14 @@
 import React, { lazy, Suspense, useContext, useEffect, useState } from 'react';
-// import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
-// import PageHeaderBar from '../Header/PageHeaderBar';
 import SideMenu from './Menu/SideMenu';
-// import Classroom from './Classroom/Classroom';
 import { useCookies } from 'react-cookie';
 import * as queries from '../../graphql/queries';
-// import PageHeaderBar from '../Header/PageHeaderBar';
 import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
+import QuestionBank from './Admin/Questions/QuestionBank';
+import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import SideWidgetBar from './SideWidgetBar/SideWidgetBar';
 import SideMenuSecondary from './Menu/SideMenuSecondary';
@@ -164,6 +162,8 @@ const Dashboard = (props: DashboardProps) => {
                 )}
               />
               <Route path={`${match.url}/manage-institutions`} render={() => <InstitutionsHome />} />
+              <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
+              <Route path={`${match.url}/lesson-builder`} render={() => <LessonsBuilderHome />} />
             </Switch>
           </Suspense>
         </div>

@@ -178,7 +178,7 @@ type Room
   length: Int
   repeat: String
   notes: String
-  activeSyllabus: Int
+  activeSyllabus: String
 }
 
 ### Class
@@ -338,6 +338,7 @@ type Syllabus
   languages: [Language]
   lessons: [SyllabusLesson] @connection(keyName: "lessonBySyllabus", fields: ["id"])
   designers: [String]
+  status: Boolean
 }
 
 type SyllabusLesson
@@ -351,6 +352,13 @@ type SyllabusLesson
   sequence: Int
   status: String
   lesson: Lesson @connection(fields: ["lessonID"])
+  complete: Boolean
+  roster: [String!]!
+  viewing: String
+  displayData: DisplayData
+  lessonPlan: [ComponentSummary!]!
+  startDate: AWSDate
+  endDate: AWSDate
 }
 
 ### Course
@@ -462,6 +470,8 @@ type Subscription {
   onUpdateClassroom(id: ID!): Classroom @aws_subscribe(mutations: ["updateClassroom"])
   onChangeStudentData(classroomID: ID!): StudentData
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
+  onNewRoomMsg(roomID: ID!): RoomMsgs
+    @aws_subscribe(mutations: ["createRoomMsgs"])
 }
 
 type StudentData
@@ -544,7 +554,7 @@ type Classroom @model(subscriptions: null) @key(name: "byCourse", fields: ["cour
   openedAt: AWSDate
   closedAt: AWSDate
   complete: Boolean
-  roster: [String!]!
+  roster: [String!]
   viewing: String
   displayData: DisplayData
   expectedStartDate: AWSDate
@@ -554,7 +564,7 @@ type Classroom @model(subscriptions: null) @key(name: "byCourse", fields: ["cour
   course: Course @connection(fields: ["courseID"])
   lessonID: ID!
   lesson: Lesson @connection(fields: ["lessonID"])
-  lessonPlan: [ComponentSummary!]!
+  lessonPlan: [ComponentSummary!]
   data: [StudentData]! @connection(keyName: "byClassroom", fields: ["id"])
   feedback: [Feedback] @connection(fields: ["id"])
 }
@@ -601,18 +611,21 @@ type Theme {
 type Lesson @model @key(fields: ["id"]) {
   id: ID!
   title: String!
-  type: String
+  type: String!
+  label: String
   instructions: [String]
   theme: Theme
   grades: [Int]
   artistID: ID!
-  artist: Artist! @connection(fields: ["artistID"])
-  language: Language!
+  artist: Artist @connection(fields: ["artistID"])
+  language: [Language!]
   SELStructure: String
   keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
   connection: String
-  summary: String!
-  objectives: [String]!
+  summary: String
+  purpose: String
+  designers: [String]
+  objectives: [String]
   checkpoints: [LessonCheckpoint]! @connection(keyName: "byLesson", fields: ["id"])
   doFirstID: ID!
   doFirst: DoFirst @connection(fields: ["doFirstID"])
@@ -625,6 +638,7 @@ type Lesson @model @key(fields: ["id"]) {
   assessmentID: ID!
   assessment: Assessment @connection(fields: ["assessmentID"])
   filters: [String]
+  coverImage: String
 }
 
 type LessonCheckpoint @model(queries: null) @key(name: "byLesson", fields: ["lessonID", "checkpointID"]) {
@@ -902,13 +916,24 @@ type FilterOption
   filterID: ID!
   text: String!
 }
-
-type Clients
+type RoomMsgs
 @model
-@key(fields: ["id"])
+@key(name: "byRoomID", fields: ["roomID", "createdAt"], queryField: "messagesByRoomID")
 {
   id: ID!
-  name: String
-  subdomain: String
-  key: String
+  roomID: ID!
+  senderAuthID: String!
+  senderEmail: String!
+  body: String!
+  createdAt: AWSDateTime
+  sender: Person @connection(fields: ["senderEmail", "senderAuthID"])
+  room: Room @connection(fields: ["roomID"])
+}
+
+type AppClients
+@model
+@key(fields: ["key"]) {
+  id: ID!
+  key: String!
+  name: String! 
 }
