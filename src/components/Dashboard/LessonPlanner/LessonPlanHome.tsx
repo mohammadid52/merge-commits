@@ -38,20 +38,20 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   const history = useHistory();
   const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
 
-  useEffect(() => {
-    getCourse('1');
-  }, []);
-
-  async function getCourse(id: string) {
-    try {
-      const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: '1' }));
-      const lessons = courses.data.getCourse.classrooms.items;
-      setListCurriculum(lessons);
-      setStatus('done');
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  // useEffect(() => {
+  //   getCourse('1');
+  // }, []);
+  //
+  // async function getCourse(id: string) {
+  //   try {
+  //     const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: '1' }));
+  //     const lessons = courses.data.getCourse.classrooms.items;
+  //     setListCurriculum(lessons);
+  //     setStatus('done');
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
   const handleSyllabusActivation = async (syllabusID: string) => {
     const roomID = activeRoom;
@@ -79,14 +79,10 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
       name: roomStateObject.room.name,
       maxPersons: roomStateObject.room.maxPersons,
       activeSyllabus: syllabusID,
-    }
+    };
 
     try {
-      const updateRoomMutation: any = API.graphql(
-        graphqlOperation(customMutations.updateRoom,
-          {input}
-        )
-      );
+      const updateRoomMutation: any = API.graphql(graphqlOperation(customMutations.updateRoom, { input }));
       const response = await updateRoomMutation;
     } catch (e) {
       console.error('handleSyllabusActivation: ', e);
@@ -101,25 +97,23 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   };
 
-  if (status !== 'done') {
-    return <ComponentLoading />;
-  }
-  {
-    return (
-      <Classroom
-        activeRoom={activeRoom}
-        currentPage={currentPage}
-        isTeacher={true}
-        visibleLessonGroup={visibleLessonGroup}
-        setVisibleLessonGroup={setVisibleLessonGroup}
-        handleSyllabusActivation={handleSyllabusActivation}
-        lessonLoading={lessonLoading}
-        setLessonLoading={setLessonLoading}
-        syllabusLoading={syllabusLoading}
-        setSyllabusLoading={setSyllabusLoading}
-      />
-    );
-  }
+  // if (status !== 'done') {
+  //   return <ComponentLoading />;
+  // }
+  return (
+    <Classroom
+      activeRoom={activeRoom}
+      currentPage={currentPage}
+      isTeacher={true}
+      visibleLessonGroup={visibleLessonGroup}
+      setVisibleLessonGroup={setVisibleLessonGroup}
+      handleSyllabusActivation={handleSyllabusActivation}
+      lessonLoading={lessonLoading}
+      setLessonLoading={setLessonLoading}
+      syllabusLoading={syllabusLoading}
+      setSyllabusLoading={setSyllabusLoading}
+    />
+  );
 };
 
 export default LessonPlanHome;
