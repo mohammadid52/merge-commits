@@ -2,6 +2,171 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createPerson = /* GraphQL */ `
+  mutation CreatePerson(
+    $input: CreatePersonInput!
+    $condition: ModelPersonConditionInput
+  ) {
+    createPerson(input: $input, condition: $condition) {
+      id
+      authId
+      status
+      email
+      role
+      type
+      firstName
+      preferredName
+      lastName
+      externalId
+      grade
+      onBoardSurvey
+      offBoardSurvey
+      phone
+      birthdate
+      image
+      language
+      filters
+      lastLoggedIn
+      lastLoggedOut
+      classes {
+        items {
+          id
+          classID
+          studentID
+          studentEmail
+          studentAuthID
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      wordbank {
+        items {
+          id
+          wordID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updatePerson = /* GraphQL */ `
+  mutation UpdatePerson(
+    $input: UpdatePersonInput!
+    $condition: ModelPersonConditionInput
+  ) {
+    updatePerson(input: $input, condition: $condition) {
+      id
+      authId
+      status
+      email
+      role
+      type
+      firstName
+      preferredName
+      lastName
+      externalId
+      grade
+      onBoardSurvey
+      offBoardSurvey
+      phone
+      birthdate
+      image
+      language
+      filters
+      lastLoggedIn
+      lastLoggedOut
+      classes {
+        items {
+          id
+          classID
+          studentID
+          studentEmail
+          studentAuthID
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      wordbank {
+        items {
+          id
+          wordID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deletePerson = /* GraphQL */ `
+  mutation DeletePerson(
+    $input: DeletePersonInput!
+    $condition: ModelPersonConditionInput
+  ) {
+    deletePerson(input: $input, condition: $condition) {
+      id
+      authId
+      status
+      email
+      role
+      type
+      firstName
+      preferredName
+      lastName
+      externalId
+      grade
+      onBoardSurvey
+      offBoardSurvey
+      phone
+      birthdate
+      image
+      language
+      filters
+      lastLoggedIn
+      lastLoggedOut
+      classes {
+        items {
+          id
+          classID
+          studentID
+          studentEmail
+          studentAuthID
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      wordbank {
+        items {
+          id
+          wordID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createInstitution = /* GraphQL */ `
   mutation CreateInstitution(
     $input: CreateInstitutionInput!
@@ -461,21 +626,21 @@ export const createStaff = /* GraphQL */ `
         lastName
         externalId
         grade
-        wordbank {
-          nextToken
-        }
         onBoardSurvey
         offBoardSurvey
         phone
         birthdate
         image
         language
-        classes {
-          nextToken
-        }
         filters
         lastLoggedIn
         lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -518,21 +683,21 @@ export const updateStaff = /* GraphQL */ `
         lastName
         externalId
         grade
-        wordbank {
-          nextToken
-        }
         onBoardSurvey
         offBoardSurvey
         phone
         birthdate
         image
         language
-        classes {
-          nextToken
-        }
         filters
         lastLoggedIn
         lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -575,21 +740,21 @@ export const deleteStaff = /* GraphQL */ `
         lastName
         externalId
         grade
-        wordbank {
-          nextToken
-        }
         onBoardSurvey
         offBoardSurvey
         phone
         birthdate
         image
         language
-        classes {
-          nextToken
-        }
         filters
         lastLoggedIn
         lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -603,171 +768,6 @@ export const deleteStaff = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createPerson = /* GraphQL */ `
-  mutation CreatePerson(
-    $input: CreatePersonInput!
-    $condition: ModelPersonConditionInput
-  ) {
-    createPerson(input: $input, condition: $condition) {
-      id
-      authId
-      status
-      email
-      role
-      type
-      firstName
-      preferredName
-      lastName
-      externalId
-      grade
-      wordbank {
-        items {
-          id
-          wordID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      onBoardSurvey
-      offBoardSurvey
-      phone
-      birthdate
-      image
-      language
-      classes {
-        items {
-          id
-          classID
-          studentID
-          studentEmail
-          studentAuthID
-          status
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      filters
-      lastLoggedIn
-      lastLoggedOut
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updatePerson = /* GraphQL */ `
-  mutation UpdatePerson(
-    $input: UpdatePersonInput!
-    $condition: ModelPersonConditionInput
-  ) {
-    updatePerson(input: $input, condition: $condition) {
-      id
-      authId
-      status
-      email
-      role
-      type
-      firstName
-      preferredName
-      lastName
-      externalId
-      grade
-      wordbank {
-        items {
-          id
-          wordID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      onBoardSurvey
-      offBoardSurvey
-      phone
-      birthdate
-      image
-      language
-      classes {
-        items {
-          id
-          classID
-          studentID
-          studentEmail
-          studentAuthID
-          status
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      filters
-      lastLoggedIn
-      lastLoggedOut
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deletePerson = /* GraphQL */ `
-  mutation DeletePerson(
-    $input: DeletePersonInput!
-    $condition: ModelPersonConditionInput
-  ) {
-    deletePerson(input: $input, condition: $condition) {
-      id
-      authId
-      status
-      email
-      role
-      type
-      firstName
-      preferredName
-      lastName
-      externalId
-      grade
-      wordbank {
-        items {
-          id
-          wordID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      onBoardSurvey
-      offBoardSurvey
-      phone
-      birthdate
-      image
-      language
-      classes {
-        items {
-          id
-          classID
-          studentID
-          studentEmail
-          studentAuthID
-          status
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      filters
-      lastLoggedIn
-      lastLoggedOut
       createdAt
       updatedAt
     }
@@ -831,21 +831,21 @@ export const createRoom = /* GraphQL */ `
         lastName
         externalId
         grade
-        wordbank {
-          nextToken
-        }
         onBoardSurvey
         offBoardSurvey
         phone
         birthdate
         image
         language
-        classes {
-          nextToken
-        }
         filters
         lastLoggedIn
         lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -962,21 +962,21 @@ export const updateRoom = /* GraphQL */ `
         lastName
         externalId
         grade
-        wordbank {
-          nextToken
-        }
         onBoardSurvey
         offBoardSurvey
         phone
         birthdate
         image
         language
-        classes {
-          nextToken
-        }
         filters
         lastLoggedIn
         lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1093,21 +1093,21 @@ export const deleteRoom = /* GraphQL */ `
         lastName
         externalId
         grade
-        wordbank {
-          nextToken
-        }
         onBoardSurvey
         offBoardSurvey
         phone
         birthdate
         image
         language
-        classes {
-          nextToken
-        }
         filters
         lastLoggedIn
         lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1471,21 +1471,21 @@ export const createClassStudent = /* GraphQL */ `
         lastName
         externalId
         grade
-        wordbank {
-          nextToken
-        }
         onBoardSurvey
         offBoardSurvey
         phone
         birthdate
         image
         language
-        classes {
-          nextToken
-        }
         filters
         lastLoggedIn
         lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1550,21 +1550,21 @@ export const updateClassStudent = /* GraphQL */ `
         lastName
         externalId
         grade
-        wordbank {
-          nextToken
-        }
         onBoardSurvey
         offBoardSurvey
         phone
         birthdate
         image
         language
-        classes {
-          nextToken
-        }
         filters
         lastLoggedIn
         lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1629,21 +1629,21 @@ export const deleteClassStudent = /* GraphQL */ `
         lastName
         externalId
         grade
-        wordbank {
-          nextToken
-        }
         onBoardSurvey
         offBoardSurvey
         phone
         birthdate
         image
         language
-        classes {
-          nextToken
-        }
         filters
         lastLoggedIn
         lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1698,6 +1698,7 @@ export const createCurriculum = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      designers
       syllabi {
         items {
           id
@@ -1717,7 +1718,6 @@ export const createCurriculum = /* GraphQL */ `
         }
         nextToken
       }
-      designers
       createdAt
       updatedAt
     }
@@ -1769,6 +1769,7 @@ export const updateCurriculum = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      designers
       syllabi {
         items {
           id
@@ -1788,7 +1789,6 @@ export const updateCurriculum = /* GraphQL */ `
         }
         nextToken
       }
-      designers
       createdAt
       updatedAt
     }
@@ -1840,6 +1840,7 @@ export const deleteCurriculum = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      designers
       syllabi {
         items {
           id
@@ -1859,7 +1860,6 @@ export const deleteCurriculum = /* GraphQL */ `
         }
         nextToken
       }
-      designers
       createdAt
       updatedAt
     }
@@ -1939,10 +1939,10 @@ export const createTopic = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        designers
         syllabi {
           nextToken
         }
-        designers
         createdAt
         updatedAt
       }
@@ -1996,10 +1996,10 @@ export const updateTopic = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        designers
         syllabi {
           nextToken
         }
-        designers
         createdAt
         updatedAt
       }
@@ -2053,10 +2053,10 @@ export const deleteTopic = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        designers
         syllabi {
           nextToken
         }
-        designers
         createdAt
         updatedAt
       }
@@ -2302,10 +2302,10 @@ export const createTeacherCurriculum = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        designers
         syllabi {
           nextToken
         }
-        designers
         createdAt
         updatedAt
       }
@@ -2349,10 +2349,10 @@ export const updateTeacherCurriculum = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        designers
         syllabi {
           nextToken
         }
-        designers
         createdAt
         updatedAt
       }
@@ -2396,10 +2396,10 @@ export const deleteTeacherCurriculum = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        designers
         syllabi {
           nextToken
         }
-        designers
         createdAt
         updatedAt
       }
@@ -2443,10 +2443,10 @@ export const createRoomCurriculum = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        designers
         syllabi {
           nextToken
         }
-        designers
         createdAt
         updatedAt
       }
@@ -2490,10 +2490,10 @@ export const updateRoomCurriculum = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        designers
         syllabi {
           nextToken
         }
-        designers
         createdAt
         updatedAt
       }
@@ -2537,1239 +2537,12 @@ export const deleteRoomCurriculum = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        designers
         syllabi {
           nextToken
         }
-        designers
         createdAt
         updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createSyllabus = /* GraphQL */ `
-  mutation CreateSyllabus(
-    $input: CreateSyllabusInput!
-    $condition: ModelSyllabusConditionInput
-  ) {
-    createSyllabus(input: $input, condition: $condition) {
-      id
-      name
-      type
-      description
-      methodology
-      policies
-      pupose
-      objectives
-      curriculumID
-      languages
-      lessons {
-        items {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      designers
-      status
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateSyllabus = /* GraphQL */ `
-  mutation UpdateSyllabus(
-    $input: UpdateSyllabusInput!
-    $condition: ModelSyllabusConditionInput
-  ) {
-    updateSyllabus(input: $input, condition: $condition) {
-      id
-      name
-      type
-      description
-      methodology
-      policies
-      pupose
-      objectives
-      curriculumID
-      languages
-      lessons {
-        items {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      designers
-      status
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteSyllabus = /* GraphQL */ `
-  mutation DeleteSyllabus(
-    $input: DeleteSyllabusInput!
-    $condition: ModelSyllabusConditionInput
-  ) {
-    deleteSyllabus(input: $input, condition: $condition) {
-      id
-      name
-      type
-      description
-      methodology
-      policies
-      pupose
-      objectives
-      curriculumID
-      languages
-      lessons {
-        items {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      designers
-      status
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createSyllabusLesson = /* GraphQL */ `
-  mutation CreateSyllabusLesson(
-    $input: CreateSyllabusLessonInput!
-    $condition: ModelSyllabusLessonConditionInput
-  ) {
-    createSyllabusLesson(input: $input, condition: $condition) {
-      id
-      syllabusID
-      lessonID
-      unit
-      sequence
-      status
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        createdAt
-        updatedAt
-      }
-      complete
-      roster
-      viewing
-      displayData {
-        breakdownComponent
-        studentInfo {
-          id
-          firstName
-          preferredName
-          lastName
-        }
-        warmUpData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
-      }
-      lessonPlan {
-        id
-        disabled
-        open
-        active
-        stage
-        type
-        displayMode
-      }
-      startDate
-      endDate
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateSyllabusLesson = /* GraphQL */ `
-  mutation UpdateSyllabusLesson(
-    $input: UpdateSyllabusLessonInput!
-    $condition: ModelSyllabusLessonConditionInput
-  ) {
-    updateSyllabusLesson(input: $input, condition: $condition) {
-      id
-      syllabusID
-      lessonID
-      unit
-      sequence
-      status
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        createdAt
-        updatedAt
-      }
-      complete
-      roster
-      viewing
-      displayData {
-        breakdownComponent
-        studentInfo {
-          id
-          firstName
-          preferredName
-          lastName
-        }
-        warmUpData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
-      }
-      lessonPlan {
-        id
-        disabled
-        open
-        active
-        stage
-        type
-        displayMode
-      }
-      startDate
-      endDate
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteSyllabusLesson = /* GraphQL */ `
-  mutation DeleteSyllabusLesson(
-    $input: DeleteSyllabusLessonInput!
-    $condition: ModelSyllabusLessonConditionInput
-  ) {
-    deleteSyllabusLesson(input: $input, condition: $condition) {
-      id
-      syllabusID
-      lessonID
-      unit
-      sequence
-      status
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        createdAt
-        updatedAt
-      }
-      complete
-      roster
-      viewing
-      displayData {
-        breakdownComponent
-        studentInfo {
-          id
-          firstName
-          preferredName
-          lastName
-        }
-        warmUpData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
-      }
-      lessonPlan {
-        id
-        disabled
-        open
-        active
-        stage
-        type
-        displayMode
-      }
-      startDate
-      endDate
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createCourse = /* GraphQL */ `
-  mutation CreateCourse(
-    $input: CreateCourseInput!
-    $condition: ModelCourseConditionInput
-  ) {
-    createCourse(input: $input, condition: $condition) {
-      id
-      name
-      type
-      classrooms {
-        items {
-          id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      startDate
-      duration
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateCourse = /* GraphQL */ `
-  mutation UpdateCourse(
-    $input: UpdateCourseInput!
-    $condition: ModelCourseConditionInput
-  ) {
-    updateCourse(input: $input, condition: $condition) {
-      id
-      name
-      type
-      classrooms {
-        items {
-          id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      startDate
-      duration
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteCourse = /* GraphQL */ `
-  mutation DeleteCourse(
-    $input: DeleteCourseInput!
-    $condition: ModelCourseConditionInput
-  ) {
-    deleteCourse(input: $input, condition: $condition) {
-      id
-      name
-      type
-      classrooms {
-        items {
-          id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      startDate
-      duration
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createStudentData = /* GraphQL */ `
-  mutation CreateStudentData(
-    $input: CreateStudentDataInput!
-    $condition: ModelStudentDataConditionInput
-  ) {
-    createStudentData(input: $input, condition: $condition) {
-      id
-      lessonProgress
-      currentLocation
-      status
-      saveType
-      classroomID
-      classroom {
-        id
-        open
-        openedAt
-        closedAt
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        expectedStartDate
-        expectedEndDate
-        SELStructure
-        courseID
-        course {
-          id
-          name
-          type
-          startDate
-          duration
-          createdAt
-          updatedAt
-        }
-        lessonID
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          createdAt
-          updatedAt
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        data {
-          nextToken
-        }
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      studentID
-      studentAuthID
-      student {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      warmupData {
-        story
-        title
-        additional {
-          name
-          input
-        }
-        truthGame {
-          id
-          label
-          isLie
-          text
-        }
-        poll {
-          id
-          question
-        }
-        adventureGame {
-          id
-          text
-        }
-      }
-      corelessonData {
-        selected {
-          anchor
-          color
-          focus
-          id
-        }
-        rawSelected {
-          color
-          selected
-        }
-        selectGroup
-      }
-      activityData {
-        editInput
-        editMode
-        lines {
-          example
-          id
-          menuOpen
-          text
-        }
-        title
-      }
-      doFirstData {
-        items {
-          id
-          studentDataID
-          questionDataID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      checkpointData {
-        items {
-          id
-          studentDataID
-          questionDataID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateStudentData = /* GraphQL */ `
-  mutation UpdateStudentData(
-    $input: UpdateStudentDataInput!
-    $condition: ModelStudentDataConditionInput
-  ) {
-    updateStudentData(input: $input, condition: $condition) {
-      id
-      lessonProgress
-      currentLocation
-      status
-      saveType
-      classroomID
-      classroom {
-        id
-        open
-        openedAt
-        closedAt
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        expectedStartDate
-        expectedEndDate
-        SELStructure
-        courseID
-        course {
-          id
-          name
-          type
-          startDate
-          duration
-          createdAt
-          updatedAt
-        }
-        lessonID
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          createdAt
-          updatedAt
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        data {
-          nextToken
-        }
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      studentID
-      studentAuthID
-      student {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      warmupData {
-        story
-        title
-        additional {
-          name
-          input
-        }
-        truthGame {
-          id
-          label
-          isLie
-          text
-        }
-        poll {
-          id
-          question
-        }
-        adventureGame {
-          id
-          text
-        }
-      }
-      corelessonData {
-        selected {
-          anchor
-          color
-          focus
-          id
-        }
-        rawSelected {
-          color
-          selected
-        }
-        selectGroup
-      }
-      activityData {
-        editInput
-        editMode
-        lines {
-          example
-          id
-          menuOpen
-          text
-        }
-        title
-      }
-      doFirstData {
-        items {
-          id
-          studentDataID
-          questionDataID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      checkpointData {
-        items {
-          id
-          studentDataID
-          questionDataID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteStudentData = /* GraphQL */ `
-  mutation DeleteStudentData(
-    $input: DeleteStudentDataInput!
-    $condition: ModelStudentDataConditionInput
-  ) {
-    deleteStudentData(input: $input, condition: $condition) {
-      id
-      lessonProgress
-      currentLocation
-      status
-      saveType
-      classroomID
-      classroom {
-        id
-        open
-        openedAt
-        closedAt
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        expectedStartDate
-        expectedEndDate
-        SELStructure
-        courseID
-        course {
-          id
-          name
-          type
-          startDate
-          duration
-          createdAt
-          updatedAt
-        }
-        lessonID
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          createdAt
-          updatedAt
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        data {
-          nextToken
-        }
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      studentID
-      studentAuthID
-      student {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      warmupData {
-        story
-        title
-        additional {
-          name
-          input
-        }
-        truthGame {
-          id
-          label
-          isLie
-          text
-        }
-        poll {
-          id
-          question
-        }
-        adventureGame {
-          id
-          text
-        }
-      }
-      corelessonData {
-        selected {
-          anchor
-          color
-          focus
-          id
-        }
-        rawSelected {
-          color
-          selected
-        }
-        selectGroup
-      }
-      activityData {
-        editInput
-        editMode
-        lines {
-          example
-          id
-          menuOpen
-          text
-        }
-        title
-      }
-      doFirstData {
-        items {
-          id
-          studentDataID
-          questionDataID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      checkpointData {
-        items {
-          id
-          studentDataID
-          questionDataID
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       createdAt
       updatedAt
@@ -3866,822 +2639,6 @@ export const deleteArtist = /* GraphQL */ `
     }
   }
 `;
-export const createClassroom = /* GraphQL */ `
-  mutation CreateClassroom(
-    $input: CreateClassroomInput!
-    $condition: ModelClassroomConditionInput
-  ) {
-    createClassroom(input: $input, condition: $condition) {
-      id
-      open
-      openedAt
-      closedAt
-      complete
-      roster
-      viewing
-      displayData {
-        breakdownComponent
-        studentInfo {
-          id
-          firstName
-          preferredName
-          lastName
-        }
-        warmUpData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
-      }
-      expectedStartDate
-      expectedEndDate
-      SELStructure
-      courseID
-      course {
-        id
-        name
-        type
-        classrooms {
-          nextToken
-        }
-        startDate
-        duration
-        createdAt
-        updatedAt
-      }
-      lessonID
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        createdAt
-        updatedAt
-      }
-      lessonPlan {
-        id
-        disabled
-        open
-        active
-        stage
-        type
-        displayMode
-      }
-      data {
-        items {
-          id
-          lessonProgress
-          currentLocation
-          status
-          saveType
-          classroomID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      feedback {
-        items {
-          id
-          classroomID
-          liked
-          comment
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateClassroom = /* GraphQL */ `
-  mutation UpdateClassroom(
-    $input: UpdateClassroomInput!
-    $condition: ModelClassroomConditionInput
-  ) {
-    updateClassroom(input: $input, condition: $condition) {
-      id
-      open
-      openedAt
-      closedAt
-      complete
-      roster
-      viewing
-      displayData {
-        breakdownComponent
-        studentInfo {
-          id
-          firstName
-          preferredName
-          lastName
-        }
-        warmUpData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
-      }
-      expectedStartDate
-      expectedEndDate
-      SELStructure
-      courseID
-      course {
-        id
-        name
-        type
-        classrooms {
-          nextToken
-        }
-        startDate
-        duration
-        createdAt
-        updatedAt
-      }
-      lessonID
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        createdAt
-        updatedAt
-      }
-      lessonPlan {
-        id
-        disabled
-        open
-        active
-        stage
-        type
-        displayMode
-      }
-      data {
-        items {
-          id
-          lessonProgress
-          currentLocation
-          status
-          saveType
-          classroomID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      feedback {
-        items {
-          id
-          classroomID
-          liked
-          comment
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteClassroom = /* GraphQL */ `
-  mutation DeleteClassroom(
-    $input: DeleteClassroomInput!
-    $condition: ModelClassroomConditionInput
-  ) {
-    deleteClassroom(input: $input, condition: $condition) {
-      id
-      open
-      openedAt
-      closedAt
-      complete
-      roster
-      viewing
-      displayData {
-        breakdownComponent
-        studentInfo {
-          id
-          firstName
-          preferredName
-          lastName
-        }
-        warmUpData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
-      }
-      expectedStartDate
-      expectedEndDate
-      SELStructure
-      courseID
-      course {
-        id
-        name
-        type
-        classrooms {
-          nextToken
-        }
-        startDate
-        duration
-        createdAt
-        updatedAt
-      }
-      lessonID
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        createdAt
-        updatedAt
-      }
-      lessonPlan {
-        id
-        disabled
-        open
-        active
-        stage
-        type
-        displayMode
-      }
-      data {
-        items {
-          id
-          lessonProgress
-          currentLocation
-          status
-          saveType
-          classroomID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      feedback {
-        items {
-          id
-          classroomID
-          liked
-          comment
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createFeedback = /* GraphQL */ `
-  mutation CreateFeedback(
-    $input: CreateFeedbackInput!
-    $condition: ModelFeedbackConditionInput
-  ) {
-    createFeedback(input: $input, condition: $condition) {
-      id
-      classroomID
-      liked
-      comment
-      classroom {
-        id
-        open
-        openedAt
-        closedAt
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        expectedStartDate
-        expectedEndDate
-        SELStructure
-        courseID
-        course {
-          id
-          name
-          type
-          startDate
-          duration
-          createdAt
-          updatedAt
-        }
-        lessonID
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          createdAt
-          updatedAt
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        data {
-          nextToken
-        }
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateFeedback = /* GraphQL */ `
-  mutation UpdateFeedback(
-    $input: UpdateFeedbackInput!
-    $condition: ModelFeedbackConditionInput
-  ) {
-    updateFeedback(input: $input, condition: $condition) {
-      id
-      classroomID
-      liked
-      comment
-      classroom {
-        id
-        open
-        openedAt
-        closedAt
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        expectedStartDate
-        expectedEndDate
-        SELStructure
-        courseID
-        course {
-          id
-          name
-          type
-          startDate
-          duration
-          createdAt
-          updatedAt
-        }
-        lessonID
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          createdAt
-          updatedAt
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        data {
-          nextToken
-        }
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteFeedback = /* GraphQL */ `
-  mutation DeleteFeedback(
-    $input: DeleteFeedbackInput!
-    $condition: ModelFeedbackConditionInput
-  ) {
-    deleteFeedback(input: $input, condition: $condition) {
-      id
-      classroomID
-      liked
-      comment
-      classroom {
-        id
-        open
-        openedAt
-        closedAt
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        expectedStartDate
-        expectedEndDate
-        SELStructure
-        courseID
-        course {
-          id
-          name
-          type
-          startDate
-          duration
-          createdAt
-          updatedAt
-        }
-        lessonID
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          createdAt
-          updatedAt
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        data {
-          nextToken
-        }
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createSelStructure = /* GraphQL */ `
   mutation CreateSelStructure(
     $input: CreateSELStructureInput!
@@ -4719,1095 +2676,6 @@ export const deleteSelStructure = /* GraphQL */ `
       id
       name
       description
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createThemeTemplate = /* GraphQL */ `
-  mutation CreateThemeTemplate(
-    $input: CreateThemeTemplateInput!
-    $condition: ModelThemeTemplateConditionInput
-  ) {
-    createThemeTemplate(input: $input, condition: $condition) {
-      id
-      type
-      name
-      summary
-      summaryLabel
-      quote {
-        id
-        source
-        text
-      }
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      connection
-      images
-      additionalContent {
-        video
-        links {
-          id
-          type
-          text
-          link
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateThemeTemplate = /* GraphQL */ `
-  mutation UpdateThemeTemplate(
-    $input: UpdateThemeTemplateInput!
-    $condition: ModelThemeTemplateConditionInput
-  ) {
-    updateThemeTemplate(input: $input, condition: $condition) {
-      id
-      type
-      name
-      summary
-      summaryLabel
-      quote {
-        id
-        source
-        text
-      }
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      connection
-      images
-      additionalContent {
-        video
-        links {
-          id
-          type
-          text
-          link
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteThemeTemplate = /* GraphQL */ `
-  mutation DeleteThemeTemplate(
-    $input: DeleteThemeTemplateInput!
-    $condition: ModelThemeTemplateConditionInput
-  ) {
-    deleteThemeTemplate(input: $input, condition: $condition) {
-      id
-      type
-      name
-      summary
-      summaryLabel
-      quote {
-        id
-        source
-        text
-      }
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      connection
-      images
-      additionalContent {
-        video
-        links {
-          id
-          type
-          text
-          link
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createLesson = /* GraphQL */ `
-  mutation CreateLesson(
-    $input: CreateLessonInput!
-    $condition: ModelLessonConditionInput
-  ) {
-    createLesson(input: $input, condition: $condition) {
-      id
-      title
-      type
-      label
-      instructions
-      theme {
-        type
-        name
-        summary
-        summaryLabel
-        quote {
-          id
-          source
-          text
-        }
-        connection
-        images
-        additionalContent {
-          video
-        }
-      }
-      grades
-      artistID
-      artist {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
-      language
-      SELStructure
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      connection
-      summary
-      purpose
-      designers
-      objectives
-      checkpoints {
-        items {
-          id
-          lessonID
-          checkpointID
-          position
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      doFirstID
-      doFirst {
-        id
-        type
-        required
-        questions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      warmUpId
-      warmUp {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        inputs {
-          title
-          example
-          titleExample
-          textExample
-          listInputNumber
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      coreLessonId
-      coreLesson {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        content {
-          video
-          link
-          title
-          artist
-          text
-        }
-        tools {
-          id
-          name
-          color
-          icon
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      activityId
-      activity {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        lineNumber
-        writingPrompts {
-          id
-          name
-          prompt
-          example
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      assessmentID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filters
-      coverImage
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateLesson = /* GraphQL */ `
-  mutation UpdateLesson(
-    $input: UpdateLessonInput!
-    $condition: ModelLessonConditionInput
-  ) {
-    updateLesson(input: $input, condition: $condition) {
-      id
-      title
-      type
-      label
-      instructions
-      theme {
-        type
-        name
-        summary
-        summaryLabel
-        quote {
-          id
-          source
-          text
-        }
-        connection
-        images
-        additionalContent {
-          video
-        }
-      }
-      grades
-      artistID
-      artist {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
-      language
-      SELStructure
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      connection
-      summary
-      purpose
-      designers
-      objectives
-      checkpoints {
-        items {
-          id
-          lessonID
-          checkpointID
-          position
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      doFirstID
-      doFirst {
-        id
-        type
-        required
-        questions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      warmUpId
-      warmUp {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        inputs {
-          title
-          example
-          titleExample
-          textExample
-          listInputNumber
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      coreLessonId
-      coreLesson {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        content {
-          video
-          link
-          title
-          artist
-          text
-        }
-        tools {
-          id
-          name
-          color
-          icon
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      activityId
-      activity {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        lineNumber
-        writingPrompts {
-          id
-          name
-          prompt
-          example
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      assessmentID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filters
-      coverImage
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteLesson = /* GraphQL */ `
-  mutation DeleteLesson(
-    $input: DeleteLessonInput!
-    $condition: ModelLessonConditionInput
-  ) {
-    deleteLesson(input: $input, condition: $condition) {
-      id
-      title
-      type
-      label
-      instructions
-      theme {
-        type
-        name
-        summary
-        summaryLabel
-        quote {
-          id
-          source
-          text
-        }
-        connection
-        images
-        additionalContent {
-          video
-        }
-      }
-      grades
-      artistID
-      artist {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
-      language
-      SELStructure
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      connection
-      summary
-      purpose
-      designers
-      objectives
-      checkpoints {
-        items {
-          id
-          lessonID
-          checkpointID
-          position
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      doFirstID
-      doFirst {
-        id
-        type
-        required
-        questions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      warmUpId
-      warmUp {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        inputs {
-          title
-          example
-          titleExample
-          textExample
-          listInputNumber
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      coreLessonId
-      coreLesson {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        content {
-          video
-          link
-          title
-          artist
-          text
-        }
-        tools {
-          id
-          name
-          color
-          icon
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      activityId
-      activity {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        lineNumber
-        writingPrompts {
-          id
-          name
-          prompt
-          example
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      assessmentID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filters
-      coverImage
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createLessonCheckpoint = /* GraphQL */ `
-  mutation CreateLessonCheckpoint(
-    $input: CreateLessonCheckpointInput!
-    $condition: ModelLessonCheckpointConditionInput
-  ) {
-    createLessonCheckpoint(input: $input, condition: $condition) {
-      id
-      lessonID
-      checkpointID
-      position
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        createdAt
-        updatedAt
-      }
-      checkpoint {
-        id
-        label
-        title
-        subtitle
-        type
-        instructions
-        questions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateLessonCheckpoint = /* GraphQL */ `
-  mutation UpdateLessonCheckpoint(
-    $input: UpdateLessonCheckpointInput!
-    $condition: ModelLessonCheckpointConditionInput
-  ) {
-    updateLessonCheckpoint(input: $input, condition: $condition) {
-      id
-      lessonID
-      checkpointID
-      position
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        createdAt
-        updatedAt
-      }
-      checkpoint {
-        id
-        label
-        title
-        subtitle
-        type
-        instructions
-        questions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteLessonCheckpoint = /* GraphQL */ `
-  mutation DeleteLessonCheckpoint(
-    $input: DeleteLessonCheckpointInput!
-    $condition: ModelLessonCheckpointConditionInput
-  ) {
-    deleteLessonCheckpoint(input: $input, condition: $condition) {
-      id
-      lessonID
-      checkpointID
-      position
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        createdAt
-        updatedAt
-      }
-      checkpoint {
-        id
-        label
-        title
-        subtitle
-        type
-        instructions
-        questions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
@@ -6959,783 +3827,6 @@ export const deleteQuestionType = /* GraphQL */ `
     }
   }
 `;
-export const createQuestionData = /* GraphQL */ `
-  mutation CreateQuestionData(
-    $input: CreateQuestionDataInput!
-    $condition: ModelQuestionDataConditionInput
-  ) {
-    createQuestionData(input: $input, condition: $condition) {
-      id
-      classroomID
-      email
-      authID
-      classroom {
-        id
-        open
-        openedAt
-        closedAt
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        expectedStartDate
-        expectedEndDate
-        SELStructure
-        courseID
-        course {
-          id
-          name
-          type
-          startDate
-          duration
-          createdAt
-          updatedAt
-        }
-        lessonID
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          createdAt
-          updatedAt
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        data {
-          nextToken
-        }
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      componentType
-      scheduleID
-      lessonID
-      responseObject {
-        qid
-        response
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateQuestionData = /* GraphQL */ `
-  mutation UpdateQuestionData(
-    $input: UpdateQuestionDataInput!
-    $condition: ModelQuestionDataConditionInput
-  ) {
-    updateQuestionData(input: $input, condition: $condition) {
-      id
-      classroomID
-      email
-      authID
-      classroom {
-        id
-        open
-        openedAt
-        closedAt
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        expectedStartDate
-        expectedEndDate
-        SELStructure
-        courseID
-        course {
-          id
-          name
-          type
-          startDate
-          duration
-          createdAt
-          updatedAt
-        }
-        lessonID
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          createdAt
-          updatedAt
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        data {
-          nextToken
-        }
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      componentType
-      scheduleID
-      lessonID
-      responseObject {
-        qid
-        response
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteQuestionData = /* GraphQL */ `
-  mutation DeleteQuestionData(
-    $input: DeleteQuestionDataInput!
-    $condition: ModelQuestionDataConditionInput
-  ) {
-    deleteQuestionData(input: $input, condition: $condition) {
-      id
-      classroomID
-      email
-      authID
-      classroom {
-        id
-        open
-        openedAt
-        closedAt
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        expectedStartDate
-        expectedEndDate
-        SELStructure
-        courseID
-        course {
-          id
-          name
-          type
-          startDate
-          duration
-          createdAt
-          updatedAt
-        }
-        lessonID
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          createdAt
-          updatedAt
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        data {
-          nextToken
-        }
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      componentType
-      scheduleID
-      lessonID
-      responseObject {
-        qid
-        response
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createQuestionDataStudentData = /* GraphQL */ `
-  mutation CreateQuestionDataStudentData(
-    $input: CreateQuestionDataStudentDataInput!
-    $condition: ModelQuestionDataStudentDataConditionInput
-  ) {
-    createQuestionDataStudentData(input: $input, condition: $condition) {
-      id
-      studentDataID
-      studentData {
-        id
-        lessonProgress
-        currentLocation
-        status
-        saveType
-        classroomID
-        classroom {
-          id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        studentID
-        studentAuthID
-        student {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        warmupData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
-        doFirstData {
-          nextToken
-        }
-        checkpointData {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      questionDataID
-      questionData {
-        id
-        classroomID
-        email
-        authID
-        classroom {
-          id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        person {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        componentType
-        scheduleID
-        lessonID
-        responseObject {
-          qid
-          response
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateQuestionDataStudentData = /* GraphQL */ `
-  mutation UpdateQuestionDataStudentData(
-    $input: UpdateQuestionDataStudentDataInput!
-    $condition: ModelQuestionDataStudentDataConditionInput
-  ) {
-    updateQuestionDataStudentData(input: $input, condition: $condition) {
-      id
-      studentDataID
-      studentData {
-        id
-        lessonProgress
-        currentLocation
-        status
-        saveType
-        classroomID
-        classroom {
-          id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        studentID
-        studentAuthID
-        student {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        warmupData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
-        doFirstData {
-          nextToken
-        }
-        checkpointData {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      questionDataID
-      questionData {
-        id
-        classroomID
-        email
-        authID
-        classroom {
-          id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        person {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        componentType
-        scheduleID
-        lessonID
-        responseObject {
-          qid
-          response
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteQuestionDataStudentData = /* GraphQL */ `
-  mutation DeleteQuestionDataStudentData(
-    $input: DeleteQuestionDataStudentDataInput!
-    $condition: ModelQuestionDataStudentDataConditionInput
-  ) {
-    deleteQuestionDataStudentData(input: $input, condition: $condition) {
-      id
-      studentDataID
-      studentData {
-        id
-        lessonProgress
-        currentLocation
-        status
-        saveType
-        classroomID
-        classroom {
-          id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        studentID
-        studentAuthID
-        student {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        warmupData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
-        doFirstData {
-          nextToken
-        }
-        checkpointData {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      questionDataID
-      questionData {
-        id
-        classroomID
-        email
-        authID
-        classroom {
-          id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        person {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        componentType
-        scheduleID
-        lessonID
-        responseObject {
-          qid
-          response
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createWord = /* GraphQL */ `
   mutation CreateWord(
     $input: CreateWordInput!
@@ -7773,6 +3864,1851 @@ export const deleteWord = /* GraphQL */ `
       id
       word
       definition
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createStudentWord = /* GraphQL */ `
+  mutation CreateStudentWord(
+    $input: CreateStudentWordInput!
+    $condition: ModelStudentWordConditionInput
+  ) {
+    createStudentWord(input: $input, condition: $condition) {
+      id
+      wordID
+      studentID
+      studentAuthID
+      word {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      student {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateStudentWord = /* GraphQL */ `
+  mutation UpdateStudentWord(
+    $input: UpdateStudentWordInput!
+    $condition: ModelStudentWordConditionInput
+  ) {
+    updateStudentWord(input: $input, condition: $condition) {
+      id
+      wordID
+      studentID
+      studentAuthID
+      word {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      student {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteStudentWord = /* GraphQL */ `
+  mutation DeleteStudentWord(
+    $input: DeleteStudentWordInput!
+    $condition: ModelStudentWordConditionInput
+  ) {
+    deleteStudentWord(input: $input, condition: $condition) {
+      id
+      wordID
+      studentID
+      studentAuthID
+      word {
+        id
+        word
+        definition
+        createdAt
+        updatedAt
+      }
+      student {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createFilterGroup = /* GraphQL */ `
+  mutation CreateFilterGroup(
+    $input: CreateFilterGroupInput!
+    $condition: ModelFilterGroupConditionInput
+  ) {
+    createFilterGroup(input: $input, condition: $condition) {
+      id
+      name
+      description
+      filters {
+        items {
+          id
+          filterGroupID
+          filterID
+          zoiq
+          admin
+          show
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateFilterGroup = /* GraphQL */ `
+  mutation UpdateFilterGroup(
+    $input: UpdateFilterGroupInput!
+    $condition: ModelFilterGroupConditionInput
+  ) {
+    updateFilterGroup(input: $input, condition: $condition) {
+      id
+      name
+      description
+      filters {
+        items {
+          id
+          filterGroupID
+          filterID
+          zoiq
+          admin
+          show
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteFilterGroup = /* GraphQL */ `
+  mutation DeleteFilterGroup(
+    $input: DeleteFilterGroupInput!
+    $condition: ModelFilterGroupConditionInput
+  ) {
+    deleteFilterGroup(input: $input, condition: $condition) {
+      id
+      name
+      description
+      filters {
+        items {
+          id
+          filterGroupID
+          filterID
+          zoiq
+          admin
+          show
+          required
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createFilterGroupFilter = /* GraphQL */ `
+  mutation CreateFilterGroupFilter(
+    $input: CreateFilterGroupFilterInput!
+    $condition: ModelFilterGroupFilterConditionInput
+  ) {
+    createFilterGroupFilter(input: $input, condition: $condition) {
+      id
+      filterGroupID
+      filterID
+      zoiq
+      admin
+      show
+      required
+      filter {
+        id
+        name
+        description
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateFilterGroupFilter = /* GraphQL */ `
+  mutation UpdateFilterGroupFilter(
+    $input: UpdateFilterGroupFilterInput!
+    $condition: ModelFilterGroupFilterConditionInput
+  ) {
+    updateFilterGroupFilter(input: $input, condition: $condition) {
+      id
+      filterGroupID
+      filterID
+      zoiq
+      admin
+      show
+      required
+      filter {
+        id
+        name
+        description
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteFilterGroupFilter = /* GraphQL */ `
+  mutation DeleteFilterGroupFilter(
+    $input: DeleteFilterGroupFilterInput!
+    $condition: ModelFilterGroupFilterConditionInput
+  ) {
+    deleteFilterGroupFilter(input: $input, condition: $condition) {
+      id
+      filterGroupID
+      filterID
+      zoiq
+      admin
+      show
+      required
+      filter {
+        id
+        name
+        description
+        options {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createFilter = /* GraphQL */ `
+  mutation CreateFilter(
+    $input: CreateFilterInput!
+    $condition: ModelFilterConditionInput
+  ) {
+    createFilter(input: $input, condition: $condition) {
+      id
+      name
+      description
+      options {
+        items {
+          id
+          filterID
+          text
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateFilter = /* GraphQL */ `
+  mutation UpdateFilter(
+    $input: UpdateFilterInput!
+    $condition: ModelFilterConditionInput
+  ) {
+    updateFilter(input: $input, condition: $condition) {
+      id
+      name
+      description
+      options {
+        items {
+          id
+          filterID
+          text
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteFilter = /* GraphQL */ `
+  mutation DeleteFilter(
+    $input: DeleteFilterInput!
+    $condition: ModelFilterConditionInput
+  ) {
+    deleteFilter(input: $input, condition: $condition) {
+      id
+      name
+      description
+      options {
+        items {
+          id
+          filterID
+          text
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createFilterOption = /* GraphQL */ `
+  mutation CreateFilterOption(
+    $input: CreateFilterOptionInput!
+    $condition: ModelFilterOptionConditionInput
+  ) {
+    createFilterOption(input: $input, condition: $condition) {
+      id
+      filterID
+      text
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateFilterOption = /* GraphQL */ `
+  mutation UpdateFilterOption(
+    $input: UpdateFilterOptionInput!
+    $condition: ModelFilterOptionConditionInput
+  ) {
+    updateFilterOption(input: $input, condition: $condition) {
+      id
+      filterID
+      text
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteFilterOption = /* GraphQL */ `
+  mutation DeleteFilterOption(
+    $input: DeleteFilterOptionInput!
+    $condition: ModelFilterOptionConditionInput
+  ) {
+    deleteFilterOption(input: $input, condition: $condition) {
+      id
+      filterID
+      text
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createRoomMsgs = /* GraphQL */ `
+  mutation CreateRoomMsgs(
+    $input: CreateRoomMsgsInput!
+    $condition: ModelRoomMsgsConditionInput
+  ) {
+    createRoomMsgs(input: $input, condition: $condition) {
+      id
+      roomID
+      senderAuthID
+      senderEmail
+      body
+      createdAt
+      sender {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        createdAt
+        updatedAt
+      }
+      updatedAt
+    }
+  }
+`;
+export const updateRoomMsgs = /* GraphQL */ `
+  mutation UpdateRoomMsgs(
+    $input: UpdateRoomMsgsInput!
+    $condition: ModelRoomMsgsConditionInput
+  ) {
+    updateRoomMsgs(input: $input, condition: $condition) {
+      id
+      roomID
+      senderAuthID
+      senderEmail
+      body
+      createdAt
+      sender {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        createdAt
+        updatedAt
+      }
+      updatedAt
+    }
+  }
+`;
+export const deleteRoomMsgs = /* GraphQL */ `
+  mutation DeleteRoomMsgs(
+    $input: DeleteRoomMsgsInput!
+    $condition: ModelRoomMsgsConditionInput
+  ) {
+    deleteRoomMsgs(input: $input, condition: $condition) {
+      id
+      roomID
+      senderAuthID
+      senderEmail
+      body
+      createdAt
+      sender {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        createdAt
+        updatedAt
+      }
+      updatedAt
+    }
+  }
+`;
+export const createAppClients = /* GraphQL */ `
+  mutation CreateAppClients(
+    $input: CreateAppClientsInput!
+    $condition: ModelAppClientsConditionInput
+  ) {
+    createAppClients(input: $input, condition: $condition) {
+      id
+      key
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAppClients = /* GraphQL */ `
+  mutation UpdateAppClients(
+    $input: UpdateAppClientsInput!
+    $condition: ModelAppClientsConditionInput
+  ) {
+    updateAppClients(input: $input, condition: $condition) {
+      id
+      key
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAppClients = /* GraphQL */ `
+  mutation DeleteAppClients(
+    $input: DeleteAppClientsInput!
+    $condition: ModelAppClientsConditionInput
+  ) {
+    deleteAppClients(input: $input, condition: $condition) {
+      id
+      key
+      name
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCourse = /* GraphQL */ `
+  mutation CreateCourse(
+    $input: CreateCourseInput!
+    $condition: ModelCourseConditionInput
+  ) {
+    createCourse(input: $input, condition: $condition) {
+      id
+      name
+      type
+      startDate
+      duration
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCourse = /* GraphQL */ `
+  mutation UpdateCourse(
+    $input: UpdateCourseInput!
+    $condition: ModelCourseConditionInput
+  ) {
+    updateCourse(input: $input, condition: $condition) {
+      id
+      name
+      type
+      startDate
+      duration
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCourse = /* GraphQL */ `
+  mutation DeleteCourse(
+    $input: DeleteCourseInput!
+    $condition: ModelCourseConditionInput
+  ) {
+    deleteCourse(input: $input, condition: $condition) {
+      id
+      name
+      type
+      startDate
+      duration
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createLesson = /* GraphQL */ `
+  mutation CreateLesson(
+    $input: CreateLessonInput!
+    $condition: ModelLessonConditionInput
+  ) {
+    createLesson(input: $input, condition: $condition) {
+      id
+      title
+      type
+      label
+      instructions
+      theme {
+        type
+        name
+        summary
+        summaryLabel
+        quote {
+          id
+          source
+          text
+        }
+        connection
+        images
+        additionalContent {
+          video
+        }
+      }
+      grades
+      artistID
+      artist {
+        id
+        images
+        name
+        type
+        bio
+        quotes {
+          id
+          source
+          text
+        }
+        additionalContent {
+          video
+        }
+        createdAt
+        updatedAt
+      }
+      language
+      SELStructure
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
+      summary
+      purpose
+      designers
+      objectives
+      checkpoints {
+        items {
+          id
+          lessonID
+          checkpointID
+          position
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      doFirstID
+      doFirst {
+        id
+        type
+        required
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      warmUpId
+      warmUp {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        inputs {
+          title
+          example
+          titleExample
+          textExample
+          listInputNumber
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      coreLessonId
+      coreLesson {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        content {
+          video
+          link
+          title
+          artist
+          text
+        }
+        tools {
+          id
+          name
+          color
+          icon
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      activityId
+      activity {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        lineNumber
+        writingPrompts {
+          id
+          name
+          prompt
+          example
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      assessmentID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      filters
+      coverImage
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateLesson = /* GraphQL */ `
+  mutation UpdateLesson(
+    $input: UpdateLessonInput!
+    $condition: ModelLessonConditionInput
+  ) {
+    updateLesson(input: $input, condition: $condition) {
+      id
+      title
+      type
+      label
+      instructions
+      theme {
+        type
+        name
+        summary
+        summaryLabel
+        quote {
+          id
+          source
+          text
+        }
+        connection
+        images
+        additionalContent {
+          video
+        }
+      }
+      grades
+      artistID
+      artist {
+        id
+        images
+        name
+        type
+        bio
+        quotes {
+          id
+          source
+          text
+        }
+        additionalContent {
+          video
+        }
+        createdAt
+        updatedAt
+      }
+      language
+      SELStructure
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
+      summary
+      purpose
+      designers
+      objectives
+      checkpoints {
+        items {
+          id
+          lessonID
+          checkpointID
+          position
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      doFirstID
+      doFirst {
+        id
+        type
+        required
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      warmUpId
+      warmUp {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        inputs {
+          title
+          example
+          titleExample
+          textExample
+          listInputNumber
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      coreLessonId
+      coreLesson {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        content {
+          video
+          link
+          title
+          artist
+          text
+        }
+        tools {
+          id
+          name
+          color
+          icon
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      activityId
+      activity {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        lineNumber
+        writingPrompts {
+          id
+          name
+          prompt
+          example
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      assessmentID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      filters
+      coverImage
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteLesson = /* GraphQL */ `
+  mutation DeleteLesson(
+    $input: DeleteLessonInput!
+    $condition: ModelLessonConditionInput
+  ) {
+    deleteLesson(input: $input, condition: $condition) {
+      id
+      title
+      type
+      label
+      instructions
+      theme {
+        type
+        name
+        summary
+        summaryLabel
+        quote {
+          id
+          source
+          text
+        }
+        connection
+        images
+        additionalContent {
+          video
+        }
+      }
+      grades
+      artistID
+      artist {
+        id
+        images
+        name
+        type
+        bio
+        quotes {
+          id
+          source
+          text
+        }
+        additionalContent {
+          video
+        }
+        createdAt
+        updatedAt
+      }
+      language
+      SELStructure
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
+      summary
+      purpose
+      designers
+      objectives
+      checkpoints {
+        items {
+          id
+          lessonID
+          checkpointID
+          position
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      doFirstID
+      doFirst {
+        id
+        type
+        required
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      warmUpId
+      warmUp {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        inputs {
+          title
+          example
+          titleExample
+          textExample
+          listInputNumber
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      coreLessonId
+      coreLesson {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        content {
+          video
+          link
+          title
+          artist
+          text
+        }
+        tools {
+          id
+          name
+          color
+          icon
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      activityId
+      activity {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        lineNumber
+        writingPrompts {
+          id
+          name
+          prompt
+          example
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      assessmentID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      filters
+      coverImage
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createLessonCheckpoint = /* GraphQL */ `
+  mutation CreateLessonCheckpoint(
+    $input: CreateLessonCheckpointInput!
+    $condition: ModelLessonCheckpointConditionInput
+  ) {
+    createLessonCheckpoint(input: $input, condition: $condition) {
+      id
+      lessonID
+      checkpointID
+      position
+      lesson {
+        id
+        title
+        type
+        label
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        coverImage
+        createdAt
+        updatedAt
+      }
+      checkpoint {
+        id
+        label
+        title
+        subtitle
+        type
+        instructions
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateLessonCheckpoint = /* GraphQL */ `
+  mutation UpdateLessonCheckpoint(
+    $input: UpdateLessonCheckpointInput!
+    $condition: ModelLessonCheckpointConditionInput
+  ) {
+    updateLessonCheckpoint(input: $input, condition: $condition) {
+      id
+      lessonID
+      checkpointID
+      position
+      lesson {
+        id
+        title
+        type
+        label
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        coverImage
+        createdAt
+        updatedAt
+      }
+      checkpoint {
+        id
+        label
+        title
+        subtitle
+        type
+        instructions
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteLessonCheckpoint = /* GraphQL */ `
+  mutation DeleteLessonCheckpoint(
+    $input: DeleteLessonCheckpointInput!
+    $condition: ModelLessonCheckpointConditionInput
+  ) {
+    deleteLessonCheckpoint(input: $input, condition: $condition) {
+      id
+      lessonID
+      checkpointID
+      position
+      lesson {
+        id
+        title
+        type
+        label
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        coverImage
+        createdAt
+        updatedAt
+      }
+      checkpoint {
+        id
+        label
+        title
+        subtitle
+        type
+        instructions
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -8135,513 +6071,1425 @@ export const deleteLessonKeyWord = /* GraphQL */ `
     }
   }
 `;
-export const createStudentWord = /* GraphQL */ `
-  mutation CreateStudentWord(
-    $input: CreateStudentWordInput!
-    $condition: ModelStudentWordConditionInput
+export const createSyllabus = /* GraphQL */ `
+  mutation CreateSyllabus(
+    $input: CreateSyllabusInput!
+    $condition: ModelSyllabusConditionInput
   ) {
-    createStudentWord(input: $input, condition: $condition) {
+    createSyllabus(input: $input, condition: $condition) {
       id
-      wordID
-      studentID
-      studentAuthID
-      word {
-        id
-        word
-        definition
-        createdAt
-        updatedAt
+      name
+      type
+      description
+      methodology
+      policies
+      pupose
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
-      student {
+      designers
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateSyllabus = /* GraphQL */ `
+  mutation UpdateSyllabus(
+    $input: UpdateSyllabusInput!
+    $condition: ModelSyllabusConditionInput
+  ) {
+    updateSyllabus(input: $input, condition: $condition) {
+      id
+      name
+      type
+      description
+      methodology
+      policies
+      pupose
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      designers
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteSyllabus = /* GraphQL */ `
+  mutation DeleteSyllabus(
+    $input: DeleteSyllabusInput!
+    $condition: ModelSyllabusConditionInput
+  ) {
+    deleteSyllabus(input: $input, condition: $condition) {
+      id
+      name
+      type
+      description
+      methodology
+      policies
+      pupose
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      designers
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createSyllabusLesson = /* GraphQL */ `
+  mutation CreateSyllabusLesson(
+    $input: CreateSyllabusLessonInput!
+    $condition: ModelSyllabusLessonConditionInput
+  ) {
+    createSyllabusLesson(input: $input, condition: $condition) {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      status
+      lesson {
         id
-        authId
-        status
-        email
-        role
+        title
         type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
+        label
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
         }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateStudentWord = /* GraphQL */ `
-  mutation UpdateStudentWord(
-    $input: UpdateStudentWordInput!
-    $condition: ModelStudentWordConditionInput
-  ) {
-    updateStudentWord(input: $input, condition: $condition) {
-      id
-      wordID
-      studentID
-      studentAuthID
-      word {
-        id
-        word
-        definition
-        createdAt
-        updatedAt
-      }
-      student {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteStudentWord = /* GraphQL */ `
-  mutation DeleteStudentWord(
-    $input: DeleteStudentWordInput!
-    $condition: ModelStudentWordConditionInput
-  ) {
-    deleteStudentWord(input: $input, condition: $condition) {
-      id
-      wordID
-      studentID
-      studentAuthID
-      word {
-        id
-        word
-        definition
-        createdAt
-        updatedAt
-      }
-      student {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createFilterGroup = /* GraphQL */ `
-  mutation CreateFilterGroup(
-    $input: CreateFilterGroupInput!
-    $condition: ModelFilterGroupConditionInput
-  ) {
-    createFilterGroup(input: $input, condition: $condition) {
-      id
-      name
-      description
-      filters {
-        items {
+        grades
+        artistID
+        artist {
           id
-          filterGroupID
-          filterID
-          zoiq
-          admin
-          show
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateFilterGroup = /* GraphQL */ `
-  mutation UpdateFilterGroup(
-    $input: UpdateFilterGroupInput!
-    $condition: ModelFilterGroupConditionInput
-  ) {
-    updateFilterGroup(input: $input, condition: $condition) {
-      id
-      name
-      description
-      filters {
-        items {
-          id
-          filterGroupID
-          filterID
-          zoiq
-          admin
-          show
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteFilterGroup = /* GraphQL */ `
-  mutation DeleteFilterGroup(
-    $input: DeleteFilterGroupInput!
-    $condition: ModelFilterGroupConditionInput
-  ) {
-    deleteFilterGroup(input: $input, condition: $condition) {
-      id
-      name
-      description
-      filters {
-        items {
-          id
-          filterGroupID
-          filterID
-          zoiq
-          admin
-          show
-          required
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createFilterGroupFilter = /* GraphQL */ `
-  mutation CreateFilterGroupFilter(
-    $input: CreateFilterGroupFilterInput!
-    $condition: ModelFilterGroupFilterConditionInput
-  ) {
-    createFilterGroupFilter(input: $input, condition: $condition) {
-      id
-      filterGroupID
-      filterID
-      zoiq
-      admin
-      show
-      required
-      filter {
-        id
-        name
-        description
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateFilterGroupFilter = /* GraphQL */ `
-  mutation UpdateFilterGroupFilter(
-    $input: UpdateFilterGroupFilterInput!
-    $condition: ModelFilterGroupFilterConditionInput
-  ) {
-    updateFilterGroupFilter(input: $input, condition: $condition) {
-      id
-      filterGroupID
-      filterID
-      zoiq
-      admin
-      show
-      required
-      filter {
-        id
-        name
-        description
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteFilterGroupFilter = /* GraphQL */ `
-  mutation DeleteFilterGroupFilter(
-    $input: DeleteFilterGroupFilterInput!
-    $condition: ModelFilterGroupFilterConditionInput
-  ) {
-    deleteFilterGroupFilter(input: $input, condition: $condition) {
-      id
-      filterGroupID
-      filterID
-      zoiq
-      admin
-      show
-      required
-      filter {
-        id
-        name
-        description
-        options {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createFilter = /* GraphQL */ `
-  mutation CreateFilter(
-    $input: CreateFilterInput!
-    $condition: ModelFilterConditionInput
-  ) {
-    createFilter(input: $input, condition: $condition) {
-      id
-      name
-      description
-      options {
-        items {
-          id
-          filterID
-          text
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateFilter = /* GraphQL */ `
-  mutation UpdateFilter(
-    $input: UpdateFilterInput!
-    $condition: ModelFilterConditionInput
-  ) {
-    updateFilter(input: $input, condition: $condition) {
-      id
-      name
-      description
-      options {
-        items {
-          id
-          filterID
-          text
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteFilter = /* GraphQL */ `
-  mutation DeleteFilter(
-    $input: DeleteFilterInput!
-    $condition: ModelFilterConditionInput
-  ) {
-    deleteFilter(input: $input, condition: $condition) {
-      id
-      name
-      description
-      options {
-        items {
-          id
-          filterID
-          text
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createFilterOption = /* GraphQL */ `
-  mutation CreateFilterOption(
-    $input: CreateFilterOptionInput!
-    $condition: ModelFilterOptionConditionInput
-  ) {
-    createFilterOption(input: $input, condition: $condition) {
-      id
-      filterID
-      text
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateFilterOption = /* GraphQL */ `
-  mutation UpdateFilterOption(
-    $input: UpdateFilterOptionInput!
-    $condition: ModelFilterOptionConditionInput
-  ) {
-    updateFilterOption(input: $input, condition: $condition) {
-      id
-      filterID
-      text
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteFilterOption = /* GraphQL */ `
-  mutation DeleteFilterOption(
-    $input: DeleteFilterOptionInput!
-    $condition: ModelFilterOptionConditionInput
-  ) {
-    deleteFilterOption(input: $input, condition: $condition) {
-      id
-      filterID
-      text
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createRoomMsgs = /* GraphQL */ `
-  mutation CreateRoomMsgs(
-    $input: CreateRoomMsgsInput!
-    $condition: ModelRoomMsgsConditionInput
-  ) {
-    createRoomMsgs(input: $input, condition: $condition) {
-      id
-      roomID
-      senderAuthID
-      senderEmail
-      body
-      createdAt
-      sender {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      room {
-        id
-        institutionID
-        classID
-        teacherAuthID
-        teacherEmail
-        name
-        maxPersons
-        institution {
-          id
+          images
           name
           type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
+          bio
           createdAt
           updatedAt
         }
-        teacher {
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        coverImage
+        createdAt
+        updatedAt
+      }
+      complete
+      roster
+      viewing
+      displayData {
+        breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
+        warmUpData {
+          story
+          title
+        }
+        corelessonData {
+          selectGroup
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+      }
+      lessonPlan {
+        id
+        disabled
+        open
+        active
+        stage
+        type
+        displayMode
+      }
+      startDate
+      endDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateSyllabusLesson = /* GraphQL */ `
+  mutation UpdateSyllabusLesson(
+    $input: UpdateSyllabusLessonInput!
+    $condition: ModelSyllabusLessonConditionInput
+  ) {
+    updateSyllabusLesson(input: $input, condition: $condition) {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      status
+      lesson {
+        id
+        title
+        type
+        label
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        coverImage
+        createdAt
+        updatedAt
+      }
+      complete
+      roster
+      viewing
+      displayData {
+        breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
+        warmUpData {
+          story
+          title
+        }
+        corelessonData {
+          selectGroup
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+      }
+      lessonPlan {
+        id
+        disabled
+        open
+        active
+        stage
+        type
+        displayMode
+      }
+      startDate
+      endDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteSyllabusLesson = /* GraphQL */ `
+  mutation DeleteSyllabusLesson(
+    $input: DeleteSyllabusLessonInput!
+    $condition: ModelSyllabusLessonConditionInput
+  ) {
+    deleteSyllabusLesson(input: $input, condition: $condition) {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      status
+      lesson {
+        id
+        title
+        type
+        label
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        coverImage
+        createdAt
+        updatedAt
+      }
+      complete
+      roster
+      viewing
+      displayData {
+        breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
+        warmUpData {
+          story
+          title
+        }
+        corelessonData {
+          selectGroup
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+      }
+      lessonPlan {
+        id
+        disabled
+        open
+        active
+        stage
+        type
+        displayMode
+      }
+      startDate
+      endDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createStudentData = /* GraphQL */ `
+  mutation CreateStudentData(
+    $input: CreateStudentDataInput!
+    $condition: ModelStudentDataConditionInput
+  ) {
+    createStudentData(input: $input, condition: $condition) {
+      id
+      lessonProgress
+      currentLocation
+      status
+      saveType
+      syllabusLessonID
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        createdAt
+        updatedAt
+      }
+      studentID
+      studentAuthID
+      student {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      warmupData {
+        story
+        title
+        additional {
+          name
+          input
+        }
+        truthGame {
+          id
+          label
+          isLie
+          text
+        }
+        poll {
+          id
+          question
+        }
+        adventureGame {
+          id
+          text
+        }
+      }
+      corelessonData {
+        selected {
+          anchor
+          color
+          focus
+          id
+        }
+        rawSelected {
+          color
+          selected
+        }
+        selectGroup
+      }
+      activityData {
+        editInput
+        editMode
+        lines {
+          example
+          id
+          menuOpen
+          text
+        }
+        title
+      }
+      doFirstData {
+        items {
+          id
+          studentDataID
+          questionDataID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      checkpointData {
+        items {
+          id
+          studentDataID
+          questionDataID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateStudentData = /* GraphQL */ `
+  mutation UpdateStudentData(
+    $input: UpdateStudentDataInput!
+    $condition: ModelStudentDataConditionInput
+  ) {
+    updateStudentData(input: $input, condition: $condition) {
+      id
+      lessonProgress
+      currentLocation
+      status
+      saveType
+      syllabusLessonID
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        createdAt
+        updatedAt
+      }
+      studentID
+      studentAuthID
+      student {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      warmupData {
+        story
+        title
+        additional {
+          name
+          input
+        }
+        truthGame {
+          id
+          label
+          isLie
+          text
+        }
+        poll {
+          id
+          question
+        }
+        adventureGame {
+          id
+          text
+        }
+      }
+      corelessonData {
+        selected {
+          anchor
+          color
+          focus
+          id
+        }
+        rawSelected {
+          color
+          selected
+        }
+        selectGroup
+      }
+      activityData {
+        editInput
+        editMode
+        lines {
+          example
+          id
+          menuOpen
+          text
+        }
+        title
+      }
+      doFirstData {
+        items {
+          id
+          studentDataID
+          questionDataID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      checkpointData {
+        items {
+          id
+          studentDataID
+          questionDataID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteStudentData = /* GraphQL */ `
+  mutation DeleteStudentData(
+    $input: DeleteStudentDataInput!
+    $condition: ModelStudentDataConditionInput
+  ) {
+    deleteStudentData(input: $input, condition: $condition) {
+      id
+      lessonProgress
+      currentLocation
+      status
+      saveType
+      syllabusLessonID
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        createdAt
+        updatedAt
+      }
+      studentID
+      studentAuthID
+      student {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      warmupData {
+        story
+        title
+        additional {
+          name
+          input
+        }
+        truthGame {
+          id
+          label
+          isLie
+          text
+        }
+        poll {
+          id
+          question
+        }
+        adventureGame {
+          id
+          text
+        }
+      }
+      corelessonData {
+        selected {
+          anchor
+          color
+          focus
+          id
+        }
+        rawSelected {
+          color
+          selected
+        }
+        selectGroup
+      }
+      activityData {
+        editInput
+        editMode
+        lines {
+          example
+          id
+          menuOpen
+          text
+        }
+        title
+      }
+      doFirstData {
+        items {
+          id
+          studentDataID
+          questionDataID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      checkpointData {
+        items {
+          id
+          studentDataID
+          questionDataID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createQuestionData = /* GraphQL */ `
+  mutation CreateQuestionData(
+    $input: CreateQuestionDataInput!
+    $condition: ModelQuestionDataConditionInput
+  ) {
+    createQuestionData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      componentType
+      scheduleID
+      lessonID
+      responseObject {
+        qid
+        response
+      }
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateQuestionData = /* GraphQL */ `
+  mutation UpdateQuestionData(
+    $input: UpdateQuestionDataInput!
+    $condition: ModelQuestionDataConditionInput
+  ) {
+    updateQuestionData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      componentType
+      scheduleID
+      lessonID
+      responseObject {
+        qid
+        response
+      }
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteQuestionData = /* GraphQL */ `
+  mutation DeleteQuestionData(
+    $input: DeleteQuestionDataInput!
+    $condition: ModelQuestionDataConditionInput
+  ) {
+    deleteQuestionData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      componentType
+      scheduleID
+      lessonID
+      responseObject {
+        qid
+        response
+      }
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createQuestionDataStudentData = /* GraphQL */ `
+  mutation CreateQuestionDataStudentData(
+    $input: CreateQuestionDataStudentDataInput!
+    $condition: ModelQuestionDataStudentDataConditionInput
+  ) {
+    createQuestionDataStudentData(input: $input, condition: $condition) {
+      id
+      studentDataID
+      studentData {
+        id
+        lessonProgress
+        currentLocation
+        status
+        saveType
+        syllabusLessonID
+        syllabusLesson {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        studentID
+        studentAuthID
+        student {
           id
           authId
           status
@@ -8665,101 +7513,34 @@ export const createRoomMsgs = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        class {
-          id
-          institutionID
-          type
-          name
-          createdAt
-          updatedAt
+        warmupData {
+          story
+          title
         }
-        curricula {
+        corelessonData {
+          selectGroup
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+        doFirstData {
           nextToken
         }
-        filters
-        location
-        startDate
-        startTime
-        length
-        repeat
-        notes
-        activeSyllabus
+        checkpointData {
+          nextToken
+        }
         createdAt
         updatedAt
       }
-      updatedAt
-    }
-  }
-`;
-export const updateRoomMsgs = /* GraphQL */ `
-  mutation UpdateRoomMsgs(
-    $input: UpdateRoomMsgsInput!
-    $condition: ModelRoomMsgsConditionInput
-  ) {
-    updateRoomMsgs(input: $input, condition: $condition) {
-      id
-      roomID
-      senderAuthID
-      senderEmail
-      body
-      createdAt
-      sender {
+      questionDataID
+      questionData {
         id
-        authId
-        status
+        syllabusLessonID
         email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      room {
-        id
-        institutionID
-        classID
-        teacherAuthID
-        teacherEmail
-        name
-        maxPersons
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        teacher {
+        authID
+        person {
           id
           authId
           status
@@ -8783,101 +7564,69 @@ export const updateRoomMsgs = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        class {
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+        }
+        syllabusLesson {
           id
-          institutionID
-          type
-          name
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
           createdAt
           updatedAt
         }
-        curricula {
-          nextToken
-        }
-        filters
-        location
-        startDate
-        startTime
-        length
-        repeat
-        notes
-        activeSyllabus
         createdAt
         updatedAt
       }
+      createdAt
       updatedAt
     }
   }
 `;
-export const deleteRoomMsgs = /* GraphQL */ `
-  mutation DeleteRoomMsgs(
-    $input: DeleteRoomMsgsInput!
-    $condition: ModelRoomMsgsConditionInput
+export const updateQuestionDataStudentData = /* GraphQL */ `
+  mutation UpdateQuestionDataStudentData(
+    $input: UpdateQuestionDataStudentDataInput!
+    $condition: ModelQuestionDataStudentDataConditionInput
   ) {
-    deleteRoomMsgs(input: $input, condition: $condition) {
+    updateQuestionDataStudentData(input: $input, condition: $condition) {
       id
-      roomID
-      senderAuthID
-      senderEmail
-      body
-      createdAt
-      sender {
+      studentDataID
+      studentData {
         id
-        authId
+        lessonProgress
+        currentLocation
         status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      room {
-        id
-        institutionID
-        classID
-        teacherAuthID
-        teacherEmail
-        name
-        maxPersons
-        institution {
+        saveType
+        syllabusLessonID
+        syllabusLesson {
           id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
           createdAt
           updatedAt
         }
-        teacher {
+        studentID
+        studentAuthID
+        student {
           id
           authId
           status
@@ -8901,69 +7650,546 @@ export const deleteRoomMsgs = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        class {
-          id
-          institutionID
-          type
-          name
-          createdAt
-          updatedAt
+        warmupData {
+          story
+          title
         }
-        curricula {
+        corelessonData {
+          selectGroup
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+        doFirstData {
           nextToken
         }
-        filters
-        location
-        startDate
-        startTime
-        length
-        repeat
-        notes
-        activeSyllabus
+        checkpointData {
+          nextToken
+        }
         createdAt
         updatedAt
       }
-      updatedAt
-    }
-  }
-`;
-export const createAppClients = /* GraphQL */ `
-  mutation CreateAppClients(
-    $input: CreateAppClientsInput!
-    $condition: ModelAppClientsConditionInput
-  ) {
-    createAppClients(input: $input, condition: $condition) {
-      id
-      key
-      name
+      questionDataID
+      questionData {
+        id
+        syllabusLessonID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+        }
+        syllabusLesson {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const updateAppClients = /* GraphQL */ `
-  mutation UpdateAppClients(
-    $input: UpdateAppClientsInput!
-    $condition: ModelAppClientsConditionInput
+export const deleteQuestionDataStudentData = /* GraphQL */ `
+  mutation DeleteQuestionDataStudentData(
+    $input: DeleteQuestionDataStudentDataInput!
+    $condition: ModelQuestionDataStudentDataConditionInput
   ) {
-    updateAppClients(input: $input, condition: $condition) {
+    deleteQuestionDataStudentData(input: $input, condition: $condition) {
       id
-      key
-      name
+      studentDataID
+      studentData {
+        id
+        lessonProgress
+        currentLocation
+        status
+        saveType
+        syllabusLessonID
+        syllabusLesson {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        studentID
+        studentAuthID
+        student {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        warmupData {
+          story
+          title
+        }
+        corelessonData {
+          selectGroup
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+        doFirstData {
+          nextToken
+        }
+        checkpointData {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      questionDataID
+      questionData {
+        id
+        syllabusLessonID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+        }
+        syllabusLesson {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteAppClients = /* GraphQL */ `
-  mutation DeleteAppClients(
-    $input: DeleteAppClientsInput!
-    $condition: ModelAppClientsConditionInput
+export const createFeedback = /* GraphQL */ `
+  mutation CreateFeedback(
+    $input: CreateFeedbackInput!
+    $condition: ModelFeedbackConditionInput
   ) {
-    deleteAppClients(input: $input, condition: $condition) {
+    createFeedback(input: $input, condition: $condition) {
       id
-      key
+      syllabusLessonID
+      liked
+      comment
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateFeedback = /* GraphQL */ `
+  mutation UpdateFeedback(
+    $input: UpdateFeedbackInput!
+    $condition: ModelFeedbackConditionInput
+  ) {
+    updateFeedback(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      liked
+      comment
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteFeedback = /* GraphQL */ `
+  mutation DeleteFeedback(
+    $input: DeleteFeedbackInput!
+    $condition: ModelFeedbackConditionInput
+  ) {
+    deleteFeedback(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      liked
+      comment
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createThemeTemplate = /* GraphQL */ `
+  mutation CreateThemeTemplate(
+    $input: CreateThemeTemplateInput!
+    $condition: ModelThemeTemplateConditionInput
+  ) {
+    createThemeTemplate(input: $input, condition: $condition) {
+      id
+      type
       name
+      summary
+      summaryLabel
+      quote {
+        id
+        source
+        text
+      }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
+      images
+      additionalContent {
+        video
+        links {
+          id
+          type
+          text
+          link
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateThemeTemplate = /* GraphQL */ `
+  mutation UpdateThemeTemplate(
+    $input: UpdateThemeTemplateInput!
+    $condition: ModelThemeTemplateConditionInput
+  ) {
+    updateThemeTemplate(input: $input, condition: $condition) {
+      id
+      type
+      name
+      summary
+      summaryLabel
+      quote {
+        id
+        source
+        text
+      }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
+      images
+      additionalContent {
+        video
+        links {
+          id
+          type
+          text
+          link
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteThemeTemplate = /* GraphQL */ `
+  mutation DeleteThemeTemplate(
+    $input: DeleteThemeTemplateInput!
+    $condition: ModelThemeTemplateConditionInput
+  ) {
+    deleteThemeTemplate(input: $input, condition: $condition) {
+      id
+      type
+      name
+      summary
+      summaryLabel
+      quote {
+        id
+        source
+        text
+      }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
+      images
+      additionalContent {
+        video
+        links {
+          id
+          type
+          text
+          link
+        }
+      }
       createdAt
       updatedAt
     }

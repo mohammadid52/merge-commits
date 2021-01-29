@@ -2,6 +2,109 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getPerson = /* GraphQL */ `
+  query GetPerson($email: String!, $authId: String!) {
+    getPerson(email: $email, authId: $authId) {
+      id
+      authId
+      status
+      email
+      role
+      type
+      firstName
+      preferredName
+      lastName
+      externalId
+      grade
+      onBoardSurvey
+      offBoardSurvey
+      phone
+      birthdate
+      image
+      language
+      filters
+      lastLoggedIn
+      lastLoggedOut
+      classes {
+        items {
+          id
+          classID
+          studentID
+          studentEmail
+          studentAuthID
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      wordbank {
+        items {
+          id
+          wordID
+          studentID
+          studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPersons = /* GraphQL */ `
+  query ListPersons(
+    $email: String
+    $authId: ModelStringKeyConditionInput
+    $filter: ModelPersonFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPersons(
+      email: $email
+      authId: $authId
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getInstitution = /* GraphQL */ `
   query GetInstitution($id: ID!) {
     getInstitution(id: $id) {
@@ -169,21 +272,21 @@ export const getStaff = /* GraphQL */ `
         lastName
         externalId
         grade
-        wordbank {
-          nextToken
-        }
         onBoardSurvey
         offBoardSurvey
         phone
         birthdate
         image
         language
-        classes {
-          nextToken
-        }
         filters
         lastLoggedIn
         lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -250,109 +353,6 @@ export const listStaffs = /* GraphQL */ `
     }
   }
 `;
-export const getPerson = /* GraphQL */ `
-  query GetPerson($email: String!, $authId: String!) {
-    getPerson(email: $email, authId: $authId) {
-      id
-      authId
-      status
-      email
-      role
-      type
-      firstName
-      preferredName
-      lastName
-      externalId
-      grade
-      wordbank {
-        items {
-          id
-          wordID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      onBoardSurvey
-      offBoardSurvey
-      phone
-      birthdate
-      image
-      language
-      classes {
-        items {
-          id
-          classID
-          studentID
-          studentEmail
-          studentAuthID
-          status
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      filters
-      lastLoggedIn
-      lastLoggedOut
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listPersons = /* GraphQL */ `
-  query ListPersons(
-    $email: String
-    $authId: ModelStringKeyConditionInput
-    $filter: ModelPersonFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listPersons(
-      email: $email
-      authId: $authId
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getRoom = /* GraphQL */ `
   query GetRoom($id: ID!) {
     getRoom(id: $id) {
@@ -408,21 +408,21 @@ export const getRoom = /* GraphQL */ `
         lastName
         externalId
         grade
-        wordbank {
-          nextToken
-        }
         onBoardSurvey
         offBoardSurvey
         phone
         birthdate
         image
         language
-        classes {
-          nextToken
-        }
         filters
         lastLoggedIn
         lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -740,21 +740,21 @@ export const getClassStudent = /* GraphQL */ `
         lastName
         externalId
         grade
-        wordbank {
-          nextToken
-        }
         onBoardSurvey
         offBoardSurvey
         phone
         birthdate
         image
         language
-        classes {
-          nextToken
-        }
         filters
         lastLoggedIn
         lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -859,6 +859,7 @@ export const getCurriculum = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      designers
       syllabi {
         items {
           id
@@ -878,7 +879,6 @@ export const getCurriculum = /* GraphQL */ `
         }
         nextToken
       }
-      designers
       createdAt
       updatedAt
     }
@@ -925,10 +925,10 @@ export const listCurriculums = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        designers
         syllabi {
           nextToken
         }
-        designers
         createdAt
         updatedAt
       }
@@ -1003,10 +1003,10 @@ export const getTopic = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        designers
         syllabi {
           nextToken
         }
-        designers
         createdAt
         updatedAt
       }
@@ -1231,10 +1231,10 @@ export const getRoomCurriculum = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        designers
         syllabi {
           nextToken
         }
-        designers
         createdAt
         updatedAt
       }
@@ -1265,618 +1265,6 @@ export const listRoomCurriculums = /* GraphQL */ `
           designers
           createdAt
           updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getSyllabus = /* GraphQL */ `
-  query GetSyllabus($id: ID!) {
-    getSyllabus(id: $id) {
-      id
-      name
-      type
-      description
-      methodology
-      policies
-      pupose
-      objectives
-      curriculumID
-      languages
-      lessons {
-        items {
-          id
-          syllabusID
-          lessonID
-          unit
-          sequence
-          status
-          complete
-          roster
-          viewing
-          startDate
-          endDate
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      designers
-      status
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listSyllabuss = /* GraphQL */ `
-  query ListSyllabuss(
-    $id: ID
-    $filter: ModelSyllabusFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listSyllabuss(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        name
-        type
-        description
-        methodology
-        policies
-        pupose
-        objectives
-        curriculumID
-        languages
-        lessons {
-          nextToken
-        }
-        designers
-        status
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getSyllabusLesson = /* GraphQL */ `
-  query GetSyllabusLesson($id: ID!) {
-    getSyllabusLesson(id: $id) {
-      id
-      syllabusID
-      lessonID
-      unit
-      sequence
-      status
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        createdAt
-        updatedAt
-      }
-      complete
-      roster
-      viewing
-      displayData {
-        breakdownComponent
-        studentInfo {
-          id
-          firstName
-          preferredName
-          lastName
-        }
-        warmUpData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
-      }
-      lessonPlan {
-        id
-        disabled
-        open
-        active
-        stage
-        type
-        displayMode
-      }
-      startDate
-      endDate
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listSyllabusLessons = /* GraphQL */ `
-  query ListSyllabusLessons(
-    $filter: ModelSyllabusLessonFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        syllabusID
-        lessonID
-        unit
-        sequence
-        status
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          createdAt
-          updatedAt
-        }
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        startDate
-        endDate
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getCourse = /* GraphQL */ `
-  query GetCourse($id: ID!) {
-    getCourse(id: $id) {
-      id
-      name
-      type
-      classrooms {
-        items {
-          id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      startDate
-      duration
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listCourses = /* GraphQL */ `
-  query ListCourses(
-    $filter: ModelCourseFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listCourses(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        type
-        classrooms {
-          nextToken
-        }
-        startDate
-        duration
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getStudentData = /* GraphQL */ `
-  query GetStudentData($classroomID: ID!, $studentID: String!) {
-    getStudentData(classroomID: $classroomID, studentID: $studentID) {
-      id
-      lessonProgress
-      currentLocation
-      status
-      saveType
-      classroomID
-      classroom {
-        id
-        open
-        openedAt
-        closedAt
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        expectedStartDate
-        expectedEndDate
-        SELStructure
-        courseID
-        course {
-          id
-          name
-          type
-          startDate
-          duration
-          createdAt
-          updatedAt
-        }
-        lessonID
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          createdAt
-          updatedAt
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        data {
-          nextToken
-        }
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      studentID
-      studentAuthID
-      student {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      warmupData {
-        story
-        title
-        additional {
-          name
-          input
-        }
-        truthGame {
-          id
-          label
-          isLie
-          text
-        }
-        poll {
-          id
-          question
-        }
-        adventureGame {
-          id
-          text
-        }
-      }
-      corelessonData {
-        selected {
-          anchor
-          color
-          focus
-          id
-        }
-        rawSelected {
-          color
-          selected
-        }
-        selectGroup
-      }
-      activityData {
-        editInput
-        editMode
-        lines {
-          example
-          id
-          menuOpen
-          text
-        }
-        title
-      }
-      doFirstData {
-        items {
-          id
-          studentDataID
-          questionDataID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      checkpointData {
-        items {
-          id
-          studentDataID
-          questionDataID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listStudentDatas = /* GraphQL */ `
-  query ListStudentDatas(
-    $classroomID: ID
-    $studentID: ModelStringKeyConditionInput
-    $filter: ModelStudentDataFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listStudentDatas(
-      classroomID: $classroomID
-      studentID: $studentID
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        lessonProgress
-        currentLocation
-        status
-        saveType
-        classroomID
-        classroom {
-          id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        studentID
-        studentAuthID
-        student {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        warmupData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
-        doFirstData {
-          nextToken
-        }
-        checkpointData {
-          nextToken
         }
         createdAt
         updatedAt
@@ -1940,386 +1328,6 @@ export const listArtists = /* GraphQL */ `
     }
   }
 `;
-export const getClassroom = /* GraphQL */ `
-  query GetClassroom($id: ID!) {
-    getClassroom(id: $id) {
-      id
-      open
-      openedAt
-      closedAt
-      complete
-      roster
-      viewing
-      displayData {
-        breakdownComponent
-        studentInfo {
-          id
-          firstName
-          preferredName
-          lastName
-        }
-        warmUpData {
-          story
-          title
-        }
-        corelessonData {
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          title
-        }
-      }
-      expectedStartDate
-      expectedEndDate
-      SELStructure
-      courseID
-      course {
-        id
-        name
-        type
-        classrooms {
-          nextToken
-        }
-        startDate
-        duration
-        createdAt
-        updatedAt
-      }
-      lessonID
-      lesson {
-        id
-        title
-        type
-        label
-        instructions
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        createdAt
-        updatedAt
-      }
-      lessonPlan {
-        id
-        disabled
-        open
-        active
-        stage
-        type
-        displayMode
-      }
-      data {
-        items {
-          id
-          lessonProgress
-          currentLocation
-          status
-          saveType
-          classroomID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      feedback {
-        items {
-          id
-          classroomID
-          liked
-          comment
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listClassrooms = /* GraphQL */ `
-  query ListClassrooms(
-    $filter: ModelClassroomFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listClassrooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        open
-        openedAt
-        closedAt
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        expectedStartDate
-        expectedEndDate
-        SELStructure
-        courseID
-        course {
-          id
-          name
-          type
-          startDate
-          duration
-          createdAt
-          updatedAt
-        }
-        lessonID
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          createdAt
-          updatedAt
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        data {
-          nextToken
-        }
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getFeedback = /* GraphQL */ `
-  query GetFeedback($id: ID!) {
-    getFeedback(id: $id) {
-      id
-      classroomID
-      liked
-      comment
-      classroom {
-        id
-        open
-        openedAt
-        closedAt
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        expectedStartDate
-        expectedEndDate
-        SELStructure
-        courseID
-        course {
-          id
-          name
-          type
-          startDate
-          duration
-          createdAt
-          updatedAt
-        }
-        lessonID
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          createdAt
-          updatedAt
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        data {
-          nextToken
-        }
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listFeedbacks = /* GraphQL */ `
-  query ListFeedbacks(
-    $filter: ModelFeedbackFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listFeedbacks(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        classroomID
-        liked
-        comment
-        classroom {
-          id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getSelStructure = /* GraphQL */ `
   query GetSelStructure($id: ID!) {
     getSELStructure(id: $id) {
@@ -2342,387 +1350,6 @@ export const listSelStructures = /* GraphQL */ `
         id
         name
         description
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getThemeTemplate = /* GraphQL */ `
-  query GetThemeTemplate($id: ID!) {
-    getThemeTemplate(id: $id) {
-      id
-      type
-      name
-      summary
-      summaryLabel
-      quote {
-        id
-        source
-        text
-      }
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      connection
-      images
-      additionalContent {
-        video
-        links {
-          id
-          type
-          text
-          link
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listThemeTemplates = /* GraphQL */ `
-  query ListThemeTemplates(
-    $filter: ModelThemeTemplateFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listThemeTemplates(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        type
-        name
-        summary
-        summaryLabel
-        quote {
-          id
-          source
-          text
-        }
-        keywords {
-          nextToken
-        }
-        connection
-        images
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getLesson = /* GraphQL */ `
-  query GetLesson($id: ID!) {
-    getLesson(id: $id) {
-      id
-      title
-      type
-      label
-      instructions
-      theme {
-        type
-        name
-        summary
-        summaryLabel
-        quote {
-          id
-          source
-          text
-        }
-        connection
-        images
-        additionalContent {
-          video
-        }
-      }
-      grades
-      artistID
-      artist {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
-      language
-      SELStructure
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      connection
-      summary
-      purpose
-      designers
-      objectives
-      checkpoints {
-        items {
-          id
-          lessonID
-          checkpointID
-          position
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      doFirstID
-      doFirst {
-        id
-        type
-        required
-        questions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      warmUpId
-      warmUp {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        inputs {
-          title
-          example
-          titleExample
-          textExample
-          listInputNumber
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      coreLessonId
-      coreLesson {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        content {
-          video
-          link
-          title
-          artist
-          text
-        }
-        tools {
-          id
-          name
-          color
-          icon
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      activityId
-      activity {
-        id
-        title
-        label
-        stage
-        type
-        language
-        SELTypes
-        instructions {
-          video
-          link
-          text
-        }
-        lineNumber
-        writingPrompts {
-          id
-          name
-          prompt
-          example
-        }
-        breakdown {
-          included
-          reflectionQuestions
-        }
-        createdAt
-        updatedAt
-      }
-      assessmentID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      filters
-      coverImage
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listLessons = /* GraphQL */ `
-  query ListLessons(
-    $id: ID
-    $filter: ModelLessonFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listLessons(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        title
-        type
-        label
-        instructions
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
-        designers
-        objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
         createdAt
         updatedAt
       }
@@ -3286,189 +1913,6 @@ export const listQuestionTypes = /* GraphQL */ `
     }
   }
 `;
-export const getQuestionData = /* GraphQL */ `
-  query GetQuestionData($id: ID!) {
-    getQuestionData(id: $id) {
-      id
-      classroomID
-      email
-      authID
-      classroom {
-        id
-        open
-        openedAt
-        closedAt
-        complete
-        roster
-        viewing
-        displayData {
-          breakdownComponent
-        }
-        expectedStartDate
-        expectedEndDate
-        SELStructure
-        courseID
-        course {
-          id
-          name
-          type
-          startDate
-          duration
-          createdAt
-          updatedAt
-        }
-        lessonID
-        lesson {
-          id
-          title
-          type
-          label
-          instructions
-          grades
-          artistID
-          language
-          SELStructure
-          connection
-          summary
-          purpose
-          designers
-          objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          createdAt
-          updatedAt
-        }
-        lessonPlan {
-          id
-          disabled
-          open
-          active
-          stage
-          type
-          displayMode
-        }
-        data {
-          nextToken
-        }
-        feedback {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      person {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        wordbank {
-          nextToken
-        }
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        classes {
-          nextToken
-        }
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        createdAt
-        updatedAt
-      }
-      componentType
-      scheduleID
-      lessonID
-      responseObject {
-        qid
-        response
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listQuestionDatas = /* GraphQL */ `
-  query ListQuestionDatas(
-    $filter: ModelQuestionDataFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listQuestionDatas(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        classroomID
-        email
-        authID
-        classroom {
-          id
-          open
-          openedAt
-          closedAt
-          complete
-          roster
-          viewing
-          expectedStartDate
-          expectedEndDate
-          SELStructure
-          courseID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        person {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        componentType
-        scheduleID
-        lessonID
-        responseObject {
-          qid
-          response
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getWord = /* GraphQL */ `
   query GetWord($id: ID!) {
     getWord(id: $id) {
@@ -3702,21 +2146,21 @@ export const getRoomMsgs = /* GraphQL */ `
         lastName
         externalId
         grade
-        wordbank {
-          nextToken
-        }
         onBoardSurvey
         offBoardSurvey
         phone
         birthdate
         image
         language
-        classes {
-          nextToken
-        }
         filters
         lastLoggedIn
         lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3896,6 +2340,1224 @@ export const listAppClientss = /* GraphQL */ `
     }
   }
 `;
+export const getCourse = /* GraphQL */ `
+  query GetCourse($id: ID!) {
+    getCourse(id: $id) {
+      id
+      name
+      type
+      startDate
+      duration
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCourses = /* GraphQL */ `
+  query ListCourses(
+    $filter: ModelCourseFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCourses(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        type
+        startDate
+        duration
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getLesson = /* GraphQL */ `
+  query GetLesson($id: ID!) {
+    getLesson(id: $id) {
+      id
+      title
+      type
+      label
+      instructions
+      theme {
+        type
+        name
+        summary
+        summaryLabel
+        quote {
+          id
+          source
+          text
+        }
+        connection
+        images
+        additionalContent {
+          video
+        }
+      }
+      grades
+      artistID
+      artist {
+        id
+        images
+        name
+        type
+        bio
+        quotes {
+          id
+          source
+          text
+        }
+        additionalContent {
+          video
+        }
+        createdAt
+        updatedAt
+      }
+      language
+      SELStructure
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
+      summary
+      purpose
+      designers
+      objectives
+      checkpoints {
+        items {
+          id
+          lessonID
+          checkpointID
+          position
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      doFirstID
+      doFirst {
+        id
+        type
+        required
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      warmUpId
+      warmUp {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        inputs {
+          title
+          example
+          titleExample
+          textExample
+          listInputNumber
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      coreLessonId
+      coreLesson {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        content {
+          video
+          link
+          title
+          artist
+          text
+        }
+        tools {
+          id
+          name
+          color
+          icon
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      activityId
+      activity {
+        id
+        title
+        label
+        stage
+        type
+        language
+        SELTypes
+        instructions {
+          video
+          link
+          text
+        }
+        lineNumber
+        writingPrompts {
+          id
+          name
+          prompt
+          example
+        }
+        breakdown {
+          included
+          reflectionQuestions
+        }
+        createdAt
+        updatedAt
+      }
+      assessmentID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      filters
+      coverImage
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listLessons = /* GraphQL */ `
+  query ListLessons(
+    $id: ID
+    $filter: ModelLessonFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listLessons(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        title
+        type
+        label
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        coverImage
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getSyllabus = /* GraphQL */ `
+  query GetSyllabus($id: ID!) {
+    getSyllabus(id: $id) {
+      id
+      name
+      type
+      description
+      methodology
+      policies
+      pupose
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      designers
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listSyllabuss = /* GraphQL */ `
+  query ListSyllabuss(
+    $id: ID
+    $filter: ModelSyllabusFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listSyllabuss(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        type
+        description
+        methodology
+        policies
+        pupose
+        objectives
+        curriculumID
+        languages
+        lessons {
+          nextToken
+        }
+        designers
+        status
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getSyllabusLesson = /* GraphQL */ `
+  query GetSyllabusLesson($id: ID!) {
+    getSyllabusLesson(id: $id) {
+      id
+      syllabusID
+      lessonID
+      unit
+      sequence
+      status
+      lesson {
+        id
+        title
+        type
+        label
+        instructions
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        coverImage
+        createdAt
+        updatedAt
+      }
+      complete
+      roster
+      viewing
+      displayData {
+        breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
+        warmUpData {
+          story
+          title
+        }
+        corelessonData {
+          selectGroup
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+      }
+      lessonPlan {
+        id
+        disabled
+        open
+        active
+        stage
+        type
+        displayMode
+      }
+      startDate
+      endDate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listSyllabusLessons = /* GraphQL */ `
+  query ListSyllabusLessons(
+    $filter: ModelSyllabusLessonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getStudentData = /* GraphQL */ `
+  query GetStudentData($syllabusLessonID: ID!, $studentID: String!) {
+    getStudentData(syllabusLessonID: $syllabusLessonID, studentID: $studentID) {
+      id
+      lessonProgress
+      currentLocation
+      status
+      saveType
+      syllabusLessonID
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        createdAt
+        updatedAt
+      }
+      studentID
+      studentAuthID
+      student {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      warmupData {
+        story
+        title
+        additional {
+          name
+          input
+        }
+        truthGame {
+          id
+          label
+          isLie
+          text
+        }
+        poll {
+          id
+          question
+        }
+        adventureGame {
+          id
+          text
+        }
+      }
+      corelessonData {
+        selected {
+          anchor
+          color
+          focus
+          id
+        }
+        rawSelected {
+          color
+          selected
+        }
+        selectGroup
+      }
+      activityData {
+        editInput
+        editMode
+        lines {
+          example
+          id
+          menuOpen
+          text
+        }
+        title
+      }
+      doFirstData {
+        items {
+          id
+          studentDataID
+          questionDataID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      checkpointData {
+        items {
+          id
+          studentDataID
+          questionDataID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listStudentDatas = /* GraphQL */ `
+  query ListStudentDatas(
+    $syllabusLessonID: ID
+    $studentID: ModelStringKeyConditionInput
+    $filter: ModelStudentDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listStudentDatas(
+      syllabusLessonID: $syllabusLessonID
+      studentID: $studentID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        lessonProgress
+        currentLocation
+        status
+        saveType
+        syllabusLessonID
+        syllabusLesson {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        studentID
+        studentAuthID
+        student {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        warmupData {
+          story
+          title
+        }
+        corelessonData {
+          selectGroup
+        }
+        activityData {
+          editInput
+          editMode
+          title
+        }
+        doFirstData {
+          nextToken
+        }
+        checkpointData {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getQuestionData = /* GraphQL */ `
+  query GetQuestionData($id: ID!) {
+    getQuestionData(id: $id) {
+      id
+      syllabusLessonID
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      componentType
+      scheduleID
+      lessonID
+      responseObject {
+        qid
+        response
+      }
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listQuestionDatas = /* GraphQL */ `
+  query ListQuestionDatas(
+    $filter: ModelQuestionDataFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listQuestionDatas(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        syllabusLessonID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+        }
+        syllabusLesson {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getFeedback = /* GraphQL */ `
+  query GetFeedback($id: ID!) {
+    getFeedback(id: $id) {
+      id
+      syllabusLessonID
+      liked
+      comment
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listFeedbacks = /* GraphQL */ `
+  query ListFeedbacks(
+    $filter: ModelFeedbackFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFeedbacks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        syllabusLessonID
+        liked
+        comment
+        syllabusLesson {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getThemeTemplate = /* GraphQL */ `
+  query GetThemeTemplate($id: ID!) {
+    getThemeTemplate(id: $id) {
+      id
+      type
+      name
+      summary
+      summaryLabel
+      quote {
+        id
+        source
+        text
+      }
+      keywords {
+        items {
+          id
+          wordID
+          lessonID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      connection
+      images
+      additionalContent {
+        video
+        links {
+          id
+          type
+          text
+          link
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listThemeTemplates = /* GraphQL */ `
+  query ListThemeTemplates(
+    $filter: ModelThemeTemplateFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listThemeTemplates(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        name
+        summary
+        summaryLabel
+        quote {
+          id
+          source
+          text
+        }
+        keywords {
+          nextToken
+        }
+        connection
+        images
+        additionalContent {
+          video
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID
@@ -3923,21 +3585,21 @@ export const userById = /* GraphQL */ `
         lastName
         externalId
         grade
-        wordbank {
-          nextToken
-        }
         onBoardSurvey
         offBoardSurvey
         phone
         birthdate
         image
         language
-        classes {
-          nextToken
-        }
         filters
         lastLoggedIn
         lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3972,21 +3634,21 @@ export const usersByRole = /* GraphQL */ `
         lastName
         externalId
         grade
-        wordbank {
-          nextToken
-        }
         onBoardSurvey
         offBoardSurvey
         phone
         birthdate
         image
         language
-        classes {
-          nextToken
-        }
         filters
         lastLoggedIn
         lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
         createdAt
         updatedAt
       }
