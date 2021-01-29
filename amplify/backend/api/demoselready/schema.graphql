@@ -327,13 +327,6 @@ type ActivityData {
   title: String
 }
 
-type Subscription {
-  onNewRoomMsg(roomID: ID!): RoomMsgs
-    @aws_subscribe(mutations: ["createRoomMsgs"])
-  onChangeStudentData(syllabusLessonID: ID!): StudentData
-    @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
-}
-
 type ComponentSummary {
   id: ID
   disabled: Boolean!
@@ -826,4 +819,12 @@ type Theme {
   connection: String
   images: [String!]!
   additionalContent: AdditionalContent
+}
+
+type Subscription {
+  onNewRoomMsg(roomID: ID!): RoomMsgs
+    @aws_subscribe(mutations: ["createRoomMsgs"])
+  onChangeStudentData(syllabusLessonID: ID!): StudentData
+    @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
+  onChangeSyllabusLesson(id: ID!): SyllabusLesson @aws_subscribe(mutations: ["updateSyllabusLesson"])
 }
