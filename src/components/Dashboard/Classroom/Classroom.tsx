@@ -157,18 +157,18 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   const getSurvey = async () => {
     try {
-      const surveyData: any = await API.graphql(
-        graphqlOperation(customQueries.getClassroom, { id: 'on-boarding-survey-1' })
-      );
-      await setSurvey(() => {
-        let surveyStatus: boolean = state.user.onBoardSurvey ? !state.user.onBoardSurvey : true;
-
-        return {
-          ...survey,
-          display: surveyStatus,
-          data: surveyData.data.getClassroom,
-        };
-      });
+      // const surveyData: any = await API.graphql(
+      //   graphqlOperation(customQueries.getClassroom, { id: 'on-boarding-survey-1' })
+      // );
+      // await setSurvey(() => {
+      //   let surveyStatus: boolean = state.user.onBoardSurvey ? !state.user.onBoardSurvey : true;
+      //
+      //   return {
+      //     ...survey,
+      //     display: surveyStatus,
+      //     data: surveyData.data.getClassroom,
+      //   };
+      // });
       setStatus('done');
     } catch (error) {
       console.error(error);
