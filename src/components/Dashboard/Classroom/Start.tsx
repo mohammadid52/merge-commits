@@ -74,18 +74,10 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   };
 
   const secondPart = () => {
-    if (isTeacher) {
-      if (type !== 'survey' && type !== 'assessment') {
-        return type.toUpperCase();
-      } else {
-        return '';
-      }
+    if (typeof type !== 'undefined') {
+      return type.toUpperCase();
     } else {
-      if (type === 'survey' || type === 'assessment') {
-        return type.toUpperCase();
-      } else {
-        return 'LESSON';
-      }
+      return '';
     }
   };
 
@@ -97,24 +89,29 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
 
   const classSwitch = () => {
     if (isTeacher) {
-      if (!open) {
-        if (type === 'survey' || type === 'assessment') {
-          return buttonClassSurvey;
-        } else {
+      if (type === 'survey' || type === 'assessment') {
+        if (!open) {
           return buttonClassLesson;
+        } else {
+          return buttonClassSurvey;
         }
       } else {
-        if (type === 'survey' || type === 'assessment') {
-          return buttonClassLesson;
-        } else {
-          return buttonClassSurvey;
-        }
-      }
-    } else {
-      if (open) {
         return buttonClassLesson;
+      }
+    }
+    if (!isTeacher) {
+      if (type === 'survey' || type === 'assessment') {
+        if (!open) {
+          return buttonClassInactive;
+        } else {
+          return buttonClassSurvey;
+        }
       } else {
-        return buttonClassInactive;
+        if (!open) {
+          return buttonClassInactive;
+        } else {
+          return buttonClassLesson;
+        }
       }
     }
   };

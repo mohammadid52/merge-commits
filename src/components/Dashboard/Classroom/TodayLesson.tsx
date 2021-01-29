@@ -19,15 +19,15 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
       ) : null}
 
       {!lessonLoading && lessons.length > 0
-        ? lessons.map((value: any, key: number) => {
+        ? lessons.map((lesson: any, key: number) => {
             return (
               <div id={`todayLesson_${key}_wrapper`} key={`todayLesson_${key}_wrapper`}>
                 <StandardLessonCard
                   isTeacher={isTeacher}
                   keyProps={`todayLesson_${key}`}
-                  lessonProps={value}
+                  lessonProps={lesson}
                   accessible={accessible}
-                  lessonType={value.type}
+                  lessonType={lesson.lesson.type}
                 />
               </div>
             );
