@@ -62,7 +62,7 @@ export const getClassroom = /* GraphQL */ `
             id
             question
             option {
-                id
+              id
             }
           }
         }
@@ -1248,6 +1248,8 @@ export const listLessonsTitles = /* GraphQL */ `
         id
         title
         type
+        language
+        designers
       }
       nextToken
     }
@@ -1273,7 +1275,7 @@ export const getTopicDetails = /* GraphQL */ `
 `;
 
 export const listRubrics = /* GraphQL */ `
-  query ListRubrics($filter: ModelRubricFilterInput $sortDirection: ModelSortDirection) {
+  query ListRubrics($filter: ModelRubricFilterInput, $sortDirection: ModelSortDirection) {
     listRubrics(filter: $filter, sortDirection: $sortDirection) {
       items {
         id

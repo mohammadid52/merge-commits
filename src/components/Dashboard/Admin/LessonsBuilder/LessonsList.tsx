@@ -53,6 +53,25 @@ const LessonsList = () => {
     { id: 2, name: 'Type', value: 'type' },
   ]
 
+  const getLanguageString = (language: string) => {
+    switch (language) {
+      case 'EN':
+        return 'English';
+      case 'ES':
+        return 'Spanish';
+    }
+  }
+
+  const getType = (type: string) => {
+    switch (type) {
+      case 'lesson':
+        return 'Lesson';
+      case 'survey':
+        return 'Survey';
+      case 'assessment':
+        return 'Assessment';
+    }
+  }
 
   const goNextPage = () => {
     const pageHigherLimit = totalPages - 1;
@@ -108,7 +127,6 @@ const LessonsList = () => {
         throw new Error('fail!');
       } else {
         const LessonsListData = fetchLessonsData.data?.listLessons?.items;
-        console.log("fetchLessonsData===>>", fetchLessonsData)
         const totalListPages = Math.floor(LessonsListData.length / pageCount)
         if (totalListPages * pageCount === LessonsListData.length) {
           setTotalPages(totalListPages);
@@ -263,9 +281,9 @@ const LessonsList = () => {
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Topics</span>
                   </div> */}
-                  {/* <div className="w-.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Language</span>
-                  </div> */}
+                  </div>
                   <div className="w-1/10 px-8 flex justify-center py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </div>
@@ -278,7 +296,8 @@ const LessonsList = () => {
                       index={currentPage * pageCount + i}
                       id={lessonsObject.id}
                       title={lessonsObject.title}
-                      type={lessonsObject.type}
+                      type={lessonsObject.type && getType(lessonsObject.type)}
+                      languages={lessonsObject?.language && lessonsObject?.language.map((item: string) => getLanguageString(item))}
                     />
                   ))
                   : (

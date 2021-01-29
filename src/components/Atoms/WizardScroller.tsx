@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react'
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 
 interface WizardScrollerProps {
-  stepsList: string[]
+  stepsList: { name: string, icon: React.ReactNode }[]
   activeStep: string
   setActiveStep: (step: string) => void
 }
@@ -11,7 +12,7 @@ const WizardScroller = (props: WizardScrollerProps) => {
     <div className="w-full py-6">
       <div className="flex flex-col">
 
-        {stepsList.length && stepsList.map((step, i) => (
+        {stepsList.length && stepsList.map((stepItem: any, i) => (
           <Fragment>
 
             <div className="relative mt-2">
@@ -25,13 +26,15 @@ const WizardScroller = (props: WizardScrollerProps) => {
                 </div>
               </div>) : null}
 
-              <div className="flex justify-start items-center mx-1 cursor-pointer" onClick={() => setActiveStep(step)}>
-                <div className={`w-10 h-10 mx-2 rounded-full text-lg text-white flex items-center ${activeStep === step ? 'bg-indigo-500 ' : 'bg-gray-400 '}`}>
-                  <span className={`text-center w-full ${activeStep === step ? 'text-white' : 'text-gray-800'}`}>
-                    {i + 1}
+              <div className="flex justify-start items-center mx-1 cursor-pointer" onClick={() => setActiveStep(stepItem.name)}>
+                <div className={`w-10 h-10 mx-2 rounded-full text-lg text-white flex items-center ${activeStep === stepItem.name ? 'bg-indigo-500 ' : 'bg-gray-400 '}`}>
+                  <span>
+                    <IconContext.Provider value={{ size: '1.5rem', color: '#ffffff' }}>
+                      {stepItem.icon}
+                    </IconContext.Provider>
                   </span>
                 </div>
-                <div className={`text-xs md:text-base mx-2 w-auto ${activeStep === step ? 'text-indigo-600 font-medium ' : ''}`}>{step}</div>
+                <div className={`text-xs md:text-base mx-2 w-auto ${activeStep === stepItem.name ? 'text-indigo-600 font-medium ' : ''}`}>{stepItem.name}</div>
               </div>
             </div>
 
