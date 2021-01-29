@@ -3,12 +3,11 @@ import { GlobalContext } from '../../contexts/GlobalContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { MdEmail } from 'react-icons/md';
 import { useHistory, NavLink } from 'react-router-dom';
-// import { Auth } from 'aws-amplify';
 import Auth from '@aws-amplify/auth';
-
+import { getAsset } from '../../assets';
 const Forgot = () => {
   const history = useHistory();
-  const { theme, state, dispatch } = useContext(GlobalContext);
+  const { theme, state, dispatch, clientKey } = useContext(GlobalContext);
   let [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
     show: false,
     type: '',
@@ -116,8 +115,8 @@ const Forgot = () => {
             </div>
             <div className='h-24 w-56'>
               <img
-                src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg'
-                alt='Iconoclast Artists'
+                src={getAsset(clientKey, 'login_page_logo')}
+                alt='Logo'
               />
             </div>
 
