@@ -237,7 +237,7 @@ export const reorder = (list: any, startIndex: number, endIndex: number) => {
 
 export const getClientKey = () => {
   const url = window.location.href;
-  if (url.indexOf('localhost') >= 0) return 'iconoclast'
+  if (url.indexOf('localhost') >= 0) return 'curate'
   if (url.indexOf('iconoclast') >= 0) return 'iconoclast'
   if (url.indexOf('curate') >= 0) return 'curate'
   else '' 

@@ -1,15 +1,13 @@
 import React, { useEffect, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { LessonContext } from '../../../contexts/LessonContext';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineInstagram, AiOutlineFacebook } from 'react-icons/ai';
-
-import BottomMenu from './BottomMenu';
+import { getAsset } from '../../../assets';
 
 const Branding: React.FC = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
+  const { clientKey } = useContext(GlobalContext);
   const history = useHistory();
   const match = useRouteMatch();
 
@@ -74,8 +72,8 @@ const Branding: React.FC = () => {
             <NavLink to='/dashboard'>
               <img
                 className='h-12 px-4'
-                src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-WHITE.svg'
-                alt='Iconoclast Artists'
+                src={getAsset(clientKey, 'main_logo')}
+                alt='Logo'
               />
             </NavLink>
           </div>
