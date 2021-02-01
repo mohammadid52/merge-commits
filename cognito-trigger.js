@@ -234,7 +234,7 @@ exports.handler = (event, context, callback) => {
                 <div style="font-family: work sans, sans-serif; font-size: 16px; line-height: 22px; text-align: left; color: #666666;">
                 <p style="display: block; padding-left: 1rem">Hi!</p>
                 <p style="display: block; margin: 13px 0; padding-left: 1rem">
-                Welcome to Iconoclast Artists.  I am excited to invite you to our online community.  All you need to do to join is to click on the button below and it will take you to our registration page. 
+                    We received a notification you wanted to reset your password.  Please click the button below to be forwarded to our reset password page, where you can enter a new password and rejoin us online.
                 </p>
                 <p style="display: block; margin: 13px 0; padding-left: 1rem">
                 We look forward to seeing you online shortly. 
@@ -259,7 +259,7 @@ exports.handler = (event, context, callback) => {
                     margin: 1rem;
                     text-decoration: none;
                     font-weight: bold;"
-                    href="${url}" >Click Here To Join Us Online</a>
+                    href="${url}" >Click Here To reset your password</a>
                 </P>
                 <p style ="color:white">{####}</p>
                 </div>

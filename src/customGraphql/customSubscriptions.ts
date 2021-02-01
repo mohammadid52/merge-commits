@@ -241,3 +241,41 @@ export const onChangeStudentData = /* GraphQL */ `
     }
   }
 `;
+
+export const onDeleteRoomMsgs = /* GraphQL */ `
+  subscription OnDeleteRoomMsgs {
+    onDeleteRoomMsgs {
+      id
+    }
+  }
+`;
+
+export const onCreateRoomMsgs = /* GraphQL */ `
+  subscription OnCreateRoomMsgs {
+    onCreateRoomMsgs {
+      id
+      body
+      sender {
+        id
+        email
+        firstName
+        preferredName
+        lastName
+        image
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const onUpdateRoomMsgs = /* GraphQL */ `
+  subscription OnUpdateRoomMsgs {
+    onUpdateRoomMsgs {
+      id
+      body
+      createdAt
+      updatedAt
+    }
+  }
+`;

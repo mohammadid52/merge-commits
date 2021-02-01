@@ -3,7 +3,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoBusinessSharp } from 'react-icons/io5';
-import { AiOutlineUsergroupAdd, AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
+import { AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
 
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import * as queries from '../../../../graphql/queries';

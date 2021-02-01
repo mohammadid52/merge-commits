@@ -829,7 +829,24 @@ type Theme {
   additionalContent: AdditionalContent
 }
 
+type PersonLocation @model 
+@key(name: "bySyllabusLesson", fields: ["syllabusLessonID"], queryField: "personLocationBySyllabusLesson")
+{
+  id: ID!
+  personAuthID: String!
+  personEmail: String!
+  syllabusLessonID: ID!
+  roomID: ID!
+  currentLocation: String
+  lessonProgress: String
+  person: Person @connection(fields: ["personEmail", "personAuthID"])
+  syllabusLesson: SyllabusLesson @connection(fields: ["syllabusLessonID"])
+  room: Room @connection(fields: ["roomID"])
+}
+
 type Subscription {
+  onChangePersonLocation(syllabusLessonID: ID!): PersonLocation
+    @aws_subscribe(mutations: ["createPersonLocation", "updatePersonLocation", "deletePersonLocation"])
   onChangeStudentData(syllabusLessonID: ID!): StudentData
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
   onChangeSyllabusLesson(id: ID!): SyllabusLesson @aws_subscribe(mutations: ["updateSyllabusLesson"])

@@ -1693,6 +1693,16 @@ export const getAssessment = /* GraphQL */ `
       type
       openingMessage
       closingMessage
+      questions {
+        items {
+          id
+          assessmentID
+          questionID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       checkpoints {
         items {
           id
@@ -1721,8 +1731,98 @@ export const listAssessments = /* GraphQL */ `
         type
         openingMessage
         closingMessage
+        questions {
+          nextToken
+        }
         checkpoints {
           nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getAssessmentQuestions = /* GraphQL */ `
+  query GetAssessmentQuestions($id: ID!) {
+    getAssessmentQuestions(id: $id) {
+      id
+      assessmentID
+      questionID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        questions {
+          nextToken
+        }
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      question {
+        id
+        label
+        type
+        question
+        designers
+        language
+        sourceId
+        note
+        options {
+          text
+          label
+          icon
+          color
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAssessmentQuestionss = /* GraphQL */ `
+  query ListAssessmentQuestionss(
+    $filter: ModelAssessmentQuestionsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAssessmentQuestionss(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        assessmentID
+        questionID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        question {
+          id
+          label
+          type
+          question
+          designers
+          language
+          sourceId
+          note
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -1743,6 +1843,9 @@ export const getAssessmentCheckpoint = /* GraphQL */ `
         type
         openingMessage
         closingMessage
+        questions {
+          nextToken
+        }
         checkpoints {
           nextToken
         }
@@ -2164,78 +2267,6 @@ export const getRoomMsgs = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      room {
-        id
-        institutionID
-        classID
-        teacherAuthID
-        teacherEmail
-        name
-        maxPersons
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        teacher {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        class {
-          id
-          institutionID
-          type
-          name
-          createdAt
-          updatedAt
-        }
-        curricula {
-          nextToken
-        }
-        filters
-        location
-        startDate
-        startTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        createdAt
-        updatedAt
-      }
       updatedAt
     }
   }
@@ -2275,25 +2306,6 @@ export const listRoomMsgss = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        room {
-          id
-          institutionID
-          classID
-          teacherAuthID
-          teacherEmail
-          name
-          maxPersons
-          filters
-          location
-          startDate
-          startTime
-          length
-          repeat
-          notes
-          activeSyllabus
           createdAt
           updatedAt
         }
@@ -2552,6 +2564,9 @@ export const getLesson = /* GraphQL */ `
         type
         openingMessage
         closingMessage
+        questions {
+          nextToken
+        }
         checkpoints {
           nextToken
         }
@@ -3608,6 +3623,261 @@ export const listThemeTemplates = /* GraphQL */ `
     }
   }
 `;
+export const getPersonLocation = /* GraphQL */ `
+  query GetPersonLocation($id: ID!) {
+    getPersonLocation(id: $id) {
+      id
+      personAuthID
+      personEmail
+      syllabusLessonID
+      roomID
+      currentLocation
+      lessonProgress
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      syllabusLesson {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          createdAt
+          updatedAt
+        }
+        complete
+        roster
+        viewing
+        displayData {
+          breakdownComponent
+        }
+        lessonPlan {
+          id
+          disabled
+          open
+          active
+          stage
+          type
+          displayMode
+        }
+        startDate
+        endDate
+        data {
+          nextToken
+        }
+        feedback {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPersonLocations = /* GraphQL */ `
+  query ListPersonLocations(
+    $filter: ModelPersonLocationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPersonLocations(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        personAuthID
+        personEmail
+        syllabusLessonID
+        roomID
+        currentLocation
+        lessonProgress
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        syllabusLesson {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID
@@ -3780,6 +4050,74 @@ export const messagesByRoomId = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const personLocationBySyllabusLesson = /* GraphQL */ `
+  query PersonLocationBySyllabusLesson(
+    $syllabusLessonID: ID
+    $sortDirection: ModelSortDirection
+    $filter: ModelPersonLocationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    personLocationBySyllabusLesson(
+      syllabusLessonID: $syllabusLessonID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        personAuthID
+        personEmail
+        syllabusLessonID
+        roomID
+        currentLocation
+        lessonProgress
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        syllabusLesson {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
         room {
           id
           institutionID
@@ -3799,6 +4137,7 @@ export const messagesByRoomId = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        createdAt
         updatedAt
       }
       nextToken

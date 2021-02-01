@@ -1787,7 +1787,6 @@ export const messagesByRoomId = /* GraphQL */ `
       items {
         id
         body
-        createdAt
         sender {
           id
           email
@@ -1796,6 +1795,7 @@ export const messagesByRoomId = /* GraphQL */ `
           lastName
           image
         }
+        createdAt
         updatedAt
       }
       nextToken
