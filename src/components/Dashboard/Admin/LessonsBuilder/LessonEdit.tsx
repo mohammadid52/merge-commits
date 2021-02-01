@@ -1,13 +1,11 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import { IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp } from 'react-icons/io5';
 import { FaRegEye, FaQuestionCircle } from 'react-icons/fa';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import { RiQuestionAnswerLine } from 'react-icons/ri';
 
 import Buttons from '../../../Atoms/Buttons';
-import Selector from '../../../Atoms/Form/Selector';
-import MultipleSelector from '../../../Atoms/Form/MultipleSelector';
-import FormInput from '../../../Atoms/Form/FormInput';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageWrapper from '../../../Atoms/PageWrapper';
@@ -17,6 +15,7 @@ import GeneralInformation from './StepActionComponent/GeneralInformation';
 import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
 import QuestionBuilder from './StepActionComponent/QuestionBuilder';
 import PreviewForm from './StepActionComponent/PreviewForm';
+import PreviousQuestions from './StepActionComponent/PreviousQuestions';
 
 const LessonEdit = () => {
 
@@ -44,6 +43,7 @@ const LessonEdit = () => {
     { name: "General Information", icon: <IoCardSharp /> },
     { name: "Instructions", icon: <IoDocumentText /> },
     { name: "Question Builder", icon: <FaQuestionCircle /> },
+    { name: "Previously Used Questions", icon: <RiQuestionAnswerLine /> },
     { name: "Preview Details", icon: <FaRegEye /> }
   ];
   const lessonScrollerStep = [
@@ -74,6 +74,8 @@ const LessonEdit = () => {
         return <AssessmentInstuctions />;
       case 'Question Builder':
         return <QuestionBuilder />;
+      case 'Previously Used Questions':
+        return <PreviousQuestions />;
       case 'Preview Details':
         return <PreviewForm />;
       default:
