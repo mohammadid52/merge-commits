@@ -607,3 +607,50 @@ export const updateSyllabusLesson = /* GraphQL */ `
     }
   }
 `;
+
+export const createRoomMsgs = /* GraphQL */ `
+  mutation CreateRoomMsgs(
+    $input: CreateRoomMsgsInput!
+    $condition: ModelRoomMsgsConditionInput
+  ) {
+    createRoomMsgs(input: $input, condition: $condition) {
+      id
+      body
+      sender {
+        id
+        email
+        firstName
+        preferredName
+        lastName
+        image
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const updateRoomMsgs = /* GraphQL */ `
+  mutation UpdateRoomMsgs(
+    $input: UpdateRoomMsgsInput!
+    $condition: ModelRoomMsgsConditionInput
+  ) {
+    updateRoomMsgs(input: $input, condition: $condition) {
+      id
+      body
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const deleteRoomMsgs = /* GraphQL */ `
+  mutation DeleteRoomMsgs(
+    $input: DeleteRoomMsgsInput!
+    $condition: ModelRoomMsgsConditionInput
+  ) {
+    deleteRoomMsgs(input: $input, condition: $condition) {
+      id
+    }
+  }
+`;

@@ -642,7 +642,6 @@ type RoomMsgs
   body: String!
   createdAt: AWSDateTime
   sender: Person @connection(fields: ["senderEmail", "senderAuthID"])
-  room: Room @connection(fields: ["roomID"])
 }
 
 type AppClients
@@ -831,12 +830,6 @@ type Theme {
 }
 
 type Subscription {
-  onNewRoomMsg(roomID: ID!): RoomMsgs
-    @aws_subscribe(mutations: ["createRoomMsgs"])
-  onDeleteRoomMsg(roomID: ID!): RoomMsgs
-    @aws_subscribe(mutations: ["deleteRoomMsgs"])
-  onEditRoomMsg(roomID: ID!): RoomMsgs
-    @aws_subscribe(mutations: ["updateRoomMsgs"])
   onChangeStudentData(syllabusLessonID: ID!): StudentData
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
   onChangeSyllabusLesson(id: ID!): SyllabusLesson @aws_subscribe(mutations: ["updateSyllabusLesson"])

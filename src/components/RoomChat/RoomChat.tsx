@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customQueries from '../../customGraphql/customQueries';
-import * as mutations from '../../graphql/mutations';
-import * as subscriptions from '../../graphql/subscriptions';
+import * as customMutations from '../../customGraphql/customMutations';
+import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import { GlobalContext } from '../../contexts/GlobalContext';
 
 interface RoomChatProps {
@@ -33,16 +33,18 @@ const RoomChat = (props: RoomChatProps) => {
                         body: msg,
                         createdAt: (new Date()).toISOString()
                     }
-                    let msgItem: any = await API.graphql(graphqlOperation(mutations.createRoomMsgs, { input }));
-                    setMsgs([...msgs, { id: msgs.length + 1, body: msg }])
+                    let msgItem: any = await API.graphql(graphqlOperation(customMutations.createRoomMsgs, { input }));
+                    msgItem = msgItem?.data.createRoomMsgs
+                    setMsgs([...msgs, { id: msgItem.id, body: msg }])
                     setMsg('')
                 } else {
                     // edit msg
+                    console.log('isEditisEditisEdit', isEdit)
                     const input = {
                         id: isEdit,
                         body: msg
                       }
-                    let msgItem: any = await API.graphql(graphqlOperation(mutations.updateRoomMsgs, { 
+                    let msgItem: any = await API.graphql(graphqlOperation(customMutations.updateRoomMsgs, { 
                         input
                     }));
                     let messages = msgs.map(m => {
@@ -75,23 +77,23 @@ const RoomChat = (props: RoomChatProps) => {
 
     useEffect(() => {
         // @ts-ignore
-        const newMsgsubscription = API.graphql(graphqlOperation(subscriptions.onNewRoomMsg, { roomID: '06263081-3fb9-4b4b-be13-d1753297d3d3' })).subscribe({
+        const newMsgsubscription = API.graphql(graphqlOperation(customSubscriptions.onCreateRoomMsgs, { roomID: '06263081-3fb9-4b4b-be13-d1753297d3d3' })).subscribe({
             next: (event: any) => {
-                setMsgs([...msgs, event.value.data.onNewRoomMsg]);
+                setMsgs([...msgs, event.value.data.onCreateRoomMsgs]);
             }
         });
         // @ts-ignore
-        const deleteMsgsubscription = API.graphql(graphqlOperation(subscriptions.onDeleteRoomMsg, { roomID: '06263081-3fb9-4b4b-be13-d1753297d3d3' })).subscribe({
+        const deleteMsgsubscription = API.graphql(graphqlOperation(customSubscriptions.onDeleteRoomMsgs, { roomID: '06263081-3fb9-4b4b-be13-d1753297d3d3' })).subscribe({
             next: (event: any) => {
-                let msgId = event.value.data.onDeleteRoomMsg.id
+                let msgId = event.value.data.onDeleteRoomMsgs.id
                 let messages = msgs.filter(m => m.id !== msgId)
                 setMsgs([...messages])
             }
         });
         // @ts-ignore
-        const editMsgSubscription = API.graphql(graphqlOperation(subscriptions.onEditRoomMsg, { roomID: '06263081-3fb9-4b4b-be13-d1753297d3d3' })).subscribe({
+        const editMsgSubscription = API.graphql(graphqlOperation(customSubscriptions.onUpdateRoomMsgs, { roomID: '06263081-3fb9-4b4b-be13-d1753297d3d3' })).subscribe({
             next: (event: any) => {
-                let message = event.value.data.onEditRoomMsg
+                let message = event.value.data.onUpdateRoomMsgs
                 let messages = msgs.map(m => {
                     if (m.id === message.id) {
                         m.body = message.body
@@ -109,12 +111,13 @@ const RoomChat = (props: RoomChatProps) => {
     }, [msgs]);
 
     const editMsg = (message: any) => {
+        console.log('editMsg', message)
         setIsEdit(message.id)
         setMsg(message.body)
     }
 
     const deleteMsg = async (message: any) => {
-        let msgItem: any = await API.graphql(graphqlOperation(mutations.deleteRoomMsgs, { input: { id: message.id }}));
+        let msgItem: any = await API.graphql(graphqlOperation(customMutations.deleteRoomMsgs, { input: { id: message.id }}));
         let messages = msgs.filter(m => m.id !== message.id)
         setMsgs([...messages])
     }
