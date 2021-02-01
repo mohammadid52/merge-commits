@@ -1064,6 +1064,30 @@ export type DeleteAssessmentInput = {
   id?: string | null,
 };
 
+export type CreateAssessmentQuestionsInput = {
+  id?: string | null,
+  assessmentID: string,
+  questionID: string,
+};
+
+export type ModelAssessmentQuestionsConditionInput = {
+  assessmentID?: ModelIDInput | null,
+  questionID?: ModelIDInput | null,
+  and?: Array< ModelAssessmentQuestionsConditionInput | null > | null,
+  or?: Array< ModelAssessmentQuestionsConditionInput | null > | null,
+  not?: ModelAssessmentQuestionsConditionInput | null,
+};
+
+export type UpdateAssessmentQuestionsInput = {
+  id: string,
+  assessmentID?: string | null,
+  questionID?: string | null,
+};
+
+export type DeleteAssessmentQuestionsInput = {
+  id?: string | null,
+};
+
 export type CreateAssessmentCheckpointInput = {
   id?: string | null,
   assessmentID: string,
@@ -2204,6 +2228,15 @@ export type ModelAssessmentFilterInput = {
   and?: Array< ModelAssessmentFilterInput | null > | null,
   or?: Array< ModelAssessmentFilterInput | null > | null,
   not?: ModelAssessmentFilterInput | null,
+};
+
+export type ModelAssessmentQuestionsFilterInput = {
+  id?: ModelIDInput | null,
+  assessmentID?: ModelIDInput | null,
+  questionID?: ModelIDInput | null,
+  and?: Array< ModelAssessmentQuestionsFilterInput | null > | null,
+  or?: Array< ModelAssessmentQuestionsFilterInput | null > | null,
+  not?: ModelAssessmentQuestionsFilterInput | null,
 };
 
 export type ModelAssessmentCheckpointFilterInput = {
@@ -6387,6 +6420,18 @@ export type CreateAssessmentMutation = {
     type: string,
     openingMessage: Array< string | null > | null,
     closingMessage: Array< string | null > | null,
+    questions:  {
+      __typename: "ModelAssessmentQuestionsConnection",
+      items:  Array< {
+        __typename: "AssessmentQuestions",
+        id: string,
+        assessmentID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     checkpoints:  {
       __typename: "ModelAssessmentCheckpointConnection",
       items:  Array< {
@@ -6417,6 +6462,18 @@ export type UpdateAssessmentMutation = {
     type: string,
     openingMessage: Array< string | null > | null,
     closingMessage: Array< string | null > | null,
+    questions:  {
+      __typename: "ModelAssessmentQuestionsConnection",
+      items:  Array< {
+        __typename: "AssessmentQuestions",
+        id: string,
+        assessmentID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     checkpoints:  {
       __typename: "ModelAssessmentCheckpointConnection",
       items:  Array< {
@@ -6447,6 +6504,18 @@ export type DeleteAssessmentMutation = {
     type: string,
     openingMessage: Array< string | null > | null,
     closingMessage: Array< string | null > | null,
+    questions:  {
+      __typename: "ModelAssessmentQuestionsConnection",
+      items:  Array< {
+        __typename: "AssessmentQuestions",
+        id: string,
+        assessmentID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     checkpoints:  {
       __typename: "ModelAssessmentCheckpointConnection",
       items:  Array< {
@@ -6458,6 +6527,168 @@ export type DeleteAssessmentMutation = {
         updatedAt: string,
       } | null > | null,
       nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateAssessmentQuestionsMutationVariables = {
+  input: CreateAssessmentQuestionsInput,
+  condition?: ModelAssessmentQuestionsConditionInput | null,
+};
+
+export type CreateAssessmentQuestionsMutation = {
+  createAssessmentQuestions:  {
+    __typename: "AssessmentQuestions",
+    id: string,
+    assessmentID: string,
+    questionID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    question:  {
+      __typename: "Question",
+      id: string,
+      label: string,
+      type: string,
+      question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
+      options:  Array< {
+        __typename: "Option",
+        text: string,
+        label: string | null,
+        icon: string | null,
+        color: string | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateAssessmentQuestionsMutationVariables = {
+  input: UpdateAssessmentQuestionsInput,
+  condition?: ModelAssessmentQuestionsConditionInput | null,
+};
+
+export type UpdateAssessmentQuestionsMutation = {
+  updateAssessmentQuestions:  {
+    __typename: "AssessmentQuestions",
+    id: string,
+    assessmentID: string,
+    questionID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    question:  {
+      __typename: "Question",
+      id: string,
+      label: string,
+      type: string,
+      question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
+      options:  Array< {
+        __typename: "Option",
+        text: string,
+        label: string | null,
+        icon: string | null,
+        color: string | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteAssessmentQuestionsMutationVariables = {
+  input: DeleteAssessmentQuestionsInput,
+  condition?: ModelAssessmentQuestionsConditionInput | null,
+};
+
+export type DeleteAssessmentQuestionsMutation = {
+  deleteAssessmentQuestions:  {
+    __typename: "AssessmentQuestions",
+    id: string,
+    assessmentID: string,
+    questionID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    question:  {
+      __typename: "Question",
+      id: string,
+      label: string,
+      type: string,
+      question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
+      options:  Array< {
+        __typename: "Option",
+        text: string,
+        label: string | null,
+        icon: string | null,
+        color: string | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
@@ -6482,6 +6713,10 @@ export type CreateAssessmentCheckpointMutation = {
       type: string,
       openingMessage: Array< string | null > | null,
       closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
       checkpoints:  {
         __typename: "ModelAssessmentCheckpointConnection",
         nextToken: string | null,
@@ -6527,6 +6762,10 @@ export type UpdateAssessmentCheckpointMutation = {
       type: string,
       openingMessage: Array< string | null > | null,
       closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
       checkpoints:  {
         __typename: "ModelAssessmentCheckpointConnection",
         nextToken: string | null,
@@ -6572,6 +6811,10 @@ export type DeleteAssessmentCheckpointMutation = {
       type: string,
       openingMessage: Array< string | null > | null,
       closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
       checkpoints:  {
         __typename: "ModelAssessmentCheckpointConnection",
         nextToken: string | null,
@@ -8015,6 +8258,10 @@ export type CreateLessonMutation = {
       type: string,
       openingMessage: Array< string | null > | null,
       closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
       checkpoints:  {
         __typename: "ModelAssessmentCheckpointConnection",
         nextToken: string | null,
@@ -8239,6 +8486,10 @@ export type UpdateLessonMutation = {
       type: string,
       openingMessage: Array< string | null > | null,
       closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
       checkpoints:  {
         __typename: "ModelAssessmentCheckpointConnection",
         nextToken: string | null,
@@ -8463,6 +8714,10 @@ export type DeleteLessonMutation = {
       type: string,
       openingMessage: Array< string | null > | null,
       closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
       checkpoints:  {
         __typename: "ModelAssessmentCheckpointConnection",
         nextToken: string | null,
@@ -13739,6 +13994,18 @@ export type GetAssessmentQuery = {
     type: string,
     openingMessage: Array< string | null > | null,
     closingMessage: Array< string | null > | null,
+    questions:  {
+      __typename: "ModelAssessmentQuestionsConnection",
+      items:  Array< {
+        __typename: "AssessmentQuestions",
+        id: string,
+        assessmentID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     checkpoints:  {
       __typename: "ModelAssessmentCheckpointConnection",
       items:  Array< {
@@ -13772,9 +14039,110 @@ export type ListAssessmentsQuery = {
       type: string,
       openingMessage: Array< string | null > | null,
       closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
       checkpoints:  {
         __typename: "ModelAssessmentCheckpointConnection",
         nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetAssessmentQuestionsQueryVariables = {
+  id: string,
+};
+
+export type GetAssessmentQuestionsQuery = {
+  getAssessmentQuestions:  {
+    __typename: "AssessmentQuestions",
+    id: string,
+    assessmentID: string,
+    questionID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    question:  {
+      __typename: "Question",
+      id: string,
+      label: string,
+      type: string,
+      question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
+      options:  Array< {
+        __typename: "Option",
+        text: string,
+        label: string | null,
+        icon: string | null,
+        color: string | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListAssessmentQuestionssQueryVariables = {
+  filter?: ModelAssessmentQuestionsFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListAssessmentQuestionssQuery = {
+  listAssessmentQuestionss:  {
+    __typename: "ModelAssessmentQuestionsConnection",
+    items:  Array< {
+      __typename: "AssessmentQuestions",
+      id: string,
+      assessmentID: string,
+      questionID: string,
+      assessment:  {
+        __typename: "Assessment",
+        id: string,
+        title: string,
+        type: string,
+        openingMessage: Array< string | null > | null,
+        closingMessage: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      question:  {
+        __typename: "Question",
+        id: string,
+        label: string,
+        type: string,
+        question: string,
+        designers: Array< string | null > | null,
+        language: string | null,
+        sourceId: string | null,
+        note: string | null,
+        createdAt: string,
+        updatedAt: string,
       } | null,
       createdAt: string,
       updatedAt: string,
@@ -13800,6 +14168,10 @@ export type GetAssessmentCheckpointQuery = {
       type: string,
       openingMessage: Array< string | null > | null,
       closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
       checkpoints:  {
         __typename: "ModelAssessmentCheckpointConnection",
         nextToken: string | null,
@@ -14725,6 +15097,10 @@ export type GetLessonQuery = {
       type: string,
       openingMessage: Array< string | null > | null,
       closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
       checkpoints:  {
         __typename: "ModelAssessmentCheckpointConnection",
         nextToken: string | null,
@@ -16100,6 +16476,260 @@ export type OnNewRoomMsgSubscriptionVariables = {
 
 export type OnNewRoomMsgSubscription = {
   onNewRoomMsg:  {
+    __typename: "RoomMsgs",
+    id: string,
+    roomID: string,
+    senderAuthID: string,
+    senderEmail: string,
+    body: string,
+    createdAt: string | null,
+    sender:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    room:  {
+      __typename: "Room",
+      id: string,
+      institutionID: string,
+      classID: string,
+      teacherAuthID: string,
+      teacherEmail: string,
+      name: string,
+      maxPersons: number,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      teacher:  {
+        __typename: "Person",
+        id: string,
+        authId: string,
+        status: PersonStatus,
+        email: string,
+        role: Role,
+        type: string | null,
+        firstName: string,
+        preferredName: string | null,
+        lastName: string,
+        externalId: string | null,
+        grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
+        phone: string | null,
+        birthdate: string | null,
+        image: string | null,
+        language: Language,
+        filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      class:  {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type: string | null,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      curricula:  {
+        __typename: "ModelRoomCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      location: string | null,
+      startDate: string | null,
+      startTime: string | null,
+      length: number | null,
+      repeat: string | null,
+      notes: string | null,
+      activeSyllabus: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteRoomMsgSubscriptionVariables = {
+  roomID: string,
+};
+
+export type OnDeleteRoomMsgSubscription = {
+  onDeleteRoomMsg:  {
+    __typename: "RoomMsgs",
+    id: string,
+    roomID: string,
+    senderAuthID: string,
+    senderEmail: string,
+    body: string,
+    createdAt: string | null,
+    sender:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    room:  {
+      __typename: "Room",
+      id: string,
+      institutionID: string,
+      classID: string,
+      teacherAuthID: string,
+      teacherEmail: string,
+      name: string,
+      maxPersons: number,
+      institution:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district: string | null,
+        address: string,
+        addressLine2: string | null,
+        city: string,
+        state: string | null,
+        zip: string,
+        phone: string | null,
+        website: string | null,
+        image: string | null,
+        isServiceProvider: boolean | null,
+        filters: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      teacher:  {
+        __typename: "Person",
+        id: string,
+        authId: string,
+        status: PersonStatus,
+        email: string,
+        role: Role,
+        type: string | null,
+        firstName: string,
+        preferredName: string | null,
+        lastName: string,
+        externalId: string | null,
+        grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
+        phone: string | null,
+        birthdate: string | null,
+        image: string | null,
+        language: Language,
+        filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      class:  {
+        __typename: "Class",
+        id: string,
+        institutionID: string,
+        type: string | null,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      curricula:  {
+        __typename: "ModelRoomCurriculumConnection",
+        nextToken: string | null,
+      } | null,
+      filters: Array< string | null > | null,
+      location: string | null,
+      startDate: string | null,
+      startTime: string | null,
+      length: number | null,
+      repeat: string | null,
+      notes: string | null,
+      activeSyllabus: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnEditRoomMsgSubscriptionVariables = {
+  roomID: string,
+};
+
+export type OnEditRoomMsgSubscription = {
+  onEditRoomMsg:  {
     __typename: "RoomMsgs",
     id: string,
     roomID: string,
@@ -20214,6 +20844,18 @@ export type OnCreateAssessmentSubscription = {
     type: string,
     openingMessage: Array< string | null > | null,
     closingMessage: Array< string | null > | null,
+    questions:  {
+      __typename: "ModelAssessmentQuestionsConnection",
+      items:  Array< {
+        __typename: "AssessmentQuestions",
+        id: string,
+        assessmentID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     checkpoints:  {
       __typename: "ModelAssessmentCheckpointConnection",
       items:  Array< {
@@ -20239,6 +20881,18 @@ export type OnUpdateAssessmentSubscription = {
     type: string,
     openingMessage: Array< string | null > | null,
     closingMessage: Array< string | null > | null,
+    questions:  {
+      __typename: "ModelAssessmentQuestionsConnection",
+      items:  Array< {
+        __typename: "AssessmentQuestions",
+        id: string,
+        assessmentID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     checkpoints:  {
       __typename: "ModelAssessmentCheckpointConnection",
       items:  Array< {
@@ -20264,6 +20918,18 @@ export type OnDeleteAssessmentSubscription = {
     type: string,
     openingMessage: Array< string | null > | null,
     closingMessage: Array< string | null > | null,
+    questions:  {
+      __typename: "ModelAssessmentQuestionsConnection",
+      items:  Array< {
+        __typename: "AssessmentQuestions",
+        id: string,
+        assessmentID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     checkpoints:  {
       __typename: "ModelAssessmentCheckpointConnection",
       items:  Array< {
@@ -20275,6 +20941,153 @@ export type OnDeleteAssessmentSubscription = {
         updatedAt: string,
       } | null > | null,
       nextToken: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateAssessmentQuestionsSubscription = {
+  onCreateAssessmentQuestions:  {
+    __typename: "AssessmentQuestions",
+    id: string,
+    assessmentID: string,
+    questionID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    question:  {
+      __typename: "Question",
+      id: string,
+      label: string,
+      type: string,
+      question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
+      options:  Array< {
+        __typename: "Option",
+        text: string,
+        label: string | null,
+        icon: string | null,
+        color: string | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateAssessmentQuestionsSubscription = {
+  onUpdateAssessmentQuestions:  {
+    __typename: "AssessmentQuestions",
+    id: string,
+    assessmentID: string,
+    questionID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    question:  {
+      __typename: "Question",
+      id: string,
+      label: string,
+      type: string,
+      question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
+      options:  Array< {
+        __typename: "Option",
+        text: string,
+        label: string | null,
+        icon: string | null,
+        color: string | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteAssessmentQuestionsSubscription = {
+  onDeleteAssessmentQuestions:  {
+    __typename: "AssessmentQuestions",
+    id: string,
+    assessmentID: string,
+    questionID: string,
+    assessment:  {
+      __typename: "Assessment",
+      id: string,
+      title: string,
+      type: string,
+      openingMessage: Array< string | null > | null,
+      closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
+      checkpoints:  {
+        __typename: "ModelAssessmentCheckpointConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    question:  {
+      __typename: "Question",
+      id: string,
+      label: string,
+      type: string,
+      question: string,
+      designers: Array< string | null > | null,
+      language: string | null,
+      sourceId: string | null,
+      note: string | null,
+      options:  Array< {
+        __typename: "Option",
+        text: string,
+        label: string | null,
+        icon: string | null,
+        color: string | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
@@ -20294,6 +21107,10 @@ export type OnCreateAssessmentCheckpointSubscription = {
       type: string,
       openingMessage: Array< string | null > | null,
       closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
       checkpoints:  {
         __typename: "ModelAssessmentCheckpointConnection",
         nextToken: string | null,
@@ -20334,6 +21151,10 @@ export type OnUpdateAssessmentCheckpointSubscription = {
       type: string,
       openingMessage: Array< string | null > | null,
       closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
       checkpoints:  {
         __typename: "ModelAssessmentCheckpointConnection",
         nextToken: string | null,
@@ -20374,6 +21195,10 @@ export type OnDeleteAssessmentCheckpointSubscription = {
       type: string,
       openingMessage: Array< string | null > | null,
       closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
       checkpoints:  {
         __typename: "ModelAssessmentCheckpointConnection",
         nextToken: string | null,
@@ -21632,6 +22457,10 @@ export type OnCreateLessonSubscription = {
       type: string,
       openingMessage: Array< string | null > | null,
       closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
       checkpoints:  {
         __typename: "ModelAssessmentCheckpointConnection",
         nextToken: string | null,
@@ -21851,6 +22680,10 @@ export type OnUpdateLessonSubscription = {
       type: string,
       openingMessage: Array< string | null > | null,
       closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
       checkpoints:  {
         __typename: "ModelAssessmentCheckpointConnection",
         nextToken: string | null,
@@ -22070,6 +22903,10 @@ export type OnDeleteLessonSubscription = {
       type: string,
       openingMessage: Array< string | null > | null,
       closingMessage: Array< string | null > | null,
+      questions:  {
+        __typename: "ModelAssessmentQuestionsConnection",
+        nextToken: string | null,
+      } | null,
       checkpoints:  {
         __typename: "ModelAssessmentCheckpointConnection",
         nextToken: string | null,
