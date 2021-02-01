@@ -15,7 +15,7 @@ const LessonsListRow = (props: LessonsListRow) => {
   const history = useHistory();
 
   const handleLessonsEdit = (type: string) => {
-    if (type === 'lesson') {
+    if (type === 'Lesson') {
       history.push(`${match.url}/lesson/edit?lessonId=${id}`);
     } else {
       history.push(`${match.url}/lesson/edit?assessmentId=${id}`);
@@ -45,7 +45,7 @@ const LessonsListRow = (props: LessonsListRow) => {
         </span>
       </div>
 
-      <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+      <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">
           {languages?.length ? languages.map((language, index) => language + `${index === (languages.length - 1) ? '.' : ', '}`) : '--'}
         </span>

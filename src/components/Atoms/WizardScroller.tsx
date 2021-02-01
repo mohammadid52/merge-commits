@@ -13,7 +13,7 @@ const WizardScroller = (props: WizardScrollerProps) => {
       <div className="flex flex-col">
 
         {stepsList.length && stepsList.map((stepItem: any, i) => (
-          <Fragment>
+          <Fragment key={i}>
 
             <div className="relative mt-2">
 
