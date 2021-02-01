@@ -829,7 +829,8 @@ type Theme {
   additionalContent: AdditionalContent
 }
 
-type PersonLocation @model 
+type PersonLocation @model
+@key(fields: ["personEmail", "personAuthID"]) 
 @key(name: "bySyllabusLesson", fields: ["syllabusLessonID"], queryField: "personLocationBySyllabusLesson")
 {
   id: ID!

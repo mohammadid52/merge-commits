@@ -1965,8 +1965,6 @@ export type CreatePersonLocationInput = {
 };
 
 export type ModelPersonLocationConditionInput = {
-  personAuthID?: ModelStringInput | null,
-  personEmail?: ModelStringInput | null,
   syllabusLessonID?: ModelIDInput | null,
   roomID?: ModelIDInput | null,
   currentLocation?: ModelStringInput | null,
@@ -1978,8 +1976,8 @@ export type ModelPersonLocationConditionInput = {
 
 export type UpdatePersonLocationInput = {
   id: string,
-  personAuthID?: string | null,
-  personEmail?: string | null,
+  personAuthID: string,
+  personEmail: string,
   syllabusLessonID?: string | null,
   roomID?: string | null,
   currentLocation?: string | null,
@@ -1987,7 +1985,8 @@ export type UpdatePersonLocationInput = {
 };
 
 export type DeletePersonLocationInput = {
-  id?: string | null,
+  personEmail: string,
+  personAuthID: string,
 };
 
 export type ModelStringKeyConditionInput = {
@@ -16584,7 +16583,8 @@ export type ListThemeTemplatesQuery = {
 };
 
 export type GetPersonLocationQueryVariables = {
-  id: string,
+  personEmail: string,
+  personAuthID: string,
 };
 
 export type GetPersonLocationQuery = {
@@ -16777,9 +16777,12 @@ export type GetPersonLocationQuery = {
 };
 
 export type ListPersonLocationsQueryVariables = {
+  personEmail?: string | null,
+  personAuthID?: ModelStringKeyConditionInput | null,
   filter?: ModelPersonLocationFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
 };
 
 export type ListPersonLocationsQuery = {
