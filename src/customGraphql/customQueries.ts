@@ -1802,3 +1802,40 @@ export const messagesByRoomId = /* GraphQL */ `
     }
   }
 `;
+
+export const getLesson = /* GraphQL */ `
+  query GetLesson($id: ID!) {
+    getLesson(id: $id) {
+      id
+      title
+      type
+      label
+      grades
+      artistID
+      language
+      purpose
+      designers
+      objectives
+      doFirstID
+      warmUpId
+      coreLessonId
+      activityId
+      assessmentID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        questions {
+          nextToken
+        }
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;

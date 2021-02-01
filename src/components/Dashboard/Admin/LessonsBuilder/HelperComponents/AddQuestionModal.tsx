@@ -12,6 +12,7 @@ import Selector from '../../../../Atoms/Form/Selector';
 interface AddQuestionModalProps {
   closeAction: () => void
   saveAction: () => void
+  setActiveStep: (step: string) => void
 }
 
 interface InitialState {
@@ -30,7 +31,7 @@ interface InputValue {
 
 const AddQuestionModal = (props: AddQuestionModalProps) => {
 
-  const { closeAction, saveAction } = props;
+  const { closeAction, saveAction, setActiveStep } = props;
   const initialState = {
     question: '',
     notes: '',
@@ -72,7 +73,7 @@ const AddQuestionModal = (props: AddQuestionModalProps) => {
       closeAction={closeAction}
     >
       <div className="">
-        <a className="text-sm text-indigo-600 px-6 cursor-pointer" onClick={() => console.log("Previously selected called")}>*Click here to add Question, directly from previously created questions.</a>
+        <a className="text-sm text-indigo-600 px-6 cursor-pointer" onClick={() => setActiveStep('Previously Used Questions')}>*Click here to add Question, directly from previously created questions.</a>
         <div className="grid grid-cols-2 min-w-256 py-4">
           <div className="px-6">
             <TextArea value={""} rows={3} id='question' onChange={onInputChange} name='question' label="Question" isRequired />

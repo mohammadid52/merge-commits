@@ -6,8 +6,12 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import AddQuestionModal from '../HelperComponents/AddQuestionModal';
 import Buttons from '../../../../Atoms/Buttons';
 
-const QuestionBuilder = () => {
+interface QuestionBuilderProps {
+  setActiveStep: (step: string) => void
+}
 
+const QuestionBuilder = (props: QuestionBuilderProps) => {
+  const { setActiveStep } = props;
   const [showModal, setShowModal] = useState(false);
 
   const questionsList = [
@@ -105,7 +109,7 @@ const QuestionBuilder = () => {
           </div>
         </div>
       </div>
-      {showModal && <AddQuestionModal saveAction={addNewQuestion} closeAction={toggleModal} />}
+      {showModal && <AddQuestionModal saveAction={addNewQuestion} closeAction={toggleModal} setActiveStep={(step) => setActiveStep(step)} />}
     </div>
   )
 }

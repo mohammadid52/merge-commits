@@ -78,7 +78,7 @@ const AssessmentInstuctions = () => {
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
               Introductory Message
-        </label>
+            </label>
             <RichTextEditor initialValue={openingMessage} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'openingMessage')} />
           </div>
 

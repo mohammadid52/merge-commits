@@ -607,3 +607,59 @@ export const updateSyllabusLesson = /* GraphQL */ `
     }
   }
 `;
+
+export const createLesson = /* GraphQL */ `
+  mutation CreateLesson(
+    $input: CreateLessonInput!
+    $condition: ModelLessonConditionInput
+  ) {
+    createLesson(input: $input, condition: $condition) {
+      id
+      title
+      type
+      label
+      artistID
+      language
+      purpose
+      designers
+      objectives
+      doFirstID
+      warmUpId
+      coreLessonId
+      activityId
+      assessmentID
+    }
+  }
+`;
+
+export const updateLesson = /* GraphQL */ `
+  mutation UpdateLesson(
+    $input: UpdateLessonInput!
+    $condition: ModelLessonConditionInput
+  ) {
+    updateLesson(input: $input, condition: $condition) {
+      id
+      title
+      type
+      language
+      purpose
+      designers
+      objectives
+      assessmentID
+    }
+  }
+`;
+
+
+export const updateAssessment = /* GraphQL */ `
+  mutation UpdateAssessment(
+    $input: UpdateAssessmentInput!
+    $condition: ModelAssessmentConditionInput
+  ) {
+    updateAssessment(input: $input, condition: $condition) {
+      id
+      title
+      type
+    }
+  }
+`;

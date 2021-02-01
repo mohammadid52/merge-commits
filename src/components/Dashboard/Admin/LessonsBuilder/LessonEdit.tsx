@@ -5,6 +5,8 @@ import { IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp } from 'react-ico
 import { FaRegEye, FaQuestionCircle } from 'react-icons/fa';
 import { RiQuestionAnswerLine } from 'react-icons/ri';
 
+import * as customQueries from '../../../../customGraphql/customQueries';
+
 import Buttons from '../../../Atoms/Buttons';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
@@ -16,9 +18,14 @@ import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
 import QuestionBuilder from './StepActionComponent/QuestionBuilder';
 import PreviewForm from './StepActionComponent/PreviewForm';
 import PreviousQuestions from './StepActionComponent/PreviousQuestions';
+import { InitialData } from './LessonBuilder';
+import { languageList } from '../../../../utilities/staticData'
 
-const LessonEdit = () => {
-
+interface LessonEditProps {
+  designersList: any[]
+}
+const LessonEdit = (props: LessonEditProps) => {
+  const { designersList } = props;
   const history = useHistory();
   const match = useRouteMatch();
   const useQuery = () => {
@@ -28,13 +35,27 @@ const LessonEdit = () => {
   const lessonId = params.get('lessonId');
   const assessmentId = params.get('assessmentId');
   const lessonType = (!lessonId && assessmentId) ? 'assessment' : 'lesson';
-  const [activeStep, setActivetep] = useState('General Information');
+
+  const initialData = {
+    name: '',
+    type: { id: '', name: '', value: '' },
+    purpose: '',
+    purposeHtml: '<p></p>',
+    objective: '',
+    objectiveHtml: '<p></p>',
+    languages: [{ id: '1', name: "English", value: 'EN' }]
+  }
+
+  const [formData, setFormData] = useState<InitialData>(initialData);
+  const [selectedDesigners, setSelectedDesigners] = useState([]);
+  const [activeStep, setActiveStep] = useState('General Information');
   const [loading, setLoading] = useState(false);
+
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Lesson Builder', url: '/dashborad/lesson-builder', last: false },
+    { title: 'Lessons', url: '/dashborad/lesson-builder', last: false },
     {
-      title: 'Edit Lesson ',
+      title: 'Lesson Builder',
       url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : `assessmentId=${assessmentId}`}`,
       last: true
     },
@@ -51,17 +72,48 @@ const LessonEdit = () => {
     { name: "Preview Details", icon: <FaRegEye /> }
   ];
 
-  const fetchLessonDetails = async () => {
-
+  const typeList: any = [
+    { id: '1', name: 'Lesson', value: 'lesson' },
+    { id: '2', name: 'Assessment', value: 'assessment' },
+    { id: '3', name: 'Survey', value: 'survey' }
+  ];
+  const goBack = () => {
+    history.push('/dashboard/lesson-builder')
   }
+
+  const fetchLessonDetails = async () => {
+    try {
+      const result: any = await API.graphql(graphqlOperation(customQueries.getLesson, {
+        id: lessonId || assessmentId
+      }))
+      const savedData = result.data.getLesson;
+      setFormData({
+        ...formData,
+        name: savedData.title,
+        type: savedData.type && typeList.find((item: any) => item.value === savedData.type),
+        purposeHtml: savedData?.purpose ? savedData.purpose : '<p></p>',
+        objectiveHtml: savedData.objectives ? savedData.objectives[0] : '<p></p>',
+        languages: savedData.language ? languageList.filter((item: any) => savedData.language.includes(item.value)) : []
+      });
+      const designers = designersList.filter((item: any) => savedData?.designers?.includes(item.id));
+      setSelectedDesigners(designers)
+      setLoading(false);
+    } catch{
+      console.log("Error while fetching lesson data");
+      history.push(`/dashboard/lesson-builder`)
+    }
+  }
+
   const checkValidUrl = async () => {
     if ((!lessonId && !assessmentId) || (lessonId && assessmentId)) {
       console.log('Invalid url')
       history.push(`/dashboard/lesson-builder`)
     } else {
+      setLoading(true)
       fetchLessonDetails();
     }
   }
+
   useEffect(() => {
     checkValidUrl();
   }, [])
@@ -69,17 +121,24 @@ const LessonEdit = () => {
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
       case 'General Information':
-        return <GeneralInformation />;
+        return <GeneralInformation
+          formData={formData}
+          setFormData={setFormData}
+          designersList={designersList}
+          selectedDesigners={selectedDesigners}
+          setSelectedDesigners={setSelectedDesigners}
+          lessonId={lessonId || assessmentId}
+        />;
       case 'Instructions':
         return <AssessmentInstuctions />;
       case 'Question Builder':
-        return <QuestionBuilder />;
+        return <QuestionBuilder setActiveStep={setActiveStep} />;
       case 'Previously Used Questions':
         return <PreviousQuestions />;
       case 'Preview Details':
         return <PreviewForm />;
       default:
-        return <GeneralInformation />;
+      // return <GeneralInformation />;
     }
   }
 
@@ -89,9 +148,9 @@ const LessonEdit = () => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="EDIT LESSON" subtitle="Edit lessons, surveys or assessments." />
+        <SectionTitle title="LESSON BUILDER" subtitle="Build lessons, surveys or assessments from here." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons btnClass="mr-4" onClick={goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -101,7 +160,7 @@ const LessonEdit = () => {
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3>
           <div className="grid grid-cols-5 divide-x divide-gray-400 p-4">
             <div className="sm:col-span-1">
-              <WizardScroller stepsList={lessonType === 'lesson' ? lessonScrollerStep : assessmentScrollerStep} activeStep={activeStep} setActiveStep={(step) => setActivetep(step)} />
+              <WizardScroller stepsList={lessonType === 'lesson' ? lessonScrollerStep : assessmentScrollerStep} activeStep={activeStep} setActiveStep={(step) => setActiveStep(step)} />
             </div>
             <div className="sm:col-span-4">
               {loading ? (
