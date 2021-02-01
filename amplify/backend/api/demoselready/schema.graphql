@@ -519,7 +519,16 @@ type Assessment @model {
   type: String!
   openingMessage: [String]
   closingMessage: [String]
+  questions: [AssessmentQuestions] @connection(keyName: "questionsByAssessments", fields: ["id"])
   checkpoints: [AssessmentCheckpoint] @connection(keyName: "checkpointByAssessment", fields: ["id"])
+}
+
+type AssessmentQuestions @model @key(name: "questionsByAssessments", fields: ["assessmentID", "questionID"]) {
+  id: ID!
+  assessmentID: ID!
+  questionID: ID!
+  assessment: Assessment @connection(fields: ["assessmentID"])
+  question: Question @connection(fields: ["questionID"])
 }
 
 type AssessmentCheckpoint @model @key(name: "checkpointByAssessment", fields: ["assessmentID", "checkpointID"]) {

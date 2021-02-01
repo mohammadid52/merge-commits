@@ -1693,6 +1693,16 @@ export const getAssessment = /* GraphQL */ `
       type
       openingMessage
       closingMessage
+      questions {
+        items {
+          id
+          assessmentID
+          questionID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       checkpoints {
         items {
           id
@@ -1721,8 +1731,98 @@ export const listAssessments = /* GraphQL */ `
         type
         openingMessage
         closingMessage
+        questions {
+          nextToken
+        }
         checkpoints {
           nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getAssessmentQuestions = /* GraphQL */ `
+  query GetAssessmentQuestions($id: ID!) {
+    getAssessmentQuestions(id: $id) {
+      id
+      assessmentID
+      questionID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        questions {
+          nextToken
+        }
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      question {
+        id
+        label
+        type
+        question
+        designers
+        language
+        sourceId
+        note
+        options {
+          text
+          label
+          icon
+          color
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAssessmentQuestionss = /* GraphQL */ `
+  query ListAssessmentQuestionss(
+    $filter: ModelAssessmentQuestionsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAssessmentQuestionss(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        assessmentID
+        questionID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        question {
+          id
+          label
+          type
+          question
+          designers
+          language
+          sourceId
+          note
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -1743,6 +1843,9 @@ export const getAssessmentCheckpoint = /* GraphQL */ `
         type
         openingMessage
         closingMessage
+        questions {
+          nextToken
+        }
         checkpoints {
           nextToken
         }
@@ -2552,6 +2655,9 @@ export const getLesson = /* GraphQL */ `
         type
         openingMessage
         closingMessage
+        questions {
+          nextToken
+        }
         checkpoints {
           nextToken
         }

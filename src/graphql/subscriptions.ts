@@ -3738,6 +3738,16 @@ export const onCreateAssessment = /* GraphQL */ `
       type
       openingMessage
       closingMessage
+      questions {
+        items {
+          id
+          assessmentID
+          questionID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       checkpoints {
         items {
           id
@@ -3761,6 +3771,16 @@ export const onUpdateAssessment = /* GraphQL */ `
       type
       openingMessage
       closingMessage
+      questions {
+        items {
+          id
+          assessmentID
+          questionID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       checkpoints {
         items {
           id
@@ -3784,6 +3804,16 @@ export const onDeleteAssessment = /* GraphQL */ `
       type
       openingMessage
       closingMessage
+      questions {
+        items {
+          id
+          assessmentID
+          questionID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       checkpoints {
         items {
           id
@@ -3793,6 +3823,138 @@ export const onDeleteAssessment = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAssessmentQuestions = /* GraphQL */ `
+  subscription OnCreateAssessmentQuestions {
+    onCreateAssessmentQuestions {
+      id
+      assessmentID
+      questionID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        questions {
+          nextToken
+        }
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      question {
+        id
+        label
+        type
+        question
+        designers
+        language
+        sourceId
+        note
+        options {
+          text
+          label
+          icon
+          color
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAssessmentQuestions = /* GraphQL */ `
+  subscription OnUpdateAssessmentQuestions {
+    onUpdateAssessmentQuestions {
+      id
+      assessmentID
+      questionID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        questions {
+          nextToken
+        }
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      question {
+        id
+        label
+        type
+        question
+        designers
+        language
+        sourceId
+        note
+        options {
+          text
+          label
+          icon
+          color
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAssessmentQuestions = /* GraphQL */ `
+  subscription OnDeleteAssessmentQuestions {
+    onDeleteAssessmentQuestions {
+      id
+      assessmentID
+      questionID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        questions {
+          nextToken
+        }
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      question {
+        id
+        label
+        type
+        question
+        designers
+        language
+        sourceId
+        note
+        options {
+          text
+          label
+          icon
+          color
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -3811,6 +3973,9 @@ export const onCreateAssessmentCheckpoint = /* GraphQL */ `
         type
         openingMessage
         closingMessage
+        questions {
+          nextToken
+        }
         checkpoints {
           nextToken
         }
@@ -3847,6 +4012,9 @@ export const onUpdateAssessmentCheckpoint = /* GraphQL */ `
         type
         openingMessage
         closingMessage
+        questions {
+          nextToken
+        }
         checkpoints {
           nextToken
         }
@@ -3883,6 +4051,9 @@ export const onDeleteAssessmentCheckpoint = /* GraphQL */ `
         type
         openingMessage
         closingMessage
+        questions {
+          nextToken
+        }
         checkpoints {
           nextToken
         }
@@ -5055,6 +5226,9 @@ export const onCreateLesson = /* GraphQL */ `
         type
         openingMessage
         closingMessage
+        questions {
+          nextToken
+        }
         checkpoints {
           nextToken
         }
@@ -5247,6 +5421,9 @@ export const onUpdateLesson = /* GraphQL */ `
         type
         openingMessage
         closingMessage
+        questions {
+          nextToken
+        }
         checkpoints {
           nextToken
         }
@@ -5439,6 +5616,9 @@ export const onDeleteLesson = /* GraphQL */ `
         type
         openingMessage
         closingMessage
+        questions {
+          nextToken
+        }
         checkpoints {
           nextToken
         }
