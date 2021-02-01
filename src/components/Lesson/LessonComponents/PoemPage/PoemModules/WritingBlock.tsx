@@ -21,7 +21,7 @@ interface WritingBlockProps {
 const WritingBlock = (props: WritingBlockProps) => {
     const { editMode, setEditMode } = props;
     const { state, theme, dispatch } = useContext(LessonContext);
-    const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+    const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
     const lineNo = state.data.lesson.activity.lineNumber;
     const promptArray = state.data.lesson.activity.writingPrompts;
     const initialLines = [];
@@ -44,11 +44,11 @@ const WritingBlock = (props: WritingBlockProps) => {
 
     useEffect(() => {
         
-        if (cookies[`lesson-${state.classroomID}`]?.poem?.lines && cookies[`lesson-${state.classroomID}`]?.poem?.lines?.length >= lineNo) {
+        if (cookies[`lesson-${state.syllabusLessonID}`]?.poem?.lines && cookies[`lesson-${state.syllabusLessonID}`]?.poem?.lines?.length >= lineNo) {
             setLineState(prev => {
                 return {
                     ...prev,
-                    lines: cookies[`lesson-${state.classroomID}`].poem?.lines
+                    lines: cookies[`lesson-${state.syllabusLessonID}`].poem?.lines
                 }
             })
         }
@@ -92,10 +92,10 @@ const WritingBlock = (props: WritingBlockProps) => {
                 }
             })
 
-            setCookie(`lesson-${state.classroomID}`, {
-                ...cookies[`lesson-${state.classroomID}`],
+            setCookie(`lesson-${state.syllabusLessonID}`, {
+                ...cookies[`lesson-${state.syllabusLessonID}`],
                 poem: {
-                    ...cookies[`lesson-${state.classroomID}`].poem,
+                    ...cookies[`lesson-${state.syllabusLessonID}`].poem,
                     lines: lineState.lines,
                     editInput: content
                 }

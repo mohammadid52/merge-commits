@@ -327,13 +327,6 @@ type ActivityData {
   title: String
 }
 
-type Subscription {
-  onNewRoomMsg(roomID: ID!): RoomMsgs
-    @aws_subscribe(mutations: ["createRoomMsgs"])
-  onChangeStudentData(syllabusLessonID: ID!): StudentData
-    @aws_subscribe(mutations: ["createStudentData", "updateupdateupdateStudentData"])
-}
-
 type ComponentSummary {
   id: ID
   disabled: Boolean!
@@ -526,7 +519,16 @@ type Assessment @model {
   type: String!
   openingMessage: [String]
   closingMessage: [String]
+  questions: [AssessmentQuestions] @connection(keyName: "questionsByAssessments", fields: ["id"])
   checkpoints: [AssessmentCheckpoint] @connection(keyName: "checkpointByAssessment", fields: ["id"])
+}
+
+type AssessmentQuestions @model @key(name: "questionsByAssessments", fields: ["assessmentID", "questionID"]) {
+  id: ID!
+  assessmentID: ID!
+  questionID: ID!
+  assessment: Assessment @connection(fields: ["assessmentID"])
+  question: Question @connection(fields: ["questionID"])
 }
 
 type AssessmentCheckpoint @model @key(name: "checkpointByAssessment", fields: ["assessmentID", "checkpointID"]) {
@@ -640,7 +642,6 @@ type RoomMsgs
   body: String!
   createdAt: AWSDateTime
   sender: Person @connection(fields: ["senderEmail", "senderAuthID"])
-  room: Room @connection(fields: ["roomID"])
 }
 
 type AppClients
@@ -826,4 +827,10 @@ type Theme {
   connection: String
   images: [String!]!
   additionalContent: AdditionalContent
+}
+
+type Subscription {
+  onChangeStudentData(syllabusLessonID: ID!): StudentData
+    @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
+  onChangeSyllabusLesson(id: ID!): SyllabusLesson @aws_subscribe(mutations: ["updateSyllabusLesson"])
 }

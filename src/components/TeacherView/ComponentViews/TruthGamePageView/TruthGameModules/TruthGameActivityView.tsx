@@ -28,7 +28,7 @@ interface props {
 const TruthGame = (props: props) => {
   const { fullscreen } = props;
   const { state, theme, dispatch } = useContext(LessonControlContext);
-  // const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
+  // const [ cookies, setCookie ] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const inputs = state.data.lesson.warmUp.inputs;
   const video = state.data.lesson.warmUp.instructions.link;
   const [openPopup, setOpenPopup] = useState(false);

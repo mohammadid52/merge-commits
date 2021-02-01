@@ -5,7 +5,7 @@ export type LessonActions =
   | {
       type: 'SET_INITIAL_STATE';
       payload: {
-        classroomID: string;
+        syllabusLessonID: string;
         data?: any;
         pages: PagesType;
         displayData?: any;
@@ -141,7 +141,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
       return {
         ...state,
         status: 'loaded',
-        classroomID: action.payload.classroomID,
+        syllabusLessonID: action.payload.syllabusLessonID,
         data: action.payload.data,
         pages: action.payload.pages,
         word_bank: action.payload.word_bank,

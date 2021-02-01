@@ -38,7 +38,7 @@ const Body = () => {
       ? state.componentState.lyrics.selected
       : []
   );
-  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const [fullscreen, setFullscreen] = useState(false);
   const { video, link } = state.data.lesson.coreLesson.instructions;
   const [openPopup, setOpenPopup] = useState(false);
@@ -60,23 +60,23 @@ const Body = () => {
   };
 
   useEffect(() => {
-    if (cookies[`lesson-${state.classroomID}`].lyrics) {
+    if (cookies[`lesson-${state.syllabusLessonID}`].lyrics) {
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
         payload: {
           name: 'lyrics',
           content: {
-            selected: cookies[`lesson-${state.classroomID}`].lyrics,
+            selected: cookies[`lesson-${state.syllabusLessonID}`].lyrics,
           },
         },
       });
 
-      setSelected(cookies[`lesson-${state.classroomID}`].lyrics.selected);
-      setInitialSelectedText(cookies[`lesson-${state.classroomID}`].lyrics.rawSelected);
-      setSelectGroup(parseInt(cookies[`lesson-${state.classroomID}`].lyrics.selectGroup));
+      setSelected(cookies[`lesson-${state.syllabusLessonID}`].lyrics.selected);
+      setInitialSelectedText(cookies[`lesson-${state.syllabusLessonID}`].lyrics.rawSelected);
+      setSelectGroup(parseInt(cookies[`lesson-${state.syllabusLessonID}`].lyrics.selectGroup));
     }
 
-    if (!cookies[`lesson-${state.classroomID}`].lyrics && !state.componentState.lyrics) {
+    if (!cookies[`lesson-${state.syllabusLessonID}`].lyrics && !state.componentState.lyrics) {
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
         payload: {
@@ -89,8 +89,8 @@ const Body = () => {
         },
       });
 
-      setCookie(`lesson-${state.classroomID}`, {
-        ...cookies[`lesson-${state.classroomID}`],
+      setCookie(`lesson-${state.syllabusLessonID}`, {
+        ...cookies[`lesson-${state.syllabusLessonID}`],
         lyrics: {
           selected: [],
           selectGroup: 0,
@@ -120,18 +120,18 @@ const Body = () => {
         },
       });
 
-      setCookie(`lesson-${state.classroomID}`, {
-        ...cookies[`lesson-${state.classroomID}`],
+      setCookie(`lesson-${state.syllabusLessonID}`, {
+        ...cookies[`lesson-${state.syllabusLessonID}`],
         lyrics: {
-          ...cookies[`lesson-${state.classroomID}`].lyrics,
+          ...cookies[`lesson-${state.syllabusLessonID}`].lyrics,
           selected: selected,
         },
       });
 
-      setCookie(`lesson-${state.classroomID}`, {
-        ...cookies[`lesson-${state.classroomID}`],
+      setCookie(`lesson-${state.syllabusLessonID}`, {
+        ...cookies[`lesson-${state.syllabusLessonID}`],
         lyrics: {
-          ...cookies[`lesson-${state.classroomID}`].lyrics,
+          ...cookies[`lesson-${state.syllabusLessonID}`].lyrics,
           rawSelected: initialSelectedText,
           selectGroup: selectGroup,
         },

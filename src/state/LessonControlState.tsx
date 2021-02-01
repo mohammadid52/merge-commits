@@ -68,7 +68,7 @@ export interface lessonControlStateType  {
         studentInfo?: studentObject
     },
     open?: boolean,
-    classroomID: string
+    syllabusLessonID: string
 }
 
 export const lessonControlState: lessonControlStateType = {
@@ -88,5 +88,5 @@ export const lessonControlState: lessonControlStateType = {
         live: false,
     },
     open: null,
-    classroomID: '',
+    syllabusLessonID: '',
 }
