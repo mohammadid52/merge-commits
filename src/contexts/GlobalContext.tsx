@@ -83,21 +83,12 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
   const userLanguage = state.user.language || 'EN';
   const clientKey = getClientKey();
 
-  const newPersonLocation = {
-    syllabusLessonID: '0',
-    currentLocation: '0',
-    lessonProgress: '0',
-    personEmail: state.user.email,
-    personAuthID: state.user.authId,
-    roomID: '0',
-  };
-
   useEffect(() => {
 
-    if (state.user.location.length > 0){
+    if (state.user && state.user.location && state.user.location.length > 0){
       updatePersonLocation();
     } else {
-      console.log('loc length: ', state.user.location.length)
+      console.log('dashboard: ', 'user location not initialized yet...')
     }
   }, [state.user]);
 
@@ -112,7 +103,7 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
       lessonProgress: '',
     };
     try {
-      console.log(updatedLocation)
+      // console.log(updatedLocation)
       const newPersonLocationMutation: any = await API.graphql(
         graphqlOperation(mutations.updatePersonLocation, { input: updatedLocation })
       );

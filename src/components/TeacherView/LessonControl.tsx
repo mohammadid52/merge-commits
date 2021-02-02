@@ -117,8 +117,8 @@ const LessonControl = () => {
           : null,
       displayData: state.displayData,
       lessonPlan: state.pages,
-      startDate: '1989-11-02z',
-      endDate: '',
+      startDate: '1989-11-02',
+      endDate: '2077-11-02',
     };
 
     try {

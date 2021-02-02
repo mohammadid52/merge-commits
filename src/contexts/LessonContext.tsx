@@ -78,7 +78,7 @@ const [loaded, setLoaded] = useState<boolean>(false);
 
   useEffect(()=>{
     if(loaded && state.syllabusLessonID){
-      if(personLocationObj.location.items.length > 0) {
+      if(personLocationObj && personLocationObj.location && personLocationObj.location.items.length > 0) {
         updatePersonLocation()
       } else {
         createPersonLocation()
