@@ -50,46 +50,47 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   let subscription: any;
 
   const theme = standardTheme;
-const [loaded, setLoaded] = useState<boolean>(false);
+  const [loaded, setLoaded] = useState<boolean>(false);
   const [personLocationObj, setPersonLocationObj] = useState<any>();
 
   const queryParams = queryString.parse(location.search);
 
   // INIT PERSON LOCATION COOKIS & STATE
-  useEffect(()=>{
-    const loadPersonData = async() => {
+  useEffect(() => {
+    const loadPersonData = async () => {
       try {
-        const user = await Auth.currentAuthenticatedUser()
+        const user = await Auth.currentAuthenticatedUser();
         if (user) {
-          const { email, sub } = user.attributes
-          let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }))
+          const { email, sub } = user.attributes;
+          let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }));
           userInfo = userInfo.data.getPerson;
           setPersonLocationObj(userInfo);
-                  }
-      } catch (e){
-        console.error(e)
+        }
+      } catch (e) {
+        console.error(e);
       } finally {
-        console.log('loaded...')
+        console.log('loaded...');
         setLoaded(true);
       }
-    }
-    loadPersonData()
-  },[])
+    };
+    loadPersonData();
+  }, []);
 
-  useEffect(()=>{
-    if(loaded && state.syllabusLessonID){
-      if(personLocationObj && personLocationObj.location && personLocationObj.location.items.length > 0) {
-        updatePersonLocation()
+  useEffect(() => {
+    if (loaded && state.syllabusLessonID) {
+      if (personLocationObj && personLocationObj.location && personLocationObj.location.items.length > 0) {
+        updatePersonLocation();
       } else {
-        createPersonLocation()
+        createPersonLocation();
       }
     }
+  }, [loaded, personLocationObj, state.syllabusLessonID]);
 
-  }, [loaded, personLocationObj, state.syllabusLessonID])
-
-  useEffect(()=>{
-    updatePersonLocation();
-  },[state.currentPage])
+  useEffect(() => {
+    if (personLocationObj && personLocationObj.location && personLocationObj.location.items.length > 0) {
+      updatePersonLocation();
+    }
+  }, [state.currentPage]);
 
   // CREATE LOCATION RECORD or UPDATE
   async function createPersonLocation() {
@@ -100,9 +101,9 @@ const [loaded, setLoaded] = useState<boolean>(false);
       roomID: '0',
       currentLocation: state.currentPage,
       lessonProgress: state.lessonProgress,
-    }
+    };
     try {
-      console.log('created', newLocation)
+      console.log('created', newLocation);
       const newPersonLocationMutation: any = await API.graphql(
         graphqlOperation(mutations.createPersonLocation, { input: newLocation })
       );
@@ -120,13 +121,13 @@ const [loaded, setLoaded] = useState<boolean>(false);
       roomID: '0',
       currentLocation: state.currentPage,
       lessonProgress: state.lessonProgress,
-    }
-     try {
-      console.log('updated', personLocationObj.location.items)
+    };
+    try {
+      console.log('updated', personLocationObj.location.items);
       const newPersonLocationMutation: any = await API.graphql(
-        graphqlOperation(mutations.updatePersonLocation, { input: updatedLocation }),
+        graphqlOperation(mutations.updatePersonLocation, { input: updatedLocation })
       );
-      console.log('updated person location...')
+      console.log('updated person location...');
     } catch (e) {
       console.error('update PersonLocation : ', e);
     }
@@ -217,7 +218,7 @@ const [loaded, setLoaded] = useState<boolean>(false);
     const syllabusLessonSubscription = API.graphql(graphqlOperation(customSubscriptions.onUpdateSyllabusLesson, { id: queryParams.id })).subscribe({
       next: (syllabusLessonData: any) => {
         const updatedLessonPlan = syllabusLessonData.value.data.onUpdateSyllabusLesson;
-        console.log('updatedLessonPlan', updatedLessonPlan)
+        console.log('updatedLessonPlan', updatedLessonPlan);
         dispatch({
           type: 'UPDATE_LESSON_PLAN',
           payload: {
