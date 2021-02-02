@@ -112,8 +112,8 @@ const LessonControl = () => {
       status: state.open ? 'Active' : 'Inactive',
       complete: state.complete ? state.complete : false,
       viewing:
-        state.studentViewing.studentInfo && state.studentViewing.studentInfo.studentAuthID
-          ? state.studentViewing.studentInfo.studentAuthID
+        state.studentViewing.studentInfo && state.studentViewing.studentInfo.personAuthID
+          ? state.studentViewing.studentInfo.personAuthID
           : null,
       displayData: state.displayData,
       lessonPlan: state.pages,
@@ -122,6 +122,7 @@ const LessonControl = () => {
     };
 
     try {
+      console.log('attempt handle update syl lesson: ', updatedSyllabusLessonData)
       const updatedSyllabusLesson = await API.graphql(
         graphqlOperation(customMutations.updateSyllabusLesson, {
           input: updatedSyllabusLessonData,
@@ -129,7 +130,7 @@ const LessonControl = () => {
       );
       dispatch({ type: 'SAVED_CHANGES' });
     } catch (err) {
-      console.error(err);
+      console.error('handleUpdateSyllabusLesson - ', err);
     }
   };
 
