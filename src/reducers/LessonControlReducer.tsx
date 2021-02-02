@@ -276,6 +276,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         open: true,
         complete: false,
         unsavedChanges: true,
+        startDate: action.payload
       };
     case 'COMPLETE_CLASSROOM':
       return {
@@ -283,7 +284,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         open: false,
         complete: true,
         unsavedChanges: true,
-        endDate: action.payload
+        endDate: action.payload,
       };
     case 'CLEANUP':
       return lessonControlState;

@@ -117,7 +117,7 @@ const LessonControl = () => {
           : null,
       displayData: state.displayData,
       lessonPlan: state.pages,
-      startDate: '',
+      startDate: '1989-11-02z',
       endDate: '',
     };
 
@@ -226,7 +226,7 @@ const LessonControl = () => {
 
   const handleOpen = async () => {
     await handleOpenSyllabusLesson();
-    dispatch({ type: 'START_CLASSROOM' });
+    dispatch({ type: 'START_CLASSROOM', payload: '1989-11-02z' });
     setOpen(true);
   };
 

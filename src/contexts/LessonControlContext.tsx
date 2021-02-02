@@ -45,7 +45,6 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
             syllabusLessonID: queryParams.id,
             pages: classroom.data.getSyllabusLesson.lessonPlan,
             data: classroom.data.getSyllabusLesson,
-            // students: classroom.data.getSyllabusLesson?.data.items,
             students: [],
             open: classroom.data.getSyllabusLesson?.status === 'Active',
             complete: classroom.data.getSyllabusLesson?.complete,

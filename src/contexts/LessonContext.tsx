@@ -219,8 +219,8 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     // @ts-ignore
     const syllabusLessonSubscription = API.graphql(graphqlOperation(customSubscriptions.onUpdateSyllabusLesson, { id: queryParams.id })).subscribe({
       next: (syllabusLessonData: any) => {
-        const updatedLessonPlan = syllabusLessonData.value.data.onUpdateClassroom;
-
+        const updatedLessonPlan = syllabusLessonData.value.data.onUpdateSyllabusLesson;
+        console.log('updatedLessonPlan', updatedLessonPlan)
         dispatch({
           type: 'UPDATE_LESSON_PLAN',
           payload: {

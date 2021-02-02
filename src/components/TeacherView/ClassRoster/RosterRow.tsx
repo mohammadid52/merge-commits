@@ -126,7 +126,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
       <div id={`${id}`} className="w-8/10 flex flex-row hover:font-semibold cursor-pointer">
         <div
           id={`${id}`}
-          className={`w-1/2 overflow-hidden mx-2 flex items-center hover:font-semibold cursor-pointer text-sm whitespace-pre`}>
+          className={`w-1/2 overflow-hidden mx-2 flex items-center hover:font-semibold cursor-pointer text-sm whitespace-pre truncate ...`}>
           {preferredName ? preferredName : firstName} {lastName}
         </div>
 
@@ -135,7 +135,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
         <div
           id={`${id}`}
           className={`w-1/2 mx-2 flex justify-center items-center hover:font-semibold cursor-pointer overflow-hidden text-sm text-left`}>
-          <ProgressSwitch label={currentLocation ? currentLocation : lessonProgress} id={id} />
+          <ProgressSwitch label={currentLocation} id={id} />
         </div>
       </div>
 
