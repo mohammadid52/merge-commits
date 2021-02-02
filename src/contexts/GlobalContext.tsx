@@ -1,7 +1,10 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useReducer, useEffect } from 'react';
 import { globalReducer } from '../reducers/GlobalReducer';
 import { globalState } from '../state/GlobalState';
-import { getClientKey } from '../utilities/strings'
+import { getClientKey } from '../utilities/strings';
+import { useCookies } from 'react-cookie';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import * as mutations from '../graphql/mutations';
 
 export const standardTheme = {
   bg: 'bg-dark-gray',
@@ -10,8 +13,7 @@ export const standardTheme = {
     cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue',
   },
   blockQuote: 'px-4 border-l-4 border-white border-opacity-50 bg-black bg-opacity-40',
-  banner:
-    'w-auto pb-2 mb-2 relative font-open font-medium text-left flex flex-row items-center text-gray-200 mt-4',
+  banner: 'w-auto pb-2 mb-2 relative font-open font-medium text-left flex flex-row items-center text-gray-200 mt-4',
   section: 'w-full max-w-256 mx-auto  flex flex-col justify-between items-center z-50',
   elem: {
     bg: 'bg-dark-block',
@@ -21,7 +23,7 @@ export const standardTheme = {
     textInput: 'bg-darker-gray text-blue-100 py-2 px-4',
     shadow: 'shadow-elem-dark',
     card: 'rounded-lg bg-white bg-opacity-20',
-    cardIn: 'rounded-lg p-2 bg-black bg-opacity-20'
+    cardIn: 'rounded-lg p-2 bg-black bg-opacity-20',
   },
   toolbar: {
     bg: 'bg-black',
@@ -30,13 +32,13 @@ export const standardTheme = {
   dashboard: {
     sectionTitle: 'w-auto text-black pb-2 font-medium mt-4 mb-1 text-left',
     bg: 'bg-darker-gray',
-    card: 'p-2 relative bg-white rounded border border-dark-gray border-opacity-10 h-auto flex'
+    card: 'p-2 relative bg-white rounded border border-dark-gray border-opacity-10 h-auto flex',
   },
   sidemenu: {
     bg: 'bg-darker-gray',
     primary: 'z-50 min-h-screen w-32 min-w-32 flex flex-col bg-darker-gray',
     secondary: 'z-50 min-h-screen w-32 min-w-32 flex flex-col bg-gray-200 border-r border-white',
-    darktone: 'bg-black bg-opacity-80'
+    darktone: 'bg-black bg-opacity-80',
   },
   block: {
     bg: 'bg-dark-blue',
@@ -49,12 +51,12 @@ export const standardTheme = {
   },
   btn: {
     indigo: 'bg-indigo-500 text-white hover:bg-indigo-600 active:bg-indigo-600 focus:bg-indigo-600',
-    cancel: 'bg-white text-gray-600 border border-gray-600 hover:bg-gray-200'
+    cancel: 'bg-white text-gray-600 border border-gray-600 hover:bg-gray-200',
   },
   text: {
     default: 'text-black80',
     secondary: 'text-gray-500',
-    active: 'text-indigo-500'
+    active: 'text-indigo-500',
   },
   formSelect: 'bg-white border-gray-400 text-gray-900 border',
   outlineNone: 'outline-none hover:outline-none active:outline-none focus:outline-none',
@@ -62,8 +64,8 @@ export const standardTheme = {
   modals: {
     header: 'flex items-center justify-between p-4 border-solid rounded-t bg-white text-gray-900 border-gray-200',
     footer: 'flex items-center justify-end p-4 border-t border-solid rounded-b bg-white text-gray-900 border-gray-200',
-    content: 'border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-gray-900'
-  }
+    content: 'border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-gray-900',
+  },
 };
 
 interface GlobalProps {
@@ -74,11 +76,45 @@ export const GlobalContext = React.createContext(null);
 
 export const GlobalContextProvider = ({ children }: GlobalProps) => {
   const [state, dispatch] = useReducer(globalReducer, globalState);
+  const [cookies, setCookie] = useCookies([`location`]);
 
   const theme = standardTheme;
   const globalStateAccess = state;
   const userLanguage = state.user.language || 'EN';
-  const clientKey = getClientKey()
+  const clientKey = getClientKey();
+
+  const newPersonLocation = {
+    syllabusLessonID: '0',
+    currentLocation: '0',
+    lessonProgress: '0',
+    personEmail: state.user.email,
+    personAuthID: state.user.authId,
+    roomID: '0',
+  };
+
+  useEffect(() => {
+    const initLocation = () => {
+      if (cookies.location) {
+        updatePersonLocation();
+      }
+    };
+
+    if (state.user.email) initLocation();
+  }, [state.user.email]);
+
+  async function updatePersonLocation() {
+    setCookie('location', { ...cookies.location, ...newPersonLocation });
+    try {
+      console.log('attempting update...', cookies.location);
+      const newPersonLocationMutation: any = await API.graphql(
+        graphqlOperation(mutations.updatePersonLocation, { input: { ...cookies.location, ...newPersonLocation } })
+      );
+      console.log('global location updated...', cookies.location);
+    } catch (e) {
+      console.error('update PersonLocation : ', e);
+    }
+  }
+
   return (
     <GlobalContext.Provider
       value={{
@@ -87,7 +123,7 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
         dispatch,
         globalStateAccess,
         userLanguage,
-        clientKey
+        clientKey,
       }}>
       {children}
     </GlobalContext.Provider>

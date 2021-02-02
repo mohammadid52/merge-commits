@@ -1221,6 +1221,18 @@ export const getStudentData = /* GraphQL */ `
   }
 `;
 
+export const getPersonLocation = /* GraphQL */ `
+  query GetPersonLocation($personAuthID: String!, $personEmail: String!) {
+    getPersonLocation(personAuthID: $personAuthID, personEmail: $personEmail) {
+      currentLocation
+      id
+      lessonProgress
+      personAuthID
+      personEmail
+    }
+  }
+`;
+
 export const getCourse = /* GraphQL */ `
   query GetCourse($id: ID!) {
     getCourse(id: $id) {

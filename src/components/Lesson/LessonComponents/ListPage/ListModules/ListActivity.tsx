@@ -51,7 +51,6 @@ const List = () => {
       // UPDATE: somehow commenting this out does not affect the standard list,
       // curious as to why it was here in the first place
 
-      console.log('listactivity additional input leng: ', inputs.additionalInputs.length > 0);
 
       if (inputs.additionalInputs.length > 0) {
         let additional: Array<{ name: string; text: string | [] }> = [];
@@ -90,7 +89,6 @@ const List = () => {
       });
     }
 
-    console.log('listactivity mounted --< ', inputs.additionalInputs);
   }, []);
 
   return (
