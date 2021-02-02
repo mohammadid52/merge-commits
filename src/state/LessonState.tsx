@@ -18,6 +18,7 @@ export interface LessonStateType  {
     data?: {
         [key: string]: any;
     }
+    location: any[];
     studentDataID: string,
     studentUsername: string,
     studentAuthID: string,
@@ -53,6 +54,7 @@ export const lessonState: LessonStateType = {
     studentUsername: '',
     studentAuthID: '',
     data: {},
+    location: [],
     currentPage: 0,
     lessonProgress: 0,
     canContinue: false,

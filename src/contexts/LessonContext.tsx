@@ -15,6 +15,7 @@ import queryString from 'query-string';
 import { standardTheme } from './GlobalContext';
 import { initRosterSyllabusLessons } from '../uniqueScripts/InitRoster_in_SyllabusLessons';
 import { create } from 'domain';
+import * as queries from '../graphql/queries';
 
 const removeDisabled = (array: PagesType): any[] => {
   let updatedArray = array.filter((item: { disabled: boolean; [key: string]: any }) => {
@@ -49,94 +50,90 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   let subscription: any;
 
   const theme = standardTheme;
-
-  const [cookies, setCookie] = useCookies([`location`]);
+const [loaded, setLoaded] = useState<boolean>(false);
   const [personLocationObj, setPersonLocationObj] = useState<any>();
 
   const queryParams = queryString.parse(location.search);
-  const newPersonLocation = {
-    syllabusLessonID: queryParams.id,
-    currentLocation: state.currentPage,
-    lessonProgress: state.lessonProgress,
-    personEmail: state.studentUsername,
-    personAuthID: state.studentAuthID,
-    roomID: '0',
-  };
 
   // INIT PERSON LOCATION COOKIS & STATE
-  useEffect(() => {
-    const initLocation = () => {
-      if (!cookies.location) {
-        getPersonLocation();
+  useEffect(()=>{
+    const loadPersonData = async() => {
+      try {
+        const user = await Auth.currentAuthenticatedUser()
+        if (user) {
+          const { email, sub } = user.attributes
+          let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }))
+          userInfo = userInfo.data.getPerson;
+          setPersonLocationObj(userInfo);
+                  }
+      } catch (e){
+        console.error(e)
+      } finally {
+        console.log('loaded...')
+        setLoaded(true);
       }
-      if(cookies.location){
-          if(cookies.location.hasOwnProperty('id')){
-            setPersonLocationObj(cookies.location);
-          } else {
-            getPersonLocation();
-          }
-      }
-    };
-
-    if (state.studentAuthID) initLocation();
-  }, [state.studentAuthID]);
+    }
+    loadPersonData()
+  },[])
 
   useEffect(()=>{
-   if(personLocationObj === null) {
-     createPersonLocation();
-   }
-   if(personLocationObj !== null && personLocationObj?.hasOwnProperty('id')){
-     updatePersonLocation()
-   }
-  }, [personLocationObj])
+    if(loaded && state.syllabusLessonID){
+      if(personLocationObj.location.items.length > 0) {
+        updatePersonLocation()
+      } else {
+        createPersonLocation()
+      }
+    }
+
+  }, [loaded, personLocationObj, state.syllabusLessonID])
 
   useEffect(()=>{
     updatePersonLocation();
   },[state.currentPage])
 
-
-  async function getPersonLocation() {
-    const personAuthID = state.studentAuthID;
-    const personEmail = state.studentUsername;
-    try {
-      const personLocation: any = await API.graphql(
-        graphqlOperation(customQueries.getPersonLocation, { personAuthID: personAuthID, personEmail: personEmail })
-      );
-      setPersonLocationObj(personLocation?.data?.getPersonLocation);
-      setCookie('location', personLocation?.data?.getPersonLocation);
-    } catch (e) {
-      console.log('getPersonLocation error: ', e);
-    }
-  }
-
   // CREATE LOCATION RECORD or UPDATE
   async function createPersonLocation() {
+    const newLocation = {
+      personAuthID: personLocationObj.authId,
+      personEmail: personLocationObj.email,
+      syllabusLessonID: state.syllabusLessonID,
+      roomID: '0',
+      currentLocation: state.currentPage,
+      lessonProgress: state.lessonProgress,
+    }
     try {
+      console.log('created', newLocation)
       const newPersonLocationMutation: any = await API.graphql(
-        graphqlOperation(mutations.createPersonLocation, { input: newPersonLocation })
+        graphqlOperation(mutations.createPersonLocation, { input: newLocation })
       );
-      setCookie('location', { ...cookies.location, ...newPersonLocation });
     } catch (e) {
       console.error('create PersonLocation : ', e);
     }
   }
 
   async function updatePersonLocation() {
-    setCookie('location', {
-      ...cookies.location,
+    const updatedLocation = {
+      id: personLocationObj.location.length > 0 ? personLocationObj.location[0].id : '',
+      personAuthID: personLocationObj.authId,
+      personEmail: personLocationObj.email,
+      syllabusLessonID: state.syllabusLessonID,
+      roomID: '0',
       currentLocation: state.currentPage,
       lessonProgress: state.lessonProgress,
-    });
-    try {
+    }
+     try {
+      console.log('updated', personLocationObj.location.items)
       const newPersonLocationMutation: any = await API.graphql(
-        graphqlOperation(mutations.updatePersonLocation, { input: { ...cookies.location, ...newPersonLocation } }),
+        graphqlOperation(mutations.updatePersonLocation, { input: updatedLocation }),
       );
+      console.log('updated person location...')
     } catch (e) {
       console.error('update PersonLocation : ', e);
     }
   }
 
   //  END OF LOCATION TRACKING SCRIPT
+
   async function getOrCreateStudentData() {
     let queryParams = queryString.parse(location.search);
     let studentID: string;

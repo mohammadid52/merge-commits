@@ -48,11 +48,13 @@ const MainRouter: React.FC = () => {
         const { email, sub } = user.attributes
         let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }))
         userInfo = userInfo.data.getPerson;
+        // console.log('user auth: ', userInfo)
         updateAuthState(true)
         dispatch({
           type: 'PREV_LOG_IN',
           payload: { email, authId: sub },
         });
+        // SETUP USER
         dispatch({
           type: 'SET_USER',
           payload: {
@@ -62,7 +64,8 @@ const MainRouter: React.FC = () => {
             language: userInfo.language,
             onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
             role: userInfo.role,
-            image: userInfo.image
+            image: userInfo.image,
+            location: userInfo.location.items
           }
         });
       } else {

@@ -76,7 +76,7 @@ export const GlobalContext = React.createContext(null);
 
 export const GlobalContextProvider = ({ children }: GlobalProps) => {
   const [state, dispatch] = useReducer(globalReducer, globalState);
-  const [cookies, setCookie] = useCookies([`location`]);
+  // const [cookies, setCookie] = useCookies([`location`]);
 
   const theme = standardTheme;
   const globalStateAccess = state;
@@ -93,23 +93,29 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
   };
 
   useEffect(() => {
-    const initLocation = () => {
-      if (cookies.location) {
-        updatePersonLocation();
-      }
-    };
 
-    if (state.user.email) initLocation();
-  }, [state.user.email]);
+    if (state.user.location.length > 0){
+      updatePersonLocation();
+    } else {
+      console.log('loc length: ', state.user.location.length)
+    }
+  }, [state.user]);
 
   async function updatePersonLocation() {
-    setCookie('location', { ...cookies.location, ...newPersonLocation });
+    const updatedLocation = {
+      id: state.user.location.length > 0 ? state.user.location[0].id : '',
+      personAuthID: state.user.location.length > 0 ? state.user.location[0].personAuthID : '',
+      personEmail: state.user.location.length > 0 ? state.user.location[0].personEmail : '',
+      syllabusLessonID: 'dashboard',
+      roomID: '0',
+      currentLocation: '',
+      lessonProgress: '',
+    };
     try {
-      console.log('attempting update...', cookies.location);
+      console.log(updatedLocation)
       const newPersonLocationMutation: any = await API.graphql(
-        graphqlOperation(mutations.updatePersonLocation, { input: { ...cookies.location, ...newPersonLocation } })
+        graphqlOperation(mutations.updatePersonLocation, { input: updatedLocation })
       );
-      console.log('global location updated...', cookies.location);
     } catch (e) {
       console.error('update PersonLocation : ', e);
     }

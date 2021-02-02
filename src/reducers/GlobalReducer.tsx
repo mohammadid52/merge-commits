@@ -25,6 +25,7 @@ type globalActions =
   | {
       type: 'SET_USER';
       payload: {
+        location: any[];
         id: string;
         firstName: string;
         lastName: string;
@@ -90,6 +91,7 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           role: action.payload.role,
           onBoardSurvey: action.payload.onBoardSurvey,
           image: action.payload.image,
+          location: action.payload.location
         },
       };
     case 'LOG_IN':
