@@ -51,6 +51,7 @@ type Person
   lastLoggedOut: AWSDateTime
   classes: [ClassStudent] @connection(keyName: "classByStudent", fields: ["email"])
   wordbank: [StudentWord] @connection(keyName: "wordsByStudent", fields: ["email"])
+  location: [PersonLocation] @connection(fields: ["email"])
 }
 type Institution 
 @model 
@@ -828,7 +829,6 @@ type Theme {
   images: [String!]!
   additionalContent: AdditionalContent
 }
-
 type PersonLocation @model
 @key(fields: ["personEmail", "personAuthID"]) 
 @key(name: "bySyllabusLesson", fields: ["syllabusLessonID"], queryField: "personLocationBySyllabusLesson")
@@ -845,7 +845,7 @@ type PersonLocation @model
   room: Room @connection(fields: ["roomID"])
 }
 
-type Subscription {
+type Subscription { 
   onChangePersonLocation(syllabusLessonID: ID!): PersonLocation
     @aws_subscribe(mutations: ["createPersonLocation", "updatePersonLocation", "deletePersonLocation"])
   onChangeStudentData(syllabusLessonID: ID!): StudentData

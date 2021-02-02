@@ -52,6 +52,20 @@ export const createPerson = /* GraphQL */ `
         }
         nextToken
       }
+      location {
+        items {
+          id
+          personAuthID
+          personEmail
+          syllabusLessonID
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -107,6 +121,20 @@ export const updatePerson = /* GraphQL */ `
         }
         nextToken
       }
+      location {
+        items {
+          id
+          personAuthID
+          personEmail
+          syllabusLessonID
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -157,6 +185,20 @@ export const deletePerson = /* GraphQL */ `
           wordID
           studentID
           studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      location {
+        items {
+          id
+          personAuthID
+          personEmail
+          syllabusLessonID
+          roomID
+          currentLocation
+          lessonProgress
           createdAt
           updatedAt
         }
@@ -641,6 +683,9 @@ export const createStaff = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -698,6 +743,9 @@ export const updateStaff = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -753,6 +801,9 @@ export const deleteStaff = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -844,6 +895,9 @@ export const createRoom = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -977,6 +1031,9 @@ export const updateRoom = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1106,6 +1163,9 @@ export const deleteRoom = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -1486,6 +1546,9 @@ export const createClassStudent = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1565,6 +1628,9 @@ export const updateClassStudent = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1642,6 +1708,9 @@ export const deleteClassStudent = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -4093,6 +4162,9 @@ export const createStudentWord = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4145,6 +4217,9 @@ export const updateStudentWord = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4195,6 +4270,9 @@ export const deleteStudentWord = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -4526,6 +4604,9 @@ export const createRoomMsgs = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4572,6 +4653,9 @@ export const updateRoomMsgs = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4616,6 +4700,9 @@ export const deleteRoomMsgs = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -6794,6 +6881,9 @@ export const createStudentData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6965,6 +7055,9 @@ export const updateStudentData = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -7140,6 +7233,9 @@ export const deleteStudentData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7249,6 +7345,9 @@ export const createQuestionData = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -7361,6 +7460,9 @@ export const updateQuestionData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7469,6 +7571,9 @@ export const deleteQuestionData = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -8340,6 +8445,9 @@ export const createPersonLocation = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -8518,6 +8626,9 @@ export const updatePersonLocation = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -8694,6 +8805,9 @@ export const deletePersonLocation = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt

@@ -1965,8 +1965,6 @@ export type CreatePersonLocationInput = {
 };
 
 export type ModelPersonLocationConditionInput = {
-  personAuthID?: ModelStringInput | null,
-  personEmail?: ModelStringInput | null,
   syllabusLessonID?: ModelIDInput | null,
   roomID?: ModelIDInput | null,
   currentLocation?: ModelStringInput | null,
@@ -1978,8 +1976,8 @@ export type ModelPersonLocationConditionInput = {
 
 export type UpdatePersonLocationInput = {
   id: string,
-  personAuthID?: string | null,
-  personEmail?: string | null,
+  personAuthID: string,
+  personEmail: string,
   syllabusLessonID?: string | null,
   roomID?: string | null,
   currentLocation?: string | null,
@@ -1987,7 +1985,8 @@ export type UpdatePersonLocationInput = {
 };
 
 export type DeletePersonLocationInput = {
-  id?: string | null,
+  personEmail: string,
+  personAuthID: string,
 };
 
 export type ModelStringKeyConditionInput = {
@@ -2576,6 +2575,22 @@ export type CreatePersonMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    location:  {
+      __typename: "ModelPersonLocationConnection",
+      items:  Array< {
+        __typename: "PersonLocation",
+        id: string,
+        personAuthID: string,
+        personEmail: string,
+        syllabusLessonID: string,
+        roomID: string,
+        currentLocation: string | null,
+        lessonProgress: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2637,6 +2652,22 @@ export type UpdatePersonMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    location:  {
+      __typename: "ModelPersonLocationConnection",
+      items:  Array< {
+        __typename: "PersonLocation",
+        id: string,
+        personAuthID: string,
+        personEmail: string,
+        syllabusLessonID: string,
+        roomID: string,
+        currentLocation: string | null,
+        lessonProgress: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2693,6 +2724,22 @@ export type DeletePersonMutation = {
         wordID: string,
         studentID: string,
         studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    location:  {
+      __typename: "ModelPersonLocationConnection",
+      items:  Array< {
+        __typename: "PersonLocation",
+        id: string,
+        personAuthID: string,
+        personEmail: string,
+        syllabusLessonID: string,
+        roomID: string,
+        currentLocation: string | null,
+        lessonProgress: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -3242,6 +3289,10 @@ export type CreateStaffMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3306,6 +3357,10 @@ export type UpdateStaffMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3368,6 +3423,10 @@ export type DeleteStaffMutation = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -3472,6 +3531,10 @@ export type CreateRoomMutation = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -3622,6 +3685,10 @@ export type UpdateRoomMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3768,6 +3835,10 @@ export type DeleteRoomMutation = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -4199,6 +4270,10 @@ export type CreateClassStudentMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4287,6 +4362,10 @@ export type UpdateClassStudentMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4373,6 +4452,10 @@ export type DeleteClassStudentMutation = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -7163,6 +7246,10 @@ export type CreateStudentWordMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -7221,6 +7308,10 @@ export type UpdateStudentWordMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -7277,6 +7368,10 @@ export type DeleteStudentWordMutation = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -7655,6 +7750,10 @@ export type CreateRoomMsgsMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -7706,6 +7805,10 @@ export type UpdateRoomMsgsMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -7755,6 +7858,10 @@ export type DeleteRoomMsgsMutation = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -10205,6 +10312,10 @@ export type CreateStudentDataMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -10401,6 +10512,10 @@ export type UpdateStudentDataMutation = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -10601,6 +10716,10 @@ export type DeleteStudentDataMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -10731,6 +10850,10 @@ export type CreateQuestionDataMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -10853,6 +10976,10 @@ export type UpdateQuestionDataMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -10973,6 +11100,10 @@ export type DeleteQuestionDataMutation = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -11943,6 +12074,10 @@ export type CreatePersonLocationMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -12137,6 +12272,10 @@ export type UpdatePersonLocationMutation = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -12329,6 +12468,10 @@ export type DeletePersonLocationMutation = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -12536,6 +12679,22 @@ export type GetPersonQuery = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    location:  {
+      __typename: "ModelPersonLocationConnection",
+      items:  Array< {
+        __typename: "PersonLocation",
+        id: string,
+        personAuthID: string,
+        personEmail: string,
+        syllabusLessonID: string,
+        roomID: string,
+        currentLocation: string | null,
+        lessonProgress: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -12581,6 +12740,10 @@ export type ListPersonsQuery = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -12795,6 +12958,10 @@ export type GetStaffQuery = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -12949,6 +13116,10 @@ export type GetRoomQuery = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -13325,6 +13496,10 @@ export type GetClassStudentQuery = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -15058,6 +15233,10 @@ export type GetRoomMsgsQuery = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -16005,6 +16184,10 @@ export type GetStudentDataQuery = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -16225,6 +16408,10 @@ export type GetQuestionDataQuery = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -16584,7 +16771,8 @@ export type ListThemeTemplatesQuery = {
 };
 
 export type GetPersonLocationQueryVariables = {
-  id: string,
+  personEmail: string,
+  personAuthID: string,
 };
 
 export type GetPersonLocationQuery = {
@@ -16625,6 +16813,10 @@ export type GetPersonLocationQuery = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -16777,9 +16969,12 @@ export type GetPersonLocationQuery = {
 };
 
 export type ListPersonLocationsQueryVariables = {
+  personEmail?: string | null,
+  personAuthID?: ModelStringKeyConditionInput | null,
   filter?: ModelPersonLocationFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
 };
 
 export type ListPersonLocationsQuery = {
@@ -16903,6 +17098,10 @@ export type UserByIdQuery = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -16949,6 +17148,10 @@ export type UsersByRoleQuery = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -17162,6 +17365,10 @@ export type OnChangePersonLocationSubscription = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -17420,6 +17627,10 @@ export type OnChangeStudentDataSubscription = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -17758,6 +17969,22 @@ export type OnCreatePersonSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    location:  {
+      __typename: "ModelPersonLocationConnection",
+      items:  Array< {
+        __typename: "PersonLocation",
+        id: string,
+        personAuthID: string,
+        personEmail: string,
+        syllabusLessonID: string,
+        roomID: string,
+        currentLocation: string | null,
+        lessonProgress: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -17814,6 +18041,22 @@ export type OnUpdatePersonSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    location:  {
+      __typename: "ModelPersonLocationConnection",
+      items:  Array< {
+        __typename: "PersonLocation",
+        id: string,
+        personAuthID: string,
+        personEmail: string,
+        syllabusLessonID: string,
+        roomID: string,
+        currentLocation: string | null,
+        lessonProgress: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -17865,6 +18108,22 @@ export type OnDeletePersonSubscription = {
         wordID: string,
         studentID: string,
         studentAuthID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    location:  {
+      __typename: "ModelPersonLocationConnection",
+      items:  Array< {
+        __typename: "PersonLocation",
+        id: string,
+        personAuthID: string,
+        personEmail: string,
+        syllabusLessonID: string,
+        roomID: string,
+        currentLocation: string | null,
+        lessonProgress: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -18379,6 +18638,10 @@ export type OnCreateStaffSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -18438,6 +18701,10 @@ export type OnUpdateStaffSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -18495,6 +18762,10 @@ export type OnDeleteStaffSubscription = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -18594,6 +18865,10 @@ export type OnCreateRoomSubscription = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -18739,6 +19014,10 @@ export type OnUpdateRoomSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -18880,6 +19159,10 @@ export type OnDeleteRoomSubscription = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -19291,6 +19574,10 @@ export type OnCreateClassStudentSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -19374,6 +19661,10 @@ export type OnUpdateClassStudentSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -19455,6 +19746,10 @@ export type OnDeleteClassStudentSubscription = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -21895,6 +22190,10 @@ export type OnCreateStudentWordSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -21948,6 +22247,10 @@ export type OnUpdateStudentWordSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -21999,6 +22302,10 @@ export type OnDeleteStudentWordSubscription = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -22312,6 +22619,10 @@ export type OnCreateRoomMsgsSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -22358,6 +22669,10 @@ export type OnUpdateRoomMsgsSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -22402,6 +22717,10 @@ export type OnDeleteRoomMsgsSubscription = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -24674,6 +24993,10 @@ export type OnCreateQuestionDataSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -24791,6 +25114,10 @@ export type OnUpdateQuestionDataSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -24906,6 +25233,10 @@ export type OnDeleteQuestionDataSubscription = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,
@@ -25826,6 +26157,10 @@ export type OnCreatePersonLocationSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -26015,6 +26350,10 @@ export type OnUpdatePersonLocationSubscription = {
         __typename: "ModelStudentWordConnection",
         nextToken: string | null,
       } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -26202,6 +26541,10 @@ export type OnDeletePersonLocationSubscription = {
       } | null,
       wordbank:  {
         __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      location:  {
+        __typename: "ModelPersonLocationConnection",
         nextToken: string | null,
       } | null,
       createdAt: string,

@@ -49,6 +49,20 @@ export const getPerson = /* GraphQL */ `
         }
         nextToken
       }
+      location {
+        items {
+          id
+          personAuthID
+          personEmail
+          syllabusLessonID
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -96,6 +110,9 @@ export const listPersons = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -287,6 +304,9 @@ export const getStaff = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -421,6 +441,9 @@ export const getRoom = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -753,6 +776,9 @@ export const getClassStudent = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -2264,6 +2290,9 @@ export const getRoomMsgs = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3111,6 +3140,9 @@ export const getStudentData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3307,6 +3339,9 @@ export const getQuestionData = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -3624,8 +3659,8 @@ export const listThemeTemplates = /* GraphQL */ `
   }
 `;
 export const getPersonLocation = /* GraphQL */ `
-  query GetPersonLocation($id: ID!) {
-    getPersonLocation(id: $id) {
+  query GetPersonLocation($personEmail: String!, $personAuthID: String!) {
+    getPersonLocation(personEmail: $personEmail, personAuthID: $personAuthID) {
       id
       personAuthID
       personEmail
@@ -3658,6 +3693,9 @@ export const getPersonLocation = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -3800,11 +3838,21 @@ export const getPersonLocation = /* GraphQL */ `
 `;
 export const listPersonLocations = /* GraphQL */ `
   query ListPersonLocations(
+    $personEmail: String
+    $personAuthID: ModelStringKeyConditionInput
     $filter: ModelPersonLocationFilterInput
     $limit: Int
     $nextToken: String
+    $sortDirection: ModelSortDirection
   ) {
-    listPersonLocations(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listPersonLocations(
+      personEmail: $personEmail
+      personAuthID: $personAuthID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
       items {
         id
         personAuthID
@@ -3920,6 +3968,9 @@ export const userById = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -3967,6 +4018,9 @@ export const usersByRole = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt

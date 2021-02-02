@@ -39,6 +39,9 @@ export const onChangePersonLocation = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -271,6 +274,9 @@ export const onChangeStudentData = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -567,6 +573,20 @@ export const onCreatePerson = /* GraphQL */ `
         }
         nextToken
       }
+      location {
+        items {
+          id
+          personAuthID
+          personEmail
+          syllabusLessonID
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -619,6 +639,20 @@ export const onUpdatePerson = /* GraphQL */ `
         }
         nextToken
       }
+      location {
+        items {
+          id
+          personAuthID
+          personEmail
+          syllabusLessonID
+          roomID
+          currentLocation
+          lessonProgress
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -666,6 +700,20 @@ export const onDeletePerson = /* GraphQL */ `
           wordID
           studentID
           studentAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      location {
+        items {
+          id
+          personAuthID
+          personEmail
+          syllabusLessonID
+          roomID
+          currentLocation
+          lessonProgress
           createdAt
           updatedAt
         }
@@ -1129,6 +1177,9 @@ export const onCreateStaff = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1183,6 +1234,9 @@ export const onUpdateStaff = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1235,6 +1289,9 @@ export const onDeleteStaff = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -1323,6 +1380,9 @@ export const onCreateRoom = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -1453,6 +1513,9 @@ export const onUpdateRoom = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1579,6 +1642,9 @@ export const onDeleteRoom = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -1947,6 +2013,9 @@ export const onCreateClassStudent = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -2023,6 +2092,9 @@ export const onUpdateClassStudent = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -2097,6 +2169,9 @@ export const onDeleteClassStudent = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -4338,6 +4413,9 @@ export const onCreateStudentWord = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4387,6 +4465,9 @@ export const onUpdateStudentWord = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4434,6 +4515,9 @@ export const onDeleteStudentWord = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -4726,6 +4810,9 @@ export const onCreateRoomMsgs = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4769,6 +4856,9 @@ export const onUpdateRoomMsgs = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4810,6 +4900,9 @@ export const onDeleteRoomMsgs = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -6860,6 +6953,9 @@ export const onCreateQuestionData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6967,6 +7063,9 @@ export const onUpdateQuestionData = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7072,6 +7171,9 @@ export const onDeleteQuestionData = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
@@ -7913,6 +8015,9 @@ export const onCreatePersonLocation = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -8088,6 +8193,9 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         wordbank {
           nextToken
         }
+        location {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -8261,6 +8369,9 @@ export const onDeletePersonLocation = /* GraphQL */ `
           nextToken
         }
         wordbank {
+          nextToken
+        }
+        location {
           nextToken
         }
         createdAt
