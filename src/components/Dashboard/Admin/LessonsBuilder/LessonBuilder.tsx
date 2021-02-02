@@ -16,6 +16,7 @@ import WizardScroller from '../../../Atoms/WizardScroller';
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm';
 import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
 import QuestionBuilder from './StepActionComponent/QuestionBuilder';
+import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
 import PreviewForm from './StepActionComponent/PreviewForm';
 import PreviousQuestions from './StepActionComponent/PreviousQuestions';
 
@@ -61,8 +62,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const assessmentScrollerStep = [
     { name: "General Information", icon: <IoCardSharp /> },
     { name: "Instructions", icon: <IoDocumentText />, isDisabled: true },
-    { name: "Question Builder", icon: <FaQuestionCircle />, isDisabled: true },
-    { name: "Previously Used Questions", icon: <RiQuestionAnswerLine />, isDisabled: true },
+    { name: "Builder", icon: <FaQuestionCircle />, isDisabled: true },
+    // { name: "Previously Used Questions", icon: <RiQuestionAnswerLine />, isDisabled: true },
     { name: "Preview Details", icon: <FaRegEye />, isDisabled: true }
   ];
   const lessonScrollerStep = [
@@ -98,22 +99,23 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         />;
       case 'Instructions':
         return <AssessmentInstuctions />;
-      case 'Question Builder':
-        return <QuestionBuilder setActiveStep={setActiveStep} />;
-      case 'Previously Used Questions':
-        return <PreviousQuestions />;
+      case 'Builder':
+        return <CheckpointBuilder />;
+      // return <QuestionBuilder setActiveStep={setActiveStep} />;
+      // case 'Previously Used Questions':
+      //   return <PreviousQuestions />;
       case 'Preview Details':
         return <PreviewForm />;
-      default:
-        return <AddNewLessonForm
-          changeLessonType={changeLessonType}
-          formData={formData}
-          setFormData={setFormData}
-          designersList={designersList}
-          selectedDesigners={selectedDesigners}
-          setSelectedDesigners={setSelectedDesigners}
-          postLessonCreation={postLessonCreation}
-        />;
+      // default:
+      //   return <AddNewLessonForm
+      //     changeLessonType={changeLessonType}
+      //     formData={formData}
+      //     setFormData={setFormData}
+      //     designersList={designersList}
+      //     selectedDesigners={selectedDesigners}
+      //     setSelectedDesigners={setSelectedDesigners}
+      //     postLessonCreation={postLessonCreation}
+      //   />;
     }
   }
 

@@ -1,4 +1,5 @@
 import React from 'react'
+import Accordion from '../../../../Atoms/Accordion'
 
 const PreviewForm = () => {
   return (
@@ -9,7 +10,7 @@ const PreviewForm = () => {
       </div>
 
       <div className="p-4">
-        <p className="p-20 text-center">Work in progress...</p>
+        {/* <Accordion /> */}
       </div>
     </div>
   )

@@ -16,6 +16,7 @@ import WizardScroller from '../../../Atoms/WizardScroller';
 import GeneralInformation from './StepActionComponent/GeneralInformation';
 import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
 import QuestionBuilder from './StepActionComponent/QuestionBuilder';
+import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
 import PreviewForm from './StepActionComponent/PreviewForm';
 import PreviousQuestions from './StepActionComponent/PreviousQuestions';
 import { InitialData } from './LessonBuilder';
@@ -48,7 +49,8 @@ const LessonEdit = (props: LessonEditProps) => {
 
   const [formData, setFormData] = useState<InitialData>(initialData);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
-  const [activeStep, setActiveStep] = useState('General Information');
+  const [activeStep, setActiveStep] = useState('Builder');
+  // const [activeStep, setActiveStep] = useState('General Information');
   const [loading, setLoading] = useState(false);
 
   const breadCrumsList = [
@@ -63,8 +65,8 @@ const LessonEdit = (props: LessonEditProps) => {
   const assessmentScrollerStep = [
     { name: "General Information", icon: <IoCardSharp /> },
     { name: "Instructions", icon: <IoDocumentText /> },
-    { name: "Question Builder", icon: <FaQuestionCircle /> },
-    { name: "Previously Used Questions", icon: <RiQuestionAnswerLine /> },
+    { name: "Builder", icon: <FaQuestionCircle /> },
+    // { name: "Previously Used Questions", icon: <RiQuestionAnswerLine /> },
     { name: "Preview Details", icon: <FaRegEye /> }
   ];
   const lessonScrollerStep = [
@@ -131,13 +133,14 @@ const LessonEdit = (props: LessonEditProps) => {
         />;
       case 'Instructions':
         return <AssessmentInstuctions />;
-      case 'Question Builder':
-        return <QuestionBuilder setActiveStep={setActiveStep} />;
-      case 'Previously Used Questions':
-        return <PreviousQuestions />;
+      case 'Builder':
+        return <CheckpointBuilder />;
+      // return <QuestionBuilder setActiveStep={setActiveStep} />;
+      // case 'Previously Used Questions':
+      //   return <PreviousQuestions />;
       case 'Preview Details':
         return <PreviewForm />;
-      default:
+      // default:
       // return <GeneralInformation />;
     }
   }
