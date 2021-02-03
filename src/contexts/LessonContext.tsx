@@ -216,7 +216,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     let queryParams = queryString.parse(location.search);
 
     // @ts-ignore
-    const syllabusLessonSubscription = API.graphql(graphqlOperation(subscriptions.onChangeSyllabusLesson, { id: state.syllabusLessonID })).subscribe({
+    const syllabusLessonSubscription = API.graphql(graphqlOperation(subscriptions.onChangeSyllabusLesson, { id: queryParams.id })).subscribe({
       next: (syllabusLessonData: any) => {
         const updatedLessonPlan = syllabusLessonData.value.data.onChangeSyllabusLesson;
         console.log('updatedLessonPlan', updatedLessonPlan);
