@@ -6,12 +6,13 @@ import ToolTip from '../General/ToolTip/ToolTip';
 import RosterRow from './ClassRoster/RosterRow';
 
 import * as queries from '../../graphql/queries';
+import * as subscriptions from '../../graphql/subscriptions';
 
 /**
  * Function imports
  */
 import { lc } from '../../utilities/strings';
-import { API, graphqlOperation } from '@aws-amplify/api';
+import API, { graphqlOperation } from '@aws-amplify/api';
 
 interface classRosterProps {
   handleUpdateSyllabusLesson: () => Promise<void>;
@@ -46,19 +47,23 @@ const ClassRoster = (props: classRosterProps) => {
   useEffect(() => {
     // load students into roster
     const getSyllabusLessonStudents = async () => {
-      const syllabusLessonStudents: any = await API.graphql(
-        graphqlOperation(queries.listPersonLocations, {
-          filter: { syllabusLessonID: { contains: state.syllabusLessonID } },
-        })
-      );
-      console.log('students --- ', syllabusLessonStudents);
-      const quickFix = syllabusLessonStudents.data.listPersonLocations.items.map((student: any) => {
-        return {...student, currentLocation: getPageLabel(student.currentLocation)}
-      })
-      setStudents(quickFix)
+      try {
+        const syllabusLessonStudents: any = await API.graphql(
+          graphqlOperation(queries.listPersonLocations, {
+            filter: { syllabusLessonID: { contains: state.syllabusLessonID } },
+          }),
+        );
+        console.log('students --- ', syllabusLessonStudents);
+        const studentList = syllabusLessonStudents.data.listPersonLocations.items;
+        updateStudentRoster(studentList, null);
+        subscription = subscribeToPersonLocations();
+      } catch (e) {
+        console.error('getSyllabusLessonstudents - ', e);
+      }
     };
-    if (state.syllabusLessonID) getSyllabusLessonStudents();
-    // assign subscription
+    if (state.syllabusLessonID) {
+      getSyllabusLessonStudents();
+    }
   }, [state.syllabusLessonID]);
 
   useEffect(() => {
@@ -68,6 +73,36 @@ const ClassRoster = (props: classRosterProps) => {
     //     handleUpdateClassroom()
     // }
   }, [state.studentViewing]);
+
+  const subscribeToPersonLocations = () => {
+    const syllabusLessonID = state.syllabusLessonID;
+    // @ts-ignore
+    const personLocationSubscription = API.graphql(graphqlOperation(subscriptions.onChangePersonLocation, { syllabusLessonID: syllabusLessonID })).subscribe({
+      next: (locationData: any) => {
+        const updatedStudent = locationData.value.data.onChangePersonLocation;
+        updateStudentRoster(students, updatedStudent);
+        console.log('loc sub: ', updatedStudent);
+      },
+    });
+    return personLocationSubscription;
+  };
+
+  const updateStudentRoster = (studentList: any, addOrRemove: any) => {
+    if (addOrRemove !== null) {
+      const containsUpdate = studentList.filter((student: any) => student.personAuthID === addOrRemove.personAuthID).length > 0;
+      const rosterExpanded = (!containsUpdate) ? [...studentList, addOrRemove] : studentList;
+      const newRoster = rosterExpanded.map((student: any) => {
+        return { ...student, currentLocation: getPageLabel(student.currentLocation) };
+      });
+      setStudents(newRoster);
+    }
+    if(addOrRemove === null) {
+      const newRoster = studentList.map((student: any) => {
+        return { ...student, currentLocation: getPageLabel(student.currentLocation) };
+      });
+      setStudents(newRoster);
+    }
+  };
 
   /**
    * UPDATE THIS SORT FUNCTION TO SORT CONTEXT
@@ -128,7 +163,6 @@ const ClassRoster = (props: classRosterProps) => {
       return student.personAuthID === id;
     });
 
-
     console.log('selected', id, selected[0]);
     dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] });
   };
@@ -188,7 +222,6 @@ const ClassRoster = (props: classRosterProps) => {
         {/* STUDENTS */}
         {students.length > 0
           ? studentRoster().map((student: any, key: number) => (
-              <React.Fragment key={`classroster_${key}`}>
                 <RosterRow
                   key={key}
                   keyProp={key}
@@ -208,7 +241,6 @@ const ClassRoster = (props: classRosterProps) => {
                   handleQuitViewing={handleQuitViewing}
                   isSameStudentShared={isSameStudentShared}
                 />
-              </React.Fragment>
             ))
           : null}
       </div>

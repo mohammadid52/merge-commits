@@ -7,6 +7,7 @@ import * as customSubscriptions from '../customGraphql/customSubscriptions';
 import * as customMutations from '../customGraphql/customMutations';
 import * as mutations from '../graphql/mutations';
 import * as customQueries from '../customGraphql/customQueries';
+import * as subscriptions from '../graphql/subscriptions';
 // import { API, graphqlOperation } from 'aws-amplify';
 import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
@@ -43,7 +44,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const [data, setData] = useState<DataObject>();
   const [lesson, setLesson] = useState<DataObject>();
 
-  // const [ cookies ] = useCookies(['auth']);
   const [state, dispatch] = useReducer(lessonReducer, lessonState);
   const location = useLocation();
   const history = useHistory();
@@ -111,6 +111,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       console.error('create PersonLocation : ', e);
     }
   }
+  //
 
   async function updatePersonLocation() {
     const updatedLocation = {
@@ -201,7 +202,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         console.log('classroom data', classroom);
         setLesson(classroom.data.getSyllabusLesson);
         getOrCreateStudentData();
-        subscription = subscribeToClassroom();
+        subscription = subscribeToSyllabusLesson();
       } catch (error) {
         console.error(error);
       }
@@ -211,13 +212,13 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   }
 
   // TODO: rename to subscribeToSyllabusLesson
-  const subscribeToClassroom = () => {
+  const subscribeToSyllabusLesson = () => {
     let queryParams = queryString.parse(location.search);
 
     // @ts-ignore
-    const syllabusLessonSubscription = API.graphql(graphqlOperation(customSubscriptions.onUpdateSyllabusLesson, { id: queryParams.id })).subscribe({
+    const syllabusLessonSubscription = API.graphql(graphqlOperation(subscriptions.onChangeSyllabusLesson, { id: state.syllabusLessonID })).subscribe({
       next: (syllabusLessonData: any) => {
-        const updatedLessonPlan = syllabusLessonData.value.data.onUpdateSyllabusLesson;
+        const updatedLessonPlan = syllabusLessonData.value.data.onChangeSyllabusLesson;
         console.log('updatedLessonPlan', updatedLessonPlan);
         dispatch({
           type: 'UPDATE_LESSON_PLAN',
@@ -263,7 +264,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
           pages: removeDisabled(lesson.lessonPlan),
           displayData: lesson.displayData,
           word_bank: wordBank,
-          subscribeFunc: subscribeToClassroom,
+          subscribeFunc: subscribeToSyllabusLesson,
         },
       });
     }
@@ -289,7 +290,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         dispatch,
         theme,
         subscription,
-        subscribeToClassroom,
+        subscribeToSyllabusLesson,
       }}>
       {children}
     </LessonContext.Provider>
