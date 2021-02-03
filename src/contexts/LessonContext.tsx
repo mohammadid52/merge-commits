@@ -110,6 +110,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       console.error('create PersonLocation : ', e);
     }
   }
+  //
 
   async function updatePersonLocation() {
     const updatedLocation = {
