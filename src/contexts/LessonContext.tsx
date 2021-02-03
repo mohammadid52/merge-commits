@@ -217,18 +217,21 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
     console.log('subscription params: ', queryParams)
     // @ts-ignore
-    const syllabusLessonSubscription = API.graphql(graphqlOperation(subscriptions.onChangeSyllabusLesson, { id: queryParams.id  })).subscribe({
+    const syllabusLessonSubscription = API.graphql(graphqlOperation(customSubscriptions.onChangeSyllabusLesson, { id: queryParams.id  })).subscribe({
       next: (syllabusLessonData: any) => {
         const updatedLessonPlan = syllabusLessonData.value.data.onChangeSyllabusLesson;
-        console.log('updatedLessonPlan --> ', updatedLessonPlan);
-        dispatch({
-          type: 'UPDATE_LESSON_PLAN',
-          payload: {
-            pages: removeDisabled(updatedLessonPlan.lessonPlan),
-            displayData: updatedLessonPlan.displayData,
-            viewing: updatedLessonPlan.viewing,
-          },
-        });
+        // @ts-ignore
+        API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id })).then((sLessonData: any) => {
+          sLessonData = sLessonData.data.getSyllabusLesson
+          dispatch({
+            type: 'UPDATE_LESSON_PLAN',
+            payload: {
+              pages: removeDisabled(sLessonData.lessonPlan),
+              displayData: sLessonData.displayData,
+              viewing: sLessonData.viewing,
+            },
+          });
+        })
       },
     });
 
