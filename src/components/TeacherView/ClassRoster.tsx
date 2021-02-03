@@ -13,6 +13,7 @@ import * as subscriptions from '../../graphql/subscriptions';
  */
 import { lc } from '../../utilities/strings';
 import API, { graphqlOperation } from '@aws-amplify/api';
+import exp from 'constants';
 
 interface classRosterProps {
   handleUpdateSyllabusLesson: () => Promise<void>;
@@ -41,6 +42,7 @@ const ClassRoster = (props: classRosterProps) => {
   const { state, dispatch } = useContext(LessonControlContext);
   const [sortBy, setSortBy] = useState<string>('');
   const [students, setStudents] = useState<any[]>([]);
+  const [updatedStudent, setUpdatedStudent] = useState<any[]>([]);
 
   let subscription: any;
 
@@ -55,7 +57,7 @@ const ClassRoster = (props: classRosterProps) => {
         );
         // console.log('students --- ', syllabusLessonStudents);
         const studentList = syllabusLessonStudents.data.listPersonLocations.items;
-        updateStudentRoster(studentList, null);
+        setStudents(studentList);
         dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: studentList } });
         subscription = subscribeToPersonLocations();
       } catch (e) {
@@ -67,43 +69,47 @@ const ClassRoster = (props: classRosterProps) => {
     }
   }, [state.syllabusLessonID]);
 
-  useEffect(() => {
-    console.log(state.studentViewing);
-
-    // if (state.studentViewing.studentInfo) {
-    //     handleUpdateClassroom()
-    // }
-  }, [state.studentViewing]);
-
   const subscribeToPersonLocations = () => {
     const syllabusLessonID = state.syllabusLessonID;
     // @ts-ignore
     const personLocationSubscription = API.graphql(graphqlOperation(subscriptions.onChangePersonLocation, { syllabusLessonID: syllabusLessonID }) ).subscribe({
       next: (locationData: any) => {
         const updatedStudent = locationData.value.data.onChangePersonLocation;
-        updateStudentRoster(students, updatedStudent);
-        console.log('loc sub: ', updatedStudent);
+        setUpdatedStudent(updatedStudent);
       },
     });
     return personLocationSubscription;
   };
 
-  const updateStudentRoster = (studentList: any, newStudent: any) => {
-    const rosterExpanded = [...studentList, newStudent];
-    console.log('rosted expanded : ', studentList, '  ', newStudent, '  ', rosterExpanded);
-    if (newStudent !== null) {
-      const newRoster = rosterExpanded.map((student: any) => {
-        return { ...student, currentLocation: getPageLabel(student.currentLocation) };
-      });
-      setStudents(newRoster);
-      dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: newRoster } });
-    } else {
-      const newRoster = studentList.map((student: any) => {
-        return { ...student, currentLocation: getPageLabel(student.currentLocation) };
-      });
-      setStudents(newRoster);
+  useEffect( ()=>{
+    const updateStudentRoster = (newStudent: any) => {
+      const studentExists =
+        students.filter((student: any) => student.personAuthID === newStudent.personAuthID).length > 0;
+
+      if (studentExists) {
+        const existRoster = students.map((student: any) => {
+          if (student.personAuthID === newStudent.personAuthID) {
+            return { ...student, currentLocation: newStudent.currentLocation };
+          } else {
+            return student;
+          }
+        });
+        console.log('exist roster: ', existRoster);
+        setStudents(existRoster)
+        dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: existRoster } });
+      } else {
+        const newRoster = [...students, newStudent];
+        console.log('new roster: ', newRoster);
+        setStudents(newRoster);
+        dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: newRoster } });
+      }
+    };
+    if(students.length > 0){
+      updateStudentRoster(updatedStudent)
     }
-  };
+  },[updatedStudent])
+
+
 
   const updateStateRoster = (studentList: any) => {};
 
@@ -156,7 +162,7 @@ const ClassRoster = (props: classRosterProps) => {
       case 'action':
         return sortStudentBy(SortByEnum.ACTION);
       default:
-        return students;
+        return state.roster;
     }
   };
 
@@ -223,7 +229,7 @@ const ClassRoster = (props: classRosterProps) => {
       {/* ROWS */}
       <div className={`w-full flex flex-col items-center`}>
         {/* STUDENTS */}
-        {students.length > 0
+        {state.roster.length > 0
           ? studentRoster().map((student: any, key: number) => (
               <RosterRow
                 key={key}
@@ -235,7 +241,7 @@ const ClassRoster = (props: classRosterProps) => {
                 lastName={student.person.lastName}
                 preferredName={student.person.preferredName}
                 role={student.person.role}
-                currentLocation={student.currentLocation}
+                currentLocation={getPageLabel(student.currentLocation)}
                 lessonProgress={student.lessonProgress}
                 handleSelect={handleSelect}
                 studentStatus={studentStatus}
