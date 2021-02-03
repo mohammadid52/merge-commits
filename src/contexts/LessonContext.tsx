@@ -17,6 +17,7 @@ import { standardTheme } from './GlobalContext';
 import { initRosterSyllabusLessons } from '../uniqueScripts/InitRoster_in_SyllabusLessons';
 import { create } from 'domain';
 import * as queries from '../graphql/queries';
+import usePrevious from '../customHooks/previousProps';
 
 const removeDisabled = (array: PagesType): any[] => {
   let updatedArray = array.filter((item: { disabled: boolean; [key: string]: any }) => {
@@ -52,7 +53,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const theme = standardTheme;
   const [loaded, setLoaded] = useState<boolean>(false);
   const [personLocationObj, setPersonLocationObj] = useState<any>();
-
+  const [recentOp, setRecentOp] = useState<string>('');
   const queryParams = queryString.parse(location.search);
 
   // INIT PERSON LOCATION COOKIS & STATE
@@ -62,8 +63,9 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         const user = await Auth.currentAuthenticatedUser();
         if (user) {
           const { email, sub } = user.attributes;
-          let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }));
-          userInfo = userInfo.data.getPerson;
+          let userInfo: any = await API.graphql(graphqlOperation(customQueries.getPersonLocation, { personEmail: email, personAuthID: sub }));
+          userInfo = userInfo.data.getPersonLocation;
+          if(userInfo !== null) setRecentOp('updated');
           setPersonLocationObj(userInfo);
         }
       } catch (e) {
@@ -77,17 +79,20 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   }, []);
 
   useEffect(() => {
-    if (loaded && state.syllabusLessonID) {
-      if (personLocationObj && personLocationObj.location && personLocationObj.location.items.length > 0) {
-        updatePersonLocation();
-      } else {
+    if (loaded && state.syllabusLessonID && state.studentAuthID) {
+      if(recentOp === 'created' || recentOp === 'updated'){
+        if (personLocationObj && personLocationObj.currentLocation) {
+          updatePersonLocation();
+        }
+      }
+      if(recentOp === ''){
         createPersonLocation();
       }
     }
-  }, [loaded, personLocationObj, state.syllabusLessonID]);
+  }, [loaded, state.syllabusLessonID, state.studentAuthID]);
 
   useEffect(() => {
-    if (personLocationObj && personLocationObj.location && personLocationObj.location.items.length > 0) {
+    if(recentOp !== ''){
       updatePersonLocation();
     }
   }, [state.currentPage]);
@@ -95,8 +100,8 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   // CREATE LOCATION RECORD or UPDATE
   async function createPersonLocation() {
     const newLocation = {
-      personAuthID: personLocationObj.authId,
-      personEmail: personLocationObj.email,
+      personAuthID: state.studentAuthID,
+      personEmail: state.studentUsername,
       syllabusLessonID: state.syllabusLessonID,
       roomID: '0',
       currentLocation: state.currentPage,
@@ -109,28 +114,33 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       );
     } catch (e) {
       console.error('create PersonLocation : ', e);
+    } finally {
+      setRecentOp('created');
     }
   }
   //
 
   async function updatePersonLocation() {
     const updatedLocation = {
-      id: personLocationObj.location.length > 0 ? personLocationObj.location[0].id : '',
-      personAuthID: personLocationObj.authId,
-      personEmail: personLocationObj.email,
+      id: personLocationObj.hasOwnProperty('id') ? personLocationObj.id : '',
+      personAuthID: personLocationObj.personAuthID,
+      personEmail: personLocationObj.personEmail,
       syllabusLessonID: state.syllabusLessonID,
       roomID: '0',
       currentLocation: state.currentPage,
       lessonProgress: state.lessonProgress,
     };
     try {
-      console.log('updated', personLocationObj.location.items);
+      console.log('updated', personLocationObj);
       const newPersonLocationMutation: any = await API.graphql(
         graphqlOperation(mutations.updatePersonLocation, { input: updatedLocation })
       );
+      setPersonLocationObj(updatedLocation);
       console.log('updated person location...');
     } catch (e) {
       console.error('update PersonLocation : ', e);
+    } finally {
+      setRecentOp('updated')
     }
   }
 

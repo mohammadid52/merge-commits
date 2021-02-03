@@ -51,11 +51,12 @@ const ClassRoster = (props: classRosterProps) => {
         const syllabusLessonStudents: any = await API.graphql(
           graphqlOperation(queries.listPersonLocations, {
             filter: { syllabusLessonID: { contains: state.syllabusLessonID } },
-          }),
+          })
         );
-        console.log('students --- ', syllabusLessonStudents);
+        // console.log('students --- ', syllabusLessonStudents);
         const studentList = syllabusLessonStudents.data.listPersonLocations.items;
         updateStudentRoster(studentList, null);
+        dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: studentList } });
         subscription = subscribeToPersonLocations();
       } catch (e) {
         console.error('getSyllabusLessonstudents - ', e);
@@ -77,7 +78,7 @@ const ClassRoster = (props: classRosterProps) => {
   const subscribeToPersonLocations = () => {
     const syllabusLessonID = state.syllabusLessonID;
     // @ts-ignore
-    const personLocationSubscription = API.graphql(graphqlOperation(subscriptions.onChangePersonLocation, { syllabusLessonID: syllabusLessonID })).subscribe({
+    const personLocationSubscription = API.graphql(graphqlOperation(subscriptions.onChangePersonLocation, { syllabusLessonID: syllabusLessonID }) ).subscribe({
       next: (locationData: any) => {
         const updatedStudent = locationData.value.data.onChangePersonLocation;
         updateStudentRoster(students, updatedStudent);
@@ -90,11 +91,12 @@ const ClassRoster = (props: classRosterProps) => {
   const updateStudentRoster = (studentList: any, newStudent: any) => {
     const rosterExpanded = [...studentList, newStudent];
     console.log('rosted expanded : ', studentList, '  ', newStudent, '  ', rosterExpanded);
-    if(newStudent !== null){
+    if (newStudent !== null) {
       const newRoster = rosterExpanded.map((student: any) => {
         return { ...student, currentLocation: getPageLabel(student.currentLocation) };
       });
       setStudents(newRoster);
+      dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: newRoster } });
     } else {
       const newRoster = studentList.map((student: any) => {
         return { ...student, currentLocation: getPageLabel(student.currentLocation) };
@@ -102,6 +104,8 @@ const ClassRoster = (props: classRosterProps) => {
       setStudents(newRoster);
     }
   };
+
+  const updateStateRoster = (studentList: any) => {};
 
   /**
    * UPDATE THIS SORT FUNCTION TO SORT CONTEXT
@@ -200,9 +204,9 @@ const ClassRoster = (props: classRosterProps) => {
     }
   };
 
-    const getPageLabel = (locationIndex: string) => {
-      return state.pages[parseInt(locationIndex)].stage
-    }
+  const getPageLabel = (locationIndex: string) => {
+    return state.pages[parseInt(locationIndex)].stage;
+  };
 
   return (
     <div className={`w-full h-full bg-light-gray bg-opacity-20 overflow-y-auto overflow-x-hidden`}>
@@ -221,25 +225,25 @@ const ClassRoster = (props: classRosterProps) => {
         {/* STUDENTS */}
         {students.length > 0
           ? studentRoster().map((student: any, key: number) => (
-                <RosterRow
-                  key={key}
-                  keyProp={key}
-                  number={key}
-                  id={student.personAuthID}
-                  status={student.person.status}
-                  firstName={student.person.firstName}
-                  lastName={student.person.lastName}
-                  preferredName={student.person.preferredName}
-                  role={student.person.role}
-                  currentLocation={student.currentLocation}
-                  lessonProgress={student.lessonProgress}
-                  handleSelect={handleSelect}
-                  studentStatus={studentStatus}
-                  handleShareStudentData={handleShareStudentData}
-                  handleQuitShare={handleQuitShare}
-                  handleQuitViewing={handleQuitViewing}
-                  isSameStudentShared={isSameStudentShared}
-                />
+              <RosterRow
+                key={key}
+                keyProp={key}
+                number={key}
+                id={student.personAuthID}
+                status={student.person.status}
+                firstName={student.person.firstName}
+                lastName={student.person.lastName}
+                preferredName={student.person.preferredName}
+                role={student.person.role}
+                currentLocation={student.currentLocation}
+                lessonProgress={student.lessonProgress}
+                handleSelect={handleSelect}
+                studentStatus={studentStatus}
+                handleShareStudentData={handleShareStudentData}
+                handleQuitShare={handleQuitShare}
+                handleQuitViewing={handleQuitViewing}
+                isSameStudentShared={isSameStudentShared}
+              />
             ))
           : null}
       </div>

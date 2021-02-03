@@ -8,6 +8,7 @@ type pageObject = {
 }
 
 export type studentObject = {
+    personAuthID: string;
     id: string
     lessonProgress: string
     currentLocation?: string
