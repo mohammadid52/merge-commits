@@ -4,7 +4,7 @@ import { IoIosKeypad } from 'react-icons/io';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 import Buttons from '../../../../../Atoms/Buttons';
-import Accordion from '../../../../../Atoms/Accordion';
+import DragableAccordion from '../../../../../Atoms/DragableAccordion';
 
 interface SelectedCheckPointsListProps {
   activeCheckpoints?: any[]
@@ -56,7 +56,7 @@ const SelectedCheckPointsList = (props: SelectedCheckPointsListProps) => {
           </div>
         ) : (
             <div>
-              <Accordion titleList={dummyData} />
+              <DragableAccordion titleList={dummyData} />
               <div className="flex w-full mx-auto p-8 justify-center">
                 <Buttons btnClass="mr-4" onClick={() => changeStep('CheckpointLookup')} label="Add Existing Checkpoint" />
                 <Buttons btnClass="ml-4" onClick={() => changeStep('AddNewCheckPoint')} label="Create New Checkpoint" />

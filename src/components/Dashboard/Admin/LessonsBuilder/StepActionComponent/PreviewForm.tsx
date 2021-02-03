@@ -1,5 +1,5 @@
 import React from 'react'
-import Accordion from '../../../../Atoms/Accordion'
+import DragableAccordion from '../../../../Atoms/DragableAccordion'
 
 const PreviewForm = () => {
   return (
@@ -10,7 +10,7 @@ const PreviewForm = () => {
       </div>
 
       <div className="p-4">
-        {/* <Accordion /> */}
+        {/* <DragableAccordion /> */}
       </div>
     </div>
   )
