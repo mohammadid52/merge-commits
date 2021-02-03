@@ -43,7 +43,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const [data, setData] = useState<DataObject>();
   const [lesson, setLesson] = useState<DataObject>();
 
-  // const [ cookies ] = useCookies(['auth']);
   const [state, dispatch] = useReducer(lessonReducer, lessonState);
   const location = useLocation();
   const history = useHistory();
