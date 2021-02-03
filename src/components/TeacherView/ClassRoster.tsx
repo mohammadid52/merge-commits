@@ -87,16 +87,15 @@ const ClassRoster = (props: classRosterProps) => {
     return personLocationSubscription;
   };
 
-  const updateStudentRoster = (studentList: any, addOrRemove: any) => {
-    if (addOrRemove !== null) {
-      const containsUpdate = studentList.filter((student: any) => student.personAuthID === addOrRemove.personAuthID).length > 0;
-      const rosterExpanded = (!containsUpdate) ? [...studentList, addOrRemove] : studentList;
+  const updateStudentRoster = (studentList: any, newStudent: any) => {
+    const rosterExpanded = [...studentList, newStudent];
+    console.log('rosted expanded : ', studentList, '  ', newStudent, '  ', rosterExpanded);
+    if(newStudent !== null){
       const newRoster = rosterExpanded.map((student: any) => {
         return { ...student, currentLocation: getPageLabel(student.currentLocation) };
       });
       setStudents(newRoster);
-    }
-    if(addOrRemove === null) {
+    } else {
       const newRoster = studentList.map((student: any) => {
         return { ...student, currentLocation: getPageLabel(student.currentLocation) };
       });
