@@ -49,20 +49,6 @@ export const getPerson = /* GraphQL */ `
         }
         nextToken
       }
-      location {
-        items {
-          id
-          personAuthID
-          personEmail
-          syllabusLessonID
-          roomID
-          currentLocation
-          lessonProgress
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -110,9 +96,6 @@ export const listPersons = /* GraphQL */ `
           nextToken
         }
         wordbank {
-          nextToken
-        }
-        location {
           nextToken
         }
         createdAt
@@ -304,9 +287,6 @@ export const getStaff = /* GraphQL */ `
         wordbank {
           nextToken
         }
-        location {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -441,9 +421,6 @@ export const getRoom = /* GraphQL */ `
           nextToken
         }
         wordbank {
-          nextToken
-        }
-        location {
           nextToken
         }
         createdAt
@@ -776,9 +753,6 @@ export const getClassStudent = /* GraphQL */ `
           nextToken
         }
         wordbank {
-          nextToken
-        }
-        location {
           nextToken
         }
         createdAt
@@ -2290,9 +2264,6 @@ export const getRoomMsgs = /* GraphQL */ `
         wordbank {
           nextToken
         }
-        location {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2604,6 +2575,7 @@ export const getLesson = /* GraphQL */ `
       }
       filters
       coverImage
+      summaryTitle
       createdAt
       updatedAt
     }
@@ -2719,6 +2691,7 @@ export const listLessons = /* GraphQL */ `
         }
         filters
         coverImage
+        summaryTitle
         createdAt
         updatedAt
       }
@@ -2906,6 +2879,7 @@ export const getSyllabusLesson = /* GraphQL */ `
         }
         filters
         coverImage
+        summaryTitle
         createdAt
         updatedAt
       }
@@ -3011,6 +2985,7 @@ export const listSyllabusLessons = /* GraphQL */ `
           assessmentID
           filters
           coverImage
+          summaryTitle
           createdAt
           updatedAt
         }
@@ -3082,6 +3057,7 @@ export const getStudentData = /* GraphQL */ `
           assessmentID
           filters
           coverImage
+          summaryTitle
           createdAt
           updatedAt
         }
@@ -3138,9 +3114,6 @@ export const getStudentData = /* GraphQL */ `
           nextToken
         }
         wordbank {
-          nextToken
-        }
-        location {
           nextToken
         }
         createdAt
@@ -3341,9 +3314,6 @@ export const getQuestionData = /* GraphQL */ `
         wordbank {
           nextToken
         }
-        location {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -3383,6 +3353,7 @@ export const getQuestionData = /* GraphQL */ `
           assessmentID
           filters
           coverImage
+          summaryTitle
           createdAt
           updatedAt
         }
@@ -3518,6 +3489,7 @@ export const getFeedback = /* GraphQL */ `
           assessmentID
           filters
           coverImage
+          summaryTitle
           createdAt
           updatedAt
         }
@@ -3695,9 +3667,6 @@ export const getPersonLocation = /* GraphQL */ `
         wordbank {
           nextToken
         }
-        location {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -3730,6 +3699,7 @@ export const getPersonLocation = /* GraphQL */ `
           assessmentID
           filters
           coverImage
+          summaryTitle
           createdAt
           updatedAt
         }
@@ -3968,9 +3938,6 @@ export const userById = /* GraphQL */ `
         wordbank {
           nextToken
         }
-        location {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -4018,9 +3985,6 @@ export const usersByRole = /* GraphQL */ `
           nextToken
         }
         wordbank {
-          nextToken
-        }
-        location {
           nextToken
         }
         createdAt
