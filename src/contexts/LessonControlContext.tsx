@@ -7,10 +7,10 @@ import * as customQueries from '../customGraphql/customQueries';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { pageThemes } from './GlobalContext';
+import { standardTheme } from './GlobalContext';
 
 interface LessonControlProps {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 interface LessonObject {
@@ -20,92 +20,78 @@ interface LessonObject {
 export const LessonControlContext = React.createContext(null);
 
 export const LessonControlContextProvider = ({ children }: LessonControlProps) => {
-    const [ state, dispatch ] = useReducer(lessonControlReducer, lessonControlState);
-    const [ lesson, setLesson ] = useState<LessonObject>()
-    const [ lightOn, setLightOn ] = useState(false);
-    const history = useHistory();
-    const location = useLocation();
-    let subscription: any;
+  const [state, dispatch] = useReducer(lessonControlReducer, lessonControlState);
+  const [lesson, setLesson] = useState<LessonObject>();
+  const history = useHistory();
+  const location = useLocation();
+  let subscription: any;
 
-    const lightSwitch = () => {
-        setLightOn(prev => {
-            return !prev
-        })
-    }
+  const theme = standardTheme;
 
-    const theme = lightOn ? pageThemes.light : pageThemes.dark;
+  async function getSyllabusLesson() {
+    let queryParams = queryString.parse(location.search);
+    if (Object.keys(queryParams).length && queryParams.id) {
+      try {
+        const classroom: any = await API.graphql(
+          graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id })
+        );
 
-    async function getClassroom() {
-      let queryParams = queryString.parse(location.search)
-      if (Object.keys(queryParams).length && queryParams.id) {
-        try {
-            // this any needs to be changed once a solution is found!!!
-            const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroom, { id: queryParams.id }))
-            // console.log('classroom data', classroom);
-            setLesson(classroom.data.getClassroom)
-            dispatch({
-              type: 'INITIAL_LESSON_SETUP', 
-              payload: { 
-                classroomID: queryParams.id,
-                pages: classroom.data.getClassroom.lessonPlan, 
-                data: classroom.data.getClassroom,
-                students: classroom.data.getClassroom.data.items,
-                open: classroom.data.getClassroom.open,
-                complete: classroom.data.getClassroom.complete,
-                expectedStartDate: classroom.data.getClassroom.expectedStartDate,
-                expectedEndDate: classroom.data.getClassroom.expectedEndDate
-            }})
-            subscription = subscribeToStudentData()
-        } catch (error) {
-            console.error(error)
-        }
-      } else {
-        history.push('/dashboard/lesson-planner');
+        console.log('getSyllabusLesson - ', classroom.data.getSyllabusLesson);
+
+        setLesson(classroom.data.getSyllabusLesson);
+        dispatch({
+          type: 'INITIAL_LESSON_SETUP',
+          payload: {
+            syllabusLessonID: queryParams.id,
+            pages: classroom.data.getSyllabusLesson.lessonPlan,
+            data: classroom.data.getSyllabusLesson,
+            students: [] /*classroom.data.getSyllabusLesson?.data.items*/,
+            open: classroom.data.getSyllabusLesson?.status === 'Active',
+            complete: classroom.data.getSyllabusLesson?.complete,
+            startDate: classroom.data.getSyllabusLesson?.startDate ? classroom.data.getSyllabusLesson?.startDate : '',
+            endDate: classroom.data.getSyllabusLesson?.endDate ? classroom.data.getSyllabusLesson?.endDate : '',
+          },
+        });
+        // subscription = subscribeToStudentData();
+      } catch (error) {
+        console.error(error);
       }
+    } else {
+      history.push('/dashboard/lesson-planner');
     }
+  }
 
-    const subscribeToStudentData = () => {
-      let queryParams = queryString.parse(location.search)
+  const subscribeToStudentData = () => {
+    let queryParams = queryString.parse(location.search);
 
-      // @ts-ignore
-      const studentDataSubscription = API.graphql(graphqlOperation(customSubscriptions.onChangeStudentData, { classroomID: queryParams.id })).subscribe({
-          next: (studentData: any) => {
-            let updatedData = studentData.value.data.onChangeStudentData
-            console.log('studentDataSubscription : ', updatedData)
+    // @ts-ignore
+    const studentDataSubscription = API.graphql( graphqlOperation(customSubscriptions.onChangeStudentData, { classroomID: queryParams.id }) ).subscribe({
+      next: (studentData: any) => {
+        let updatedData = studentData.value.data.onChangeStudentData;
+        console.log('studentDataSubscription : ', updatedData);
 
-            dispatch({ type: 'UPDATE_STUDENT_DATA', payload: updatedData })
-            // console.log(found)
-          }
-      });
+        dispatch({ type: 'UPDATE_STUDENT_DATA', payload: updatedData });
+        // console.log(found)
+      },
+    });
 
-      // console.log('sub', studentDataSubscription)
+    return studentDataSubscription;
+  };
 
-      return studentDataSubscription
-    }
+  useEffect(() => {
+    getSyllabusLesson();
 
-    useEffect(() => {
-      getClassroom()
-      
-      return function cleanup() {
-        if (subscription) {
-          subscription.unsubscribe();
-        }
-        dispatch({ type: 'CLEANUP' })
+    return function cleanup() {
+      if (subscription) {
+        subscription.unsubscribe();
       }
-    }, [])
+      dispatch({ type: 'CLEANUP' });
+    };
+  }, []);
 
+  useEffect(() => {
+    // console.log(lesson);
+  }, [lesson]);
 
-    useEffect(() => {
-      // console.log(lesson);
-      
-      
-    }, [lesson])
-
-
-    return (
-        <LessonControlContext.Provider value={{ state, dispatch, theme }}>
-            { children }
-        </LessonControlContext.Provider>
-    )
-}
-
+  return <LessonControlContext.Provider value={{ state, dispatch, theme }}>{children}</LessonControlContext.Provider>;
+};

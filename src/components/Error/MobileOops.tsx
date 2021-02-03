@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { VscSmiley } from 'react-icons/vsc';
-
+import { getAsset} from '../../assets';
+import { GlobalContext } from '../../contexts/GlobalContext';
 interface MobileOops {
   userAgent: string;
 }
 
 const MobileOops: React.FC<MobileOops> = (props: MobileOops) => {
+  const { clientKey } = useContext(GlobalContext);
   return (
     <div className='fixed w-screen h-screen flex items-center justify-center bg-light-gray bg-opacity-20 p-4 rounded-xl'>
       <div className='h-1/2 max-h-80 max-w-80 my-auto mx-auto shadow-xl rounded-xl'>
@@ -14,7 +16,7 @@ const MobileOops: React.FC<MobileOops> = (props: MobileOops) => {
           <img
             id='dashboard'
             className='h-full mx-auto'
-            src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-WHITE.svg'
+            src={getAsset(clientKey, 'main_logo')}
             alt='Iconoclast Artists'
           />
         </div>

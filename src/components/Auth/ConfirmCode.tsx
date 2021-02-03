@@ -7,14 +7,14 @@ import { AiOutlineEye } from 'react-icons/ai';
 import { AiOutlineEyeInvisible } from 'react-icons/ai';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { useHistory, useLocation, NavLink } from 'react-router-dom';
-// import { Auth } from 'aws-amplify';
 import { Auth } from '@aws-amplify/auth';
+import { getAsset } from '../../assets';
 
 const ConfirmCode = () => {
   const history = useHistory();
   const location = useLocation();
 
-  const { dispatch } = useContext(GlobalContext);
+  const { dispatch, clientKey } = useContext(GlobalContext);
   const [cookies, setCookie, removeCookie] = useCookies();
   const [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
     show: false,
@@ -250,8 +250,8 @@ const ConfirmCode = () => {
             <div className='h-24 w-56'>
               <img
                 className=''
-                src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg'
-                alt='Iconoclast Artists'
+                src={getAsset(clientKey, 'login_page_logo')}
+                alt='Logo'
               />
             </div>
 

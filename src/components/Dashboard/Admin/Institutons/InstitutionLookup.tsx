@@ -3,7 +3,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoBusinessSharp } from 'react-icons/io5';
-import { AiOutlineUsergroupAdd, AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
+import { AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
 
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import * as queries from '../../../../graphql/queries';
@@ -47,14 +47,14 @@ const InstitutionLookup: React.FC = () => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Institution Management', url: '/dashboard/manage-institutions', last: true },
+    { title: 'Institution Management', url: `${match.url}`, last: true },
   ]
 
   const sortByList = [
     { id: 1, name: 'Institute Name', value: 'name' },
     { id: 2, name: 'Type', value: 'type' },
-    { id: 2, name: 'Website', value: 'website' },
-    { id: 2, name: 'Contact No.', value: 'phone' },
+    { id: 3, name: 'Website', value: 'website' },
+    { id: 4, name: 'Contact No.', value: 'phone' },
   ]
 
   const goNextPage = () => {
@@ -195,6 +195,10 @@ const InstitutionLookup: React.FC = () => {
     } else {
       setTotalPages(totalListPages + 1)
     }
+    if (totalPages === 1 && totalListPages === 0) {
+      setFirstPage(true);
+      setLastPage(true);
+    }
   }, [userCount]);
 
   useEffect(() => {
@@ -219,7 +223,7 @@ const InstitutionLookup: React.FC = () => {
   }
   {
     return (
-      <div className={`w-full h-full mt-4`}>
+      <div className={`w-full h-full`}>
 
         {/* Header section */}
         <BreadCrums items={breadCrumsList} />

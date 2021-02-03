@@ -2,6 +2,11 @@ export interface globalStateType {
   sidebar: {
     upcomingLessons: any[];
   };
+  roomData: {
+    rooms: any[];
+    syllabus: any[];
+    lessons: any[];
+  };
   status: string;
   error: string;
   isAuthenticated: boolean;
@@ -19,7 +24,12 @@ export interface globalStateType {
 
 export const globalState: globalStateType = {
   sidebar: {
-    upcomingLessons: []
+    upcomingLessons: [],
+  },
+  roomData: {
+    rooms: [],
+    syllabus: [],
+    lessons: [],
   },
   status: '',
   error: '',

@@ -194,7 +194,7 @@ const InstitutionAdd = () => {
   const { name, type, website, image, address, addressLine2, city, state, zip, phone, isServiceProvider } = instituteData;
 
   return (
-    <div className="w-full h-full mt-4 p-4">
+    <div className="w-full h-full p-4">
 
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />

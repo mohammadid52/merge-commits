@@ -14,11 +14,7 @@ const LessonHeaderBar = () => {
   const { visible, setVisible, ref } = useOutsideAlerter(false);
 
   /**
-   *
-   *
    * AUTO-PUSH TO SPECIFIC LESSON
-   *
-   *
    */
 
   useEffect(() => {
@@ -43,8 +39,6 @@ const LessonHeaderBar = () => {
 
   const handlePopup = () => {
     setVisible((prevState: any) => !prevState);
-    // console.log('handlepopup: ');
-    // console.log('visible?: ', visible);
   };
 
   const handleSubmit = () => {

@@ -3,6 +3,7 @@ import { Auth } from '@aws-amplify/auth';
 import { useCookies } from 'react-cookie';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as queries from '../graphql/queries';
+import * as mutations from '../graphql/mutations';
 import { GlobalContext } from '../contexts/GlobalContext';
 import useDeviceDetect from '../customHooks/deviceDetect';
 import MobileOops from '../components/Error/MobileOops';
@@ -15,38 +16,58 @@ import * as customMutations from '../customGraphql/customMutations'
 
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
-  // const { theme, dispatch } = useContext(GlobalContext);
-  const { state, theme, dispatch } = useContext(GlobalContext);
+  const { state, theme, clientKey, dispatch } = useContext(GlobalContext);
   const [cookies, setCookie, removeCookie] = useCookies();
   const [authState, setAuthState] = useState('loading')
 
+  useEffect(() => {
+    if (authState === 'loggedIn') {
+      checkForUserInactivity()
+    } else {
+      removeCookie('auth', { path: '/' });
+      dispatch({ type: 'CLEANUP' });
+      sessionStorage.removeItem('accessToken');
+    }
+  }, [authState]);
+
+  // const loadItems = async () => {
+  //   await Promise.all(items.map(async item => {
+  //     // await API.graphql(graphqlOperation(mutations.createLesson, { input: items }));
+  //   }))
+  // }
+
+  useEffect(() => {
+    checkUserAuthenticated();
+    // loadItems()
+  }, []);
+
   const checkUserAuthenticated = async () => {
     try {
-        const user = await Auth.currentAuthenticatedUser()
-        if (user) {
-          const { email, sub } = user.attributes
-          let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }))
-          userInfo = userInfo.data.getPerson;
-          updateAuthState(true)
-          dispatch({
-            type: 'PREV_LOG_IN',
-            payload: { email, authId: sub },
-          });
-          dispatch({
-            type: 'SET_USER',
-            payload: {
-              id: userInfo.id,
-              firstName: userInfo.preferredName || userInfo.firstName,
-              lastName: userInfo.lastName,
-              language: userInfo.language,
-              onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
-              role: userInfo.role,
-              image: userInfo.image
-            }
-          });
-        } else {
-          updateAuthState(false)    
-        }
+      const user = await Auth.currentAuthenticatedUser()
+      if (user) {
+        const { email, sub } = user.attributes
+        let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }))
+        userInfo = userInfo.data.getPerson;
+        updateAuthState(true)
+        dispatch({
+          type: 'PREV_LOG_IN',
+          payload: { email, authId: sub },
+        });
+        dispatch({
+          type: 'SET_USER',
+          payload: {
+            id: userInfo.id,
+            firstName: userInfo.preferredName || userInfo.firstName,
+            lastName: userInfo.lastName,
+            language: userInfo.language,
+            onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
+            role: userInfo.role,
+            image: userInfo.image
+          }
+        });
+      } else {
+        updateAuthState(false)
+      }
     } catch (err) {
       updateAuthState(false)
     }
@@ -93,20 +114,6 @@ const MainRouter: React.FC = () => {
       setAuthState('notLoggedIn')
     }
   }
-
-  useEffect(() => {
-    if (authState === 'loggedIn') {
-      checkForUserInactivity()
-    } else {
-      removeCookie('auth', { path: '/' });
-      dispatch({ type: 'CLEANUP' });
-      sessionStorage.removeItem('accessToken');
-    }
-  }, [authState]);
-
-  useEffect(() => {
-    checkUserAuthenticated();
-  }, []);
 
   if (authState === 'loading') {
     return <ComponentLoading />

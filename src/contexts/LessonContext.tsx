@@ -2,7 +2,6 @@ import React, { useReducer, useEffect, useState, } from 'react';
 import { useHistory } from 'react-router-dom';
 import { lessonState, PagesType } from '../state/LessonState'
 import { lessonReducer } from '../reducers/LessonReducer'
-import { pageThemes } from './GlobalContext';
 // import { useCookies } from 'react-cookie';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 import * as customMutations from '../customGraphql/customMutations';
@@ -12,6 +11,8 @@ import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
+import { standardTheme } from './GlobalContext';
+import { initRosterSyllabusLessons } from '../uniqueScripts/InitRoster_in_SyllabusLessons';
 
 const removeDisabled = (array: PagesType) => {
     let updatedArray = array.filter((item: { disabled: boolean, [key: string]: any }) => {
@@ -40,18 +41,11 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     const [lesson, setLesson] = useState<DataObject>();
     // const [ cookies ] = useCookies(['auth']);
     const [state, dispatch] = useReducer(lessonReducer, lessonState);
-    const [lightOn, setLightOn] = useState(false);
     const location = useLocation();
     const history = useHistory();
     let subscription: any;
 
-    const lightSwitch = () => {
-        setLightOn(prev => {
-            return !prev
-        })
-    }
-
-    const theme = lightOn ? pageThemes.light : pageThemes.dark;
+    const theme = standardTheme;
 
     async function getOrCreateStudentData() {
         let queryParams = queryString.parse(location.search)
@@ -71,8 +65,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                 studentID: studentID,
             }))
 
-            // console.log(studentData)
-
             if (!studentData.data.getStudentData) {
                 const newStudentData: any = await API.graphql(graphqlOperation(customMutations.createStudentData, {
                     input: {
@@ -84,7 +76,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                         studentAuthID: studentAuthID,
                     }
                 }))
-                // console.log(newStudentData)
                 dispatch({
                     type: 'SET_STUDENT_INFO', payload: {
                         studentDataID: newStudentData.data.createStudentData.id,
@@ -108,21 +99,25 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         }
 
 
-        // console.log('student data', newStudentData);
     }
 
-    async function getClassroom() {
-        let queryParams = queryString.parse(location.search)
+    /**
+     * TODO:
+     *  getClassroom() has been renamed to getSyllabusLesson()  updated to use the new query 'getSyllabusLesson' instead of
+     *  the deprecated 'getClassroom'
+     *  ALL subscriptions will be frozen until the lessons are loading properly from the new query
+     */
+    async function getSyllabusLesson() {
+        let queryParams = queryString.parse(location.search);
         if (Object.keys(queryParams).length && queryParams.id) {
             try {
-                // this any needs to be changed once a solution is found!!!
-                const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroomStudent, { id: queryParams.id }))
+                const classroom: any = await API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id }));
                 console.log('classroom data', classroom);
-                setLesson(classroom.data.getClassroom)
-                getOrCreateStudentData()
-                subscription = subscribeToClassroom()
+                // setLesson(classroom.data.getClassroom)
+                // getOrCreateStudentData()
+                // subscription = subscribeToClassroom()
             } catch (error) {
-                console.error(error)
+                console.error(error);
             }
         } else {
             history.push('/dashboard');
@@ -136,10 +131,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         const classroomSubscription = API.graphql(graphqlOperation(customSubscriptions.onUpdateClassroom, { id: queryParams.id })).subscribe({
             next: (classroomData: any) => {
                 const updatedLessonPlan = classroomData.value.data.onUpdateClassroom
-
-                // console.log('updated', updatedLessonPlan)
-                // dispatch({ type: 'SET_LOADING' })
-                // console.log('state,', state)
 
                 dispatch({
                     type: 'UPDATE_LESSON_PLAN',
@@ -160,13 +151,11 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             }
         })
 
-        // console.log('sub', classroomSubscription)
-
         return classroomSubscription;
     }
 
     useEffect(() => {
-        getClassroom()
+        getSyllabusLesson()
 
         return function cleanup() {
             if (subscription) {
@@ -178,7 +167,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
     useEffect(() => {
         if (lesson) {
-            // console.log('lesson', lesson);
             const wordBank: Array<string> = ['Mimo provoz'];
 
             dispatch({
@@ -197,7 +185,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
     useEffect(() => {
         if (data) {
-            // console.log('data', data)
             let initialComponentState: any = {};
             lesson.lessonPlan.forEach((item: { type: string, stage: string }) => {
                 initialComponentState[item.type] = data[item.stage]
@@ -206,11 +193,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
                 type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB',
                 payload: initialComponentState,
             })
-
-            // dispatch({
-            //     type: 'SET_LESSON_PROGRESS',
-            //     payload: data.lessonProgress
-            // })
         }
     }, [data])
 

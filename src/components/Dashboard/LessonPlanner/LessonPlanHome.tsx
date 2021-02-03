@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import * as customQueries from '../../../customGraphql/customQueries';
+import * as customMutations from '../../../customGraphql/customMutations';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
-import Classroom from '../Classroom/Classroom';
+import Classroom, { Syllabus } from '../Classroom/Classroom';
 import { DashboardProps } from '../Dashboard';
 
 export interface Artist {
@@ -22,41 +23,97 @@ export interface CurriculumInfo {
 }
 
 const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
-  const { visibleLessonGroup, setVisibleLessonGroup } = props;
+  const {
+    currentPage,
+    activeRoom,
+    visibleLessonGroup,
+    setVisibleLessonGroup,
+    lessonLoading,
+    setLessonLoading,
+    syllabusLoading,
+    setSyllabusLoading,
+  } = props;
   const [status, setStatus] = useState('');
-  const { theme } = useContext(GlobalContext);
+  const { state, theme, dispatch } = useContext(GlobalContext);
   const history = useHistory();
   const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
 
-  async function getCourse(id: string) {
+  // useEffect(() => {
+  //   getCourse('1');
+  // }, []);
+  //
+  // async function getCourse(id: string) {
+  //   try {
+  //     const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: '1' }));
+  //     const lessons = courses.data.getCourse.classrooms.items;
+  //     setListCurriculum(lessons);
+  //     setStatus('done');
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+
+  const handleSyllabusActivation = async (syllabusID: string) => {
+    const roomID = activeRoom;
+    const syllabusArray = state.roomData.syllabus;
+    const updatedSyllabusArray = syllabusArray.map((syllabus: Syllabus) => {
+      if (syllabus.id === syllabusID) {
+        return { ...syllabus, active: true };
+      } else {
+        return { ...syllabus, active: false };
+      }
+    });
+    const roomStateObject = state.roomData.rooms.reduce((acc: {}, room: any) => {
+      if (room.id === roomID) {
+        return { ...acc, room };
+      } else {
+        return acc;
+      }
+    }, {});
+    const input = {
+      id: roomID,
+      institutionID: roomStateObject.room.institutionID,
+      classID: roomStateObject.room.classID,
+      teacherAuthID: roomStateObject.room.teacherAuthID,
+      teacherEmail: roomStateObject.room.teacherEmail,
+      name: roomStateObject.room.name,
+      maxPersons: roomStateObject.room.maxPersons,
+      activeSyllabus: syllabusID,
+    };
+
     try {
-      const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: '1' }));
-      const lessons = courses.data.getCourse.classrooms.items;
-      setListCurriculum(lessons);
-      setStatus('done');
-    } catch (error) {
-      console.error(error);
+      const updateRoomMutation: any = API.graphql(graphqlOperation(customMutations.updateRoom, { input }));
+      const response = await updateRoomMutation;
+    } catch (e) {
+      console.error('handleSyllabusActivation: ', e);
+    } finally {
+      dispatch({
+        type: 'UPDATE_ROOM',
+        payload: {
+          property: 'syllabus',
+          data: updatedSyllabusArray,
+        },
+      });
     }
-  }
+  };
 
-  useEffect(() => {
-    getCourse('1');
-
-    // history.push('/lesson-control?id=1')
-  }, []);
-
-  if (status !== 'done') {
-    return <ComponentLoading />;
-  }
-  {
-    return (
-      <Classroom
-        isTeacher={true}
-        visibleLessonGroup={visibleLessonGroup}
-        setVisibleLessonGroup={setVisibleLessonGroup}
-      />
-    );
-  }
+  // if (status !== 'done') {
+  //   return <ComponentLoading />;
+  // }
+  return (
+    <Classroom
+      activeRoom={activeRoom}
+      currentPage={currentPage}
+      isTeacher={true}
+      visibleLessonGroup={visibleLessonGroup}
+      setVisibleLessonGroup={setVisibleLessonGroup}
+      handleSyllabusActivation={handleSyllabusActivation}
+      lessonLoading={lessonLoading}
+      setLessonLoading={setLessonLoading}
+      syllabusLoading={syllabusLoading}
+      setSyllabusLoading={setSyllabusLoading}
+    />
+  );
 };
 
 export default LessonPlanHome;

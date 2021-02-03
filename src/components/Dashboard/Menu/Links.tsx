@@ -3,7 +3,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 // Iconz
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaRulerVertical } from 'react-icons/fa';
+import { FaRulerVertical, FaQuestionCircle } from 'react-icons/fa';
 import { AiOutlineSchedule, AiOutlineUsergroupAdd } from 'react-icons/ai';
 import useDictionary from '../../../customHooks/dictionary';
 import { IoIosPeople } from 'react-icons/io';
@@ -98,6 +98,16 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: 'Classroom',
               path: 'classroom',
             },
+            // {
+            //   title: 'QUESTION_BANK',
+            //   name: 'Question Bank',
+            //   path: 'question-bank',
+            // },
+            {
+              title: 'LESSON_BUILDER',
+              name: 'Lesson Builder',
+              path: 'lesson-builder',
+            },
           ];
         });
       case 'FLW':
@@ -160,6 +170,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     if (pageUrlContains('/dashboard/manage-institutions')) {
       setCurrentPage('manage-institutions');
     }
+    // if (pageUrlContains('/dashboard/question-bank')) {
+    //   setCurrentPage('question-bank');
+    // }
+    if (pageUrlContains('/dashboard/assessments')) {
+      setCurrentPage('assessments');
+    }
   }, []);
 
   const pageUrlEndsWith = (pageLabel: string) => {
@@ -187,6 +203,8 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         return <FaRulerVertical id={url} />;
       case 'Institutions':
         return <IoSchoolOutline id={url} />;
+      // case 'Question Bank':
+      //   return <FaQuestionCircle id={url} />;
       default:
         return '';
     }
@@ -202,11 +220,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string }, key: number) => (
             <div key={`link_${key}`} id={link.path} onClick={handleLink}>
-              <div
-                id={link.path}
-                className={`${linkClass} ${
-                  currentPage === link.path && activeClass
-                } border-b-2 border-black border-opacity-40`}>
+              <div id={link.path} className={`${linkClass} ${currentPage === link.path && activeClass}`}>
                 <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
                   {getMenuIcon(link.name, link.path)}
                 </IconContext.Provider>

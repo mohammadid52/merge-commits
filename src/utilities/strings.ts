@@ -10,17 +10,16 @@ interface PatternObject {
  * @param outputPattern
  */
 export const formatPattern = (pattern: string, separator: string, inputPattern: string, outputPattern: string) => {
+  if(typeof pattern === 'undefined' || typeof separator === 'undefined' || typeof inputPattern === 'undefined' || typeof outputPattern === 'undefined'){
+    return 'param undefined...'
+  }
+
   const patternStringObject = pattern.split(separator);
   const originalTime = inputPattern.split(separator).reduce((acc: PatternObject, val: string, i: number) => {
     return { ...acc, [`${val}`]: patternStringObject[i] };
   }, {});
   const outputTime = outputPattern.split(separator).map((val: string, i: number) => originalTime[val]);
 
-  // console.log('formatpattern', patternStringObject);
-  // console.log('formatpattern', originalTime);
-  // console.log('formatpattern', outputTime);
-
-  // The final; string
   return outputTime.join(separator);
 };
 
@@ -234,3 +233,11 @@ export const reorder = (list: any, startIndex: number, endIndex: number) => {
   result.splice(endIndex, 0, removed);
   return result;
 };
+
+export const getClientKey = () => {
+  const url = window.location.href;
+  if (url.indexOf('localhost') >= 0) return 'iconoclast'
+  if (url.indexOf('iconoclast') >= 0) return 'iconoclast'
+  if (url.indexOf('curate') >= 0) return 'curate'
+  else '' 
+}

@@ -7,12 +7,12 @@ import { AiOutlineEye } from 'react-icons/ai';
 import { AiOutlineEyeInvisible } from 'react-icons/ai';
 import { MdEmail } from 'react-icons/md';
 import { useHistory, Link, NavLink } from 'react-router-dom';
-// import { Auth } from 'aws-amplify';
 import { Auth } from '@aws-amplify/auth';
+import { getAsset } from '../../assets';
 
 const Reset = () => {
   const history = useHistory();
-  const { theme, state, dispatch } = useContext(GlobalContext);
+  const { theme, state, dispatch, clientKey } = useContext(GlobalContext);
   const [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
     show: false,
     type: '',
@@ -28,16 +28,6 @@ const Reset = () => {
   const [newPassToggle, setNewPassToggle] = useState(false);
 
   async function reset() {
-    // if ( input.password !== input.match ) {
-    //     return setMessage(() => {
-    //         return {
-    //             show: true,
-    //             type: 'error',
-    //             message: 'Passwords do not match',
-    //         }
-    //     })
-    // }
-
     let username = input.email;
     let password = input.password;
     let match = input.match;
@@ -45,8 +35,6 @@ const Reset = () => {
 
     try {
       const forgot = await Auth.forgotPasswordSubmit(username, code, password);
-      // .then(data => console.log(data))
-      // .catch(err => console.log(err));
       history.push('/login');
     } catch (error) {
       console.error('error signing in', error);
@@ -195,8 +183,8 @@ const Reset = () => {
             <div className='h-24 w-56'>
               <img
                 className=''
-                src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg'
-                alt='Iconoclast Artists'
+                src={getAsset(clientKey, 'login_page_logo')}
+                alt='Logo'
               />
             </div>
 

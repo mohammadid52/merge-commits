@@ -1,6 +1,3 @@
-import React from 'react';
-import Institution from '../components/Dashboard/Admin/Institutons/Institution';
-
 const BUTTONS: any = {
     'EN': {
         ADD: 'Add',
@@ -17,9 +14,20 @@ const BUTTONS: any = {
         CANCEL: 'Cancelar'
     }
 }
+const BreadcrumsTitles: any = {
+    'EN': {
+        HOME: 'HOME',
+        PROFILE: 'PROFILE',
+    },
+    'ES': {
+        HOME: 'CASA',
+        PROFILE: 'PERFIL',
+    }
+}
 
 const dashboardProfileDict: any = {
     'EN': {
+        PROFILE: 'Profile',
         TITLE: 'USER PROFILE',
         SUBTITLE: 'This contains your profile information.',
         PERSONAL_INFO: {
@@ -66,6 +74,7 @@ const dashboardProfileDict: any = {
         }
     },
     'ES': {
+        PROFILE: 'Perfil',
         TITLE: 'PERFIL DEL USUARIO',
         SUBTITLE: 'Esto contiene la información de su perfil.',
         PERSONAL_INFO: {
@@ -220,6 +229,7 @@ function useDictionary() {
 
     return {
         BUTTONS,
+        BreadcrumsTitles,
         appDict,
         sideBarLinksDict,
         dashboardProfileDict,

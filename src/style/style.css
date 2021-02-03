@@ -24,9 +24,7 @@
   width: 16rem;
 }
 
-/* This contains custom class names for the reusable components. */
-
-.pagetitle-container {
+/* .pagetitle-container {
   @apply my-4 p-4;
 }
 
@@ -48,7 +46,7 @@
 
 .purpule-button:active {
   @apply border-indigo-700;
-}
+} */
 
 /*** MODAL STYLES ***/
 
@@ -58,6 +56,62 @@
   animation-iteration-count: 1;
   animation-timing-function: ease-in;
   animation-duration: 0.2s;
+}
+
+.toolbarClassName {
+  border: 1.5px solid #f1f1f1;
+}
+
+.toolItemClassName {
+  width: auto;
+}
+
+.toolItemClassName > div {
+  width: auto;
+}
+
+.toolbarClassName > div {
+  width: auto;
+}
+
+.dropdownClassName {
+  width: 50px !important;
+  z-index: unset !important;
+}
+
+.dropdownBlockClassName {
+  width: 100px !important;
+}
+
+.dropdownClassName img {
+  width: unset;
+}
+
+.plainText a {
+  text-decoration: none;
+  color: black;
+}
+
+.wrapperClassName {
+  background-color: white;
+  min-height: 15rem;
+  height: 100%;
+}
+
+.editorClassName {
+  height: 12rem !important;
+  border: 1.5px solid #f1f1f1;
+  padding: 5px;
+  border-radius: 2px;
+}
+
+/* .editorClassName h1 h2 h3 h4 h5 h6 {
+  font-size: initial;
+} */
+
+.editorClassName p,
+span {
+  margin: unset;
 }
 
 @keyframes backdropFadeInOpacity {

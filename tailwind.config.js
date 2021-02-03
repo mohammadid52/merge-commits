@@ -364,6 +364,7 @@ module.exports = {
         '9.3/10': '93%',
       },
       minWidth: {
+        32: '8rem',
         48: '12rem',
         52: '13rem',
         56: '14rem',

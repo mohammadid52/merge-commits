@@ -174,8 +174,8 @@ const EditCurricular = (props: EditCurricularProps) => {
       const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase()) ? 1 : -1);
       const InstituteList = sortedList.map((item: any, i: any) => ({
         id: item.id,
-        name: `${item.name ? item.name : ''}`,
-        value: `${item.name ? item.name : ''}`
+        name: `${item.name || ''}`,
+        value: `${item.name || ''}`
       }));
       setInstitutionList(InstituteList);
     } catch{
@@ -260,9 +260,12 @@ const EditCurricular = (props: EditCurricularProps) => {
           objectives: savedData.objectives[0],
           languages: languageList.filter(item => savedData.languages.includes(item.value))
         });
-        setDesignerIds([...savedData?.designers])
+        if (savedData && savedData.designers && savedData.designers.length) {
+          setDesignerIds([...savedData?.designers])
+        }
         setPreviousName(savedData.name);
-      } catch {
+      } catch (err) {
+        console.log('err', err)
         setMessages({
           show: true,
           message: 'Error while fetching curricular data,please try again later.',
@@ -281,7 +284,7 @@ const EditCurricular = (props: EditCurricularProps) => {
   }, [])
 
   useEffect(() => {
-    if (designersList.length > 0) {
+    if (designersList && Array.isArray(designersList) && designersList.length > 0) {
       const designers = [...designerIds].map((desID: string) => {
         const personData = designersList.find(per => per.id === desID)
         const personObj = {

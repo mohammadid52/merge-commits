@@ -14,7 +14,8 @@ import RoomsList from './Listing/RoomsList';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
-  updateServiceProviders: Function
+  updateServiceProviders: Function,
+  tabProps?: any
 }
 interface InstInfo {
   id: string
@@ -35,7 +36,7 @@ interface InstInfo {
 }
 
 const InstitutionInfo = (instProps: InstitutionInfoProps) => {
-  const { institute } = instProps;
+  const { institute, tabProps } = instProps;
   const match = useRouteMatch();
   const [imageUrl, setImageUrl] = useState();
 
@@ -46,6 +47,10 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     { index: 3, title: 'Curricular', icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} instId={institute?.id} /> },
     { index: 4, title: 'Rooms', icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id} /> }
   ]
+
+  const updateTab = (tab: number) => {
+    tabProps.setTabsData({...tabProps.tabsData, inst: tab})
+  }
 
   useEffect(() => {
     async function getUrl() {
@@ -133,7 +138,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
             instProps?.institute?.id &&
             <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg'>
               <div className='px-4 py-5 sm:px-6'>
-                <UnderlinedTabs tabs={tabs} />
+                <UnderlinedTabs tabs={tabs} activeTab={tabProps.tabsData.inst} updateTab={updateTab} />
               </div>
             </div>
           }
