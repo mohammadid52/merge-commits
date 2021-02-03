@@ -11,6 +11,7 @@ import ComponentLoading from './Lesson/Loading/ComponentLoading';
 
 import AuthRoutes from './AppRoutes/AuthRoutes';
 import UnauthRoutes from './AppRoutes/UnauthRoutes';
+import { getAsset } from '../assets';
 
 import * as customMutations from '../customGraphql/customMutations'
 
@@ -30,16 +31,19 @@ const MainRouter: React.FC = () => {
     }
   }, [authState]);
 
-  // const loadItems = async () => {
-  //   await Promise.all(items.map(async item => {
-  //     // await API.graphql(graphqlOperation(mutations.createLesson, { input: items }));
-  //   }))
-  // }
-
   useEffect(() => {
+    setupAppHeaders();
     checkUserAuthenticated();
-    // loadItems()
   }, []);
+
+  const setupAppHeaders = async () => {
+    const favicon:any = document.getElementById("faviconDefault");
+    const favicon32x32:any = document.getElementById("favicon32x32");
+    const favicon16x16:any = document.getElementById("favicon16x16");
+    favicon.href = getAsset(clientKey, 'faviconDefault')
+    favicon32x32.href = getAsset(clientKey, 'favicon32x32')
+    favicon16x16.href = getAsset(clientKey, 'favicon16x16')
+  };
 
   const checkUserAuthenticated = async () => {
     try {
@@ -48,7 +52,6 @@ const MainRouter: React.FC = () => {
         const { email, sub } = user.attributes
         let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }))
         userInfo = userInfo.data.getPerson;
-        // console.log('user auth: ', userInfo)
         updateAuthState(true)
         dispatch({
           type: 'PREV_LOG_IN',
@@ -90,8 +93,8 @@ const MainRouter: React.FC = () => {
         }
       }
     });
-
   }
+
   const autoLogout = async () => {
     if (isUserLoggedIn()) {
       const input = {
@@ -146,7 +149,6 @@ const MainRouter: React.FC = () => {
       </div>
     );
   }
-
 };
 
 export default MainRouter;
