@@ -54,18 +54,28 @@ const LessonControl = () => {
     }
   }, [location.pathname]);
 
+  const getPageLabel = (locIndex: string) => {
+    return state.pages[parseInt(locIndex)].stage;
+  }
+
   useEffect(() => {
     if (state.studentViewing.live) {
-      let hasCurrentLocation = typeof state.studentViewing.studentInfo.currentLocation === 'string';
+      const hasCurrentLocation = typeof state.studentViewing.studentInfo.currentLocation === 'string'
+      const currentLocationDefined = typeof state.pages[state.studentViewing.studentInfo.currentLocation]?.stage !== 'undefined';
+      const lessonProgressDefined = typeof state.pages[state.studentViewing.studentInfo.lessonProgress]?.stage !== 'undefined';
 
-      console.log(typeof state.studentViewing.studentInfo.currentLocation, hasCurrentLocation);
+        console.log('TEACHER SHOULD CHANGE PAGE NOW...');
 
       if (hasCurrentLocation) {
-        history.push(`${match.url}/${state.studentViewing.studentInfo.currentLocation}`);
+        if(currentLocationDefined){
+          history.push(`${match.url}/${state.pages[state.studentViewing.studentInfo.currentLocation]?.stage}`);
+        }
       }
 
       if (!hasCurrentLocation) {
-        history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`);
+        if(lessonProgressDefined) {
+          history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`);
+        }
       }
     }
   }, [state.studentViewing]);

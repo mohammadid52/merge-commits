@@ -5,6 +5,7 @@ import LyricsBlock from './LyricsBlock';
 import VideoBlock from './VideoBlock';
 import {LessonControlContext} from '../../../../../contexts/LessonControlContext';
 import InstructionBlock from "./InstructionBlock";
+import { getPageLabel } from '../../../../getPageLabel';
 
 type SelectObject = {
   id?: string | number;
@@ -65,7 +66,7 @@ const Body = (props: props) => {
 
   let displayStudentData = state.studentViewing.live
       ? state.studentViewing.studentInfo.currentLocation
-          ? state.studentViewing.studentInfo.currentLocation === 'corelesson'
+          ? getPageLabel(state.studentViewing.studentInfo.currentLocation, state.pages) === 'corelesson'
           : state.studentViewing.studentInfo.lessonProgress === 'corelesson'
       : false;
 

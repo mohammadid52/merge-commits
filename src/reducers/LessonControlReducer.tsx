@@ -2,30 +2,31 @@ import { lessonControlStateType, lessonControlState } from '../state/LessonContr
 
 type lessonControlActions =
   | {
-  type: 'INITIAL_LESSON_SETUP';
-  payload: any;
-} | {
-  type: 'UPDATE_STUDENT_ROSTER';
-  payload: any;
-}
+      type: 'INITIAL_LESSON_SETUP';
+      payload: any;
+    }
   | {
-  type:
-    | 'OPEN_LESSON'
-    | 'DISABLE_LESSON'
-    | 'CLOSE_LESSON'
-    | 'DELETE_DISPLAY_DATA'
-    | 'SET_DISPLAY_DATA'
-    | 'SET_STUDENT_VIEWING'
-    | 'SET_SHARE_MODE'
-    | 'QUIT_SHARE_MODE'
-    | 'SAVED_CHANGES'
-    | 'UPDATE_STUDENT_DATA'
-    | 'QUIT_STUDENT_VIEWING'
-    | 'RESET_DONE'
-    | 'START_CLASSROOM'
-    | 'COMPLETE_CLASSROOM';
-  payload: any;
-}
+      type: 'UPDATE_STUDENT_ROSTER';
+      payload: any;
+    }
+  | {
+      type:
+        | 'OPEN_LESSON'
+        | 'DISABLE_LESSON'
+        | 'CLOSE_LESSON'
+        | 'DELETE_DISPLAY_DATA'
+        | 'SET_DISPLAY_DATA'
+        | 'SET_STUDENT_VIEWING'
+        | 'SET_SHARE_MODE'
+        | 'QUIT_SHARE_MODE'
+        | 'SAVED_CHANGES'
+        | 'UPDATE_STUDENT_DATA'
+        | 'QUIT_STUDENT_VIEWING'
+        | 'RESET_DONE'
+        | 'START_CLASSROOM'
+        | 'COMPLETE_CLASSROOM';
+      payload: any;
+    }
   | {
       type: 'CLEANUP';
     };
@@ -46,7 +47,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         endDate: action.payload.endDate,
       };
     case 'UPDATE_STUDENT_ROSTER':
-      console.log('lesson control reducer students: ', action.payload.students)
+      console.log('lesson control reducer students: ', action.payload.students);
       return {
         ...state,
         roster: action.payload.students,
@@ -145,64 +146,31 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         return student.personAuthID === action.payload.studentAuthID;
       });
 
-      let doneArray = state.done;
+      let viewing = state.studentViewing.studentInfo?.personAuthID === action.payload.studentAuthID;
 
-      let saveType = action.payload.saveType;
-
-      if (saveType === 'done') {
-        let foundInDoneArray = doneArray.some((item: string) => {
-          return item === action.payload.student.email;
-        });
-
-        if (!foundInDoneArray) {
-          doneArray.push(action.payload.student.email);
-          console.log('added', doneArray);
-        }
-      }
-
-      let viewing = state.studentViewing.studentInfo?.personAuthID === action.payload.student.authId;
-
-      if (foundInRoster) {
-        if (viewing) {
+      const updatedRoster = state.roster.map((student: any) => {
+        if(student.personAuthID === action.payload.studentAuthID){
           return {
-            ...state,
-            studentDataUpdated: true,
-            done: doneArray,
-            roster: state.roster.map((student: any) => {
-              if (student.id === action.payload.id) {
-                return action.payload;
-              }
-              return student;
-            }),
-            studentViewing: {
-              ...state.studentViewing,
-              studentInfo: action.payload,
-            },
-          };
+            ...student,
+            saveType: action.payload.saveType,
+            currentLocation: action.payload.currentLocation,
+            lessonProgress: action.payload.lessonProgress,
+          }
+        } else {
+          return student;
         }
+      })
 
-        return {
-          ...state,
-          done: doneArray,
-          studentDataUpdated: true,
-          // roster: [],
-          roster: state.roster.map((student: any) => {
-            if (student.id === action.payload.id) {
-              return action.payload;
-            }
-            return student;
-          }),
-        };
-      }
 
-      let updatedArray = state.roster;
-      updatedArray.push(action.payload);
 
       return {
         ...state,
         studentDataUpdated: true,
-        done: doneArray,
-        roster: [],
+        roster: updatedRoster,
+        studentViewing: {
+          ...state.studentViewing,
+          studentInfo: action.payload,
+        },
       };
 
     case 'RESET_DONE':
@@ -244,11 +212,10 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         },
       };
     case 'SET_STUDENT_VIEWING':
-      // console.log('SET_STUDENT_VIEWING', action.payload);
 
-      if (state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === action.payload.id) {
-        // console.log('firstIf');
 
+      if (state.studentViewing.studentInfo && state.studentViewing.studentInfo.studentAuthID === action.payload.personAuthID) {
+        console.log('SET_STUDENT_VIEWING', action.payload);
         return {
           ...state,
           studentDataUpdated: true,
@@ -286,7 +253,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         open: true,
         complete: false,
         unsavedChanges: true,
-        startDate: action.payload
+        startDate: action.payload,
       };
     case 'COMPLETE_CLASSROOM':
       return {

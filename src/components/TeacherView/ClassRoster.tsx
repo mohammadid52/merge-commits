@@ -55,7 +55,6 @@ const ClassRoster = (props: classRosterProps) => {
             filter: { syllabusLessonID: { contains: state.syllabusLessonID } },
           })
         );
-        // console.log('students --- ', syllabusLessonStudents);
         const studentList = syllabusLessonStudents.data.listPersonLocations.items;
         setStudents(studentList);
         dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: studentList } });
@@ -168,17 +167,12 @@ const ClassRoster = (props: classRosterProps) => {
 
   const handleSelect = async (e: any) => {
     const { id } = e.target;
-    const selected = students.filter((student: any) => {
+    const selected = state.roster.filter((student: any) => {
       return student.personAuthID === id;
     });
 
     console.log('selected', id, selected[0]);
     dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] });
-  };
-
-  const initials = (lastName: string) => {
-    let lastInitial = lastName.charAt(0).toUpperCase();
-    return lastInitial + '.';
   };
 
   const studentStatus = (status: string) => {
@@ -210,10 +204,6 @@ const ClassRoster = (props: classRosterProps) => {
     }
   };
 
-  const getPageLabel = (locationIndex: string) => {
-    return state.pages[parseInt(locationIndex)].stage;
-  };
-
   return (
     <div className={`w-full h-full bg-light-gray bg-opacity-20 overflow-y-auto overflow-x-hidden`}>
       {/* TABLE HEAD */}
@@ -230,7 +220,7 @@ const ClassRoster = (props: classRosterProps) => {
       <div className={`w-full flex flex-col items-center`}>
         {/* STUDENTS */}
         {state.roster.length > 0
-          ? studentRoster().map((student: any, key: number) => (
+          ? state.roster.map((student: any, key: number) => (
               <RosterRow
                 key={key}
                 keyProp={key}
@@ -241,7 +231,7 @@ const ClassRoster = (props: classRosterProps) => {
                 lastName={student.person.lastName}
                 preferredName={student.person.preferredName}
                 role={student.person.role}
-                currentLocation={getPageLabel(student.currentLocation)}
+                currentLocation={student.currentLocation}
                 lessonProgress={student.lessonProgress}
                 handleSelect={handleSelect}
                 studentStatus={studentStatus}
@@ -250,6 +240,7 @@ const ClassRoster = (props: classRosterProps) => {
                 handleQuitViewing={handleQuitViewing}
                 isSameStudentShared={isSameStudentShared}
               />
+
             ))
           : null}
       </div>

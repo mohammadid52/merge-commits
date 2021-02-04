@@ -6,6 +6,7 @@ import Banner from './Banner';
 import Modules from './Modules';
 import InstructionsPopup from '../../../../Lesson/Popup/InstructionsPopup';
 import TruthGameForm from './TruthGameFormView';
+import { getPageLabel } from '../../../../getPageLabel';
 
 export interface TruthInput {
   id: string;
@@ -36,7 +37,7 @@ const TruthGame = (props: props) => {
 
   let displayStudentData = state.studentViewing.live
     ? state.studentViewing.studentInfo.currentLocation
-      ? state.studentViewing.studentInfo.currentLocation === 'warmup'
+      ? getPageLabel(state.studentViewing.studentInfo.currentLocation, state.pages) === 'warmup'
       : state.studentViewing.studentInfo.lessonProgress === 'warmup'
     : false;
 

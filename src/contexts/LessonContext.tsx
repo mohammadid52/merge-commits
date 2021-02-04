@@ -58,23 +58,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
   // INIT PERSON LOCATION COOKIS & STATE
   useEffect(() => {
-    const loadPersonData = async () => {
-      try {
-        const user = await Auth.currentAuthenticatedUser();
-        if (user) {
-          const { email, sub } = user.attributes;
-          let userInfo: any = await API.graphql(graphqlOperation(customQueries.getPersonLocation, { personEmail: email, personAuthID: sub }));
-          userInfo = userInfo.data.getPersonLocation;
-          if(userInfo !== null) setRecentOp('updated');
-          setPersonLocationObj(userInfo);
-        }
-      } catch (e) {
-        console.error(e);
-      } finally {
-        console.log('loaded...');
-        setLoaded(true);
-      }
-    };
+
     loadPersonData();
   }, []);
 
@@ -98,6 +82,25 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   }, [state.currentPage]);
 
   // CREATE LOCATION RECORD or UPDATE
+  async function loadPersonData () {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      if (user) {
+        const { email, sub } = user.attributes;
+        let userInfo: any = await API.graphql(graphqlOperation(customQueries.getPersonLocation, { personEmail: email, personAuthID: sub }));
+        userInfo = userInfo.data.getPersonLocation;
+        if(userInfo !== null) setRecentOp('updated');
+        setPersonLocationObj(userInfo);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.log('loaded...');
+      setLoaded(true);
+    }
+  }
+
+
   async function createPersonLocation() {
     const newLocation = {
       personAuthID: state.studentAuthID,
@@ -122,15 +125,18 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
   async function updatePersonLocation() {
     const updatedLocation = {
-      id: personLocationObj.hasOwnProperty('id') ? personLocationObj.id : '',
-      personAuthID: personLocationObj.personAuthID,
-      personEmail: personLocationObj.personEmail,
+      id: personLocationObj && personLocationObj.id ? personLocationObj.id : '',
+      personAuthID: state.studentAuthID,
+      personEmail: state.studentUsername,
       syllabusLessonID: state.syllabusLessonID,
       roomID: '0',
       currentLocation: state.currentPage,
       lessonProgress: state.lessonProgress,
     };
     try {
+      if(recentOp === 'created'){
+        await loadPersonData();
+      }
       console.log('updated', personLocationObj);
       const newPersonLocationMutation: any = await API.graphql(
         graphqlOperation(mutations.updatePersonLocation, { input: updatedLocation })
@@ -169,8 +175,8 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         const newStudentData: any = await API.graphql(
           graphqlOperation(customMutations.createStudentData, {
             input: {
-              lessonProgress: 'intro',
-              currentLocation: 'intro',
+              lessonProgress: '0',
+              currentLocation: '0',
               status: 'ACTIVE',
               syllabusLessonID: queryParams.id,
               studentID: studentID,

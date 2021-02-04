@@ -109,8 +109,8 @@ const useStudentTimer = (inputs?: inputs) => {
 
     let data = {
       id: state.studentDataID,
-      lessonProgress: lessonProgress,
-      currentLocation: currentLocation,
+      lessonProgress: params.state.lessonProgress,
+      currentLocation: params.state.currentPage,
       saveType: saveType,
       status: params.state.studentStatus,
       syllabusLessonID: params.state.syllabusLessonID,

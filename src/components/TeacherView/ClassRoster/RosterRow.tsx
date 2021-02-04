@@ -87,6 +87,11 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     }
   };
 
+  const getPageLabel = (locationIndex: string) => {
+    return state.pages[parseInt(locationIndex)].stage;
+  };
+
+
   return (
     /**
      *
@@ -135,7 +140,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
         <div
           id={`${id}`}
           className={`w-1/2 mx-2 flex justify-center items-center hover:font-semibold cursor-pointer overflow-hidden text-sm text-left`}>
-          <ProgressSwitch label={currentLocation} id={id} />
+          <ProgressSwitch label={getPageLabel(currentLocation)} id={id} />
         </div>
       </div>
 
