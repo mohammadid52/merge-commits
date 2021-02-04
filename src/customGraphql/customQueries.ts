@@ -1814,3 +1814,42 @@ export const messagesByRoomId = /* GraphQL */ `
     }
   }
 `;
+export const getCurriculum = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      institutionID
+      name
+      type
+      description
+      objectives
+      languages
+      institution {
+        id
+        name
+      }
+      designers
+      syllabi {
+        items {
+          id
+          name
+          type
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          designers
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
