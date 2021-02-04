@@ -7,7 +7,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { RiArrowRightCircleFill, RiArrowDownCircleFill } from 'react-icons/ri';
 import { IoAdd } from 'react-icons/io5';
 
-import TopicsListComponent from './TopicsListNew';
+import TopicsListComponent from './TopicsList';
 
 
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
@@ -142,7 +142,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
       return {
         id: t.id,
         title: t.name,
-        content: <TopicsListComponent topicsList={filteredTopics} addNewTopic={addNewTopic} onLOEdit={() => editLearningObjective(t.id)} />,
+        content: <TopicsListComponent topicsList={filteredTopics} curricularId={curricularId} onLOEdit={() => editLearningObjective(t.id)} />,
         index
       }
     }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))

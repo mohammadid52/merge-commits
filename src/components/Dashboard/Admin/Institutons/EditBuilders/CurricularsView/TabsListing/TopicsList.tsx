@@ -1,41 +1,49 @@
-import React, { useEffect, Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react';
+
+import MeasurementList from './MeasMntList';
+
 import { useHistory } from 'react-router';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaGripVertical } from 'react-icons/fa';
+import { FaEdit, FaTrashAlt, FaChevronRight, FaRegArrowAltCircleDown, FaRegArrowAltCircleRight } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { RiArrowRightCircleFill, RiArrowDownCircleFill } from 'react-icons/ri';
+import { IoAdd } from 'react-icons/io5';
 
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
+import DragableAccordion from '../../../../../../Atoms/DragableAccordion';
 import Buttons from '../../../../../../Atoms/Buttons';
 import { reorder } from '../../../../../../../utilities/strings';
 
-import * as queries from '../../../../../../../graphql/queries';
-import * as customQueries from '../../../../../../../customGraphql/customQueries'
 import * as mutations from '../../../../../../../graphql/mutations';
-interface TopicsListProps {
-  topicsList?: any[]
+import * as queries from '../../../../../../../graphql/queries';
+import * as customQueries from '../../../../../../../customGraphql/customQueries';
+
+
+interface TopicsListComponentProps {
+  topicsList: any
   curricularId: string
+  onLOEdit: () => void
 }
 
-const TopicsList = (props: TopicsListProps) => {
-  const { curricularId } = props;
-  const history = useHistory();
-  const [loading, setLoading] = useState(false)
-  const [topics, setTopics] = useState([])
-  const [topicIds, setTopicIds] = useState([])
+// IN PROGRESS NOTES: **Component is in progress
+// Pendings:
 
-  const onDragEnd = async (result: any) => {
-    if (result.source.index !== result.destination.index) {
-      const list = reorder(topicIds, result.source.index, result.destination.index)
-      setTopicIds(list)
-      let topicsList = topics.map((t: any) => {
-        let index = list.indexOf(t.id)
-        return { ...t, index }
-      }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-      setTopics(topicsList)
-      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `t_${curricularId}`, sequence: list } }));
-      seqItem = seqItem.data.updateCSequences;
-      console.log('seq updated');
+// 1. Improve mutations
+// 2. Set list sequence
+// 3. Remove redundant things
+
+
+const TopicsListComponent = (props: TopicsListComponentProps) => {
+  const { topicsList, onLOEdit, curricularId } = props;
+  const history = useHistory();
+  const [openRow, setOpenRow] = useState('');
+
+  const expandRow = (id: string) => {
+    if (openRow === id) {
+      setOpenRow('')
+    } else {
+      setOpenRow(id)
     }
   }
 
@@ -47,124 +55,55 @@ const TopicsList = (props: TopicsListProps) => {
     history.push(`/dashboard/manage-institutions/curricular/${curricularId}/topic/edit/${id}`)
   }
 
-  const fetchTopics = async () => {
-    // set loader true
-    setLoading(true)
-    // fetch topics list and its sequence
-    let [list, seq]:any = await Promise.all([
-      await API.graphql(graphqlOperation(customQueries.listTopics, {
-        filter: { curriculumID: { eq: curricularId } },
-      })),
-      await API.graphql(graphqlOperation(queries.getCSequences,
-        { id: `t_${curricularId}` }))
-    ]);
-    list = list?.data.listTopics?.items || []
-    seq = seq?.data.getCSequences?.sequence || []
-    // sort list as per the seq
-    list = list.map((t: any) => {
-      let index = seq.indexOf(t.id)
-      return { ...t, index }
-    }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-
-    setTopics(list)
-    setTopicIds(seq)
-    setLoading(false)
-  }
-
-  useEffect(() => {
-    fetchTopics()
-  }, [])
-
   return (
-    <div className="p-8 flex m-auto justify-center">
-      <div className="">
-        <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CURRICULAR TOPICS</h3>
-          {
-            !loading ?
-              <>
-                {(topics && topics.length > 0) ? (
-                  <Fragment>
-                    <div className="flex justify-end w-8/10 m-auto ">
-                      <Buttons btnClass="mx-4" label="Add new Topic" onClick={createNewTopic} />
-                    </div>
-                    <div className="flex justify-between w-8/10 m-auto px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                      <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>No.</span>
-                      </div>
-                      <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                        <span>Topic Name</span>
-                      </div>
-                      <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                        <span>Learning Objective</span>
-                      </div>
-                      <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>Actions</span>
-                      </div>
-                    </div>
-
-                    <div className="mb-8 w-8/10 m-auto max-h-88 overflow-y-auto">
-                      {/* Drag and drop listing */}
-                      <DragDropContext onDragEnd={onDragEnd}>
-                        <Droppable droppableId="droppable">
-                          {(provided, snapshot) => (
-                            <div
-                              {...provided.droppableProps}
-                              ref={provided.innerRef}
-                            >
-                              {topics.map((item, index) => (
-                                <Draggable key={item.id} draggableId={item.id} index={index}>
-                                  {(provided, snapshot) => (
-                                    <div
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                    >
-                                      <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200 cursor-move">
-
-                                        {/* TODO: need to find some nice icon for drag and drop. */}
-                                        {/* <div className="flex w-1/10 items-center px-2 py-8 text-left text-s leading-4 text-indigo-600">
-                                          <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
-                                            <FaGripVertical />
-                                          </IconContext.Provider>
-                                        </div> */}
-
-                                        <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
-                                        <div className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal">
-                                          {item.name}
-                                        </div>
-                                        <div className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 whitespace-normal">
-                                          {item.learningObjective ? item.learningObjective.name : '--'}
-                                        </div>
-                                        <span className="w-1/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentTopic(item.id)}>
-                                          edit
-                                        </span>
-                                      </div>
-                                    </div>
-                                  )}
-                                </Draggable>
-                              ))}
-                              {provided.placeholder}
-                            </div>
-                          )}
-                        </Droppable>
-                      </DragDropContext>
-
-                    </div>
-                  </Fragment>
-                ) : (
-                    <Fragment>
-                      <div className="flex justify-center mt-8">
-                        <Buttons btnClass="mx-4" label="Add new Topic" onClick={createNewTopic} />
-                      </div>
-                      <p className="text-center p-16">  This curricular does not have any topics. Please create a new one.</p>
-                    </Fragment>)}
-              </> : <div className="py-12 my-12 m-auto text-center">Fetching Data Please wait...</div>
-          }
-        </PageWrapper>
+    <Fragment>
+      <div className="w-9/10 mx-auto my-4 flex justify-end">
+        <div>
+          <p className="text-base font-medium text-gray-600">Topics: </p>
+        </div>
+        <div className="w-auto">
+          <Buttons btnClass="" Icon={FaEdit} label="Edit Learning Objective" onClick={onLOEdit} />
+        </div>
       </div>
-    </div>
+      {topicsList?.length > 0 ?
+        <div className='mb-4'>
+          <div className="w-9/10 m-auto border-b">
+            {topicsList.map((item: any) => (
+              <Fragment>
+                <div key={item.id} className={`flex justify-between w-full px-8 py-4 whitespace-no-wrap border border-b-0 border-gray-200 hover:bg-gray-200 ${(openRow === item.id) && 'bg-gray-200'}`}>
+                  <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4" onClick={() => expandRow(item.id)}>
+                    <span className="w-6 h-6 flex items-center cursor-pointer">
+                      <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+                        {(openRow !== item.id) ? <FaRegArrowAltCircleRight /> : <FaRegArrowAltCircleDown />}
+                      </IconContext.Provider>
+                    </span>
+                  </div>
+                  <div className="flex w-6/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer text-gray-900 hover:text-gray-800" onClick={() => expandRow(item.id)}> {item.name} </div>
+                  <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentTopic(item.id)}>
+                    Edit
+                  </div>
+                </div>
+                {(openRow === item.id) && <div className="border border-gray-200">
+                  <MeasurementList curricularId={curricularId} measurementList={item.measurements} />
+                </div>}
+              </Fragment>
+            ))}
+          </div>
+        </div> : (
+          <div>
+            <p className="text-center p-16">  This learning objective does not have any topics. Please create a new one.</p>
+          </div>
+        )}
+      <div className="flex justify-center items-center my-2 w-9/10 mx-auto px-8 py-4 border border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer" onClick={createNewTopic}>
+        <span className="w-6 h-6 flex items-center mr-4">
+          <IconContext.Provider value={{ size: '1.5rem', color: 'darkgray' }}>
+            <IoAdd />
+          </IconContext.Provider>
+        </span>
+          Add New Topic
+        </div>
+    </Fragment>
   )
 }
 
-export default TopicsList
+export default TopicsListComponent;

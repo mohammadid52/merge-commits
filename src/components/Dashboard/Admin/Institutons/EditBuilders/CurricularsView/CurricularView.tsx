@@ -17,10 +17,11 @@ import Buttons from '../../../../../Atoms/Buttons';
 import PageWrapper from '../../../../../Atoms/PageWrapper';
 import UnderlinedTabs from '../../../../../Atoms/UnderlinedTabs';
 import SyllabusList from './TabsListing/SyllabusList';
-import TopicsList from './TabsListing/TopicsList';
-import MeasMntList from './TabsListing/MeasMntList';
-import LearningObjectiveList from './TabsListing/learningObjective';
-import LearningObjective from './TabsListing/LearningObjectiveNEW';
+import LearningObjective from './TabsListing/LearningObjective';
+
+import TopicsList from './TabsListing/TopicsListOld';
+import MeasMntList from './TabsListing/MeasMntListOld';
+import LearningObjectiveNEW from './TabsListing/LearningObjectiveUnused';
 interface CurricularViewProps {
   tabProps?: any
 }
@@ -37,7 +38,6 @@ interface InitialData {
   },
   syllabusList: any[]
 }
-
 
 // IN PROGRESS NOTES: **Component is in progress
 // Pendings:
@@ -86,10 +86,10 @@ const CurricularView = (props: CurricularViewProps) => {
     { title: 'Curricular Info', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
   ]
   const tabs = [
-    { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjectiveList curricularId={currID} learningObjData={learningObjData} setLearningObjData={setLearningObjData} /> },
     // { index: 1, title: 'Topics', icon: <MdSpeakerNotes />, active: false, content: <TopicsList curricularId={currID} /> },
     // { index: 2, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList curricularId={currID} /> },
     // { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjective /> },
+    { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjective curricularId={currID} learningObjData={learningObjData} setLearningObjData={setLearningObjData} /> },
     { index: 3, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList syllabusList={curricularData.syllabusList} curricularId={currID} /> },
   ]
 
