@@ -43,6 +43,7 @@ const ClassRoster = (props: classRosterProps) => {
   const [sortBy, setSortBy] = useState<string>('');
   const [students, setStudents] = useState<any[]>([]);
   const [updatedStudent, setUpdatedStudent] = useState<any[]>([]);
+  const [viewedStudent, setViewedStudent] = useState<string>('');
 
   let subscription: any;
 
@@ -172,6 +173,7 @@ const ClassRoster = (props: classRosterProps) => {
     });
 
     console.log('selected', id, selected[0]);
+    setViewedStudent(id);
     dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] });
   };
 
@@ -238,6 +240,8 @@ const ClassRoster = (props: classRosterProps) => {
                 handleShareStudentData={handleShareStudentData}
                 handleQuitShare={handleQuitShare}
                 handleQuitViewing={handleQuitViewing}
+                viewedStudent={viewedStudent}
+                setViewedStudent={setViewedStudent}
                 isSameStudentShared={isSameStudentShared}
               />
 

@@ -130,8 +130,8 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         ...state,
         sharing: true,
         unsavedChanges: true,
-        pages: state.pages.map((page) => {
-          if (action.payload !== page.stage) {
+        pages: state.pages.map((page, pageIndex: number) => {
+          if (parseInt(action.payload) !== pageIndex) {
             return page;
           } else {
             return {

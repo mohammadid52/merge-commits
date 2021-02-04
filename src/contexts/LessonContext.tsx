@@ -220,9 +220,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
     console.log('subscription params: ', queryParams);
     // @ts-ignore
-    const syllabusLessonSubscription = API.graphql(
-      graphqlOperation(customSubscriptions.onChangeSyllabusLesson, { id: queryParams.id })
-    ).subscribe({
+    const syllabusLessonSubscription = API.graphql( graphqlOperation(customSubscriptions.onChangeSyllabusLesson, { id: queryParams.id }) ).subscribe({
       next: (syllabusLessonData: any) => {
         const updatedLessonPlan = syllabusLessonData.value.data.onChangeSyllabusLesson;
         // @ts-ignore
@@ -230,17 +228,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
           (sLessonData: any) => {
             const sLessonDataData = sLessonData.data.getSyllabusLesson;
             setSubscriptionData(sLessonDataData)
-            /*dispatch({
-              type: 'UPDATE_LESSON_PLAN',
-              payload: {
-                pages: sLessonData.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
-                  return !item.disabled;
-                }),
-                displayData: sLessonData.displayData,
-                viewing: sLessonData.viewing,
-              },
-            });*/
-            console.log('onChangeSyllabusLesson: ', sLessonData);
           }
         );
       },
@@ -289,19 +276,19 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
   useEffect(() => {
     if(subscriptionData){
+
       dispatch({
         type: 'UPDATE_LESSON_PLAN',
         payload: {
           pages: subscriptionData.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
             return !item.disabled;
           }),
-          displayData: subscriptionData.displayData,
+          //@ts-ignore
+          displayData: {...subscriptionData.displayData, breakdownComponent: state.pages[subscriptionData.displayData.breakdownComponent]?.stage},
           viewing: subscriptionData.viewing,
         },
       });
-      console.log('useEffect subscriptionData -> ', 'subscription data changed...')
     }
-    console.log('onchange sub data: ', subscriptionData);
   }, [subscriptionData]);
 
   useEffect(() => {

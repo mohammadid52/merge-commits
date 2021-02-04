@@ -20,6 +20,8 @@ interface RosterRowProps {
   handleQuitShare: () => void;
   handleQuitViewing: () => void;
   isSameStudentShared: boolean;
+  viewedStudent: string;
+  setViewedStudent: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
@@ -40,19 +42,20 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     handleQuitShare,
     handleQuitViewing,
     isSameStudentShared,
+    viewedStudent,
+    setViewedStudent
   } = props;
   const { state, dispatch } = useContext(LessonControlContext);
-  const location = useLocation();
-  const [quickShare, setQuickShare] = useState<boolean>(false);
   const [shareable, setShareable] = useState(true);
 
   useEffect(() => {
-    let result = /.+\/(breakdown)\/*.*/.test(lessonProgress);
+    const indexToPage = state.pages[lessonProgress].stage;
+    let result = /.+\/(breakdown)\/*.*/.test(indexToPage);
 
     if (currentLocation) {
-      result = /.+\/(breakdown)\/*.*/.test(currentLocation);
+      result = /.+\/(breakdown)\/*.*/.test(indexToPage);
     } else if (lessonProgress) {
-      result = /.+\/(breakdown)\/*.*/.test(lessonProgress);
+      result = /.+\/(breakdown)\/*.*/.test(indexToPage);
     }
 
     if (result) {
@@ -74,7 +77,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
 
   const studentIsViewed = () => {
     if (state.studentViewing.live) {
-      return state.studentViewing.studentInfo.personAuthID === id;
+      return viewedStudent === id;
     }
   };
 
@@ -108,24 +111,6 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
                     ${number % 2 === 0 ? 'bg-white bg-opacity-20' : null} 
                     ${studentIsViewed() ? 'bg-blueberry bg-opacity-30' : null}
                     `}>
-      {/* STUDENT STATUS */}
-
-      {/* <div id={`${id}`} className={`w-1/10 text-center text-xs flex`}>
-        {studentIsViewed() ? (
-          <div onClick={handleQuitViewing}>
-            <IconContext.Provider value={{ color: '#FFFFFF', size: '100%' }}>
-              <AiOutlineEye style={{ pointerEvents: 'none' }} />
-            </IconContext.Provider>
-          </div>
-        ) : (
-          <div>
-            <IconContext.Provider value={{ color: '#9098a9', size: '100%' }}>
-              <AiOutlineEyeInvisible style={{ pointerEvents: 'none' }} />
-            </IconContext.Provider>
-          </div>
-        )}
-      </div> */}
-
       {/* STUDENT NAME */}
 
       <div id={`${id}`} className="w-8/10 flex flex-row hover:font-semibold cursor-pointer">
@@ -145,14 +130,6 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
       </div>
 
       {/* STUDENT ROLEY */}
-
-      {/* <div
-        id={`${id}`}
-        className={`w-1.5/10 mx-2 ${
-          role !== 'ST' ? 'text-center text-white bg-dark-gray rounded-lg' : 'font-semibold'
-        } text-center `}>
-        {role === 'ST' ? 'Student' : role}
-      </div> */}
 
       {/* MR SHARE BUTTON */}
 

@@ -166,7 +166,7 @@ const LessonControl = () => {
           ? state.studentViewing.studentInfo.activityData
           : null,
       };
-      // console.log(displayData);
+      // console.log('display data: ', displayData);
       dispatch({
         type: 'SET_SHARE_MODE',
         payload: state.studentViewing.studentInfo.currentLocation
