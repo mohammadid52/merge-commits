@@ -5,14 +5,15 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import { GlobalContext } from '../../contexts/GlobalContext';
 
-interface AccordionProps {
+interface DragableAccordionProps {
   titleList: { id: string, title: string, subtitle?: string, content: React.ReactNode }[]
-  onDragEnd?: () => void
+  showSequence?: boolean
+  onDragEnd?: (result: any) => void
 }
 
-const Accordion = (props: AccordionProps) => {
+const DragableAccordion = (props: DragableAccordionProps) => {
   const { theme } = useContext(GlobalContext);
-  const { titleList, onDragEnd } = props;
+  const { titleList, showSequence, onDragEnd } = props;
   const [selectedItem, setSelectedItem] = useState('');
 
   const changeView = (step: string) => {
@@ -23,6 +24,10 @@ const Accordion = (props: AccordionProps) => {
     }
   }
 
+  const onItemDrag = (result: any) => {
+    onDragEnd(result);
+  }
+
   // useEffect(() => {
   //   if (titleList?.length) {
   //     setSelectedItem(titleList[0]?.id);
@@ -31,7 +36,7 @@ const Accordion = (props: AccordionProps) => {
 
   return (
     <div className="bg-white mx-auto border border-gray-200 rounded-xl">
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragEnd={onItemDrag}>
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
             <div
@@ -48,9 +53,9 @@ const Accordion = (props: AccordionProps) => {
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                       >
-                        <Fragment>
+                        <Fragment key={item.id}>
                           <li className={`relative border-b border-gray-200 ${selectedItem === item.id ? 'rounded-lg' : ''}`}>
-                            <button type="button" className={`w-full px-8 py-6 text-left ${theme.outlineNone} ${selectedItem === item.id ? 'border border-indigo-400 rounded-lg' : ''}`} onClick={() => changeView(item.id)}>
+                            <div className={`w-full px-8 py-6 text-left cursor-pointer ${theme.outlineNone} ${selectedItem === item.id ? 'border border-indigo-400 rounded-lg' : ''}`} onClick={() => changeView(item.id)}>
                               <div className="flex items-center justify-between">
                                 <span className={`text-xs md:text-base font-medium ${selectedItem === item.id && 'text-indigo-600'}`}>
                                   <span>{item.title}</span><br />
@@ -62,7 +67,7 @@ const Accordion = (props: AccordionProps) => {
                                   </IconContext.Provider>
                                 </span>
                               </div>
-                            </button>
+                            </div>
                             {(selectedItem === item.id) && (
                               <div className="px-8 py-6 max-h-140 overflow-auto">
                                 {item.content}
@@ -85,4 +90,4 @@ const Accordion = (props: AccordionProps) => {
   )
 }
 
-export default Accordion
+export default DragableAccordion

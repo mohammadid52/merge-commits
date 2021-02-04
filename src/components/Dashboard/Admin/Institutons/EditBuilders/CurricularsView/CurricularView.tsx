@@ -19,7 +19,8 @@ import UnderlinedTabs from '../../../../../Atoms/UnderlinedTabs';
 import SyllabusList from './TabsListing/SyllabusList';
 import TopicsList from './TabsListing/TopicsList';
 import MeasMntList from './TabsListing/MeasMntList';
-import LearningObjectiveList from './TabsListing/learningObjective'
+import LearningObjectiveList from './TabsListing/learningObjective';
+import LearningObjective from './TabsListing/LearningObjectiveNEW';
 interface CurricularViewProps {
   tabProps?: any
 }
@@ -36,6 +37,15 @@ interface InitialData {
   },
   syllabusList: any[]
 }
+
+
+// IN PROGRESS NOTES: **Component is in progress
+// Pendings:
+
+// 1. Improve mutations
+// 2. Set list sequence
+// 3. Remove redundant things
+
 const CurricularView = (props: CurricularViewProps) => {
   const { tabProps } = props;
 
@@ -67,7 +77,8 @@ const CurricularView = (props: CurricularViewProps) => {
 
   const [curricularData, setCurricularData] = useState<InitialData>(initialData);
   const [designersId, setDesignersID] = useState([]);
-  const [designersName, setDesignersName] = useState([]);
+  // const [designersName, setDesignersName] = useState([]);
+  const [learningObjData, setLearningObjData] = useState([]);
   const [personsDataList, setPersonsDataList] = useState([]);
 
   const breadCrumsList = [
@@ -75,14 +86,15 @@ const CurricularView = (props: CurricularViewProps) => {
     { title: 'Curricular Info', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
   ]
   const tabs = [
-    { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjectiveList curricularId={currID} /> },
-    { index: 1, title: 'Topics', icon: <MdSpeakerNotes />, active: false, content: <TopicsList curricularId={currID} /> },
-    { index: 2, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList curricularId={currID} /> },
+    { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjectiveList curricularId={currID} learningObjData={learningObjData} setLearningObjData={setLearningObjData} /> },
+    // { index: 1, title: 'Topics', icon: <MdSpeakerNotes />, active: false, content: <TopicsList curricularId={currID} /> },
+    // { index: 2, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList curricularId={currID} /> },
+    // { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjective /> },
     { index: 3, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList syllabusList={curricularData.syllabusList} curricularId={currID} /> },
   ]
 
   const updateTab = (tab: number) => {
-    tabProps.setTabsData({...tabProps.tabsData, instCurr: tab})
+    tabProps.setTabsData({ ...tabProps.tabsData, instCurr: tab })
   }
 
   const fetchCurricularData = async () => {
