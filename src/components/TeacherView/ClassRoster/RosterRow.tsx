@@ -49,7 +49,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
   const [shareable, setShareable] = useState(true);
 
   useEffect(() => {
-    const indexToPage = state.pages[lessonProgress].stage;
+    const indexToPage = state.pages[currentLocation].stage;
     let result = /.+\/(breakdown)\/*.*/.test(indexToPage);
 
     if (currentLocation) {
@@ -65,7 +65,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     if (!result) {
       setShareable(false);
     }
-  }, [lessonProgress]);
+  }, [currentLocation]);
 
   const studentIsShared = () => {
     if (/* state.studentViewing.live &&  */ state.sharing) {

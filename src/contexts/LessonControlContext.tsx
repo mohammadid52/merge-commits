@@ -36,7 +36,7 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
           graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id })
         );
 
-        console.log('getSyllabusLesson - ', classroom.data.getSyllabusLesson);
+        // console.log('getSyllabusLesson - ', classroom.data.getSyllabusLesson);
 
         setLesson(classroom.data.getSyllabusLesson);
         dispatch({

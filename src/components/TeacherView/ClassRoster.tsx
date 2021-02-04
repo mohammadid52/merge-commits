@@ -94,12 +94,12 @@ const ClassRoster = (props: classRosterProps) => {
             return student;
           }
         });
-        console.log('exist roster: ', existRoster);
+        // console.log('exist roster: ', existRoster);
         setStudents(existRoster)
         dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: existRoster } });
       } else {
         const newRoster = [...students, newStudent];
-        console.log('new roster: ', newRoster);
+        // console.log('new roster: ', newRoster);
         setStudents(newRoster);
         dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: newRoster } });
       }
@@ -108,10 +108,6 @@ const ClassRoster = (props: classRosterProps) => {
       updateStudentRoster(updatedStudent)
     }
   },[updatedStudent])
-
-
-
-  const updateStateRoster = (studentList: any) => {};
 
   /**
    * UPDATE THIS SORT FUNCTION TO SORT CONTEXT

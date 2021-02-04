@@ -126,11 +126,16 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         }),
       };
     case 'SET_SHARE_MODE':
+      console.log('set_share_mode:  ', action.payload)
       return {
         ...state,
         sharing: true,
         unsavedChanges: true,
         pages: state.pages.map((page, pageIndex: number) => {
+          console.log('set_share_mode:  ', {
+            payload: parseInt(action.payload),
+            pageIndex: pageIndex
+          })
           if (parseInt(action.payload) !== pageIndex) {
             return page;
           } else {
@@ -161,15 +166,13 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         }
       })
 
-
-
       return {
         ...state,
         studentDataUpdated: true,
         roster: updatedRoster,
         studentViewing: {
           ...state.studentViewing,
-          studentInfo: action.payload,
+          studentInfo: {...state.studentViewing.studentInfo, ...action.payload},
         },
       };
 

@@ -124,12 +124,12 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       if (recentOp === 'created') {
         await loadPersonData();
       }
-      console.log('updated', personLocationObj);
+      // console.log('updated', personLocationObj);
       const newPersonLocationMutation: any = await API.graphql(
         graphqlOperation(mutations.updatePersonLocation, { input: updatedLocation })
       );
       setPersonLocationObj(updatedLocation);
-      console.log('updated person location...');
+      // console.log('updated person location...');
     } catch (e) {
       console.error('update PersonLocation : ', e);
     } finally {

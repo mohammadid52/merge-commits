@@ -48,7 +48,7 @@ const ProgressBar = () => {
   }, [state.pages]);
 
   useEffect(()=>{
-    console.log('state.pages progress bar MOD: ', state.pages)
+    // console.log('state.pages progress bar MOD: ', state.pages)
   },[state.pages])
 
   /**
