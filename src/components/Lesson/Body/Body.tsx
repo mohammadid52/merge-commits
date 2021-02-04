@@ -1,6 +1,10 @@
-import React, { lazy, useContext, useEffect } from 'react';
+import React, { lazy, useContext, useEffect, useState } from 'react';
 import { LessonContext } from '../../../contexts/LessonContext';
 import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import * as customQueries from '../../../customGraphql/customQueries';
+import queryString from 'query-string';
+import * as mutations from '../../../graphql/mutations';
 
 const Intro = lazy(() => import('../LessonComponents/Intro/Intro'));
 const Story = lazy(() => import('../LessonComponents/StoryPage/Story'));
@@ -22,7 +26,6 @@ const Checkpoint = lazy(() => import('../AssessmentComponents/Checkpoint'));
  *  when the time comes to add the assessments,
  *  add it back here
  */
-
 
 const Body = () => {
   const { state, theme, dispatch } = useContext(LessonContext);

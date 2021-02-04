@@ -15,7 +15,7 @@ interface FormInputsState {
 const Modules = (props: ModulesProps) => {
     const { inputs } = props
     const { state, theme, dispatch } = useContext(LessonContext);
-    const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]) 
+    const [ cookies, setCookie ] = useCookies([`lesson-${state.syllabusLessonID}`])
     const [ formInputs, setFormInputs ] = useState<FormInputsState>() 
 
     useEffect(() => {
@@ -28,8 +28,8 @@ const Modules = (props: ModulesProps) => {
             })
         })
 
-        if ( cookies[`lesson-${state.classroomID}`]?.truthGame?.additional && cookies[`lesson-${state.classroomID}`].truthGame.additional.length > 0 ) {
-            cookies[`lesson-${state.classroomID}`].truthGame.additional.forEach((item: { name: string, input: string }) => {
+        if ( cookies[`lesson-${state.syllabusLessonID}`]?.truthGame?.additional && cookies[`lesson-${state.syllabusLessonID}`].truthGame.additional.length > 0 ) {
+            cookies[`lesson-${state.syllabusLessonID}`].truthGame.additional.forEach((item: { name: string, input: string }) => {
                 setFormInputs(prev => {
                     return {
                         ...prev,
@@ -73,7 +73,7 @@ const Modules = (props: ModulesProps) => {
                 }
             })
 
-            setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], truthGame: { ...cookies[`lesson-${state.classroomID}`].truthGame, additional: tempArray }})
+            setCookie(`lesson-${state.syllabusLessonID}`, { ...cookies[`lesson-${state.syllabusLessonID}`], truthGame: { ...cookies[`lesson-${state.syllabusLessonID}`].truthGame, additional: tempArray }})
 
         }
     }, [formInputs])

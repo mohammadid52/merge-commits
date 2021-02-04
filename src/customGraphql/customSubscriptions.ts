@@ -81,15 +81,98 @@ export const onUpdateClassroom = /* GraphQL */ `
   }
 `;
 
+export const onUpdateSyllabusLesson = /* GraphQL */ `
+  subscription onUpdateSyllabusLesson($id: ID!) {
+    onUpdateSyllabusLesson(id: $id) {
+      id
+      status
+      lessonID
+      roster
+      viewing
+      displayData {
+        breakdownComponent
+        studentInfo {
+          id
+          firstName
+          preferredName
+          lastName
+        }
+        warmUpData {
+          story
+          title
+          additional {
+            name
+            input
+          }
+          truthGame {
+            id
+            label
+            isLie
+            text
+          }
+          poll {
+            id
+            question
+            option {
+              id
+              option
+              isChoice
+            }
+          }
+        }
+        corelessonData {
+          selected {
+            anchor
+            color
+            content {
+              id
+              text
+            }
+            focus
+            id
+          }
+          rawSelected {
+            color
+            selected
+          }
+          selectGroup
+        }
+        activityData {
+          editInput
+          editMode
+          lines {
+            example
+            id
+            menuOpen
+            text
+          }
+          title
+        }
+      }
+      lessonPlan {
+        id
+        disabled
+        open
+        active
+        stage
+        type
+        displayMode
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const onChangeStudentData = /* GraphQL */ `
-  subscription onChangeStudentData($classroomID: ID!) {
-    onChangeStudentData(classroomID: $classroomID) {
+  subscription onChangeStudentData($syllabusLessonID: ID!) {
+    onChangeStudentData(syllabusLessonID: $syllabusLessonID) {
       id
       lessonProgress
       currentLocation
       status
       saveType
-      classroomID
+      syllabusLessonID
       studentID
       studentAuthID
       student {

@@ -5,18 +5,18 @@ import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 const StoryForm = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const [input, setInput] = useState({
     title: state.componentState.story && state.componentState.story.title ? state.componentState.story.title : '',
     story: state.componentState.story && state.componentState.story.story ? state.componentState.story.story : [''],
   });
 
   useEffect(() => {
-    if (cookies[`lesson-${state.classroomID}`]?.story) {
+    if (cookies[`lesson-${state.syllabusLessonID}`]?.story) {
       setInput(() => {
         return {
-          title: cookies[`lesson-${state.classroomID}`].story.title,
-          story: cookies[`lesson-${state.classroomID}`].story.story,
+          title: cookies[`lesson-${state.syllabusLessonID}`].story.title,
+          story: cookies[`lesson-${state.syllabusLessonID}`].story.story,
         };
       });
     }
@@ -33,9 +33,9 @@ const StoryForm = () => {
         },
       });
 
-      setCookie(`lesson-${state.classroomID}`, {
-        ...cookies[`lesson-${state.classroomID}`],
-        story: { ...cookies[`lesson-${state.classroomID}`].story, title: input.title },
+      setCookie(`lesson-${state.syllabusLessonID}`, {
+        ...cookies[`lesson-${state.syllabusLessonID}`],
+        story: { ...cookies[`lesson-${state.syllabusLessonID}`].story, title: input.title },
       });
     }
   }, [input.title]);
@@ -51,9 +51,9 @@ const StoryForm = () => {
         },
       });
 
-      setCookie(`lesson-${state.classroomID}`, {
-        ...cookies[`lesson-${state.classroomID}`],
-        story: { ...cookies[`lesson-${state.classroomID}`].story, story: input.story },
+      setCookie(`lesson-${state.syllabusLessonID}`, {
+        ...cookies[`lesson-${state.syllabusLessonID}`],
+        story: { ...cookies[`lesson-${state.syllabusLessonID}`].story, story: input.story },
       });
     }
   }, [input.story]);

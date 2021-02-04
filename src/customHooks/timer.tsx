@@ -113,7 +113,7 @@ const useStudentTimer = (inputs?: inputs) => {
       currentLocation: currentLocation,
       saveType: saveType,
       status: params.state.studentStatus,
-      classroomID: params.state.classroomID,
+      syllabusLessonID: params.state.syllabusLessonID,
       studentID: params.state.studentUsername,
       studentAuthID: params.state.studentAuthID,
       warmupData: params.state.componentState.story

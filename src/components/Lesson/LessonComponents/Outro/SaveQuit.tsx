@@ -53,7 +53,7 @@ const SaveQuit = (props: SaveQuitProps) => {
       currentLocation: currentLocation,
       status: state.studentStatus,
       saveType: 'finalSave',
-      classroomID: state.classroomID,
+      syllabusLessonID: state.syllabusLessonID,
       studentID: state.studentUsername,
       studentAuthID: state.studentAuthID,
       warmupData: state.componentState.story ? state.componentState.story : null,
@@ -106,7 +106,7 @@ const SaveQuit = (props: SaveQuitProps) => {
 
   const saveQuestionData = async (responseObj: any) => {
     let questiondDataObject = {
-      classroomID: '1',
+      syllabusLessonID: '1',
       componentType: 'checkpoint',
       lessonID: state.data.lesson.id,
       authID: state.studentAuthID,
@@ -129,7 +129,7 @@ const SaveQuit = (props: SaveQuitProps) => {
 
   const saveLessonFeedback = async () => {
     let feedbackInput = {
-      classroomID: '1',
+      syllabusLessonID: '1',
       liked: feedback.like,
       comment: feedback.text,
     };

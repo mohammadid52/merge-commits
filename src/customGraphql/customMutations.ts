@@ -48,7 +48,7 @@ export const createStudentData = /* GraphQL */ `
       currentLocation
       status
       saveType
-      classroomID
+      syllabusLessonID
       studentID
       studentAuthID
       student {
@@ -144,7 +144,7 @@ export const updateStudentData = /* GraphQL */ `
       currentLocation
       status
       saveType
-      classroomID
+      syllabusLessonID
       studentID
       studentAuthID
       student {
@@ -323,7 +323,7 @@ export const createQuestionData = /* GraphQL */ `
   mutation CreateQuestionData($input: CreateQuestionDataInput!, $condition: ModelQuestionDataConditionInput) {
     createQuestionData(input: $input, condition: $condition) {
       id
-      classroomID
+      syllabusLessonID
       email
       authID
       componentType
@@ -354,7 +354,7 @@ export const createFeedback = /* GraphQL */ `
   mutation CreateFeedback($input: CreateFeedbackInput!, $condition: ModelFeedbackConditionInput) {
     createFeedback(input: $input, condition: $condition) {
       id
-      classroomID
+      syllabusLessonID
       liked
       comment
       createdAt
@@ -609,10 +609,7 @@ export const updateSyllabusLesson = /* GraphQL */ `
 `;
 
 export const createRoomMsgs = /* GraphQL */ `
-  mutation CreateRoomMsgs(
-    $input: CreateRoomMsgsInput!
-    $condition: ModelRoomMsgsConditionInput
-  ) {
+  mutation CreateRoomMsgs($input: CreateRoomMsgsInput!, $condition: ModelRoomMsgsConditionInput) {
     createRoomMsgs(input: $input, condition: $condition) {
       id
       body
@@ -631,10 +628,7 @@ export const createRoomMsgs = /* GraphQL */ `
 `;
 
 export const updateRoomMsgs = /* GraphQL */ `
-  mutation UpdateRoomMsgs(
-    $input: UpdateRoomMsgsInput!
-    $condition: ModelRoomMsgsConditionInput
-  ) {
+  mutation UpdateRoomMsgs($input: UpdateRoomMsgsInput!, $condition: ModelRoomMsgsConditionInput) {
     updateRoomMsgs(input: $input, condition: $condition) {
       id
       body
@@ -645,10 +639,7 @@ export const updateRoomMsgs = /* GraphQL */ `
 `;
 
 export const deleteRoomMsgs = /* GraphQL */ `
-  mutation DeleteRoomMsgs(
-    $input: DeleteRoomMsgsInput!
-    $condition: ModelRoomMsgsConditionInput
-  ) {
+  mutation DeleteRoomMsgs($input: DeleteRoomMsgsInput!, $condition: ModelRoomMsgsConditionInput) {
     deleteRoomMsgs(input: $input, condition: $condition) {
       id
     }

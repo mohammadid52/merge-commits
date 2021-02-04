@@ -10,7 +10,6 @@ const SelfDisplay = () => {
     const { state, theme, dispatch } = useContext(LessonContext);
     const displayProps = state.componentState.story;
     const tempDisplayProps = state.data.lesson.warmUp.inputs.additionalInputs
-    console.log(state, 'props')
 
     useEffect(() => {
         dispatch({ type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown' })

@@ -45,14 +45,15 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
             syllabusLessonID: queryParams.id,
             pages: classroom.data.getSyllabusLesson.lessonPlan,
             data: classroom.data.getSyllabusLesson,
-            students: [] /*classroom.data.getSyllabusLesson?.data.items*/,
+            // students: classroom.data.getSyllabusLesson?.data.items,
+            students: [],
             open: classroom.data.getSyllabusLesson?.status === 'Active',
             complete: classroom.data.getSyllabusLesson?.complete,
             startDate: classroom.data.getSyllabusLesson?.startDate ? classroom.data.getSyllabusLesson?.startDate : '',
             endDate: classroom.data.getSyllabusLesson?.endDate ? classroom.data.getSyllabusLesson?.endDate : '',
           },
         });
-        // subscription = subscribeToStudentData();
+        subscription = subscribeToStudentData();
       } catch (error) {
         console.error(error);
       }
@@ -65,7 +66,7 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
     let queryParams = queryString.parse(location.search);
 
     // @ts-ignore
-    const studentDataSubscription = API.graphql( graphqlOperation(customSubscriptions.onChangeStudentData, { classroomID: queryParams.id }) ).subscribe({
+    const studentDataSubscription = API.graphql( graphqlOperation(customSubscriptions.onChangeStudentData, { syllabusLessonID: queryParams.id }) ).subscribe({
       next: (studentData: any) => {
         let updatedData = studentData.value.data.onChangeStudentData;
         console.log('studentDataSubscription : ', updatedData);

@@ -22,7 +22,7 @@ type storageObject = {
 
 const PoemActivity = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const [editMode, setEditMode] = useState({
     open:
       state.componentState.poem && state.componentState.poem.editMode
@@ -44,23 +44,23 @@ const PoemActivity = () => {
      * 
      * 
      */
-    if (cookies[`lesson-${state.classroomID}`]?.poem) {
-      if (!cookies[`lesson-${state.classroomID}`]?.poem?.editMode) {
+    if (cookies[`lesson-${state.syllabusLessonID}`]?.poem) {
+      if (!cookies[`lesson-${state.syllabusLessonID}`]?.poem?.editMode) {
         dispatch({
           type: 'SET_INITIAL_COMPONENT_STATE',
           payload: {
             name: 'poem',
-            content: cookies[`lesson-${state.classroomID}`].poem,
+            content: cookies[`lesson-${state.syllabusLessonID}`].poem,
           },
         });
       }
 
-      if (cookies[`lesson-${state.classroomID}`]?.poem?.editMode) {
+      if (cookies[`lesson-${state.syllabusLessonID}`]?.poem?.editMode) {
         setEditMode((prev) => {
           return {
             ...prev,
             editMode: true,
-            input: cookies[`lesson-${state.classroomID}`].poem.editInput,
+            input: cookies[`lesson-${state.syllabusLessonID}`].poem.editInput,
           };
         });
 
@@ -68,7 +68,7 @@ const PoemActivity = () => {
           type: 'SET_INITIAL_COMPONENT_STATE',
           payload: {
             name: 'poem',
-            content: cookies[`lesson-${state.classroomID}`]?.poem,
+            content: cookies[`lesson-${state.syllabusLessonID}`]?.poem,
           },
         });
       }
@@ -81,7 +81,7 @@ const PoemActivity = () => {
      * 
      * 
      */
-    if (!cookies[`lesson-${state.classroomID}`]?.poem && !state.componentState.poem) {
+    if (!cookies[`lesson-${state.syllabusLessonID}`]?.poem && !state.componentState.poem) {
       let storageObj: storageObject = {
         title: '',
         editMode: false,
@@ -97,8 +97,8 @@ const PoemActivity = () => {
         },
       });
 
-      setCookie(`lesson-${state.classroomID}`, {
-        ...cookies[`lesson-${state.classroomID}`],
+      setCookie(`lesson-${state.syllabusLessonID}`, {
+        ...cookies[`lesson-${state.syllabusLessonID}`],
         poem: storageObj,
       });
     }
@@ -115,10 +115,10 @@ const PoemActivity = () => {
         },
       });
 
-      setCookie(`lesson-${state.classroomID}`, {
-        ...cookies[`lesson-${state.classroomID}`],
+      setCookie(`lesson-${state.syllabusLessonID}`, {
+        ...cookies[`lesson-${state.syllabusLessonID}`],
         poem: {
-          ...cookies[`lesson-${state.classroomID}`].poem,
+          ...cookies[`lesson-${state.syllabusLessonID}`].poem,
           editMode: true,
         },
       });

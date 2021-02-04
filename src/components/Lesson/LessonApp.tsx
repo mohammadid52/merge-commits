@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LessonContext } from '../../contexts/LessonContext';
 import Body from './Body/Body';
 // import Foot from './Foot/_Foot';
@@ -7,6 +7,10 @@ import LessonHeaderBar from '../Header/LessonHeaderBar';
 import BottomMenu from '../Lesson/Foot/BottomMenu';
 import Foot from './Foot/Foot';
 import NotificationBar from './Header/NotificationBar';
+import queryString from 'query-string';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import * as mutations from '../../graphql/mutations';
+import * as customQueries from '../../customGraphql/customQueries';
 
 const LessonApp = () => {
   const { state, theme } = useContext(LessonContext);
@@ -14,8 +18,6 @@ const LessonApp = () => {
   if (state.status !== 'loaded') {
     return <LessonLoading />;
   }
-
-  // console.log(state)
 
   return (
     <div className={`${theme.bg} w-full md:h-screen flex flex-col items-start`}>

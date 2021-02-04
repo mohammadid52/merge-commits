@@ -22,7 +22,7 @@ const SideMenu = (props: { handlePopup: () => void }) => {
       lessonProgress: lessonProgress,
       status: state.studentStatus,
       saveType: saveType,
-      classroomID: 1,
+      syllabusLessonID: 1,
       studentID: state.studentUsername,
       studentAuthID: state.studentAuthID,
       warmupData: state.componentState.story ? state.componentState.story : null,

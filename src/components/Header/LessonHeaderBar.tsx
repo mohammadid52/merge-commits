@@ -10,7 +10,7 @@ import SideMenu from '../Lesson/Header/SideMenu';
 const LessonHeaderBar = () => {
   const history = useHistory();
   const { theme, state, dispatch } = useContext(LessonContext);
-  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const { visible, setVisible, ref } = useOutsideAlerter(false);
 
   /**

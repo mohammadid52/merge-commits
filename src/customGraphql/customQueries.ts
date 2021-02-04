@@ -1162,14 +1162,14 @@ export const listAllSyllabusLessons = /* GraphQL */ `
 `;
 
 export const getStudentData = /* GraphQL */ `
-  query GetStudentData($classroomID: ID!, $studentID: String!) {
-    getStudentData(classroomID: $classroomID, studentID: $studentID) {
+  query GetStudentData($syllabusLessonID: ID!, $studentID: String!) {
+    getStudentData(syllabusLessonID: $syllabusLessonID, studentID: $studentID) {
       id
       lessonProgress
       currentLocation
       status
       saveType
-      classroomID
+      syllabusLessonID
       studentID
       studentAuthID
       warmupData {
@@ -1217,6 +1217,18 @@ export const getStudentData = /* GraphQL */ `
       }
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const getPersonLocation = /* GraphQL */ `
+  query GetPersonLocation($personAuthID: String!, $personEmail: String!) {
+    getPersonLocation(personAuthID: $personAuthID, personEmail: $personEmail) {
+      currentLocation
+      id
+      lessonProgress
+      personAuthID
+      personEmail
     }
   }
 `;
