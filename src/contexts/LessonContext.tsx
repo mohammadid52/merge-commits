@@ -13,10 +13,10 @@ import queryString from 'query-string';
 import { standardTheme } from './GlobalContext';
 
 const removeDisabled = (array: PagesType): any[] => {
-  let updatedArray = array.filter((item: { disabled: boolean; [key: string]: any }) => {
-    return !item.disabled;
-  });
   if (array) {
+    let updatedArray = array.filter((item: { disabled: boolean; [key: string]: any }) => {
+      return !item.disabled;
+    });
     return updatedArray;
   } else {
     return [];
@@ -237,16 +237,8 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         // @ts-ignore
         API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id })).then(
           (sLessonData: any) => {
-            // setSubscriptionData(sLessonData.data.getSyllabusLesson)
-            sLessonData = sLessonData.data.getSyllabusLesson;
-            dispatch({
-              type: 'UPDATE_LESSON_PLAN',
-              payload: {
-                pages: removeDisabled(sLessonData.lessonPlan),
-                displayData: sLessonData.displayData,
-                viewing: sLessonData.viewing,
-              },
-            });
+            const sLessonDataData = sLessonData.data.getSyllabusLesson;
+            setSubscriptionData(sLessonData)
             console.log('onChangeSyllabusLesson: ', sLessonData)
           }
         );
@@ -302,6 +294,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
           viewing: subscriptionData.viewing,
         },
       });
+      console.log('useEffect subscriptionData -> ', 'subscription data changed...')
     }
   },[subscriptionData])
 

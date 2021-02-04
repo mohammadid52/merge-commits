@@ -19,6 +19,7 @@ const getClassroomLessonplans = async () => {
 const getSyllabusLessons = async () => {
   try {
     const getQuery: any = await API.graphql(graphqlOperation(customQueries.listAllSyllabusLessons));
+    console.log('getSyllabusLessons: ', getQuery)
     return await getQuery?.data?.listSyllabusLessons?.items;
   } catch (e) {
     console.error('getSyllabusLessons - ', e);
@@ -34,23 +35,24 @@ const syllabusLessonIdsAndPlanIds = async (arr: any) => {
 };
 
 const loopSyllabusLessonIdAndMutate = async (arrIdsAndPlanIdd: any, lessonPlans: any) => {
-  console.log('before try mutate: ', arrIdsAndPlanIdd);
+  // console.log('before try mutate: ', arrIdsAndPlanIdd);
   arrIdsAndPlanIdd.reduce((_: any, idPlanIdArr: any, iKey: number) => {
     const lessonPlanLessonIds = lessonPlans.map((lpObj: any) => lpObj.lessonID);
     const lessonPlanExists = lessonPlans.filter((arr: any) => arr.lessonID === idPlanIdArr.lessonID).length > 0;
 
-    console.log('loop -> ', lessonPlanLessonIds)
+    console.log('lesson plans: ', lessonPlans.filter((arr: any) => arr.lessonID === idPlanIdArr.lessonID))
+    // console.log('loop -> ', lessonPlanLessonIds)
 
     if (lessonPlanExists) {
       const lessonPlan = lessonPlans[lessonPlanLessonIds.indexOf(idPlanIdArr.lessonID)].lessonPlan;
       mutateSingleSyllabusLesson(idPlanIdArr.id, lessonPlan);
-      console.log(idPlanIdArr.lessonID)
+      // console.log(idPlanIdArr.lessonID)
     }
   }, []);
 };
 
 const mutateSingleSyllabusLesson = async (sylID: string, lessonPlan: any[]) => {
-  console.log('mutateSingleSyllabusLesson: ', 'start');
+  // console.log('mutateSingleSyllabusLesson: ', 'start');
   try {
     await API.graphql(
       graphqlOperation(customMutations.updateSyllabusLesson, {
@@ -61,7 +63,7 @@ const mutateSingleSyllabusLesson = async (sylID: string, lessonPlan: any[]) => {
       })
     );
   } catch (e) {
-    console.log('mutateSingleSyllabusLesson: ', e);
+    console.error('mutateSingleSyllabusLesson: ', e);
   }
 };
 
