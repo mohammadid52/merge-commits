@@ -1,30 +1,26 @@
-import React, { useReducer, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useReducer, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { lessonState, PagesType } from '../state/LessonState';
 import { lessonReducer } from '../reducers/LessonReducer';
-import { useCookies } from 'react-cookie';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 import * as customMutations from '../customGraphql/customMutations';
 import * as mutations from '../graphql/mutations';
 import * as customQueries from '../customGraphql/customQueries';
-import * as subscriptions from '../graphql/subscriptions';
 // import { API, graphqlOperation } from 'aws-amplify';
 import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import { standardTheme } from './GlobalContext';
-import { initRosterSyllabusLessons } from '../uniqueScripts/InitRoster_in_SyllabusLessons';
-import { create } from 'domain';
-import * as queries from '../graphql/queries';
-import usePrevious from '../customHooks/previousProps';
 
 const removeDisabled = (array: PagesType): any[] => {
   let updatedArray = array.filter((item: { disabled: boolean; [key: string]: any }) => {
     return !item.disabled;
   });
-
-  return updatedArray;
+  if (array) {
+    return updatedArray;
+  } else {
+    return [];
+  }
 };
 
 interface LessonProps {
@@ -44,6 +40,7 @@ export const LessonContext = React.createContext(null);
 export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const [data, setData] = useState<DataObject>();
   const [lesson, setLesson] = useState<DataObject>();
+  const [subscriptionData, setSubscriptionData] = useState<any>();
 
   const [state, dispatch] = useReducer(lessonReducer, lessonState);
   const location = useLocation();
@@ -51,6 +48,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   let subscription: any;
 
   const theme = standardTheme;
+
   const [loaded, setLoaded] = useState<boolean>(false);
   const [personLocationObj, setPersonLocationObj] = useState<any>();
   const [recentOp, setRecentOp] = useState<string>('');
@@ -58,38 +56,39 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
   // INIT PERSON LOCATION COOKIS & STATE
   useEffect(() => {
-
     loadPersonData();
   }, []);
 
   useEffect(() => {
     if (loaded && state.syllabusLessonID && state.studentAuthID) {
-      if(recentOp === 'created' || recentOp === 'updated'){
+      if (recentOp === 'created' || recentOp === 'updated') {
         if (personLocationObj && personLocationObj.currentLocation) {
           updatePersonLocation();
         }
       }
-      if(recentOp === ''){
+      if (recentOp === '') {
         createPersonLocation();
       }
     }
   }, [loaded, state.syllabusLessonID, state.studentAuthID]);
 
   useEffect(() => {
-    if(recentOp !== ''){
+    if (recentOp !== '') {
       updatePersonLocation();
     }
   }, [state.currentPage]);
 
   // CREATE LOCATION RECORD or UPDATE
-  async function loadPersonData () {
+  async function loadPersonData() {
     try {
       const user = await Auth.currentAuthenticatedUser();
       if (user) {
         const { email, sub } = user.attributes;
-        let userInfo: any = await API.graphql(graphqlOperation(customQueries.getPersonLocation, { personEmail: email, personAuthID: sub }));
+        let userInfo: any = await API.graphql(
+          graphqlOperation(customQueries.getPersonLocation, { personEmail: email, personAuthID: sub })
+        );
         userInfo = userInfo.data.getPersonLocation;
-        if(userInfo !== null) setRecentOp('updated');
+        if (userInfo !== null) setRecentOp('updated');
         setPersonLocationObj(userInfo);
       }
     } catch (e) {
@@ -99,7 +98,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       setLoaded(true);
     }
   }
-
 
   async function createPersonLocation() {
     const newLocation = {
@@ -134,7 +132,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       lessonProgress: state.lessonProgress,
     };
     try {
-      if(recentOp === 'created'){
+      if (recentOp === 'created') {
         await loadPersonData();
       }
       console.log('updated', personLocationObj);
@@ -146,7 +144,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     } catch (e) {
       console.error('update PersonLocation : ', e);
     } finally {
-      setRecentOp('updated')
+      setRecentOp('updated');
     }
   }
 
@@ -231,23 +229,27 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const subscribeToSyllabusLesson = () => {
     let queryParams = queryString.parse(location.search);
 
-    console.log('subscription params: ', queryParams)
+    console.log('subscription params: ', queryParams);
     // @ts-ignore
-    const syllabusLessonSubscription = API.graphql(graphqlOperation(customSubscriptions.onChangeSyllabusLesson, { id: queryParams.id  })).subscribe({
+    const syllabusLessonSubscription = API.graphql( graphqlOperation(customSubscriptions.onChangeSyllabusLesson, { id: queryParams.id }) ).subscribe({
       next: (syllabusLessonData: any) => {
         const updatedLessonPlan = syllabusLessonData.value.data.onChangeSyllabusLesson;
         // @ts-ignore
-        API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id })).then((sLessonData: any) => {
-          sLessonData = sLessonData.data.getSyllabusLesson
-          dispatch({
-            type: 'UPDATE_LESSON_PLAN',
-            payload: {
-              pages: removeDisabled(sLessonData.lessonPlan),
-              displayData: sLessonData.displayData,
-              viewing: sLessonData.viewing,
-            },
-          });
-        })
+        API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id })).then(
+          (sLessonData: any) => {
+            // setSubscriptionData(sLessonData.data.getSyllabusLesson)
+            sLessonData = sLessonData.data.getSyllabusLesson;
+            dispatch({
+              type: 'UPDATE_LESSON_PLAN',
+              payload: {
+                pages: removeDisabled(sLessonData.lessonPlan),
+                displayData: sLessonData.displayData,
+                viewing: sLessonData.viewing,
+              },
+            });
+            console.log('onChangeSyllabusLesson: ', sLessonData)
+          }
+        );
       },
     });
 
@@ -289,6 +291,19 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       });
     }
   }, [lesson]);
+
+  useEffect(()=>{
+    if(subscriptionData){
+      dispatch({
+        type: 'UPDATE_LESSON_PLAN',
+        payload: {
+          pages: removeDisabled(subscriptionData.lessonPlan),
+          displayData: subscriptionData.displayData,
+          viewing: subscriptionData.viewing,
+        },
+      });
+    }
+  },[subscriptionData])
 
   useEffect(() => {
     if (data) {
