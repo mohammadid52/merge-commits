@@ -3613,11 +3613,7 @@ export const onCreateCheckpoint = /* GraphQL */ `
       stage
       type
       instructionsTitle
-      instructions {
-        video
-        link
-        text
-      }
+      instructions
       questions {
         items {
           id
@@ -3649,11 +3645,7 @@ export const onUpdateCheckpoint = /* GraphQL */ `
       stage
       type
       instructionsTitle
-      instructions {
-        video
-        link
-        text
-      }
+      instructions
       questions {
         items {
           id
@@ -3685,11 +3677,7 @@ export const onDeleteCheckpoint = /* GraphQL */ `
       stage
       type
       instructionsTitle
-      instructions {
-        video
-        link
-        text
-      }
+      instructions
       questions {
         items {
           id
@@ -3726,11 +3714,7 @@ export const onCreateCheckpointQuestions = /* GraphQL */ `
         stage
         type
         instructionsTitle
-        instructions {
-          video
-          link
-          text
-        }
+        instructions
         questions {
           nextToken
         }
@@ -3780,11 +3764,7 @@ export const onUpdateCheckpointQuestions = /* GraphQL */ `
         stage
         type
         instructionsTitle
-        instructions {
-          video
-          link
-          text
-        }
+        instructions
         questions {
           nextToken
         }
@@ -3834,11 +3814,7 @@ export const onDeleteCheckpointQuestions = /* GraphQL */ `
         stage
         type
         instructionsTitle
-        instructions {
-          video
-          link
-          text
-        }
+        instructions
         questions {
           nextToken
         }
@@ -4133,11 +4109,7 @@ export const onCreateAssessmentCheckpoint = /* GraphQL */ `
         stage
         type
         instructionsTitle
-        instructions {
-          video
-          link
-          text
-        }
+        instructions
         questions {
           nextToken
         }
@@ -4183,11 +4155,7 @@ export const onUpdateAssessmentCheckpoint = /* GraphQL */ `
         stage
         type
         instructionsTitle
-        instructions {
-          video
-          link
-          text
-        }
+        instructions
         questions {
           nextToken
         }
@@ -4233,11 +4201,7 @@ export const onDeleteAssessmentCheckpoint = /* GraphQL */ `
         stage
         type
         instructionsTitle
-        instructions {
-          video
-          link
-          text
-        }
+        instructions
         questions {
           nextToken
         }
@@ -5708,11 +5672,7 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
         stage
         type
         instructionsTitle
-        instructions {
-          video
-          link
-          text
-        }
+        instructions
         questions {
           nextToken
         }
@@ -5851,11 +5811,7 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
         stage
         type
         instructionsTitle
-        instructions {
-          video
-          link
-          text
-        }
+        instructions
         questions {
           nextToken
         }
@@ -5994,11 +5950,7 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
         stage
         type
         instructionsTitle
-        instructions {
-          video
-          link
-          text
-        }
+        instructions
         questions {
           nextToken
         }

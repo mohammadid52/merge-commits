@@ -1646,11 +1646,7 @@ export const getCheckpoint = /* GraphQL */ `
       stage
       type
       instructionsTitle
-      instructions {
-        video
-        link
-        text
-      }
+      instructions
       questions {
         items {
           id
@@ -1687,11 +1683,7 @@ export const listCheckpoints = /* GraphQL */ `
         stage
         type
         instructionsTitle
-        instructions {
-          video
-          link
-          text
-        }
+        instructions
         questions {
           nextToken
         }
@@ -1882,11 +1874,7 @@ export const getAssessmentCheckpoint = /* GraphQL */ `
         stage
         type
         instructionsTitle
-        instructions {
-          video
-          link
-          text
-        }
+        instructions
         questions {
           nextToken
         }
@@ -1935,6 +1923,7 @@ export const listAssessmentCheckpoints = /* GraphQL */ `
           stage
           type
           instructionsTitle
+          instructions
           purpose
           objectives
           designers

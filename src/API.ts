@@ -982,7 +982,7 @@ export type CreateCheckpointInput = {
   stage?: string | null,
   type: string,
   instructionsTitle?: string | null,
-  instructions?: InstructionsInput | null,
+  instructions?: string | null,
   purpose?: string | null,
   objectives?: string | null,
   designers?: Array< string | null > | null,
@@ -997,6 +997,7 @@ export type ModelCheckpointConditionInput = {
   stage?: ModelStringInput | null,
   type?: ModelStringInput | null,
   instructionsTitle?: ModelStringInput | null,
+  instructions?: ModelStringInput | null,
   purpose?: ModelStringInput | null,
   objectives?: ModelStringInput | null,
   designers?: ModelStringInput | null,
@@ -1015,7 +1016,7 @@ export type UpdateCheckpointInput = {
   stage?: string | null,
   type?: string | null,
   instructionsTitle?: string | null,
-  instructions?: InstructionsInput | null,
+  instructions?: string | null,
   purpose?: string | null,
   objectives?: string | null,
   designers?: Array< string | null > | null,
@@ -2326,6 +2327,7 @@ export type ModelCheckpointFilterInput = {
   stage?: ModelStringInput | null,
   type?: ModelStringInput | null,
   instructionsTitle?: ModelStringInput | null,
+  instructions?: ModelStringInput | null,
   purpose?: ModelStringInput | null,
   objectives?: ModelStringInput | null,
   designers?: ModelStringInput | null,
@@ -6317,12 +6319,7 @@ export type CreateCheckpointMutation = {
     stage: string | null,
     type: string,
     instructionsTitle: string | null,
-    instructions:  {
-      __typename: "Instructions",
-      video: boolean,
-      link: string | null,
-      text: Array< string >,
-    } | null,
+    instructions: string | null,
     questions:  {
       __typename: "ModelCheckpointQuestionsConnection",
       items:  Array< {
@@ -6361,12 +6358,7 @@ export type UpdateCheckpointMutation = {
     stage: string | null,
     type: string,
     instructionsTitle: string | null,
-    instructions:  {
-      __typename: "Instructions",
-      video: boolean,
-      link: string | null,
-      text: Array< string >,
-    } | null,
+    instructions: string | null,
     questions:  {
       __typename: "ModelCheckpointQuestionsConnection",
       items:  Array< {
@@ -6405,12 +6397,7 @@ export type DeleteCheckpointMutation = {
     stage: string | null,
     type: string,
     instructionsTitle: string | null,
-    instructions:  {
-      __typename: "Instructions",
-      video: boolean,
-      link: string | null,
-      text: Array< string >,
-    } | null,
+    instructions: string | null,
     questions:  {
       __typename: "ModelCheckpointQuestionsConnection",
       items:  Array< {
@@ -6455,12 +6442,7 @@ export type CreateCheckpointQuestionsMutation = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -6519,12 +6501,7 @@ export type UpdateCheckpointQuestionsMutation = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -6583,12 +6560,7 @@ export type DeleteCheckpointQuestionsMutation = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -6952,12 +6924,7 @@ export type CreateAssessmentCheckpointMutation = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -7013,12 +6980,7 @@ export type UpdateAssessmentCheckpointMutation = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -7074,12 +7036,7 @@ export type DeleteAssessmentCheckpointMutation = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -8877,12 +8834,7 @@ export type CreateLessonCheckpointMutation = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -9039,12 +8991,7 @@ export type UpdateLessonCheckpointMutation = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -9201,12 +9148,7 @@ export type DeleteLessonCheckpointMutation = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -14867,12 +14809,7 @@ export type GetCheckpointQuery = {
     stage: string | null,
     type: string,
     instructionsTitle: string | null,
-    instructions:  {
-      __typename: "Instructions",
-      video: boolean,
-      link: string | null,
-      text: Array< string >,
-    } | null,
+    instructions: string | null,
     questions:  {
       __typename: "ModelCheckpointQuestionsConnection",
       items:  Array< {
@@ -14914,12 +14851,7 @@ export type ListCheckpointsQuery = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -15142,12 +15074,7 @@ export type GetAssessmentCheckpointQuery = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -15198,6 +15125,7 @@ export type ListAssessmentCheckpointsQuery = {
         stage: string | null,
         type: string,
         instructionsTitle: string | null,
+        instructions: string | null,
         purpose: string | null,
         objectives: string | null,
         designers: Array< string | null > | null,
@@ -21789,12 +21717,7 @@ export type OnCreateCheckpointSubscription = {
     stage: string | null,
     type: string,
     instructionsTitle: string | null,
-    instructions:  {
-      __typename: "Instructions",
-      video: boolean,
-      link: string | null,
-      text: Array< string >,
-    } | null,
+    instructions: string | null,
     questions:  {
       __typename: "ModelCheckpointQuestionsConnection",
       items:  Array< {
@@ -21828,12 +21751,7 @@ export type OnUpdateCheckpointSubscription = {
     stage: string | null,
     type: string,
     instructionsTitle: string | null,
-    instructions:  {
-      __typename: "Instructions",
-      video: boolean,
-      link: string | null,
-      text: Array< string >,
-    } | null,
+    instructions: string | null,
     questions:  {
       __typename: "ModelCheckpointQuestionsConnection",
       items:  Array< {
@@ -21867,12 +21785,7 @@ export type OnDeleteCheckpointSubscription = {
     stage: string | null,
     type: string,
     instructionsTitle: string | null,
-    instructions:  {
-      __typename: "Instructions",
-      video: boolean,
-      link: string | null,
-      text: Array< string >,
-    } | null,
+    instructions: string | null,
     questions:  {
       __typename: "ModelCheckpointQuestionsConnection",
       items:  Array< {
@@ -21912,12 +21825,7 @@ export type OnCreateCheckpointQuestionsSubscription = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -21971,12 +21879,7 @@ export type OnUpdateCheckpointQuestionsSubscription = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -22030,12 +21933,7 @@ export type OnDeleteCheckpointQuestionsSubscription = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -22364,12 +22262,7 @@ export type OnCreateAssessmentCheckpointSubscription = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -22420,12 +22313,7 @@ export type OnUpdateAssessmentCheckpointSubscription = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -22476,12 +22364,7 @@ export type OnDeleteAssessmentCheckpointSubscription = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -24094,12 +23977,7 @@ export type OnCreateLessonCheckpointSubscription = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -24251,12 +24129,7 @@ export type OnUpdateLessonCheckpointSubscription = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
@@ -24408,12 +24281,7 @@ export type OnDeleteLessonCheckpointSubscription = {
       stage: string | null,
       type: string,
       instructionsTitle: string | null,
-      instructions:  {
-        __typename: "Instructions",
-        video: boolean,
-        link: string | null,
-        text: Array< string >,
-      } | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,

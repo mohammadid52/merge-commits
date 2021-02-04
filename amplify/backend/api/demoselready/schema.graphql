@@ -499,7 +499,7 @@ type Checkpoint @model {
   stage: String
   type: String!
   instructionsTitle: String
-  instructions: Instructions
+  instructions: String
   questions: [CheckpointQuestions]! @connection(keyName: "byCheckpoint", fields: ["id"])
   purpose: String
   objectives: String
