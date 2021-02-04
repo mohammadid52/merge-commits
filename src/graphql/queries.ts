@@ -3624,8 +3624,8 @@ export const listThemeTemplates = /* GraphQL */ `
   }
 `;
 export const getPersonLocation = /* GraphQL */ `
-  query GetPersonLocation($id: ID!) {
-    getPersonLocation(id: $id) {
+  query GetPersonLocation($personEmail: String!, $personAuthID: String!) {
+    getPersonLocation(personEmail: $personEmail, personAuthID: $personAuthID) {
       id
       personAuthID
       personEmail
@@ -3800,11 +3800,21 @@ export const getPersonLocation = /* GraphQL */ `
 `;
 export const listPersonLocations = /* GraphQL */ `
   query ListPersonLocations(
+    $personEmail: String
+    $personAuthID: ModelStringKeyConditionInput
     $filter: ModelPersonLocationFilterInput
     $limit: Int
     $nextToken: String
+    $sortDirection: ModelSortDirection
   ) {
-    listPersonLocations(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listPersonLocations(
+      personEmail: $personEmail
+      personAuthID: $personAuthID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
       items {
         id
         personAuthID
