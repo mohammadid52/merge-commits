@@ -12,17 +12,6 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import queryString from 'query-string';
 import { standardTheme } from './GlobalContext';
 
-const removeDisabled = (array: PagesType): any[] => {
-  if (array) {
-    let updatedArray = array.filter((item: { disabled: boolean; [key: string]: any }) => {
-      return !item.disabled;
-    });
-    return updatedArray;
-  } else {
-    return [];
-  }
-};
-
 interface LessonProps {
   children: React.ReactNode;
 }
@@ -231,15 +220,27 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
     console.log('subscription params: ', queryParams);
     // @ts-ignore
-    const syllabusLessonSubscription = API.graphql( graphqlOperation(customSubscriptions.onChangeSyllabusLesson, { id: queryParams.id }) ).subscribe({
+    const syllabusLessonSubscription = API.graphql(
+      graphqlOperation(customSubscriptions.onChangeSyllabusLesson, { id: queryParams.id })
+    ).subscribe({
       next: (syllabusLessonData: any) => {
         const updatedLessonPlan = syllabusLessonData.value.data.onChangeSyllabusLesson;
         // @ts-ignore
         API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id })).then(
           (sLessonData: any) => {
             const sLessonDataData = sLessonData.data.getSyllabusLesson;
-            setSubscriptionData(sLessonData)
-            console.log('onChangeSyllabusLesson: ', sLessonData)
+            setSubscriptionData(sLessonDataData)
+            /*dispatch({
+              type: 'UPDATE_LESSON_PLAN',
+              payload: {
+                pages: sLessonData.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
+                  return !item.disabled;
+                }),
+                displayData: sLessonData.displayData,
+                viewing: sLessonData.viewing,
+              },
+            });*/
+            console.log('onChangeSyllabusLesson: ', sLessonData);
           }
         );
       },
@@ -275,7 +276,9 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         payload: {
           syllabusLessonID: lesson.id,
           data: lesson,
-          pages: removeDisabled(lesson.lessonPlan),
+          pages: lesson.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
+            return !item.disabled;
+          }),
           displayData: lesson.displayData,
           word_bank: wordBank,
           subscribeFunc: subscribeToSyllabusLesson,
@@ -284,19 +287,22 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     }
   }, [lesson]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if(subscriptionData){
       dispatch({
         type: 'UPDATE_LESSON_PLAN',
         payload: {
-          pages: removeDisabled(subscriptionData.lessonPlan),
+          pages: subscriptionData.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
+            return !item.disabled;
+          }),
           displayData: subscriptionData.displayData,
           viewing: subscriptionData.viewing,
         },
       });
       console.log('useEffect subscriptionData -> ', 'subscription data changed...')
     }
-  },[subscriptionData])
+    console.log('onchange sub data: ', subscriptionData);
+  }, [subscriptionData]);
 
   useEffect(() => {
     if (data) {
