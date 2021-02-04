@@ -642,7 +642,6 @@ type RoomMsgs
   body: String!
   createdAt: AWSDateTime
   sender: Person @connection(fields: ["senderEmail", "senderAuthID"])
-  room: Room @connection(fields: ["roomID"])
 }
 
 type AppClients
@@ -692,6 +691,7 @@ type Lesson @model @key(fields: ["id"]) {
   assessment: Assessment @connection(fields: ["assessmentID"])
   filters: [String]
   coverImage: String
+  summaryTitle: String
 }
 
 type LessonCheckpoint @model(queries: null) @key(name: "byLesson", fields: ["lessonID", "checkpointID"]) {
@@ -830,9 +830,25 @@ type Theme {
   additionalContent: AdditionalContent
 }
 
+type PersonLocation @model
+@key(fields: ["personEmail", "personAuthID"]) 
+@key(name: "bySyllabusLesson", fields: ["syllabusLessonID"], queryField: "personLocationBySyllabusLesson")
+{
+  id: ID!
+  personAuthID: String!
+  personEmail: String!
+  syllabusLessonID: ID!
+  roomID: ID!
+  currentLocation: String
+  lessonProgress: String
+  person: Person @connection(fields: ["personEmail", "personAuthID"])
+  syllabusLesson: SyllabusLesson @connection(fields: ["syllabusLessonID"])
+  room: Room @connection(fields: ["roomID"])
+}
+
 type Subscription {
-  onNewRoomMsg(roomID: ID!): RoomMsgs
-    @aws_subscribe(mutations: ["createRoomMsgs"])
+  onChangePersonLocation(syllabusLessonID: ID!): PersonLocation
+    @aws_subscribe(mutations: ["createPersonLocation", "updatePersonLocation", "deletePersonLocation"])
   onChangeStudentData(syllabusLessonID: ID!): StudentData
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
   onChangeSyllabusLesson(id: ID!): SyllabusLesson @aws_subscribe(mutations: ["updateSyllabusLesson"])
