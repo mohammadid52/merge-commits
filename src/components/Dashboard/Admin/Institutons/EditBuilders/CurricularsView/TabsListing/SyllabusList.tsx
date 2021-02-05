@@ -55,6 +55,15 @@ const SyllabusList = (props: SyllabusListProps) => {
     }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
     setSyllabusList(list)
     setSyllabusIds(item)
+    const sequenceLength = item?.length;
+    const listLength = props?.syllabusList?.length;
+    if (listLength && !sequenceLength) {
+      // create sequence
+      let syllabusId = props?.syllabusList?.map((item: { id: string }) => item.id)
+      let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `s_${curricularId}`, sequence: syllabusId } }));
+      seqItem = seqItem.data.createCSequences
+      setSyllabusIds(syllabusId)
+    }
   }
 
   useEffect(() => {

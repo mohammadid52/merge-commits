@@ -28,12 +28,6 @@ const DragableAccordion = (props: DragableAccordionProps) => {
     onDragEnd(result);
   }
 
-  // useEffect(() => {
-  //   if (titleList?.length) {
-  //     setSelectedItem(titleList[0]?.id);
-  //   }
-  // }, []);
-
   return (
     <div className="bg-white mx-auto border border-gray-200 rounded-xl">
       <DragDropContext onDragEnd={onItemDrag}>
@@ -46,15 +40,18 @@ const DragableAccordion = (props: DragableAccordionProps) => {
               <ul className="rounded-xl">
 
                 {titleList.map((item: { id: string, title: string, subtitle?: string, content: React.ReactNode }, index) => (
-                  <Draggable key={item.id} draggableId={item.id} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <Fragment key={item.id}>
-                          <li className={`relative border-b border-gray-200 ${selectedItem === item.id ? 'rounded-lg' : ''}`}>
+
+
+                  <Fragment key={item.id}>
+                    <li className={`relative border-b border-gray-200 ${selectedItem === item.id ? 'rounded-lg' : ''}`}>
+
+                      <Draggable key={item.id} draggableId={item.id} index={index}>
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
                             <div className={`w-full px-8 py-6 text-left cursor-pointer ${theme.outlineNone} ${selectedItem === item.id ? 'border border-indigo-400 rounded-lg' : ''}`} onClick={() => changeView(item.id)}>
                               <div className="flex items-center justify-between">
                                 <span className={`text-xs md:text-base font-medium ${selectedItem === item.id && 'text-indigo-600'}`}>
@@ -68,16 +65,18 @@ const DragableAccordion = (props: DragableAccordionProps) => {
                                 </span>
                               </div>
                             </div>
-                            {(selectedItem === item.id) && (
-                              <div className="px-8 py-6 max-h-140 overflow-auto">
-                                {item.content}
-                              </div>
-                            )}
-                          </li>
-                        </Fragment>
-                      </div>
-                    )}
-                  </Draggable>
+                          </div>
+                        )}
+                      </Draggable>
+
+                      {(selectedItem === item.id) && (
+                        <div className="px-8 py-6 max-h-140 overflow-auto">
+                          {item.content}
+                        </div>
+                      )}
+                    </li>
+                  </Fragment>
+
                 ))}
               </ul >
 

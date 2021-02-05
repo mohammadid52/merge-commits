@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useLocation, useHistory, useRouteMatch } from 'react-router';
-import { IoArrowUndoCircleOutline, IoSpeedometerSharp } from 'react-icons/io5';
+import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import { BiNotepad } from 'react-icons/bi';
 import { MdSpeakerNotes } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
@@ -19,9 +19,6 @@ import UnderlinedTabs from '../../../../../Atoms/UnderlinedTabs';
 import SyllabusList from './TabsListing/SyllabusList';
 import LearningObjective from './TabsListing/LearningObjective';
 
-import TopicsList from './TabsListing/TopicsListOld';
-import MeasMntList from './TabsListing/MeasMntListOld';
-import LearningObjectiveNEW from './TabsListing/LearningObjectiveUnused';
 interface CurricularViewProps {
   tabProps?: any
 }
@@ -38,13 +35,6 @@ interface InitialData {
   },
   syllabusList: any[]
 }
-
-// IN PROGRESS NOTES: **Component is in progress
-// Pendings:
-
-// 1. Improve mutations
-// 2. Set list sequence
-// 3. Remove redundant things
 
 const CurricularView = (props: CurricularViewProps) => {
   const { tabProps } = props;
@@ -77,8 +67,6 @@ const CurricularView = (props: CurricularViewProps) => {
 
   const [curricularData, setCurricularData] = useState<InitialData>(initialData);
   const [designersId, setDesignersID] = useState([]);
-  // const [designersName, setDesignersName] = useState([]);
-  const [learningObjData, setLearningObjData] = useState([]);
   const [personsDataList, setPersonsDataList] = useState([]);
 
   const breadCrumsList = [
@@ -86,10 +74,7 @@ const CurricularView = (props: CurricularViewProps) => {
     { title: 'Curricular Info', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
   ]
   const tabs = [
-    // { index: 1, title: 'Topics', icon: <MdSpeakerNotes />, active: false, content: <TopicsList curricularId={currID} /> },
-    // { index: 2, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList curricularId={currID} /> },
-    // { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjective /> },
-    { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjective curricularId={currID} learningObjData={learningObjData} setLearningObjData={setLearningObjData} /> },
+    { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjective curricularId={currID} /> },
     { index: 3, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList syllabusList={curricularData.syllabusList} curricularId={currID} /> },
   ]
 
