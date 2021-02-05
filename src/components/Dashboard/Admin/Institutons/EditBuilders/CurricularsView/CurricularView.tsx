@@ -11,11 +11,13 @@ import * as customQueries from '../../../../../../customGraphql/customQueries';
 
 import { languageList } from '../../../../../../utilities/staticData';
 import { createFilterToFetchSpecificItemsOnly } from '../../../../../../utilities/strings';
+
 import BreadCrums from '../../../../../Atoms/BreadCrums';
 import SectionTitle from '../../../../../Atoms/SectionTitle';
 import Buttons from '../../../../../Atoms/Buttons';
 import PageWrapper from '../../../../../Atoms/PageWrapper';
 import UnderlinedTabs from '../../../../../Atoms/UnderlinedTabs';
+
 import SyllabusList from './TabsListing/SyllabusList';
 import LearningObjective from './TabsListing/LearningObjective';
 
