@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { LessonActions } from '../reducers/LessonReducer';
-// import { LessonStateType } from '../state/LessonState';
-// import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../customGraphql/customMutations';
-
-// import { FaSatellite } from 'react-icons/fa';
 
 interface inputs {
   subscription?: any;
@@ -72,18 +68,32 @@ const useStudentTimer = (inputs?: inputs) => {
   }, [params.state.studentStatus]);
 
   useEffect(() => {
-    if (params.state.viewing) {
-      startAutoSave();
-    }
-
-    if (!params.state.viewing) {
-      clearAutoSave();
-    }
+    /**
+     * HERE WE CAN CHECK IF ANY CHANGES HAVE BEEN MADE
+     * BEFORE ENABLING AUTO SAVE ON VIEW
+     *
+     * 1. ON state.viewing = increase save count + 1
+     *      SET changes made to FALSE
+     * 2. ON state.viewing && changes made TRUE
+     *      = increase save count + 1
+     *      SET changes made to FALSE
+     * 3. ON state.viewing && changes made FALSE
+     *      = do nothing.
+     * 4. ON !state.viewing
+     *      = do nothing, clear save
+     */
+    // if (params.state.viewing) {
+    //   startAutoSave();
+    // }
+    //
+    // if (!params.state.viewing) {
+    //   clearAutoSave();
+    // }
   }, [params.state.viewing]);
 
   useEffect(() => {
     if (params.state.viewing) {
-      // console.log(params.state.saveCount);
+      console.log('teacher viewing savecount: ', params.state.saveCount);
       updateStudentData('autosave');
     }
   }, [params.state.saveCount]);
@@ -146,37 +156,37 @@ const useStudentTimer = (inputs?: inputs) => {
     });
   };
 
-  const startTimer = () => {
-    console.log('started');
-
-    clearTimeout(params.activeTimer);
-    clearTimeout(params.idleTimer);
-    params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' });
-
-    params.activeTimer = setTimeout(() => {
-      clearTimeout(params.activeTimer);
-      params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'IDLE' });
-    }, 60000);
-
-    params.idleTimer = setTimeout(() => {
-      clearTimeout(params.idleTimer);
-      params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'OFFLINE' });
-    }, 60000);
-  };
+  /**
+   * this timer for detecting users idle status
+   * never actually used and can probably be deleted
+   */
+  // const startTimer = () => {
+  //   console.log('started');
+  //
+  //   clearTimeout(params.activeTimer);
+  //   clearTimeout(params.idleTimer);
+  //   params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' });
+  //
+  //   params.activeTimer = setTimeout(() => {
+  //     clearTimeout(params.activeTimer);
+  //     params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'IDLE' });
+  //   }, 60000);
+  //
+  //   params.idleTimer = setTimeout(() => {
+  //     clearTimeout(params.idleTimer);
+  //     params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'OFFLINE' });
+  //   }, 60000);
+  // };
 
   const startAutoSave = () => {
     clearTimeout(params.activeTimer);
     clearTimeout(params.idleTimer);
     params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' });
     params.dispatch({ type: 'INCREMENT_SAVE_COUNT' });
-    // callback()
-    // console.log('save');
 
-    params.autoSaveInterval = setInterval(() => {
-      // console.log('save');
-      params.dispatch({ type: 'INCREMENT_SAVE_COUNT' });
-      // callback()
-    }, 3000);
+    // params.autoSaveInterval = setInterval(() => {
+    //   params.dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+    // }, 3000);
   };
 
   const clearAutoSave = () => {
@@ -191,7 +201,7 @@ const useStudentTimer = (inputs?: inputs) => {
   };
 
   return {
-    startTimer,
+    // startTimer,
     startAutoSave,
     clearAutoSave,
     clearAllTimers,

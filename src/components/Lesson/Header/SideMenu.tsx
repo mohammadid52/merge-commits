@@ -58,7 +58,7 @@ const SideMenu = (props: { handlePopup: () => void }) => {
     }, 300);
   };
 
-  const { startTimer, changeParams } = useStudentTimer({
+  const { changeParams } = useStudentTimer({
     dispatch: dispatch,
     subscription: state.subscription,
     subscribeFunc: state.subscribeFunc,

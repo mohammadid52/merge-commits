@@ -41,7 +41,21 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [personLocationObj, setPersonLocationObj] = useState<any>();
   const [recentOp, setRecentOp] = useState<string>('');
-  const queryParams = queryString.parse(location.search);
+
+  const [activityInterval, setActivityInterval] = useState<any>();
+
+  // SAVE TRIGGER TIMING
+  useEffect(()=>{
+    if(state.viewing){
+      clearTimeout(activityInterval)
+      console.log('interval set at LessonContext.tsx')
+      setActivityInterval( setTimeout(
+        () => dispatch({ type: 'INCREMENT_SAVE_COUNT' })
+        , 1000))
+    }
+      return ()=> clearTimeout(activityInterval)
+  },[state.viewing, state.componentState])
+
 
   // INIT PERSON LOCATION COOKIS & STATE
   useEffect(() => {
@@ -202,7 +216,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         const classroom: any = await API.graphql(
           graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id })
         );
-        console.log('classroom data', classroom);
+        // console.log('classroom data', classroom);
         setLesson(classroom.data.getSyllabusLesson);
         getOrCreateStudentData();
         subscription = subscribeToSyllabusLesson();
@@ -218,7 +232,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const subscribeToSyllabusLesson = () => {
     let queryParams = queryString.parse(location.search);
 
-    console.log('subscription params: ', queryParams);
+    // console.log('subscription params: ', queryParams);
     // @ts-ignore
     const syllabusLessonSubscription = API.graphql( graphqlOperation(customSubscriptions.onChangeSyllabusLesson, { id: queryParams.id }) ).subscribe({
       next: (syllabusLessonData: any) => {
