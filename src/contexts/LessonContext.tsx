@@ -42,21 +42,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const [personLocationObj, setPersonLocationObj] = useState<any>();
   const [recentOp, setRecentOp] = useState<string>('');
 
-  const [activityInterval, setActivityInterval] = useState<any>();
-
-  // SAVE TRIGGER TIMING
-  useEffect(()=>{
-    if(state.viewing){
-      clearTimeout(activityInterval)
-      console.log('interval set at LessonContext.tsx')
-      setActivityInterval( setTimeout(
-        () => dispatch({ type: 'INCREMENT_SAVE_COUNT' })
-        , 1000))
-    }
-      return ()=> clearTimeout(activityInterval)
-  },[state.viewing, state.componentState])
-
-
   // INIT PERSON LOCATION COOKIS & STATE
   useEffect(() => {
     loadPersonData();

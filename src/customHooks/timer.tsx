@@ -35,6 +35,8 @@ const useStudentTimer = (inputs?: inputs) => {
     autoSaveInterval: null,
   });
 
+  const [activityInterval, setActivityInterval] = useState<any>();
+
   useEffect(() => {
     console.log(params.state.subscription);
   }, [params.state.subscription]);
@@ -90,6 +92,20 @@ const useStudentTimer = (inputs?: inputs) => {
     //   clearAutoSave();
     // }
   }, [params.state.viewing]);
+
+
+
+  // SAVE TRIGGER TIMING
+  useEffect(()=>{
+    if(state.viewing){
+      clearTimeout(activityInterval)
+      console.log('interval set at LessonContext.tsx')
+      setActivityInterval( setTimeout(
+        () => dispatch({ type: 'INCREMENT_SAVE_COUNT' })
+        , 1000))
+    }
+    return ()=> clearTimeout(activityInterval)
+  },[state.viewing, state.componentState])
 
   useEffect(() => {
     if (params.state.viewing) {
