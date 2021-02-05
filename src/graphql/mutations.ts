@@ -1865,45 +1865,6 @@ export const deleteCurriculum = /* GraphQL */ `
     }
   }
 `;
-export const createCSequences = /* GraphQL */ `
-  mutation CreateCSequences(
-    $input: CreateCSequencesInput!
-    $condition: ModelCSequencesConditionInput
-  ) {
-    createCSequences(input: $input, condition: $condition) {
-      id
-      sequence
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateCSequences = /* GraphQL */ `
-  mutation UpdateCSequences(
-    $input: UpdateCSequencesInput!
-    $condition: ModelCSequencesConditionInput
-  ) {
-    updateCSequences(input: $input, condition: $condition) {
-      id
-      sequence
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteCSequences = /* GraphQL */ `
-  mutation DeleteCSequences(
-    $input: DeleteCSequencesInput!
-    $condition: ModelCSequencesConditionInput
-  ) {
-    deleteCSequences(input: $input, condition: $condition) {
-      id
-      sequence
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createTopic = /* GraphQL */ `
   mutation CreateTopic(
     $input: CreateTopicInput!
@@ -2070,6 +2031,45 @@ export const deleteTopic = /* GraphQL */ `
       }
       name
       description
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCSequences = /* GraphQL */ `
+  mutation CreateCSequences(
+    $input: CreateCSequencesInput!
+    $condition: ModelCSequencesConditionInput
+  ) {
+    createCSequences(input: $input, condition: $condition) {
+      id
+      sequence
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCSequences = /* GraphQL */ `
+  mutation UpdateCSequences(
+    $input: UpdateCSequencesInput!
+    $condition: ModelCSequencesConditionInput
+  ) {
+    updateCSequences(input: $input, condition: $condition) {
+      id
+      sequence
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCSequences = /* GraphQL */ `
+  mutation DeleteCSequences(
+    $input: DeleteCSequencesInput!
+    $condition: ModelCSequencesConditionInput
+  ) {
+    deleteCSequences(input: $input, condition: $condition) {
+      id
+      sequence
       createdAt
       updatedAt
     }
@@ -3267,7 +3267,9 @@ export const createCheckpoint = /* GraphQL */ `
       label
       title
       subtitle
+      stage
       type
+      instructionsTitle
       instructions
       questions {
         items {
@@ -3280,6 +3282,11 @@ export const createCheckpoint = /* GraphQL */ `
         }
         nextToken
       }
+      purpose
+      objectives
+      designers
+      language
+      estTime
       createdAt
       updatedAt
     }
@@ -3295,7 +3302,9 @@ export const updateCheckpoint = /* GraphQL */ `
       label
       title
       subtitle
+      stage
       type
+      instructionsTitle
       instructions
       questions {
         items {
@@ -3308,6 +3317,11 @@ export const updateCheckpoint = /* GraphQL */ `
         }
         nextToken
       }
+      purpose
+      objectives
+      designers
+      language
+      estTime
       createdAt
       updatedAt
     }
@@ -3323,7 +3337,9 @@ export const deleteCheckpoint = /* GraphQL */ `
       label
       title
       subtitle
+      stage
       type
+      instructionsTitle
       instructions
       questions {
         items {
@@ -3336,6 +3352,11 @@ export const deleteCheckpoint = /* GraphQL */ `
         }
         nextToken
       }
+      purpose
+      objectives
+      designers
+      language
+      estTime
       createdAt
       updatedAt
     }
@@ -3356,11 +3377,18 @@ export const createCheckpointQuestions = /* GraphQL */ `
         label
         title
         subtitle
+        stage
         type
+        instructionsTitle
         instructions
         questions {
           nextToken
         }
+        purpose
+        objectives
+        designers
+        language
+        estTime
         createdAt
         updatedAt
       }
@@ -3402,11 +3430,18 @@ export const updateCheckpointQuestions = /* GraphQL */ `
         label
         title
         subtitle
+        stage
         type
+        instructionsTitle
         instructions
         questions {
           nextToken
         }
+        purpose
+        objectives
+        designers
+        language
+        estTime
         createdAt
         updatedAt
       }
@@ -3448,11 +3483,18 @@ export const deleteCheckpointQuestions = /* GraphQL */ `
         label
         title
         subtitle
+        stage
         type
+        instructionsTitle
         instructions
         questions {
           nextToken
         }
+        purpose
+        objectives
+        designers
+        language
+        estTime
         createdAt
         updatedAt
       }
@@ -3757,11 +3799,18 @@ export const createAssessmentCheckpoint = /* GraphQL */ `
         label
         title
         subtitle
+        stage
         type
+        instructionsTitle
         instructions
         questions {
           nextToken
         }
+        purpose
+        objectives
+        designers
+        language
+        estTime
         createdAt
         updatedAt
       }
@@ -3799,11 +3848,18 @@ export const updateAssessmentCheckpoint = /* GraphQL */ `
         label
         title
         subtitle
+        stage
         type
+        instructionsTitle
         instructions
         questions {
           nextToken
         }
+        purpose
+        objectives
+        designers
+        language
+        estTime
         createdAt
         updatedAt
       }
@@ -3841,11 +3897,18 @@ export const deleteAssessmentCheckpoint = /* GraphQL */ `
         label
         title
         subtitle
+        stage
         type
+        instructionsTitle
         instructions
         questions {
           nextToken
         }
+        purpose
+        objectives
+        designers
+        language
+        estTime
         createdAt
         updatedAt
       }
@@ -4625,48 +4688,6 @@ export const deleteRoomMsgs = /* GraphQL */ `
     }
   }
 `;
-export const createAppClients = /* GraphQL */ `
-  mutation CreateAppClients(
-    $input: CreateAppClientsInput!
-    $condition: ModelAppClientsConditionInput
-  ) {
-    createAppClients(input: $input, condition: $condition) {
-      id
-      key
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateAppClients = /* GraphQL */ `
-  mutation UpdateAppClients(
-    $input: UpdateAppClientsInput!
-    $condition: ModelAppClientsConditionInput
-  ) {
-    updateAppClients(input: $input, condition: $condition) {
-      id
-      key
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteAppClients = /* GraphQL */ `
-  mutation DeleteAppClients(
-    $input: DeleteAppClientsInput!
-    $condition: ModelAppClientsConditionInput
-  ) {
-    deleteAppClients(input: $input, condition: $condition) {
-      id
-      key
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createCourse = /* GraphQL */ `
   mutation CreateCourse(
     $input: CreateCourseInput!
@@ -4909,6 +4930,14 @@ export const createLesson = /* GraphQL */ `
       filters
       coverImage
       summaryTitle
+      introductionTitle
+      introduction
+      connectionTitle
+      lessonPlan {
+        type
+        LessonComponentID
+        sequence
+      }
       createdAt
       updatedAt
     }
@@ -5108,6 +5137,14 @@ export const updateLesson = /* GraphQL */ `
       filters
       coverImage
       summaryTitle
+      introductionTitle
+      introduction
+      connectionTitle
+      lessonPlan {
+        type
+        LessonComponentID
+        sequence
+      }
       createdAt
       updatedAt
     }
@@ -5307,6 +5344,14 @@ export const deleteLesson = /* GraphQL */ `
       filters
       coverImage
       summaryTitle
+      introductionTitle
+      introduction
+      connectionTitle
+      lessonPlan {
+        type
+        LessonComponentID
+        sequence
+      }
       createdAt
       updatedAt
     }
@@ -5418,6 +5463,14 @@ export const createLessonCheckpoint = /* GraphQL */ `
         filters
         coverImage
         summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+        }
         createdAt
         updatedAt
       }
@@ -5426,11 +5479,18 @@ export const createLessonCheckpoint = /* GraphQL */ `
         label
         title
         subtitle
+        stage
         type
+        instructionsTitle
         instructions
         questions {
           nextToken
         }
+        purpose
+        objectives
+        designers
+        language
+        estTime
         createdAt
         updatedAt
       }
@@ -5545,6 +5605,14 @@ export const updateLessonCheckpoint = /* GraphQL */ `
         filters
         coverImage
         summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+        }
         createdAt
         updatedAt
       }
@@ -5553,11 +5621,18 @@ export const updateLessonCheckpoint = /* GraphQL */ `
         label
         title
         subtitle
+        stage
         type
+        instructionsTitle
         instructions
         questions {
           nextToken
         }
+        purpose
+        objectives
+        designers
+        language
+        estTime
         createdAt
         updatedAt
       }
@@ -5672,6 +5747,14 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
         filters
         coverImage
         summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+        }
         createdAt
         updatedAt
       }
@@ -5680,11 +5763,18 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
         label
         title
         subtitle
+        stage
         type
+        instructionsTitle
         instructions
         questions {
           nextToken
         }
+        purpose
+        objectives
+        designers
+        language
+        estTime
         createdAt
         updatedAt
       }
@@ -5805,6 +5895,14 @@ export const createLessonKeyWord = /* GraphQL */ `
         filters
         coverImage
         summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+        }
         createdAt
         updatedAt
       }
@@ -5925,6 +6023,14 @@ export const updateLessonKeyWord = /* GraphQL */ `
         filters
         coverImage
         summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+        }
         createdAt
         updatedAt
       }
@@ -6045,6 +6151,14 @@ export const deleteLessonKeyWord = /* GraphQL */ `
         filters
         coverImage
         summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+        }
         createdAt
         updatedAt
       }
@@ -6284,6 +6398,14 @@ export const createSyllabusLesson = /* GraphQL */ `
         filters
         coverImage
         summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+        }
         createdAt
         updatedAt
       }
@@ -6461,6 +6583,14 @@ export const updateSyllabusLesson = /* GraphQL */ `
         filters
         coverImage
         summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+        }
         createdAt
         updatedAt
       }
@@ -6638,6 +6768,14 @@ export const deleteSyllabusLesson = /* GraphQL */ `
         filters
         coverImage
         summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+        }
         createdAt
         updatedAt
       }
@@ -6749,6 +6887,9 @@ export const createStudentData = /* GraphQL */ `
           filters
           coverImage
           summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
           createdAt
           updatedAt
         }
@@ -6923,6 +7064,9 @@ export const updateStudentData = /* GraphQL */ `
           filters
           coverImage
           summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
           createdAt
           updatedAt
         }
@@ -7097,6 +7241,9 @@ export const deleteStudentData = /* GraphQL */ `
           filters
           coverImage
           summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
           createdAt
           updatedAt
         }
@@ -7306,6 +7453,9 @@ export const createQuestionData = /* GraphQL */ `
           filters
           coverImage
           summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
           createdAt
           updatedAt
         }
@@ -7417,6 +7567,9 @@ export const updateQuestionData = /* GraphQL */ `
           filters
           coverImage
           summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
           createdAt
           updatedAt
         }
@@ -7528,6 +7681,9 @@ export const deleteQuestionData = /* GraphQL */ `
           filters
           coverImage
           summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
           createdAt
           updatedAt
         }
@@ -8013,6 +8169,9 @@ export const createFeedback = /* GraphQL */ `
           filters
           coverImage
           summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
           createdAt
           updatedAt
         }
@@ -8087,6 +8246,9 @@ export const updateFeedback = /* GraphQL */ `
           filters
           coverImage
           summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
           createdAt
           updatedAt
         }
@@ -8161,6 +8323,9 @@ export const deleteFeedback = /* GraphQL */ `
           filters
           coverImage
           summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
           createdAt
           updatedAt
         }
@@ -8195,22 +8360,20 @@ export const deleteFeedback = /* GraphQL */ `
     }
   }
 `;
-export const createThemeTemplate = /* GraphQL */ `
-  mutation CreateThemeTemplate(
-    $input: CreateThemeTemplateInput!
-    $condition: ModelThemeTemplateConditionInput
+export const createIntro = /* GraphQL */ `
+  mutation CreateIntro(
+    $input: CreateIntroInput!
+    $condition: ModelIntroConditionInput
   ) {
-    createThemeTemplate(input: $input, condition: $condition) {
+    createIntro(input: $input, condition: $condition) {
       id
+      title
+      label
+      stage
       type
-      name
-      summary
-      summaryLabel
-      quote {
-        id
-        source
-        text
-      }
+      connectionTitle
+      connection
+      keywordsTitle
       keywords {
         items {
           id
@@ -8221,38 +8384,56 @@ export const createThemeTemplate = /* GraphQL */ `
         }
         nextToken
       }
-      connection
-      images
-      additionalContent {
-        video
-        links {
+      questionsTitle
+      questions {
+        items {
           id
-          type
-          text
-          link
+          doFirstID
+          questionID
+          createdAt
+          updatedAt
         }
+        nextToken
+      }
+      language
+      estTime
+      artistID
+      artist {
+        id
+        images
+        name
+        type
+        bio
+        quotes {
+          id
+          source
+          text
+        }
+        additionalContent {
+          video
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
     }
   }
 `;
-export const updateThemeTemplate = /* GraphQL */ `
-  mutation UpdateThemeTemplate(
-    $input: UpdateThemeTemplateInput!
-    $condition: ModelThemeTemplateConditionInput
+export const updateIntro = /* GraphQL */ `
+  mutation UpdateIntro(
+    $input: UpdateIntroInput!
+    $condition: ModelIntroConditionInput
   ) {
-    updateThemeTemplate(input: $input, condition: $condition) {
+    updateIntro(input: $input, condition: $condition) {
       id
+      title
+      label
+      stage
       type
-      name
-      summary
-      summaryLabel
-      quote {
-        id
-        source
-        text
-      }
+      connectionTitle
+      connection
+      keywordsTitle
       keywords {
         items {
           id
@@ -8263,38 +8444,56 @@ export const updateThemeTemplate = /* GraphQL */ `
         }
         nextToken
       }
-      connection
-      images
-      additionalContent {
-        video
-        links {
+      questionsTitle
+      questions {
+        items {
           id
-          type
-          text
-          link
+          doFirstID
+          questionID
+          createdAt
+          updatedAt
         }
+        nextToken
+      }
+      language
+      estTime
+      artistID
+      artist {
+        id
+        images
+        name
+        type
+        bio
+        quotes {
+          id
+          source
+          text
+        }
+        additionalContent {
+          video
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteThemeTemplate = /* GraphQL */ `
-  mutation DeleteThemeTemplate(
-    $input: DeleteThemeTemplateInput!
-    $condition: ModelThemeTemplateConditionInput
+export const deleteIntro = /* GraphQL */ `
+  mutation DeleteIntro(
+    $input: DeleteIntroInput!
+    $condition: ModelIntroConditionInput
   ) {
-    deleteThemeTemplate(input: $input, condition: $condition) {
+    deleteIntro(input: $input, condition: $condition) {
       id
+      title
+      label
+      stage
       type
-      name
-      summary
-      summaryLabel
-      quote {
-        id
-        source
-        text
-      }
+      connectionTitle
+      connection
+      keywordsTitle
       keywords {
         items {
           id
@@ -8305,17 +8504,133 @@ export const deleteThemeTemplate = /* GraphQL */ `
         }
         nextToken
       }
-      connection
-      images
-      additionalContent {
-        video
-        links {
+      questionsTitle
+      questions {
+        items {
           id
-          type
-          text
-          link
+          doFirstID
+          questionID
+          createdAt
+          updatedAt
         }
+        nextToken
       }
+      language
+      estTime
+      artistID
+      artist {
+        id
+        images
+        name
+        type
+        bio
+        quotes {
+          id
+          source
+          text
+        }
+        additionalContent {
+          video
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createOutro = /* GraphQL */ `
+  mutation CreateOutro(
+    $input: CreateOutroInput!
+    $condition: ModelOutroConditionInput
+  ) {
+    createOutro(input: $input, condition: $condition) {
+      id
+      title
+      subtitle
+      stage
+      type
+      closingTitle
+      closingText
+      questionsTitle
+      questions {
+        items {
+          id
+          doFirstID
+          questionID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      additionalInfo
+      language
+      estTime
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateOutro = /* GraphQL */ `
+  mutation UpdateOutro(
+    $input: UpdateOutroInput!
+    $condition: ModelOutroConditionInput
+  ) {
+    updateOutro(input: $input, condition: $condition) {
+      id
+      title
+      subtitle
+      stage
+      type
+      closingTitle
+      closingText
+      questionsTitle
+      questions {
+        items {
+          id
+          doFirstID
+          questionID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      additionalInfo
+      language
+      estTime
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteOutro = /* GraphQL */ `
+  mutation DeleteOutro(
+    $input: DeleteOutroInput!
+    $condition: ModelOutroConditionInput
+  ) {
+    deleteOutro(input: $input, condition: $condition) {
+      id
+      title
+      subtitle
+      stage
+      type
+      closingTitle
+      closingText
+      questionsTitle
+      questions {
+        items {
+          id
+          doFirstID
+          questionID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      additionalInfo
+      language
+      estTime
       createdAt
       updatedAt
     }
@@ -8394,6 +8709,9 @@ export const createPersonLocation = /* GraphQL */ `
           filters
           coverImage
           summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
           createdAt
           updatedAt
         }
@@ -8573,6 +8891,9 @@ export const updatePersonLocation = /* GraphQL */ `
           filters
           coverImage
           summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
           createdAt
           updatedAt
         }
@@ -8752,6 +9073,9 @@ export const deletePersonLocation = /* GraphQL */ `
           filters
           coverImage
           summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
           createdAt
           updatedAt
         }

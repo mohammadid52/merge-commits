@@ -171,15 +171,6 @@ type Curriculum
   designers: [String]
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
 }
-
-type CSequences
-@key(fields: ["id"])
-@model
-{
-  id: ID!
-  sequence: [String]
-}
-
 type Topic
 @model 
 @key(fields: ["id"])
@@ -192,6 +183,14 @@ type Topic
   learningObjective: LearningObjective @connection(fields: ["learningObjectiveID"])
   name: String!
   description: String
+}
+
+type CSequences
+@key(fields: ["id"])
+@model
+{
+  id: ID!
+  sequence: [String]
 }
 
 type LearningObjective

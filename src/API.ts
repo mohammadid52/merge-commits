@@ -477,27 +477,6 @@ export type DeleteCurriculumInput = {
   id: string,
 };
 
-export type CreateCSequencesInput = {
-  id?: string | null,
-  sequence?: Array< string | null > | null,
-};
-
-export type ModelCSequencesConditionInput = {
-  sequence?: ModelStringInput | null,
-  and?: Array< ModelCSequencesConditionInput | null > | null,
-  or?: Array< ModelCSequencesConditionInput | null > | null,
-  not?: ModelCSequencesConditionInput | null,
-};
-
-export type UpdateCSequencesInput = {
-  id: string,
-  sequence?: Array< string | null > | null,
-};
-
-export type DeleteCSequencesInput = {
-  id: string,
-};
-
 export type CreateTopicInput = {
   id?: string | null,
   curriculumID: string,
@@ -525,6 +504,27 @@ export type UpdateTopicInput = {
 };
 
 export type DeleteTopicInput = {
+  id: string,
+};
+
+export type CreateCSequencesInput = {
+  id?: string | null,
+  sequence?: Array< string | null > | null,
+};
+
+export type ModelCSequencesConditionInput = {
+  sequence?: ModelStringInput | null,
+  and?: Array< ModelCSequencesConditionInput | null > | null,
+  or?: Array< ModelCSequencesConditionInput | null > | null,
+  not?: ModelCSequencesConditionInput | null,
+};
+
+export type UpdateCSequencesInput = {
+  id: string,
+  sequence?: Array< string | null > | null,
+};
+
+export type DeleteCSequencesInput = {
   id: string,
 };
 
@@ -979,16 +979,30 @@ export type CreateCheckpointInput = {
   label: string,
   title?: string | null,
   subtitle?: string | null,
+  stage?: string | null,
   type: string,
-  instructions: string,
+  instructionsTitle?: string | null,
+  instructions?: string | null,
+  purpose?: string | null,
+  objectives?: string | null,
+  designers?: Array< string | null > | null,
+  language?: string | null,
+  estTime?: number | null,
 };
 
 export type ModelCheckpointConditionInput = {
   label?: ModelStringInput | null,
   title?: ModelStringInput | null,
   subtitle?: ModelStringInput | null,
+  stage?: ModelStringInput | null,
   type?: ModelStringInput | null,
+  instructionsTitle?: ModelStringInput | null,
   instructions?: ModelStringInput | null,
+  purpose?: ModelStringInput | null,
+  objectives?: ModelStringInput | null,
+  designers?: ModelStringInput | null,
+  language?: ModelStringInput | null,
+  estTime?: ModelIntInput | null,
   and?: Array< ModelCheckpointConditionInput | null > | null,
   or?: Array< ModelCheckpointConditionInput | null > | null,
   not?: ModelCheckpointConditionInput | null,
@@ -999,8 +1013,15 @@ export type UpdateCheckpointInput = {
   label?: string | null,
   title?: string | null,
   subtitle?: string | null,
+  stage?: string | null,
   type?: string | null,
+  instructionsTitle?: string | null,
   instructions?: string | null,
+  purpose?: string | null,
+  objectives?: string | null,
+  designers?: Array< string | null > | null,
+  language?: string | null,
+  estTime?: number | null,
 };
 
 export type DeleteCheckpointInput = {
@@ -1394,29 +1415,6 @@ export type DeleteRoomMsgsInput = {
   id?: string | null,
 };
 
-export type CreateAppClientsInput = {
-  id?: string | null,
-  key: string,
-  name: string,
-};
-
-export type ModelAppClientsConditionInput = {
-  name?: ModelStringInput | null,
-  and?: Array< ModelAppClientsConditionInput | null > | null,
-  or?: Array< ModelAppClientsConditionInput | null > | null,
-  not?: ModelAppClientsConditionInput | null,
-};
-
-export type UpdateAppClientsInput = {
-  id: string,
-  key: string,
-  name?: string | null,
-};
-
-export type DeleteAppClientsInput = {
-  key: string,
-};
-
 export type CreateCourseInput = {
   id?: string | null,
   name: string,
@@ -1471,6 +1469,10 @@ export type CreateLessonInput = {
   filters?: Array< string | null > | null,
   coverImage?: string | null,
   summaryTitle?: string | null,
+  introductionTitle?: string | null,
+  introduction?: string | null,
+  connectionTitle?: string | null,
+  lessonPlan?: Array< LessonComponentsInput | null > | null,
 };
 
 export type ThemeInput = {
@@ -1482,6 +1484,12 @@ export type ThemeInput = {
   connection?: string | null,
   images: Array< string >,
   additionalContent?: AdditionalContentInput | null,
+};
+
+export type LessonComponentsInput = {
+  type?: string | null,
+  LessonComponentID: string,
+  sequence: number,
 };
 
 export type ModelLessonConditionInput = {
@@ -1506,6 +1514,9 @@ export type ModelLessonConditionInput = {
   filters?: ModelStringInput | null,
   coverImage?: ModelStringInput | null,
   summaryTitle?: ModelStringInput | null,
+  introductionTitle?: ModelStringInput | null,
+  introduction?: ModelStringInput | null,
+  connectionTitle?: ModelStringInput | null,
   and?: Array< ModelLessonConditionInput | null > | null,
   or?: Array< ModelLessonConditionInput | null > | null,
   not?: ModelLessonConditionInput | null,
@@ -1535,6 +1546,10 @@ export type UpdateLessonInput = {
   filters?: Array< string | null > | null,
   coverImage?: string | null,
   summaryTitle?: string | null,
+  introductionTitle?: string | null,
+  introduction?: string | null,
+  connectionTitle?: string | null,
+  lessonPlan?: Array< LessonComponentsInput | null > | null,
 };
 
 export type DeleteLessonInput = {
@@ -1917,43 +1932,102 @@ export type DeleteFeedbackInput = {
   id?: string | null,
 };
 
-export type CreateThemeTemplateInput = {
+export type CreateIntroInput = {
   id?: string | null,
+  title?: string | null,
+  label?: string | null,
+  stage?: string | null,
   type?: string | null,
-  name: string,
-  summary: Array< string >,
-  summaryLabel: string,
-  quote?: Array< QuoteInput | null > | null,
+  connectionTitle?: string | null,
   connection?: string | null,
-  images: Array< string >,
-  additionalContent?: AdditionalContentInput | null,
+  keywordsTitle?: string | null,
+  questionsTitle?: string | null,
+  language?: string | null,
+  estTime?: number | null,
+  artistID: string,
 };
 
-export type ModelThemeTemplateConditionInput = {
+export type ModelIntroConditionInput = {
+  title?: ModelStringInput | null,
+  label?: ModelStringInput | null,
+  stage?: ModelStringInput | null,
   type?: ModelStringInput | null,
-  name?: ModelStringInput | null,
-  summary?: ModelStringInput | null,
-  summaryLabel?: ModelStringInput | null,
+  connectionTitle?: ModelStringInput | null,
   connection?: ModelStringInput | null,
-  images?: ModelStringInput | null,
-  and?: Array< ModelThemeTemplateConditionInput | null > | null,
-  or?: Array< ModelThemeTemplateConditionInput | null > | null,
-  not?: ModelThemeTemplateConditionInput | null,
+  keywordsTitle?: ModelStringInput | null,
+  questionsTitle?: ModelStringInput | null,
+  language?: ModelStringInput | null,
+  estTime?: ModelIntInput | null,
+  artistID?: ModelIDInput | null,
+  and?: Array< ModelIntroConditionInput | null > | null,
+  or?: Array< ModelIntroConditionInput | null > | null,
+  not?: ModelIntroConditionInput | null,
 };
 
-export type UpdateThemeTemplateInput = {
+export type UpdateIntroInput = {
   id: string,
+  title?: string | null,
+  label?: string | null,
+  stage?: string | null,
   type?: string | null,
-  name?: string | null,
-  summary?: Array< string > | null,
-  summaryLabel?: string | null,
-  quote?: Array< QuoteInput | null > | null,
+  connectionTitle?: string | null,
   connection?: string | null,
-  images?: Array< string > | null,
-  additionalContent?: AdditionalContentInput | null,
+  keywordsTitle?: string | null,
+  questionsTitle?: string | null,
+  language?: string | null,
+  estTime?: number | null,
+  artistID?: string | null,
 };
 
-export type DeleteThemeTemplateInput = {
+export type DeleteIntroInput = {
+  id?: string | null,
+};
+
+export type CreateOutroInput = {
+  id?: string | null,
+  title?: string | null,
+  subtitle?: string | null,
+  stage?: string | null,
+  type?: string | null,
+  closingTitle?: string | null,
+  closingText?: string | null,
+  questionsTitle?: string | null,
+  additionalInfo?: string | null,
+  language?: string | null,
+  estTime?: number | null,
+};
+
+export type ModelOutroConditionInput = {
+  title?: ModelStringInput | null,
+  subtitle?: ModelStringInput | null,
+  stage?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  closingTitle?: ModelStringInput | null,
+  closingText?: ModelStringInput | null,
+  questionsTitle?: ModelStringInput | null,
+  additionalInfo?: ModelStringInput | null,
+  language?: ModelStringInput | null,
+  estTime?: ModelIntInput | null,
+  and?: Array< ModelOutroConditionInput | null > | null,
+  or?: Array< ModelOutroConditionInput | null > | null,
+  not?: ModelOutroConditionInput | null,
+};
+
+export type UpdateOutroInput = {
+  id: string,
+  title?: string | null,
+  subtitle?: string | null,
+  stage?: string | null,
+  type?: string | null,
+  closingTitle?: string | null,
+  closingText?: string | null,
+  questionsTitle?: string | null,
+  additionalInfo?: string | null,
+  language?: string | null,
+  estTime?: number | null,
+};
+
+export type DeleteOutroInput = {
   id?: string | null,
 };
 
@@ -2123,14 +2197,6 @@ export type ModelCurriculumFilterInput = {
   not?: ModelCurriculumFilterInput | null,
 };
 
-export type ModelCSequencesFilterInput = {
-  id?: ModelIDInput | null,
-  sequence?: ModelStringInput | null,
-  and?: Array< ModelCSequencesFilterInput | null > | null,
-  or?: Array< ModelCSequencesFilterInput | null > | null,
-  not?: ModelCSequencesFilterInput | null,
-};
-
 export type ModelTopicFilterInput = {
   id?: ModelIDInput | null,
   curriculumID?: ModelIDInput | null,
@@ -2140,6 +2206,14 @@ export type ModelTopicFilterInput = {
   and?: Array< ModelTopicFilterInput | null > | null,
   or?: Array< ModelTopicFilterInput | null > | null,
   not?: ModelTopicFilterInput | null,
+};
+
+export type ModelCSequencesFilterInput = {
+  id?: ModelIDInput | null,
+  sequence?: ModelStringInput | null,
+  and?: Array< ModelCSequencesFilterInput | null > | null,
+  or?: Array< ModelCSequencesFilterInput | null > | null,
+  not?: ModelCSequencesFilterInput | null,
 };
 
 export type ModelLearningObjectiveFilterInput = {
@@ -2250,8 +2324,15 @@ export type ModelCheckpointFilterInput = {
   label?: ModelStringInput | null,
   title?: ModelStringInput | null,
   subtitle?: ModelStringInput | null,
+  stage?: ModelStringInput | null,
   type?: ModelStringInput | null,
+  instructionsTitle?: ModelStringInput | null,
   instructions?: ModelStringInput | null,
+  purpose?: ModelStringInput | null,
+  objectives?: ModelStringInput | null,
+  designers?: ModelStringInput | null,
+  language?: ModelStringInput | null,
+  estTime?: ModelIntInput | null,
   and?: Array< ModelCheckpointFilterInput | null > | null,
   or?: Array< ModelCheckpointFilterInput | null > | null,
   not?: ModelCheckpointFilterInput | null,
@@ -2377,15 +2458,6 @@ export type ModelRoomMsgsFilterInput = {
   not?: ModelRoomMsgsFilterInput | null,
 };
 
-export type ModelAppClientsFilterInput = {
-  id?: ModelIDInput | null,
-  key?: ModelStringInput | null,
-  name?: ModelStringInput | null,
-  and?: Array< ModelAppClientsFilterInput | null > | null,
-  or?: Array< ModelAppClientsFilterInput | null > | null,
-  not?: ModelAppClientsFilterInput | null,
-};
-
 export type ModelCourseFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -2420,6 +2492,9 @@ export type ModelLessonFilterInput = {
   filters?: ModelStringInput | null,
   coverImage?: ModelStringInput | null,
   summaryTitle?: ModelStringInput | null,
+  introductionTitle?: ModelStringInput | null,
+  introduction?: ModelStringInput | null,
+  connectionTitle?: ModelStringInput | null,
   and?: Array< ModelLessonFilterInput | null > | null,
   or?: Array< ModelLessonFilterInput | null > | null,
   not?: ModelLessonFilterInput | null,
@@ -2497,17 +2572,39 @@ export type ModelFeedbackFilterInput = {
   not?: ModelFeedbackFilterInput | null,
 };
 
-export type ModelThemeTemplateFilterInput = {
+export type ModelIntroFilterInput = {
   id?: ModelIDInput | null,
+  title?: ModelStringInput | null,
+  label?: ModelStringInput | null,
+  stage?: ModelStringInput | null,
   type?: ModelStringInput | null,
-  name?: ModelStringInput | null,
-  summary?: ModelStringInput | null,
-  summaryLabel?: ModelStringInput | null,
+  connectionTitle?: ModelStringInput | null,
   connection?: ModelStringInput | null,
-  images?: ModelStringInput | null,
-  and?: Array< ModelThemeTemplateFilterInput | null > | null,
-  or?: Array< ModelThemeTemplateFilterInput | null > | null,
-  not?: ModelThemeTemplateFilterInput | null,
+  keywordsTitle?: ModelStringInput | null,
+  questionsTitle?: ModelStringInput | null,
+  language?: ModelStringInput | null,
+  estTime?: ModelIntInput | null,
+  artistID?: ModelIDInput | null,
+  and?: Array< ModelIntroFilterInput | null > | null,
+  or?: Array< ModelIntroFilterInput | null > | null,
+  not?: ModelIntroFilterInput | null,
+};
+
+export type ModelOutroFilterInput = {
+  id?: ModelIDInput | null,
+  title?: ModelStringInput | null,
+  subtitle?: ModelStringInput | null,
+  stage?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  closingTitle?: ModelStringInput | null,
+  closingText?: ModelStringInput | null,
+  questionsTitle?: ModelStringInput | null,
+  additionalInfo?: ModelStringInput | null,
+  language?: ModelStringInput | null,
+  estTime?: ModelIntInput | null,
+  and?: Array< ModelOutroFilterInput | null > | null,
+  or?: Array< ModelOutroFilterInput | null > | null,
+  not?: ModelOutroFilterInput | null,
 };
 
 export type ModelPersonLocationFilterInput = {
@@ -4629,51 +4726,6 @@ export type DeleteCurriculumMutation = {
   } | null,
 };
 
-export type CreateCSequencesMutationVariables = {
-  input: CreateCSequencesInput,
-  condition?: ModelCSequencesConditionInput | null,
-};
-
-export type CreateCSequencesMutation = {
-  createCSequences:  {
-    __typename: "CSequences",
-    id: string,
-    sequence: Array< string | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateCSequencesMutationVariables = {
-  input: UpdateCSequencesInput,
-  condition?: ModelCSequencesConditionInput | null,
-};
-
-export type UpdateCSequencesMutation = {
-  updateCSequences:  {
-    __typename: "CSequences",
-    id: string,
-    sequence: Array< string | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteCSequencesMutationVariables = {
-  input: DeleteCSequencesInput,
-  condition?: ModelCSequencesConditionInput | null,
-};
-
-export type DeleteCSequencesMutation = {
-  deleteCSequences:  {
-    __typename: "CSequences",
-    id: string,
-    sequence: Array< string | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type CreateTopicMutationVariables = {
   input: CreateTopicInput,
   condition?: ModelTopicConditionInput | null,
@@ -4858,6 +4910,51 @@ export type DeleteTopicMutation = {
     } | null,
     name: string,
     description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateCSequencesMutationVariables = {
+  input: CreateCSequencesInput,
+  condition?: ModelCSequencesConditionInput | null,
+};
+
+export type CreateCSequencesMutation = {
+  createCSequences:  {
+    __typename: "CSequences",
+    id: string,
+    sequence: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateCSequencesMutationVariables = {
+  input: UpdateCSequencesInput,
+  condition?: ModelCSequencesConditionInput | null,
+};
+
+export type UpdateCSequencesMutation = {
+  updateCSequences:  {
+    __typename: "CSequences",
+    id: string,
+    sequence: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteCSequencesMutationVariables = {
+  input: DeleteCSequencesInput,
+  condition?: ModelCSequencesConditionInput | null,
+};
+
+export type DeleteCSequencesMutation = {
+  deleteCSequences:  {
+    __typename: "CSequences",
+    id: string,
+    sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6219,8 +6316,10 @@ export type CreateCheckpointMutation = {
     label: string,
     title: string | null,
     subtitle: string | null,
+    stage: string | null,
     type: string,
-    instructions: string,
+    instructionsTitle: string | null,
+    instructions: string | null,
     questions:  {
       __typename: "ModelCheckpointQuestionsConnection",
       items:  Array< {
@@ -6234,6 +6333,11 @@ export type CreateCheckpointMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    purpose: string | null,
+    objectives: string | null,
+    designers: Array< string | null > | null,
+    language: string | null,
+    estTime: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6251,8 +6355,10 @@ export type UpdateCheckpointMutation = {
     label: string,
     title: string | null,
     subtitle: string | null,
+    stage: string | null,
     type: string,
-    instructions: string,
+    instructionsTitle: string | null,
+    instructions: string | null,
     questions:  {
       __typename: "ModelCheckpointQuestionsConnection",
       items:  Array< {
@@ -6266,6 +6372,11 @@ export type UpdateCheckpointMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    purpose: string | null,
+    objectives: string | null,
+    designers: Array< string | null > | null,
+    language: string | null,
+    estTime: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6283,8 +6394,10 @@ export type DeleteCheckpointMutation = {
     label: string,
     title: string | null,
     subtitle: string | null,
+    stage: string | null,
     type: string,
-    instructions: string,
+    instructionsTitle: string | null,
+    instructions: string | null,
     questions:  {
       __typename: "ModelCheckpointQuestionsConnection",
       items:  Array< {
@@ -6298,6 +6411,11 @@ export type DeleteCheckpointMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    purpose: string | null,
+    objectives: string | null,
+    designers: Array< string | null > | null,
+    language: string | null,
+    estTime: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6321,12 +6439,19 @@ export type CreateCheckpointQuestionsMutation = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -6373,12 +6498,19 @@ export type UpdateCheckpointQuestionsMutation = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -6425,12 +6557,19 @@ export type DeleteCheckpointQuestionsMutation = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -6782,12 +6921,19 @@ export type CreateAssessmentCheckpointMutation = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -6831,12 +6977,19 @@ export type UpdateAssessmentCheckpointMutation = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -6880,12 +7033,19 @@ export type DeleteAssessmentCheckpointMutation = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -7767,54 +7927,6 @@ export type DeleteRoomMsgsMutation = {
   } | null,
 };
 
-export type CreateAppClientsMutationVariables = {
-  input: CreateAppClientsInput,
-  condition?: ModelAppClientsConditionInput | null,
-};
-
-export type CreateAppClientsMutation = {
-  createAppClients:  {
-    __typename: "AppClients",
-    id: string,
-    key: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateAppClientsMutationVariables = {
-  input: UpdateAppClientsInput,
-  condition?: ModelAppClientsConditionInput | null,
-};
-
-export type UpdateAppClientsMutation = {
-  updateAppClients:  {
-    __typename: "AppClients",
-    id: string,
-    key: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteAppClientsMutationVariables = {
-  input: DeleteAppClientsInput,
-  condition?: ModelAppClientsConditionInput | null,
-};
-
-export type DeleteAppClientsMutation = {
-  deleteAppClients:  {
-    __typename: "AppClients",
-    id: string,
-    key: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type CreateCourseMutationVariables = {
   input: CreateCourseInput,
   condition?: ModelCourseConditionInput | null,
@@ -8093,6 +8205,15 @@ export type CreateLessonMutation = {
     filters: Array< string | null > | null,
     coverImage: string | null,
     summaryTitle: string | null,
+    introductionTitle: string | null,
+    introduction: string | null,
+    connectionTitle: string | null,
+    lessonPlan:  Array< {
+      __typename: "LessonComponents",
+      type: string | null,
+      LessonComponentID: string,
+      sequence: number,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -8322,6 +8443,15 @@ export type UpdateLessonMutation = {
     filters: Array< string | null > | null,
     coverImage: string | null,
     summaryTitle: string | null,
+    introductionTitle: string | null,
+    introduction: string | null,
+    connectionTitle: string | null,
+    lessonPlan:  Array< {
+      __typename: "LessonComponents",
+      type: string | null,
+      LessonComponentID: string,
+      sequence: number,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -8551,6 +8681,15 @@ export type DeleteLessonMutation = {
     filters: Array< string | null > | null,
     coverImage: string | null,
     summaryTitle: string | null,
+    introductionTitle: string | null,
+    introduction: string | null,
+    connectionTitle: string | null,
+    lessonPlan:  Array< {
+      __typename: "LessonComponents",
+      type: string | null,
+      LessonComponentID: string,
+      sequence: number,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -8674,6 +8813,15 @@ export type CreateLessonCheckpointMutation = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -8683,12 +8831,19 @@ export type CreateLessonCheckpointMutation = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -8815,6 +8970,15 @@ export type UpdateLessonCheckpointMutation = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -8824,12 +8988,19 @@ export type UpdateLessonCheckpointMutation = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -8956,6 +9127,15 @@ export type DeleteLessonCheckpointMutation = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -8965,12 +9145,19 @@ export type DeleteLessonCheckpointMutation = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9104,6 +9291,15 @@ export type CreateLessonKeyWordMutation = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9237,6 +9433,15 @@ export type UpdateLessonKeyWordMutation = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9370,6 +9575,15 @@ export type DeleteLessonKeyWordMutation = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9633,6 +9847,15 @@ export type CreateSyllabusLessonMutation = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9832,6 +10055,15 @@ export type UpdateSyllabusLessonMutation = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -10031,6 +10263,15 @@ export type DeleteSyllabusLessonMutation = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -10156,6 +10397,9 @@ export type CreateStudentDataMutation = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -10355,6 +10599,9 @@ export type UpdateStudentDataMutation = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -10554,6 +10801,9 @@ export type DeleteStudentDataMutation = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -10792,6 +11042,9 @@ export type CreateQuestionDataMutation = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -10915,6 +11168,9 @@ export type UpdateQuestionDataMutation = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -11038,6 +11294,9 @@ export type DeleteQuestionDataMutation = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -11573,6 +11832,9 @@ export type CreateFeedbackMutation = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -11655,6 +11917,9 @@ export type UpdateFeedbackMutation = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -11737,6 +12002,9 @@ export type DeleteFeedbackMutation = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -11775,25 +12043,22 @@ export type DeleteFeedbackMutation = {
   } | null,
 };
 
-export type CreateThemeTemplateMutationVariables = {
-  input: CreateThemeTemplateInput,
-  condition?: ModelThemeTemplateConditionInput | null,
+export type CreateIntroMutationVariables = {
+  input: CreateIntroInput,
+  condition?: ModelIntroConditionInput | null,
 };
 
-export type CreateThemeTemplateMutation = {
-  createThemeTemplate:  {
-    __typename: "ThemeTemplate",
+export type CreateIntroMutation = {
+  createIntro:  {
+    __typename: "Intro",
     id: string,
+    title: string | null,
+    label: string | null,
+    stage: string | null,
     type: string | null,
-    name: string,
-    summary: Array< string >,
-    summaryLabel: string,
-    quote:  Array< {
-      __typename: "Quote",
-      id: string | null,
-      source: string | null,
-      text: string,
-    } | null > | null,
+    connectionTitle: string | null,
+    connection: string | null,
+    keywordsTitle: string | null,
     keywords:  {
       __typename: "ModelLessonKeyWordConnection",
       items:  Array< {
@@ -11806,43 +12071,63 @@ export type CreateThemeTemplateMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    connection: string | null,
-    images: Array< string >,
-    additionalContent:  {
-      __typename: "AdditionalContent",
-      video: string | null,
-      links:  Array< {
-        __typename: "Link",
-        id: string | null,
-        type: string | null,
-        text: string | null,
-        link: string | null,
+    questionsTitle: string | null,
+    questions:  {
+      __typename: "ModelDoFirstQuestionConnection",
+      items:  Array< {
+        __typename: "DoFirstQuestion",
+        id: string,
+        doFirstID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
       } | null > | null,
+      nextToken: string | null,
+    } | null,
+    language: string | null,
+    estTime: number | null,
+    artistID: string,
+    artist:  {
+      __typename: "Artist",
+      id: string,
+      images: Array< string > | null,
+      name: string,
+      type: string,
+      bio: Array< string >,
+      quotes:  Array< {
+        __typename: "Quote",
+        id: string | null,
+        source: string | null,
+        text: string,
+      } >,
+      additionalContent:  {
+        __typename: "AdditionalContent",
+        video: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type UpdateThemeTemplateMutationVariables = {
-  input: UpdateThemeTemplateInput,
-  condition?: ModelThemeTemplateConditionInput | null,
+export type UpdateIntroMutationVariables = {
+  input: UpdateIntroInput,
+  condition?: ModelIntroConditionInput | null,
 };
 
-export type UpdateThemeTemplateMutation = {
-  updateThemeTemplate:  {
-    __typename: "ThemeTemplate",
+export type UpdateIntroMutation = {
+  updateIntro:  {
+    __typename: "Intro",
     id: string,
+    title: string | null,
+    label: string | null,
+    stage: string | null,
     type: string | null,
-    name: string,
-    summary: Array< string >,
-    summaryLabel: string,
-    quote:  Array< {
-      __typename: "Quote",
-      id: string | null,
-      source: string | null,
-      text: string,
-    } | null > | null,
+    connectionTitle: string | null,
+    connection: string | null,
+    keywordsTitle: string | null,
     keywords:  {
       __typename: "ModelLessonKeyWordConnection",
       items:  Array< {
@@ -11855,43 +12140,63 @@ export type UpdateThemeTemplateMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    connection: string | null,
-    images: Array< string >,
-    additionalContent:  {
-      __typename: "AdditionalContent",
-      video: string | null,
-      links:  Array< {
-        __typename: "Link",
-        id: string | null,
-        type: string | null,
-        text: string | null,
-        link: string | null,
+    questionsTitle: string | null,
+    questions:  {
+      __typename: "ModelDoFirstQuestionConnection",
+      items:  Array< {
+        __typename: "DoFirstQuestion",
+        id: string,
+        doFirstID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
       } | null > | null,
+      nextToken: string | null,
+    } | null,
+    language: string | null,
+    estTime: number | null,
+    artistID: string,
+    artist:  {
+      __typename: "Artist",
+      id: string,
+      images: Array< string > | null,
+      name: string,
+      type: string,
+      bio: Array< string >,
+      quotes:  Array< {
+        __typename: "Quote",
+        id: string | null,
+        source: string | null,
+        text: string,
+      } >,
+      additionalContent:  {
+        __typename: "AdditionalContent",
+        video: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type DeleteThemeTemplateMutationVariables = {
-  input: DeleteThemeTemplateInput,
-  condition?: ModelThemeTemplateConditionInput | null,
+export type DeleteIntroMutationVariables = {
+  input: DeleteIntroInput,
+  condition?: ModelIntroConditionInput | null,
 };
 
-export type DeleteThemeTemplateMutation = {
-  deleteThemeTemplate:  {
-    __typename: "ThemeTemplate",
+export type DeleteIntroMutation = {
+  deleteIntro:  {
+    __typename: "Intro",
     id: string,
+    title: string | null,
+    label: string | null,
+    stage: string | null,
     type: string | null,
-    name: string,
-    summary: Array< string >,
-    summaryLabel: string,
-    quote:  Array< {
-      __typename: "Quote",
-      id: string | null,
-      source: string | null,
-      text: string,
-    } | null > | null,
+    connectionTitle: string | null,
+    connection: string | null,
+    keywordsTitle: string | null,
     keywords:  {
       __typename: "ModelLessonKeyWordConnection",
       items:  Array< {
@@ -11904,19 +12209,150 @@ export type DeleteThemeTemplateMutation = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    connection: string | null,
-    images: Array< string >,
-    additionalContent:  {
-      __typename: "AdditionalContent",
-      video: string | null,
-      links:  Array< {
-        __typename: "Link",
-        id: string | null,
-        type: string | null,
-        text: string | null,
-        link: string | null,
+    questionsTitle: string | null,
+    questions:  {
+      __typename: "ModelDoFirstQuestionConnection",
+      items:  Array< {
+        __typename: "DoFirstQuestion",
+        id: string,
+        doFirstID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
       } | null > | null,
+      nextToken: string | null,
     } | null,
+    language: string | null,
+    estTime: number | null,
+    artistID: string,
+    artist:  {
+      __typename: "Artist",
+      id: string,
+      images: Array< string > | null,
+      name: string,
+      type: string,
+      bio: Array< string >,
+      quotes:  Array< {
+        __typename: "Quote",
+        id: string | null,
+        source: string | null,
+        text: string,
+      } >,
+      additionalContent:  {
+        __typename: "AdditionalContent",
+        video: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateOutroMutationVariables = {
+  input: CreateOutroInput,
+  condition?: ModelOutroConditionInput | null,
+};
+
+export type CreateOutroMutation = {
+  createOutro:  {
+    __typename: "Outro",
+    id: string,
+    title: string | null,
+    subtitle: string | null,
+    stage: string | null,
+    type: string | null,
+    closingTitle: string | null,
+    closingText: string | null,
+    questionsTitle: string | null,
+    questions:  {
+      __typename: "ModelDoFirstQuestionConnection",
+      items:  Array< {
+        __typename: "DoFirstQuestion",
+        id: string,
+        doFirstID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    additionalInfo: string | null,
+    language: string | null,
+    estTime: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateOutroMutationVariables = {
+  input: UpdateOutroInput,
+  condition?: ModelOutroConditionInput | null,
+};
+
+export type UpdateOutroMutation = {
+  updateOutro:  {
+    __typename: "Outro",
+    id: string,
+    title: string | null,
+    subtitle: string | null,
+    stage: string | null,
+    type: string | null,
+    closingTitle: string | null,
+    closingText: string | null,
+    questionsTitle: string | null,
+    questions:  {
+      __typename: "ModelDoFirstQuestionConnection",
+      items:  Array< {
+        __typename: "DoFirstQuestion",
+        id: string,
+        doFirstID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    additionalInfo: string | null,
+    language: string | null,
+    estTime: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteOutroMutationVariables = {
+  input: DeleteOutroInput,
+  condition?: ModelOutroConditionInput | null,
+};
+
+export type DeleteOutroMutation = {
+  deleteOutro:  {
+    __typename: "Outro",
+    id: string,
+    title: string | null,
+    subtitle: string | null,
+    stage: string | null,
+    type: string | null,
+    closingTitle: string | null,
+    closingText: string | null,
+    questionsTitle: string | null,
+    questions:  {
+      __typename: "ModelDoFirstQuestionConnection",
+      items:  Array< {
+        __typename: "DoFirstQuestion",
+        id: string,
+        doFirstID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    additionalInfo: string | null,
+    language: string | null,
+    estTime: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -12002,6 +12438,9 @@ export type CreatePersonLocationMutation = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -12197,6 +12636,9 @@ export type UpdatePersonLocationMutation = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -12392,6 +12834,9 @@ export type DeletePersonLocationMutation = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -13551,42 +13996,6 @@ export type ListCurriculumsQuery = {
   } | null,
 };
 
-export type GetCSequencesQueryVariables = {
-  id: string,
-};
-
-export type GetCSequencesQuery = {
-  getCSequences:  {
-    __typename: "CSequences",
-    id: string,
-    sequence: Array< string | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListCSequencessQueryVariables = {
-  id?: string | null,
-  filter?: ModelCSequencesFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListCSequencessQuery = {
-  listCSequencess:  {
-    __typename: "ModelCSequencesConnection",
-    items:  Array< {
-      __typename: "CSequences",
-      id: string,
-      sequence: Array< string | null > | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken: string | null,
-  } | null,
-};
-
 export type GetTopicQueryVariables = {
   id: string,
 };
@@ -13689,6 +14098,42 @@ export type ListTopicsQuery = {
       } | null,
       name: string,
       description: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetCSequencesQueryVariables = {
+  id: string,
+};
+
+export type GetCSequencesQuery = {
+  getCSequences:  {
+    __typename: "CSequences",
+    id: string,
+    sequence: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListCSequencessQueryVariables = {
+  id?: string | null,
+  filter?: ModelCSequencesFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListCSequencessQuery = {
+  listCSequencess:  {
+    __typename: "ModelCSequencesConnection",
+    items:  Array< {
+      __typename: "CSequences",
+      id: string,
+      sequence: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -14361,8 +14806,10 @@ export type GetCheckpointQuery = {
     label: string,
     title: string | null,
     subtitle: string | null,
+    stage: string | null,
     type: string,
-    instructions: string,
+    instructionsTitle: string | null,
+    instructions: string | null,
     questions:  {
       __typename: "ModelCheckpointQuestionsConnection",
       items:  Array< {
@@ -14376,6 +14823,11 @@ export type GetCheckpointQuery = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    purpose: string | null,
+    objectives: string | null,
+    designers: Array< string | null > | null,
+    language: string | null,
+    estTime: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -14396,12 +14848,19 @@ export type ListCheckpointsQuery = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -14612,12 +15071,19 @@ export type GetAssessmentCheckpointQuery = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -14656,8 +15122,15 @@ export type ListAssessmentCheckpointsQuery = {
         label: string,
         title: string | null,
         subtitle: string | null,
+        stage: string | null,
         type: string,
-        instructions: string,
+        instructionsTitle: string | null,
+        instructions: string | null,
+        purpose: string | null,
+        objectives: string | null,
+        designers: Array< string | null > | null,
+        language: string | null,
+        estTime: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -15140,44 +15613,6 @@ export type ListRoomMsgssQuery = {
   } | null,
 };
 
-export type GetAppClientsQueryVariables = {
-  key: string,
-};
-
-export type GetAppClientsQuery = {
-  getAppClients:  {
-    __typename: "AppClients",
-    id: string,
-    key: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListAppClientssQueryVariables = {
-  key?: string | null,
-  filter?: ModelAppClientsFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListAppClientssQuery = {
-  listAppClientss:  {
-    __typename: "ModelAppClientsConnection",
-    items:  Array< {
-      __typename: "AppClients",
-      id: string,
-      key: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken: string | null,
-  } | null,
-};
-
 export type GetCourseQueryVariables = {
   id: string,
 };
@@ -15441,6 +15876,15 @@ export type GetLessonQuery = {
     filters: Array< string | null > | null,
     coverImage: string | null,
     summaryTitle: string | null,
+    introductionTitle: string | null,
+    introduction: string | null,
+    connectionTitle: string | null,
+    lessonPlan:  Array< {
+      __typename: "LessonComponents",
+      type: string | null,
+      LessonComponentID: string,
+      sequence: number,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -15563,6 +16007,15 @@ export type ListLessonsQuery = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -15769,6 +16222,15 @@ export type GetSyllabusLessonQuery = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -15889,6 +16351,9 @@ export type ListSyllabusLessonsQuery = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -15972,6 +16437,9 @@ export type GetStudentDataQuery = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -16302,6 +16770,9 @@ export type GetQuestionDataQuery = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -16454,6 +16925,9 @@ export type GetFeedbackQuery = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -16530,24 +17004,21 @@ export type ListFeedbacksQuery = {
   } | null,
 };
 
-export type GetThemeTemplateQueryVariables = {
+export type GetIntroQueryVariables = {
   id: string,
 };
 
-export type GetThemeTemplateQuery = {
-  getThemeTemplate:  {
-    __typename: "ThemeTemplate",
+export type GetIntroQuery = {
+  getIntro:  {
+    __typename: "Intro",
     id: string,
+    title: string | null,
+    label: string | null,
+    stage: string | null,
     type: string | null,
-    name: string,
-    summary: Array< string >,
-    summaryLabel: string,
-    quote:  Array< {
-      __typename: "Quote",
-      id: string | null,
-      source: string | null,
-      text: string,
-    } | null > | null,
+    connectionTitle: string | null,
+    connection: string | null,
+    keywordsTitle: string | null,
     keywords:  {
       __typename: "ModelLessonKeyWordConnection",
       items:  Array< {
@@ -16560,56 +17031,156 @@ export type GetThemeTemplateQuery = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    connection: string | null,
-    images: Array< string >,
-    additionalContent:  {
-      __typename: "AdditionalContent",
-      video: string | null,
-      links:  Array< {
-        __typename: "Link",
-        id: string | null,
-        type: string | null,
-        text: string | null,
-        link: string | null,
+    questionsTitle: string | null,
+    questions:  {
+      __typename: "ModelDoFirstQuestionConnection",
+      items:  Array< {
+        __typename: "DoFirstQuestion",
+        id: string,
+        doFirstID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
       } | null > | null,
+      nextToken: string | null,
+    } | null,
+    language: string | null,
+    estTime: number | null,
+    artistID: string,
+    artist:  {
+      __typename: "Artist",
+      id: string,
+      images: Array< string > | null,
+      name: string,
+      type: string,
+      bio: Array< string >,
+      quotes:  Array< {
+        __typename: "Quote",
+        id: string | null,
+        source: string | null,
+        text: string,
+      } >,
+      additionalContent:  {
+        __typename: "AdditionalContent",
+        video: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type ListThemeTemplatesQueryVariables = {
-  filter?: ModelThemeTemplateFilterInput | null,
+export type ListIntrosQueryVariables = {
+  filter?: ModelIntroFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListThemeTemplatesQuery = {
-  listThemeTemplates:  {
-    __typename: "ModelThemeTemplateConnection",
+export type ListIntrosQuery = {
+  listIntros:  {
+    __typename: "ModelIntroConnection",
     items:  Array< {
-      __typename: "ThemeTemplate",
+      __typename: "Intro",
       id: string,
+      title: string | null,
+      label: string | null,
+      stage: string | null,
       type: string | null,
-      name: string,
-      summary: Array< string >,
-      summaryLabel: string,
-      quote:  Array< {
-        __typename: "Quote",
-        id: string | null,
-        source: string | null,
-        text: string,
-      } | null > | null,
+      connectionTitle: string | null,
+      connection: string | null,
+      keywordsTitle: string | null,
       keywords:  {
         __typename: "ModelLessonKeyWordConnection",
         nextToken: string | null,
       } | null,
-      connection: string | null,
-      images: Array< string >,
-      additionalContent:  {
-        __typename: "AdditionalContent",
-        video: string | null,
+      questionsTitle: string | null,
+      questions:  {
+        __typename: "ModelDoFirstQuestionConnection",
+        nextToken: string | null,
       } | null,
+      language: string | null,
+      estTime: number | null,
+      artistID: string,
+      artist:  {
+        __typename: "Artist",
+        id: string,
+        images: Array< string > | null,
+        name: string,
+        type: string,
+        bio: Array< string >,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetOutroQueryVariables = {
+  id: string,
+};
+
+export type GetOutroQuery = {
+  getOutro:  {
+    __typename: "Outro",
+    id: string,
+    title: string | null,
+    subtitle: string | null,
+    stage: string | null,
+    type: string | null,
+    closingTitle: string | null,
+    closingText: string | null,
+    questionsTitle: string | null,
+    questions:  {
+      __typename: "ModelDoFirstQuestionConnection",
+      items:  Array< {
+        __typename: "DoFirstQuestion",
+        id: string,
+        doFirstID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    additionalInfo: string | null,
+    language: string | null,
+    estTime: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListOutrosQueryVariables = {
+  filter?: ModelOutroFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListOutrosQuery = {
+  listOutros:  {
+    __typename: "ModelOutroConnection",
+    items:  Array< {
+      __typename: "Outro",
+      id: string,
+      title: string | null,
+      subtitle: string | null,
+      stage: string | null,
+      type: string | null,
+      closingTitle: string | null,
+      closingText: string | null,
+      questionsTitle: string | null,
+      questions:  {
+        __typename: "ModelDoFirstQuestionConnection",
+        nextToken: string | null,
+      } | null,
+      additionalInfo: string | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -16697,6 +17268,9 @@ export type GetPersonLocationQuery = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -17238,6 +17812,9 @@ export type OnChangePersonLocationSubscription = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -17398,6 +17975,9 @@ export type OnChangeStudentDataSubscription = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -17670,6 +18250,15 @@ export type OnChangeSyllabusLessonSubscription = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -19735,36 +20324,6 @@ export type OnDeleteCurriculumSubscription = {
   } | null,
 };
 
-export type OnCreateCSequencesSubscription = {
-  onCreateCSequences:  {
-    __typename: "CSequences",
-    id: string,
-    sequence: Array< string | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateCSequencesSubscription = {
-  onUpdateCSequences:  {
-    __typename: "CSequences",
-    id: string,
-    sequence: Array< string | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteCSequencesSubscription = {
-  onDeleteCSequences:  {
-    __typename: "CSequences",
-    id: string,
-    sequence: Array< string | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type OnCreateTopicSubscription = {
   onCreateTopic:  {
     __typename: "Topic",
@@ -19934,6 +20493,36 @@ export type OnDeleteTopicSubscription = {
     } | null,
     name: string,
     description: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateCSequencesSubscription = {
+  onCreateCSequences:  {
+    __typename: "CSequences",
+    id: string,
+    sequence: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateCSequencesSubscription = {
+  onUpdateCSequences:  {
+    __typename: "CSequences",
+    id: string,
+    sequence: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteCSequencesSubscription = {
+  onDeleteCSequences:  {
+    __typename: "CSequences",
+    id: string,
+    sequence: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -21125,8 +21714,10 @@ export type OnCreateCheckpointSubscription = {
     label: string,
     title: string | null,
     subtitle: string | null,
+    stage: string | null,
     type: string,
-    instructions: string,
+    instructionsTitle: string | null,
+    instructions: string | null,
     questions:  {
       __typename: "ModelCheckpointQuestionsConnection",
       items:  Array< {
@@ -21140,6 +21731,11 @@ export type OnCreateCheckpointSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    purpose: string | null,
+    objectives: string | null,
+    designers: Array< string | null > | null,
+    language: string | null,
+    estTime: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -21152,8 +21748,10 @@ export type OnUpdateCheckpointSubscription = {
     label: string,
     title: string | null,
     subtitle: string | null,
+    stage: string | null,
     type: string,
-    instructions: string,
+    instructionsTitle: string | null,
+    instructions: string | null,
     questions:  {
       __typename: "ModelCheckpointQuestionsConnection",
       items:  Array< {
@@ -21167,6 +21765,11 @@ export type OnUpdateCheckpointSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    purpose: string | null,
+    objectives: string | null,
+    designers: Array< string | null > | null,
+    language: string | null,
+    estTime: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -21179,8 +21782,10 @@ export type OnDeleteCheckpointSubscription = {
     label: string,
     title: string | null,
     subtitle: string | null,
+    stage: string | null,
     type: string,
-    instructions: string,
+    instructionsTitle: string | null,
+    instructions: string | null,
     questions:  {
       __typename: "ModelCheckpointQuestionsConnection",
       items:  Array< {
@@ -21194,6 +21799,11 @@ export type OnDeleteCheckpointSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
+    purpose: string | null,
+    objectives: string | null,
+    designers: Array< string | null > | null,
+    language: string | null,
+    estTime: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -21212,12 +21822,19 @@ export type OnCreateCheckpointQuestionsSubscription = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -21259,12 +21876,19 @@ export type OnUpdateCheckpointQuestionsSubscription = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -21306,12 +21930,19 @@ export type OnDeleteCheckpointQuestionsSubscription = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -21628,12 +22259,19 @@ export type OnCreateAssessmentCheckpointSubscription = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -21672,12 +22310,19 @@ export type OnUpdateAssessmentCheckpointSubscription = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -21716,12 +22361,19 @@ export type OnDeleteAssessmentCheckpointSubscription = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -22453,39 +23105,6 @@ export type OnDeleteRoomMsgsSubscription = {
   } | null,
 };
 
-export type OnCreateAppClientsSubscription = {
-  onCreateAppClients:  {
-    __typename: "AppClients",
-    id: string,
-    key: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateAppClientsSubscription = {
-  onUpdateAppClients:  {
-    __typename: "AppClients",
-    id: string,
-    key: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteAppClientsSubscription = {
-  onDeleteAppClients:  {
-    __typename: "AppClients",
-    id: string,
-    key: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type OnCreateCourseSubscription = {
   onCreateCourse:  {
     __typename: "Course",
@@ -22744,6 +23363,15 @@ export type OnCreateLessonSubscription = {
     filters: Array< string | null > | null,
     coverImage: string | null,
     summaryTitle: string | null,
+    introductionTitle: string | null,
+    introduction: string | null,
+    connectionTitle: string | null,
+    lessonPlan:  Array< {
+      __typename: "LessonComponents",
+      type: string | null,
+      LessonComponentID: string,
+      sequence: number,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -22968,6 +23596,15 @@ export type OnUpdateLessonSubscription = {
     filters: Array< string | null > | null,
     coverImage: string | null,
     summaryTitle: string | null,
+    introductionTitle: string | null,
+    introduction: string | null,
+    connectionTitle: string | null,
+    lessonPlan:  Array< {
+      __typename: "LessonComponents",
+      type: string | null,
+      LessonComponentID: string,
+      sequence: number,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -23192,6 +23829,15 @@ export type OnDeleteLessonSubscription = {
     filters: Array< string | null > | null,
     coverImage: string | null,
     summaryTitle: string | null,
+    introductionTitle: string | null,
+    introduction: string | null,
+    connectionTitle: string | null,
+    lessonPlan:  Array< {
+      __typename: "LessonComponents",
+      type: string | null,
+      LessonComponentID: string,
+      sequence: number,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -23310,6 +23956,15 @@ export type OnCreateLessonCheckpointSubscription = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -23319,12 +23974,19 @@ export type OnCreateLessonCheckpointSubscription = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -23446,6 +24108,15 @@ export type OnUpdateLessonCheckpointSubscription = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -23455,12 +24126,19 @@ export type OnUpdateLessonCheckpointSubscription = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -23582,6 +24260,15 @@ export type OnDeleteLessonCheckpointSubscription = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -23591,12 +24278,19 @@ export type OnDeleteLessonCheckpointSubscription = {
       label: string,
       title: string | null,
       subtitle: string | null,
+      stage: string | null,
       type: string,
-      instructions: string,
+      instructionsTitle: string | null,
+      instructions: string | null,
       questions:  {
         __typename: "ModelCheckpointQuestionsConnection",
         nextToken: string | null,
       } | null,
+      purpose: string | null,
+      objectives: string | null,
+      designers: Array< string | null > | null,
+      language: string | null,
+      estTime: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -23725,6 +24419,15 @@ export type OnCreateLessonKeyWordSubscription = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -23853,6 +24556,15 @@ export type OnUpdateLessonKeyWordSubscription = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -23981,6 +24693,15 @@ export type OnDeleteLessonKeyWordSubscription = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -24224,6 +24945,15 @@ export type OnCreateSyllabusLessonSubscription = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -24418,6 +25148,15 @@ export type OnUpdateSyllabusLessonSubscription = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -24612,6 +25351,15 @@ export type OnDeleteSyllabusLessonSubscription = {
       filters: Array< string | null > | null,
       coverImage: string | null,
       summaryTitle: string | null,
+      introductionTitle: string | null,
+      introduction: string | null,
+      connectionTitle: string | null,
+      lessonPlan:  Array< {
+        __typename: "LessonComponents",
+        type: string | null,
+        LessonComponentID: string,
+        sequence: number,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -24771,6 +25519,9 @@ export type OnCreateQuestionDataSubscription = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -24889,6 +25640,9 @@ export type OnUpdateQuestionDataSubscription = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -25007,6 +25761,9 @@ export type OnDeleteQuestionDataSubscription = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -25522,6 +26279,9 @@ export type OnCreateFeedbackSubscription = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -25599,6 +26359,9 @@ export type OnUpdateFeedbackSubscription = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -25676,6 +26439,9 @@ export type OnDeleteFeedbackSubscription = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -25714,20 +26480,17 @@ export type OnDeleteFeedbackSubscription = {
   } | null,
 };
 
-export type OnCreateThemeTemplateSubscription = {
-  onCreateThemeTemplate:  {
-    __typename: "ThemeTemplate",
+export type OnCreateIntroSubscription = {
+  onCreateIntro:  {
+    __typename: "Intro",
     id: string,
+    title: string | null,
+    label: string | null,
+    stage: string | null,
     type: string | null,
-    name: string,
-    summary: Array< string >,
-    summaryLabel: string,
-    quote:  Array< {
-      __typename: "Quote",
-      id: string | null,
-      source: string | null,
-      text: string,
-    } | null > | null,
+    connectionTitle: string | null,
+    connection: string | null,
+    keywordsTitle: string | null,
     keywords:  {
       __typename: "ModelLessonKeyWordConnection",
       items:  Array< {
@@ -25740,38 +26503,58 @@ export type OnCreateThemeTemplateSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    connection: string | null,
-    images: Array< string >,
-    additionalContent:  {
-      __typename: "AdditionalContent",
-      video: string | null,
-      links:  Array< {
-        __typename: "Link",
-        id: string | null,
-        type: string | null,
-        text: string | null,
-        link: string | null,
+    questionsTitle: string | null,
+    questions:  {
+      __typename: "ModelDoFirstQuestionConnection",
+      items:  Array< {
+        __typename: "DoFirstQuestion",
+        id: string,
+        doFirstID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
       } | null > | null,
+      nextToken: string | null,
+    } | null,
+    language: string | null,
+    estTime: number | null,
+    artistID: string,
+    artist:  {
+      __typename: "Artist",
+      id: string,
+      images: Array< string > | null,
+      name: string,
+      type: string,
+      bio: Array< string >,
+      quotes:  Array< {
+        __typename: "Quote",
+        id: string | null,
+        source: string | null,
+        text: string,
+      } >,
+      additionalContent:  {
+        __typename: "AdditionalContent",
+        video: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnUpdateThemeTemplateSubscription = {
-  onUpdateThemeTemplate:  {
-    __typename: "ThemeTemplate",
+export type OnUpdateIntroSubscription = {
+  onUpdateIntro:  {
+    __typename: "Intro",
     id: string,
+    title: string | null,
+    label: string | null,
+    stage: string | null,
     type: string | null,
-    name: string,
-    summary: Array< string >,
-    summaryLabel: string,
-    quote:  Array< {
-      __typename: "Quote",
-      id: string | null,
-      source: string | null,
-      text: string,
-    } | null > | null,
+    connectionTitle: string | null,
+    connection: string | null,
+    keywordsTitle: string | null,
     keywords:  {
       __typename: "ModelLessonKeyWordConnection",
       items:  Array< {
@@ -25784,38 +26567,58 @@ export type OnUpdateThemeTemplateSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    connection: string | null,
-    images: Array< string >,
-    additionalContent:  {
-      __typename: "AdditionalContent",
-      video: string | null,
-      links:  Array< {
-        __typename: "Link",
-        id: string | null,
-        type: string | null,
-        text: string | null,
-        link: string | null,
+    questionsTitle: string | null,
+    questions:  {
+      __typename: "ModelDoFirstQuestionConnection",
+      items:  Array< {
+        __typename: "DoFirstQuestion",
+        id: string,
+        doFirstID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
       } | null > | null,
+      nextToken: string | null,
+    } | null,
+    language: string | null,
+    estTime: number | null,
+    artistID: string,
+    artist:  {
+      __typename: "Artist",
+      id: string,
+      images: Array< string > | null,
+      name: string,
+      type: string,
+      bio: Array< string >,
+      quotes:  Array< {
+        __typename: "Quote",
+        id: string | null,
+        source: string | null,
+        text: string,
+      } >,
+      additionalContent:  {
+        __typename: "AdditionalContent",
+        video: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
-export type OnDeleteThemeTemplateSubscription = {
-  onDeleteThemeTemplate:  {
-    __typename: "ThemeTemplate",
+export type OnDeleteIntroSubscription = {
+  onDeleteIntro:  {
+    __typename: "Intro",
     id: string,
+    title: string | null,
+    label: string | null,
+    stage: string | null,
     type: string | null,
-    name: string,
-    summary: Array< string >,
-    summaryLabel: string,
-    quote:  Array< {
-      __typename: "Quote",
-      id: string | null,
-      source: string | null,
-      text: string,
-    } | null > | null,
+    connectionTitle: string | null,
+    connection: string | null,
+    keywordsTitle: string | null,
     keywords:  {
       __typename: "ModelLessonKeyWordConnection",
       items:  Array< {
@@ -25828,19 +26631,135 @@ export type OnDeleteThemeTemplateSubscription = {
       } | null > | null,
       nextToken: string | null,
     } | null,
-    connection: string | null,
-    images: Array< string >,
-    additionalContent:  {
-      __typename: "AdditionalContent",
-      video: string | null,
-      links:  Array< {
-        __typename: "Link",
-        id: string | null,
-        type: string | null,
-        text: string | null,
-        link: string | null,
+    questionsTitle: string | null,
+    questions:  {
+      __typename: "ModelDoFirstQuestionConnection",
+      items:  Array< {
+        __typename: "DoFirstQuestion",
+        id: string,
+        doFirstID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
       } | null > | null,
+      nextToken: string | null,
     } | null,
+    language: string | null,
+    estTime: number | null,
+    artistID: string,
+    artist:  {
+      __typename: "Artist",
+      id: string,
+      images: Array< string > | null,
+      name: string,
+      type: string,
+      bio: Array< string >,
+      quotes:  Array< {
+        __typename: "Quote",
+        id: string | null,
+        source: string | null,
+        text: string,
+      } >,
+      additionalContent:  {
+        __typename: "AdditionalContent",
+        video: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateOutroSubscription = {
+  onCreateOutro:  {
+    __typename: "Outro",
+    id: string,
+    title: string | null,
+    subtitle: string | null,
+    stage: string | null,
+    type: string | null,
+    closingTitle: string | null,
+    closingText: string | null,
+    questionsTitle: string | null,
+    questions:  {
+      __typename: "ModelDoFirstQuestionConnection",
+      items:  Array< {
+        __typename: "DoFirstQuestion",
+        id: string,
+        doFirstID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    additionalInfo: string | null,
+    language: string | null,
+    estTime: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateOutroSubscription = {
+  onUpdateOutro:  {
+    __typename: "Outro",
+    id: string,
+    title: string | null,
+    subtitle: string | null,
+    stage: string | null,
+    type: string | null,
+    closingTitle: string | null,
+    closingText: string | null,
+    questionsTitle: string | null,
+    questions:  {
+      __typename: "ModelDoFirstQuestionConnection",
+      items:  Array< {
+        __typename: "DoFirstQuestion",
+        id: string,
+        doFirstID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    additionalInfo: string | null,
+    language: string | null,
+    estTime: number | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteOutroSubscription = {
+  onDeleteOutro:  {
+    __typename: "Outro",
+    id: string,
+    title: string | null,
+    subtitle: string | null,
+    stage: string | null,
+    type: string | null,
+    closingTitle: string | null,
+    closingText: string | null,
+    questionsTitle: string | null,
+    questions:  {
+      __typename: "ModelDoFirstQuestionConnection",
+      items:  Array< {
+        __typename: "DoFirstQuestion",
+        id: string,
+        doFirstID: string,
+        questionID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken: string | null,
+    } | null,
+    additionalInfo: string | null,
+    language: string | null,
+    estTime: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -25921,6 +26840,9 @@ export type OnCreatePersonLocationSubscription = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -26111,6 +27033,9 @@ export type OnUpdatePersonLocationSubscription = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -26301,6 +27226,9 @@ export type OnDeletePersonLocationSubscription = {
         filters: Array< string | null > | null,
         coverImage: string | null,
         summaryTitle: string | null,
+        introductionTitle: string | null,
+        introduction: string | null,
+        connectionTitle: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
