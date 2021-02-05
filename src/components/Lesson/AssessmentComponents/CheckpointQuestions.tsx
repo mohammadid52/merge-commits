@@ -67,10 +67,24 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const queryParams = queryString.parse(location.search);
   const thereAreCheckpoints =
     (() => {
-      if (state.data.lesson && state.data.lesson.checkpoints && state.data.lesson.checkpoints.items) {
-        return state.data.lesson.checkpoints.items;
-      } else {
-        return [];
+      if (checkpointType === 'assessment' || checkpointType === 'checkpoint') {
+        if (state.data.lesson && state.data.lesson.checkpoints && state.data.lesson.checkpoints.items) {
+          return state.data.lesson.checkpoints.items;
+        } else {
+          return [];
+        }
+      }
+      if (checkpointType === 'doFirst') {
+        if (
+          state.data.lesson &&
+          state.data.lesson.doFirst &&
+          state.data.lesson.doFirst.questions &&
+          state.data.lesson.doFirst.questions.items
+        ) {
+          return state.data.lesson.doFirst.questions.items;
+        } else {
+          return [];
+        }
       }
     })().length > 0;
 
