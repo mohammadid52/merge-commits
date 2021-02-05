@@ -1865,45 +1865,6 @@ export const deleteCurriculum = /* GraphQL */ `
     }
   }
 `;
-export const createCSequences = /* GraphQL */ `
-  mutation CreateCSequences(
-    $input: CreateCSequencesInput!
-    $condition: ModelCSequencesConditionInput
-  ) {
-    createCSequences(input: $input, condition: $condition) {
-      id
-      sequence
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateCSequences = /* GraphQL */ `
-  mutation UpdateCSequences(
-    $input: UpdateCSequencesInput!
-    $condition: ModelCSequencesConditionInput
-  ) {
-    updateCSequences(input: $input, condition: $condition) {
-      id
-      sequence
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteCSequences = /* GraphQL */ `
-  mutation DeleteCSequences(
-    $input: DeleteCSequencesInput!
-    $condition: ModelCSequencesConditionInput
-  ) {
-    deleteCSequences(input: $input, condition: $condition) {
-      id
-      sequence
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createTopic = /* GraphQL */ `
   mutation CreateTopic(
     $input: CreateTopicInput!
@@ -2070,6 +2031,45 @@ export const deleteTopic = /* GraphQL */ `
       }
       name
       description
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCSequences = /* GraphQL */ `
+  mutation CreateCSequences(
+    $input: CreateCSequencesInput!
+    $condition: ModelCSequencesConditionInput
+  ) {
+    createCSequences(input: $input, condition: $condition) {
+      id
+      sequence
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCSequences = /* GraphQL */ `
+  mutation UpdateCSequences(
+    $input: UpdateCSequencesInput!
+    $condition: ModelCSequencesConditionInput
+  ) {
+    updateCSequences(input: $input, condition: $condition) {
+      id
+      sequence
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCSequences = /* GraphQL */ `
+  mutation DeleteCSequences(
+    $input: DeleteCSequencesInput!
+    $condition: ModelCSequencesConditionInput
+  ) {
+    deleteCSequences(input: $input, condition: $condition) {
+      id
+      sequence
       createdAt
       updatedAt
     }

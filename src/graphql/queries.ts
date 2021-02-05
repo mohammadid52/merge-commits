@@ -936,41 +936,6 @@ export const listCurriculums = /* GraphQL */ `
     }
   }
 `;
-export const getCSequences = /* GraphQL */ `
-  query GetCSequences($id: ID!) {
-    getCSequences(id: $id) {
-      id
-      sequence
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listCSequencess = /* GraphQL */ `
-  query ListCSequencess(
-    $id: ID
-    $filter: ModelCSequencesFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listCSequencess(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        sequence
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getTopic = /* GraphQL */ `
   query GetTopic($id: ID!) {
     getTopic(id: $id) {
@@ -1066,6 +1031,41 @@ export const listTopics = /* GraphQL */ `
         }
         name
         description
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCSequences = /* GraphQL */ `
+  query GetCSequences($id: ID!) {
+    getCSequences(id: $id) {
+      id
+      sequence
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCSequencess = /* GraphQL */ `
+  query ListCSequencess(
+    $id: ID
+    $filter: ModelCSequencesFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCSequencess(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        sequence
         createdAt
         updatedAt
       }

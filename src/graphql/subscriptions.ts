@@ -2328,36 +2328,6 @@ export const onDeleteCurriculum = /* GraphQL */ `
     }
   }
 `;
-export const onCreateCSequences = /* GraphQL */ `
-  subscription OnCreateCSequences {
-    onCreateCSequences {
-      id
-      sequence
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateCSequences = /* GraphQL */ `
-  subscription OnUpdateCSequences {
-    onUpdateCSequences {
-      id
-      sequence
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteCSequences = /* GraphQL */ `
-  subscription OnDeleteCSequences {
-    onDeleteCSequences {
-      id
-      sequence
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateTopic = /* GraphQL */ `
   subscription OnCreateTopic {
     onCreateTopic {
@@ -2515,6 +2485,36 @@ export const onDeleteTopic = /* GraphQL */ `
       }
       name
       description
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateCSequences = /* GraphQL */ `
+  subscription OnCreateCSequences {
+    onCreateCSequences {
+      id
+      sequence
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCSequences = /* GraphQL */ `
+  subscription OnUpdateCSequences {
+    onUpdateCSequences {
+      id
+      sequence
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCSequences = /* GraphQL */ `
+  subscription OnDeleteCSequences {
+    onDeleteCSequences {
+      id
+      sequence
       createdAt
       updatedAt
     }
