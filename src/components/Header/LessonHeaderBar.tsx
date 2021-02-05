@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
 import { useOutsideAlerter } from '../General/hooks/outsideAlerter';
@@ -12,15 +12,6 @@ const LessonHeaderBar = () => {
   const { theme, state, dispatch } = useContext(LessonContext);
   const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const { visible, setVisible, ref } = useOutsideAlerter(false);
-  const thereArePages = state.pages.length > 0;
-
-  /**
-   * AUTO-PUSH TO SPECIFIC LESSON
-   */
-
-  useEffect(() => {
-    // history.push('/lesson/corelesson');
-  }, []);
 
   useEffect(() => {
     const shouldDispatch = state.pages.length > 0 ;

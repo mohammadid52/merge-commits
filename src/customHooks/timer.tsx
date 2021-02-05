@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { LessonActions } from '../reducers/LessonReducer';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../customGraphql/customMutations';
+import { type } from 'os';
 
 interface inputs {
   subscription?: any;
@@ -35,24 +36,57 @@ const useStudentTimer = (inputs?: inputs) => {
     autoSaveInterval: null,
   });
 
-  const [activityInterval, setActivityInterval] = useState<any>();
+  const [activityTimeout, setactivityTimeout] = useState<any>();
+  const [typeOfTimeout, setTypeOfTimeout] = useState<'pageSwitch' | 'edit' | ''>('');
 
+  // SAVING
+  //PAGE SWITCH => SAVE TTRIGGER after 10 secs
   useEffect(() => {
-    console.log(params.state.subscription);
-  }, [params.state.subscription]);
-
-  useEffect(() => {
-    if (params.state.studentStatus === 'ACTIVE' && params.state.subscription._state === 'ready') {
-      // clearAllTimers()
-      // startTimer()
-      // updateStudentData('status')
+    console.log('state.currentPage', state.currentPage);
+    if (!state.viewing) {
+      if (typeOfTimeout === 'edit' || typeOfTimeout === '') {
+        console.log('%c save timer: ', 'background: #222; color: #bada55', 'current save timeout interrupted');
+        console.log('%c save timer: ', 'background: #222; color: #bada55', 'page switch save triggered after 10s');
+        clearTimeout(activityTimeout);
+        setTypeOfTimeout('pageSwitch');
+        setactivityTimeout(
+          setTimeout(() => {
+            dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+            setTypeOfTimeout('');
+            console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
+          }, 10000)
+        );
+      }
     }
+    return () => clearTimeout(activityTimeout);
+  }, [state.viewing, state.currentPage]);
 
+  // TEACHER VIEWING & STUDENT EDIT => SAVE TRIGGER after 1 secs
+  useEffect(() => {
+    if (state.viewing) {
+      clearTimeout(activityTimeout);
+      setactivityTimeout(setTimeout(() => dispatch({ type: 'INCREMENT_SAVE_COUNT' }), 1000));
+    }
+    if (!state.viewing) {
+      if (typeOfTimeout === '') {
+        console.log('%c save timer: ', 'background: #222; color: #bada55', 'edit save triggered after 60s');
+        clearTimeout(activityTimeout);
+        setTypeOfTimeout('edit');
+        setactivityTimeout(
+          setTimeout(() => {
+            dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+            setTypeOfTimeout('');
+            console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
+          }, 120000)
+        );
+      }
+    }
+    return () => clearTimeout(activityTimeout);
+  }, [state.viewing, state.componentState]);
+
+  useEffect(() => {
     if (params.state.studentStatus === 'ACTIVE' && params.state.subscription._state === 'closed') {
       params.subscribeFunc();
-
-      // startTimer()
-
       updateStudentData('status');
     }
 
@@ -62,77 +96,17 @@ const useStudentTimer = (inputs?: inputs) => {
 
     if (params.subscription && params.state.studentStatus === 'OFFLINE') {
       clearAllTimers();
-
       params.subscription.unsubscribe();
-
       console.log('unsubscribed', params.state.subscription);
     }
   }, [params.state.studentStatus]);
 
   useEffect(() => {
-    /**
-     * HERE WE CAN CHECK IF ANY CHANGES HAVE BEEN MADE
-     * BEFORE ENABLING AUTO SAVE ON VIEW
-     *
-     * 1. ON state.viewing = increase save count + 1
-     *      SET changes made to FALSE
-     * 2. ON state.viewing && changes made TRUE
-     *      = increase save count + 1
-     *      SET changes made to FALSE
-     * 3. ON state.viewing && changes made FALSE
-     *      = do nothing.
-     * 4. ON !state.viewing
-     *      = do nothing, clear save
-     */
-    // if (params.state.viewing) {
-    //   startAutoSave();
-    // }
-    //
-    // if (!params.state.viewing) {
-    //   clearAutoSave();
-    // }
-  }, [params.state.viewing]);
-
-
-
-  // SAVE TRIGGER TIMING
-  useEffect(()=>{
-    if(state.viewing){
-      clearTimeout(activityInterval)
-      console.log('interval set at LessonContext.tsx')
-      setActivityInterval( setTimeout(
-        () => dispatch({ type: 'INCREMENT_SAVE_COUNT' })
-        , 1000))
-    }
-    return ()=> clearTimeout(activityInterval)
-  },[state.viewing, state.componentState])
-
-  useEffect(() => {
-    if (params.state.viewing) {
-      console.log('teacher viewing savecount: ', params.state.saveCount);
-      updateStudentData('autosave');
-    }
+    // console.log('teacher viewing savecount: ', params.state.saveCount);
+    updateStudentData('autosave');
   }, [params.state.saveCount]);
 
   const updateStudentData = async (saveType?: string) => {
-    let lessonProgress =
-      params.state.pages[params.state.lessonProgress].stage === ''
-        ? 'intro'
-        : params.state.pages[params.state.lessonProgress].stage;
-
-    let currentLocation =
-      params.state.pages[params.state.currentPage].stage === ''
-        ? 'intro'
-        : params.state.pages[params.state.currentPage].stage;
-
-    /**
-     * The warmupData ternary condition should be improved
-     * so that it doesn't look specifically for the truthGame object
-     * but can also return any other additional object from new components
-     */
-
-    //TODO: clean up the warmUpData ternary condition below
-
     let data = {
       id: state.studentDataID,
       lessonProgress: params.state.lessonProgress,
@@ -172,37 +146,11 @@ const useStudentTimer = (inputs?: inputs) => {
     });
   };
 
-  /**
-   * this timer for detecting users idle status
-   * never actually used and can probably be deleted
-   */
-  // const startTimer = () => {
-  //   console.log('started');
-  //
-  //   clearTimeout(params.activeTimer);
-  //   clearTimeout(params.idleTimer);
-  //   params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' });
-  //
-  //   params.activeTimer = setTimeout(() => {
-  //     clearTimeout(params.activeTimer);
-  //     params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'IDLE' });
-  //   }, 60000);
-  //
-  //   params.idleTimer = setTimeout(() => {
-  //     clearTimeout(params.idleTimer);
-  //     params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'OFFLINE' });
-  //   }, 60000);
-  // };
-
   const startAutoSave = () => {
     clearTimeout(params.activeTimer);
     clearTimeout(params.idleTimer);
     params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' });
     params.dispatch({ type: 'INCREMENT_SAVE_COUNT' });
-
-    // params.autoSaveInterval = setInterval(() => {
-    //   params.dispatch({ type: 'INCREMENT_SAVE_COUNT' });
-    // }, 3000);
   };
 
   const clearAutoSave = () => {
