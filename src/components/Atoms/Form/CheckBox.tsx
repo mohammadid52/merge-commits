@@ -18,10 +18,10 @@ const CheckBox = (checkBoxProps: CheckBoxProps) => {
         type="checkbox"
         checked={value ? true : false}
         name={name}
-        className="form-checkbox text-indigo-500 h-6 w-6 mx-2"
+        className="form-checkbox cursor-pointer text-indigo-500 h-6 w-6 mx-2"
         onChange={onChange}
       />
-      <span className="mx-2 text-m font-medium leading-5 text-gray-700">{label ? label : null}</span>
+      {label ? <span className="mx-2 text-m font-medium leading-5 text-gray-700"> {label} </span> : null}
     </label>
   )
 }

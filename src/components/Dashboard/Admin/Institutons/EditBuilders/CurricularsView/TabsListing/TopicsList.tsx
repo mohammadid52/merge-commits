@@ -1,41 +1,39 @@
-import React, { useEffect, Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react';
+import { IoAdd, IoCaretDownCircleOutline, IoCaretUpCircleOutline } from 'react-icons/io5';
 import { useHistory } from 'react-router';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaGripVertical } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-import PageWrapper from '../../../../../../Atoms/PageWrapper';
+import MeasurementList from './MeasMntList';
+
 import Buttons from '../../../../../../Atoms/Buttons';
 import { reorder } from '../../../../../../../utilities/strings';
 
-import * as queries from '../../../../../../../graphql/queries';
-import * as customQueries from '../../../../../../../customGraphql/customQueries'
 import * as mutations from '../../../../../../../graphql/mutations';
-interface TopicsListProps {
-  topicsList?: any[]
+import * as queries from '../../../../../../../graphql/queries';
+import * as customQueries from '../../../../../../../customGraphql/customQueries';
+
+
+interface TopicsListComponentProps {
   curricularId: string
+  learningId: string
 }
 
-const TopicsList = (props: TopicsListProps) => {
-  const { curricularId } = props;
+const TopicsListComponent = (props: TopicsListComponentProps) => {
+  const { curricularId, learningId } = props;
   const history = useHistory();
+
+  const [openRow, setOpenRow] = useState('');
   const [loading, setLoading] = useState(false)
   const [topics, setTopics] = useState([])
   const [topicIds, setTopicIds] = useState([])
 
-  const onDragEnd = async (result: any) => {
-    if (result.source.index !== result.destination.index) {
-      const list = reorder(topicIds, result.source.index, result.destination.index)
-      setTopicIds(list)
-      let topicsList = topics.map((t: any) => {
-        let index = list.indexOf(t.id)
-        return { ...t, index }
-      }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-      setTopics(topicsList)
-      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `t_${curricularId}`, sequence: list } }));
-      seqItem = seqItem.data.updateCSequences;
-      console.log('seq updated');
+  const expandRow = (id: string) => {
+    if (openRow === id) {
+      setOpenRow('')
+    } else {
+      setOpenRow(id)
     }
   }
 
@@ -47,19 +45,36 @@ const TopicsList = (props: TopicsListProps) => {
     history.push(`/dashboard/manage-institutions/curricular/${curricularId}/topic/edit/${id}`)
   }
 
-  const fetchTopics = async () => {
+  const onDragEnd = async (result: any) => {
+    if (result.source.index !== result.destination.index) {
+      const list = reorder(topicIds, result.source.index, result.destination.index)
+      setTopicIds(list)
+      let topicsList = topics.map((t: any) => {
+        let index = list.indexOf(t.id)
+        return { ...t, index }
+      }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+      setTopics(topicsList)
+      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `t_${learningId}`, sequence: list } }));
+      seqItem = seqItem.data.updateCSequences;
+      console.log('seq updated');
+    }
+  }
+
+  const fetchTopicList = async () => {
     // set loader true
     setLoading(true)
     // fetch topics list and its sequence
-    let [list, seq]:any = await Promise.all([
+    let [list, seq]: any = await Promise.all([
       await API.graphql(graphqlOperation(customQueries.listTopics, {
-        filter: { curriculumID: { eq: curricularId } },
+        filter: { learningObjectiveID: { eq: learningId } },
       })),
       await API.graphql(graphqlOperation(queries.getCSequences,
-        { id: `t_${curricularId}` }))
+        { id: `t_${learningId}` }))
     ]);
     list = list?.data.listTopics?.items || []
     seq = seq?.data.getCSequences?.sequence || []
+    const sequenceLength = seq?.length;
+    const listLength = list?.length;
     // sort list as per the seq
     list = list.map((t: any) => {
       let index = seq.indexOf(t.id)
@@ -68,103 +83,100 @@ const TopicsList = (props: TopicsListProps) => {
 
     setTopics(list)
     setTopicIds(seq)
+    if (listLength && !sequenceLength) {
+      let topicsID = list.map((item: { id: string }) => item.id)
+      let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `t_${learningId}`, sequence: topicsID } }));
+      seqItem = seqItem.data.createCSequences
+      setTopicIds(topicsID)
+    }
     setLoading(false)
   }
 
   useEffect(() => {
-    fetchTopics()
+    fetchTopicList();
   }, [])
 
   return (
-    <div className="p-8 flex m-auto justify-center">
-      <div className="">
-        <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CURRICULAR TOPICS</h3>
+    <Fragment>
+      <div className="w-9/10 mx-auto my-4 flex">
+        <div>
+          <p className="text-base font-medium text-gray-600">Topics: </p>
+        </div>
+      </div>
+      {!loading ? (
+        <Fragment>
           {
-            !loading ?
-              <>
-                {(topics && topics.length > 0) ? (
-                  <Fragment>
-                    <div className="flex justify-end w-8/10 m-auto ">
-                      <Buttons btnClass="mx-4" label="Add new Topic" onClick={createNewTopic} />
-                    </div>
-                    <div className="flex justify-between w-8/10 m-auto px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                      <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>No.</span>
-                      </div>
-                      <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                        <span>Topic Name</span>
-                      </div>
-                      <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                        <span>Learning Objective</span>
-                      </div>
-                      <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>Actions</span>
-                      </div>
-                    </div>
+            topics?.length > 0 ?
+              <div className='mb-4'>
 
-                    <div className="mb-8 w-8/10 m-auto max-h-88 overflow-y-auto">
-                      {/* Drag and drop listing */}
-                      <DragDropContext onDragEnd={onDragEnd}>
-                        <Droppable droppableId="droppable">
-                          {(provided, snapshot) => (
-                            <div
-                              {...provided.droppableProps}
-                              ref={provided.innerRef}
-                            >
-                              {topics.map((item, index) => (
-                                <Draggable key={item.id} draggableId={item.id} index={index}>
-                                  {(provided, snapshot) => (
-                                    <div
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                    >
-                                      <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200 cursor-move">
-
-                                        {/* TODO: need to find some nice icon for drag and drop. */}
-                                        {/* <div className="flex w-1/10 items-center px-2 py-8 text-left text-s leading-4 text-indigo-600">
+                <DragDropContext onDragEnd={onDragEnd}>
+                  <Droppable droppableId="droppable">
+                    {(provided, snapshot) => (
+                      <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                      >
+                        <div className="w-9/10 m-auto border-b">
+                          {topics.map((item: any, index: number) => (
+                            <Fragment>
+                              <Draggable key={item.id} draggableId={item.id} index={index}>
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                  >
+                                    <div key={item.id} className={`flex justify-between w-full px-8 py-4 whitespace-no-wrap border border-b-0 border-gray-200 hover:bg-gray-200 ${(openRow === item.id) && 'bg-gray-200'}`}>
+                                      <div className="flex w-8.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer text-gray-900 hover:text-gray-800" onClick={() => expandRow(item.id)}> {item.name} </div>
+                                      <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentTopic(item.id)}>
+                                        Edit
+                                      </div>
+                                      <div className="flex w-1.5/10 items-center px-8 py-3 text-left text-s leading-4 justify-end" onClick={() => expandRow(item.id)}>
+                                        <span className="w-6 h-6 flex items-center cursor-pointer">
                                           <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
-                                            <FaGripVertical />
+                                            {(openRow !== item.id) ? <IoCaretDownCircleOutline /> : <IoCaretUpCircleOutline />}
                                           </IconContext.Provider>
-                                        </div> */}
-
-                                        <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
-                                        <div className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal">
-                                          {item.name}
-                                        </div>
-                                        <div className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 whitespace-normal">
-                                          {item.learningObjective ? item.learningObjective.name : '--'}
-                                        </div>
-                                        <span className="w-1/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentTopic(item.id)}>
-                                          edit
                                         </span>
                                       </div>
                                     </div>
-                                  )}
-                                </Draggable>
-                              ))}
-                              {provided.placeholder}
-                            </div>
-                          )}
-                        </Droppable>
-                      </DragDropContext>
-
-                    </div>
-                  </Fragment>
-                ) : (
-                    <Fragment>
-                      <div className="flex justify-center mt-8">
-                        <Buttons btnClass="mx-4" label="Add new Topic" onClick={createNewTopic} />
+                                  </div>
+                                )}
+                              </Draggable>
+                              {(openRow === item.id) && <div className="border border-gray-200">
+                                <MeasurementList curricularId={curricularId} topicID={item.id} />
+                              </div>}
+                            </Fragment>
+                          ))}
+                        </div>
+                        {provided.placeholder}
                       </div>
-                      <p className="text-center p-16">  This curricular does not have any topics. Please create a new one.</p>
-                    </Fragment>)}
-              </> : <div className="py-12 my-12 m-auto text-center">Fetching Data Please wait...</div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
+
+              </div> : (
+                <div>
+                  <p className="text-center p-16">  This learning objective does not have any topics. Please create a new one.</p>
+                </div>
+              )
           }
-        </PageWrapper>
-      </div>
-    </div>
+          <div className="flex justify-center items-center my-2 w-9/10 mx-auto px-8 py-4 border border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer" onClick={createNewTopic}>
+            <span className="w-6 h-6 flex items-center mr-4">
+              <IconContext.Provider value={{ size: '1.5rem', color: 'darkgray' }}>
+                <IoAdd />
+              </IconContext.Provider>
+            </span>
+          Add New Topic
+        </div>
+        </Fragment>
+      ) : (
+          <div>
+            <p className="text-center p-16">  Fetching topics list...</p>
+          </div >
+        )}
+
+    </Fragment >
   )
 }
 
-export default TopicsList
+export default TopicsListComponent;

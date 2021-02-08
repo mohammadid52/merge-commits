@@ -2384,6 +2384,7 @@ export const getLesson = /* GraphQL */ `
       type
       label
       instructions
+      instructionsTitle
       theme {
         type
         name
@@ -2601,6 +2602,7 @@ export const listLessons = /* GraphQL */ `
         type
         label
         instructions
+        instructionsTitle
         theme {
           type
           name
@@ -2797,6 +2799,7 @@ export const getSyllabusLesson = /* GraphQL */ `
         type
         label
         instructions
+        instructionsTitle
         theme {
           type
           name
@@ -2984,6 +2987,7 @@ export const listSyllabusLessons = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language
@@ -3059,6 +3063,7 @@ export const getStudentData = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language
@@ -3358,6 +3363,7 @@ export const getQuestionData = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language
@@ -3497,6 +3503,7 @@ export const getFeedback = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language
@@ -3795,6 +3802,7 @@ export const getPersonLocation = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language

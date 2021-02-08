@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useLocation, useHistory, useRouteMatch } from 'react-router';
-import { IoArrowUndoCircleOutline, IoSpeedometerSharp } from 'react-icons/io5';
+import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import { BiNotepad } from 'react-icons/bi';
 import { MdSpeakerNotes } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
@@ -11,15 +11,16 @@ import * as customQueries from '../../../../../../customGraphql/customQueries';
 
 import { languageList } from '../../../../../../utilities/staticData';
 import { createFilterToFetchSpecificItemsOnly } from '../../../../../../utilities/strings';
+
 import BreadCrums from '../../../../../Atoms/BreadCrums';
 import SectionTitle from '../../../../../Atoms/SectionTitle';
 import Buttons from '../../../../../Atoms/Buttons';
 import PageWrapper from '../../../../../Atoms/PageWrapper';
 import UnderlinedTabs from '../../../../../Atoms/UnderlinedTabs';
+
 import SyllabusList from './TabsListing/SyllabusList';
-import TopicsList from './TabsListing/TopicsList';
-import MeasMntList from './TabsListing/MeasMntList';
-import LearningObjectiveList from './TabsListing/learningObjective'
+import LearningObjective from './TabsListing/LearningObjective';
+
 interface CurricularViewProps {
   tabProps?: any
 }
@@ -36,6 +37,7 @@ interface InitialData {
   },
   syllabusList: any[]
 }
+
 const CurricularView = (props: CurricularViewProps) => {
   const { tabProps } = props;
 
@@ -67,27 +69,26 @@ const CurricularView = (props: CurricularViewProps) => {
 
   const [curricularData, setCurricularData] = useState<InitialData>(initialData);
   const [designersId, setDesignersID] = useState([]);
-  const [designersName, setDesignersName] = useState([]);
   const [personsDataList, setPersonsDataList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Curricular Info', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
   ]
   const tabs = [
-    { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjectiveList curricularId={currID} /> },
-    { index: 1, title: 'Topics', icon: <MdSpeakerNotes />, active: false, content: <TopicsList curricularId={currID} /> },
-    { index: 2, title: 'Measurements', icon: <IoSpeedometerSharp />, active: false, content: <MeasMntList curricularId={currID} /> },
-    { index: 3, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList syllabusList={curricularData.syllabusList} curricularId={currID} /> },
+    { index: 0, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList savedSyllabi={curricularData.syllabusList} curricularId={currID} loading={loading} /> },
+    { index: 1, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjective curricularId={currID} /> },
   ]
 
   const updateTab = (tab: number) => {
-    tabProps.setTabsData({...tabProps.tabsData, instCurr: tab})
+    tabProps.setTabsData({ ...tabProps.tabsData, instCurr: tab })
   }
 
   const fetchCurricularData = async () => {
     const currID = params.get('id');
     if (currID) {
+      setLoading(true)
       try {
         const result: any = await API.graphql(graphqlOperation(customQueries.getCurriculum, { id: currID }))
         const savedData = result.data.getCurriculum;
@@ -107,9 +108,11 @@ const CurricularView = (props: CurricularViewProps) => {
           languages: savedLanguages ? savedLanguages : []
         });
         setDesignersID(savedData?.designers);
+        setLoading(false);
       } catch (err) {
         console.log(err)
         console.log('Error while fetching curricular data.')
+        setLoading(false);
       }
     } else {
       history.push('/dashboard/manage-institutions')
