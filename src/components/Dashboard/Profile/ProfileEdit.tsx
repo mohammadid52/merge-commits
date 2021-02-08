@@ -134,7 +134,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                         </div>
 
                         <div className="h-full px-4 py-5 sm:px-6">
-                            <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
+                            <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 text-gray-900">
 
                                 {user.role === 'ST' ?
                                     // what users with STUDENT can see

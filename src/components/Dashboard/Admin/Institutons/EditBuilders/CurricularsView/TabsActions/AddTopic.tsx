@@ -71,11 +71,11 @@ const AddTopic = (props: AddTopicProps) => {
       const item: any = await API.graphql(graphqlOperation(customMutations.createTopic, { input }));
       const addedItem = item.data.createTopic
       if (!topicIds.length) {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `t_${curricularId}`, sequence: [addedItem.id] } }));
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `t_${learning.id}`, sequence: [addedItem.id] } }));
         seqItem = seqItem.data.createCSequences
         console.log('seqItem', seqItem)
       } else {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `t_${curricularId}`, sequence: [...topicIds, addedItem.id] } }));
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `t_${learning.id}`, sequence: [...topicIds, addedItem.id] } }));
         seqItem = seqItem.data.updateCSequences
         console.log('seqItem', seqItem)
       }
@@ -94,24 +94,31 @@ const AddTopic = (props: AddTopicProps) => {
     setLearning({ id, name, value: val })
   }
 
-  const fetchData = async () => {
-    let [list, seq]:any = await Promise.all([
-      await API.graphql(graphqlOperation(queries.listLearningObjectives, {
-        filter: { curriculumID: { eq: curricularId } },
-      })),
-      await API.graphql(graphqlOperation(queries.getCSequences,
-        { id: `t_${curricularId}` })),
-    ]);
-    list = list?.data?.listLearningObjectives?.items || []
-    list = list.map((item: any) => ({ id: item.id, name: item.name, value: item.name }));
+  const fetchTopicsSequence = async (leraningID: string) => {
+    let seq: any = await API.graphql(graphqlOperation(queries.getCSequences,
+      { id: `t_${leraningID}` }))
     seq = seq?.data?.getCSequences?.sequence || []
-    setLearnings(list)
     setTopicIds(seq)
   }
 
+  const fetchLoListData = async () => {
+    let list: any = await API.graphql(graphqlOperation(queries.listLearningObjectives, {
+      filter: { curriculumID: { eq: curricularId } },
+    }))
+    list = list?.data?.listLearningObjectives?.items || []
+    list = list.map((item: any) => ({ id: item.id, name: item.name, value: item.name }));
+    setLearnings(list)
+  }
+
   useEffect(() => {
-    fetchData()
+    fetchLoListData()
   }, [])
+
+  useEffect(() => {
+    if (learning?.id) {
+      fetchTopicsSequence(learning?.id)
+    }
+  }, [learning.id])
 
   const cancelEvent = () => {
     history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
