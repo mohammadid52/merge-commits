@@ -4,7 +4,7 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 // Iconz
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaRulerVertical, FaQuestionCircle } from 'react-icons/fa';
-import { AiOutlineSchedule, AiOutlineUsergroupAdd } from 'react-icons/ai';
+import { AiOutlineSchedule, AiOutlineUsergroupAdd, AiOutlineBook } from 'react-icons/ai';
 import useDictionary from '../../../customHooks/dictionary';
 import { IoIosPeople } from 'react-icons/io';
 import { IoBookOutline, IoSchoolOutline } from 'react-icons/io5';
@@ -63,6 +63,11 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               path: 'classroom',
             },
             {
+              title: 'ANTHOLOGY',
+              name: 'Anthology',
+              path: 'anthology',
+            },
+            {
               title: 'LESSON_PLANNER',
               name: 'Lesson Planner',
               path: 'lesson-planner',
@@ -98,11 +103,11 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: 'Classroom',
               path: 'classroom',
             },
-            // {
-            //   title: 'QUESTION_BANK',
-            //   name: 'Question Bank',
-            //   path: 'question-bank',
-            // },
+            {
+              title: 'ANTHOLOGY',
+              name: 'Anthology',
+              path: 'anthology',
+            },
             {
               title: 'LESSON_BUILDER',
               name: 'Lesson Builder',
@@ -170,9 +175,9 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     if (pageUrlContains('/dashboard/manage-institutions')) {
       setCurrentPage('manage-institutions');
     }
-    // if (pageUrlContains('/dashboard/question-bank')) {
-    //   setCurrentPage('question-bank');
-    // }
+    if (pageUrlContains('/dashboard/anthology')) {
+      setCurrentPage('anthology');
+    }
     if (pageUrlContains('/dashboard/assessments')) {
       setCurrentPage('assessments');
     }
@@ -203,8 +208,8 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         return <FaRulerVertical id={url} />;
       case 'Institutions':
         return <IoSchoolOutline id={url} />;
-      // case 'Question Bank':
-      //   return <FaQuestionCircle id={url} />;
+      case 'Anthology':
+        return <AiOutlineBook id={url} />;
       default:
         return '';
     }
