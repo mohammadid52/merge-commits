@@ -15,7 +15,7 @@ interface FormInputsState {
 const Modules = (props: ModulesProps) => {
   const { inputs } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
-  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const [formInputs, setFormInputs] = useState<FormInputsState>();
 
   useEffect(() => {

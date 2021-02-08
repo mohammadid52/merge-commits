@@ -90,7 +90,7 @@ const CurricularView = (props: CurricularViewProps) => {
     if (currID) {
       setLoading(true)
       try {
-        const result: any = await API.graphql(graphqlOperation(queries.getCurriculum, { id: currID }))
+        const result: any = await API.graphql(graphqlOperation(customQueries.getCurriculum, { id: currID }))
         const savedData = result.data.getCurriculum;
         const savedLanguages = languageList.filter(item => savedData.languages?.includes(item.value))
         setCurricularData({

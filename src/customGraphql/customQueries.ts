@@ -1162,14 +1162,14 @@ export const listAllSyllabusLessons = /* GraphQL */ `
 `;
 
 export const getStudentData = /* GraphQL */ `
-  query GetStudentData($classroomID: ID!, $studentID: String!) {
-    getStudentData(classroomID: $classroomID, studentID: $studentID) {
+  query GetStudentData($syllabusLessonID: ID!, $studentID: String!) {
+    getStudentData(syllabusLessonID: $syllabusLessonID, studentID: $studentID) {
       id
       lessonProgress
       currentLocation
       status
       saveType
-      classroomID
+      syllabusLessonID
       studentID
       studentAuthID
       warmupData {
@@ -1217,6 +1217,18 @@ export const getStudentData = /* GraphQL */ `
       }
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const getPersonLocation = /* GraphQL */ `
+  query GetPersonLocation($personAuthID: String!, $personEmail: String!) {
+    getPersonLocation(personAuthID: $personAuthID, personEmail: $personEmail) {
+      currentLocation
+      id
+      lessonProgress
+      personAuthID
+      personEmail
     }
   }
 `;
@@ -1787,7 +1799,6 @@ export const messagesByRoomId = /* GraphQL */ `
       items {
         id
         body
-        createdAt
         sender {
           id
           email
@@ -1796,9 +1807,49 @@ export const messagesByRoomId = /* GraphQL */ `
           lastName
           image
         }
+        createdAt
         updatedAt
       }
       nextToken
+    }
+  }
+`;
+export const getCurriculum = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      institutionID
+      name
+      type
+      description
+      objectives
+      languages
+      institution {
+        id
+        name
+      }
+      designers
+      syllabi {
+        items {
+          id
+          name
+          type
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          designers
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
     }
   }
 `;

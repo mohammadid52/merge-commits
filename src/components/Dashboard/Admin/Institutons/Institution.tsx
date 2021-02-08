@@ -126,7 +126,9 @@ const Institution = (props: InstitutionProps) => {
   }
 
   useEffect(() => {
-    getInstitutionData();
+    if (isNewUpdate) {
+      getInstitutionData();
+    }
   }, [isNewUpdate]);
 
   return (

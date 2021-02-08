@@ -1,10 +1,6 @@
 import React, { useContext, useState } from 'react';
-// import { IconContext } from 'react-icons/lib/esm/iconContext';
-// import { FaRegSave, FaHome } from 'react-icons/fa';
-// import { AiOutlineSave, AiOutlineHome } from 'react-icons/ai';
 import { NavLink, useHistory } from 'react-router-dom';
 import { LessonContext } from '../../../../contexts/LessonContext';
-// import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../../customGraphql/customMutations';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
@@ -25,19 +21,6 @@ const SaveQuit = (props: SaveQuitProps) => {
   const { id, feedback } = props;
   const history = useHistory();
   const { visible, setVisible, ref } = useOutsideAlerter(false);
-  // the bottom is from 'LessonHeaderBar.tsx'
-  // const { theme, state, dispatch } = useContext(LessonContext);
-  // const handleSave = () => {
-  //     if ( state.unsavedChanges ) {
-  //         if ( !state.firstSave ) {
-  //             createClassroomData()
-  //         }
-
-  //         if ( state.firstSave ) {
-  //             updateClassroomData()
-  //         }
-  //     }
-  // }
 
   const updateStudentData = async () => {
     let lessonProgress =
@@ -53,7 +36,7 @@ const SaveQuit = (props: SaveQuitProps) => {
       currentLocation: currentLocation,
       status: state.studentStatus,
       saveType: 'finalSave',
-      classroomID: state.classroomID,
+      syllabusLessonID: state.syllabusLessonID,
       studentID: state.studentUsername,
       studentAuthID: state.studentAuthID,
       warmupData: state.componentState.story ? state.componentState.story : null,
@@ -106,7 +89,7 @@ const SaveQuit = (props: SaveQuitProps) => {
 
   const saveQuestionData = async (responseObj: any) => {
     let questiondDataObject = {
-      classroomID: '1',
+      syllabusLessonID: '1',
       componentType: 'checkpoint',
       lessonID: state.data.lesson.id,
       authID: state.studentAuthID,
@@ -129,7 +112,7 @@ const SaveQuit = (props: SaveQuitProps) => {
 
   const saveLessonFeedback = async () => {
     let feedbackInput = {
-      classroomID: '1',
+      syllabusLessonID: '1',
       liked: feedback.like,
       comment: feedback.text,
     };

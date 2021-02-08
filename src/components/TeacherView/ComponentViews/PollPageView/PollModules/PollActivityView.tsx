@@ -13,6 +13,7 @@ import PollForm from '../../../../Lesson/LessonComponents/PollPage/PollModules/P
  */
 import { PollInput } from '../../../../Lesson/LessonComponents/PollPage/PollModules/PollActivity';
 import Modules from '../../../../Lesson/LessonComponents/PollPage/PollModules/Modules';
+import { getPageLabel } from '../../../../getPageLabel';
 
 interface DataProps {
   poll: PollInput[];
@@ -30,7 +31,7 @@ const PollActivityView = () => {
    */
   let displayStudentData = state.studentViewing.live
     ? state.studentViewing.studentInfo.currentLocation
-      ? state.studentViewing.studentInfo.currentLocation === 'warmup'
+      ? getPageLabel(state.studentViewing.studentInfo.currentLocation, state.pages) === 'warmup'
       : state.studentViewing.studentInfo.lessonProgress === 'warmup'
     : false;
 

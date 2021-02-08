@@ -32,7 +32,7 @@ const Modules = (props: ModulesProps) => {
   /**
    * Component state and cookies
    */
-  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const [formInputs, setFormInputs] = useState<FormInputsState>();
 
   /**
@@ -56,10 +56,10 @@ const Modules = (props: ModulesProps) => {
        *
        */
       if (
-        cookies[`lesson-${state.classroomID}`]?.poll?.additional &&
-        cookies[`lesson-${state.classroomID}`].poll.additional.length > 0
+        cookies[`lesson-${state.syllabusLessonID}`]?.poll?.additional &&
+        cookies[`lesson-${state.syllabusLessonID}`].poll.additional.length > 0
       ) {
-        cookies[`lesson-${state.classroomID}`].poll.additional.forEach((item: { name: string; input: string }) => {
+        cookies[`lesson-${state.syllabusLessonID}`].poll.additional.forEach((item: { name: string; input: string }) => {
           setFormInputs((prev) => {
             return {
               ...prev,
@@ -114,9 +114,9 @@ const Modules = (props: ModulesProps) => {
           },
         });
 
-        setCookie(`lesson-${state.classroomID}`, {
-          ...cookies[`lesson-${state.classroomID}`],
-          poll: { ...cookies[`lesson-${state.classroomID}`].poll, additional: tempArray },
+        setCookie(`lesson-${state.syllabusLessonID}`, {
+          ...cookies[`lesson-${state.syllabusLessonID}`],
+          poll: { ...cookies[`lesson-${state.syllabusLessonID}`].poll, additional: tempArray },
         });
       }
     }

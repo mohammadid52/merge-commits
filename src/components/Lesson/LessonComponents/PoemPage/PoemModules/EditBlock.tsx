@@ -12,18 +12,18 @@ interface EditBlockProps {
 const EditBlock = (props: EditBlockProps) => {
     const { editMode } = props;
     const { state, theme, dispatch } = useContext(LessonContext);
-    const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
+    const [ cookies, setCookie ] = useCookies([`lesson-${state.syllabusLessonID}`]);
     const [ editInput, setEditInput ] = useState<{title: string, text: string}>({
         title: '',
         text: editMode.input,
     })
 
     useEffect(() => {
-        if ( cookies[`lesson-${state.classroomID}`].poem && cookies[`lesson-${state.classroomID}`].poem.editMode ) {
+        if ( cookies[`lesson-${state.syllabusLessonID}`].poem && cookies[`lesson-${state.syllabusLessonID}`].poem.editMode ) {
             setEditInput(() => {
                 return {
-                    title: cookies[`lesson-${state.classroomID}`].poem.title,
-                    text: cookies[`lesson-${state.classroomID}`].poem.editInput,
+                    title: cookies[`lesson-${state.syllabusLessonID}`].poem.title,
+                    text: cookies[`lesson-${state.syllabusLessonID}`].poem.editInput,
                 }
             })
         }
@@ -40,10 +40,10 @@ const EditBlock = (props: EditBlockProps) => {
                 }
             })
 
-            setCookie(`lesson-${state.classroomID}`, {
-                ...cookies[`lesson-${state.classroomID}`],
+            setCookie(`lesson-${state.syllabusLessonID}`, {
+                ...cookies[`lesson-${state.syllabusLessonID}`],
                 poem: {
-                    ...cookies[`lesson-${state.classroomID}`].poem,
+                    ...cookies[`lesson-${state.syllabusLessonID}`].poem,
                     editInput: editInput.text
                 }
             })
@@ -61,10 +61,10 @@ const EditBlock = (props: EditBlockProps) => {
                 }
             })
 
-            setCookie(`lesson-${state.classroomID}`, {
-                ...cookies[`lesson-${state.classroomID}`],
+            setCookie(`lesson-${state.syllabusLessonID}`, {
+                ...cookies[`lesson-${state.syllabusLessonID}`],
                 poem: {
-                    ...cookies[`lesson-${state.classroomID}`].poem,
+                    ...cookies[`lesson-${state.syllabusLessonID}`].poem,
                     title: editInput.title
                 }
             })

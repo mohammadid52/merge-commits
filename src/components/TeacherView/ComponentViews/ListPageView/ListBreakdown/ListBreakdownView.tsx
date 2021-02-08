@@ -6,6 +6,7 @@ import ReflectionQuestions from './ReflectionQuestions';
 import Modules from './Modules';
 import Banner from './Banner';
 import ListOutput from './ListOutput';
+import { getPageLabel } from '../../../../getPageLabel';
 
 interface props {
   fullscreen: boolean;
@@ -22,7 +23,7 @@ const SelfDisplay = (props: props) => {
 
   let displayStudentData = state.studentViewing.live
     ? state.studentViewing.studentInfo.currentLocation
-      ? state.studentViewing.studentInfo.currentLocation === 'warmup/breakdown'
+      ? getPageLabel(state.studentViewing.studentInfo.currentLocation, state.pages) === 'warmup/breakdown'
       : state.studentViewing.studentInfo.lessonProgress === 'warmup/breakdown'
     : false;
 

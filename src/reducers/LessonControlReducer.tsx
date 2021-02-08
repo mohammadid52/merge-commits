@@ -6,6 +6,10 @@ type lessonControlActions =
       payload: any;
     }
   | {
+      type: 'UPDATE_STUDENT_ROSTER';
+      payload: any;
+    }
+  | {
       type:
         | 'OPEN_LESSON'
         | 'DISABLE_LESSON'
@@ -41,6 +45,12 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         complete: action.payload.complete,
         startDate: action.payload.startDate,
         endDate: action.payload.endDate,
+      };
+    case 'UPDATE_STUDENT_ROSTER':
+      console.log('lesson control reducer students: ', action.payload.students);
+      return {
+        ...state,
+        roster: action.payload.students,
       };
     case 'OPEN_LESSON':
       return {
@@ -116,12 +126,17 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         }),
       };
     case 'SET_SHARE_MODE':
+      console.log('set_share_mode:  ', action.payload)
       return {
         ...state,
         sharing: true,
         unsavedChanges: true,
-        pages: state.pages.map((page) => {
-          if (action.payload !== page.stage) {
+        pages: state.pages.map((page, pageIndex: number) => {
+          console.log('set_share_mode:  ', {
+            payload: parseInt(action.payload),
+            pageIndex: pageIndex
+          })
+          if (parseInt(action.payload) !== pageIndex) {
             return page;
           } else {
             return {
@@ -133,66 +148,32 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
       };
     case 'UPDATE_STUDENT_DATA':
       let foundInRoster = state.roster.some((student: any) => {
-        return student.id === action.payload.id;
+        return student.personAuthID === action.payload.studentAuthID;
       });
 
-      let doneArray = state.done;
+      let viewing = state.studentViewing.studentInfo?.personAuthID === action.payload.studentAuthID;
 
-      let saveType = action.payload.saveType;
-
-      if (saveType === 'done') {
-        let foundInDoneArray = doneArray.some((item: string) => {
-          return item === action.payload.student.email;
-        });
-
-        if (!foundInDoneArray) {
-          doneArray.push(action.payload.student.email);
-          console.log('added', doneArray);
-        }
-      }
-
-      let viewing = state.studentViewing.studentInfo?.id === action.payload.id;
-
-      if (foundInRoster) {
-        if (viewing) {
+      const updatedRoster = state.roster.map((student: any) => {
+        if(student.personAuthID === action.payload.studentAuthID){
           return {
-            ...state,
-            studentDataUpdated: true,
-            done: doneArray,
-            roster: state.roster.map((student: any) => {
-              if (student.id === action.payload.id) {
-                return action.payload;
-              }
-              return student;
-            }),
-            studentViewing: {
-              ...state.studentViewing,
-              studentInfo: action.payload,
-            },
-          };
+            ...student,
+            saveType: action.payload.saveType,
+            currentLocation: action.payload.currentLocation,
+            lessonProgress: action.payload.lessonProgress,
+          }
+        } else {
+          return student;
         }
-
-        return {
-          ...state,
-          done: doneArray,
-          studentDataUpdated: true,
-          roster: state.roster.map((student: any) => {
-            if (student.id === action.payload.id) {
-              return action.payload;
-            }
-            return student;
-          }),
-        };
-      }
-
-      let updatedArray = state.roster;
-      updatedArray.push(action.payload);
+      })
 
       return {
         ...state,
         studentDataUpdated: true,
-        done: doneArray,
-        roster: updatedArray,
+        roster: updatedRoster,
+        studentViewing: {
+          ...state.studentViewing,
+          studentInfo: {...state.studentViewing.studentInfo, ...action.payload},
+        },
       };
 
     case 'RESET_DONE':
@@ -234,11 +215,10 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         },
       };
     case 'SET_STUDENT_VIEWING':
-      // console.log('SET_STUDENT_VIEWING', action.payload);
 
-      if (state.studentViewing.studentInfo && state.studentViewing.studentInfo.id === action.payload.id) {
-        // console.log('firstIf');
 
+      if (state.studentViewing.studentInfo && state.studentViewing.studentInfo.studentAuthID === action.payload.personAuthID) {
+        console.log('SET_STUDENT_VIEWING', action.payload);
         return {
           ...state,
           studentDataUpdated: true,
@@ -276,6 +256,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         open: true,
         complete: false,
         unsavedChanges: true,
+        startDate: action.payload,
       };
     case 'COMPLETE_CLASSROOM':
       return {
@@ -283,7 +264,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         open: false,
         complete: true,
         unsavedChanges: true,
-        endDate: action.payload
+        endDate: action.payload,
       };
     case 'CLEANUP':
       return lessonControlState;

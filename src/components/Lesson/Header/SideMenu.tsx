@@ -13,6 +13,14 @@ const SideMenu = (props: { handlePopup: () => void }) => {
   const { theme, state, dispatch } = useContext(LessonContext);
   const [isToggled, setIsToggled] = useState<string[]>(['']);
 
+  useEffect(() => {
+    changeParams('state', state);
+  }, [state.studentStatus, state.currentPage, state.currentLocation, state.viewing, state.saveCount, state.subscription]);
+
+  /**
+   * FUNCTION TO SAVE STUDENT DATA ON COMMAND
+   * @param saveType
+   */
   const updateStudentData = async (saveType?: string) => {
     let lessonProgress =
       state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
@@ -22,7 +30,7 @@ const SideMenu = (props: { handlePopup: () => void }) => {
       lessonProgress: lessonProgress,
       status: state.studentStatus,
       saveType: saveType,
-      classroomID: 1,
+      syllabusLessonID: state.syllabusLessonID,
       studentID: state.studentUsername,
       studentAuthID: state.studentAuthID,
       warmupData: state.componentState.story ? state.componentState.story : null,
@@ -30,7 +38,7 @@ const SideMenu = (props: { handlePopup: () => void }) => {
       activityData: state.componentState.poem ? state.componentState.poem : null,
     };
 
-    console.log('update', data);
+    // console.log('update', data);
 
     try {
       const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
@@ -58,17 +66,13 @@ const SideMenu = (props: { handlePopup: () => void }) => {
     }, 300);
   };
 
-  const { startTimer, changeParams } = useStudentTimer({
+  const { changeParams } = useStudentTimer({
     dispatch: dispatch,
     subscription: state.subscription,
     subscribeFunc: state.subscribeFunc,
     callback: updateStudentData,
     state: state,
   });
-
-  useEffect(() => {
-    changeParams('state', state);
-  }, [state.studentStatus, state.viewing, state.saveCount, state.subscription]);
 
   return (
     <>

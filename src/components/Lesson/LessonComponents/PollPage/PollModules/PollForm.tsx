@@ -29,7 +29,7 @@ const PollForm = (props: PollBreakdownProps) => {
   /**
    * Component state and cookies
    */
-  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const pollInputs = state.data.lesson.warmUp.inputs.pollInputs; // This is correct
   const [input, setInput] = useState({ pollInputs: [] });
 
@@ -44,9 +44,9 @@ const PollForm = (props: PollBreakdownProps) => {
      *
      */
     if (!isTeacher) {
-      // if (cookies[`lesson-${state.classroomID}`]) {
+      // if (cookies[`lesson-${state.syllabusLessonID}`]) {
       //   setInput(() => {
-      //     return cookies[`lesson-${state.classroomID}`].poll;
+      //     return cookies[`lesson-${state.syllabusLessonID}`].poll;
       //   });
       // } else {
       //   console.log('setInput -- ', state.componentState.poll)
@@ -94,9 +94,9 @@ const PollForm = (props: PollBreakdownProps) => {
           },
         });
 
-        setCookie(`lesson-${state.classroomID}`, {
-          ...cookies[`lesson-${state.classroomID}`],
-          poll: { ...cookies[`lesson-${state.classroomID}`].poll },
+        setCookie(`lesson-${state.syllabusLessonID}`, {
+          ...cookies[`lesson-${state.syllabusLessonID}`],
+          poll: { ...cookies[`lesson-${state.syllabusLessonID}`].poll },
         });
       }
     }
