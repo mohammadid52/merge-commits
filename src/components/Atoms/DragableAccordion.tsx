@@ -8,12 +8,14 @@ import { GlobalContext } from '../../contexts/GlobalContext';
 interface DragableAccordionProps {
   titleList: { id: string, title: string, subtitle?: string, content: React.ReactNode }[]
   showSequence?: boolean
+  showEdit?: boolean
+  onItemEdit?: (id: string) => void
   onDragEnd?: (result: any) => void
 }
 
 const DragableAccordion = (props: DragableAccordionProps) => {
   const { theme } = useContext(GlobalContext);
-  const { titleList, showSequence, onDragEnd } = props;
+  const { titleList, showSequence, showEdit, onItemEdit, onDragEnd } = props;
   const [selectedItem, setSelectedItem] = useState('');
 
   const changeView = (step: string) => {
@@ -52,13 +54,18 @@ const DragableAccordion = (props: DragableAccordionProps) => {
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
-                            <div className={`w-full px-8 py-6 text-left cursor-pointer ${theme.outlineNone} ${selectedItem === item.id ? 'border border-indigo-400 rounded-lg' : ''}`} onClick={() => changeView(item.id)}>
+                            <div className={`w-full px-8 py-6 text-left ${theme.outlineNone} ${selectedItem === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
                               <div className="flex items-center justify-between">
-                                <span className={`text-xs md:text-base font-medium ${selectedItem === item.id && 'text-indigo-600'}`}>
+                                <span className={`text-xs md:text-base font-medium cursor-pointer ${selectedItem === item.id && 'text-indigo-600'}`} onClick={() => changeView(item.id)}>
                                   <span>{item.title}</span><br />
                                   <span className="text-sm leading-6 text-gray-500">{item.subtitle ? item.subtitle : ''}</span>
                                 </span>
-                                <span className="w-8 h-8 flex items-center">
+                                {showEdit && (
+                                  <div className="w-auto text-xs md:text-base text-indigo-600 mx-16 cursor-pointer">
+                                    <span onClick={() => onItemEdit(item.id)}>Edit</span>
+                                  </div>
+                                )}
+                                <span className="w-8 h-8 flex items-center cursor-pointer" onClick={() => changeView(item.id)}>
                                   <IconContext.Provider value={{ size: '2rem', color: '#667eea' }}>
                                     {(selectedItem === item.id) ? <IoCaretUpCircleOutline /> : <IoCaretDownCircleOutline />}
                                   </IconContext.Provider>

@@ -70,14 +70,15 @@ const CurricularView = (props: CurricularViewProps) => {
   const [curricularData, setCurricularData] = useState<InitialData>(initialData);
   const [designersId, setDesignersID] = useState([]);
   const [personsDataList, setPersonsDataList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Curricular Info', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
   ]
   const tabs = [
-    { index: 0, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjective curricularId={currID} /> },
-    { index: 3, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList syllabusList={curricularData.syllabusList} curricularId={currID} /> },
+    { index: 0, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList savedSyllabi={curricularData.syllabusList} curricularId={currID} loading={loading} /> },
+    { index: 1, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjective curricularId={currID} /> },
   ]
 
   const updateTab = (tab: number) => {
@@ -87,6 +88,7 @@ const CurricularView = (props: CurricularViewProps) => {
   const fetchCurricularData = async () => {
     const currID = params.get('id');
     if (currID) {
+      setLoading(true)
       try {
         const result: any = await API.graphql(graphqlOperation(queries.getCurriculum, { id: currID }))
         const savedData = result.data.getCurriculum;
@@ -106,9 +108,11 @@ const CurricularView = (props: CurricularViewProps) => {
           languages: savedLanguages ? savedLanguages : []
         });
         setDesignersID(savedData?.designers);
+        setLoading(false);
       } catch (err) {
         console.log(err)
         console.log('Error while fetching curricular data.')
+        setLoading(false);
       }
     } else {
       history.push('/dashboard/manage-institutions')

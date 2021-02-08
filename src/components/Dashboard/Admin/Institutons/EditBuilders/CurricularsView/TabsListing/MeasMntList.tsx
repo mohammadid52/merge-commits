@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaEdit } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { IoAdd } from 'react-icons/io5';
 
@@ -121,12 +120,8 @@ const MeasurementList = (props: MeasurementListProps) => {
                                     {index + 1}.
                                 </div>
                                   <div className="flex w-7/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal text-gray-600 cursor-move"> {item.name} </div>
-                                  <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal" onClick={() => editCurrentMeasurement(item.id)}>
-                                    <span className="w-6 h-6 flex items-center cursor-pointer mr-4" >
-                                      <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
-                                        <FaEdit />
-                                      </IconContext.Provider>
-                                    </span>
+                                  <div className="flex w-2/10 px-8 py-3 items-center text-left text-s leading-4 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentMeasurement(item.id)}>
+                                    Edit
                                   </div>
                                 </div>
                               </div>

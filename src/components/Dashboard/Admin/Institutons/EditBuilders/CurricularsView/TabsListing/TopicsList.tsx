@@ -1,9 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { IoAdd } from 'react-icons/io5';
+import { IoAdd, IoCaretDownCircleOutline, IoCaretUpCircleOutline } from 'react-icons/io5';
 import { useHistory } from 'react-router';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaEdit, FaRegArrowAltCircleDown, FaRegArrowAltCircleRight } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import MeasurementList from './MeasMntList';
@@ -36,10 +35,6 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
     } else {
       setOpenRow(id)
     }
-  }
-
-  const editLearningObjective = () => {
-    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/learning-objective/edit/${learningId}`)
   }
 
   const createNewTopic = () => {
@@ -103,12 +98,9 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
 
   return (
     <Fragment>
-      <div className="w-9/10 mx-auto my-4 flex justify-end">
+      <div className="w-9/10 mx-auto my-4 flex">
         <div>
           <p className="text-base font-medium text-gray-600">Topics: </p>
-        </div>
-        <div className="w-auto">
-          <Buttons btnClass="" Icon={FaEdit} label="Edit Learning Objective" onClick={editLearningObjective} />
         </div>
       </div>
       {!loading ? (
@@ -135,17 +127,17 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
                                     {...provided.dragHandleProps}
                                   >
                                     <div key={item.id} className={`flex justify-between w-full px-8 py-4 whitespace-no-wrap border border-b-0 border-gray-200 hover:bg-gray-200 ${(openRow === item.id) && 'bg-gray-200'}`}>
-                                      <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4" onClick={() => expandRow(item.id)}>
+                                      <div className="flex w-8.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer text-gray-900 hover:text-gray-800" onClick={() => expandRow(item.id)}> {item.name} </div>
+                                      <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentTopic(item.id)}>
+                                        Edit
+                                      </div>
+                                      <div className="flex w-1.5/10 items-center px-8 py-3 text-left text-s leading-4 justify-end" onClick={() => expandRow(item.id)}>
                                         <span className="w-6 h-6 flex items-center cursor-pointer">
                                           <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
-                                            {(openRow !== item.id) ? <FaRegArrowAltCircleRight /> : <FaRegArrowAltCircleDown />}
+                                            {(openRow !== item.id) ? <IoCaretDownCircleOutline /> : <IoCaretUpCircleOutline />}
                                           </IconContext.Provider>
                                         </span>
                                       </div>
-                                      <div className="flex w-6/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer text-gray-900 hover:text-gray-800" onClick={() => expandRow(item.id)}> {item.name} </div>
-                                      <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentTopic(item.id)}>
-                                        Edit
-                                </div>
                                     </div>
                                   </div>
                                 )}

@@ -46,6 +46,9 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
   const createLearningObjective = () => {
     history.push(`/dashboard/manage-institutions/curricular/${curricularId}/learning-objective/add`)
   }
+  const editLearningObj = (learningId: string) => {
+    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/learning-objective/edit/${learningId}`)
+  }
 
   const fetchLearningObjs = async () => {
     setLoading(true)
@@ -98,7 +101,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                   <Buttons btnClass="" label="Add New Learning Objective" onClick={createLearningObjective} />
                 </div>
                 <div className="py-4">
-                  <DragableAccordion titleList={learnings} onDragEnd={onDragEnd} />
+                  <DragableAccordion titleList={learnings} onDragEnd={onDragEnd} showEdit onItemEdit={editLearningObj} />
                 </div>
               </Fragment>
             ) : (
