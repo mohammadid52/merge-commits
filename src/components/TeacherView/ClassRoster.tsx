@@ -45,6 +45,8 @@ const ClassRoster = (props: classRosterProps) => {
   const [updatedStudent, setUpdatedStudent] = useState<any[]>([]);
   const [viewedStudent, setViewedStudent] = useState<string>('');
 
+  const [refreshRoster, setRefreshRoster] = useState<any>();
+
   let subscription: any;
 
   useEffect(() => {
@@ -64,10 +66,10 @@ const ClassRoster = (props: classRosterProps) => {
         console.error('getSyllabusLessonstudents - ', e);
       }
     };
-    if (state.syllabusLessonID) {
+    if (state.syllabusLessonID && state.roster.length === 0) {
       getSyllabusLessonStudents();
     }
-  }, [state.syllabusLessonID]);
+  }, [state.syllabusLessonID, state.roster]);
 
   const subscribeToPersonLocations = () => {
     const syllabusLessonID = state.syllabusLessonID;

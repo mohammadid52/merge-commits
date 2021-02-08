@@ -40,23 +40,45 @@ const SideRoomSelector = (props: SideMenuProps) => {
   useEffect(() => {
     const listClassStudents = async () => {
       const standardUserID = state.user.id;
+      const userAuthID = state.user.authId;
+      const userRole = state.user.role;
 
-      try {
-        const classesFetch: any = await API.graphql(
-          graphqlOperation(customQueries.listClassStudents, { studentID: standardUserID })
-        );
-        const response = await classesFetch;
-        const arrayOfResponseObjects = response?.data?.listClassStudents?.items;
-        const arrayOfClassIDs = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'classID');
-        setClassIds(arrayOfClassIDs);
-      } catch (e) {
-        console.error('Classes Fetch ERR: ', e);
+      if (userRole === 'STD') {
+        try {
+          const classesFetch: any = await API.graphql(
+            graphqlOperation(customQueries.listClassStudents, { studentID: standardUserID })
+          );
+          const response = await classesFetch;
+          const arrayOfResponseObjects = response?.data?.listClassStudents?.items;
+          const arrayOfClassIDs = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'classID');
+          setClassIds(arrayOfClassIDs);
+          console.log('1 -> ', arrayOfClassIDs);
+        } catch (e) {
+          console.error('Classes Fetch ERR: ', e);
+        }
+      }
+
+      if(userRole === 'FLW'){
+        try {
+          const classIdFromRoomsFetch: any = await API.graphql(
+            graphqlOperation(customQueries.listRooms, { teacherAuthId: userAuthID })
+          );
+          const response = await classIdFromRoomsFetch;
+          const arrayOfResponseObjects = response?.data?.listRooms?.items;
+          const arrayOfClassIDs = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'classID');
+          setClassIds(arrayOfClassIDs);
+          console.log('1 -> ', arrayOfClassIDs);
+        } catch (e) {
+          console.error('Classes Fetch ERR: ', e);
+        }
       }
     };
     listClassStudents();
   }, []);
 
   useEffect(() => {
+    const userRole = state.user.role;
+
     const listRooms = async () => {
       if (classIds.length > 0) {
         try {
@@ -77,6 +99,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
               data: arrayOfResponseObjects,
             },
           });
+          console.log('2 --> ', arrayOfResponseObjects)
         } catch (e) {
           console.error('Rooms Fetch ERR: ', e);
         } finally {
@@ -84,7 +107,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
         }
       }
     };
-    listRooms();
+      listRooms();
   }, [classIds]);
 
   useEffect(() => {
@@ -101,6 +124,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
           const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
           const arrayOfCurriculumIds = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'curriculumID');
           setCurriculumIds(arrayOfCurriculumIds);
+          console.log('3 --> ', arrayOfCurriculumIds)
         } catch (e) {
           console.error('RoomCurriculums fetch ERR: ', e);
         }
