@@ -69,6 +69,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
             {
               title: 'ANTHOLOGY',
               name: 'Anthology',
+              label: 'Anthology',
               path: 'anthology',
             },
             {
@@ -116,6 +117,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
             {
               title: 'ANTHOLOGY',
               name: 'Anthology',
+              label: 'Anthology',
               path: 'anthology',
             },
             {
