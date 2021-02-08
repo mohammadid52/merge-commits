@@ -664,6 +664,7 @@ type Lesson @model @key(fields: ["id"]) {
   type: String!
   label: String
   instructions: [String]
+  instructionsTitle: String
   theme: Theme
   grades: [Int]
   artistID: ID!
