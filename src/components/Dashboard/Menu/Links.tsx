@@ -13,6 +13,7 @@ type LinkObject = {
   name: string;
   path: string;
   title: string;
+  label: string;
 };
 
 export interface LinkProps {
@@ -48,28 +49,33 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
-              title: 'REGISTRATION',
-              name: 'Registration',
+              title: sideBarLinksDict[userLanguage].REGISTRATION,
+              name: sideBarLinksDict[userLanguage].REGISTRATION,
+              label: 'Registration',
               path: 'registration',
             },
             {
-              title: 'PEOPLE',
-              name: 'People',
+              title: sideBarLinksDict[userLanguage].PEOPLE,
+              name: sideBarLinksDict[userLanguage].PEOPLE,
+              label: 'People',
               path: 'manage-users',
             },
             {
-              title: 'CLASSROOM',
-              name: 'Classroom',
+              title: sideBarLinksDict[userLanguage].CLASSROOM,
+              name: sideBarLinksDict[userLanguage].CLASSROOM,
+              label: 'Classroom',
               path: 'classroom',
             },
             {
-              title: 'LESSON_PLANNER',
-              name: 'Lesson Planner',
+              title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+              name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+              label: 'Lesson Planner',
               path: 'lesson-planner',
             },
             {
-              title: 'INSTITUTIONS',
-              name: 'Institutions',
+              title: sideBarLinksDict[userLanguage].INSTITUTIONS,
+              name: sideBarLinksDict[userLanguage].INSTITUTIONS,
+              label: 'Institutions',
               path: 'manage-institutions',
             },
           ];
@@ -79,33 +85,33 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
-              title: 'INSTITUTIONS',
-              name: 'Institutions',
+              title: sideBarLinksDict[userLanguage].INSTITUTIONS,
+              name: sideBarLinksDict[userLanguage].INSTITUTIONS,
+              label: 'Institutions',
               path: 'manage-institutions',
             },
             {
-              title: 'PEOPLE',
-              name: 'People',
+              title: sideBarLinksDict[userLanguage].PEOPLE,
+              name: sideBarLinksDict[userLanguage].PEOPLE,
+              label: 'People',
               path: 'manage-users',
             },
             {
-              title: 'LESSON_PLANNER',
-              name: 'Lesson Planner',
+              title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+              name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+              label: 'Lesson Planner',
               path: 'lesson-planner',
             },
             {
-              title: 'CLASSROOM',
-              name: 'Classroom',
+              title: sideBarLinksDict[userLanguage].CLASSROOM,
+              name: sideBarLinksDict[userLanguage].CLASSROOM,
+              label: 'Classroom',
               path: 'classroom',
             },
-            // {
-            //   title: 'QUESTION_BANK',
-            //   name: 'Question Bank',
-            //   path: 'question-bank',
-            // },
             {
-              title: 'LESSON_BUILDER',
-              name: 'Lesson Builder',
+              title: sideBarLinksDict[userLanguage].LESSON_BUILDER,
+              name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
+              label: 'Lesson Builder',
               path: 'lesson-builder',
             },
           ];
@@ -115,13 +121,15 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
-              title: 'PEOPLE',
-              name: 'People',
+              title: sideBarLinksDict[userLanguage].PEOPLE,
+              name: sideBarLinksDict[userLanguage].PEOPLE,
+              label: 'People',
               path: 'manage-users',
             },
             {
-              title: 'LESSON_PLANNER',
-              name: 'Lesson Planner',
+              title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+              name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+              label: 'Lesson Planner',
               path: 'lesson-planner',
             },
           ];
@@ -218,11 +226,11 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   return (
     <div className={`link w-full h-12 z-40`}>
       {state.user.role && links.length > 0
-        ? links.map((link: { name: string; path: string }, key: number) => (
+        ? links.map((link: { name: string; path: string, label: string }, key: number) => (
             <div key={`link_${key}`} id={link.path} onClick={handleLink}>
               <div id={link.path} className={`${linkClass} ${currentPage === link.path && activeClass}`}>
                 <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
-                  {getMenuIcon(link.name, link.path)}
+                  {getMenuIcon(link.label, link.path)}
                 </IconContext.Provider>
                 {link.name}
               </div>

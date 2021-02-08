@@ -107,33 +107,37 @@ const useStudentTimer = (inputs?: inputs) => {
   }, [params.state.saveCount]);
 
   const updateStudentData = async (saveType?: string) => {
-    let data = {
-      id: state.studentDataID,
-      lessonProgress: params.state.lessonProgress,
-      currentLocation: params.state.currentPage,
-      saveType: saveType,
-      status: params.state.studentStatus,
-      syllabusLessonID: params.state.syllabusLessonID,
-      studentID: params.state.studentUsername,
-      studentAuthID: params.state.studentAuthID,
-      warmupData: params.state.componentState.story
-        ? params.state.componentState.story
-        : typeof params.state.componentState.truthGame?.truthGameArray !== 'undefined'
-        ? { truthGame: params.state.componentState.truthGame.truthGameArray }
-        : typeof params.state.componentState.poll?.pollInputs !== 'undefined'
-        ? { poll: params.state.componentState.poll.pollInputs, additional: params.state.componentState.poll.additional }
-        : null,
-      corelessonData: params.state.componentState.lyrics ? params.state.componentState.lyrics : null,
-      activityData: params.state.componentState.poem ? params.state.componentState.poem : null,
-    };
-
-    try {
-      console.log(' timer save: ', data);
-      const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
-
-      dispatch({ type: 'SAVED_CHANGES' });
-    } catch (error) {
-      console.error(error);
+    if (state.studentDataID) {
+      let data = {
+        id: state.studentDataID,
+        lessonProgress: params.state.lessonProgress,
+        currentLocation: params.state.currentPage,
+        saveType: saveType,
+        status: params.state.studentStatus,
+        syllabusLessonID: params.state.syllabusLessonID,
+        studentID: params.state.studentUsername,
+        studentAuthID: params.state.studentAuthID,
+        warmupData: params.state.componentState.story
+          ? params.state.componentState.story
+          : typeof params.state.componentState.truthGame?.truthGameArray !== 'undefined'
+          ? { truthGame: params.state.componentState.truthGame.truthGameArray }
+          : typeof params.state.componentState.poll?.pollInputs !== 'undefined'
+          ? { poll: params.state.componentState.poll.pollInputs, additional: params.state.componentState.poll.additional }
+          : null,
+        corelessonData: params.state.componentState.lyrics ? params.state.componentState.lyrics : null,
+        activityData: params.state.componentState.poem ? params.state.componentState.poem : null,
+      };
+  
+      try {
+        console.log(' timer save: ', data);
+        const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
+  
+        dispatch({ type: 'SAVED_CHANGES' });
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      console.log('studentDataID not yet created')
     }
   };
 
