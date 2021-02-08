@@ -128,14 +128,16 @@ const sideBarLinksDict: any = {
         INSTITUTIONS: 'Institution',
         PEOPLE: 'People',
         LESSON_PLANNER: 'Lesson Planner',
-        CLASSROOM: 'Classroom'
+        CLASSROOM: 'Classroom',
+        LESSON_BUILDER: 'Lesson Builder'
     },
     'ES': {
         REGISTRATION: 'Registro',
         INSTITUTIONS: 'Institución',
         PEOPLE: 'Personas',
         LESSON_PLANNER: 'Planificador de lecciones',
-        CLASSROOM: 'Aula'
+        CLASSROOM: 'Aula',
+        LESSON_BUILDER: 'Constructor de lecciones'
     }
 }
 const appDict: any = {
