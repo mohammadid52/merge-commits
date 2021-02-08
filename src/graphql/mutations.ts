@@ -4747,6 +4747,7 @@ export const createLesson = /* GraphQL */ `
       type
       label
       instructions
+      instructionsTitle
       theme {
         type
         name
@@ -4954,6 +4955,7 @@ export const updateLesson = /* GraphQL */ `
       type
       label
       instructions
+      instructionsTitle
       theme {
         type
         name
@@ -5161,6 +5163,7 @@ export const deleteLesson = /* GraphQL */ `
       type
       label
       instructions
+      instructionsTitle
       theme {
         type
         name
@@ -5373,6 +5376,7 @@ export const createLessonCheckpoint = /* GraphQL */ `
         type
         label
         instructions
+        instructionsTitle
         theme {
           type
           name
@@ -5515,6 +5519,7 @@ export const updateLessonCheckpoint = /* GraphQL */ `
         type
         label
         instructions
+        instructionsTitle
         theme {
           type
           name
@@ -5657,6 +5662,7 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
         type
         label
         instructions
+        instructionsTitle
         theme {
           type
           name
@@ -5805,6 +5811,7 @@ export const createLessonKeyWord = /* GraphQL */ `
         type
         label
         instructions
+        instructionsTitle
         theme {
           type
           name
@@ -5933,6 +5940,7 @@ export const updateLessonKeyWord = /* GraphQL */ `
         type
         label
         instructions
+        instructionsTitle
         theme {
           type
           name
@@ -6061,6 +6069,7 @@ export const deleteLessonKeyWord = /* GraphQL */ `
         type
         label
         instructions
+        instructionsTitle
         theme {
           type
           name
@@ -6308,6 +6317,7 @@ export const createSyllabusLesson = /* GraphQL */ `
         type
         label
         instructions
+        instructionsTitle
         theme {
           type
           name
@@ -6493,6 +6503,7 @@ export const updateSyllabusLesson = /* GraphQL */ `
         type
         label
         instructions
+        instructionsTitle
         theme {
           type
           name
@@ -6678,6 +6689,7 @@ export const deleteSyllabusLesson = /* GraphQL */ `
         type
         label
         instructions
+        instructionsTitle
         theme {
           type
           name
@@ -6870,6 +6882,7 @@ export const createStudentData = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language
@@ -7047,6 +7060,7 @@ export const updateStudentData = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language
@@ -7224,6 +7238,7 @@ export const deleteStudentData = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language
@@ -7436,6 +7451,7 @@ export const createQuestionData = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language
@@ -7550,6 +7566,7 @@ export const updateQuestionData = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language
@@ -7664,6 +7681,7 @@ export const deleteQuestionData = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language
@@ -8152,6 +8170,7 @@ export const createFeedback = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language
@@ -8229,6 +8248,7 @@ export const updateFeedback = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language
@@ -8306,6 +8326,7 @@ export const deleteFeedback = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language
@@ -8692,6 +8713,7 @@ export const createPersonLocation = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language
@@ -8874,6 +8896,7 @@ export const updatePersonLocation = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language
@@ -9056,6 +9079,7 @@ export const deletePersonLocation = /* GraphQL */ `
           type
           label
           instructions
+          instructionsTitle
           grades
           artistID
           language

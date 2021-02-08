@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react'
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { IoMdAddCircleOutline, IoMdRemoveCircleOutline } from 'react-icons/io';
+import { IoIosKeypad, IoMdAddCircleOutline, IoMdRemoveCircleOutline } from 'react-icons/io';
+import { RiArrowRightLine } from 'react-icons/ri';
 
-import Modal from '../../../../Atoms/Modal';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import TextArea from '../../../../Atoms/Form/TextArea';
-import CheckBox from '../../../../Atoms/Form/CheckBox';
-import Selector from '../../../../Atoms/Form/Selector';
+import Buttons from '../../../../../Atoms/Buttons';
+import FormInput from '../../../../../Atoms/Form/FormInput';
+import TextArea from '../../../../../Atoms/Form/TextArea';
+import CheckBox from '../../../../../Atoms/Form/CheckBox';
+import Selector from '../../../../../Atoms/Form/Selector';
 
-interface AddQuestionModalProps {
-  closeAction: () => void
-  saveAction: () => void
-  setActiveStep: (step: string) => void
+interface AddNewQuestionProps {
+  changeStep: (step: string) => void
+
 }
-
 interface InitialState {
   question: string
   notes: string
@@ -29,9 +27,9 @@ interface InputValue {
   value: string
 }
 
-const AddQuestionModal = (props: AddQuestionModalProps) => {
+const AddNewQuestion = (props: AddNewQuestionProps) => {
+  const { changeStep } = props;
 
-  const { closeAction, saveAction, setActiveStep } = props;
   const initialState = {
     question: '',
     notes: '',
@@ -68,48 +66,79 @@ const AddQuestionModal = (props: AddQuestionModalProps) => {
 
   const { question, notes, label, type, language } = questionData;
 
+
   return (
-    <Modal showHeader={true} title="ADD QUESTION" showHeaderBorder={true} showFooter={false}
-      closeAction={closeAction}
-    >
-      <div className="">
-        <a className="text-sm text-indigo-600 px-6 cursor-pointer" onClick={() => setActiveStep('Previously Used Questions')}>*Click here to add Question, directly from previously created questions.</a>
-        <div className="grid grid-cols-2 min-w-256 py-4">
-          <div className="px-6">
-            <TextArea value={""} rows={3} id='question' onChange={onInputChange} name='question' label="Question" isRequired />
-          </div>
-          <div className="px-6">
-            <TextArea value={""} rows={3} id='notes' onChange={onInputChange} name='notes' label="Notes" />
-          </div>
-        </div>
+    <Fragment>
+      <div className="px-4 py-5 border-b border-gray-200 sm:px-6 flex items-center">
+        <span className="w-6 h-6 flex items-center mr-4" onClick={() => console.log('')}>
+          <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
+            <IoIosKeypad />
+          </IconContext.Provider>
+        </span>
 
-        <div className="grid grid-cols-2 min-w-256 py-4">
-          <div className="px-6">
-            <FormInput value={""} id='Label' onChange={onInputChange} name='label' label="Question Label" isRequired />
-          </div>
+        {/* Breadcrums */}
+        <h4 className="text-base leading-6 font-medium text-gray-900 flex items-center">
+          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>Assessment Builder</span>
+          <span className="w-6 h-6 flex items-center mx-4">
+            <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
+              <RiArrowRightLine />
+            </IconContext.Provider>
+          </span>
+          <span className="font-normal text-gray-600 w-auto flex-shrink-0">Checkpoints</span>
+          <span className="w-6 h-6 flex items-center mx-4">
+            <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
+              <RiArrowRightLine />
+            </IconContext.Provider>
+          </span>
+          <span className="font-normal text-gray-600 w-auto flex-shrink-0">Add New Question</span>
+        </h4>
+      </div>
 
-          <div className="px-6">
+      {/* Component body */}
+      <div className="p-4">
+        <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+          <div>
+            {/* <TextArea value={""} rows={3} id='question' onChange={onInputChange} name='question' label="Question" isRequired /> */}
+            <FormInput value={""} id='question' onChange={onInputChange} name='question' label="Question" isRequired />
+          </div>
+          <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
               Select Language
             </label>
             <Selector selectedItem={""} placeholder="Language" list={languageList} onChange={(val, name, id) => onSelectOption(val, name, id, 'language')} />
           </div>
+          {/* <div>
+            <TextArea value={""} rows={3} id='notes' onChange={onInputChange} name='notes' label="Notes" />
+          </div> */}
         </div>
 
-        <div className="grid grid-cols-2 min-w-256 py-4">
-          <div className="px-6">
+        {/* <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+          <div>
+            <FormInput value={""} id='Label' onChange={onInputChange} name='label' label="Question Label" isRequired />
+          </div>
+
+          <div>
+            <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+              Select Language
+            </label>
+            <Selector selectedItem={""} placeholder="Language" list={languageList} onChange={(val, name, id) => onSelectOption(val, name, id, 'language')} />
+          </div>
+        </div> */}
+
+        <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+          <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
               Select Type
             </label>
             <Selector selectedItem={type.name} placeholder="Type" list={typeList} onChange={(val, name, id) => onSelectOption(val, name, id, 'type')} />
           </div>
-          <div className="px-6 flex items-center">
+          <div className=" flex items-center">
             <CheckBox value={true} onChange={() => console.log("onChange")} name='isRequired' label="Make this question required" />
           </div>
         </div>
 
         {(type.id === '3' || type.id === '4') && (<div className="p-6">
-          <div className="p-6 border-gray-400 border">
+          <div className="p-6 border-gray-400 border border-dashed">
             <p className="text-m font-medium leading-5 text-gray-700 mb-1">Add Options: </p>
 
             <div className="flex w-9/10 mx-auto mt-4">
@@ -179,18 +208,17 @@ const AddQuestionModal = (props: AddQuestionModalProps) => {
         </div>)}
 
         <div className="flex mt-8 justify-center px-6 pb-4">
-          <div className="">
+          {/* <div className="">
             <Buttons btnClass="py-1 px-2 text-xs ml-4" label="Next Question" onClick={saveAction} Icon={IoMdAddCircleOutline} />
-          </div>
-          <div className="flex justify-end">
-            <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={closeAction} transparent />
-            <Buttons btnClass="py-1 px-8 text-xs ml-2" label="Save" onClick={saveAction} />
+          </div> */}
+          <div className="flex justify-center my-6">
+            <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={() => changeStep('AddNewCheckPoint')} transparent />
+            <Buttons btnClass="py-1 px-8 text-xs ml-2" label="Save" onClick={() => console.log('')} />
           </div>
         </div>
       </div>
-    </Modal>
-
+    </Fragment>
   )
 }
 
-export default AddQuestionModal
+export default AddNewQuestion;
