@@ -39,7 +39,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
 
   useEffect(() => {
     const listClassStudents = async () => {
-      const standardUserID = '1fae4475-a915-4160-8a5e-7f7c04998e55';
+      const standardUserID = state.user.id;
 
       try {
         const classesFetch: any = await API.graphql(

@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { getAsset } from '../../../assets';
+import useDictionary from '../../../customHooks/dictionary';
 const ComponentLoading = () => {
-  const { clientKey } = useContext(GlobalContext);
+  const { appDict } = useDictionary();
+  const { clientKey, userLanguage } = useContext(GlobalContext);
   return (
     <div className='min-h-screen h-screen w-full text-gray-200 font-open font-light flex flex-col justify-center items-center'>
       <div className='relative w-full mb-4 pb-4 flex flex-col justify-center items-center rounded-lg'>
@@ -15,7 +17,7 @@ const ComponentLoading = () => {
         </div>
         <div
           className={`w-64 h-16 p-8 text-lg text-center text-blue-100 flex flex-col justify-center items-center font-light bg-darker-gray  shadow-xl rounded-b-lg`}>
-          <p>Give us one second, this section is loading... </p>
+          <p>{appDict[userLanguage].LOADING} </p>
         </div>
       </div>
     </div>

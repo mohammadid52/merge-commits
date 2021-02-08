@@ -68,7 +68,7 @@ const MainRouter: React.FC = () => {
             onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
             role: userInfo.role,
             image: userInfo.image,
-            location: userInfo.location.items
+            location: userInfo?.location?.items
           }
         });
       } else {

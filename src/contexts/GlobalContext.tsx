@@ -81,6 +81,7 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
   const theme = standardTheme;
   const globalStateAccess = state;
   const userLanguage = state.user.language || 'EN';
+  const uLang = userLanguage;
   const clientKey = getClientKey();
 
   useEffect(() => {
@@ -103,7 +104,6 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
       lessonProgress: '',
     };
     try {
-      // console.log(updatedLocation)
       const newPersonLocationMutation: any = await API.graphql(
         graphqlOperation(mutations.updatePersonLocation, { input: updatedLocation })
       );
@@ -120,6 +120,7 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
         dispatch,
         globalStateAccess,
         userLanguage,
+        uLang,
         clientKey,
       }}>
       {children}
