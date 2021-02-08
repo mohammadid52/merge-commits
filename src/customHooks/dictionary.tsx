@@ -18,10 +18,12 @@ const BreadcrumsTitles: any = {
     'EN': {
         HOME: 'HOME',
         PROFILE: 'PROFILE',
+        PEOPLE: 'PEOPLE'
     },
     'ES': {
         HOME: 'CASA',
         PROFILE: 'PERFIL',
+        PEOPLE: 'PERSONAS'
     }
 }
 
@@ -122,6 +124,33 @@ const dashboardProfileDict: any = {
     }
 }
 
+const manageusersDict: any = {
+    'EN': {
+        TITLE: 'USER MANAGEMENT',
+        SUBTITLE: "People's List",
+        TABLE: {
+            NAME: 'Name',
+            ROLE: 'Role',
+            INST: 'Institution',
+            STATUS: 'Status',
+            ACTIONS: 'Actions'
+        },
+        ADD_NEW: 'Add New Person'
+    },
+    'ES': {
+        TITLE: 'GESTIÓN DE USUARIOS',
+        SUBTITLE: "Lista de personas",
+        TABLE: {
+            NAME: 'Nombre',
+            ROLE: 'Papel',
+            INST: 'Institución',
+            STATUS: 'Estado',
+            ACTIONS: 'Comportamiento'
+        },
+        ADD_NEW: 'Agregar persona'
+    }
+};
+
 const sideBarLinksDict: any = {
     'EN': {
         REGISTRATION: 'Registration',
@@ -142,10 +171,12 @@ const sideBarLinksDict: any = {
 }
 const appDict: any = {
     'EN': {
-        LOG_OUT: 'Log Out'
+        LOG_OUT: 'Log Out',
+        LOADING: 'Give us one second, this section is loading...'
     },
     'ES': {
-        LOG_OUT: 'Cerrar sesión'
+        LOG_OUT: 'Cerrar sesión',
+        LOADING: 'esta sección se está cargando...'
     }
 }
 
@@ -206,7 +237,7 @@ const editClassDict: any = {
             ACTIONS: 'comportamiento'
         }
     }
-} 
+}
 
 function useDictionary() {
     async function lookUp(word: string) {
@@ -225,11 +256,16 @@ function useDictionary() {
             },
         })
         const data = await res.json();
-        console.log('dict_res', data)
-
+        // console.log('dict_res', data)
     }
 
+    function paginationPage(lang:string, page: number, total: number) {
+        if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`
+        if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`
+        return ''
+    }
     return {
+        paginationPage,
         BUTTONS,
         BreadcrumsTitles,
         appDict,
@@ -237,7 +273,8 @@ function useDictionary() {
         dashboardProfileDict,
         staffBuilderDict,
         editClassDict,
-        spBuilderDict
+        spBuilderDict,
+        manageusersDict
     }
 }
 
