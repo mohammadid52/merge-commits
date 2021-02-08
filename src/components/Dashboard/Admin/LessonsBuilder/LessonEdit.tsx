@@ -1,9 +1,8 @@
 import React, { useState, useEffect, Fragment } from 'react'
-import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp } from 'react-icons/io5';
 import { FaRegEye, FaQuestionCircle } from 'react-icons/fa';
-import { RiQuestionAnswerLine } from 'react-icons/ri';
 
 import * as customQueries from '../../../../customGraphql/customQueries';
 
@@ -15,16 +14,23 @@ import WizardScroller from '../../../Atoms/WizardScroller';
 
 import GeneralInformation from './StepActionComponent/GeneralInformation';
 import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
-import QuestionBuilder from './StepActionComponent/QuestionBuilder';
 import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
 import PreviewForm from './StepActionComponent/PreviewForm';
-import PreviousQuestions from './StepActionComponent/PreviousQuestions';
 import { InitialData } from './LessonBuilder';
 import { languageList } from '../../../../utilities/staticData'
 
 interface LessonEditProps {
   designersList: any[]
 }
+export interface InstructionInitialState {
+  introductionTitle: string,
+  instructionsTitle: string,
+  summaryTitle: string,
+  introduction: string,
+  instructions: string,
+  summary: string
+}
+
 const LessonEdit = (props: LessonEditProps) => {
   const { designersList } = props;
   const history = useHistory();
@@ -46,11 +52,19 @@ const LessonEdit = (props: LessonEditProps) => {
     objectiveHtml: '<p></p>',
     languages: [{ id: '1', name: "English", value: 'EN' }]
   }
-
+  const instructionInitialState = {
+    introductionTitle: '',
+    instructionsTitle: '',
+    summaryTitle: '',
+    introduction: '',
+    instructions: '',
+    summary: ''
+  }
   const [formData, setFormData] = useState<InitialData>(initialData);
+  const [instructionsData, setInstructionsData] = useState<InstructionInitialState>(instructionInitialState);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
-  const [activeStep, setActiveStep] = useState('Builder');
-  // const [activeStep, setActiveStep] = useState('General Information');
+  // const [activeStep, setActiveStep] = useState('Instructions');
+  const [activeStep, setActiveStep] = useState('General Information');
   const [loading, setLoading] = useState(false);
 
   const breadCrumsList = [
@@ -66,7 +80,6 @@ const LessonEdit = (props: LessonEditProps) => {
     { name: "General Information", icon: <IoCardSharp /> },
     { name: "Instructions", icon: <IoDocumentText /> },
     { name: "Builder", icon: <FaQuestionCircle /> },
-    // { name: "Previously Used Questions", icon: <RiQuestionAnswerLine /> },
     { name: "Preview Details", icon: <FaRegEye /> }
   ];
   const lessonScrollerStep = [
@@ -97,6 +110,14 @@ const LessonEdit = (props: LessonEditProps) => {
         objectiveHtml: savedData.objectives ? savedData.objectives[0] : '<p></p>',
         languages: savedData.language ? languageList.filter((item: any) => savedData.language.includes(item.value)) : []
       });
+      setInstructionsData({
+        introductionTitle: savedData.introductionTitle,
+        instructionsTitle: savedData.instructionsTitle,
+        summaryTitle: savedData.summaryTitle,
+        introduction: savedData.introduction,
+        instructions: savedData.instructions,
+        summary: savedData.summary
+      })
       const designers = designersList.filter((item: any) => savedData?.designers?.includes(item.id));
       setSelectedDesigners(designers)
       setLoading(false);
@@ -132,16 +153,20 @@ const LessonEdit = (props: LessonEditProps) => {
           lessonId={lessonId || assessmentId}
         />;
       case 'Instructions':
-        return <AssessmentInstuctions />;
+        return <AssessmentInstuctions lessonId={lessonId || assessmentId} savedInstructions={instructionsData} updateParentState={(obj) => setInstructionsData(obj)} />;
       case 'Builder':
         return <CheckpointBuilder />;
-      // return <QuestionBuilder setActiveStep={setActiveStep} />;
-      // case 'Previously Used Questions':
-      //   return <PreviousQuestions />;
       case 'Preview Details':
         return <PreviewForm />;
       // default:
-      // return <GeneralInformation />;
+      //   return <GeneralInformation
+      //     formData={formData}
+      //     setFormData={setFormData}
+      //     designersList={designersList}
+      //     selectedDesigners={selectedDesigners}
+      //     setSelectedDesigners={setSelectedDesigners}
+      //     lessonId={lessonId || assessmentId}
+      //   />;
     }
   }
 
@@ -176,7 +201,6 @@ const LessonEdit = (props: LessonEditProps) => {
                   </Fragment>
                 )}
             </div>
-
           </div>
         </div>
       </PageWrapper>

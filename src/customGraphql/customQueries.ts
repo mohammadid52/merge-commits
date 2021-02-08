@@ -1809,33 +1809,16 @@ export const getLesson = /* GraphQL */ `
       id
       title
       type
-      label
-      grades
-      artistID
       language
       purpose
       designers
       objectives
-      doFirstID
-      warmUpId
-      coreLessonId
-      activityId
-      assessmentID
-      assessment {
-        id
-        title
-        type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
+      introductionTitle
+      instructionsTitle
+      summaryTitle
+      introduction
+      instructions
+      summary
     }
   }
 `;

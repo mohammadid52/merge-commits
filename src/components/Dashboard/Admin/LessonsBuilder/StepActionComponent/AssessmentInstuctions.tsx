@@ -1,33 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import API, { graphqlOperation } from '@aws-amplify/api'
 
-import { languageList } from '../../../../../utilities/staticData'
+import * as customMutations from '../../../../../customGraphql/customMutations';
 
-import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
+import { InstructionInitialState } from '../LessonEdit';
 
-interface InitialData {
-  instructionTitle: string,
-  instructionDesc: string,
-  openingMessage: string,
-  closingMessage: string
+interface AssessmentInstuctionsProps {
+  savedInstructions?: InstructionInitialState
+  lessonId: string
+  updateParentState?: (obj: InstructionInitialState) => void
 }
 
-const AssessmentInstuctions = () => {
 
-  const initialData = {
-    instructionTitle: '',
-    instructionDesc: '',
-    openingMessage: '',
-    closingMessage: ''
-  }
+const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
 
-  const [formData, setFormData] = useState<InitialData>(initialData);
+  const { savedInstructions, lessonId, updateParentState } = props;
+
+
+  const [formData, setFormData] = useState<InstructionInitialState>(savedInstructions);
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({
-    name: '',
-    type: '',
     message: '',
     isError: true
   });
@@ -37,10 +32,11 @@ const AssessmentInstuctions = () => {
       ...formData,
       [e.target.name]: e.target.value
     })
-    if (validation.name) {
+    if (validation.message) {
       setValidation({
         ...validation,
-        name: ''
+        message: '',
+        isError: true
       })
     }
   }
@@ -50,12 +46,53 @@ const AssessmentInstuctions = () => {
       ...formData,
       [fieldHtml]: html
     })
+    if (validation.message) {
+      setValidation({
+        ...validation,
+        message: '',
+        isError: true
+      })
+    }
   }
 
-  const updateInstructions = () => {
-
+  const updateInstructions = async () => {
+    try {
+      setLoading(true)
+      const input = {
+        id: lessonId,
+        introductionTitle: formData.introductionTitle,
+        instructionsTitle: formData.instructionsTitle,
+        summaryTitle: formData.summaryTitle,
+        introduction: formData.introduction,
+        instructions: [formData.instructions],
+        summary: formData.summary,
+      }
+      const results: any = await API.graphql(
+        graphqlOperation(customMutations.updateLesson, { input: input })
+      );
+      const lessonsData = results?.data?.updateLesson;
+      setValidation({
+        ...validation,
+        message: 'Instructions details saved.',
+        isError: false
+      });
+      updateParentState(formData);
+      setLoading(false)
+    } catch{
+      setValidation({
+        ...validation,
+        message: 'Error while updating instructions, please try again later.',
+        isError: true
+      })
+      setLoading(false)
+    }
   }
-  const { instructionTitle, instructionDesc, openingMessage, closingMessage } = formData;
+
+  useEffect(() => {
+    setFormData({ ...savedInstructions })
+  }, [savedInstructions])
+
+  const { introductionTitle, instructionsTitle, summaryTitle, introduction, instructions, summary } = formData;
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
@@ -67,10 +104,16 @@ const AssessmentInstuctions = () => {
 
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
-            <FormInput value={instructionTitle} id='instructionTitle' onChange={onInputChange} name='instructionTitle' label="Instruction title" />
+            <FormInput value={introductionTitle} id='introductionTitle' onChange={onInputChange} name='introductionTitle' label="Introduction title" />
           </div>
           <div>
-            <FormInput value={instructionDesc} id='instructionDesc' onChange={onInputChange} name='instructionDesc' label="Instruction description" />
+            <FormInput value={instructionsTitle} id='instructionsTitle' onChange={onInputChange} name='instructionsTitle' label="Instruction title" />
+          </div>
+        </div>
+
+        <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+          <div>
+            <FormInput value={summaryTitle} id='summaryTitle' onChange={onInputChange} name='summaryTitle' label="Closing Message title" />
           </div>
         </div>
 
@@ -79,14 +122,22 @@ const AssessmentInstuctions = () => {
             <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
               Introductory Message
             </label>
-            <RichTextEditor initialValue={openingMessage} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'openingMessage')} />
+            <RichTextEditor initialValue={introduction} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'introduction')} />
           </div>
+          <div>
+            <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
+              Instructions
+            </label>
+            <RichTextEditor initialValue={instructions ? instructions[0] : '<p><p>'} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'instructions')} />
+          </div>
+        </div>
 
+        <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
               Closing Message
-        </label>
-            <RichTextEditor initialValue={closingMessage} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'closingMessage')} />
+            </label>
+            <RichTextEditor initialValue={summary} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'summary')} />
           </div>
         </div>
 

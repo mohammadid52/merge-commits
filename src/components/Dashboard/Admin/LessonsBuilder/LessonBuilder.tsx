@@ -1,11 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react'
-import API, { graphqlOperation } from '@aws-amplify/api'
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp } from 'react-icons/io5';
 import { FaRegEye, FaQuestionCircle } from 'react-icons/fa';
-import { RiQuestionAnswerLine } from 'react-icons/ri';
-
-import * as customQueries from '../../../../customGraphql/customQueries';
 
 import Buttons from '../../../Atoms/Buttons';
 import BreadCrums from '../../../Atoms/BreadCrums';
@@ -15,10 +11,9 @@ import WizardScroller from '../../../Atoms/WizardScroller';
 
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm';
 import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
-import QuestionBuilder from './StepActionComponent/QuestionBuilder';
 import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
 import PreviewForm from './StepActionComponent/PreviewForm';
-import PreviousQuestions from './StepActionComponent/PreviousQuestions';
+import { InstructionInitialState } from './LessonEdit';
 
 export interface InitialData {
   name: string
@@ -58,12 +53,19 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     objectiveHtml: '<p></p>',
     languages: [{ id: '1', name: "English", value: 'EN' }]
   }
+  const instructionInitialState = {
+    introductionTitle: '',
+    instructionsTitle: '',
+    summaryTitle: '',
+    introduction: '',
+    instructions: '',
+    summary: ''
+  }
 
   const assessmentScrollerStep = [
     { name: "General Information", icon: <IoCardSharp /> },
     { name: "Instructions", icon: <IoDocumentText />, isDisabled: true },
     { name: "Builder", icon: <FaQuestionCircle />, isDisabled: true },
-    // { name: "Previously Used Questions", icon: <RiQuestionAnswerLine />, isDisabled: true },
     { name: "Preview Details", icon: <FaRegEye />, isDisabled: true }
   ];
   const lessonScrollerStep = [
@@ -72,8 +74,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   ];
 
   const [formData, setFormData] = useState<InitialData>(initialData);
+  const [instructionData, setInstructionData] = useState<InstructionInitialState>(instructionInitialState)
   const [selectedDesigners, setSelectedDesigners] = useState([]);
-
+  const [lessonId, setLessonId] = useState('');
   const [activeStep, setActiveStep] = useState('General Information');
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
 
@@ -98,12 +101,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           postLessonCreation={postLessonCreation}
         />;
       case 'Instructions':
-        return <AssessmentInstuctions />;
+        return <AssessmentInstuctions lessonId={lessonId} savedInstructions={instructionData} updateParentState={(obj) => onInstructionSaved(obj)} />;
       case 'Builder':
         return <CheckpointBuilder />;
-      // return <QuestionBuilder setActiveStep={setActiveStep} />;
-      // case 'Previously Used Questions':
-      //   return <PreviousQuestions />;
       case 'Preview Details':
         return <PreviewForm />;
       // default:
@@ -119,15 +119,21 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   }
 
-  const postLessonCreation = () => {
+  const postLessonCreation = (lessonId: string) => {
     const currentSteps = [...lessonBuilderSteps];
     const updatedState = currentSteps.map(item => ({ ...item, isDisabled: false }));
     setLessonBuilderSteps(updatedState);
+    setLessonId(lessonId);
     if (formData.type?.id === '1') {
       setActiveStep('Preview Details');
     } else {
       setActiveStep('Instructions');
     }
+  }
+
+  const onInstructionSaved = (obj: InstructionInitialState) => {
+    setInstructionData(obj);
+    setActiveStep('Builder')
   }
 
   useEffect(() => {

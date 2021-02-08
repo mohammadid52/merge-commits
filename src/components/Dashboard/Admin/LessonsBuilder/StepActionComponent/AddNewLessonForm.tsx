@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api'
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 
 import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as mutations from '../../../../../graphql/mutations';
 
 import Selector from '../../../../Atoms/Form/Selector';
 import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
@@ -21,7 +20,7 @@ interface AddNewLessonFormProps {
   changeLessonType: (type: string) => void
   setFormData: (data: InitialData) => void
   setSelectedDesigners: (designer: InputValueObject[]) => void,
-  postLessonCreation: () => void
+  postLessonCreation: (lessonId: string) => void
 }
 
 const AddNewLessonForm = (props: AddNewLessonFormProps) => {
@@ -159,25 +158,15 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           warmUpId: "0",
           coreLessonId: "0",
           activityId: "0",
-          assessmentID: formData.type?.value === 'lesson' ? "0" : uuidv4(),
+          assessmentID: "0",
+          // assessmentID: formData.type?.value === 'lesson' ? "0" : uuidv4(),
         }
         const results: any = await API.graphql(
           graphqlOperation(customMutations.createLesson, { input: input })
         );
         const lessonsData = results?.data?.createLesson;
-        if (formData.type?.value !== 'lesson') {
-          const assessmentInput = {
-            id: lessonsData.assessmentID,
-            title: formData.name,
-            type: formData.type?.value,
-          }
-          const results: any = await API.graphql(
-            graphqlOperation(mutations.createAssessment, { input: assessmentInput })
-          );
-          const assessmentData = results?.data?.createAssessment;
-        }
         setLoading(false);
-        postLessonCreation();
+        postLessonCreation(lessonsData?.id);
         if (lessonsData) {
           setValidation({
             name: '',

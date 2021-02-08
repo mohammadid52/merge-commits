@@ -641,15 +641,19 @@ export const updateLesson = /* GraphQL */ `
       id
       title
       type
+      instructions
+      instructionsTitle
       language
+      summary
       purpose
       designers
       objectives
-      assessmentID
+      summaryTitle
+      introductionTitle
+      introduction
     }
   }
 `;
-
 
 export const updateAssessment = /* GraphQL */ `
   mutation UpdateAssessment(
