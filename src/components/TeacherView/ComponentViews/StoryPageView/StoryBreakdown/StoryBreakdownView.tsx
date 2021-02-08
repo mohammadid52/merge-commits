@@ -5,6 +5,7 @@ import Banner from './Banner';
 import StoryOutput from './StoryOuput';
 import { studentObject } from '../../../../../state/LessonControlState';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
+import { getPageLabel } from '../../../../getPageLabel';
 
 interface props {
   fullscreen: boolean;
@@ -21,7 +22,7 @@ const SelfDisplay = (props: props) => {
 
   let displayStudentData = state.studentViewing.live
     ? state.studentViewing.studentInfo.currentLocation
-      ? state.studentViewing.studentInfo.currentLocation === 'warmup/breakdown'
+      ? getPageLabel(state.studentViewing.studentInfo.currentLocation, state.pages) === 'warmup/breakdown'
       : state.studentViewing.studentInfo.lessonProgress === 'warmup/breakdown'
     : false;
 

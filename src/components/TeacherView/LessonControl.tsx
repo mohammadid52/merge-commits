@@ -54,18 +54,28 @@ const LessonControl = () => {
     }
   }, [location.pathname]);
 
+  const getPageLabel = (locIndex: string) => {
+    return state.pages[parseInt(locIndex)].stage;
+  }
+
   useEffect(() => {
     if (state.studentViewing.live) {
-      let hasCurrentLocation = typeof state.studentViewing.studentInfo.currentLocation === 'string';
+      const hasCurrentLocation = typeof state.studentViewing.studentInfo.currentLocation === 'string'
+      const currentLocationDefined = typeof state.pages[state.studentViewing.studentInfo.currentLocation]?.stage !== 'undefined';
+      const lessonProgressDefined = typeof state.pages[state.studentViewing.studentInfo.lessonProgress]?.stage !== 'undefined';
 
-      console.log(typeof state.studentViewing.studentInfo.currentLocation, hasCurrentLocation);
+        console.log('TEACHER SHOULD CHANGE PAGE NOW...');
 
       if (hasCurrentLocation) {
-        history.push(`${match.url}/${state.studentViewing.studentInfo.currentLocation}`);
+        if(currentLocationDefined){
+          history.push(`${match.url}/${state.pages[state.studentViewing.studentInfo.currentLocation]?.stage}`);
+        }
       }
 
       if (!hasCurrentLocation) {
-        history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`);
+        if(lessonProgressDefined) {
+          history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`);
+        }
       }
     }
   }, [state.studentViewing]);
@@ -112,16 +122,17 @@ const LessonControl = () => {
       status: state.open ? 'Active' : 'Inactive',
       complete: state.complete ? state.complete : false,
       viewing:
-        state.studentViewing.studentInfo && state.studentViewing.studentInfo.studentAuthID
-          ? state.studentViewing.studentInfo.studentAuthID
+        state.studentViewing.studentInfo && state.studentViewing.studentInfo.personAuthID
+          ? state.studentViewing.studentInfo.personAuthID
           : null,
       displayData: state.displayData,
       lessonPlan: state.pages,
-      startDate: '',
-      endDate: '',
+      startDate: '1989-11-02',
+      endDate: '2077-11-02',
     };
 
     try {
+      console.log('attempt handle update syl lesson: ', updatedSyllabusLessonData)
       const updatedSyllabusLesson = await API.graphql(
         graphqlOperation(customMutations.updateSyllabusLesson, {
           input: updatedSyllabusLessonData,
@@ -129,7 +140,7 @@ const LessonControl = () => {
       );
       dispatch({ type: 'SAVED_CHANGES' });
     } catch (err) {
-      console.error(err);
+      console.error('handleUpdateSyllabusLesson - ', err);
     }
   };
 
@@ -155,7 +166,7 @@ const LessonControl = () => {
           ? state.studentViewing.studentInfo.activityData
           : null,
       };
-      // console.log(displayData);
+      // console.log('display data: ', displayData);
       dispatch({
         type: 'SET_SHARE_MODE',
         payload: state.studentViewing.studentInfo.currentLocation
@@ -226,7 +237,7 @@ const LessonControl = () => {
 
   const handleOpen = async () => {
     await handleOpenSyllabusLesson();
-    dispatch({ type: 'START_CLASSROOM' });
+    dispatch({ type: 'START_CLASSROOM', payload: '1989-11-02z' });
     setOpen(true);
   };
 

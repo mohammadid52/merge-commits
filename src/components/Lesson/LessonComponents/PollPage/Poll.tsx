@@ -8,7 +8,7 @@ import { useCookies } from 'react-cookie';
 
 const PollPage = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const inputs = state.data.lesson.warmUp.inputs;
   const match = useRouteMatch();
 
@@ -29,12 +29,12 @@ const PollPage = () => {
    *
    */
   useEffect(() => {
-    if (cookies[`lesson-${state.classroomID}`].poll) {
+    if (cookies[`lesson-${state.syllabusLessonID}`].poll) {
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
         payload: {
           name: 'poll',
-          content: cookies[`lesson-${state.classroomID}`].poll,
+          content: cookies[`lesson-${state.syllabusLessonID}`].poll,
         },
       });
     } else {
@@ -58,7 +58,7 @@ const PollPage = () => {
         },
       });
 
-      setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], poll: initialObject });
+      setCookie(`lesson-${state.syllabusLessonID}`, { ...cookies[`lesson-${state.syllabusLessonID}`], poll: initialObject });
     }
   }, []);
 

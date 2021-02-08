@@ -18,13 +18,13 @@ export interface StoryState {
 
 const Story = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const inputs = state.data.lesson.warmUp.inputs;
   // const video = state.data.lesson.warmUp.instructions.link
   // const [ openPopup, setOpenPopup ] = useState(false)
 
   useEffect(() => {
-    if (!cookies[`lesson-${state.classroomID}`].story && !state.componentState.story) {
+    if (!cookies[`lesson-${state.syllabusLessonID}`].story && !state.componentState.story) {
       let tempObj: StoryState = {
         story: [''],
       };
@@ -54,15 +54,15 @@ const Story = () => {
         },
       });
 
-      setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], story: tempObj });
+      setCookie(`lesson-${state.syllabusLessonID}`, { ...cookies[`lesson-${state.syllabusLessonID}`], story: tempObj });
     }
 
-    if (cookies[`lesson-${state.classroomID}`].story) {
+    if (cookies[`lesson-${state.syllabusLessonID}`].story) {
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
         payload: {
           name: 'story',
-          content: cookies[`lesson-${state.classroomID}`].story,
+          content: cookies[`lesson-${state.syllabusLessonID}`].story,
         },
       });
     }

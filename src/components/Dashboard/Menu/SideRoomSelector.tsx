@@ -39,7 +39,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
 
   useEffect(() => {
     const listClassStudents = async () => {
-      const standardUserID = '19944846-faa9-4f94-a2b1-434902d4aa49';
+      const standardUserID = state.user.id;
 
       try {
         const classesFetch: any = await API.graphql(
@@ -201,7 +201,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
        */
       if (getActiveSyllabus.length > 0) {
         try {
-          console.log('attempting fetch of listSyllabusLessons :: ', getActiveSyllabus[0].id)
+          // console.log('attempting fetch of listSyllabusLessons :: ', getActiveSyllabus[0].id)
           const syllabusLessonFetch: any = API.graphql(
             graphqlOperation(customQueries.listSyllabusLessons, {
               syllabusID: getActiveSyllabus[0].id,

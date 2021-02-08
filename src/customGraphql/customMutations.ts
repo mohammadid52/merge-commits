@@ -48,7 +48,7 @@ export const createStudentData = /* GraphQL */ `
       currentLocation
       status
       saveType
-      classroomID
+      syllabusLessonID
       studentID
       studentAuthID
       student {
@@ -144,7 +144,7 @@ export const updateStudentData = /* GraphQL */ `
       currentLocation
       status
       saveType
-      classroomID
+      syllabusLessonID
       studentID
       studentAuthID
       student {
@@ -323,7 +323,7 @@ export const createQuestionData = /* GraphQL */ `
   mutation CreateQuestionData($input: CreateQuestionDataInput!, $condition: ModelQuestionDataConditionInput) {
     createQuestionData(input: $input, condition: $condition) {
       id
-      classroomID
+      syllabusLessonID
       email
       authID
       componentType
@@ -354,7 +354,7 @@ export const createFeedback = /* GraphQL */ `
   mutation CreateFeedback($input: CreateFeedbackInput!, $condition: ModelFeedbackConditionInput) {
     createFeedback(input: $input, condition: $condition) {
       id
-      classroomID
+      syllabusLessonID
       liked
       comment
       createdAt
@@ -609,10 +609,7 @@ export const updateSyllabusLesson = /* GraphQL */ `
 `;
 
 export const createRoomMsgs = /* GraphQL */ `
-  mutation CreateRoomMsgs(
-    $input: CreateRoomMsgsInput!
-    $condition: ModelRoomMsgsConditionInput
-  ) {
+  mutation CreateRoomMsgs($input: CreateRoomMsgsInput!, $condition: ModelRoomMsgsConditionInput) {
     createRoomMsgs(input: $input, condition: $condition) {
       id
       body
@@ -629,28 +626,75 @@ export const createRoomMsgs = /* GraphQL */ `
     }
   }
 `;
+export const createLesson = /* GraphQL */ `
+mutation CreateLesson(
+  $input: CreateLessonInput!
+    $condition: ModelLessonConditionInput
+) {
+  createLesson(input: $input, condition: $condition) {
+    id
+    title
+    type
+    label
+    artistID
+    language
+    purpose
+    designers
+    objectives
+    doFirstID
+    warmUpId
+    coreLessonId
+    activityId
+    assessmentID
+  }
+}
+`;
 
 export const updateRoomMsgs = /* GraphQL */ `
-  mutation UpdateRoomMsgs(
-    $input: UpdateRoomMsgsInput!
-    $condition: ModelRoomMsgsConditionInput
-  ) {
-    updateRoomMsgs(input: $input, condition: $condition) {
-      id
-      body
-      createdAt
-      updatedAt
-    }
+mutation UpdateRoomMsgs($input: UpdateRoomMsgsInput!, $condition: ModelRoomMsgsConditionInput) {
+  updateRoomMsgs(input: $input, condition: $condition) {
+    id
+    body
+    createdAt
+    updatedAt
   }
+}
+`;
+export const updateLesson = /* GraphQL */ `
+mutation UpdateLesson(
+  $input: UpdateLessonInput!
+    $condition: ModelLessonConditionInput
+) {
+  updateLesson(input: $input, condition: $condition) {
+    id
+    title
+    type
+    language
+    purpose
+    designers
+    objectives
+    assessmentID
+  }
+}
 `;
 
 export const deleteRoomMsgs = /* GraphQL */ `
-  mutation DeleteRoomMsgs(
-    $input: DeleteRoomMsgsInput!
-    $condition: ModelRoomMsgsConditionInput
-  ) {
-    deleteRoomMsgs(input: $input, condition: $condition) {
-      id
-    }
+mutation DeleteRoomMsgs($input: DeleteRoomMsgsInput!, $condition: ModelRoomMsgsConditionInput) {
+  deleteRoomMsgs(input: $input, condition: $condition) {
+    id
   }
+}
+`;
+
+export const updateAssessment = /* GraphQL */ `
+mutation UpdateAssessment(
+  $input: UpdateAssessmentInput!
+    $condition: ModelAssessmentConditionInput
+) {
+  updateAssessment(input: $input, condition: $condition) {
+    id
+    title
+    type
+  }
+}
 `;

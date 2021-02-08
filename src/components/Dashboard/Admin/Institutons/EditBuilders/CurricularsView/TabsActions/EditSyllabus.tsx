@@ -106,7 +106,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
 
       setSelectedLessonsList(lessonsList)
-      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `le_${curricularId}_sy_${syllabusId}`, sequence: list } }));
+      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `lesson_${syllabusId}`, sequence: list } }));
       seqItem = seqItem.data.updateCSequences;
       console.log('seq updated');
     }
@@ -268,12 +268,12 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
       if (!lessonsIds.length) {
         setLessonsIds([newLesson.id])
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `le_${curricularId}_sy_${syllabusId}`, sequence: [newLesson.id] } }));
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `lesson_${syllabusId}`, sequence: [newLesson.id] } }));
         seqItem = seqItem.data.createCSequences
         console.log('seqItem', seqItem)
       } else {
         setLessonsIds([...lessonsIds, newLesson.id])
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `le_${curricularId}_sy_${syllabusId}`, sequence: [...lessonsIds, newLesson.id] } }));
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `lesson_${syllabusId}`, sequence: [...lessonsIds, newLesson.id] } }));
         seqItem = seqItem.data.updateCSequences
         console.log('seqItem', seqItem)
       }
@@ -338,7 +338,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           setDesignerIds([...savedData?.designers])
         }
         setSavedLessonsList([...savedData.lessons?.items]);
-      } catch(err) {
+      } catch (err) {
         console.log('err', err)
         setMessages({
           show: true,
@@ -401,11 +401,15 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
   const fetchLessonsSequence = async () => {
     let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
-      { id: `le_${curricularId}_sy_${syllabusId}` }))
+      { id: `lesson_${syllabusId}` }))
     item = item?.data.getCSequences?.sequence || []
     if (item) {
       setLessonsIds(item)
     }
+  }
+  const createLessonSequence = async (lessonsID: string[]) => {
+    let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `lesson_${syllabusId}`, sequence: lessonsID } }));
+    setLessonsIds(lessonsID)
   }
 
   useEffect(() => {
@@ -420,6 +424,13 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       updateListAndDropdown();
     }
   }, [savedLessonsList, allLessonsList])
+
+  useEffect(() => {
+    if (savedLessonsList?.length && !lessonsIds.length) {
+      const currentLessonsID = savedLessonsList.map(item => item.id);
+      createLessonSequence(currentLessonsID);
+    }
+  }, [savedLessonsList])
 
   useEffect(() => {
     if (designersList && designersList.length > 0) {

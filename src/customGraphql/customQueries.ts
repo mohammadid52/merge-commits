@@ -1162,14 +1162,14 @@ export const listAllSyllabusLessons = /* GraphQL */ `
 `;
 
 export const getStudentData = /* GraphQL */ `
-  query GetStudentData($classroomID: ID!, $studentID: String!) {
-    getStudentData(classroomID: $classroomID, studentID: $studentID) {
+  query GetStudentData($syllabusLessonID: ID!, $studentID: String!) {
+    getStudentData(syllabusLessonID: $syllabusLessonID, studentID: $studentID) {
       id
       lessonProgress
       currentLocation
       status
       saveType
-      classroomID
+      syllabusLessonID
       studentID
       studentAuthID
       warmupData {
@@ -1217,6 +1217,18 @@ export const getStudentData = /* GraphQL */ `
       }
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const getPersonLocation = /* GraphQL */ `
+  query GetPersonLocation($personAuthID: String!, $personEmail: String!) {
+    getPersonLocation(personAuthID: $personAuthID, personEmail: $personEmail) {
+      currentLocation
+      id
+      lessonProgress
+      personAuthID
+      personEmail
     }
   }
 `;
@@ -1838,6 +1850,43 @@ export const getCurriculum = /* GraphQL */ `
       }
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const getLesson = /* GraphQL */ `
+  query GetLesson($id: ID!) {
+    getLesson(id: $id) {
+      id
+      title
+      type
+      label
+      grades
+      artistID
+      language
+      purpose
+      designers
+      objectives
+      doFirstID
+      warmUpId
+      coreLessonId
+      activityId
+      assessmentID
+      assessment {
+        id
+        title
+        type
+        openingMessage
+        closingMessage
+        questions {
+          nextToken
+        }
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
     }
   }
 `;

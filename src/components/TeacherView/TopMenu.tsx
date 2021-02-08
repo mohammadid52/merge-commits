@@ -51,6 +51,14 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
 
   const { state, theme, dispatch } = useContext(LessonControlContext);
 
+  const studentsOnline = () => {
+    if(state.roster) {
+      return state.roster.length;
+    } else {
+      return 0;
+    }
+  }
+
   return (
     <>
       {/* LABELS */}
@@ -87,7 +95,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
         {/* LEFT */}
         <div className="h-full  w-4/10 min-w-100 max-w-160 border-r border-white bg-light-gray bg-opacity-10 pl-2 flex flex-row justify-between ">
           <div className="w-full flex flex-col my-auto">
-            <p className="text-xs">Students Online: {state.roster.length}</p>
+            <p className="text-xs">Students Online: {studentsOnline()}</p>
             <p className="text-xs">Topic: Identity</p>
             <p className="text-xs">Start Date: {formatPattern(state.startDate, '-','aaaa-bb-cc','bb-cc-aaaa')}</p>
             <p className="text-xs">Estimated Time: 1 hr 15 mins</p>

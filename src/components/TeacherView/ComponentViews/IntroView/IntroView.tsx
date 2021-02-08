@@ -8,6 +8,7 @@ import InstructionsBlock from './InstructionsBlock';
 import Keyword from './Keyword';
 import Connect from './Connect';
 import DoFirst from './DoFirst';
+import { getPageLabel } from '../../../getPageLabel';
 
 interface props {
   fullscreen: boolean;
@@ -21,7 +22,7 @@ const IntroView = (props: props) => {
 
   let displayStudentData = state.studentViewing.live
     ? state.studentViewing.studentInfo.currentLocation
-      ? state.studentViewing.studentInfo.currentLocation === 'intro'
+      ? getPageLabel(state.studentViewing.studentInfo.currentLocation, state.pages) === 'intro'
       : state.studentViewing.studentInfo.lessonProgress === 'intro'
     : false;
 

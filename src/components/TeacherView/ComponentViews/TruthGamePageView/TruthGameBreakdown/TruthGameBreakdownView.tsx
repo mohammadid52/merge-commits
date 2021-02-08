@@ -4,6 +4,7 @@ import ReflectionQuestions from './ReflectionQuestions';
 import TruthGameOutput from './TruthGameOutput';
 import Modules from './Modules';
 import Banner from './Banner';
+import { getPageLabel } from '../../../../getPageLabel';
 
 interface props {
   fullscreen: boolean;
@@ -23,7 +24,7 @@ const TruthGameBreakdown = (props: props) => {
 
   let displayStudentData = state.studentViewing.live
     ? state.studentViewing.studentInfo.currentLocation
-      ? state.studentViewing.studentInfo.currentLocation === 'warmup/breakdown'
+      ? getPageLabel(state.studentViewing.studentInfo.currentLocation, state.pages) === 'warmup/breakdown'
       : state.studentViewing.studentInfo.lessonProgress === 'warmup/breakdown'
     : false;
 

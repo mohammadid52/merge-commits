@@ -5,7 +5,7 @@ export type LessonActions =
   | {
       type: 'SET_INITIAL_STATE';
       payload: {
-        classroomID: string;
+        syllabusLessonID: string;
         data?: any;
         pages: PagesType;
         displayData?: any;
@@ -141,7 +141,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
       return {
         ...state,
         status: 'loaded',
-        classroomID: action.payload.classroomID,
+        syllabusLessonID: action.payload.syllabusLessonID,
         data: action.payload.data,
         pages: action.payload.pages,
         word_bank: action.payload.word_bank,
@@ -249,8 +249,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
         },
       };
     case 'UPDATE_LESSON_PLAN':
-      // console.log('this', action.payload, state.studentAuthID, action.payload.viewing === state.studentAuthID);
-
+      console.log('UPDATE_LESSON_PLAN: pages >> ', action.payload.pages)
       return {
         ...state,
         status: 'loaded',

@@ -1,28 +1,34 @@
 import React, { useState } from 'react';
+import API, { graphqlOperation } from '@aws-amplify/api'
 
-import { InitialData } from '../LessonBuilder';
+import { InitialData, InputValueObject } from '../LessonBuilder';
 import { languageList } from '../../../../../utilities/staticData'
+
+import * as customMutations from '../../../../../customGraphql/customMutations';
 
 import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
 
-const GeneralInformation = () => {
+interface GeneralInformationProps {
+  formData: InitialData
+  designersList: InputValueObject[],
+  selectedDesigners: InputValueObject[],
+  setFormData: (data: InitialData) => void
+  setSelectedDesigners: (designer: InputValueObject[]) => void,
+  lessonId: string
+}
+const GeneralInformation = (props: GeneralInformationProps) => {
+  const {
+    formData,
+    designersList,
+    selectedDesigners,
+    setSelectedDesigners,
+    setFormData,
+    lessonId
+  } = props;
 
-  const initialData = {
-    name: '',
-    type: { id: '', name: '', value: '' },
-    purpose: '',
-    purposeHtml: '<p></p>',
-    objective: '',
-    objectiveHtml: '<p></p>',
-    languages: [{ id: '1', name: "English", value: 'EN' }]
-  }
-
-  const [formData, setFormData] = useState<InitialData>(initialData);
-  const [designersList, setDesignersList] = useState([]);
-  const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({
     name: '',
@@ -77,11 +83,69 @@ const GeneralInformation = () => {
     setSelectedDesigners(updatedList)
   }
 
-  const updateFormInformation = () => {
-
+  const validateForm = () => {
+    let isValid = true
+    const msgs = validation;
+    if (!formData.name?.trim().length) {
+      isValid = false;
+      msgs.name = 'Lessson name is required';
+    } else {
+      msgs.name = ''
+    }
+    // TODO: Add validation for repeating lesson names.
+    setValidation({ ...msgs });
+    return isValid;
   }
 
-  const { name, type, languages, purpose, purposeHtml, objective, objectiveHtml } = formData;
+  const updateFormInformation = async () => {
+    const isValid = validateForm();
+    if (isValid) {
+      try {
+        setLoading(true)
+        const input = {
+          id: lessonId,
+          title: formData.name,
+          purpose: formData.purposeHtml,
+          objectives: [formData.objectiveHtml],
+          designers: selectedDesigners.map(item => item.id),
+        }
+        const results: any = await API.graphql(
+          graphqlOperation(customMutations.updateLesson, { input: input })
+        );
+        const lessonsData = results?.data?.updateLesson;
+        if (lessonsData.type !== 'lesson') {
+          const assessmentInput = {
+            id: lessonsData.assessmentID,
+            title: formData.name,
+            type: formData.type?.value,
+          }
+          const results: any = await API.graphql(
+            graphqlOperation(customMutations.updateAssessment, { input: assessmentInput })
+          );
+          const assessmentData = results?.data?.updateAssessment;
+        }
+        setLoading(false);
+        if (lessonsData) {
+          setValidation({
+            name: '',
+            type: '',
+            message: 'Lesson details updated successfully.',
+            isError: false
+          })
+        }
+      } catch{
+        setValidation({
+          name: '',
+          type: '',
+          message: 'Unable to update Lesson details, Please try again later.',
+          isError: true
+        });
+        setLoading(false)
+      }
+    }
+  }
+
+  const { name, type, languages, purposeHtml, objectiveHtml } = formData;
 
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
@@ -104,7 +168,8 @@ const GeneralInformation = () => {
             <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
           </div>
         </div>
-{/* 
+
+        {/* 
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
 
           <div>
@@ -119,7 +184,7 @@ const GeneralInformation = () => {
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
               Purpose
-          </label>
+            </label>
             <RichTextEditor initialValue={purposeHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'purposeHtml', 'purpose')} />
           </div>
           <div>

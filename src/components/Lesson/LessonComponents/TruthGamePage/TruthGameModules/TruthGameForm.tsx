@@ -15,7 +15,7 @@ export type TruthInputState = Array<TruthInput>;
 const TruthGameForm = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
   const gameInputs = state.data.lesson.warmUp.inputs.truthGameInputs;
-  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
 
   const [truthGameInput, setTruthGameInput] = useState(
     state.componentState.truthGame && state.componentState.truthGame.truthGameArray
@@ -24,9 +24,9 @@ const TruthGameForm = () => {
   );
 
   useEffect(() => {
-    if (cookies[`lesson-${state.classroomID}`]?.truthGame) {
+    if (cookies[`lesson-${state.syllabusLessonID}`]?.truthGame) {
       setTruthGameInput(() => {
-        return cookies[`lesson-${state.classroomID}`].truthGame.truthGameArray;
+        return cookies[`lesson-${state.syllabusLessonID}`].truthGame.truthGameArray;
       });
     }
   }, []);
@@ -42,7 +42,7 @@ const TruthGameForm = () => {
         },
       });
 
-      setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`] });
+      setCookie(`lesson-${state.syllabusLessonID}`, { ...cookies[`lesson-${state.syllabusLessonID}`] });
     }
 
     // console.log('TruthGameForm: ', 'new truth game dispatch...');

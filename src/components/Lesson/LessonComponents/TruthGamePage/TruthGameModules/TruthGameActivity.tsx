@@ -18,13 +18,13 @@ export type TruthInputState = Array<TruthInput>;
 
 const TruthGame = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const inputs = state.data.lesson.warmUp.inputs;
   // const video = state.data.lesson.warmUp.instructions.link;
   // const [openPopup, setOpenPopup] = useState(false);
 
   useEffect(() => {
-    if (!cookies[`lesson-${state.classroomID}`].truthGame && !state.componentState.truthGame) {
+    if (!cookies[`lesson-${state.syllabusLessonID}`].truthGame && !state.componentState.truthGame) {
       let tempObj: {
         truthGameArray: TruthInputState;
         additional?: Array<{ name: string; text: string | [] }>;
@@ -68,15 +68,15 @@ const TruthGame = () => {
         },
       });
 
-      setCookie(`lesson-${state.classroomID}`, { ...cookies[`lesson-${state.classroomID}`], truthGame: tempObj });
+      setCookie(`lesson-${state.syllabusLessonID}`, { ...cookies[`lesson-${state.syllabusLessonID}`], truthGame: tempObj });
     }
 
-    if (cookies[`lesson-${state.classroomID}`].truthGame) {
+    if (cookies[`lesson-${state.syllabusLessonID}`].truthGame) {
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
         payload: {
           name: 'truthGame',
-          content: cookies[`lesson-${state.classroomID}`].truthGame,
+          content: cookies[`lesson-${state.syllabusLessonID}`].truthGame,
         },
       });
     }

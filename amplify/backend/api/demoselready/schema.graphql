@@ -171,15 +171,6 @@ type Curriculum
   designers: [String]
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
 }
-
-type CSequences
-@key(fields: ["id"])
-@model
-{
-  id: ID!
-  sequence: [String]
-}
-
 type Topic
 @model 
 @key(fields: ["id"])
@@ -192,6 +183,14 @@ type Topic
   learningObjective: LearningObjective @connection(fields: ["learningObjectiveID"])
   name: String!
   description: String
+}
+
+type CSequences
+@key(fields: ["id"])
+@model
+{
+  id: ID!
+  sequence: [String]
 }
 
 type LearningObjective
@@ -496,9 +495,16 @@ type Checkpoint @model {
   label: String!
   title: String
   subtitle: String
+  stage: String
   type: String!
-  instructions: String!
+  instructionsTitle: String
+  instructions: String
   questions: [CheckpointQuestions]! @connection(keyName: "byCheckpoint", fields: ["id"])
+  purpose: String
+  objectives: String
+  designers: [String]
+  language: String
+  estTime: Int
 }
 
 type CheckpointQuestions
@@ -644,14 +650,6 @@ type RoomMsgs
   sender: Person @connection(fields: ["senderEmail", "senderAuthID"])
 }
 
-type AppClients
-@model
-@key(fields: ["key"]) {
-  id: ID!
-  key: String!
-  name: String! 
-}
-
 type Course @model {
   id: ID!
   name: String!
@@ -666,6 +664,7 @@ type Lesson @model @key(fields: ["id"]) {
   type: String!
   label: String
   instructions: [String]
+  instructionsTitle: String
   theme: Theme
   grades: [Int]
   artistID: ID!
@@ -691,8 +690,17 @@ type Lesson @model @key(fields: ["id"]) {
   assessment: Assessment @connection(fields: ["assessmentID"])
   filters: [String]
   coverImage: String
+  summaryTitle: String
+  introductionTitle: String
+  introduction: String
+  connectionTitle: String
+  lessonPlan: [LessonComponents]
 }
-
+type LessonComponents {
+  type: String
+  LessonComponentID: ID!
+  sequence: Int!
+}
 type LessonCheckpoint @model(queries: null) @key(name: "byLesson", fields: ["lessonID", "checkpointID"]) {
   id: ID!
   lessonID: ID!
@@ -709,7 +717,6 @@ type LessonKeyWord @model(queries: null) @key(name: "wordsByLesson", fields: ["l
   word: Word @connection(fields: ["wordID"])
   lesson: Lesson @connection(fields: ["lessonID"])
 }
-
 
 type Syllabus
 @model
@@ -804,17 +811,38 @@ type Feedback @model {
   comment: String
   syllabusLesson: SyllabusLesson @connection(fields: ["syllabusLessonID"])
 }
-type ThemeTemplate @model {
+
+type Intro @model {
   id: ID!
+  title: String
+  label: String
+  stage: String
   type: String
-  name: String!
-  summary: [String!]!
-  summaryLabel: String!
-  quote: [Quote]
-  keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
+  connectionTitle: String
   connection: String
-  images: [String!]!
-  additionalContent: AdditionalContent
+  keywordsTitle: String
+  keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
+  questionsTitle: String
+  questions: [DoFirstQuestion!]! @connection(keyName: "byDoFirst", fields: ["id"])
+  language: String
+  estTime: Int 
+  artistID: ID!
+  artist: Artist @connection(fields: ["artistID"])
+}
+
+type Outro @model {
+  id: ID!
+  title: String
+  subtitle: String
+  stage: String
+  type: String
+  closingTitle: String
+  closingText: String
+  questionsTitle: String
+  questions: [DoFirstQuestion!]! @connection(keyName: "byDoFirst", fields: ["id"])
+  additionalInfo: String
+  language: String
+  estTime: Int
 }
 
 type Theme {

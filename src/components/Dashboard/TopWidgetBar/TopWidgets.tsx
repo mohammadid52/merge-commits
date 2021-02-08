@@ -49,16 +49,17 @@ export const QuoteWidget = () => {
   useEffect(() => {
     let quoteTimer = setInterval(() => {
       const randomNumber = Math.floor(Math.random() * quotes.length);
-      setTimeout(() => {
+      const opaczero = setTimeout(() => {
         setTWClass('opacity-0');
       }, 0);
-      setTimeout(() => {
+      const setQuote = setTimeout(() => {
         setWidgetQuote(quotes[randomNumber]);
       }, 1000);
-      setTimeout(() => {
+      const opachunnit = setTimeout(() => {
         setTWClass('opacity-100');
       }, 1200);
     }, 6000);
+    return () => clearInterval(quoteTimer);
   }, []);
 
   return (

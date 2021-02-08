@@ -20,6 +20,8 @@ interface RosterRowProps {
   handleQuitShare: () => void;
   handleQuitViewing: () => void;
   isSameStudentShared: boolean;
+  viewedStudent: string;
+  setViewedStudent: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
@@ -40,19 +42,20 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     handleQuitShare,
     handleQuitViewing,
     isSameStudentShared,
+    viewedStudent,
+    setViewedStudent
   } = props;
   const { state, dispatch } = useContext(LessonControlContext);
-  const location = useLocation();
-  const [quickShare, setQuickShare] = useState<boolean>(false);
   const [shareable, setShareable] = useState(true);
 
   useEffect(() => {
-    let result = /.+\/(breakdown)\/*.*/.test(lessonProgress);
+    const indexToPage = state.pages[currentLocation].stage;
+    let result = /.+\/(breakdown)\/*.*/.test(indexToPage);
 
     if (currentLocation) {
-      result = /.+\/(breakdown)\/*.*/.test(currentLocation);
+      result = /.+\/(breakdown)\/*.*/.test(indexToPage);
     } else if (lessonProgress) {
-      result = /.+\/(breakdown)\/*.*/.test(lessonProgress);
+      result = /.+\/(breakdown)\/*.*/.test(indexToPage);
     }
 
     if (result) {
@@ -62,7 +65,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     if (!result) {
       setShareable(false);
     }
-  }, [lessonProgress]);
+  }, [currentLocation]);
 
   const studentIsShared = () => {
     if (/* state.studentViewing.live &&  */ state.sharing) {
@@ -74,7 +77,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
 
   const studentIsViewed = () => {
     if (state.studentViewing.live) {
-      return state.studentViewing.studentInfo.id === id;
+      return viewedStudent === id;
     }
   };
 
@@ -86,6 +89,11 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
       handleSelect(e);
     }
   };
+
+  const getPageLabel = (locationIndex: string) => {
+    return state.pages[parseInt(locationIndex)].stage;
+  };
+
 
   return (
     /**
@@ -103,30 +111,12 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
                     ${number % 2 === 0 ? 'bg-white bg-opacity-20' : null} 
                     ${studentIsViewed() ? 'bg-blueberry bg-opacity-30' : null}
                     `}>
-      {/* STUDENT STATUS */}
-
-      {/* <div id={`${id}`} className={`w-1/10 text-center text-xs flex`}>
-        {studentIsViewed() ? (
-          <div onClick={handleQuitViewing}>
-            <IconContext.Provider value={{ color: '#FFFFFF', size: '100%' }}>
-              <AiOutlineEye style={{ pointerEvents: 'none' }} />
-            </IconContext.Provider>
-          </div>
-        ) : (
-          <div>
-            <IconContext.Provider value={{ color: '#9098a9', size: '100%' }}>
-              <AiOutlineEyeInvisible style={{ pointerEvents: 'none' }} />
-            </IconContext.Provider>
-          </div>
-        )}
-      </div> */}
-
       {/* STUDENT NAME */}
 
       <div id={`${id}`} className="w-8/10 flex flex-row hover:font-semibold cursor-pointer">
         <div
           id={`${id}`}
-          className={`w-1/2 overflow-hidden mx-2 flex items-center hover:font-semibold cursor-pointer text-sm whitespace-pre`}>
+          className={`w-1/2 overflow-hidden mx-2 flex items-center hover:font-semibold cursor-pointer text-sm whitespace-pre truncate ...`}>
           {preferredName ? preferredName : firstName} {lastName}
         </div>
 
@@ -135,19 +125,11 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
         <div
           id={`${id}`}
           className={`w-1/2 mx-2 flex justify-center items-center hover:font-semibold cursor-pointer overflow-hidden text-sm text-left`}>
-          <ProgressSwitch label={currentLocation ? currentLocation : lessonProgress} id={id} />
+          <ProgressSwitch label={getPageLabel(currentLocation)} id={id} />
         </div>
       </div>
 
       {/* STUDENT ROLEY */}
-
-      {/* <div
-        id={`${id}`}
-        className={`w-1.5/10 mx-2 ${
-          role !== 'ST' ? 'text-center text-white bg-dark-gray rounded-lg' : 'font-semibold'
-        } text-center `}>
-        {role === 'ST' ? 'Student' : role}
-      </div> */}
 
       {/* MR SHARE BUTTON */}
 
