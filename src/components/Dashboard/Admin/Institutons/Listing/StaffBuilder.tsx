@@ -106,6 +106,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           member.name = `${member.staffMember.firstName || ''} ${member.staffMember.lastName || ''}`
           member.image = member.staffMember.image ? getImageFromS3(member?.staffMember?.image) : null
           member.role = member.staffMember.role
+          member.email = member.staffMember.email
           return member
         }
       })
@@ -135,6 +136,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         addedMember.name = `${addedMember.staffMember.firstName || ''} ${addedMember.staffMember.lastName || ''}`
         addedMember.image = addedMember.staffMember.image ? getImageFromS3(addedMember?.staffMember?.image) : null;
         addedMember.role = addedMember.staffMember.role;
+        addedMember.email = addedMember.staffMember.email;
         setActiveStaffList([...activeStaffList, addedMember]);
         // remove the selected user
         setNewMember({ name: '', id: '', value: '', avatar: '' });
@@ -233,7 +235,14 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                   </div>
                                 )}
                             </div>
-                            <div className="ml-4">{item.name}</div>
+                            <div className="ml-2">
+                              <div className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900">
+                                {item.name}
+                              </div>
+                              <div className="text-sm leading-5 text-gray-500">
+                                {item.email}
+                              </div>
+                            </div>
                           </div>
 
                           <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center">{item.role ? getStaffRole(item.role) : ''}</div>
