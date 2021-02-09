@@ -5007,7 +5007,6 @@ export const onCreateLesson = /* GraphQL */ `
           id
           lessonID
           checkpointID
-          position
           createdAt
           updatedAt
         }
@@ -5212,7 +5211,6 @@ export const onUpdateLesson = /* GraphQL */ `
           id
           lessonID
           checkpointID
-          position
           createdAt
           updatedAt
         }
@@ -5417,7 +5415,6 @@ export const onDeleteLesson = /* GraphQL */ `
           id
           lessonID
           checkpointID
-          position
           createdAt
           updatedAt
         }
@@ -5562,7 +5559,6 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
       id
       lessonID
       checkpointID
-      position
       lesson {
         id
         title
@@ -5702,7 +5698,6 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
       id
       lessonID
       checkpointID
-      position
       lesson {
         id
         title
@@ -5842,7 +5837,6 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
       id
       lessonID
       checkpointID
-      position
       lesson {
         id
         title

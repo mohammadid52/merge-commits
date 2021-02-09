@@ -2442,7 +2442,6 @@ export const getLesson = /* GraphQL */ `
           id
           lessonID
           checkpointID
-          position
           createdAt
           updatedAt
         }
