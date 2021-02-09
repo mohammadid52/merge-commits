@@ -55,7 +55,7 @@ const ClassRoster = (props: classRosterProps) => {
       const syllabusLessonStudents: any = await API.graphql(
         graphqlOperation(queries.listPersonLocations, {
           filter: { syllabusLessonID: { contains: state.syllabusLessonID } },
-        }),
+        })
       );
       const studentList = syllabusLessonStudents.data.listPersonLocations.items;
       setStudents(studentList);
@@ -63,21 +63,29 @@ const ClassRoster = (props: classRosterProps) => {
       subscription = subscribeToPersonLocations();
     } catch (e) {
       console.error('getSyllabusLessonstudents - ', e);
-    } finally {
-      // if (state.roster.length > 0) {
-      //   clearInterval(refreshRoster);
-      //   console.log('interval for roster refresh cleared...');
-      // }
-      // if (state.roster.length === 0) {
-      //   setRefreshRoster(
-      //     setInterval(() => {
-      //       console.log('interval for roster refresh set at 5s...');
-      //       getSyllabusLessonStudents();
-      //     }, 5000),
-      //   );
-      // }
     }
   };
+
+  // Set refresh timer on mount
+  useEffect(() => {
+    if (state.roster.length === 0) {
+      console.log('interval for roster refresh set at 5s...');
+      setRefreshRoster(
+        setInterval(() => {
+          console.log('update roster...')
+          getSyllabusLessonStudents();
+        }, 5000)
+      );
+    }
+  }, []);
+
+  // Clear refresh timer if there are students
+  useEffect(() => {
+    if (state.roster.length > 0) {
+      clearInterval(refreshRoster);
+      console.log('interval for roster refresh cleared...');
+    }
+  }, [state.roster]);
 
   useEffect(() => {
     if (state.syllabusLessonID && state.roster.length === 0) {
@@ -88,7 +96,7 @@ const ClassRoster = (props: classRosterProps) => {
   const subscribeToPersonLocations = () => {
     const syllabusLessonID = state.syllabusLessonID;
     // @ts-ignore
-    const personLocationSubscription = API.graphql(graphqlOperation(subscriptions.onChangePersonLocation, { syllabusLessonID: syllabusLessonID }) ).subscribe({
+    const personLocationSubscription = API.graphql( graphqlOperation(subscriptions.onChangePersonLocation, { syllabusLessonID: syllabusLessonID }) ).subscribe({
       next: (locationData: any) => {
         const updatedStudent = locationData.value.data.onChangePersonLocation;
         setUpdatedStudent(updatedStudent);
@@ -97,7 +105,7 @@ const ClassRoster = (props: classRosterProps) => {
     return personLocationSubscription;
   };
 
-  useEffect( ()=>{
+  useEffect(() => {
     const updateStudentRoster = (newStudent: any) => {
       const studentExists =
         students.filter((student: any) => student.personAuthID === newStudent.personAuthID).length > 0;
@@ -111,7 +119,7 @@ const ClassRoster = (props: classRosterProps) => {
           }
         });
         // console.log('exist roster: ', existRoster);
-        setStudents(existRoster)
+        setStudents(existRoster);
         dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: existRoster } });
       } else {
         const newRoster = [...students, newStudent];
@@ -120,63 +128,10 @@ const ClassRoster = (props: classRosterProps) => {
         dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: newRoster } });
       }
     };
-    if(students.length > 0){
-      updateStudentRoster(updatedStudent)
+    if (students.length > 0) {
+      updateStudentRoster(updatedStudent);
     }
-  },[updatedStudent])
-
-  /**
-   * UPDATE THIS SORT FUNCTION TO SORT CONTEXT
-   * @param column - which column you want sorted
-   */
-  // const sortStudentBy = (column: string) => {
-  //   const thereAreStudents = state.roster && state.roster.length > 0;
-  //
-  //   if (thereAreStudents) {
-  //     if (column === SortByEnum.FNAME) {
-  //       return state.roster.sort((a: any, b: any) => {
-  //         if (lc(a.student[column]) < lc(b.student[column])) {
-  //           return -1;
-  //         } else {
-  //           return 1;
-  //         }
-  //       });
-  //     }
-  //
-  //     if (column === SortByEnum.PAGE) {
-  //       return state.roster.sort((a: any, b: any) => {
-  //         if (lc(a.lessonProgress) < lc(b.lessonProgress)) {
-  //           return -1;
-  //         } else {
-  //           return 1;
-  //         }
-  //       });
-  //     }
-  //
-  //     if (column === SortByEnum.ACTION) {
-  //       return state.roster.sort((a: any, b: any) => {
-  //         if (a.lessonProgress.includes('breakdown') && b.lessonProgress.includes('breakdown') === false) {
-  //           return -1;
-  //         } else {
-  //           return 1;
-  //         }
-  //       });
-  //     }
-  //   }
-  // };
-
-  // const studentRoster = () => {
-  //   switch (sortBy) {
-  //     case 'firstName':
-  //       return sortStudentBy(SortByEnum.FNAME);
-  //     case 'lessonProgress':
-  //       return sortStudentBy(SortByEnum.PAGE);
-  //     case 'action':
-  //       return sortStudentBy(SortByEnum.ACTION);
-  //     default:
-  //       return state.roster;
-  //   }
-  // };
+  }, [updatedStudent]);
 
   const handleSelect = async (e: any) => {
     const { id } = e.target;
@@ -255,7 +210,6 @@ const ClassRoster = (props: classRosterProps) => {
                 setViewedStudent={setViewedStudent}
                 isSameStudentShared={isSameStudentShared}
               />
-
             ))
           : null}
       </div>
