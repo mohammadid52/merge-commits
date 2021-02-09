@@ -42,7 +42,7 @@ const ClassRoster = (props: classRosterProps) => {
   const { state, dispatch } = useContext(LessonControlContext);
   const [sortBy, setSortBy] = useState<string>('');
   const [students, setStudents] = useState<any[]>([]);
-  const [updatedStudent, setUpdatedStudent] = useState<any[]>([]);
+  const [updatedStudent, setUpdatedStudent] = useState<any>({});
   const [viewedStudent, setViewedStudent] = useState<string>('');
 
   const [refreshRoster, setRefreshRoster] = useState<any>();
@@ -65,27 +65,6 @@ const ClassRoster = (props: classRosterProps) => {
       console.error('getSyllabusLessonstudents - ', e);
     }
   };
-
-  // Set refresh timer on mount
-  useEffect(() => {
-    if (state.roster.length === 0) {
-      // console.log('interval for roster refresh set at 5s...');
-      // setRefreshRoster(
-      //   setInterval(() => {
-      //     console.log('update roster...')
-      //     getSyllabusLessonStudents();
-      //   }, 5000)
-      // );
-    }
-  }, []);
-
-  // Clear refresh timer if there are students
-  useEffect(() => {
-    // if (state.roster.length > 0) {
-    //   clearInterval(refreshRoster);
-    //   console.log('interval for roster refresh cleared...');
-    // }
-  }, [state.roster]);
 
   useEffect(() => {
     if (state.syllabusLessonID && state.roster.length === 0) {
@@ -118,18 +97,18 @@ const ClassRoster = (props: classRosterProps) => {
             return student;
           }
         });
-        // console.log('exist roster: ', existRoster);
         setStudents(existRoster);
         dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: existRoster } });
+        setUpdatedStudent({});
       } else {
         const newRoster = [...students, newStudent];
-        // console.log('new roster: ', newRoster);
         setStudents(newRoster);
         dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: newRoster } });
+        setUpdatedStudent({});
       }
     };
-    if (students.length > 0) {
-      updateStudentRoster(updatedStudent);
+    if(Object.keys(updatedStudent).length){
+      updateStudentRoster(updatedStudent)
     }
   }, [updatedStudent]);
 

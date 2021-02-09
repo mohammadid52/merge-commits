@@ -8,6 +8,9 @@ import * as queries from '../../../graphql/queries';
 
 const Anthology = () => {
   const { state } = useContext(GlobalContext);
+
+  const [studentDatas, setStudentDatas] = useState<any>();
+
   const [subSection, setSubSection] = useState<string>('LessonData');
 
   useEffect(() => {
