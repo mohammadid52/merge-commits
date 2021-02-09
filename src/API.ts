@@ -1563,13 +1563,11 @@ export type CreateLessonCheckpointInput = {
   id?: string | null,
   lessonID: string,
   checkpointID: string,
-  position: number,
 };
 
 export type ModelLessonCheckpointConditionInput = {
   lessonID?: ModelIDInput | null,
   checkpointID?: ModelIDInput | null,
-  position?: ModelIntInput | null,
   and?: Array< ModelLessonCheckpointConditionInput | null > | null,
   or?: Array< ModelLessonCheckpointConditionInput | null > | null,
   not?: ModelLessonCheckpointConditionInput | null,
@@ -1579,7 +1577,6 @@ export type UpdateLessonCheckpointInput = {
   id: string,
   lessonID?: string | null,
   checkpointID?: string | null,
-  position?: number | null,
 };
 
 export type DeleteLessonCheckpointInput = {
@@ -8066,7 +8063,6 @@ export type CreateLessonMutation = {
         id: string,
         lessonID: string,
         checkpointID: string,
-        position: number,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -8305,7 +8301,6 @@ export type UpdateLessonMutation = {
         id: string,
         lessonID: string,
         checkpointID: string,
-        position: number,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -8544,7 +8539,6 @@ export type DeleteLessonMutation = {
         id: string,
         lessonID: string,
         checkpointID: string,
-        position: number,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -8713,7 +8707,6 @@ export type CreateLessonCheckpointMutation = {
     id: string,
     lessonID: string,
     checkpointID: string,
-    position: number,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -8871,7 +8864,6 @@ export type UpdateLessonCheckpointMutation = {
     id: string,
     lessonID: string,
     checkpointID: string,
-    position: number,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -9029,7 +9021,6 @@ export type DeleteLessonCheckpointMutation = {
     id: string,
     lessonID: string,
     checkpointID: string,
-    position: number,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -15761,7 +15752,6 @@ export type GetLessonQuery = {
         id: string,
         lessonID: string,
         checkpointID: string,
-        position: number,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -23259,7 +23249,6 @@ export type OnCreateLessonSubscription = {
         id: string,
         lessonID: string,
         checkpointID: string,
-        position: number,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -23493,7 +23482,6 @@ export type OnUpdateLessonSubscription = {
         id: string,
         lessonID: string,
         checkpointID: string,
-        position: number,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -23727,7 +23715,6 @@ export type OnDeleteLessonSubscription = {
         id: string,
         lessonID: string,
         checkpointID: string,
-        position: number,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -23891,7 +23878,6 @@ export type OnCreateLessonCheckpointSubscription = {
     id: string,
     lessonID: string,
     checkpointID: string,
-    position: number,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -24044,7 +24030,6 @@ export type OnUpdateLessonCheckpointSubscription = {
     id: string,
     lessonID: string,
     checkpointID: string,
-    position: number,
     lesson:  {
       __typename: "Lesson",
       id: string,
@@ -24197,7 +24182,6 @@ export type OnDeleteLessonCheckpointSubscription = {
     id: string,
     lessonID: string,
     checkpointID: string,
-    position: number,
     lesson:  {
       __typename: "Lesson",
       id: string,

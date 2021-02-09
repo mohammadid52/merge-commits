@@ -4,7 +4,7 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 // Iconz
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaRulerVertical, FaQuestionCircle } from 'react-icons/fa';
-import { AiOutlineSchedule, AiOutlineUsergroupAdd } from 'react-icons/ai';
+import { AiOutlineSchedule, AiOutlineUsergroupAdd, AiOutlineBook } from 'react-icons/ai';
 import useDictionary from '../../../customHooks/dictionary';
 import { IoIosPeople } from 'react-icons/io';
 import { IoBookOutline, IoSchoolOutline } from 'react-icons/io5';
@@ -12,8 +12,8 @@ import { IoBookOutline, IoSchoolOutline } from 'react-icons/io5';
 type LinkObject = {
   name: string;
   path: string;
-  title: string;
-  label: string;
+  title?: string;
+  label?: string;
 };
 
 export interface LinkProps {
@@ -67,6 +67,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               path: 'classroom',
             },
             {
+              title: 'ANTHOLOGY',
+              name: 'Anthology',
+              label: 'Anthology',
+              path: 'anthology',
+            },
+            {
               title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               label: 'Lesson Planner',
@@ -107,6 +113,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].CLASSROOM,
               label: 'Classroom',
               path: 'classroom',
+            },
+            {
+              title: 'ANTHOLOGY',
+              name: 'Anthology',
+              label: 'Anthology',
+              path: 'anthology',
             },
             {
               title: sideBarLinksDict[userLanguage].LESSON_BUILDER,
@@ -178,9 +190,9 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     if (pageUrlContains('/dashboard/manage-institutions')) {
       setCurrentPage('manage-institutions');
     }
-    // if (pageUrlContains('/dashboard/question-bank')) {
-    //   setCurrentPage('question-bank');
-    // }
+    if (pageUrlContains('/dashboard/anthology')) {
+      setCurrentPage('anthology');
+    }
     if (pageUrlContains('/dashboard/assessments')) {
       setCurrentPage('assessments');
     }
@@ -211,8 +223,8 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         return <FaRulerVertical id={url} />;
       case 'Institutions':
         return <IoSchoolOutline id={url} />;
-      // case 'Question Bank':
-      //   return <FaQuestionCircle id={url} />;
+      case 'Anthology':
+        return <AiOutlineBook id={url} />;
       default:
         return '';
     }
