@@ -281,6 +281,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
 
   return (
     <div className={`${theme.sidemenu.secondary} mr-2`}>
+      <div className={`h-12 p-1 flex items-center justify-center`}>Rooms:</div>
       {rooms.length > 0 ? (
         rooms.map((room: Room, i: number) => {
           return (

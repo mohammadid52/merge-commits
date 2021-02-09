@@ -68,6 +68,8 @@ export const standardTheme = {
   },
 };
 
+// TODO: replace dashboard.sectionTitle with << font-medium h-12 justify-center items-center text-left >>
+
 interface GlobalProps {
   children: React.ReactNode;
 }
