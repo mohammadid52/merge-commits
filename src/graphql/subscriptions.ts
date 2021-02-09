@@ -469,7 +469,6 @@ export const onChangeSyllabusLesson = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
-          sequence
         }
         createdAt
         updatedAt
@@ -5007,7 +5006,6 @@ export const onCreateLesson = /* GraphQL */ `
           id
           lessonID
           checkpointID
-          position
           createdAt
           updatedAt
         }
@@ -5139,7 +5137,6 @@ export const onCreateLesson = /* GraphQL */ `
       lessonPlan {
         type
         LessonComponentID
-        sequence
       }
       createdAt
       updatedAt
@@ -5212,7 +5209,6 @@ export const onUpdateLesson = /* GraphQL */ `
           id
           lessonID
           checkpointID
-          position
           createdAt
           updatedAt
         }
@@ -5344,7 +5340,6 @@ export const onUpdateLesson = /* GraphQL */ `
       lessonPlan {
         type
         LessonComponentID
-        sequence
       }
       createdAt
       updatedAt
@@ -5417,7 +5412,6 @@ export const onDeleteLesson = /* GraphQL */ `
           id
           lessonID
           checkpointID
-          position
           createdAt
           updatedAt
         }
@@ -5549,7 +5543,6 @@ export const onDeleteLesson = /* GraphQL */ `
       lessonPlan {
         type
         LessonComponentID
-        sequence
       }
       createdAt
       updatedAt
@@ -5562,7 +5555,6 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
       id
       lessonID
       checkpointID
-      position
       lesson {
         id
         title
@@ -5666,7 +5658,6 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
-          sequence
         }
         createdAt
         updatedAt
@@ -5702,7 +5693,6 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
       id
       lessonID
       checkpointID
-      position
       lesson {
         id
         title
@@ -5806,7 +5796,6 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
-          sequence
         }
         createdAt
         updatedAt
@@ -5842,7 +5831,6 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
       id
       lessonID
       checkpointID
-      position
       lesson {
         id
         title
@@ -5946,7 +5934,6 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
-          sequence
         }
         createdAt
         updatedAt
@@ -6092,7 +6079,6 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
-          sequence
         }
         createdAt
         updatedAt
@@ -6218,7 +6204,6 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
-          sequence
         }
         createdAt
         updatedAt
@@ -6344,7 +6329,6 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
-          sequence
         }
         createdAt
         updatedAt
@@ -6580,7 +6564,6 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
-          sequence
         }
         createdAt
         updatedAt
@@ -6763,7 +6746,6 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
-          sequence
         }
         createdAt
         updatedAt
@@ -6946,7 +6928,6 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
-          sequence
         }
         createdAt
         updatedAt
