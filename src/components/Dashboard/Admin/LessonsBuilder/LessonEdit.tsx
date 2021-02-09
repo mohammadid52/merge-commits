@@ -30,7 +30,16 @@ export interface InstructionInitialState {
   instructions: string,
   summary: string
 }
-
+export interface LessonPlansProps {
+  type: string,
+  LessonComponentID: string,
+  sequence: number,
+  stage: string
+}
+export interface SavedLessonDetailsProps {
+  lessonPlans: LessonPlansProps[] | null
+  lessonInstructions: InstructionInitialState | null
+}
 const LessonEdit = (props: LessonEditProps) => {
   const { designersList } = props;
   const history = useHistory();
@@ -61,10 +70,13 @@ const LessonEdit = (props: LessonEditProps) => {
     summary: ''
   }
   const [formData, setFormData] = useState<InitialData>(initialData);
-  const [instructionsData, setInstructionsData] = useState<InstructionInitialState>(instructionInitialState);
+  const [savedLessonDetails, setSavedLessonDetails] = useState<SavedLessonDetailsProps>({
+    lessonPlans: null,
+    lessonInstructions: instructionInitialState
+  })
   const [selectedDesigners, setSelectedDesigners] = useState([]);
-  // const [activeStep, setActiveStep] = useState('Instructions');
-  const [activeStep, setActiveStep] = useState('General Information');
+  const [activeStep, setActiveStep] = useState('Builder');
+  // const [activeStep, setActiveStep] = useState('General Information');
   const [loading, setLoading] = useState(false);
 
   const breadCrumsList = [
@@ -110,13 +122,17 @@ const LessonEdit = (props: LessonEditProps) => {
         objectiveHtml: savedData.objectives ? savedData.objectives[0] : '<p></p>',
         languages: savedData.language ? languageList.filter((item: any) => savedData.language.includes(item.value)) : []
       });
-      setInstructionsData({
-        introductionTitle: savedData.introductionTitle,
-        instructionsTitle: savedData.instructionsTitle,
-        summaryTitle: savedData.summaryTitle,
-        introduction: savedData.introduction,
-        instructions: savedData.instructions,
-        summary: savedData.summary
+      setSavedLessonDetails({
+        ...savedLessonDetails,
+        lessonPlans: savedData.lessonPlan,
+        lessonInstructions: {
+          introductionTitle: savedData.introductionTitle,
+          instructionsTitle: savedData.instructionsTitle,
+          summaryTitle: savedData.summaryTitle,
+          introduction: savedData.introduction,
+          instructions: savedData.instructions,
+          summary: savedData.summary
+        }
       })
       const designers = designersList.filter((item: any) => savedData?.designers?.includes(item.id));
       setSelectedDesigners(designers)
@@ -137,6 +153,19 @@ const LessonEdit = (props: LessonEditProps) => {
     }
   }
 
+  const updateInstructions = (obj: InstructionInitialState) => {
+    setSavedLessonDetails({
+      ...savedLessonDetails,
+      lessonInstructions: obj
+    })
+  }
+  const updateLessonPlan = (lessonPlan: LessonPlansProps[]) => {
+    setSavedLessonDetails({
+      ...savedLessonDetails,
+      lessonPlans: lessonPlan
+    })
+  }
+
   useEffect(() => {
     checkValidUrl();
   }, [])
@@ -153,9 +182,17 @@ const LessonEdit = (props: LessonEditProps) => {
           lessonId={lessonId || assessmentId}
         />;
       case 'Instructions':
-        return <AssessmentInstuctions lessonId={lessonId || assessmentId} savedInstructions={instructionsData} updateParentState={(obj) => setInstructionsData(obj)} />;
+        return <AssessmentInstuctions
+          lessonId={lessonId || assessmentId}
+          savedInstructions={savedLessonDetails?.lessonInstructions}
+          updateParentState={updateInstructions}
+        />;
       case 'Builder':
-        return <CheckpointBuilder />;
+        return <CheckpointBuilder
+          lessonPlans={savedLessonDetails.lessonPlans}
+          updateLessonPlan={updateLessonPlan}
+          designersList={designersList}
+          lessonID={lessonId || assessmentId} />;
       case 'Preview Details':
         return <PreviewForm />;
       // default:

@@ -6,13 +6,17 @@ import EditCheckPoint from './CheckPointSteps/EditCheckPoint';
 import AddNewQuestion from './CheckPointSteps/AddNewQuestion';
 import QuestionLookup from './CheckPointSteps/QuestionLookup';
 import SelectedCheckPointsList from './CheckPointSteps/SelectedCheckPointsList';
+import { LessonPlansProps } from '../LessonEdit';
 
 interface CheckpointBuilderProps {
-
+  designersList?: { id: string, name: string, value: string }[]
+  lessonID: string
+  lessonPlans?: LessonPlansProps[] | null
+  updateLessonPlan: (plan: LessonPlansProps[]) => void
 }
 
 const CheckpointBuilder = (props: CheckpointBuilderProps) => {
-  const { } = props;
+  const { designersList, lessonID, lessonPlans, updateLessonPlan } = props;
   const [builderStep, setBuilderStep] = useState('SelectedCheckPointsList');
   const [savedCheckPoints, setSavedCheckpoints] = useState([])
 
@@ -35,7 +39,9 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
       case 'SelectedCheckPointsList':
-        return <SelectedCheckPointsList changeStep={changeBuilderStep} activeCheckpoints={savedCheckPoints} />;
+        return <SelectedCheckPointsList
+          changeStep={changeBuilderStep}
+          activeCheckpoints={savedCheckPoints} />;
       case 'CheckpointLookup':
         return <CheckpointLookup
           checkpointList={dymmyCheckpointsList}
@@ -43,7 +49,13 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           onSave={saveCheckpoints}
         />;
       case 'AddNewCheckPoint':
-        return <AddNewCheckPoint changeStep={changeBuilderStep} />;
+        return <AddNewCheckPoint
+          lessonPlans={lessonPlans}
+          updateLessonPlan={updateLessonPlan}
+          changeStep={changeBuilderStep}
+          designersList={designersList}
+          lessonID={lessonID}
+        />;
       case 'EditCheckPoint':
         return <EditCheckPoint changeStep={changeBuilderStep} />;
       case 'AddNewQuestion':
@@ -51,7 +63,9 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
       case 'QuestionLookup':
         return <QuestionLookup changeStep={changeBuilderStep} />;
       default:
-        return <SelectedCheckPointsList changeStep={changeBuilderStep} activeCheckpoints={savedCheckPoints} />;
+        return <SelectedCheckPointsList
+          changeStep={changeBuilderStep}
+          activeCheckpoints={savedCheckPoints} />;
     }
   }
 

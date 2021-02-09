@@ -1,24 +1,34 @@
 import React, { Fragment, useState } from 'react'
+import API, { graphqlOperation } from '@aws-amplify/api'
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoIosKeypad } from 'react-icons/io';
 import { RiArrowRightLine } from 'react-icons/ri';
+
+import * as customMutations from '../../../../../../customGraphql/customMutations';
 
 import MultipleSelector from '../../../../../Atoms/Form/MultipleSelector';
 import Selector from '../../../../../Atoms/Form/Selector';
 import FormInput from '../../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../../Atoms/Buttons';
 import RichTextEditor from '../../../../../Atoms/RichTextEditor';
+import { LessonPlansProps } from '../../LessonEdit';
 
 interface AddNewCheckPointProps {
   changeStep: (step: string) => void
+  updateLessonPlan: (plan: LessonPlansProps[]) => void
+  designersList?: InputValueObject[]
+  lessonID: string
+  lessonPlans?: LessonPlansProps[] | null
 }
 export interface InitialData {
   title: string
   subtitle: string
+  language: InputValueObject
+  label: string,
+  instructionsTitle: string,
   purposeHtml: string,
   objectiveHtml: string,
   instructionHtml: string,
-  languages: InputValueObject[]
 }
 interface InputValueObject {
   id: string,
@@ -27,19 +37,27 @@ interface InputValueObject {
 }
 
 const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
-  const { changeStep } = props;
-  const designersList: any = [];
+  const { changeStep, updateLessonPlan, designersList, lessonID, lessonPlans } = props;
 
   const initialData = {
     title: '',
     subtitle: '',
+    label: '',
+    instructionsTitle: '',
     purposeHtml: '<p></p>',
     objectiveHtml: '<p></p>',
     instructionHtml: '<p></p>',
-    languages: [{ id: '1', name: "English", value: 'EN' }]
+    language: { id: '1', name: "English", value: 'EN' }
   }
   const [checkPointData, setCheckPointData] = useState<InitialData>(initialData);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [validation, setValidation] = useState({
+    title: '',
+    label: '',
+    message: '',
+    isError: true
+  });
 
   const selectedQuestionsList: any = [];
 
@@ -53,27 +71,30 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
       ...checkPointData,
       [e.target.name]: e.target.value
     })
-
+    if (validation.title || validation.label) {
+      setValidation({
+        ...validation,
+        title: '',
+        label: ''
+      })
+    }
   }
+
   const setEditorContent = (html: string, text: string, fieldHtml: string, field: string) => {
     setCheckPointData({
       ...checkPointData,
       [fieldHtml]: html,
-      [field]: text
     })
   }
-  const selectLanguage = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentLanguages = checkPointData.languages;
-    const selectedItem = currentLanguages.find(item => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentLanguages, { id, name, value }];
-    } else {
-      updatedList = currentLanguages.filter(item => item.id !== id);
-    }
+
+  const selectLanguage = (value: string, name: string, id: string) => {
     setCheckPointData({
       ...checkPointData,
-      languages: updatedList
+      language: {
+        id,
+        name,
+        value
+      }
     })
   }
 
@@ -89,7 +110,105 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     setSelectedDesigners(updatedList)
   }
 
-  const { title, subtitle, languages, purposeHtml, objectiveHtml, instructionHtml } = checkPointData;
+  const validateForm = () => {
+    let isValid = true
+    const msgs = validation;
+    if (!checkPointData.title?.trim().length) {
+      isValid = false;
+      msgs.title = 'Checkpoint title is required';
+    } else {
+      msgs.title = ''
+    }
+    if (!checkPointData.label?.trim().length) {
+      isValid = false;
+      msgs.label = 'Checkpoint label is required';
+    } else {
+      msgs.label = ''
+    }
+    setValidation({ ...msgs });
+    return isValid;
+  }
+
+  const saveNewCheckPoint = async () => {
+    const isValid = validateForm();
+    if (isValid) {
+      try {
+        setLoading(true)
+        const input = {
+          stage: 'checkpoint',
+          type: 'checkpoint',
+          label: checkPointData.label,
+          title: checkPointData.title,
+          subtitle: checkPointData.subtitle,
+          instructionsTitle: checkPointData.instructionsTitle,
+          instructions: checkPointData.instructionHtml,
+          purpose: checkPointData.purposeHtml,
+          objectives: checkPointData.objectiveHtml,
+          designers: selectedDesigners.map(item => item.id),
+          language: checkPointData.language.value,
+        }
+        const results: any = await API.graphql(
+          graphqlOperation(customMutations.createCheckpoint, { input: input })
+        );
+        const newCheckpoint = results?.data?.createCheckpoint;
+        if (newCheckpoint) {
+          let lessonCheckpointInput = {
+            lessonID: lessonID,
+            checkpointID: newCheckpoint.id,
+            position: 0,
+          }
+          let lessonPlansInput = !lessonPlans?.length ? [
+            {
+              type: 'checkpoint',
+              LessonComponentID: newCheckpoint.id,
+              sequence: 0,
+              stage: 'checkpoint',
+            }
+          ] : [
+              ...lessonPlans,
+              {
+                type: 'checkpoint',
+                LessonComponentID: newCheckpoint.id,
+                sequence: lessonPlans.length,
+                stage: 'checkpoint',
+              }
+            ]
+          let [lessonCheckpoint, lesson]: any = await Promise.all([
+            await API.graphql(graphqlOperation(customMutations.createLessonCheckpoint, {
+              input: lessonCheckpointInput
+            })),
+            await API.graphql(graphqlOperation(customMutations.updateLesson, {
+              input: {
+                id: lessonID,
+                lessonPlan: lessonPlansInput
+              }
+            }))
+          ]);
+          const newLessonPlans = lesson?.data?.updateLesson?.lessonPlan;
+          updateLessonPlan(newLessonPlans)
+        }
+        setValidation({
+          title: '',
+          label: '',
+          message: 'Checkpoint details has been saved.',
+          isError: true
+        });
+        setLoading(false)
+        
+        // TODO: Redirect to previous step on success.
+      } catch{
+        setValidation({
+          title: '',
+          label: '',
+          message: 'Unable to save Checkpoint details, Please try again later.',
+          isError: true
+        });
+        setLoading(false)
+      }
+    }
+  }
+
+  const { title, subtitle, language, label, instructionsTitle, purposeHtml, objectiveHtml, instructionHtml } = checkPointData;
 
   return (
     <Fragment>
@@ -119,24 +238,35 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
               <FormInput value={title} id='title' onChange={onInputChange} name='title' label="Title" isRequired />
+              {validation.title && <p className="text-red-600 text-sm">{validation.title}</p>}
             </div>
             <div>
+              <FormInput value={label} id='label' onChange={onInputChange} name='label' label="Checkpoint Label" isRequired />
+              {validation.label && <p className="text-red-600 text-sm">{validation.label}</p>}
+            </div>
+          </div>
+
+          <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+            <div>
               <FormInput value={subtitle} id='subtitle' onChange={onInputChange} name='subtitle' label="Subtitle" />
+            </div>
+            <div>
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                Select Language
+            </label>
+              <Selector selectedItem={language.name} placeholder="Language" list={languageList} onChange={selectLanguage} />
             </div>
           </div>
 
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Select Language
-            </label>
-              <Selector selectedItem={""} placeholder="Language" list={languageList} onChange={selectLanguage} />
-            </div>
-            <div>
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 Select Designers
             </label>
               <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
+            </div>
+            <div>
+              <FormInput value={instructionsTitle} id='instructionsTitle' onChange={onInputChange} name='instructionsTitle' label="Instructions Title" />
             </div>
           </div>
 
@@ -149,18 +279,18 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
             </div>
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-                Objective
+                Instructions
             </label>
-              <RichTextEditor initialValue={objectiveHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')} />
+              <RichTextEditor initialValue={instructionHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'instructionHtml', 'instruction')} />
             </div>
           </div>
 
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-                Instructions
-            </label>
-              <RichTextEditor initialValue={instructionHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'instructionHtml', 'instruction')} />
+                Objective
+              </label>
+              <RichTextEditor initialValue={objectiveHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')} />
             </div>
           </div>
         </div>
@@ -180,9 +310,12 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
             )}
         </div>
         <div className="flex mt-8 justify-center px-6 pb-4">
+          {validation.message && <div className="py-4 m-auto mt-2 text-center">
+            <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
+          </div>}
           <div className="flex justify-center my-6">
             <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={() => changeStep('SelectedCheckPointsList')} transparent />
-            <Buttons btnClass="py-1 px-8 text-xs ml-2" label="Save" onClick={() => console.log('')} />
+            <Buttons btnClass="py-1 px-8 text-xs ml-2" label={loading ? 'Saving...' : 'Save'} onClick={saveNewCheckPoint} disabled={loading ? true : false} />
           </div>
         </div>
       </div>

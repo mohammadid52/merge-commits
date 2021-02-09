@@ -679,9 +679,14 @@ mutation UpdateLesson(
       summaryTitle
       introductionTitle
       introduction
+      lessonPlan {
+        type
+        LessonComponentID
+        sequence
+        stage
+      }
     }
   }
-}
 `;
 
 export const deleteRoomMsgs = /* GraphQL */ `
@@ -703,4 +708,40 @@ mutation UpdateAssessment(
     type
   }
 }
+`;
+
+export const createCheckpoint = /* GraphQL */ `
+  mutation CreateCheckpoint(
+    $input: CreateCheckpointInput!
+    $condition: ModelCheckpointConditionInput
+  ) {
+    createCheckpoint(input: $input, condition: $condition) {
+      id
+      label
+      title
+      subtitle
+      type
+      instructionsTitle
+      instructions
+      purpose
+      objectives
+      designers
+      language
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const createLessonCheckpoint = /* GraphQL */ `
+  mutation CreateLessonCheckpoint(
+    $input: CreateLessonCheckpointInput!
+    $condition: ModelLessonCheckpointConditionInput
+  ) {
+    createLessonCheckpoint(input: $input, condition: $condition) {
+      id
+      lessonID
+      checkpointID
+    }
+  }
 `;

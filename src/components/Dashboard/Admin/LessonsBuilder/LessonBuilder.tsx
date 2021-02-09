@@ -13,7 +13,7 @@ import AddNewLessonForm from './StepActionComponent/AddNewLessonForm';
 import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
 import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
 import PreviewForm from './StepActionComponent/PreviewForm';
-import { InstructionInitialState } from './LessonEdit';
+import { InstructionInitialState, SavedLessonDetailsProps, LessonPlansProps } from './LessonEdit';
 
 export interface InitialData {
   name: string
@@ -74,12 +74,16 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   ];
 
   const [formData, setFormData] = useState<InitialData>(initialData);
-  const [instructionData, setInstructionData] = useState<InstructionInitialState>(instructionInitialState)
+  // const [instructionData, setInstructionData] = useState<InstructionInitialState>(instructionInitialState)
+  // const [savedLessonDetails,setSavedLessonDetails] = useState<>()
+  const [savedLessonDetails, setSavedLessonDetails] = useState<SavedLessonDetailsProps>({
+    lessonPlans: null,
+    lessonInstructions: instructionInitialState
+  })
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [lessonId, setLessonId] = useState('');
   const [activeStep, setActiveStep] = useState('General Information');
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
-
   const changeLessonType = (type: string) => {
     if (type === 'lesson') {
       setLessonBuilderSteps(lessonScrollerStep);
@@ -101,9 +105,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           postLessonCreation={postLessonCreation}
         />;
       case 'Instructions':
-        return <AssessmentInstuctions lessonId={lessonId} savedInstructions={instructionData} updateParentState={(obj) => onInstructionSaved(obj)} />;
+        return <AssessmentInstuctions lessonId={lessonId} savedInstructions={savedLessonDetails?.lessonInstructions} updateParentState={(obj) => onInstructionSaved(obj)} />;
       case 'Builder':
-        return <CheckpointBuilder />;
+        return <CheckpointBuilder lessonPlans={savedLessonDetails?.lessonPlans} designersList={designersList} lessonID={lessonId} updateLessonPlan={updateLessonPlan} />;
       case 'Preview Details':
         return <PreviewForm />;
       // default:
@@ -132,10 +136,19 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   }
 
   const onInstructionSaved = (obj: InstructionInitialState) => {
-    setInstructionData(obj);
+    setSavedLessonDetails({
+      ...savedLessonDetails,
+      lessonInstructions: obj
+    })
     setActiveStep('Builder')
   }
 
+  const updateLessonPlan = (lessonPlan: LessonPlansProps[]) => {
+    setSavedLessonDetails({
+      ...savedLessonDetails,
+      lessonPlans: lessonPlan
+    })
+  }
   useEffect(() => {
     if (formData.type?.id) {
       changeLessonType(formData.type?.value)

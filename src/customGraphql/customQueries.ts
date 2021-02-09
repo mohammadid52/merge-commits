@@ -1870,6 +1870,12 @@ export const getLesson = /* GraphQL */ `
       introduction
       instructions
       summary
+      lessonPlan {
+        type
+        LessonComponentID
+        sequence
+        stage
+      }
     }
   }
 `;

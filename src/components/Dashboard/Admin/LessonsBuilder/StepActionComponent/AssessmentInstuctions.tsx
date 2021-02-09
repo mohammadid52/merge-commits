@@ -128,7 +128,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
             <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
               Instructions
             </label>
-            <RichTextEditor initialValue={instructions ? instructions[0] : '<p><p>'} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'instructions')} />
+            <RichTextEditor initialValue={typeof instructions === 'object' ? instructions[0] : instructions} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'instructions')} />
           </div>
         </div>
 
