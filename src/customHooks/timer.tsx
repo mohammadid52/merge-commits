@@ -42,24 +42,21 @@ const useStudentTimer = (inputs?: inputs) => {
   // SAVING
   //PAGE SWITCH => SAVE TTRIGGER after 10 secs
   useEffect(() => {
-    console.log('state.currentPage', state.currentPage);
     if (!state.viewing) {
       if (typeOfTimeout === 'edit' || typeOfTimeout === '') {
-        console.log('%c save timer: ', 'background: #222; color: #bada55', 'current save timeout interrupted');
         console.log('%c save timer: ', 'background: #222; color: #bada55', 'page switch save triggered after 10s');
-        clearTimeout(activityTimeout);
+
         setTypeOfTimeout('pageSwitch');
-        setactivityTimeout(
-          setTimeout(() => {
-            dispatch({ type: 'INCREMENT_SAVE_COUNT' });
-            setTypeOfTimeout('');
-            console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
-          }, 10000)
-        );
+
+        const pageEditTimeout = setTimeout(() => {
+          dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+          setTypeOfTimeout('');
+          console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
+        }, 10000);
       }
     }
-    return () => clearTimeout(activityTimeout);
-  }, [state.viewing, state.currentPage]);
+    // return () => clearTimeout(activityTimeout);
+  }, [state.currentPage]);
 
   // TEACHER VIEWING & STUDENT EDIT => SAVE TRIGGER after 1 secs
   useEffect(() => {
@@ -70,15 +67,14 @@ const useStudentTimer = (inputs?: inputs) => {
     if (!state.viewing) {
       if (typeOfTimeout === '') {
         console.log('%c save timer: ', 'background: #222; color: #bada55', 'edit save triggered after 60s');
-        clearTimeout(activityTimeout);
+
         setTypeOfTimeout('edit');
-        setactivityTimeout(
-          setTimeout(() => {
-            dispatch({ type: 'INCREMENT_SAVE_COUNT' });
-            setTypeOfTimeout('');
-            console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
-          }, 120000)
-        );
+
+        const editTimeout = setTimeout(() => {
+          dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+          setTypeOfTimeout('');
+          console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
+        }, 60000);
       }
     }
     return () => clearTimeout(activityTimeout);
