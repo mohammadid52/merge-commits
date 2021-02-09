@@ -64,18 +64,18 @@ const ClassRoster = (props: classRosterProps) => {
     } catch (e) {
       console.error('getSyllabusLessonstudents - ', e);
     } finally {
-      if (state.roster.length > 0) {
-        clearInterval(refreshRoster);
-        console.log('interval for roster refresh cleared...');
-      }
-      if (state.roster.length === 0) {
-        setRefreshRoster(
-          setInterval(() => {
-            console.log('interval for roster refresh set at 5s...');
-            getSyllabusLessonStudents();
-          }, 5000),
-        );
-      }
+      // if (state.roster.length > 0) {
+      //   clearInterval(refreshRoster);
+      //   console.log('interval for roster refresh cleared...');
+      // }
+      // if (state.roster.length === 0) {
+      //   setRefreshRoster(
+      //     setInterval(() => {
+      //       console.log('interval for roster refresh set at 5s...');
+      //       getSyllabusLessonStudents();
+      //     }, 5000),
+      //   );
+      // }
     }
   };
 
