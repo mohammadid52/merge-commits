@@ -2442,6 +2442,7 @@ export const getLesson = /* GraphQL */ `
           id
           lessonID
           checkpointID
+          position
           createdAt
           updatedAt
         }
@@ -2574,6 +2575,7 @@ export const getLesson = /* GraphQL */ `
         type
         LessonComponentID
         sequence
+        stage
       }
       createdAt
       updatedAt
@@ -2699,6 +2701,7 @@ export const listLessons = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -2896,6 +2899,7 @@ export const getSyllabusLesson = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
