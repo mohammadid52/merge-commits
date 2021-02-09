@@ -699,6 +699,7 @@ type Lesson @model @key(fields: ["id"]) {
 type LessonComponents {
   type: String
   LessonComponentID: ID!
+  sequence: Int!
 }
 type LessonCheckpoint @model(queries: null) @key(name: "byLesson", fields: ["lessonID", "checkpointID"]) {
   id: ID!

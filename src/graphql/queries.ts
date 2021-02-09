@@ -2573,6 +2573,7 @@ export const getLesson = /* GraphQL */ `
       lessonPlan {
         type
         LessonComponentID
+        sequence
       }
       createdAt
       updatedAt
@@ -2697,6 +2698,7 @@ export const listLessons = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
+          sequence
         }
         createdAt
         updatedAt
@@ -2893,6 +2895,7 @@ export const getSyllabusLesson = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
+          sequence
         }
         createdAt
         updatedAt

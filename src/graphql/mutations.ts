@@ -4936,6 +4936,7 @@ export const createLesson = /* GraphQL */ `
       lessonPlan {
         type
         LessonComponentID
+        sequence
       }
       createdAt
       updatedAt
@@ -5142,6 +5143,7 @@ export const updateLesson = /* GraphQL */ `
       lessonPlan {
         type
         LessonComponentID
+        sequence
       }
       createdAt
       updatedAt
@@ -5348,6 +5350,7 @@ export const deleteLesson = /* GraphQL */ `
       lessonPlan {
         type
         LessonComponentID
+        sequence
       }
       createdAt
       updatedAt
@@ -5466,6 +5469,7 @@ export const createLessonCheckpoint = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
+          sequence
         }
         createdAt
         updatedAt
@@ -5607,6 +5611,7 @@ export const updateLessonCheckpoint = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
+          sequence
         }
         createdAt
         updatedAt
@@ -5748,6 +5753,7 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
+          sequence
         }
         createdAt
         updatedAt
@@ -5896,6 +5902,7 @@ export const createLessonKeyWord = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
+          sequence
         }
         createdAt
         updatedAt
@@ -6024,6 +6031,7 @@ export const updateLessonKeyWord = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
+          sequence
         }
         createdAt
         updatedAt
@@ -6152,6 +6160,7 @@ export const deleteLessonKeyWord = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
+          sequence
         }
         createdAt
         updatedAt
@@ -6399,6 +6408,7 @@ export const createSyllabusLesson = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
+          sequence
         }
         createdAt
         updatedAt
@@ -6584,6 +6594,7 @@ export const updateSyllabusLesson = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
+          sequence
         }
         createdAt
         updatedAt
@@ -6769,6 +6780,7 @@ export const deleteSyllabusLesson = /* GraphQL */ `
         lessonPlan {
           type
           LessonComponentID
+          sequence
         }
         createdAt
         updatedAt
