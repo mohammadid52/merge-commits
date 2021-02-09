@@ -2442,6 +2442,7 @@ export const getLesson = /* GraphQL */ `
           id
           lessonID
           checkpointID
+          position
           createdAt
           updatedAt
         }
@@ -2574,6 +2575,7 @@ export const getLesson = /* GraphQL */ `
         type
         LessonComponentID
         sequence
+        stage
       }
       createdAt
       updatedAt
@@ -2699,6 +2701,7 @@ export const listLessons = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -2896,6 +2899,7 @@ export const getSyllabusLesson = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -2945,6 +2949,7 @@ export const getSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
+          anthologyType
           createdAt
           updatedAt
         }
@@ -3210,6 +3215,13 @@ export const getStudentData = /* GraphQL */ `
         }
         nextToken
       }
+      anthologyType
+      anthologyContent {
+        title
+        subTitle
+        description
+        content
+      }
       createdAt
       updatedAt
     }
@@ -3297,6 +3309,13 @@ export const listStudentDatas = /* GraphQL */ `
         }
         checkpointData {
           nextToken
+        }
+        anthologyType
+        anthologyContent {
+          title
+          subTitle
+          description
+          content
         }
         createdAt
         updatedAt

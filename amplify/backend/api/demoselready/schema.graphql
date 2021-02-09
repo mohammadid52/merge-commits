@@ -699,7 +699,8 @@ type Lesson @model @key(fields: ["id"]) {
 type LessonComponents {
   type: String
   LessonComponentID: ID!
-  sequence: Int!
+  sequence: Int
+  stage: String
 }
 type LessonCheckpoint @model(queries: null) @key(name: "byLesson", fields: ["lessonID", "checkpointID"]) {
   id: ID!
@@ -779,8 +780,16 @@ type StudentData
   activityData: ActivityData
   doFirstData: [QuestionDataStudentData]! @connection(name: "byStudentData", fields: ["id"])
   checkpointData: [QuestionDataStudentData]! @connection(name: "byStudentData", fields: ["id"])
+  anthologyType: String
+	anthologyContent: [AnthologyContent]
 }
 
+type AnthologyContent {
+	title: String
+	subTitle: String
+	description: String
+	content: String
+}
 type QuestionData @model {
   id: ID!
   syllabusLessonID: ID!

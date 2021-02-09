@@ -352,6 +352,13 @@ export const onChangeStudentData = /* GraphQL */ `
         }
         nextToken
       }
+      anthologyType
+      anthologyContent {
+        title
+        subTitle
+        description
+        content
+      }
       createdAt
       updatedAt
     }
@@ -470,6 +477,7 @@ export const onChangeSyllabusLesson = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -519,6 +527,7 @@ export const onChangeSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
+          anthologyType
           createdAt
           updatedAt
         }
@@ -5007,6 +5016,7 @@ export const onCreateLesson = /* GraphQL */ `
           id
           lessonID
           checkpointID
+          position
           createdAt
           updatedAt
         }
@@ -5139,6 +5149,7 @@ export const onCreateLesson = /* GraphQL */ `
         type
         LessonComponentID
         sequence
+        stage
       }
       createdAt
       updatedAt
@@ -5211,6 +5222,7 @@ export const onUpdateLesson = /* GraphQL */ `
           id
           lessonID
           checkpointID
+          position
           createdAt
           updatedAt
         }
@@ -5343,6 +5355,7 @@ export const onUpdateLesson = /* GraphQL */ `
         type
         LessonComponentID
         sequence
+        stage
       }
       createdAt
       updatedAt
@@ -5415,6 +5428,7 @@ export const onDeleteLesson = /* GraphQL */ `
           id
           lessonID
           checkpointID
+          position
           createdAt
           updatedAt
         }
@@ -5547,6 +5561,7 @@ export const onDeleteLesson = /* GraphQL */ `
         type
         LessonComponentID
         sequence
+        stage
       }
       createdAt
       updatedAt
@@ -5559,6 +5574,7 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
       id
       lessonID
       checkpointID
+      position
       lesson {
         id
         title
@@ -5663,6 +5679,7 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -5698,6 +5715,7 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
       id
       lessonID
       checkpointID
+      position
       lesson {
         id
         title
@@ -5802,6 +5820,7 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -5837,6 +5856,7 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
       id
       lessonID
       checkpointID
+      position
       lesson {
         id
         title
@@ -5941,6 +5961,7 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -6087,6 +6108,7 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -6213,6 +6235,7 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -6339,6 +6362,7 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -6575,6 +6599,7 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -6624,6 +6649,7 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
+          anthologyType
           createdAt
           updatedAt
         }
@@ -6758,6 +6784,7 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -6807,6 +6834,7 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
+          anthologyType
           createdAt
           updatedAt
         }
@@ -6941,6 +6969,7 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -6990,6 +7019,7 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
+          anthologyType
           createdAt
           updatedAt
         }
@@ -7418,6 +7448,13 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
         checkpointData {
           nextToken
         }
+        anthologyType
+        anthologyContent {
+          title
+          subTitle
+          description
+          content
+        }
         createdAt
         updatedAt
       }
@@ -7552,6 +7589,13 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
         checkpointData {
           nextToken
         }
+        anthologyType
+        anthologyContent {
+          title
+          subTitle
+          description
+          content
+        }
         createdAt
         updatedAt
       }
@@ -7685,6 +7729,13 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
         }
         checkpointData {
           nextToken
+        }
+        anthologyType
+        anthologyContent {
+          title
+          subTitle
+          description
+          content
         }
         createdAt
         updatedAt
