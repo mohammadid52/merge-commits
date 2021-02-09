@@ -5,7 +5,6 @@ import { AiOutlineUsergroupAdd, AiOutlineArrowUp, AiOutlineArrowDown } from 'rea
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 
 import { GlobalContext } from '../../../../contexts/GlobalContext';
-import useDictionary from '../../../../customHooks/dictionary';
 import * as queries from '../../../../graphql/queries';
 
 import Pagination from '../../../Atoms/Pagination';
@@ -20,8 +19,7 @@ import SearchInput from '../../../Atoms/Form/SearchInput';
 import Selector from '../../../Atoms/Form/Selector';
 
 const UserLookup = () => {
-	const { state, theme, uLang } = useContext(GlobalContext);
-	const { paginationPage, BreadcrumsTitles, manageusersDict } = useDictionary();
+	const { state, theme } = useContext(GlobalContext);
 	const history = useHistory();
 	const [status, setStatus] = useState('');
 	const [userList, setUserList] = useState([]);
@@ -46,8 +44,8 @@ const UserLookup = () => {
 	// ...End.
 
 	const breadCrumsList = [
-		{ title: BreadcrumsTitles[uLang].HOME, url: '/dashboard', last: false },
-		{ title: BreadcrumsTitles[uLang].PEOPLE, url: '/dashboard/manage-users', last: true },
+		{ title: 'Home', url: '/dashboard', last: false },
+		{ title: 'People', url: '/dashboard/manage-users', last: true },
 	]
 
 	const sortByList = [
@@ -215,7 +213,7 @@ const UserLookup = () => {
 		fetchSortedList();
 	}, [sortingType.value, sortingType.asc])
 
-	if (status === 'done') {
+	if (status !== 'done') {
 		return (
 			<LessonLoading />
 		)
@@ -227,7 +225,7 @@ const UserLookup = () => {
 				{/* Header Section */}
 				<BreadCrums items={breadCrumsList} />
 				<div className="flex justify-between">
-					<SectionTitle title={manageusersDict[uLang].TITLE} subtitle={manageusersDict[uLang].SUBTITLE} />
+					<SectionTitle title="USER MANAGEMENT" subtitle="People's List" />
 					<div className="flex justify-end py-4 mb-4">
 						<SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchUserFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
 						<Selector placeholder="Sort By" list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none border-r-0" arrowHidden={true} />
@@ -236,7 +234,7 @@ const UserLookup = () => {
 								{sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
 							</IconContext.Provider>
 						</button>
-						<Buttons label={manageusersDict[uLang].ADD_NEW} onClick={handleLink} btnClass="mr-4 w-full" Icon={AiOutlineUsergroupAdd} />
+						<Buttons label="Add New Person" onClick={handleLink} btnClass="mr-4 w-full" Icon={AiOutlineUsergroupAdd} />
 					</div>
 				</div>
 
@@ -247,19 +245,19 @@ const UserLookup = () => {
 							<div className="h-8/10 px-4">
 								<div className="w-full flex justify-between border-b border-gray-200 ">
 									<div className="w-3.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-										<span>{manageusersDict[uLang].TABLE.NAME}</span>
+										<span>Name</span>
 									</div>
 									<div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-										<span className="w-auto">{manageusersDict[uLang].TABLE.ROLE}</span>
+										<span className="w-auto">Role</span>
 									</div>
 									<div className="w-3.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-										<span className="w-auto">{manageusersDict[uLang].TABLE.INST}</span>
+										<span className="w-auto">Institution</span>
 									</div>
 									<div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-										<span className="w-auto">{manageusersDict[uLang].TABLE.STATUS}</span>
+										<span className="w-auto">Status</span>
 									</div>
 									<div className="w-1/10 px-8 justify-center py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-									{manageusersDict[uLang].TABLE.ACTIONS}
+										Actions
 									</div>
 								</div>
 								{
@@ -283,7 +281,7 @@ const UserLookup = () => {
 								{!searchInput.isActive &&
 									(
 										<Fragment>
-											<span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">{paginationPage(uLang, currentPage, totalPages)}</span>
+											<span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">Showing Page {currentPage + 1} of {totalPages} pages</span>
 											<Pagination
 												currentPage={currentPage + 1}
 												setNext={goNextPage}

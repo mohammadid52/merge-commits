@@ -45,26 +45,42 @@ const ClassRoster = (props: classRosterProps) => {
   const [updatedStudent, setUpdatedStudent] = useState<any[]>([]);
   const [viewedStudent, setViewedStudent] = useState<string>('');
 
+  const [refreshRoster, setRefreshRoster] = useState<any>();
+
   let subscription: any;
 
+  // load students into roster
+  const getSyllabusLessonStudents = async () => {
+    try {
+      const syllabusLessonStudents: any = await API.graphql(
+        graphqlOperation(queries.listPersonLocations, {
+          filter: { syllabusLessonID: { contains: state.syllabusLessonID } },
+        }),
+      );
+      const studentList = syllabusLessonStudents.data.listPersonLocations.items;
+      setStudents(studentList);
+      dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: studentList } });
+      subscription = subscribeToPersonLocations();
+    } catch (e) {
+      console.error('getSyllabusLessonstudents - ', e);
+    } finally {
+      // if (state.roster.length > 0) {
+      //   clearInterval(refreshRoster);
+      //   console.log('interval for roster refresh cleared...');
+      // }
+      // if (state.roster.length === 0) {
+      //   setRefreshRoster(
+      //     setInterval(() => {
+      //       console.log('interval for roster refresh set at 5s...');
+      //       getSyllabusLessonStudents();
+      //     }, 5000),
+      //   );
+      // }
+    }
+  };
+
   useEffect(() => {
-    // load students into roster
-    const getSyllabusLessonStudents = async () => {
-      try {
-        const syllabusLessonStudents: any = await API.graphql(
-          graphqlOperation(queries.listPersonLocations, {
-            filter: { syllabusLessonID: { contains: state.syllabusLessonID } },
-          })
-        );
-        const studentList = syllabusLessonStudents.data.listPersonLocations.items;
-        setStudents(studentList);
-        dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: studentList } });
-        subscription = subscribeToPersonLocations();
-      } catch (e) {
-        console.error('getSyllabusLessonstudents - ', e);
-      }
-    };
-    if (state.syllabusLessonID) {
+    if (state.syllabusLessonID && state.roster.length === 0) {
       getSyllabusLessonStudents();
     }
   }, [state.syllabusLessonID]);
@@ -113,54 +129,54 @@ const ClassRoster = (props: classRosterProps) => {
    * UPDATE THIS SORT FUNCTION TO SORT CONTEXT
    * @param column - which column you want sorted
    */
-  const sortStudentBy = (column: string) => {
-    const thereAreStudents = state.roster && state.roster.length > 0;
+  // const sortStudentBy = (column: string) => {
+  //   const thereAreStudents = state.roster && state.roster.length > 0;
+  //
+  //   if (thereAreStudents) {
+  //     if (column === SortByEnum.FNAME) {
+  //       return state.roster.sort((a: any, b: any) => {
+  //         if (lc(a.student[column]) < lc(b.student[column])) {
+  //           return -1;
+  //         } else {
+  //           return 1;
+  //         }
+  //       });
+  //     }
+  //
+  //     if (column === SortByEnum.PAGE) {
+  //       return state.roster.sort((a: any, b: any) => {
+  //         if (lc(a.lessonProgress) < lc(b.lessonProgress)) {
+  //           return -1;
+  //         } else {
+  //           return 1;
+  //         }
+  //       });
+  //     }
+  //
+  //     if (column === SortByEnum.ACTION) {
+  //       return state.roster.sort((a: any, b: any) => {
+  //         if (a.lessonProgress.includes('breakdown') && b.lessonProgress.includes('breakdown') === false) {
+  //           return -1;
+  //         } else {
+  //           return 1;
+  //         }
+  //       });
+  //     }
+  //   }
+  // };
 
-    if (thereAreStudents) {
-      if (column === SortByEnum.FNAME) {
-        return state.roster.sort((a: any, b: any) => {
-          if (lc(a.student[column]) < lc(b.student[column])) {
-            return -1;
-          } else {
-            return 1;
-          }
-        });
-      }
-
-      if (column === SortByEnum.PAGE) {
-        return state.roster.sort((a: any, b: any) => {
-          if (lc(a.lessonProgress) < lc(b.lessonProgress)) {
-            return -1;
-          } else {
-            return 1;
-          }
-        });
-      }
-
-      if (column === SortByEnum.ACTION) {
-        return state.roster.sort((a: any, b: any) => {
-          if (a.lessonProgress.includes('breakdown') && b.lessonProgress.includes('breakdown') === false) {
-            return -1;
-          } else {
-            return 1;
-          }
-        });
-      }
-    }
-  };
-
-  const studentRoster = () => {
-    switch (sortBy) {
-      case 'firstName':
-        return sortStudentBy(SortByEnum.FNAME);
-      case 'lessonProgress':
-        return sortStudentBy(SortByEnum.PAGE);
-      case 'action':
-        return sortStudentBy(SortByEnum.ACTION);
-      default:
-        return state.roster;
-    }
-  };
+  // const studentRoster = () => {
+  //   switch (sortBy) {
+  //     case 'firstName':
+  //       return sortStudentBy(SortByEnum.FNAME);
+  //     case 'lessonProgress':
+  //       return sortStudentBy(SortByEnum.PAGE);
+  //     case 'action':
+  //       return sortStudentBy(SortByEnum.ACTION);
+  //     default:
+  //       return state.roster;
+  //   }
+  // };
 
   const handleSelect = async (e: any) => {
     const { id } = e.target;
@@ -168,7 +184,6 @@ const ClassRoster = (props: classRosterProps) => {
       return student.personAuthID === id;
     });
 
-    console.log('selected', id, selected[0]);
     setViewedStudent(id);
     dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] });
   };

@@ -42,8 +42,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const [personLocationObj, setPersonLocationObj] = useState<any>();
   const [recentOp, setRecentOp] = useState<string>('');
 
-
-  // INIT PERSON LOCATION COOKIS & STATE
+  // INIT PERSON LOCATION STATE
   useEffect(() => {
     loadPersonData();
   }, []);
