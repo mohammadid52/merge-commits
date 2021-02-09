@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { LessonActions } from '../reducers/LessonReducer';
-// import { LessonStateType } from '../state/LessonState';
-// import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../customGraphql/customMutations';
-
-// import { FaSatellite } from 'react-icons/fa';
+import { type } from 'os';
 
 interface inputs {
   subscription?: any;
@@ -39,22 +36,57 @@ const useStudentTimer = (inputs?: inputs) => {
     autoSaveInterval: null,
   });
 
-  useEffect(() => {
-    console.log(params.state.subscription);
-  }, [params.state.subscription]);
+  const [activityTimeout, setactivityTimeout] = useState<any>();
+  const [typeOfTimeout, setTypeOfTimeout] = useState<'pageSwitch' | 'edit' | ''>('');
 
+  // SAVING
+  //PAGE SWITCH => SAVE TTRIGGER after 10 secs
   useEffect(() => {
-    if (params.state.studentStatus === 'ACTIVE' && params.state.subscription._state === 'ready') {
-      // clearAllTimers()
-      // startTimer()
-      // updateStudentData('status')
+    console.log('state.currentPage', state.currentPage);
+    if (!state.viewing) {
+      if (typeOfTimeout === 'edit' || typeOfTimeout === '') {
+        console.log('%c save timer: ', 'background: #222; color: #bada55', 'current save timeout interrupted');
+        console.log('%c save timer: ', 'background: #222; color: #bada55', 'page switch save triggered after 10s');
+        clearTimeout(activityTimeout);
+        setTypeOfTimeout('pageSwitch');
+        setactivityTimeout(
+          setTimeout(() => {
+            dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+            setTypeOfTimeout('');
+            console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
+          }, 10000)
+        );
+      }
     }
+    return () => clearTimeout(activityTimeout);
+  }, [state.viewing, state.currentPage]);
 
+  // TEACHER VIEWING & STUDENT EDIT => SAVE TRIGGER after 1 secs
+  useEffect(() => {
+    if (state.viewing) {
+      clearTimeout(activityTimeout);
+      setactivityTimeout(setTimeout(() => dispatch({ type: 'INCREMENT_SAVE_COUNT' }), 1000));
+    }
+    if (!state.viewing) {
+      if (typeOfTimeout === '') {
+        console.log('%c save timer: ', 'background: #222; color: #bada55', 'edit save triggered after 60s');
+        clearTimeout(activityTimeout);
+        setTypeOfTimeout('edit');
+        setactivityTimeout(
+          setTimeout(() => {
+            dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+            setTypeOfTimeout('');
+            console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
+          }, 120000)
+        );
+      }
+    }
+    return () => clearTimeout(activityTimeout);
+  }, [state.viewing, state.componentState]);
+
+  useEffect(() => {
     if (params.state.studentStatus === 'ACTIVE' && params.state.subscription._state === 'closed') {
       params.subscribeFunc();
-
-      // startTimer()
-
       updateStudentData('status');
     }
 
@@ -64,76 +96,48 @@ const useStudentTimer = (inputs?: inputs) => {
 
     if (params.subscription && params.state.studentStatus === 'OFFLINE') {
       clearAllTimers();
-
       params.subscription.unsubscribe();
-
       console.log('unsubscribed', params.state.subscription);
     }
   }, [params.state.studentStatus]);
 
   useEffect(() => {
-    if (params.state.viewing) {
-      startAutoSave();
-    }
-
-    if (!params.state.viewing) {
-      clearAutoSave();
-    }
-  }, [params.state.viewing]);
-
-  useEffect(() => {
-    if (params.state.viewing) {
-      // console.log(params.state.saveCount);
-      updateStudentData('autosave');
-    }
+    // console.log('teacher viewing savecount: ', params.state.saveCount);
+    updateStudentData('autosave');
   }, [params.state.saveCount]);
 
   const updateStudentData = async (saveType?: string) => {
-    let lessonProgress =
-      params.state.pages[params.state.lessonProgress].stage === ''
-        ? 'intro'
-        : params.state.pages[params.state.lessonProgress].stage;
-
-    let currentLocation =
-      params.state.pages[params.state.currentPage].stage === ''
-        ? 'intro'
-        : params.state.pages[params.state.currentPage].stage;
-
-    /**
-     * The warmupData ternary condition should be improved
-     * so that it doesn't look specifically for the truthGame object
-     * but can also return any other additional object from new components
-     */
-
-    //TODO: clean up the warmUpData ternary condition below
-
-    let data = {
-      id: state.studentDataID,
-      lessonProgress: lessonProgress,
-      currentLocation: currentLocation,
-      saveType: saveType,
-      status: params.state.studentStatus,
-      classroomID: params.state.classroomID,
-      studentID: params.state.studentUsername,
-      studentAuthID: params.state.studentAuthID,
-      warmupData: params.state.componentState.story
-        ? params.state.componentState.story
-        : typeof params.state.componentState.truthGame?.truthGameArray !== 'undefined'
-        ? { truthGame: params.state.componentState.truthGame.truthGameArray }
-        : typeof params.state.componentState.poll?.pollInputs !== 'undefined'
-        ? { poll: params.state.componentState.poll.pollInputs, additional: params.state.componentState.poll.additional }
-        : null,
-      corelessonData: params.state.componentState.lyrics ? params.state.componentState.lyrics : null,
-      activityData: params.state.componentState.poem ? params.state.componentState.poem : null,
-    };
-
-    try {
-      console.log(' timer save: ', data);
-      const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
-
-      dispatch({ type: 'SAVED_CHANGES' });
-    } catch (error) {
-      console.error(error);
+    if (state.studentDataID) {
+      let data = {
+        id: state.studentDataID,
+        lessonProgress: params.state.lessonProgress,
+        currentLocation: params.state.currentPage,
+        saveType: saveType,
+        status: params.state.studentStatus,
+        syllabusLessonID: params.state.syllabusLessonID,
+        studentID: params.state.studentUsername,
+        studentAuthID: params.state.studentAuthID,
+        warmupData: params.state.componentState.story
+          ? params.state.componentState.story
+          : typeof params.state.componentState.truthGame?.truthGameArray !== 'undefined'
+          ? { truthGame: params.state.componentState.truthGame.truthGameArray }
+          : typeof params.state.componentState.poll?.pollInputs !== 'undefined'
+          ? { poll: params.state.componentState.poll.pollInputs, additional: params.state.componentState.poll.additional }
+          : null,
+        corelessonData: params.state.componentState.lyrics ? params.state.componentState.lyrics : null,
+        activityData: params.state.componentState.poem ? params.state.componentState.poem : null,
+      };
+  
+      try {
+        console.log(' timer save: ', data);
+        const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
+  
+        dispatch({ type: 'SAVED_CHANGES' });
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      console.log('studentDataID not yet created')
     }
   };
 
@@ -146,37 +150,11 @@ const useStudentTimer = (inputs?: inputs) => {
     });
   };
 
-  const startTimer = () => {
-    console.log('started');
-
-    clearTimeout(params.activeTimer);
-    clearTimeout(params.idleTimer);
-    params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' });
-
-    params.activeTimer = setTimeout(() => {
-      clearTimeout(params.activeTimer);
-      params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'IDLE' });
-    }, 60000);
-
-    params.idleTimer = setTimeout(() => {
-      clearTimeout(params.idleTimer);
-      params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'OFFLINE' });
-    }, 60000);
-  };
-
   const startAutoSave = () => {
     clearTimeout(params.activeTimer);
     clearTimeout(params.idleTimer);
     params.dispatch({ type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE' });
     params.dispatch({ type: 'INCREMENT_SAVE_COUNT' });
-    // callback()
-    // console.log('save');
-
-    params.autoSaveInterval = setInterval(() => {
-      // console.log('save');
-      params.dispatch({ type: 'INCREMENT_SAVE_COUNT' });
-      // callback()
-    }, 3000);
   };
 
   const clearAutoSave = () => {
@@ -191,7 +169,7 @@ const useStudentTimer = (inputs?: inputs) => {
   };
 
   return {
-    startTimer,
+    // startTimer,
     startAutoSave,
     clearAutoSave,
     clearAllTimers,

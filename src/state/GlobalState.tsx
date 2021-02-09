@@ -19,6 +19,7 @@ export interface globalStateType {
     language: string;
     role: string;
     onBoardSurvey?: boolean;
+    location: any[]
   };
 }
 
@@ -42,5 +43,6 @@ export const globalState: globalStateType = {
     lastName: '',
     language: '',
     role: '',
+    location: []
   },
 };

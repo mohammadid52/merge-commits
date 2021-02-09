@@ -70,9 +70,9 @@ const AddMeasurement = (props: AddMeasurementProps) => {
     }));
     setTopics(list)
   }
-  const fetchMeasurementSequence = async () => {
+  const fetchMeasurementSequence = async (topicId: string) => {
     let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
-      { id: `m_${curricularId}` }))
+      { id: `m_${topicId}` }))
     item = item?.data.getCSequences?.sequence || []
     if (item) {
       setMeasurementIds(item)
@@ -109,11 +109,11 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       const item: any = await API.graphql(graphqlOperation(customMutations.createRubric, { input }));
       const addedItem = item.data.createRubric
       if (!measurementIds.length) {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `m_${curricularId}`, sequence: [addedItem.id] } }));
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `m_${topic.id}`, sequence: [addedItem.id] } }));
         seqItem = seqItem.data.createCSequences
         console.log('seqItem', seqItem)
       } else {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `m_${curricularId}`, sequence: [...measurementIds, addedItem.id] } }));
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `m_${topic.id}`, sequence: [...measurementIds, addedItem.id] } }));
         seqItem = seqItem.data.updateCSequences
         console.log('seqItem', seqItem)
       }
@@ -127,8 +127,13 @@ const AddMeasurement = (props: AddMeasurementProps) => {
 
   useEffect(() => {
     fetchTopics()
-    fetchMeasurementSequence()
   }, [])
+
+  useEffect(() => {
+    if (topic?.id) {
+      fetchMeasurementSequence(topic.id)
+    }
+  }, [topic.id])
 
   const cancelEvent = () => {
     history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);

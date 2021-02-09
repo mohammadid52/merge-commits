@@ -11,6 +11,7 @@ import ComponentLoading from './Lesson/Loading/ComponentLoading';
 
 import AuthRoutes from './AppRoutes/AuthRoutes';
 import UnauthRoutes from './AppRoutes/UnauthRoutes';
+import { getAsset } from '../assets';
 
 import * as customMutations from '../customGraphql/customMutations'
 
@@ -30,16 +31,19 @@ const MainRouter: React.FC = () => {
     }
   }, [authState]);
 
-  // const loadItems = async () => {
-  //   await Promise.all(items.map(async item => {
-  //     // await API.graphql(graphqlOperation(mutations.createLesson, { input: items }));
-  //   }))
-  // }
-
   useEffect(() => {
+    setupAppHeaders();
     checkUserAuthenticated();
-    // loadItems()
   }, []);
+
+  const setupAppHeaders = async () => {
+    const favicon:any = document.getElementById("faviconDefault");
+    const favicon32x32:any = document.getElementById("favicon32x32");
+    const favicon16x16:any = document.getElementById("favicon16x16");
+    favicon.href = getAsset(clientKey, 'faviconDefault')
+    favicon32x32.href = getAsset(clientKey, 'favicon32x32')
+    favicon16x16.href = getAsset(clientKey, 'favicon16x16')
+  };
 
   const checkUserAuthenticated = async () => {
     try {
@@ -53,6 +57,7 @@ const MainRouter: React.FC = () => {
           type: 'PREV_LOG_IN',
           payload: { email, authId: sub },
         });
+        // SETUP USER
         dispatch({
           type: 'SET_USER',
           payload: {
@@ -62,7 +67,8 @@ const MainRouter: React.FC = () => {
             language: userInfo.language,
             onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
             role: userInfo.role,
-            image: userInfo.image
+            image: userInfo.image,
+            location: userInfo?.location?.items
           }
         });
       } else {
@@ -87,8 +93,8 @@ const MainRouter: React.FC = () => {
         }
       }
     });
-
   }
+
   const autoLogout = async () => {
     if (isUserLoggedIn()) {
       const input = {
@@ -143,7 +149,6 @@ const MainRouter: React.FC = () => {
       </div>
     );
   }
-
 };
 
 export default MainRouter;
