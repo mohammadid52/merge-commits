@@ -705,6 +705,7 @@ type LessonCheckpoint @model(queries: null) @key(name: "byLesson", fields: ["les
   id: ID!
   lessonID: ID!
   checkpointID: ID!
+  position: Int!
   lesson: Lesson @connection(fields: ["lessonID"])
   checkpoint: Checkpoint @connection(fields: ["checkpointID"])
 }
