@@ -69,22 +69,22 @@ const ClassRoster = (props: classRosterProps) => {
   // Set refresh timer on mount
   useEffect(() => {
     if (state.roster.length === 0) {
-      console.log('interval for roster refresh set at 5s...');
-      setRefreshRoster(
-        setInterval(() => {
-          console.log('update roster...')
-          getSyllabusLessonStudents();
-        }, 5000)
-      );
+      // console.log('interval for roster refresh set at 5s...');
+      // setRefreshRoster(
+      //   setInterval(() => {
+      //     console.log('update roster...')
+      //     getSyllabusLessonStudents();
+      //   }, 5000)
+      // );
     }
   }, []);
 
   // Clear refresh timer if there are students
   useEffect(() => {
-    if (state.roster.length > 0) {
-      clearInterval(refreshRoster);
-      console.log('interval for roster refresh cleared...');
-    }
+    // if (state.roster.length > 0) {
+    //   clearInterval(refreshRoster);
+    //   console.log('interval for roster refresh cleared...');
+    // }
   }, [state.roster]);
 
   useEffect(() => {
