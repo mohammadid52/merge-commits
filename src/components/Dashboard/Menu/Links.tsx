@@ -67,12 +67,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               path: 'classroom',
             },
             {
-              title: 'ANTHOLOGY',
-              name: 'Anthology',
-              label: 'Anthology',
-              path: 'anthology',
-            },
-            {
               title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               label: 'Lesson Planner',
@@ -115,12 +109,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               path: 'classroom',
             },
             {
-              title: 'ANTHOLOGY',
-              name: 'Anthology',
-              label: 'Anthology',
-              path: 'anthology',
-            },
-            {
               title: sideBarLinksDict[userLanguage].LESSON_BUILDER,
               name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
               label: 'Lesson Builder',
@@ -146,6 +134,18 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
             },
           ];
         });
+      case 'ST':
+        return setLinks((links) => {
+          return [
+            ...links,
+            {
+              title: 'ANTHOLOGY',
+              name: 'Anthology',
+              label: 'Anthology',
+              path: 'anthology',
+            },
+          ]
+        })
       default:
         return;
     }
