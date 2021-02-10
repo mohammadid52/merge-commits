@@ -75,8 +75,8 @@ const LessonEdit = (props: LessonEditProps) => {
     lessonInstructions: instructionInitialState
   })
   const [selectedDesigners, setSelectedDesigners] = useState([]);
-  const [activeStep, setActiveStep] = useState('Builder');
-  // const [activeStep, setActiveStep] = useState('General Information');
+  // const [activeStep, setActiveStep] = useState('Instructions');
+  const [activeStep, setActiveStep] = useState('General Information');
   const [loading, setLoading] = useState(false);
 
   const breadCrumsList = [
@@ -186,6 +186,7 @@ const LessonEdit = (props: LessonEditProps) => {
           lessonId={lessonId || assessmentId}
           savedInstructions={savedLessonDetails?.lessonInstructions}
           updateParentState={updateInstructions}
+          lessonType={formData.type?.value}
         />;
       case 'Builder':
         return <CheckpointBuilder

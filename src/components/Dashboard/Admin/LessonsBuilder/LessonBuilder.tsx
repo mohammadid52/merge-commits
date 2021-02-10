@@ -105,7 +105,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           postLessonCreation={postLessonCreation}
         />;
       case 'Instructions':
-        return <AssessmentInstuctions lessonId={lessonId} savedInstructions={savedLessonDetails?.lessonInstructions} updateParentState={(obj) => onInstructionSaved(obj)} />;
+        return <AssessmentInstuctions
+          lessonId={lessonId}
+          savedInstructions={savedLessonDetails?.lessonInstructions}
+          updateParentState={(obj) => onInstructionSaved(obj)}
+          lessonType={formData.type?.value}
+        />;
       case 'Builder':
         return <CheckpointBuilder lessonPlans={savedLessonDetails?.lessonPlans} designersList={designersList} lessonID={lessonId} updateLessonPlan={updateLessonPlan} />;
       case 'Preview Details':
