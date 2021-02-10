@@ -4,7 +4,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../customGraphql/customMutations';
 import { type } from 'os';
 
-type AnthologyContent = {
+export type AnthologyContentType = {
   type: string;
   title: string;
   subTitle: string;
@@ -131,9 +131,9 @@ const useStudentTimer = (inputs?: inputs) => {
 
   const getAnthologyContent = () => {
     const lessonPlan = state.data.lessonPlan;
-    return lessonPlan.reduce((acc: AnthologyContent[], lessonPlanObj: { disabled: boolean; open: boolean; active: boolean; stage: string; type: string; displayMode: string }) => {
+    return lessonPlan.reduce((acc: AnthologyContentType[], lessonPlanObj: { disabled: boolean; open: boolean; active: boolean; stage: string; type: string; displayMode: string }) => {
       if (lessonPlanObj.type === 'story' || lessonPlanObj.type === 'poem') {
-        const template: AnthologyContent = {
+        const template: AnthologyContentType = {
           type: lessonPlanObj.type,
           title: '',
           subTitle: '',

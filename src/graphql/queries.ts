@@ -3310,8 +3310,8 @@ export const listStudentDatas = /* GraphQL */ `
         checkpointData {
           nextToken
         }
-        anthologyType
         anthologyContent {
+          type
           title
           subTitle
           description
