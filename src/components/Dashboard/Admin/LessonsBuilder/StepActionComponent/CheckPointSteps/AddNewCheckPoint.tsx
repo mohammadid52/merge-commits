@@ -309,7 +309,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
               <p>Questions list</p>
             )}
         </div>
-        <div className="flex mt-8 justify-center px-6 pb-4">
+        <div className="mt-8 px-6 pb-4">
           {validation.message && <div className="py-4 m-auto mt-2 text-center">
             <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
           </div>}

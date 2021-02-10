@@ -18,6 +18,7 @@ interface CheckpointBuilderProps {
 const CheckpointBuilder = (props: CheckpointBuilderProps) => {
   const { designersList, lessonID, lessonPlans, updateLessonPlan } = props;
   const [builderStep, setBuilderStep] = useState('SelectedCheckPointsList');
+  // const [builderStep, setBuilderStep] = useState('AddNewQuestion');
   const [savedCheckPoints, setSavedCheckpoints] = useState([])
 
   // tentative static data 
