@@ -73,7 +73,7 @@ const useStudentTimer = (inputs?: inputs) => {
         const editTimeout = setTimeout(() => {
           dispatch({ type: 'INCREMENT_SAVE_COUNT' });
           setTypeOfTimeout('');
-          console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
+          console.log('%c save timer: ', 'background: #00FF00; color: #bada55', 'saved');
         }, 60000);
       }
     }
@@ -102,6 +102,22 @@ const useStudentTimer = (inputs?: inputs) => {
     updateStudentData('autosave');
   }, [params.state.saveCount]);
 
+  const getWarmupDataSource = () => {
+    const warmupType = state.data.lesson.warmup.type;
+    switch(warmupType){
+      case 'story':
+      case 'list':
+        return params.state.componentState.story;
+      case 'truthgame':
+        return { truthGame: params.state.componentState.truthGame.truthGameArray }
+      case 'poll':
+          return { poll: params.state.componentState.poll.pollInputs, additional: params.state.componentState.poll.additional }
+      case 'adventure':
+      default:
+        return {}
+    }
+  }
+
   const updateStudentData = async (saveType?: string) => {
     if (state.studentDataID) {
       let data = {
@@ -113,13 +129,7 @@ const useStudentTimer = (inputs?: inputs) => {
         syllabusLessonID: params.state.syllabusLessonID,
         studentID: params.state.studentUsername,
         studentAuthID: params.state.studentAuthID,
-        warmupData: params.state.componentState.story
-          ? params.state.componentState.story
-          : typeof params.state.componentState.truthGame?.truthGameArray !== 'undefined'
-          ? { truthGame: params.state.componentState.truthGame.truthGameArray }
-          : typeof params.state.componentState.poll?.pollInputs !== 'undefined'
-          ? { poll: params.state.componentState.poll.pollInputs, additional: params.state.componentState.poll.additional }
-          : null,
+        warmupData: getWarmupDataSource(),
         corelessonData: params.state.componentState.lyrics ? params.state.componentState.lyrics : null,
         activityData: params.state.componentState.poem ? params.state.componentState.poem : null,
       };

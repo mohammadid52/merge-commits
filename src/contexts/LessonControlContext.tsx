@@ -72,7 +72,7 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
       next: (studentData: any) => {
         let updatedData = studentData.value.data.onChangeStudentData;
 
-        console.log('studentDataSubscription : ', updatedData);
+        //console.log('studentDataSubscription : ', updatedData);
 
         dispatch({ type: 'UPDATE_STUDENT_DATA', payload: updatedData });
         // console.log(found)
