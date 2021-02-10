@@ -1,4 +1,5 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
+import API, { graphqlOperation } from '@aws-amplify/api';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoIosKeypad } from 'react-icons/io';
 import { RiArrowRightLine } from 'react-icons/ri';
@@ -6,6 +7,8 @@ import { RiArrowRightLine } from 'react-icons/ri';
 import SearchInput from '../../../../../Atoms/Form/SearchInput';
 import CheckBox from '../../../../../Atoms/Form/CheckBox';
 import Buttons from '../../../../../Atoms/Buttons';
+
+import * as queries from '../../../../../../graphql/queries';
 
 interface QuestionLookupProps {
   changeStep: (step: string) => void
@@ -15,19 +18,11 @@ interface QuestionLookupProps {
 const QuestionLookup = (props: QuestionLookupProps) => {
   const { changeStep } = props;
   const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
-
-  const dymmyQuestionsList = [
-    { id: '1', question: 'Where are you from?', type: 'Text Input', language: 'English' },
-    { id: '2', question: 'What social issues is your congregation most deeply invested in?', type: 'Text Input', language: 'English' },
-    { id: '3', question: 'Where are you from?', type: 'Text Input', language: 'English' },
-    { id: '4', question: 'What social issues is your congregation most deeply invested in?', type: 'Text Input', language: 'English' },
-    { id: '5', question: 'What social issues is your congregation most deeply invested in?', type: 'Text Input', language: 'English' },
-    { id: '6', question: 'Where are you from?', type: 'Text Input', language: 'English' },
-    { id: '7', question: 'What social issues is your congregation most deeply invested in?', type: 'Text Input', language: 'English' },
-    { id: '8', question: 'What social issues is your congregation most deeply invested in?', type: 'Text Input', language: 'English' },
-    { id: '9', question: 'Where are you from?', type: 'Text Input', language: 'English' },
-    { id: '10', question: 'What social issues is your congregation most deeply invested in?', type: 'Text Input', language: 'English' },
-  ]
+  const [questionsList, setQuestionsList] = useState([]);
+  const [allQuestionsList, setAllQuestionsList] = useState([]);
+  const [searchInput, setSearchInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false)
 
   const selectItem = (questId: string) => {
     const selectedItem = selectedQuestionIds.find(id => id === questId);
@@ -39,6 +34,69 @@ const QuestionLookup = (props: QuestionLookupProps) => {
     }
     setSelectedQuestionIds(updatedList);
   }
+
+  const getLanguageString = (language: string) => {
+    switch (language) {
+      case 'EN':
+        return 'English';
+      case 'ES':
+        return 'Spanish';
+    }
+  }
+
+  const getTypeString = (type: string) => {
+    switch (type) {
+      case 'text':
+        return 'Text';
+      case 'input':
+        return 'Input';
+      case 'selectMany':
+        return 'Select Many';
+      case 'selectOne':
+        return 'Select One';
+      default:
+        return 'Text';
+    }
+  }
+  const searchFromList = () => {
+    const currentQuesList = [...allQuestionsList];
+    const newList = currentQuesList.filter(item => {
+      // Search on question for match.
+      return (
+        (item.question?.toLowerCase().includes(searchInput))
+      )
+    });
+    setQuestionsList(newList);
+  }
+
+  const removeSearchAction = () => {
+    setQuestionsList(allQuestionsList);
+    setSearchInput('')
+  }
+
+  const fetchQuestionsList = async () => {
+    try {
+      setLoading(true);
+      const fetchQuestionsData: any = await API.graphql(
+        graphqlOperation(queries.listQuestions)
+      );
+      if (!fetchQuestionsData) {
+        throw new Error('fail!');
+      } else {
+        const QuestionsList = fetchQuestionsData.data?.listQuestions?.items;
+        setQuestionsList(QuestionsList);
+        setAllQuestionsList(QuestionsList);
+      }
+      setLoading(false);
+    } catch (error) {
+      setError(true);
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    fetchQuestionsList();
+  }, [])
 
   return (
     <Fragment>
@@ -70,7 +128,7 @@ const QuestionLookup = (props: QuestionLookupProps) => {
       <div className="p-4">
         <div className="flex justify-between my-4">
           <p className="text-sm font-medium text-gray-600 flex items-center w-1/4 px-14"> {selectedQuestionIds?.length} Questions Selected</p>
-          <SearchInput value={''} onChange={() => console.log("setSearch")} onKeyDown={() => console.log("searchQuestionFromList")} closeAction={() => console.log("removeSearchAction")} style="w-2/4" />
+          <SearchInput value={searchInput} onChange={(val: string) => setSearchInput(val)} onKeyDown={searchFromList} closeAction={removeSearchAction} style="w-2/4" />
         </div>
         <div>
           <Fragment>
@@ -90,19 +148,39 @@ const QuestionLookup = (props: QuestionLookupProps) => {
             </div>
 
             <div className="w-full m-auto max-h-120 overflow-y-auto">
-              {dymmyQuestionsList?.length && dymmyQuestionsList.map(item => (
-                <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
-                    <span>
-                      <CheckBox value={selectedQuestionIds?.includes(item.id)} onChange={() => selectItem(item.id)} name='selectquestion' />
-                    </span>
-                  </div>
-                  <div className="flex w-5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.question} </div>
-                  <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.type}</div>
-                  <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.language}</div>
-                </div>
+              {!loading ? (
+                <Fragment>
+                  {!error ? (
+                    <Fragment>
+                      {questionsList?.length ? questionsList.map(item => (
+                        <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                          <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
+                            <span>
+                              <CheckBox value={selectedQuestionIds?.includes(item.id)} onChange={() => selectItem(item.id)} name='selectquestion' />
+                            </span>
+                          </div>
+                          <div className="flex w-5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.question} </div>
+                          <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.type ? getTypeString(item.type) : '--'}</div>
+                          <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.language ? getLanguageString(item.language) : '--'}</div>
+                        </div>
+                      )) : (
+                          <div className="py-12 my-6 text-center">
+                            <p> Question bank is empty please create a new question.</p>
+                          </div>
+                        )}
+                    </Fragment>
+                  ) : (
+                      <div className="py-12 my-6 text-center">
+                        <p> Error while fetching questions list please try again later.</p>
+                      </div>
+                    )}
 
-              ))}
+                </Fragment>
+              ) : (
+                  <div className="py-12 my-6 text-center">
+                    <p> Fetching question details please wait...</p>
+                  </div>
+                )}
             </div>
           </Fragment>
         </div>
@@ -112,8 +190,8 @@ const QuestionLookup = (props: QuestionLookupProps) => {
             <Buttons btnClass="py-1 px-8 text-xs ml-2" label="Save" onClick={() => console.log('')} />
           </div>
         </div>
-      </div>
-    </Fragment>
+      </div >
+    </Fragment >
   )
 }
 
