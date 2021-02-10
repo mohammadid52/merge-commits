@@ -4938,6 +4938,7 @@ export const createLesson = /* GraphQL */ `
         type
         LessonComponentID
         sequence
+        stage
       }
       createdAt
       updatedAt
@@ -5146,6 +5147,7 @@ export const updateLesson = /* GraphQL */ `
         type
         LessonComponentID
         sequence
+        stage
       }
       createdAt
       updatedAt
@@ -5354,6 +5356,7 @@ export const deleteLesson = /* GraphQL */ `
         type
         LessonComponentID
         sequence
+        stage
       }
       createdAt
       updatedAt
@@ -5474,6 +5477,7 @@ export const createLessonCheckpoint = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -5617,6 +5621,7 @@ export const updateLessonCheckpoint = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -5760,6 +5765,7 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -5909,6 +5915,7 @@ export const createLessonKeyWord = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -6038,6 +6045,7 @@ export const updateLessonKeyWord = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -6167,6 +6175,7 @@ export const deleteLessonKeyWord = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -6415,6 +6424,7 @@ export const createSyllabusLesson = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -6464,6 +6474,7 @@ export const createSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
+          anthologyType
           createdAt
           updatedAt
         }
@@ -6601,6 +6612,7 @@ export const updateSyllabusLesson = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -6650,6 +6662,7 @@ export const updateSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
+          anthologyType
           createdAt
           updatedAt
         }
@@ -6787,6 +6800,7 @@ export const deleteSyllabusLesson = /* GraphQL */ `
           type
           LessonComponentID
           sequence
+          stage
         }
         createdAt
         updatedAt
@@ -6836,6 +6850,7 @@ export const deleteSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
+          anthologyType
           createdAt
           updatedAt
         }
@@ -7030,6 +7045,13 @@ export const createStudentData = /* GraphQL */ `
         }
         nextToken
       }
+      anthologyType
+      anthologyContent {
+        title
+        subTitle
+        description
+        content
+      }
       createdAt
       updatedAt
     }
@@ -7208,6 +7230,13 @@ export const updateStudentData = /* GraphQL */ `
         }
         nextToken
       }
+      anthologyType
+      anthologyContent {
+        title
+        subTitle
+        description
+        content
+      }
       createdAt
       updatedAt
     }
@@ -7385,6 +7414,13 @@ export const deleteStudentData = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      anthologyType
+      anthologyContent {
+        title
+        subTitle
+        description
+        content
       }
       createdAt
       updatedAt
@@ -7810,6 +7846,13 @@ export const createQuestionDataStudentData = /* GraphQL */ `
         checkpointData {
           nextToken
         }
+        anthologyType
+        anthologyContent {
+          title
+          subTitle
+          description
+          content
+        }
         createdAt
         updatedAt
       }
@@ -7947,6 +7990,13 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
         checkpointData {
           nextToken
         }
+        anthologyType
+        anthologyContent {
+          title
+          subTitle
+          description
+          content
+        }
         createdAt
         updatedAt
       }
@@ -8083,6 +8133,13 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
         }
         checkpointData {
           nextToken
+        }
+        anthologyType
+        anthologyContent {
+          title
+          subTitle
+          description
+          content
         }
         createdAt
         updatedAt

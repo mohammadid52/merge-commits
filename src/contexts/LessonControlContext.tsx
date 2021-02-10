@@ -8,6 +8,8 @@ import * as customSubscriptions from '../customGraphql/customSubscriptions';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { standardTheme } from './GlobalContext';
+import { Auth } from '@aws-amplify/auth';
+import * as mutations from '../graphql/mutations';
 
 interface LessonControlProps {
   children: React.ReactNode;
@@ -24,6 +26,7 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
   const [lesson, setLesson] = useState<LessonObject>();
   const history = useHistory();
   const location = useLocation();
+
   let subscription: any;
 
   const theme = standardTheme;
