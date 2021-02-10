@@ -780,8 +780,16 @@ type StudentData
   activityData: ActivityData
   doFirstData: [QuestionDataStudentData]! @connection(name: "byStudentData", fields: ["id"])
   checkpointData: [QuestionDataStudentData]! @connection(name: "byStudentData", fields: ["id"])
+  anthologyType: String
+	anthologyContent: [AnthologyContent]
 }
 
+type AnthologyContent {
+	title: String
+	subTitle: String
+	description: String
+	content: String
+}
 type QuestionData @model {
   id: ID!
   syllabusLessonID: ID!

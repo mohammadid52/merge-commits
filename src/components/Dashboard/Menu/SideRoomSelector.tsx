@@ -41,7 +41,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
     const standardUserID = state.user.id;
     const userRole = state.user.role;
     const listClassStudents = async () => {
-      if (userRole === 'STD') {
+      if (userRole === 'ST') {
         try {
           const classesFetch: any = await API.graphql(
             graphqlOperation(customQueries.listClassStudents, { studentID: standardUserID })
@@ -55,8 +55,8 @@ const SideRoomSelector = (props: SideMenuProps) => {
           console.error('Classes Fetch ERR: ', e);
         }
       }
-    };
-    userRole === 'STD' && listClassStudents();
+    }
+    userRole === 'ST' && listClassStudents();
   }, []);
 
   useEffect(() => {
@@ -118,7 +118,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
         }
       }
     };
-    userRole === 'STD' && listRooms();
+    userRole === 'ST' && listRooms();
   }, [classIds]);
 
   useEffect(() => {
@@ -281,6 +281,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
 
   return (
     <div className={`${theme.sidemenu.secondary} mr-2`}>
+      <div className={`h-12 p-1 flex items-center justify-center`}>Rooms:</div>
       {rooms.length > 0 ? (
         rooms.map((room: Room, i: number) => {
           return (
