@@ -11,7 +11,7 @@ const Anthology = () => {
 
   const [studentData, setStudentData] = useState<any>();
 
-  const [subSection, setSubSection] = useState<string>('LessonData');
+  const [subSection, setSubSection] = useState<string>('Stories');
 
   useEffect(() => {
     const listStudentData = async () => {
@@ -43,25 +43,6 @@ const Anthology = () => {
     }
   };
 
-  const studentDataGroupPick = (dataObjectArray: any[], filterArray: string[]) => {
-    /**
-     * This function should accept a string
-     * that is used to collect all the object properties
-     * from the dataObjectArray,
-     * and returns an array of objects with only these values
-     */
-    return filterArray.reduce((acc:any[], filter: string) => {
-      const filtered = dataObjectArray.reduce((acc2: any[], dataObject: any)=>{
-        if(dataObject.hasOwnProperty(filter)){
-          return [...acc2, dataObject[filter]]
-        } else {
-          return acc2;
-        }
-      },[])
-    return [...acc, {filtered}]
-    },[])
-  };
-
   return (
     <React.Fragment>
       <SectionTitle title={`Anthology`} />
@@ -74,7 +55,7 @@ const Anthology = () => {
       <SubSectionTabs
         subSection={subSection}
         handleTabClick={handleTabClick}
-        subSectionList={['LessonData', 'Journal', 'Stories', 'Poems']}
+        subSectionList={['Stories', 'Poems','Journal']}
       />
       <SectionTitle title={subSection} />
       {/*
@@ -83,7 +64,7 @@ const Anthology = () => {
           - Journal entries
           - User written stories & poems
     */}
-      <AnthologyContent content={subSection} />
+      <AnthologyContent subSection={subSection} content={studentData} />
     </React.Fragment>
   );
 };
