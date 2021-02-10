@@ -2949,7 +2949,6 @@ export const getSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
-          anthologyType
           createdAt
           updatedAt
         }
@@ -3215,8 +3214,8 @@ export const getStudentData = /* GraphQL */ `
         }
         nextToken
       }
-      anthologyType
       anthologyContent {
+        type
         title
         subTitle
         description
@@ -3310,8 +3309,8 @@ export const listStudentDatas = /* GraphQL */ `
         checkpointData {
           nextToken
         }
-        anthologyType
         anthologyContent {
+          type
           title
           subTitle
           description
