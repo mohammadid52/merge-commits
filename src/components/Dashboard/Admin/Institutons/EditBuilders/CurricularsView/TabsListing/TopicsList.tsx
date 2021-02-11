@@ -37,8 +37,8 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
     }
   }
 
-  const createNewTopic = (lid: string) => {
-    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/topic/add?lid=${lid}`)
+  const createNewTopic = () => {
+    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/topic/add?lid=${learningId}`)
   }
 
   const editCurrentTopic = (id: string) => {
@@ -160,7 +160,7 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
                 </div>
               )
           }
-          <div className="flex justify-center items-center my-2 w-9/10 mx-auto px-8 py-4 border border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer" onClick={() => createNewTopic(learningId)}>
+          <div className="flex justify-center items-center my-2 w-9/10 mx-auto px-8 py-4 border border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer" onClick={createNewTopic}>
             <span className="w-6 h-6 flex items-center mr-4">
               <IconContext.Provider value={{ size: '1.5rem', color: 'darkgray' }}>
                 <IoAdd />
