@@ -130,6 +130,11 @@ const Dashboard = (props: DashboardProps) => {
         role: state.user?.role,
         image: state.user?.image,
       });
+      if (state.user?.role === 'FLW' || state.user?.role === 'TR') {
+        setCurrentPage('lesson-planner');
+      } else if (userData.role === 'ST') {
+        setCurrentPage('classroom');
+      } else setCurrentPage('manage-institutions');
     }
   }, []);
 
