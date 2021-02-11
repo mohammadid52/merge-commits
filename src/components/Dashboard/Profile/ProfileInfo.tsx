@@ -15,8 +15,8 @@ interface UserInfoProps {
 
 const ProfileInfo = (props: UserInfoProps) => {
     const { user, status } = props;
-    const { dashboardProfileDict } = useDictionary();
-    const { theme, state, userLanguage, dispatch } = useContext(GlobalContext);
+    const { userLanguage, clientKey } = useContext(GlobalContext);
+    const { dashboardProfileDict } = useDictionary(clientKey);
     const match = useRouteMatch();
 
     const language = () => {

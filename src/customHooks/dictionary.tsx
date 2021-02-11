@@ -1,3 +1,5 @@
+import * as iconoclastDict from '../dictionary/dictionary.iconoclast'
+import * as curateDict from '../dictionary/dictionary.curate'
 const BUTTONS: any = {
     'EN': {
         ADD: 'Add',
@@ -239,43 +241,29 @@ const editClassDict: any = {
     }
 }
 
-function useDictionary() {
-    async function lookUp(word: string) {
-        const appId = 'c4ad157e';
-        const appKey = 'cc99a6410f78f4d8da7b70e0fcea3254';
-        const endpoint = "entries";
-        const languageCode = "en-us";
-        const wordId = word.toLowerCase()
-
-        const url = "https://od-api.oxforddictionaries.com/api/v2/" + endpoint + "/" + languageCode + "/" + wordId
-
-        const res = await fetch(url, {
-            headers: {
-                'app_id': appId,
-                'app_key': appKey,
-            },
-        })
-        const data = await res.json();
-        // console.log('dict_res', data)
+function useDictionary(clientKey) {
+    if (clientKey === 'iconoclast') {
+        return iconoclastDict
+    } else if (clientKey === 'curate') {
+        return curateDict
     }
-
-    function paginationPage(lang:string, page: number, total: number) {
-        if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`
-        if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`
-        return ''
-    }
-    return {
-        paginationPage,
-        BUTTONS,
-        BreadcrumsTitles,
-        appDict,
-        sideBarLinksDict,
-        dashboardProfileDict,
-        staffBuilderDict,
-        editClassDict,
-        spBuilderDict,
-        manageusersDict
-    }
+    // function paginationPage(lang:string, page: number, total: number) {
+    //     if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`
+    //     if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`
+    //     return ''
+    // }
+    // return {
+    //     paginationPage,
+    //     BUTTONS,
+    //     BreadcrumsTitles,
+    //     appDict,
+    //     sideBarLinksDict,
+    //     dashboardProfileDict,
+    //     staffBuilderDict,
+    //     editClassDict,
+    //     spBuilderDict,
+    //     manageusersDict
+    // }
 }
 
 export default useDictionary;

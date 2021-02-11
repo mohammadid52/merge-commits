@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
-import { NavLink, useHistory, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import { LinkProps } from '../Dashboard/Menu/Links';
 
@@ -15,10 +15,8 @@ import * as customMutations from '../../customGraphql/customMutations'
 
 const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const [cookies, , removeCookie] = useCookies();
-  const { appDict } = useDictionary()
-  const location = useLocation();
-  const history = useHistory();
-  const { theme, lightSwitch, forceTheme, userLanguage, state, dispatch } = useContext(GlobalContext);
+  const { theme, userLanguage, clientKey, state, dispatch } = useContext(GlobalContext);
+  const { appDict } = useDictionary(clientKey)
 
   async function SignOut() {
     try {
