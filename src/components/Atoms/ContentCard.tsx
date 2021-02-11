@@ -11,7 +11,7 @@ const ContentCard = (props: ContentCardProps) => {
   const {keyProps, children} = props;
   const { theme } = useContext(GlobalContext);
   return (
-    <div key={keyProps} className={`${theme.section} p-4 text-xl`}>
+    <div key={keyProps} className={`${theme.section} p-4 text-xl h-32`}>
       <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>
         {children}
       </div>

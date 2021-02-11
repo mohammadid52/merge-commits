@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { LessonCardProps } from '../../Classroom';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 const MainSummary = (props: LessonCardProps) => {
+  const {theme} = useContext(GlobalContext)
   const {lessonType, lessonProps} = props;
 
   const reverseDateString = () => {
@@ -13,7 +15,7 @@ const MainSummary = (props: LessonCardProps) => {
     <div className={`${lessonType !== 'survey' ? 'h-44' : 'h-auto'} p-4 flex flex-col justify-start items-center`}>
       <h1 className={`flex text-2xl text-black font-open text-left`}>
         <span>{lessonProps.lesson && lessonProps.lesson.title ? lessonProps.lesson.title : null}</span>
-        <span className={`text-sm text-gray-400 text-right`}>
+        <span className={`${theme.lessonCard.subtitle}`}>
               {lessonProps.complete && lessonProps.endDate ? 'Completed on ' + reverseDateString() : ''}
             </span>
       </h1>

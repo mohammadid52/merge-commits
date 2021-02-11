@@ -249,7 +249,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
         },
       };
     case 'UPDATE_LESSON_PLAN':
-      console.log('UPDATE_LESSON_PLAN: pages >> ', action.payload.pages)
+      //console.log('UPDATE_LESSON_PLAN: pages >> ', action.payload.pages)
       return {
         ...state,
         status: 'loaded',

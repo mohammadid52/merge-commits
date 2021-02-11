@@ -277,11 +277,12 @@ const SideRoomSelector = (props: SideMenuProps) => {
     }
   };
 
-  const linkClass = 'w-full text-xs tracking-wider mx-auto p-2 bg-white';
+  const roomsTitle = 'h-12 p-2 font-semibold text-grayscale-lightest flex items-center justify-start bg-darker-gray bg-opacity-60';
+  const linkClass = 'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b border-medium-gray';
 
   return (
     <div className={`${theme.sidemenu.secondary} mr-2`}>
-      <div className={`h-12 p-1 flex items-center justify-center`}>Rooms:</div>
+      <div className={roomsTitle}>Rooms:</div>
       {rooms.length > 0 ? (
         rooms.map((room: Room, i: number) => {
           return (
@@ -290,11 +291,12 @@ const SideRoomSelector = (props: SideMenuProps) => {
               id={room.id}
               data-name={room.name}
               onClick={handleRoomSelection}
-              className={`cursor-pointer ${linkClass} ${
-                activeRoom === room.id
-                  ? 'border border-blueberry border-opacity-80'
-                  : 'border border-dark-gray border-opacity-10'
-              } truncate ...`}>
+              className={`cursor-pointer ${linkClass} 
+              ${ activeRoom === room.id
+                  ? 'bg-grayscale-light bg-opacity-80'
+                  : 'bg-darker-gray bg-opacity-20'
+              } 
+              truncate ...`}>
               {room.name}
             </div>
           );

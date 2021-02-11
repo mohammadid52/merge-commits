@@ -82,7 +82,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     } catch (e) {
       console.error(e);
     } finally {
-      console.log('loaded...');
+      //console.log('loaded...');
       setLoaded(true);
     }
   }
@@ -97,7 +97,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       lessonProgress: state.lessonProgress,
     };
     try {
-      console.log('created', newLocation);
+      //console.log('created', newLocation);
       const newPersonLocationMutation: any = await API.graphql(
         graphqlOperation(mutations.createPersonLocation, { input: newLocation })
       );
