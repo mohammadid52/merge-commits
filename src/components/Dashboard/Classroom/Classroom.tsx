@@ -89,7 +89,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     syllabusLoading,
     setSyllabusLoading,
   } = props;
-
   const { state, theme, dispatch } = useContext(GlobalContext);
   const [survey, setSurvey] = useState<any>({
     display: false,
