@@ -6474,7 +6474,6 @@ export const createSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
-          anthologyType
           createdAt
           updatedAt
         }
@@ -6662,7 +6661,6 @@ export const updateSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
-          anthologyType
           createdAt
           updatedAt
         }
@@ -6850,7 +6848,6 @@ export const deleteSyllabusLesson = /* GraphQL */ `
           syllabusLessonID
           studentID
           studentAuthID
-          anthologyType
           createdAt
           updatedAt
         }
@@ -7045,8 +7042,8 @@ export const createStudentData = /* GraphQL */ `
         }
         nextToken
       }
-      anthologyType
       anthologyContent {
+        type
         title
         subTitle
         description
@@ -7231,6 +7228,7 @@ export const updateStudentData = /* GraphQL */ `
         nextToken
       }
       anthologyContent {
+        type
         title
         subTitle
         description
@@ -7414,8 +7412,8 @@ export const deleteStudentData = /* GraphQL */ `
         }
         nextToken
       }
-      anthologyType
       anthologyContent {
+        type
         title
         subTitle
         description
@@ -7845,8 +7843,8 @@ export const createQuestionDataStudentData = /* GraphQL */ `
         checkpointData {
           nextToken
         }
-        anthologyType
         anthologyContent {
+          type
           title
           subTitle
           description
@@ -7989,8 +7987,8 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
         checkpointData {
           nextToken
         }
-        anthologyType
         anthologyContent {
+          type
           title
           subTitle
           description
@@ -8133,8 +8131,8 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
         checkpointData {
           nextToken
         }
-        anthologyType
         anthologyContent {
+          type
           title
           subTitle
           description

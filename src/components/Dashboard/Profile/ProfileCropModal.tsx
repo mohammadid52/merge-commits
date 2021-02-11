@@ -14,8 +14,8 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (props: ProfileCropMod
   const { upImg, saveCroppedImage, closeAction } = props
   const [crop, setCrop] = useState<any>({ unit: '%', x: 0, y: 0, width: 100, aspect: 1 });
   const [completedCrop, setCompletedCrop] = useState(null);
-  const { BUTTONS } = useDictionary();
-  const { userLanguage } = useContext(GlobalContext);
+  const { userLanguage, clientKey } = useContext(GlobalContext);
+  const { BUTTONS } = useDictionary(clientKey);
   const imgRef = useRef(null);
 
   const onLoad = useCallback((img) => {

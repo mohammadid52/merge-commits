@@ -95,7 +95,7 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
     if (state.user && state.user.location && state.user.location.length > 0){
       updatePersonLocation();
     } else {
-      console.log('dashboard: ', 'user location not initialized yet...')
+      // console.log('dashboard: ', 'user location not initialized yet...')
     }
   }, [state.user]);
 

@@ -24,7 +24,7 @@ const MeasurementList = (props: MeasurementListProps) => {
   const [measrementIds, setMeasrementIds] = useState([])
 
   const createNewMeasurement = () => {
-    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/measurement/add`)
+    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/measurement/add?tid=${topicID}`)
   }
 
   const editCurrentMeasurement = (id: string) => {

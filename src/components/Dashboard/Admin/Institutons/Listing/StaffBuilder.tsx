@@ -23,8 +23,8 @@ interface StaffBuilderProps {
 }
 
 const StaffBuilder = (props: StaffBuilderProps) => {
-  const { staffBuilderDict } = useDictionary();
-  const { userLanguage } = useContext(GlobalContext);
+  const { userLanguage, clientKey } = useContext(GlobalContext);
+  const { staffBuilderDict } = useDictionary(clientKey);
   const dictionary = staffBuilderDict[userLanguage]
   const [availableUsers, setAvailableUsers] = useState([]);
   const [allAvailableUsers, setAllAvailableUsers] = useState([])
