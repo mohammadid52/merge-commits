@@ -1879,3 +1879,17 @@ export const getLesson = /* GraphQL */ `
     }
   }
 `;
+export const listCheckpoints = /* GraphQL */ `
+  query ListCheckpoints($filter: ModelCheckpointFilterInput, $limit: Int, $nextToken: String) {
+    listCheckpoints(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        label
+        title
+        subtitle
+        language
+      }
+      nextToken
+    }
+  }
+`;

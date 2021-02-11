@@ -9,6 +9,7 @@ import CheckBox from '../../../../../Atoms/Form/CheckBox';
 import Buttons from '../../../../../Atoms/Buttons';
 
 import * as queries from '../../../../../../graphql/queries';
+import { getLanguageString } from '../../../../../../utilities/strings';
 
 interface QuestionLookupProps {
   changeStep: (step: string) => void
@@ -33,15 +34,6 @@ const QuestionLookup = (props: QuestionLookupProps) => {
       updatedList = selectedQuestionIds.filter(id => id !== questId);
     }
     setSelectedQuestionIds(updatedList);
-  }
-
-  const getLanguageString = (language: string) => {
-    switch (language) {
-      case 'EN':
-        return 'English';
-      case 'ES':
-        return 'Spanish';
-    }
   }
 
   const getTypeString = (type: string) => {
@@ -81,6 +73,7 @@ const QuestionLookup = (props: QuestionLookupProps) => {
         graphqlOperation(queries.listQuestions)
       );
       if (!fetchQuestionsData) {
+        setError(true);
         throw new Error('fail!');
       } else {
         const QuestionsList = fetchQuestionsData.data?.listQuestions?.items;
@@ -89,6 +82,7 @@ const QuestionLookup = (props: QuestionLookupProps) => {
       }
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       setError(true);
       console.error(error);
     }

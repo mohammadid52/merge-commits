@@ -1,12 +1,15 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoIosKeypad } from 'react-icons/io';
 import { RiArrowRightLine } from 'react-icons/ri';
 import { IoCaretDownCircleOutline, IoCaretUpCircleOutline } from 'react-icons/io5';
 
+import { getLanguageString } from '../../../../../../utilities/strings';
+
 import SearchInput from '../../../../../Atoms/Form/SearchInput';
 import CheckBox from '../../../../../Atoms/Form/CheckBox';
 import Buttons from '../../../../../Atoms/Buttons';
+import CheckpointQueTable from './CheckpointQueTable';
 interface CheckpointLookupProps {
   changeStep: (step: string) => void
   onSave: (ids: string[]) => void
@@ -17,6 +20,8 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
   const { changeStep, onSave, checkpointList } = props;
   const [selectedCheckpointIds, setSelectedCheckpointIds] = useState([]);
   const [expandId, setExpandedId] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [filteredList, setFilteredList] = useState(checkpointList);
 
   const selectItem = (checkpointId: string) => {
     const selectedItem = selectedCheckpointIds.find(id => id === checkpointId);
@@ -37,18 +42,25 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
     }
   }
 
-  const dymmyQuestionsList = [
-    { id: '1', question: 'Where are you from?', type: 'Text Input', language: 'English' },
-    { id: '2', question: 'What social issues is your congregation most deeply invested in?', type: 'Text Input', language: 'English' },
-    { id: '3', question: 'Where are you from?', type: 'Text Input', language: 'English' },
-    { id: '4', question: 'What social issues is your congregation most deeply invested in?', type: 'Text Input', language: 'English' },
-    // { id: '5', question: 'What social issues is your congregation most deeply invested in?', type: 'Text Input', language: 'English' },
-    // { id: '6', question: 'Where are you from?', type: 'Text Input', language: 'English' },
-    // { id: '7', question: 'What social issues is your congregation most deeply invested in?', type: 'Text Input', language: 'English' },
-    // { id: '8', question: 'What social issues is your congregation most deeply invested in?', type: 'Text Input', language: 'English' },
-    // { id: '9', question: 'Where are you from?', type: 'Text Input', language: 'English' },
-    // { id: '10', question: 'What social issues is your congregation most deeply invested in?', type: 'Text Input', language: 'English' },
-  ]
+  const searchFromList = () => {
+    const currentCheckList = [...checkpointList];
+    const newList = currentCheckList.filter(item => {
+      // Search on title for match.
+      return (
+        (item.title?.toLowerCase().includes(searchInput))
+      )
+    });
+    setFilteredList(newList);
+  }
+
+  const removeSearchAction = () => {
+    setFilteredList(checkpointList);
+    setSearchInput('')
+  }
+
+  useEffect(() => {
+    setFilteredList(checkpointList)
+  }, [checkpointList])
 
   return (
     <Fragment>
@@ -74,7 +86,7 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
       <div className="p-4">
         <div className="flex justify-between my-4">
           <p className="text-sm font-medium text-gray-600 flex items-center w-1/4 px-14"> {selectedCheckpointIds?.length} Checkpoints Selected</p>
-          <SearchInput value={''} onChange={() => console.log("setSearch")} onKeyDown={() => console.log("searchCheckpointFromList")} closeAction={() => console.log("removeSearchAction")} style="w-2/4" />
+          <SearchInput value={searchInput} onChange={(val: string) => setSearchInput(val)} onKeyDown={searchFromList} closeAction={removeSearchAction} style="w-2/4" />
         </div>
         <div>
           <Fragment>
@@ -94,7 +106,7 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
             </div>
 
             <div className="w-full m-auto max-h-128 overflow-y-auto">
-              {checkpointList?.length && checkpointList.map(item => (
+              {checkpointList?.length && filteredList.map(item => (
                 <Fragment>
                   {/* Table row */}
                   <div key={item.id} className={`flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200 ${expandId === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
@@ -109,7 +121,7 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
                         <span className="text-sm leading-6 text-gray-500">{item.subtitle ? item.subtitle : ''}</span>
                       </div>
                     </div>
-                    <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.language}</div>
+                    <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.language ? getLanguageString(item.language) : '--'}</div>
                     <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
                       <span className="w-6 h-6 cursor-pointer text-indigo-600" onClick={() => viewCheckpoint(item.id)}>
                         <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
@@ -120,31 +132,11 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
                   </div>
 
                   {/* Details for selected row */}
-                  {(expandId === item.id) && (<div className='px-4 mb-4'>
-                    <div className="flex justify-between w-9/10 px-8 py-4 mx-auto whitespace-no-wrap border-b border-gray-200">
-                      <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>No.</span>
-                      </div>
-                      <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>Question</span>
-                      </div>
-                      <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>Type</span>
-                      </div>
+                  {(expandId === item.id) && (
+                    <div className="my-6">
+                      <CheckpointQueTable changeStep={changeStep} checkpointId={item.id} />
                     </div>
-                    <div className="w-9/10 m-auto">
-                      {dymmyQuestionsList?.length && dymmyQuestionsList.map((item, index) => (
-                        <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                          <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
-                            {index + 1}.
-                          </div>
-                          <div className="flex w-6/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.question} </div>
-                          <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.type}</div>
-                        </div>
-
-                      ))}
-                    </div>
-                  </div>)}
+                  )}
 
                 </Fragment>
               ))}

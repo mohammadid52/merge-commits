@@ -75,7 +75,7 @@ const LessonEdit = (props: LessonEditProps) => {
     lessonInstructions: instructionInitialState
   })
   const [selectedDesigners, setSelectedDesigners] = useState([]);
-  // const [activeStep, setActiveStep] = useState('Instructions');
+  // const [activeStep, setActiveStep] = useState('Builder');
   const [activeStep, setActiveStep] = useState('General Information');
   const [loading, setLoading] = useState(false);
 

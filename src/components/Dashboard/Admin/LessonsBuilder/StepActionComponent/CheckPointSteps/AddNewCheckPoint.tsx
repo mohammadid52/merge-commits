@@ -15,7 +15,7 @@ import { LessonPlansProps } from '../../LessonEdit';
 
 interface AddNewCheckPointProps {
   changeStep: (step: string) => void
-  updateLessonPlan: (plan: LessonPlansProps[]) => void
+  updateLessonPlan: (plan: LessonPlansProps[], newObj: any[]) => void
   designersList?: InputValueObject[]
   lessonID: string
   lessonPlans?: LessonPlansProps[] | null
@@ -185,16 +185,27 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
             }))
           ]);
           const newLessonPlans = lesson?.data?.updateLesson?.lessonPlan;
-          updateLessonPlan(newLessonPlans)
+          const newData = [{
+            type: 'checkpoint',
+            LessonComponentID: newCheckpoint.id,
+            id: newCheckpoint.id,
+            sequence: !lessonPlans?.length ? 0 : lessonPlans.length,
+            stage: 'checkpoint',
+            label: checkPointData.label,
+            title: checkPointData.title,
+            subtitle: checkPointData.subtitle,
+            language: checkPointData.language.value,
+          }]
+          updateLessonPlan(newLessonPlans, newData)
         }
         setValidation({
           title: '',
           label: '',
           message: 'Checkpoint details has been saved.',
-          isError: true
+          isError: false
         });
         setLoading(false)
-        
+
         // TODO: Redirect to previous step on success.
       } catch{
         setValidation({
