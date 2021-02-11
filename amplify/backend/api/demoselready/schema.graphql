@@ -219,17 +219,6 @@ type Rubric
   curriculumID: ID!
 }
 
-type LessonRubrics 
-@model
-@key(name: "byLesson", fields: ["lessonID", "rubricID"])
-{
-  id: ID!
-  lessonID: ID!
-  rubricID: ID!
-  lesson: Lesson @connection(fields: ["lessonID"])
-  rubric: Rubric @connection(fields: ["rubricID"])
-}
-
 type TeacherCurriculum
 @model(queries: null)
 @key(name: "curriculumByTeacher", fields: ["staffID"])
