@@ -103,7 +103,7 @@ const useStudentTimer = (inputs?: inputs) => {
   }, [params.state.saveCount]);
 
   const getWarmupDataSource = () => {
-    const warmupType = state.data.lesson.warmup.type;
+    const warmupType = state.data?.lesson?.warmup?.type;
     switch(warmupType){
       case 'story':
       case 'list':

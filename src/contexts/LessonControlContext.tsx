@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
 import { lessonControlState } from '../state/LessonControlState';
 import { lessonControlReducer } from '../reducers/LessonControlReducer';
 import queryString from 'query-string';
@@ -26,17 +26,20 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
   const [lesson, setLesson] = useState<LessonObject>();
   const history = useHistory();
   const location = useLocation();
+  const urlParams: any = useParams()
+  console.log('urlParams', urlParams)
 
   let subscription: any;
 
   const theme = standardTheme;
 
   async function getSyllabusLesson() {
-    let queryParams = queryString.parse(location.search);
-    if (Object.keys(queryParams).length && queryParams.id) {
+    // let queryParams = queryString.parse(location.search);
+    const { lessonID } = urlParams
+    if (lessonID) {
       try {
         const classroom: any = await API.graphql(
-          graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id })
+          graphqlOperation(customQueries.getSyllabusLesson, { id: lessonID })
         );
 
         // console.log('getSyllabusLesson - ', classroom.data.getSyllabusLesson);
@@ -45,7 +48,7 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
         dispatch({
           type: 'INITIAL_LESSON_SETUP',
           payload: {
-            syllabusLessonID: queryParams.id,
+            syllabusLessonID: lessonID,
             pages: classroom.data.getSyllabusLesson.lessonPlan,
             data: classroom.data.getSyllabusLesson,
             students: [],
@@ -65,10 +68,9 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
   }
 
   const subscribeToStudentData = () => {
-    let queryParams = queryString.parse(location.search);
-
+    const { lessonID } = urlParams
     // @ts-ignore
-    const studentDataSubscription = API.graphql( graphqlOperation(customSubscriptions.onChangeStudentData, { syllabusLessonID: queryParams.id }) ).subscribe({
+    const studentDataSubscription = API.graphql( graphqlOperation(customSubscriptions.onChangeStudentData, { syllabusLessonID: lessonID }) ).subscribe({
       next: (studentData: any) => {
         let updatedData = studentData.value.data.onChangeStudentData;
 

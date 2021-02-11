@@ -267,7 +267,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           <div className={`${theme.section} p-4 text-xl m-auto`}>
             <SurveyCard
               isTeacher={isTeacher}
-              link={'/lesson?id=on-boarding-survey-1'}
+              link={'/lesson/on-boarding-survey-1'}
               lessons={assessmentsSurveys}
               lessonType={`survey`}
               accessible={survey.display}
