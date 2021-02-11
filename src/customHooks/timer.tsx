@@ -3,14 +3,9 @@ import { LessonActions } from '../reducers/LessonReducer';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../customGraphql/customMutations';
 import { type } from 'os';
+import { AnthologyContentInterface } from '../components/Dashboard/Anthology/Anthology';
 
-export type AnthologyContentType = {
-  type: string;
-  title: string;
-  subTitle: string;
-  description: string;
-  content: string;
-}
+
 
 interface inputs {
   subscription?: any;
@@ -131,9 +126,9 @@ const useStudentTimer = (inputs?: inputs) => {
 
   const getAnthologyContent = () => {
     const lessonPlan = state.data.lessonPlan;
-    return lessonPlan.reduce((acc: AnthologyContentType[], lessonPlanObj: { disabled: boolean; open: boolean; active: boolean; stage: string; type: string; displayMode: string }) => {
+    return lessonPlan.reduce((acc: AnthologyContentInterface[], lessonPlanObj: { disabled: boolean; open: boolean; active: boolean; stage: string; type: string; displayMode: string }) => {
       if (lessonPlanObj.type === 'story' || lessonPlanObj.type === 'poem') {
-        const template: AnthologyContentType = {
+        const template: AnthologyContentInterface = {
           type: lessonPlanObj.type,
           title: '',
           subTitle: '',
