@@ -4,6 +4,7 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import ContentCard from '../../Atoms/ContentCard';
 import { AnthologyMapItem, ViewEditMode } from './Anthology';
 import FormInput from '../../Atoms/Form/FormInput';
+import TextArea from '../../Atoms/Form/TextArea';
 
 interface ContentCardProps {
   viewEditMode: ViewEditMode;
@@ -24,7 +25,7 @@ const AnthologyContent = (props: ContentCardProps) => {
        */}
       <div className={`flex`}>
         <p className={`text-left ${theme.lessonCard.subtitle}`}>Lesson: Lesson Title</p>
-        <p className={`text-right ${theme.lessonCard.subtitle}`}>Last updated date</p>
+        <p className={`text-right ${theme.lessonCard.subtitle}`}>{contentObj.updatedAt}</p>
       </div>
       {/**
        *  section: TITLE
@@ -65,7 +66,7 @@ const AnthologyContent = (props: ContentCardProps) => {
        */}
       <div className={`flex`}>
         <p className={`text-left ${theme.lessonCard.subtitle}`}>Lesson: Lesson Title</p>
-        <p className={`text-right ${theme.lessonCard.subtitle}`}>Last updated date</p>
+        <p className={`text-right ${theme.lessonCard.subtitle}`}>{contentObj.updatedAt}</p>
       </div>
       {/**
        *  section: TITLE
@@ -99,7 +100,7 @@ const AnthologyContent = (props: ContentCardProps) => {
        *  section:  CONTENT
        */}
       <div>
-        <FormInput
+        <TextArea
           id={`content_${contentObj.type}_${contentObj.studentDataID}`}
           onChange={handleEditUpdate}
           value={contentObj.content}
@@ -113,8 +114,8 @@ const AnthologyContent = (props: ContentCardProps) => {
         <p onClick={() => handleEditToggle('view', contentObj.studentDataID)}
            className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}>View</p>
         <span className={`w-auto`}>/</span>
-        <p onClick={() => handleEditToggle('edit', contentObj.studentDataID)}
-           className={`w-auto mx-2 cursor-pointer font-semibold text-blueberry`}>Edit</p>
+        <p onClick={() => handleEditToggle('save', contentObj.studentDataID)}
+           className={`w-auto mx-2 cursor-pointer font-semibold text-blueberry`}>Save</p>
       </div>
     </div>);
 

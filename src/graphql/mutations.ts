@@ -7230,7 +7230,6 @@ export const updateStudentData = /* GraphQL */ `
         }
         nextToken
       }
-      anthologyType
       anthologyContent {
         title
         subTitle

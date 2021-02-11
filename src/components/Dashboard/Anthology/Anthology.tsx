@@ -5,6 +5,8 @@ import AnthologyContent from './AnthologyContent';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { API, graphqlOperation } from '@aws-amplify/api';
 import * as queries from '../../../graphql/queries';
+import * as mutations from '../../../graphql/mutations';
+import * as customMutations from '../../../customGraphql/customMutations';
 
 export interface AnthologyContentInterface {
   type: string;
@@ -16,16 +18,22 @@ export interface AnthologyContentInterface {
 
 export interface AnthologyMapItem extends AnthologyContentInterface {
   studentDataID: string;
+  status: string;
+  syllabusLessonID: string;
+  studentID: string;
+  studentAuthID: string;
+  updatedAt: string;
 }
 
 export type ViewEditMode = {
-  mode: 'view' | 'edit' | '';
+  mode: 'view' | 'edit' | 'save' | '';
   studentDataID: string;
 }
 
 const Anthology = () => {
   const { state } = useContext(GlobalContext);
   const [studentData, setStudentData] = useState<AnthologyMapItem[]>([]);
+  // const [rawData, setRawData] = useState();
 
   // For switching sections & knowing which field to edit
   const [subSection, setSubSection] = useState<string>('Stories');
@@ -44,13 +52,20 @@ const Anthology = () => {
         const reducedAnthologyContent = arrayOfResponseObjects.reduce((acc: AnthologyMapItem[], contentObj: any) => {
           if (contentObj.anthologyContent) {
             const mapIdToItem = contentObj.anthologyContent.map((contentMapItem: AnthologyContentInterface) => {
-              return { ...contentMapItem, studentDataID: contentObj.id };
+              return { ...contentMapItem,
+                status: contentObj.status,
+                syllabusLessonID: contentObj.syllabusLessonID,
+                studentID: contentObj.studentID,
+                studentAuthID: contentObj.studentAuthID,
+                studentDataID: contentObj.id,
+                updatedAt: contentObj.updatedAt };
             });
             return [...acc, ...mapIdToItem];
           } else {
             return acc;
           }
         }, []);
+        // setRawData(arrayOfResponseObjects);
         setStudentData(reducedAnthologyContent);
       } catch (e) {
         console.error('Anthology student data fetch error: ', e);
@@ -102,6 +117,48 @@ const Anthology = () => {
       if (contentObj.type === subSectionKey[subSection]) return contentObj;
     });
   };
+
+  // Function group for mutating database
+  useEffect(() => {
+    const anthologySave = async () => {
+      const getAnthologyContentByStudentDataID = studentData.filter((contentObj: AnthologyMapItem) => {
+        return contentObj.studentDataID === viewEditMode.studentDataID;
+      });
+      const removeHelperProperties = getAnthologyContentByStudentDataID.map((contentObj: AnthologyMapItem) => {
+        return {
+          type: contentObj.type,
+          title: contentObj.title,
+          subTitle: contentObj.subTitle,
+          description: contentObj.description,
+          content: contentObj.content,
+        };
+      });
+
+      try {
+        const studentDataUpdate: any = await API.graphql(
+          graphqlOperation(mutations.updateStudentData, {
+            input: {
+              id: getAnthologyContentByStudentDataID[0].studentDataID,
+              status: getAnthologyContentByStudentDataID[0].status,
+              syllabusLessonID: getAnthologyContentByStudentDataID[0].syllabusLessonID,
+              studentID: getAnthologyContentByStudentDataID[0].studentID,
+              studentAuthID: getAnthologyContentByStudentDataID[0].studentAuthID,
+              anthologyContent: removeHelperProperties
+            },
+          }),
+        );
+      } catch (e) {
+        console.error('studentDataUpdate: ', e);
+      } finally {
+        setViewEditMode({ mode: '', studentDataID: '' });
+      }
+    };
+
+    if (viewEditMode.mode === 'save') {
+      anthologySave();
+    }
+
+  }, [viewEditMode]);
 
   // RETURN
   return (
