@@ -35,7 +35,8 @@ export const standardTheme = {
     card: 'p-2 relative bg-white rounded border border-dark-gray border-opacity-10 h-auto flex',
   },
   lessonCard:{
-    subtitle:'text-sm text-gray-400 text-right'
+    title: 'flex items-center text-2xl text-black font-open text-left',
+    subtitle:'text-sm text-gray-400'
   },
   sidemenu: {
     bg: 'bg-darker-gray',

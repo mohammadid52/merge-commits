@@ -71,7 +71,7 @@ const ListForm = (props: ListFormProps) => {
      * */
     const storyArrayID = parseInt(e.target.id.match(/[0-9]/)[0]);
 
-    console.log('changing multi list: ', storyArrayID);
+    // console.log('changing multi list: ', storyArrayID);
 
     setInput({
       ...input,

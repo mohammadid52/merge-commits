@@ -206,6 +206,13 @@ export const updateStudentData = /* GraphQL */ `
         }
         title
       }
+      anthologyContent {
+        type
+        title
+        subTitle
+        description
+        content
+      }
       createdAt
       updatedAt
     }
