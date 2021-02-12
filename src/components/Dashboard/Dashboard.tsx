@@ -72,13 +72,13 @@ const Dashboard = (props: DashboardProps) => {
   const [activeRoom, setActiveRoom] = useState<string>('');
   const [activeRoomName, setActiveRoomName] = useState<string>('');
 
-  // useEffect(()=>{
-  //   copyLessonPlans();
-  // },[])
+  useEffect(()=>{
+    // copyLessonPlans();
+  },[])
 
-  // useEffect(()=>{
-  //   initRosterSyllabusLessons();
-  // },[])
+  useEffect(()=>{
+    // initRosterSyllabusLessons();
+  },[])
 
   const setUser = (user: userObject) => {
     setUserData({

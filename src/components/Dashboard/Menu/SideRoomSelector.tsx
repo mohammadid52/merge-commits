@@ -63,7 +63,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
     const userAuthID = state.user.authId;
     const userRole = state.user.role;
     const listRoomTeacher = async () => {
-      if (userRole === 'FLW') {
+      if (userRole === 'FLW' || userRole === 'TR') {
         try {
           const classIdFromRoomsFetch: any = await API.graphql(
             graphqlOperation(customQueries.listRooms, { filter: { teacherAuthID: { eq: userAuthID } } })
@@ -84,7 +84,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
         }
       }
     };
-    userRole === 'FLW' && listRoomTeacher();
+    userRole === 'FLW' || userRole === 'TR' && listRoomTeacher();
   }, []);
 
   useEffect(() => {
