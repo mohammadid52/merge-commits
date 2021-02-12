@@ -45,14 +45,14 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
 
   const handleLink = () => {
     if (!isTeacher && accessible && open) {
-      history.push(`${`/lesson?id=${lessonKey}`}`);
+      history.push(`${`/lesson/${lessonKey}`}`);
     }
 
     if (isTeacher) {
       if (type.includes('survey') || type.includes('assessment')) {
         toggleEnableDisable();
       } else {
-        history.push(`${`/lesson-control?id=${lessonKey}`}`);
+        history.push(`${`/lesson-control/${lessonKey}`}`);
       }
     }
   };

@@ -20,8 +20,8 @@ interface ServiceProvidersProps {
 }
 
 const ServiceProviders = (props: ServiceProvidersProps) => {
-  const { spBuilderDict, BUTTONS } = useDictionary();
-  const { userLanguage } = useContext(GlobalContext);
+  const { userLanguage, clientKey } = useContext(GlobalContext);
+  const { spBuilderDict, BUTTONS } = useDictionary(clientKey);
   const dictionary = spBuilderDict[userLanguage]
 
   const { instId, serviceProviders } = props;

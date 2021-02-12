@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useContext, useEffect, useState } from 'react';
+import React, { Suspense, useContext, useEffect, useState } from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 import * as customMutations from '../../customGraphql/customMutations';
@@ -25,10 +25,23 @@ const LessonControl = () => {
 
   const [isSameStudentShared, setIsSameStudentShared] = useState(false);
   const [open, setOpen] = useState(state.open);
-  const [pageViewed, setPageViewed] = useState({
+  
+  let pathParams:any = location.pathname.split('/')
+  pathParams = pathParams[pathParams.length - 1]
+
+  const pViewed = {
     pageID: 0,
     stage: 'intro',
-  });
+  };
+  if (pathParams) {
+    state.pages.map((p:any, index: number) => {
+      if(p.stage === pathParams) {
+        pViewed.pageID = index
+        pViewed.stage = p.stage
+      }
+    });
+  }
+  const [pageViewed, setPageViewed] = useState(pViewed);
 
   const handleFullscreen = () => {
     setFullscreen((fullscreen) => {

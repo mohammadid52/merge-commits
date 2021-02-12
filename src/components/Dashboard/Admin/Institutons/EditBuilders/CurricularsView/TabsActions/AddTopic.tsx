@@ -22,6 +22,13 @@ const AddTopic = (props: AddTopicProps) => {
   const urlParams: any = useParams()
   const curricularId = urlParams.curricularId;
 
+  const useQuery = () => {
+    return new URLSearchParams(location.search);
+  };
+
+  const urlGetParams: any = useQuery();
+  const learningId = urlGetParams.get('lid'); // Find a code from params.
+
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Add Topic', url: `/dashboard/curricular/${curricularId}/topic/add`, last: true }
@@ -108,6 +115,9 @@ const AddTopic = (props: AddTopicProps) => {
     list = list?.data?.listLearningObjectives?.items || []
     list = list.map((item: any) => ({ id: item.id, name: item.name, value: item.name }));
     setLearnings(list)
+    if (learningId) {
+      setLearning(list.find((item: any) => item.id === learningId));
+    }
   }
 
   useEffect(() => {

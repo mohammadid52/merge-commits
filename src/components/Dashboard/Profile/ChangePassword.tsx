@@ -16,8 +16,8 @@ const ChangePassword = () => {
     const [passMatchToggle, setPassMatchToggle] = useState(false);
     const history = useHistory();
 
-    const { dashboardProfileDict } = useDictionary();
-    const { userLanguage } = useContext(GlobalContext);
+    const { userLanguage, clientKey } = useContext(GlobalContext);
+    const { dashboardProfileDict } = useDictionary(clientKey);
     const dictionary = dashboardProfileDict[userLanguage]
 
     const [ message, setMessage ] = useState<{show: boolean, type: string, message: string,}>({

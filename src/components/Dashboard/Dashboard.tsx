@@ -72,7 +72,6 @@ const Dashboard = (props: DashboardProps) => {
   const [activeRoom, setActiveRoom] = useState<string>('');
   const [activeRoomName, setActiveRoomName] = useState<string>('');
 
-
   // useEffect(()=>{
   //   copyLessonPlans();
   // },[])
@@ -131,6 +130,11 @@ const Dashboard = (props: DashboardProps) => {
         role: state.user?.role,
         image: state.user?.image,
       });
+      if (state.user?.role === 'FLW' || state.user?.role === 'TR') {
+        setCurrentPage('lesson-planner');
+      } else if (userData.role === 'ST') {
+        setCurrentPage('classroom');
+      } else setCurrentPage('manage-institutions');
     }
   }, []);
 
@@ -170,8 +174,26 @@ const Dashboard = (props: DashboardProps) => {
             }>
             <Switch>
               <Route
-                exact
                 path={`${match.url}`}
+                exact
+                render={() => {
+                  if (userData && userData.role !== '') {
+                    if (userData.role === 'FLW' || userData.role === 'TR') {
+                      return <Redirect to={`${match.url}/lesson-planner`} />;
+                    } else if (userData.role === 'ST') {
+                      return <Redirect to={`${match.url}/classroom`} />;
+                    } else return <Redirect to={`${match.url}/manage-institutions`} />;
+                  } else
+                    return (
+                      <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                        <ComponentLoading />
+                      </div>
+                    );
+                }}
+              />
+              <Route
+                exact
+                path={`${match.url}/classroom`}
                 render={() => (
                   <Classroom
                     currentPage={currentPage}
@@ -183,17 +205,6 @@ const Dashboard = (props: DashboardProps) => {
                     setVisibleLessonGroup={setVisibleLessonGroup}
                     lessonLoading={lessonLoading}
                     syllabusLoading={syllabusLoading}
-                  />
-                )}
-              />
-              <Route
-                path={`${match.url}/classroom`}
-                render={({ location }) => (
-                  <Redirect
-                    to={{
-                      pathname: '/',
-                      state: { from: location },
-                    }}
                   />
                 )}
               />

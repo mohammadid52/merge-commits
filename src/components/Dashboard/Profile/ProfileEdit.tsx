@@ -17,10 +17,10 @@ interface UserInfoProps {
 
 const ProfileEdit = (props: UserInfoProps) => {
     const history = useHistory();
-    const { dashboardProfileDict } = useDictionary();
+    const { state, userLanguage, clientKey, dispatch } = useContext(GlobalContext);
+    const { dashboardProfileDict } = useDictionary(clientKey);
     const { user, getUser, status, setStatus } = props;
     const [editUser, setEditUser] = useState(user);
-    const { state, userLanguage, dispatch } = useContext(GlobalContext);
 
     async function updatePerson() {
         const input = {

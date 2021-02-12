@@ -3,8 +3,8 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import { getAsset } from '../../../assets';
 import useDictionary from '../../../customHooks/dictionary';
 const ComponentLoading = () => {
-  const { appDict } = useDictionary();
   const { clientKey, userLanguage } = useContext(GlobalContext);
+  const { appDict } = useDictionary(clientKey);
   return (
     <div className='min-h-screen h-screen w-full text-gray-200 font-open font-light flex flex-col justify-center items-center'>
       <div className='relative w-full mb-4 pb-4 flex flex-col justify-center items-center rounded-lg'>

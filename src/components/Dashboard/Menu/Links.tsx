@@ -26,11 +26,11 @@ export interface LinkProps {
 }
 
 const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
+  const { state, userLanguage, clientKey } = useContext(GlobalContext);
   const { currentPage, setCurrentPage } = linkProps;
-  const { sideBarLinksDict } = useDictionary();
+  const { sideBarLinksDict } = useDictionary(clientKey);
   const history = useHistory();
   const match = useRouteMatch();
-  const { state, theme, userLanguage } = useContext(GlobalContext);
   const { role } = linkProps;
   const [links, setLinks] = useState<Array<LinkObject>>([]);
 
@@ -43,6 +43,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   }, [role]);
 
   const userLinks = (role: string): void => {
+    console.log('role', role)
     switch (role) {
       case 'SUP':
         return setLinks((links) => {
