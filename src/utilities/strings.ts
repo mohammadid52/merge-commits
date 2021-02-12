@@ -241,3 +241,12 @@ export const getClientKey = () => {
   if (url.indexOf('curate') >= 0) return 'curate'
   else '' 
 }
+
+export const getLanguageString = (language: string) => {
+  switch (language) {
+    case 'EN':
+      return 'English';
+    case 'ES':
+      return 'Spanish';
+  }
+}

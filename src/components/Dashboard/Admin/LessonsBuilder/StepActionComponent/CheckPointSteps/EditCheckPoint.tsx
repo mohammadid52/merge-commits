@@ -20,10 +20,12 @@ const EditCheckPoint = (props: EditCheckPointProps) => {
   const initialData = {
     title: '',
     subtitle: '',
+    label: '',
+    instructionsTitle: '',
     purposeHtml: '<p></p>',
     objectiveHtml: '<p></p>',
     instructionHtml: '<p></p>',
-    languages: [{ id: '1', name: "English", value: 'EN' }]
+    language: { id: '1', name: "English", value: 'EN' }
   }
   const [checkPointData, setCheckPointData] = useState<InitialData>(initialData);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
@@ -46,21 +48,18 @@ const EditCheckPoint = (props: EditCheckPointProps) => {
     setCheckPointData({
       ...checkPointData,
       [fieldHtml]: html,
-      [field]: text
+      // [field]: text
     })
   }
-  const selectLanguage = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentLanguages = checkPointData.languages;
-    const selectedItem = currentLanguages.find(item => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentLanguages, { id, name, value }];
-    } else {
-      updatedList = currentLanguages.filter(item => item.id !== id);
-    }
+
+  const selectLanguage = (value: string, name: string, id: string) => {
     setCheckPointData({
       ...checkPointData,
-      languages: updatedList
+      language: {
+        id,
+        name,
+        value
+      }
     })
   }
 
@@ -75,7 +74,7 @@ const EditCheckPoint = (props: EditCheckPointProps) => {
     }
     setSelectedDesigners(updatedList)
   }
-  const { title, subtitle, languages, purposeHtml, objectiveHtml, instructionHtml } = checkPointData;
+  const { title, subtitle, language, label, instructionsTitle, purposeHtml, objectiveHtml, instructionHtml } = checkPointData;
 
   return (
     <Fragment>
@@ -94,7 +93,7 @@ const EditCheckPoint = (props: EditCheckPointProps) => {
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
-          <span className="font-normal text-gray-600 w-auto flex-shrink-0">Edit Checkpoint</span>
+          <span className="font-normal text-gray-600 w-auto flex-shrink-0">Add New Checkpoint</span>
 
         </h4>
       </div>
@@ -107,22 +106,31 @@ const EditCheckPoint = (props: EditCheckPointProps) => {
               <FormInput value={title} id='title' onChange={onInputChange} name='title' label="Title" isRequired />
             </div>
             <div>
+              <FormInput value={label} id='label' onChange={onInputChange} name='label' label="Checkpoint Label" isRequired />
+            </div>
+          </div>
+
+          <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+            <div>
               <FormInput value={subtitle} id='subtitle' onChange={onInputChange} name='subtitle' label="Subtitle" />
+            </div>
+            <div>
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                Select Language
+          </label>
+              <Selector selectedItem={language.name} placeholder="Language" list={languageList} onChange={selectLanguage} />
             </div>
           </div>
 
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Select Language
-            </label>
-              <Selector selectedItem={""} placeholder="Language" list={languageList} onChange={selectLanguage} />
+                Select Designers
+          </label>
+              <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
             </div>
             <div>
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Select Designers
-            </label>
-              <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
+              <FormInput value={instructionsTitle} id='instructionsTitle' onChange={onInputChange} name='instructionsTitle' label="Instructions Title" />
             </div>
           </div>
 
@@ -130,23 +138,23 @@ const EditCheckPoint = (props: EditCheckPointProps) => {
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
                 Purpose
-            </label>
+          </label>
               <RichTextEditor initialValue={purposeHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'purposeHtml', 'purpose')} />
             </div>
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-                Objective
-            </label>
-              <RichTextEditor initialValue={objectiveHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')} />
+                Instructions
+          </label>
+              <RichTextEditor initialValue={instructionHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'instructionHtml', 'instruction')} />
             </div>
           </div>
 
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-                Instructions
+                Objective
             </label>
-              <RichTextEditor initialValue={instructionHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'instructionHtml', 'instruction')} />
+              <RichTextEditor initialValue={objectiveHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')} />
             </div>
           </div>
         </div>

@@ -1,11 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react'
-import API, { graphqlOperation } from '@aws-amplify/api'
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp } from 'react-icons/io5';
 import { FaRegEye, FaQuestionCircle } from 'react-icons/fa';
-import { RiQuestionAnswerLine } from 'react-icons/ri';
-
-import * as customQueries from '../../../../customGraphql/customQueries';
 
 import Buttons from '../../../Atoms/Buttons';
 import BreadCrums from '../../../Atoms/BreadCrums';
@@ -15,10 +11,9 @@ import WizardScroller from '../../../Atoms/WizardScroller';
 
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm';
 import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
-import QuestionBuilder from './StepActionComponent/QuestionBuilder';
 import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
 import PreviewForm from './StepActionComponent/PreviewForm';
-import PreviousQuestions from './StepActionComponent/PreviousQuestions';
+import { InstructionInitialState, SavedLessonDetailsProps, LessonPlansProps } from './LessonEdit';
 
 export interface InitialData {
   name: string
@@ -58,12 +53,19 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     objectiveHtml: '<p></p>',
     languages: [{ id: '1', name: "English", value: 'EN' }]
   }
+  const instructionInitialState = {
+    introductionTitle: '',
+    instructionsTitle: '',
+    summaryTitle: '',
+    introduction: '',
+    instructions: '',
+    summary: ''
+  }
 
   const assessmentScrollerStep = [
     { name: "General Information", icon: <IoCardSharp /> },
     { name: "Instructions", icon: <IoDocumentText />, isDisabled: true },
     { name: "Builder", icon: <FaQuestionCircle />, isDisabled: true },
-    // { name: "Previously Used Questions", icon: <RiQuestionAnswerLine />, isDisabled: true },
     { name: "Preview Details", icon: <FaRegEye />, isDisabled: true }
   ];
   const lessonScrollerStep = [
@@ -72,11 +74,16 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   ];
 
   const [formData, setFormData] = useState<InitialData>(initialData);
+  // const [instructionData, setInstructionData] = useState<InstructionInitialState>(instructionInitialState)
+  // const [savedLessonDetails,setSavedLessonDetails] = useState<>()
+  const [savedLessonDetails, setSavedLessonDetails] = useState<SavedLessonDetailsProps>({
+    lessonPlans: null,
+    lessonInstructions: instructionInitialState
+  })
   const [selectedDesigners, setSelectedDesigners] = useState([]);
-
+  const [lessonId, setLessonId] = useState('');
   const [activeStep, setActiveStep] = useState('General Information');
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
-
   const changeLessonType = (type: string) => {
     if (type === 'lesson') {
       setLessonBuilderSteps(lessonScrollerStep);
@@ -98,12 +105,14 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           postLessonCreation={postLessonCreation}
         />;
       case 'Instructions':
-        return <AssessmentInstuctions />;
+        return <AssessmentInstuctions
+          lessonId={lessonId}
+          savedInstructions={savedLessonDetails?.lessonInstructions}
+          updateParentState={(obj) => onInstructionSaved(obj)}
+          lessonType={formData.type?.value}
+        />;
       case 'Builder':
-        return <CheckpointBuilder />;
-      // return <QuestionBuilder setActiveStep={setActiveStep} />;
-      // case 'Previously Used Questions':
-      //   return <PreviousQuestions />;
+        return <CheckpointBuilder lessonPlans={savedLessonDetails?.lessonPlans} designersList={designersList} lessonID={lessonId} updateLessonPlan={updateLessonPlan} />;
       case 'Preview Details':
         return <PreviewForm />;
       // default:
@@ -119,10 +128,11 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   }
 
-  const postLessonCreation = () => {
+  const postLessonCreation = (lessonId: string) => {
     const currentSteps = [...lessonBuilderSteps];
     const updatedState = currentSteps.map(item => ({ ...item, isDisabled: false }));
     setLessonBuilderSteps(updatedState);
+    setLessonId(lessonId);
     if (formData.type?.id === '1') {
       setActiveStep('Preview Details');
     } else {
@@ -130,6 +140,20 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   }
 
+  const onInstructionSaved = (obj: InstructionInitialState) => {
+    setSavedLessonDetails({
+      ...savedLessonDetails,
+      lessonInstructions: obj
+    })
+    setActiveStep('Builder')
+  }
+
+  const updateLessonPlan = (lessonPlan: LessonPlansProps[]) => {
+    setSavedLessonDetails({
+      ...savedLessonDetails,
+      lessonPlans: lessonPlan
+    })
+  }
   useEffect(() => {
     if (formData.type?.id) {
       changeLessonType(formData.type?.value)
@@ -152,7 +176,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       <PageWrapper>
 
         <div className="w-full m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3>
+          {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3> */}
           <div className="grid grid-cols-5 divide-x divide-gray-400 p-4">
             <div className="sm:col-span-1">
               <WizardScroller stepsList={lessonBuilderSteps} activeStep={activeStep} setActiveStep={(step) => setActiveStep(step)} />
