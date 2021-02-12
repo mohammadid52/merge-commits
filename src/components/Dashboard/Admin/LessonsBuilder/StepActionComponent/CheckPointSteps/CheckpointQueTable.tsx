@@ -12,10 +12,11 @@ interface CheckPointContentProps {
   checkpointId: string
   showActionIcons?: boolean
   DeleteCheckpoint?: (id: string) => void
+  editCheckPoint?: (id: string) => void
 }
 
 const CheckpointQueTable = (props: CheckPointContentProps) => {
-  const { changeStep, checkpointId, showActionIcons, DeleteCheckpoint } = props;
+  const { changeStep, checkpointId, showActionIcons, DeleteCheckpoint, editCheckPoint } = props;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [questionsList, setQuestionsList] = useState([]);
@@ -54,6 +55,10 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
       console.error(error);
     }
   }
+  const editCurrentCheckp = () => {
+    editCheckPoint(checkpointId);
+    changeStep('EditCheckPoint');
+  }
 
   useEffect(() => {
     fetchCheckpointQuestions();
@@ -62,7 +67,7 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
   return (
     <Fragment>
       {showActionIcons && <div className="w-9/10 mx-auto my-4 flex justify-end">
-        <span className="w-6 h-6 flex items-center cursor-pointer mr-4" onClick={() => changeStep('EditCheckPoint')}>
+        <span className="w-6 h-6 flex items-center cursor-pointer mr-4" onClick={editCurrentCheckp}>
           <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
             <FaEdit />
           </IconContext.Provider>
