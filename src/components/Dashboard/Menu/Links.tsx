@@ -145,6 +145,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               label: 'Anthology',
               path: 'anthology',
             },
+            {
+              title: sideBarLinksDict[userLanguage].CLASSROOM,
+              name: sideBarLinksDict[userLanguage].CLASSROOM,
+              label: 'Classroom',
+              path: 'classroom',
+            }
           ]
         })
       default:
