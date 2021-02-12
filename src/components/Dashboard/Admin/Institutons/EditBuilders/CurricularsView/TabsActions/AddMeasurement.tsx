@@ -33,6 +33,14 @@ const AddMeasurement = (props: AddMeasurementProps) => {
   const [validation, setValidation] = useState({ name: '', topic: '' })
   const [measurementIds, setMeasurementIds] = useState([]);
 
+  const useQuery = () => {
+    return new URLSearchParams(location.search);
+  };
+
+  const urlGetParams: any = useQuery();
+  const topicId = urlGetParams.get('tid'); // Find a code from params.
+
+
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Add Measurement', url: `/dashboard/curricular/${curricularId}/measurement/add`, last: true }
@@ -69,6 +77,9 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       value: item.name
     }));
     setTopics(list)
+    if(topicId){
+      setTopic(list.find((item:any) => item.id === topicId))
+    }
   }
   const fetchMeasurementSequence = async (topicId: string) => {
     let item: any = await API.graphql(graphqlOperation(queries.getCSequences,

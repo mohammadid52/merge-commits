@@ -3,6 +3,9 @@ import { LessonActions } from '../reducers/LessonReducer';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../customGraphql/customMutations';
 import { type } from 'os';
+import { AnthologyContentInterface } from '../components/Dashboard/Anthology/Anthology';
+
+
 
 interface inputs {
   subscription?: any;
@@ -66,14 +69,14 @@ const useStudentTimer = (inputs?: inputs) => {
     }
     if (!state.viewing) {
       if (typeOfTimeout === '') {
-        console.log('%c save timer: ', 'background: #222; color: #bada55', 'edit save triggered after 60s');
+        console.log('%c save timer: ', 'background: #bada55; color: #25362a', 'edit save triggered after 60s');
 
         setTypeOfTimeout('edit');
 
         const editTimeout = setTimeout(() => {
           dispatch({ type: 'INCREMENT_SAVE_COUNT' });
           setTypeOfTimeout('');
-          console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
+          console.log('%c save timer: ', 'background: #00FF00; color: #bada55', 'saved');
         }, 60000);
       }
     }
@@ -102,6 +105,59 @@ const useStudentTimer = (inputs?: inputs) => {
     updateStudentData('autosave');
   }, [params.state.saveCount]);
 
+  const getWarmupDataSource = () => {
+    const warmupType = state.data.lesson.warmUp.type;
+    switch(warmupType){
+      case 'story':
+      case 'list':
+        return params.state.componentState.story;
+      case 'truthgame':
+        return { truthGame: params.state.componentState.truthGame.truthGameArray };
+      case 'poll':
+        return {
+          poll: params.state.componentState.poll.pollInputs,
+          additional: params.state.componentState.poll.additional,
+        };
+      case 'adventure':
+      default:
+        return {};
+    }
+  }
+
+  const getAnthologyContent = () => {
+    const lessonPlan = state.data.lessonPlan;
+    return lessonPlan.reduce((acc: AnthologyContentInterface[], lessonPlanObj: { disabled: boolean; open: boolean; active: boolean; stage: string; type: string; displayMode: string }) => {
+      if (lessonPlanObj.type === 'story' || lessonPlanObj.type === 'poem') {
+        const template: AnthologyContentInterface = {
+          type: lessonPlanObj.type,
+          title: '',
+          subTitle: '',
+          description: '',
+          content: '',
+        };
+        const templateOutput = () => {
+          switch (lessonPlanObj.type) {
+            case 'story':
+              return {
+                ...template,
+                title: (params.state.componentState?.story) ? params.state.componentState?.story.title : '',
+                content: (params.state.componentState?.story) ? params.state.componentState.story.story : '',
+              };
+            case 'poem':
+              return {
+                ...template,
+                title: (params.state.componentState?.poem) ? params.state.componentState?.poem.title : '',
+                content: (params.state.componentState?.poem) ? params.state.componentState.poem?.editInput : '',
+              };
+          }
+        };
+        return [...acc, templateOutput()];
+      } else {
+        return acc;
+      }
+    }, []);
+  };
+
   const updateStudentData = async (saveType?: string) => {
     if (state.studentDataID) {
       let data = {
@@ -113,21 +169,15 @@ const useStudentTimer = (inputs?: inputs) => {
         syllabusLessonID: params.state.syllabusLessonID,
         studentID: params.state.studentUsername,
         studentAuthID: params.state.studentAuthID,
-        warmupData: params.state.componentState.story
-          ? params.state.componentState.story
-          : typeof params.state.componentState.truthGame?.truthGameArray !== 'undefined'
-          ? { truthGame: params.state.componentState.truthGame.truthGameArray }
-          : typeof params.state.componentState.poll?.pollInputs !== 'undefined'
-          ? { poll: params.state.componentState.poll.pollInputs, additional: params.state.componentState.poll.additional }
-          : null,
+        warmupData: getWarmupDataSource(),
         corelessonData: params.state.componentState.lyrics ? params.state.componentState.lyrics : null,
         activityData: params.state.componentState.poem ? params.state.componentState.poem : null,
+        anthologyContent: getAnthologyContent(),
       };
   
       try {
-        console.log(' timer save: ', data);
+        // console.log(' timer save: ', data);
         const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
-  
         dispatch({ type: 'SAVED_CHANGES' });
       } catch (error) {
         console.error(error);

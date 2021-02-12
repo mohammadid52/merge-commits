@@ -154,9 +154,8 @@ const Login = ({ updateAuthState }: LoginProps) => {
 
   const handleEnter = (e: any) => {
     if (e.key === 'Enter') {
-      SignIn();
+      handleSubmit();
     }
-    // toggleLoading();
   };
 
   const handleSubmit = () => {
@@ -287,16 +286,20 @@ const Login = ({ updateAuthState }: LoginProps) => {
             {/* <Link to="/register">Register</Link> */}
             <div className="relative h-4.5/10 flex flex-col justify-center items-center">
               <button
+                disabled={isToggled}
                 className="bg-dark-red text-gray-200 rounded-xl-xl mb-4"
                 onKeyPress={handleEnter}
                 onClick={handleSubmit}>
-                Login
+                {isToggled ? (
+                  <IconContext.Provider
+                    value={{ size: '1.5rem', color: '#ffffff', className: 'relative animate-spin' }}>
+                    <AiOutlineLoading3Quarters />
+                  </IconContext.Provider>
+                ) : (
+                  'Login'
+                )}
               </button>
-              {isToggled && (
-                <IconContext.Provider value={{ size: '1.5rem', color: '#488AC7', className: 'relative animate-spin' }}>
-                  <AiOutlineLoading3Quarters />
-                </IconContext.Provider>
-              )}
+
               <NavLink to="/forgot-password">
                 <div className="text-bold text-center text-blueberry hover:text-blue-500 mb-2">
                   Forgot your password?

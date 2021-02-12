@@ -16,10 +16,10 @@ const AuthRoutes = ({ updateAuthState }: AuthRoutesProps) => {
             <PrivateRoute path='/dashboard'>
                 <Dashboard updateAuthState={updateAuthState} />
             </PrivateRoute>
-            <PrivateRoute path='/lesson'>
+            <PrivateRoute path='/lesson/:lessonID'>
                 <Lesson />
             </PrivateRoute>
-            <PrivateRoute path='/lesson-control'>
+            <PrivateRoute path='/lesson-control/:lessonID'>
                 <TeacherView />
             </PrivateRoute>
             <Route

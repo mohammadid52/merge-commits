@@ -34,10 +34,14 @@ export const standardTheme = {
     bg: 'bg-darker-gray',
     card: 'p-2 relative bg-white rounded border border-dark-gray border-opacity-10 h-auto flex',
   },
+  lessonCard:{
+    title: 'flex items-center text-2xl text-black font-open text-left',
+    subtitle:'text-sm text-gray-400'
+  },
   sidemenu: {
     bg: 'bg-darker-gray',
     primary: 'z-50 min-h-screen w-32 min-w-32 flex flex-col bg-darker-gray',
-    secondary: 'z-50 min-h-screen w-32 min-w-32 flex flex-col bg-gray-200 border-r border-white',
+    secondary: 'z-50 min-h-screen w-32 min-w-32 flex flex-col bg-medium-gray border-r border-white',
     darktone: 'bg-black bg-opacity-80',
   },
   block: {
@@ -91,7 +95,7 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
     if (state.user && state.user.location && state.user.location.length > 0){
       updatePersonLocation();
     } else {
-      console.log('dashboard: ', 'user location not initialized yet...')
+      // console.log('dashboard: ', 'user location not initialized yet...')
     }
   }, [state.user]);
 

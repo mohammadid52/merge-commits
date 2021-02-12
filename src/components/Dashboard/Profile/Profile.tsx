@@ -70,12 +70,12 @@ const Profile: React.FC = () => {
       birthdate: null,
     }
   );
-  const { dashboardProfileDict, BreadcrumsTitles } = useDictionary();
+  const { state, theme, userLanguage, clientKey, dispatch } = useContext(GlobalContext);
+  const { dashboardProfileDict, BreadcrumsTitles } = useDictionary(clientKey);
   const match = useRouteMatch();
   const history = useHistory();
   const pathName = location.pathname.replace(/\/$/, "");
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
-  const { state, theme, userLanguage, dispatch } = useContext(GlobalContext);
   const [status, setStatus] = useState('');
   const [select, setSelect] = useState('Profile');
   const [showCropper, setShowCropper] = useState(false);

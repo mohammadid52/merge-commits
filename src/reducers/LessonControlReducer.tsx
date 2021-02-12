@@ -47,7 +47,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         endDate: action.payload.endDate,
       };
     case 'UPDATE_STUDENT_ROSTER':
-      console.log('lesson control reducer students: ', action.payload.students);
+      //console.log('lesson control reducer students: ', action.payload.students);
       return {
         ...state,
         roster: action.payload.students,

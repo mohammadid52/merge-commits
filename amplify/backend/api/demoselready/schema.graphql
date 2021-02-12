@@ -780,11 +780,11 @@ type StudentData
   activityData: ActivityData
   doFirstData: [QuestionDataStudentData]! @connection(name: "byStudentData", fields: ["id"])
   checkpointData: [QuestionDataStudentData]! @connection(name: "byStudentData", fields: ["id"])
-  anthologyType: String
 	anthologyContent: [AnthologyContent]
 }
 
 type AnthologyContent {
+  type: String
 	title: String
 	subTitle: String
 	description: String

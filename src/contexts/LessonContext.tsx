@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { lessonState, PagesType } from '../state/LessonState';
 import { lessonReducer } from '../reducers/LessonReducer';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
@@ -27,6 +27,7 @@ interface DataObject {
 export const LessonContext = React.createContext(null);
 
 export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
+  const urlParams: any = useParams()
   const [data, setData] = useState<DataObject>();
   const [lesson, setLesson] = useState<DataObject>();
   const [subscriptionData, setSubscriptionData] = useState<any>();
@@ -82,7 +83,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     } catch (e) {
       console.error(e);
     } finally {
-      console.log('loaded...');
+      //console.log('loaded...');
       setLoaded(true);
     }
   }
@@ -97,7 +98,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       lessonProgress: state.lessonProgress,
     };
     try {
-      console.log('created', newLocation);
+      //console.log('created', newLocation);
       const newPersonLocationMutation: any = await API.graphql(
         graphqlOperation(mutations.createPersonLocation, { input: newLocation })
       );
@@ -139,7 +140,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   //  END OF LOCATION TRACKING SCRIPT
 
   async function getOrCreateStudentData() {
-    let queryParams = queryString.parse(location.search);
+    const { lessonID } = urlParams
     let studentID: string;
     let studentAuthID: string;
 
@@ -152,7 +153,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     try {
       const studentData: any = await API.graphql(
         graphqlOperation(customQueries.getStudentData, {
-          syllabusLessonID: queryParams.id,
+          syllabusLessonID: lessonID,
           studentID: studentID,
         })
       );
@@ -164,7 +165,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
               lessonProgress: '0',
               currentLocation: '0',
               status: 'ACTIVE',
-              syllabusLessonID: queryParams.id,
+              syllabusLessonID: lessonID,
               studentID: studentID,
               studentAuthID: studentAuthID,
             },
@@ -195,11 +196,11 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   }
 
   async function getSyllabusLesson() {
-    let queryParams = queryString.parse(location.search);
-    if (Object.keys(queryParams).length && queryParams.id) {
+    const { lessonID } = urlParams;
+    if (lessonID) {
       try {
         const classroom: any = await API.graphql(
-          graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id })
+          graphqlOperation(customQueries.getSyllabusLesson, { id: lessonID })
         );
         // console.log('classroom data', classroom);
         setLesson(classroom.data.getSyllabusLesson);
@@ -215,15 +216,13 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
   // TODO: rename to subscribeToSyllabusLesson
   const subscribeToSyllabusLesson = () => {
-    let queryParams = queryString.parse(location.search);
-
-    // console.log('subscription params: ', queryParams);
+    const { lessonID } = urlParams;
     // @ts-ignore
-    const syllabusLessonSubscription = API.graphql( graphqlOperation(customSubscriptions.onChangeSyllabusLesson, { id: queryParams.id }) ).subscribe({
+    const syllabusLessonSubscription = API.graphql( graphqlOperation(customSubscriptions.onChangeSyllabusLesson, { id: lessonID }) ).subscribe({
       next: (syllabusLessonData: any) => {
         const updatedLessonPlan = syllabusLessonData.value.data.onChangeSyllabusLesson;
         // @ts-ignore
-        API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: queryParams.id })).then(
+        API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: lessonID })).then(
           (sLessonData: any) => {
             const sLessonDataData = sLessonData.data.getSyllabusLesson;
             setSubscriptionData(sLessonDataData)

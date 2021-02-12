@@ -38,7 +38,7 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
   }
 
   const createNewTopic = () => {
-    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/topic/add`)
+    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/topic/add?lid=${learningId}`)
   }
 
   const editCurrentTopic = (id: string) => {

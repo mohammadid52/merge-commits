@@ -48,8 +48,8 @@ const EditClass = (props: EditClassProps) => {
     { title: 'Edit Class', url: `/dashboard/class-edit?id=${urlParams.get('id')}`, last: true }
   ];
 
-  const { editClassDict } = useDictionary();
-  const { userLanguage } = useContext(GlobalContext);
+  const { clientKey, userLanguage } = useContext(GlobalContext);
+  const { editClassDict } = useDictionary(clientKey);
   const dictionary = editClassDict[userLanguage]
 
   const fetchClassData = async (classId: string) => {
