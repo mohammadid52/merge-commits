@@ -84,7 +84,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
         }
       }
     };
-    userRole === 'FLW' || userRole === 'TR' && listRoomTeacher();
+    (userRole === 'FLW' || userRole === 'TR') && listRoomTeacher();
   }, []);
 
   useEffect(() => {
