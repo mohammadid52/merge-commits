@@ -1,15 +1,13 @@
 import React, { useEffect, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { LessonContext } from '../../../contexts/LessonContext';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineInstagram, AiOutlineFacebook } from 'react-icons/ai';
-
-import BottomMenu from './BottomMenu';
+import { getAsset } from '../../../assets';
 
 const Branding: React.FC = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
+  const { clientKey } = useContext(GlobalContext);
   const history = useHistory();
   const match = useRouteMatch();
 
@@ -74,15 +72,14 @@ const Branding: React.FC = () => {
             <NavLink to='/dashboard'>
               <img
                 className='h-12 px-4'
-                src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-WHITE.svg'
-                alt='Iconoclast Artists'
+                src={getAsset(clientKey, 'main_logo')}
+                alt='Logo'
               />
             </NavLink>
           </div>
 
           {/* CONTINUE */}
           <div className='w-3.3/10 flex justify-center items-center'>
-            {!history.location.pathname.includes('corelesson') ? (
               <div
                 className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
                   state.canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark-gray cursor-default'
@@ -90,7 +87,6 @@ const Branding: React.FC = () => {
                 onClick={handleForward}>
                 <div className='w-auto h-auto text-white'>Continue</div>
               </div>
-            ) : null}
           </div>
         </div>
       </div>

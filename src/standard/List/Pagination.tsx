@@ -9,7 +9,7 @@ const Pagination = (props: props) => {
     const [posts, setPosts] = useState(data);
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage, setPostsPerPage] = useState(10);
-    console.log(data);
+    //console.log(data);
     return (
         //change the NUMBERs
         <div className="w-full bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">

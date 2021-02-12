@@ -1,65 +1,82 @@
-import React, { useContext, useState, useEffect, SetStateAction } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 // Iconz
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FiUsers } from 'react-icons/fi';
-import { FaUniversity, FaRulerVertical } from 'react-icons/fa';
-import { AiOutlineSchedule, AiOutlineAudit, AiOutlineUsergroupAdd } from 'react-icons/ai';
+import { FaRulerVertical, FaQuestionCircle } from 'react-icons/fa';
+import { AiOutlineSchedule, AiOutlineUsergroupAdd, AiOutlineBook } from 'react-icons/ai';
 import useDictionary from '../../../customHooks/dictionary';
+import { IoIosPeople } from 'react-icons/io';
+import { IoBookOutline, IoSchoolOutline } from 'react-icons/io5';
 
 type LinkObject = {
   name: string;
   path: string;
-  title: string
+  title?: string;
+  label?: string;
 };
 
 export interface LinkProps {
   children?: React.ReactNode;
-  setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
+  setCurrentPage?: React.Dispatch<React.SetStateAction<string>>;
   currentPage: string;
   image?: string;
   role?: string;
-  updateAuthState?: Function
-};
+  updateAuthState?: Function;
+}
 
 const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
-  const { sideBarLinksDict } = useDictionary()
+  const { state, userLanguage, clientKey } = useContext(GlobalContext);
+  const { currentPage, setCurrentPage } = linkProps;
+  const { sideBarLinksDict } = useDictionary(clientKey);
   const history = useHistory();
   const match = useRouteMatch();
-  const { state, userLanguage } = useContext(GlobalContext);
   const { role } = linkProps;
   const [links, setLinks] = useState<Array<LinkObject>>([]);
-  
+
+  /**
+   * DISPLAY OTHER MENU ITEMS FOR
+   * DIFFERENT USERS
+   */
+  useEffect(() => {
+    userLinks(role);
+  }, [role]);
+
   const userLinks = (role: string): void => {
+    console.log('role', role)
     switch (role) {
       case 'SUP':
         return setLinks((links) => {
           return [
             ...links,
             {
-              title: 'REGISTRATION',
-              name: 'Registration',
+              title: sideBarLinksDict[userLanguage].REGISTRATION,
+              name: sideBarLinksDict[userLanguage].REGISTRATION,
+              label: 'Registration',
               path: 'registration',
             },
             {
-              title: 'PEOPLE',
-              name: 'People',
+              title: sideBarLinksDict[userLanguage].PEOPLE,
+              name: sideBarLinksDict[userLanguage].PEOPLE,
+              label: 'People',
               path: 'manage-users',
             },
             {
-              title: 'CLASSROOM',
-              name: 'Classroom',
+              title: sideBarLinksDict[userLanguage].CLASSROOM,
+              name: sideBarLinksDict[userLanguage].CLASSROOM,
+              label: 'Classroom',
               path: 'classroom',
             },
             {
-              title: 'LESSON_PLANNER',
-              name: 'Lesson Planner',
+              title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+              name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+              label: 'Lesson Planner',
               path: 'lesson-planner',
             },
             {
-              title: 'INSTITUTIONS',
-              name: 'Institutions',
+              title: sideBarLinksDict[userLanguage].INSTITUTIONS,
+              name: sideBarLinksDict[userLanguage].INSTITUTIONS,
+              label: 'Institutions',
               path: 'manage-institutions',
             },
           ];
@@ -69,28 +86,34 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
-              title: 'INSTITUTIONS',
-              name: 'Institutions',
+              title: sideBarLinksDict[userLanguage].INSTITUTIONS,
+              name: sideBarLinksDict[userLanguage].INSTITUTIONS,
+              label: 'Institutions',
               path: 'manage-institutions',
             },
             {
-              title: 'PEOPLE',
-              name: 'People',
+              title: sideBarLinksDict[userLanguage].PEOPLE,
+              name: sideBarLinksDict[userLanguage].PEOPLE,
+              label: 'People',
               path: 'manage-users',
             },
-            // {
-            //   name: 'Lesson Builder',
-            //   path: 'lesson-planner',
-            // },
             {
-              title: 'LESSON_PLANNER',
-              name: 'Lesson Planner',
+              title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+              name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+              label: 'Lesson Planner',
               path: 'lesson-planner',
             },
             {
-              title: 'CLASSROOM',
-              name: 'Classroom',
+              title: sideBarLinksDict[userLanguage].CLASSROOM,
+              name: sideBarLinksDict[userLanguage].CLASSROOM,
+              label: 'Classroom',
               path: 'classroom',
+            },
+            {
+              title: sideBarLinksDict[userLanguage].LESSON_BUILDER,
+              name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
+              label: 'Lesson Builder',
+              path: 'lesson-builder',
             },
           ];
         });
@@ -98,39 +121,36 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         return setLinks((links) => {
           return [
             ...links,
-            // {
-            //   name: 'Registration',
-            //   path: 'registration',
-            // },
             {
-              title: 'PEOPLE',
-              name: 'People',
+              title: sideBarLinksDict[userLanguage].PEOPLE,
+              name: sideBarLinksDict[userLanguage].PEOPLE,
+              label: 'People',
               path: 'manage-users',
             },
             {
-              title: 'LESSON_PLANNER',
-              name: 'Lesson Planner',
+              title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+              name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
+              label: 'Lesson Planner',
               path: 'lesson-planner',
             },
           ];
         });
+      case 'ST':
+        return setLinks((links) => {
+          return [
+            ...links,
+            {
+              title: 'ANTHOLOGY',
+              name: 'Anthology',
+              label: 'Anthology',
+              path: 'anthology',
+            },
+          ]
+        })
       default:
         return;
     }
   };
-
-  // useEffect(() => {
-  //   userLinks(state.user.role);
-  // }, [state.user.role]);
-
-  useEffect(() => {
-    userLinks(role);
-  }, [role]);
-
-  // useEffect(() => {
-  //   console.log("initial useeffect in links has been called", role)
-  //   userLinks(role);
-  // }, [])
 
   const handleLink = (e: any) => {
     const id = e.target.id.toLowerCase();
@@ -146,81 +166,87 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     linkProps.setCurrentPage(id);
   };
 
+  /**
+   * HANDLE MENU LINK COLORS
+   */
+  useEffect(() => {
+    if (pageUrlEndsWith('dashboard')) {
+      setCurrentPage('classroom');
+    }
+    if (pageUrlContains('/dashboard/manage-users')) {
+      setCurrentPage('manage-users');
+    }
+    if (pageUrlContains('/dashboard/registration')) {
+      setCurrentPage('registration');
+    }
+    if (pageUrlContains('/dashboard/classroom')) {
+      setCurrentPage('classroom');
+    }
+    if (pageUrlContains('/dashboard/lesson-planner')) {
+      setCurrentPage('lesson-planner');
+    }
+    if (pageUrlContains('/dashboard/lesson-builder')) {
+      setCurrentPage('lesson-builder');
+    }
+    if (pageUrlContains('/dashboard/manage-institutions')) {
+      setCurrentPage('manage-institutions');
+    }
+    if (pageUrlContains('/dashboard/anthology')) {
+      setCurrentPage('anthology');
+    }
+    if (pageUrlContains('/dashboard/assessments')) {
+      setCurrentPage('assessments');
+    }
+  }, []);
+
+  const pageUrlEndsWith = (pageLabel: string) => {
+    const pageUrl = window.location.href;
+    const lastPart = pageUrl.match(/[^/]+$/g);
+    return lastPart.includes(pageLabel);
+  };
+
+  const pageUrlContains = (pageLabel: string) => {
+    const pageUrl = window.location.href;
+    return pageUrl.indexOf(pageLabel) !== -1;
+  };
+
   const getMenuIcon = (label: string, url: string) => {
     switch (label) {
       case 'People':
-        return <FiUsers id={url} />;
-        break;
+        return <IoIosPeople id={url} />;
       case 'Registration':
         return <AiOutlineUsergroupAdd id={url} />;
-        break;
       case 'Classroom':
-        return <AiOutlineAudit id={url} />;
-        break;
+        return <IoBookOutline id={url} />;
       case 'Lesson Planner':
         return <AiOutlineSchedule id={url} />;
-        break;
       case 'Lesson Builder':
         return <FaRulerVertical id={url} />;
-        break;
       case 'Institutions':
-        return <FaUniversity id={url} />;
-        break;
+        return <IoSchoolOutline id={url} />;
+      case 'Anthology':
+        return <AiOutlineBook id={url} />;
       default:
         return '';
     }
   };
-  const getClassStyle = (label: string) => {
-    switch (label) {
-      case 'People':
-        return `${linkProps.currentPage === 'manage-users' && 'bg-grayscale'
-          } border-l-4 border-mustard-yellow`;
-        break;
-      case 'Registration':
-        return `${linkProps.currentPage === 'registration' && 'bg-grayscale'
-          } border-l-4 border-ketchup`;
-        break;
-      case 'Classroom':
-        return `${linkProps.currentPage === 'classroom' && 'bg-grayscale'
-          } border-l-4 border-blueberry`;
-        break;
-      case 'Lesson Planner':
-        return `${linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'
-          } border-l-4 border-sea-green`;
-        break;
-      case 'Lesson Builder':
-        return `${linkProps.currentPage === 'lesson-planner' && 'bg-grayscale'
-          } border-l-4 border-sea-green`;
-        break;
-      case 'Institutions':
-        return `${linkProps.currentPage === 'manage-institutions' && 'bg-grayscale'
-          } border-l-4 border-ketchup`;
-        break;
-      default:
-        return '';
-    }
-  };
+
+  const linkClass =
+    'w-full h-20 text-center text-xs tracking-wider mx-auto py-4 flex flex-col items-center justify-center';
+  const dividerClass = 'w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent';
+  const activeClass = 'bg-gray-200 text-dark-gray';
 
   return (
-    <div className="link  w-full h-12 z-40">
+    <div className={`link w-full h-12 z-40`}>
       {state.user.role && links.length > 0
-        ? links.map((link: { name: string; path: string }, key: number) => (
-            <div key={`link_${key}`}>
-              <div
-                id={link.path}
-                className={`w-full h-16 text-center text-sm mx-auto py-4 flex flex-col items-center justify-center ${getClassStyle(
-                  link.name
-                )}`}
-                onClick={handleLink}>
-                <div id={link.path} className="w-full text-center">
-                  <IconContext.Provider value={{ size: '1.5rem' }}>
-                    {getMenuIcon(link.name, link.path)}
-                  </IconContext.Provider>
-                </div>
+        ? links.map((link: { name: string; path: string, label: string }, key: number) => (
+            <div key={`link_${key}`} id={link.path} onClick={handleLink}>
+              <div id={link.path} className={`${linkClass} ${currentPage === link.path && activeClass}`}>
+                <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
+                  {getMenuIcon(link.label, link.path)}
+                </IconContext.Provider>
                 {link.name}
               </div>
-
-              <div className={`w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent`}></div>
             </div>
           ))
         : null}

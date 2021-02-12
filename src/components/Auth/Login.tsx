@@ -10,17 +10,19 @@ import { AiOutlineEyeInvisible } from 'react-icons/ai';
 import { MdEmail } from 'react-icons/md';
 import { useHistory, Link, NavLink } from 'react-router-dom';
 import Auth from '@aws-amplify/auth';
-import * as queries from '../../graphql/queries'
+import * as queries from '../../graphql/queries';
 import * as customMutations from '../../customGraphql/customMutations';
+import { getAsset } from '../../assets';
+
 interface LoginProps {
-  updateAuthState: Function
+  updateAuthState: Function;
 }
 
 const Login = ({ updateAuthState }: LoginProps) => {
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const [cookies, setCookie, removeCookie] = useCookies();
   const history = useHistory();
-  const { theme, state, dispatch } = useContext(GlobalContext);
+  const { theme, state, clientKey, dispatch } = useContext(GlobalContext);
   let [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
     show: false,
     type: '',
@@ -41,13 +43,15 @@ const Login = ({ updateAuthState }: LoginProps) => {
       const user = await Auth.signIn(username, password);
       dispatch({ type: 'LOG_IN', payload: { email: username, authId: user.username } });
       if (isChecked) {
-        setCookie('cred', { email: username, isChecked, password }, { path: '/' })
+        setCookie('cred', { email: username, isChecked, password }, { path: '/' });
       } else {
         removeCookie('cred');
       }
       setCookie('auth', { email: username, authId: user.username }, { secure: false, path: '/' });
-      sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken)
-      let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: username, authId: user.username }))
+      sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken);
+      let userInfo: any = await API.graphql(
+        graphqlOperation(queries.getPerson, { email: username, authId: user.username })
+      );
       userInfo = userInfo.data.getPerson;
       dispatch({
         type: 'SET_USER',
@@ -58,19 +62,17 @@ const Login = ({ updateAuthState }: LoginProps) => {
           language: userInfo.language,
           onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
           role: userInfo.role,
-          image: userInfo.image
-        }
+          image: userInfo.image,
+        },
       });
       const input = {
         id: userInfo.id,
         authId: user.username,
         email: username,
-        lastLoggedIn: (new Date()).toISOString()
-      }
-      const update: any = await API.graphql(
-        graphqlOperation(customMutations.updatePersonLoginTime, { input })
-      );
-      updateAuthState(true)
+        lastLoggedIn: new Date().toISOString(),
+      };
+      const update: any = await API.graphql(graphqlOperation(customMutations.updatePersonLoginTime, { input }));
+      updateAuthState(true);
     } catch (error) {
       console.error('error signing in', error);
 
@@ -109,12 +111,12 @@ const Login = ({ updateAuthState }: LoginProps) => {
               type: 'error',
               message: 'The email or password you entered was not correct',
             };
-          case "UserNotConfirmedException":
+          case 'UserNotConfirmedException':
             return {
               show: true,
               type: 'error',
               message: 'You need to confirm registered email id, Please check your email.',
-            }
+            };
           // shows valid error message for confirmation error instead of redirecting to confirm-code rout.
 
           default:
@@ -125,7 +127,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
             };
         }
       });
-      toggleLoading(false)
+      toggleLoading(false);
     }
   }
 
@@ -152,9 +154,8 @@ const Login = ({ updateAuthState }: LoginProps) => {
 
   const handleEnter = (e: any) => {
     if (e.key === 'Enter') {
-      SignIn();
+      handleSubmit();
     }
-    // toggleLoading();
   };
 
   const handleSubmit = () => {
@@ -162,115 +163,107 @@ const Login = ({ updateAuthState }: LoginProps) => {
     toggleLoading(true);
   };
   const checkLoginCred = () => {
-
     const auth = cookies.cred;
     if (auth?.isChecked) {
       setIsChecked(auth.isChecked);
       setInput({
         ...input,
         email: auth.email,
-        password: auth.password
-      })
+        password: auth.password,
+      });
     }
-  }
+  };
 
   const toggleCheckBox = () => {
     setIsChecked(!isChecked);
-  }
+  };
 
   useEffect(() => {
-    checkLoginCred()
-  }, [])
+    checkLoginCred();
+  }, []);
 
   return (
-    <div className='w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm'>
-      <div className='w-auto h-auto flex flex-row rounded-xl shadow-2xl'>
-        <div className='login w-140 min-w-sm max-w-sm bg-white rounded-l-xl pt-0'>
-          <div className='h-.7/10  w-full rounded-tl-xl'></div>
-          <div className='relative h-9.3/10 flex flex-col items-center p-8'>
-            <div className='absolute text-center text-xs mb-4' style={{ bottom: '0' }}>
+    <div className="w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm">
+      <div className="w-auto h-auto flex flex-row rounded-xl shadow-2xl">
+        <div className="login w-140 min-w-sm max-w-sm bg-white rounded-l-xl pt-0">
+          <div className="h-.7/10  w-full rounded-tl-xl"></div>
+          <div className="relative h-9.3/10 flex flex-col items-center p-8">
+            <div className="absolute text-center text-xs mb-4" style={{ bottom: '0' }}>
               <p>© Copyright 2020</p>
               <p>
-                <NavLink className='underline text-sm hover:text-blue-500' to='/privacy-policy'>
+                <NavLink className="underline text-sm hover:text-blue-500" to="/privacy-policy">
                   Privacy Policy
                 </NavLink>
               </p>
             </div>
-            <div className='h-24 w-56'>
-              <img
-                className=''
-                src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg'
-                alt='Iconoclast Artists'
-              />
+            <div className="h-24 w-56">
+              <img className="" src={getAsset(clientKey, 'login_page_logo')} alt="login_page_logo" />
             </div>
 
-            <div className='h-4.5/10 flex-grow flex flex-col justify-center'>
-              <div className='w-full h-1/10 flex justify-center items-center'>
+            <div className="h-4.5/10 flex-grow flex flex-col justify-center">
+              <div className="w-full h-1/10 flex justify-center items-center">
                 {message.show ? (
                   <p
-                    className={`text-sm text-center ${message.type === 'success'
-                      ? 'text-green-500'
-                      : message.type === 'error'
-                        ? 'text-red-500'
-                        : null
-                      }`}>
+                    className={`text-sm text-center ${
+                      message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null
+                    }`}>
                     {message.message}
                   </p>
                 ) : null}
               </div>
 
-              <div className='input'>
-                <div className='icon'>
+              <div className="input">
+                <div className="icon">
                   <IconContext.Provider value={{ size: '1.5rem' }}>
                     <MdEmail />
                   </IconContext.Provider>
                 </div>
-                <label className='hidden' htmlFor='email'>
+                <label className="hidden" htmlFor="email">
                   Email
                 </label>
                 <input
-                  className='w-full px-2 py-1 ml-2 bg-off-white'
-                  placeholder='Email'
-                  type='text'
-                  id='email'
-                  name='email'
+                  className="w-full px-2 py-1 ml-2 bg-off-white"
+                  placeholder="Email"
+                  type="text"
+                  id="email"
+                  name="email"
                   value={input.email}
                   onChange={handleChange}
                 />
               </div>
 
-              <div className='input relative w-full'>
-                <div style={{ right: 0 }} className='absolute w-6'>
+              <div className="input relative w-full">
+                <div style={{ right: 0 }} className="absolute w-6">
                   <div
                     onClick={() => setPassToggle(!passToggle)}
-                    className='text-gray-500 cursor-pointer hover:text-grayscale'>
+                    className="text-gray-500 cursor-pointer hover:text-grayscale">
                     {passToggle ? (
                       <IconContext.Provider value={{ size: '1.5rem' }}>
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
-                        <IconContext.Provider value={{ size: '1.5rem' }}>
-                          <AiOutlineEyeInvisible />
-                        </IconContext.Provider>
-                      )}
+                      <IconContext.Provider value={{ size: '1.5rem' }}>
+                        <AiOutlineEyeInvisible />
+                      </IconContext.Provider>
+                    )}
                   </div>
                 </div>
 
-                <div className='icon'>
+                <div className="icon">
                   <IconContext.Provider value={{ size: '1.2rem' }}>
                     <FaKey />
                   </IconContext.Provider>
                 </div>
 
-                <label className='hidden' htmlFor='password'>
+                <label className="hidden" htmlFor="password">
                   Password
                 </label>
                 <input
-                  className='w-full px-2 py-1 ml-2 bg-off-white'
-                  placeholder='Password'
+                  className="w-full px-2 py-1 ml-2 bg-off-white"
+                  placeholder="Password"
                   type={passToggle ? 'text' : 'password'}
-                  id='password'
-                  name='password'
+                  id="password"
+                  name="password"
                   value={input.password}
                   onChange={handleChange}
                   onKeyDown={handleEnter}
@@ -279,29 +272,36 @@ const Login = ({ updateAuthState }: LoginProps) => {
 
               <div className="my-3">
                 <label className="flex items-center justify-end">
-                  <input type="checkbox" className="form-checkbox w-4 h-10" checked={isChecked} onChange={toggleCheckBox} />
+                  <input
+                    type="checkbox"
+                    className="form-checkbox w-4 h-10"
+                    checked={isChecked}
+                    onChange={toggleCheckBox}
+                  />
                   <span className="ml-2 w-auto">Remember Me</span>
                 </label>
               </div>
-
             </div>
 
             {/* <Link to="/register">Register</Link> */}
-            <div className='relative h-4.5/10 flex flex-col justify-center items-center'>
+            <div className="relative h-4.5/10 flex flex-col justify-center items-center">
               <button
-                className='bg-dark-red text-gray-200 rounded-xl-xl mb-4'
+                disabled={isToggled}
+                className="bg-dark-red text-gray-200 rounded-xl-xl mb-4"
                 onKeyPress={handleEnter}
                 onClick={handleSubmit}>
-                Login
+                {isToggled ? (
+                  <IconContext.Provider
+                    value={{ size: '1.5rem', color: '#ffffff', className: 'relative animate-spin' }}>
+                    <AiOutlineLoading3Quarters />
+                  </IconContext.Provider>
+                ) : (
+                  'Login'
+                )}
               </button>
-              {isToggled && (
-                <IconContext.Provider
-                  value={{ size: '1.5rem', color: '#488AC7', className: 'relative animate-spin' }}>
-                  <AiOutlineLoading3Quarters />
-                </IconContext.Provider>
-              )}
-              <NavLink to='/forgot-password'>
-                <div className='text-bold text-center text-blueberry hover:text-blue-500 mb-2'>
+
+              <NavLink to="/forgot-password">
+                <div className="text-bold text-center text-blueberry hover:text-blue-500 mb-2">
                   Forgot your password?
                 </div>
               </NavLink>
@@ -313,7 +313,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
             </div>
           </div>
         </div>
-        <div className='login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 bg-login-bg bg-cover bg-center'></div>
+        <div className="login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 bg-login-bg bg-cover bg-center"></div>
         {/* <div className="absolute w-full h-screen scale-110 bg-login-bg" style={{filter: 'blur(24px)', WebkitFilter: 'blur(24px)'}}></div> */}
       </div>
     </div>

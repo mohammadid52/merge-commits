@@ -6,7 +6,7 @@ import CheckpointQuestions from '../../AssessmentComponents/CheckpointQuestions'
 
 const DoFirst = () => {
   const { state, dispatch, theme } = useContext(LessonContext);
-  const [ cookies, setCookie ] = useCookies([`lesson-${state.classroomID}`]);
+  const [ cookies, setCookie ] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const { questions, required, type } = state.data.lesson.doFirst;
   const doFirstID = state.data.lesson.doFirst.id
   const questionArray = questions.items;
@@ -36,9 +36,9 @@ const DoFirst = () => {
     //   });
     // }
 
-    if ( cookies[`lesson-${state.classroomID}`]?.doFirst ) {
+    if ( cookies[`lesson-${state.syllabusLessonID}`]?.doFirst ) {
       setInput(() => {
-        return cookies[`lesson-${state.classroomID}`].doFirst
+        return cookies[`lesson-${state.syllabusLessonID}`].doFirst
       })
     }
     setStatus('loaded')
@@ -58,8 +58,8 @@ const DoFirst = () => {
     //   });
     // }
 
-    setCookie(`lesson-${state.classroomID}`, {
-      ...cookies[`lesson-${state.classroomID}`],
+    setCookie(`lesson-${state.syllabusLessonID}`, {
+      ...cookies[`lesson-${state.syllabusLessonID}`],
       doFirst: input
     })
 

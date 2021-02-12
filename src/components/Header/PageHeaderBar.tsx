@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { useCookies } from 'react-cookie';
-import { NavLink, useHistory, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import { LinkProps } from '../Dashboard/Menu/Links';
 
@@ -15,10 +15,8 @@ import * as customMutations from '../../customGraphql/customMutations'
 
 const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const [cookies, , removeCookie] = useCookies();
-  const { appDict } = useDictionary()
-  const location = useLocation();
-  const history = useHistory();
-  const { theme, lightSwitch, forceTheme, userLanguage, state, dispatch } = useContext(GlobalContext);
+  const { theme, userLanguage, clientKey, state, dispatch } = useContext(GlobalContext);
+  const { appDict } = useDictionary(clientKey)
 
   async function SignOut() {
     try {
@@ -35,7 +33,7 @@ const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
       sessionStorage.removeItem('accessToken');
       dispatch({ type: 'CLEANUP' });
     } catch (error) {
-      console.log('error signing out: ', error);
+      console.error('error signing out: ', error);
     }
   }
 
@@ -68,9 +66,6 @@ const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
                 <button className={`w-24 h-full flex justify-center items-center text-lg py-2`} onClick={lightSwitch}></button> */}
 
       <div className={`w-full md:w-32 h-12 md:flex flex-row justify-end bg-darker-gray`}>
-        {/* <button className={`h-full flex justify-center items-center text-lg py-2`} onClick={lightSwitch}>
-                    Lights
-                </button> */}
         {state.isAuthenticated ? (
           <div className={`h-full text-sm flex align-center justify-center ${theme.sidemenu.bg}`} onClick={handleSignOut}>
             <span className='relative mr-1 w-auto h-full flex items-center justify-center'>

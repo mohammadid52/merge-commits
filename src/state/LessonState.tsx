@@ -13,11 +13,12 @@ export type PagesType = Array<{
 export interface LessonStateType  {
     status: string;
     error: string;
-    classroomID: string,
+    syllabusLessonID: string,
     studentStatus: string;
     data?: {
         [key: string]: any;
     }
+    location: any[];
     studentDataID: string,
     studentUsername: string,
     studentAuthID: string,
@@ -47,12 +48,13 @@ export interface LessonStateType  {
 export const lessonState: LessonStateType = {
     status: '',
     error: '',
-    classroomID: '',
+    syllabusLessonID: '',
     studentStatus: 'ACTIVE',
     studentDataID: '',
     studentUsername: '',
     studentAuthID: '',
     data: {},
+    location: [],
     currentPage: 0,
     lessonProgress: 0,
     canContinue: false,

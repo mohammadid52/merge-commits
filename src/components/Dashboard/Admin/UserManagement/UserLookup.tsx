@@ -192,6 +192,10 @@ const UserLookup = () => {
 		} else {
 			setTotalPages(totalListPages + 1)
 		}
+		if (totalPages === 1 && totalListPages === 0) {
+			setFirstPage(true);
+			setLastPage(true);
+		}
 	}, [userCount]);
 
 	useEffect(() => {
@@ -216,7 +220,7 @@ const UserLookup = () => {
 	}
 	{
 		return (
-			<div className={`w-full h-full mt-4`}>
+			<div className={`w-full h-full`}>
 
 				{/* Header Section */}
 				<BreadCrums items={breadCrumsList} />

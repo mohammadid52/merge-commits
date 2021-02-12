@@ -7,6 +7,8 @@ import Buttons from '../../../../Atoms/Buttons';
 import PageWrapper from '../../../../Atoms/PageWrapper';
 
 import { getInitialsFromString, initials, stringToHslColor, createFilterToFetchSpecificItemsOnly } from '../../../../../utilities/strings';
+import { getImageFromS3 } from '../../../../../utilities/services';
+import { statusList } from '../../../../../utilities/staticData';
 
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
@@ -21,8 +23,8 @@ interface StaffBuilderProps {
 }
 
 const StaffBuilder = (props: StaffBuilderProps) => {
-  const { staffBuilderDict } = useDictionary();
-  const { userLanguage } = useContext(GlobalContext);
+  const { userLanguage, clientKey } = useContext(GlobalContext);
+  const { staffBuilderDict } = useDictionary(clientKey);
   const dictionary = staffBuilderDict[userLanguage]
   const [availableUsers, setAvailableUsers] = useState([]);
   const [allAvailableUsers, setAllAvailableUsers] = useState([])
@@ -37,11 +39,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const [showModal, setShowModal] = useState<{ show: boolean; item: any; }>({ show: false, item: {} })
   const [statusEdit, setStatusEdit] = useState('');
   const [updateStatus, setUpdateStatus] = useState(false)
-  const statusList = [
-    { id: 1, name: 'Active', value: 'Active' },
-    { id: 2, name: 'Inactive', value: 'Inactive' },
-    { id: 3, name: 'Dropped', value: 'Dropped' }
-  ]
+
   const onChange = (str: string, name: string, id: string, avatar: string) => {
     setNewMember({
       name: name,
@@ -57,13 +55,20 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         return 'Coordinator';
       case 'TR':
         return 'Teacher';
+      case 'FLW':
+        return 'Fellow';
+      case 'BLD':
+        return 'Builder';
+      case 'ADM':
+        return 'Admin';
     }
   }
 
   const getPersonsList = async () => {
     try {
       const list: any = await API.graphql(graphqlOperation(customQueries.listPersons, {
-        filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "CRD" } }] },
+        // filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "FLW" } }, { role: { eq: "CRD" } }] },
+        filter: { role: { ne: "ST" } },
       }));
       const sortedList = list.data.listPersons.items.sort((a: any, b: any) => (a.firstName?.toLowerCase() > b.firstName?.toLowerCase()) ? 1 : -1);
       const personsList = sortedList.map((item: any, i: any) => ({
@@ -71,7 +76,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         name: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
         value: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
         authId: item.authId,
-        email: item.email
+        email: item.email,
+        avatar: item.image ? getImageFromS3(item.image) : '',
       }));
       return personsList;
     } catch {
@@ -98,8 +104,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           staffUserIds.push(member.staffMember.id)
           member.userId = member.staffMember.id;
           member.name = `${member.staffMember.firstName || ''} ${member.staffMember.lastName || ''}`
-          member.image = member.staffMember.image
+          member.image = member.staffMember.image ? getImageFromS3(member?.staffMember?.image) : null
           member.role = member.staffMember.role
+          member.email = member.staffMember.email
           return member
         }
       })
@@ -127,8 +134,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         const addedMember = staff.data.createStaff;
         addedMember.userId = addedMember.staffMember.id;
         addedMember.name = `${addedMember.staffMember.firstName || ''} ${addedMember.staffMember.lastName || ''}`
-        addedMember.image = addedMember.staffMember.image;
+        addedMember.image = addedMember.staffMember.image ? getImageFromS3(addedMember?.staffMember?.image) : null;
         addedMember.role = addedMember.staffMember.role;
+        addedMember.email = addedMember.staffMember.email;
         setActiveStaffList([...activeStaffList, addedMember]);
         // remove the selected user
         setNewMember({ name: '', id: '', value: '', avatar: '' });
@@ -217,11 +225,24 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
                           <div className="flex w-3/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal">
                             <div className="flex-shrink-0 h-10 w-10 flex items-center">
-                              <div className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold" style={{ background: `${stringToHslColor(getInitialsFromString(item.name)[0] + ' ' + getInitialsFromString(item.name)[1])}`, textShadow: '0.1rem 0.1rem 2px #423939b3' }} >
-                                {item.name ? initials(getInitialsFromString(item.name)[0], getInitialsFromString(item.name)[1]) : initials('N', 'A')}
+                              {!item.image ? (
+                                <div className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold" style={{ background: `${stringToHslColor(getInitialsFromString(item.name)[0] + ' ' + getInitialsFromString(item.name)[1])}`, textShadow: '0.1rem 0.1rem 2px #423939b3' }} >
+                                  {item.name ? initials(getInitialsFromString(item.name)[0], getInitialsFromString(item.name)[1]) : initials('N', 'A')}
+                                </div>
+                              ) : (
+                                  <div className="h-8 w-8 rounded-full flex justify-center items-center" >
+                                    <img src={item.image} className="rounded-full" />
+                                  </div>
+                                )}
+                            </div>
+                            <div className="ml-2">
+                              <div className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900">
+                                {item.name}
+                              </div>
+                              <div className="text-sm leading-5 text-gray-500">
+                                {item.email}
                               </div>
                             </div>
-                            <div className="ml-4">{item.name}</div>
                           </div>
 
                           <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center">{item.role ? getStaffRole(item.role) : ''}</div>
@@ -236,7 +257,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                           }
                           <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center">
                             {statusEdit === item.id ?
-                              <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600">{updateStatus ? 'updating...' : ' '}</span>
+                              <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
                               :
                               <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit(item.id)}>
                                 Edit

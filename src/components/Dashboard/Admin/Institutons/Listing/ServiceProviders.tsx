@@ -8,6 +8,7 @@ import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 
 import { createFilterToFetchAllItemsExcept } from '../../../../../utilities/strings';
+import { statusList } from '../../../../../utilities/staticData';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
@@ -19,8 +20,8 @@ interface ServiceProvidersProps {
 }
 
 const ServiceProviders = (props: ServiceProvidersProps) => {
-  const { spBuilderDict, BUTTONS } = useDictionary();
-  const { userLanguage } = useContext(GlobalContext);
+  const { userLanguage, clientKey } = useContext(GlobalContext);
+  const { spBuilderDict, BUTTONS } = useDictionary(clientKey);
   const dictionary = spBuilderDict[userLanguage]
 
   const { instId, serviceProviders } = props;
@@ -37,11 +38,6 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
   const [newServPro, setNewServPro] = useState({ id: '', name: '', value: '' });
   const [statusEdit, setStatusEdit] = useState('');
   const [updateStatus, setUpdateStatus] = useState(false)
-  const statusList = [
-    { id: 1, name: 'Active', value: 'Active' },
-    { id: 2, name: 'Inactive', value: 'Inactive' },
-    { id: 3, name: 'Dropped', value: 'Dropped' }
-  ]
 
   const onServProChange = (val: string, name: string, id: string) => {
     setNewServPro({
@@ -168,13 +164,13 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
                         <div className="w-4/10 mr-6 flex items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                           <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={(val, name, id) => onPartnerStatusChange(val, item.id, item.status)} />
                         </div>) :
-                        <div className="w-4/10 flex items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+                        <div className="w-4/10 flex items-center px-8 py-3 text-left text-s leading-4">
                           {item.status || 'Active'}
                         </div>
                     }
-                    <div className="w-1/10 flex items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+                    <div className="w-1/10 flex items-center px-8 py-3 text-left text-s leading-4">
                       {statusEdit === item.id ?
-                        <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600">{updateStatus ? 'updating...' : ''}</span>
+                        <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
                         :
                         <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit(item.id)}>
                           {BUTTONS[userLanguage].EDIT}

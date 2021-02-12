@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 // import { Auth } from 'aws-amplify';
 import Auth from '@aws-amplify/auth';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
@@ -6,10 +6,12 @@ import { FaUnlockAlt } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
 import { useHistory, NavLink } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-
+import { GlobalContext } from '../../contexts/GlobalContext';
+import { getAsset } from '../../assets';
 const Registration = () => {
   const history = useHistory();
   const [cookies, setCookie] = useCookies(['confirm_user']);
+  const { clientKey } = useContext(GlobalContext);
   const [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
     show: false,
     type: '',
@@ -117,8 +119,8 @@ const Registration = () => {
             <div className='h-24 w-56'>
               <img
                 className=''
-                src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg'
-                alt='Iconoclast Artists'
+                src={getAsset(clientKey, 'login_page_logo')}
+                alt='Logo'
               />
             </div>
             <div className='h-4.5/10 flex-grow flex flex-col justify-center'>

@@ -8,6 +8,7 @@ import { studentObject } from '../../../../../state/LessonControlState';
 import InstructionsPopup from '../../../../Lesson/Popup/InstructionsPopup';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 import { string } from 'prop-types';
+import { getPageLabel } from '../../../../getPageLabel';
 
 export interface StoryState {
   story: string[];
@@ -32,7 +33,7 @@ const Story = (props: props) => {
 
   let displayStudentData = state.studentViewing.live
     ? state.studentViewing.studentInfo.currentLocation
-      ? state.studentViewing.studentInfo.currentLocation === 'warmup'
+      ? getPageLabel(state.studentViewing.studentInfo.currentLocation, state.pages) === 'warmup'
       : state.studentViewing.studentInfo.lessonProgress === 'warmup'
     : false;
 

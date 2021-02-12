@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
 import { useOutsideAlerter } from '../General/hooks/outsideAlerter';
@@ -10,25 +10,14 @@ import SideMenu from '../Lesson/Header/SideMenu';
 const LessonHeaderBar = () => {
   const history = useHistory();
   const { theme, state, dispatch } = useContext(LessonContext);
-  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const { visible, setVisible, ref } = useOutsideAlerter(false);
 
-  /**
-   *
-   *
-   * AUTO-PUSH TO SPECIFIC LESSON
-   *
-   *
-   */
-
   useEffect(() => {
-    // history.push('/lesson/corelesson');
-  }, []);
-
-  useEffect(() => {
-    if (!state.pages[0].active) {
-      dispatch({ type: 'SET_PROGRESS', payload: state.lessonProgress });
-    }
+    const shouldDispatch = state.pages.length > 0 ;
+      if (shouldDispatch && !state.pages[0].active) {
+        dispatch({ type: 'SET_PROGRESS', payload: state.lessonProgress });
+      }
   }, [state.pages, state.currentPage]);
 
   useEffect(() => {
@@ -43,8 +32,6 @@ const LessonHeaderBar = () => {
 
   const handlePopup = () => {
     setVisible((prevState: any) => !prevState);
-    // console.log('handlepopup: ');
-    // console.log('visible?: ', visible);
   };
 
   const handleSubmit = () => {
@@ -73,7 +60,7 @@ const LessonHeaderBar = () => {
         />
       </div>
 
-      <TopMenu />
+      <TopMenu handlePopup={handlePopup} />
 
       {/*<NotificationBar />*/}
 

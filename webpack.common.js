@@ -59,7 +59,8 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
+        // TODO: Need to recheck.
+        // exclude: /node_modules/,
         use: [
           {
             loader: 'style-loader',

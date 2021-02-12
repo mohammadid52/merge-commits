@@ -3,6 +3,7 @@ import Banner from './Banner';
 import ReflectionQuestions from './ReflectionQuestions';
 import PoemOutput from './PoemOutput';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
+import { getPageLabel } from '../../../../getPageLabel';
 
 interface props {
     fullscreen: boolean
@@ -15,7 +16,7 @@ const PoemBreakdownView = (props: props) => {
         null
     )
 
-    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.currentLocation ? state.studentViewing.studentInfo.currentLocation === 'activity/breakdown' : state.studentViewing.studentInfo.lessonProgress === 'activity/breakdown' : false;
+    let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.currentLocation ? getPageLabel(state.studentViewing.studentInfo.currentLocation, state.pages) === 'activity/breakdown' : state.studentViewing.studentInfo.lessonProgress === 'activity/breakdown' : false;
 
     useEffect(() => {
         if (displayStudentData && state.studentViewing.studentInfo.activityData) {

@@ -1,228 +1,317 @@
-import React, { useReducer, useEffect, useState, } from 'react';
-import { useHistory } from 'react-router-dom';
-import { lessonState, PagesType } from '../state/LessonState'
-import { lessonReducer } from '../reducers/LessonReducer'
-import { pageThemes } from './GlobalContext';
-// import { useCookies } from 'react-cookie';
+import React, { useEffect, useReducer, useState } from 'react';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { lessonState, PagesType } from '../state/LessonState';
+import { lessonReducer } from '../reducers/LessonReducer';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 import * as customMutations from '../customGraphql/customMutations';
+import * as mutations from '../graphql/mutations';
 import * as customQueries from '../customGraphql/customQueries';
 // import { API, graphqlOperation } from 'aws-amplify';
 import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-
-const removeDisabled = (array: PagesType) => {
-    let updatedArray = array.filter((item: { disabled: boolean, [key: string]: any }) => {
-        return !item.disabled
-    })
-    // console.log('updatedPages', updatedArray)
-    return updatedArray
-}
+import { standardTheme } from './GlobalContext';
 
 interface LessonProps {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 interface LessonObject {
-    [key: string]: any;
+  [key: string]: any;
 }
 
 interface DataObject {
-    [key: string]: any;
+  [key: string]: any;
 }
 
 export const LessonContext = React.createContext(null);
 
 export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
-    const [data, setData] = useState<DataObject>();
-    const [lesson, setLesson] = useState<DataObject>();
-    // const [ cookies ] = useCookies(['auth']);
-    const [state, dispatch] = useReducer(lessonReducer, lessonState);
-    const [lightOn, setLightOn] = useState(false);
-    const location = useLocation();
-    const history = useHistory();
-    let subscription: any;
+  const urlParams: any = useParams()
+  const [data, setData] = useState<DataObject>();
+  const [lesson, setLesson] = useState<DataObject>();
+  const [subscriptionData, setSubscriptionData] = useState<any>();
 
-    const lightSwitch = () => {
-        setLightOn(prev => {
-            return !prev
+  const [state, dispatch] = useReducer(lessonReducer, lessonState);
+  const location = useLocation();
+  const history = useHistory();
+  let subscription: any;
+
+  const theme = standardTheme;
+
+  const [loaded, setLoaded] = useState<boolean>(false);
+  const [personLocationObj, setPersonLocationObj] = useState<any>();
+  const [recentOp, setRecentOp] = useState<string>('');
+
+  // INIT PERSON LOCATION STATE
+  useEffect(() => {
+    loadPersonData();
+  }, []);
+
+  useEffect(() => {
+    if (loaded && state.syllabusLessonID && state.studentAuthID) {
+      if (recentOp === 'created' || recentOp === 'updated') {
+        if (personLocationObj && personLocationObj.currentLocation) {
+          updatePersonLocation();
+        }
+      }
+      if (recentOp === '') {
+        createPersonLocation();
+      }
+    }
+  }, [loaded, state.syllabusLessonID, state.studentAuthID]);
+
+  useEffect(() => {
+    if (recentOp !== '') {
+      updatePersonLocation();
+    }
+  }, [state.currentPage]);
+
+  // CREATE LOCATION RECORD or UPDATE
+  async function loadPersonData() {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      if (user) {
+        const { email, sub } = user.attributes;
+        let userInfo: any = await API.graphql(
+          graphqlOperation(customQueries.getPersonLocation, { personEmail: email, personAuthID: sub })
+        );
+        userInfo = userInfo.data.getPersonLocation;
+        if (userInfo !== null) setRecentOp('updated');
+        setPersonLocationObj(userInfo);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      //console.log('loaded...');
+      setLoaded(true);
+    }
+  }
+
+  async function createPersonLocation() {
+    const newLocation = {
+      personAuthID: state.studentAuthID,
+      personEmail: state.studentUsername,
+      syllabusLessonID: state.syllabusLessonID,
+      roomID: '0',
+      currentLocation: state.currentPage,
+      lessonProgress: state.lessonProgress,
+    };
+    try {
+      //console.log('created', newLocation);
+      const newPersonLocationMutation: any = await API.graphql(
+        graphqlOperation(mutations.createPersonLocation, { input: newLocation })
+      );
+    } catch (e) {
+      console.error('create PersonLocation : ', e);
+    } finally {
+      setRecentOp('created');
+    }
+  }
+  //
+
+  async function updatePersonLocation() {
+    const updatedLocation = {
+      id: personLocationObj && personLocationObj.id ? personLocationObj.id : '',
+      personAuthID: state.studentAuthID,
+      personEmail: state.studentUsername,
+      syllabusLessonID: state.syllabusLessonID,
+      roomID: '0',
+      currentLocation: state.currentPage,
+      lessonProgress: state.lessonProgress,
+    };
+    try {
+      if (recentOp === 'created') {
+        await loadPersonData();
+      }
+      // console.log('updated', personLocationObj);
+      const newPersonLocationMutation: any = await API.graphql(
+        graphqlOperation(mutations.updatePersonLocation, { input: updatedLocation })
+      );
+      setPersonLocationObj(updatedLocation);
+      // console.log('updated person location...');
+    } catch (e) {
+      console.error('update PersonLocation : ', e);
+    } finally {
+      setRecentOp('updated');
+    }
+  }
+
+  //  END OF LOCATION TRACKING SCRIPT
+
+  async function getOrCreateStudentData() {
+    const { lessonID } = urlParams
+    let studentID: string;
+    let studentAuthID: string;
+
+    await Auth.currentAuthenticatedUser().then((user) => {
+      // console.log(user);
+      studentID = user.attributes.email;
+      studentAuthID = user.attributes.sub;
+    });
+
+    try {
+      const studentData: any = await API.graphql(
+        graphqlOperation(customQueries.getStudentData, {
+          syllabusLessonID: lessonID,
+          studentID: studentID,
         })
-    }
+      );
 
-    const theme = lightOn ? pageThemes.light : pageThemes.dark;
-
-    async function getOrCreateStudentData() {
-        let queryParams = queryString.parse(location.search)
-        let studentID: string;
-        let studentAuthID: string;
-
-        await Auth.currentAuthenticatedUser()
-            .then(user => {
-                // console.log(user);
-                studentID = user.attributes.email
-                studentAuthID = user.attributes.sub
-            })
-
-        try {
-            const studentData: any = await API.graphql(graphqlOperation(customQueries.getStudentData, {
-                classroomID: queryParams.id,
-                studentID: studentID,
-            }))
-
-            // console.log(studentData)
-
-            if (!studentData.data.getStudentData) {
-                const newStudentData: any = await API.graphql(graphqlOperation(customMutations.createStudentData, {
-                    input: {
-                        lessonProgress: 'intro',
-                        currentLocation: 'intro',
-                        status: 'ACTIVE',
-                        classroomID: queryParams.id,
-                        studentID: studentID,
-                        studentAuthID: studentAuthID,
-                    }
-                }))
-                // console.log(newStudentData)
-                dispatch({
-                    type: 'SET_STUDENT_INFO', payload: {
-                        studentDataID: newStudentData.data.createStudentData.id,
-                        studentUsername: newStudentData.data.createStudentData.studentID,
-                        studentAuthID: newStudentData.data.createStudentData.studentAuthID
-                    }
-                })
-                return setData(newStudentData.data.createStudentData)
-            }
-            dispatch({
-                type: 'SET_STUDENT_INFO', payload: {
-                    studentDataID: studentData.data.getStudentData.id,
-                    studentUsername: studentData.data.getStudentData.studentID,
-                    studentAuthID: studentData.data.getStudentData.studentAuthID
-                }
-            })
-            return setData(studentData.data.getStudentData)
-
-        } catch (err) {
-            console.error(err);
-        }
-
-
-        // console.log('student data', newStudentData);
-    }
-
-    async function getClassroom() {
-        let queryParams = queryString.parse(location.search)
-        if (Object.keys(queryParams).length && queryParams.id) {
-            try {
-                // this any needs to be changed once a solution is found!!!
-                const classroom: any = await API.graphql(graphqlOperation(customQueries.getClassroomStudent, { id: queryParams.id }))
-                console.log('classroom data', classroom);
-                setLesson(classroom.data.getClassroom)
-                getOrCreateStudentData()
-                subscription = subscribeToClassroom()
-            } catch (error) {
-                console.error(error)
-            }
-        } else {
-            history.push('/dashboard');
-        }
-    }
-
-    const subscribeToClassroom = () => {
-        let queryParams = queryString.parse(location.search)
-
-        // @ts-ignore
-        const classroomSubscription = API.graphql(graphqlOperation(customSubscriptions.onUpdateClassroom, { id: queryParams.id })).subscribe({
-            next: (classroomData: any) => {
-                const updatedLessonPlan = classroomData.value.data.onUpdateClassroom
-
-                // console.log('updated', updatedLessonPlan)
-                // dispatch({ type: 'SET_LOADING' })
-                // console.log('state,', state)
-
-                dispatch({
-                    type: 'UPDATE_LESSON_PLAN',
-                    payload: {
-                        pages: removeDisabled(updatedLessonPlan.lessonPlan),
-                        displayData: updatedLessonPlan.displayData,
-                        viewing: updatedLessonPlan.viewing
-                    }
-                })
-
-            }
-        });
-
+      if (!studentData.data.getStudentData) {
+        const newStudentData: any = await API.graphql(
+          graphqlOperation(customMutations.createStudentData, {
+            input: {
+              lessonProgress: '0',
+              currentLocation: '0',
+              status: 'ACTIVE',
+              syllabusLessonID: lessonID,
+              studentID: studentID,
+              studentAuthID: studentAuthID,
+            },
+          })
+        );
         dispatch({
-            type: 'SET_SUBSCRIPTION',
-            payload: {
-                subscription: classroomSubscription,
-            }
-        })
-
-        // console.log('sub', classroomSubscription)
-
-        return classroomSubscription;
+          type: 'SET_STUDENT_INFO',
+          payload: {
+            studentDataID: newStudentData.data.createStudentData.id,
+            studentUsername: newStudentData.data.createStudentData.studentID,
+            studentAuthID: newStudentData.data.createStudentData.studentAuthID,
+          },
+        });
+        return setData(newStudentData.data.createStudentData);
+      }
+      dispatch({
+        type: 'SET_STUDENT_INFO',
+        payload: {
+          studentDataID: studentData.data.getStudentData.id,
+          studentUsername: studentData.data.getStudentData.studentID,
+          studentAuthID: studentData.data.getStudentData.studentAuthID,
+        },
+      });
+      return setData(studentData.data.getStudentData);
+    } catch (err) {
+      console.error(err);
     }
+  }
 
-    useEffect(() => {
-        getClassroom()
+  async function getSyllabusLesson() {
+    const { lessonID } = urlParams;
+    if (lessonID) {
+      try {
+        const classroom: any = await API.graphql(
+          graphqlOperation(customQueries.getSyllabusLesson, { id: lessonID })
+        );
+        // console.log('classroom data', classroom);
+        setLesson(classroom.data.getSyllabusLesson);
+        getOrCreateStudentData();
+        subscription = subscribeToSyllabusLesson();
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      history.push('/dashboard');
+    }
+  }
 
-        return function cleanup() {
-            if (subscription) {
-                subscription.unsubscribe()
-            }
-            dispatch({ type: 'CLEANUP' })
-        };
-    }, []);
+  // TODO: rename to subscribeToSyllabusLesson
+  const subscribeToSyllabusLesson = () => {
+    const { lessonID } = urlParams;
+    // @ts-ignore
+    const syllabusLessonSubscription = API.graphql( graphqlOperation(customSubscriptions.onChangeSyllabusLesson, { id: lessonID }) ).subscribe({
+      next: (syllabusLessonData: any) => {
+        const updatedLessonPlan = syllabusLessonData.value.data.onChangeSyllabusLesson;
+        // @ts-ignore
+        API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: lessonID })).then(
+          (sLessonData: any) => {
+            const sLessonDataData = sLessonData.data.getSyllabusLesson;
+            setSubscriptionData(sLessonDataData)
+          }
+        );
+      },
+    });
 
-    useEffect(() => {
-        if (lesson) {
-            // console.log('lesson', lesson);
-            const wordBank: Array<string> = ['Mimo provoz'];
+    dispatch({
+      type: 'SET_SUBSCRIPTION',
+      payload: {
+        subscription: syllabusLessonSubscription,
+      },
+    });
 
-            dispatch({
-                type: 'SET_INITIAL_STATE',
-                payload: {
-                    classroomID: lesson.id,
-                    data: lesson,
-                    pages: removeDisabled(lesson.lessonPlan),
-                    displayData: lesson.displayData,
-                    word_bank: wordBank,
-                    subscribeFunc: subscribeToClassroom,
-                }
-            })
-        }
-    }, [lesson])
+    return syllabusLessonSubscription;
+  };
 
-    useEffect(() => {
-        if (data) {
-            // console.log('data', data)
-            let initialComponentState: any = {};
-            lesson.lessonPlan.forEach((item: { type: string, stage: string }) => {
-                initialComponentState[item.type] = data[item.stage]
-            })
-            dispatch({
-                type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB',
-                payload: initialComponentState,
-            })
+  useEffect(() => {
+    getSyllabusLesson();
 
-            // dispatch({
-            //     type: 'SET_LESSON_PROGRESS',
-            //     payload: data.lessonProgress
-            // })
-        }
-    }, [data])
+    return function cleanup() {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+      dispatch({ type: 'CLEANUP' });
+    };
+  }, []);
 
-    return (
-        <LessonContext.Provider value={{
-            state,
-            dispatch,
-            theme,
-            subscription,
-            subscribeToClassroom,
-        }}>
-            { children}
-        </LessonContext.Provider>
-    )
-}
+  useEffect(() => {
+    if (lesson) {
+      const wordBank: Array<string> = ['Mimo provoz'];
+
+      dispatch({
+        type: 'SET_INITIAL_STATE',
+        payload: {
+          syllabusLessonID: lesson.id,
+          data: lesson,
+          pages: lesson.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
+            return !item.disabled;
+          }),
+          displayData: lesson.displayData,
+          word_bank: wordBank,
+          subscribeFunc: subscribeToSyllabusLesson,
+        },
+      });
+    }
+  }, [lesson]);
+
+  useEffect(() => {
+    if(subscriptionData){
+
+      dispatch({
+        type: 'UPDATE_LESSON_PLAN',
+        payload: {
+          pages: subscriptionData.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
+            return !item.disabled;
+          }),
+          //@ts-ignore
+          displayData: {...subscriptionData.displayData, breakdownComponent: state.pages[subscriptionData.displayData.breakdownComponent]?.stage},
+          viewing: subscriptionData.viewing,
+        },
+      });
+    }
+  }, [subscriptionData]);
+
+  useEffect(() => {
+    if (data) {
+      let initialComponentState: any = {};
+      lesson.lessonPlan.forEach((item: { type: string; stage: string }) => {
+        initialComponentState[item.type] = data[item.stage];
+      });
+      dispatch({
+        type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB',
+        payload: initialComponentState,
+      });
+    }
+  }, [data]);
+
+  return (
+    <LessonContext.Provider
+      value={{
+        state,
+        dispatch,
+        theme,
+        subscription,
+        subscribeToSyllabusLesson,
+      }}>
+      {children}
+    </LessonContext.Provider>
+  );
+};

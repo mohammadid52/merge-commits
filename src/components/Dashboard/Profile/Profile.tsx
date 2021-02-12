@@ -70,21 +70,22 @@ const Profile: React.FC = () => {
       birthdate: null,
     }
   );
-  const { dashboardProfileDict } = useDictionary();
+  const { state, theme, userLanguage, clientKey, dispatch } = useContext(GlobalContext);
+  const { dashboardProfileDict, BreadcrumsTitles } = useDictionary(clientKey);
   const match = useRouteMatch();
   const history = useHistory();
   const pathName = location.pathname.replace(/\/$/, "");
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
-  const { state, theme, userLanguage, dispatch } = useContext(GlobalContext);
   const [status, setStatus] = useState('');
   const [select, setSelect] = useState('Profile');
   const [showCropper, setShowCropper] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [upImage, setUpImage] = useState(null);
   const [imageUrl, setImageUrl] = useState('')
+
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Profile', url: '/dashboard/profile', last: true },
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['PROFILE'], url: '/dashboard/profile', last: true },
   ]
 
   // TODO: 

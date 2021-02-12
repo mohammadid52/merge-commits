@@ -1,24 +1,22 @@
-import React, { useContext, useState, useEffect, Suspense, lazy } from "react";
-import { LessonControlContext } from "../../contexts/LessonControlContext";
+import React, { useContext } from 'react';
+import { LessonControlContext } from '../../contexts/LessonControlContext';
 
-import LessonInfoTitleBar from "./TopMenu/LessonInfoTitleBar";
-import LessonControlBar from "./LessonControlBar/LessonControlBar";
-import PlayComplete from "./TopMenu/PlayComplete";
+import LessonInfoTitleBar from './TopMenu/LessonInfoTitleBar';
+import LessonControlBar from './LessonControlBar/LessonControlBar';
 
-import HamburgerMenu from "./TopMenu/HamburgerMenu";
-import { WritingAlertProps } from "../General/Popup";
+import HamburgerMenu from './TopMenu/HamburgerMenu';
 /**
  * IMPORT FUNCTIONS
  */
-import { firstInitialFunc } from "../../utilities/strings";
-import {formatPattern} from '../../utilities/strings';
+import { formatPattern } from '../../utilities/strings';
 
 interface TopMenuControlProps {
   shareable: boolean;
   setShareable: React.Dispatch<React.SetStateAction<boolean>>;
   isSameStudentShared: boolean;
-  handleOpen: () => void;
-  handleLessonButton: () => void;
+  handleOpen?: () => void;
+  handleComplete?: () => void;
+  handleLessonButton?: () => void;
   handleQuitViewing: () => void;
   handleShareStudentData: () => void;
   handleQuitShare: () => void;
@@ -29,6 +27,8 @@ interface TopMenuControlProps {
   setQuickRegister: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+export type LessonInfoTitleBarProps = Pick<TopMenuControlProps, 'handleOpen' | 'handleComplete' | 'handleLessonButton'>;
+
 const TopMenuControl: React.FC<TopMenuControlProps> = (
   props: TopMenuControlProps
 ) => {
@@ -37,6 +37,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
     setShareable,
     isSameStudentShared,
     handleOpen,
+    handleComplete,
     handleLessonButton,
     handleQuitViewing,
     handleShareStudentData,
@@ -50,6 +51,14 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
 
   const { state, theme, dispatch } = useContext(LessonControlContext);
 
+  const studentsOnline = () => {
+    if(state.roster) {
+      return state.roster.length;
+    } else {
+      return 0;
+    }
+  }
+
   return (
     <>
       {/* LABELS */}
@@ -60,6 +69,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
         {/* LEFT */}
         <LessonInfoTitleBar
           handleOpen={handleOpen}
+          handleComplete={handleComplete}
           handleLessonButton={handleLessonButton}
         />
 
@@ -85,9 +95,9 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
         {/* LEFT */}
         <div className="h-full  w-4/10 min-w-100 max-w-160 border-r border-white bg-light-gray bg-opacity-10 pl-2 flex flex-row justify-between ">
           <div className="w-full flex flex-col my-auto">
-            <p className="text-xs">Students Online: {state.roster.length}</p>
+            <p className="text-xs">Students Online: {studentsOnline()}</p>
             <p className="text-xs">Topic: Identity</p>
-            <p className="text-xs">Start Date: {formatPattern(state.expectedStartDate, '-','aaaa-bb-cc','bb-cc-aaaa')}</p>
+            <p className="text-xs">Start Date: {formatPattern(state.startDate, '-','aaaa-bb-cc','bb-cc-aaaa')}</p>
             <p className="text-xs">Estimated Time: 1 hr 15 mins</p>
           </div>
         </div>

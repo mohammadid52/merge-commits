@@ -1,30 +1,38 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import API, { graphqlOperation } from '@aws-amplify/api';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { IoAdd } from 'react-icons/io5';
 
-import PageWrapper from '../../../../../../Atoms/PageWrapper';
-import Buttons from '../../../../../../Atoms/Buttons';
 import { reorder } from '../../../../../../../utilities/strings';
 
-import * as customQueries from '../../../../../../../customGraphql/customQueries'
 import * as mutations from '../../../../../../../graphql/mutations';
 import * as queries from '../../../../../../../graphql/queries';
+import * as customQueries from '../../../../../../../customGraphql/customQueries';
 
-interface MeasMntListProps {
-  measurementList?: any[]
+interface MeasurementListProps {
   curricularId: string
+  topicID: string
 }
 
-const MeasMntList = (props: MeasMntListProps) => {
-  const { curricularId } = props;
+const MeasurementList = (props: MeasurementListProps) => {
+  const { curricularId, topicID } = props;
   const history = useHistory();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [measurements, setMeasurements] = useState([])
   const [measrementIds, setMeasrementIds] = useState([])
-  const [sequenceId, setSequenceId] = useState('')
+
+  const createNewMeasurement = () => {
+    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/measurement/add?tid=${topicID}`)
+  }
+
+  const editCurrentMeasurement = (id: string) => {
+    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/measurement/edit/${id}`)
+  }
 
   const onDragEnd = async (result: any) => {
+    // Change measurement sequence
     if (result.source.index !== result.destination.index) {
       const list = reorder(measrementIds, result.source.index, result.destination.index)
       setMeasrementIds(list)
@@ -33,132 +41,121 @@ const MeasMntList = (props: MeasMntListProps) => {
         return { ...t, index }
       }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
       setMeasurements(measurementList)
-      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `m_${curricularId}`, sequence: list } }));
+      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `m_${topicID}`, sequence: list } }));
       seqItem = seqItem.data.updateCSequences;
       console.log('seq updated');
     }
   }
 
-  const createNewMeasurement = () => {
-    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/measurement/add`)
-  }
-
-  const editCurrentMeasurement = (id: string) => {
-    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/measurement/edit/${id}`)
-  }
-
   const fetchMeasurements = async () => {
+    // Fetching measurement list and it's sequence for given topic.
     setLoading(true)
     let list: any = await API.graphql(graphqlOperation(customQueries.listRubrics, {
-      filter: { curriculumID: { eq: curricularId } },
+      filter: { topicID: { eq: topicID } },
     }));
     list = list.data.listRubrics?.items || []
 
     let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
-      { id: `m_${curricularId}` }))
+      { id: `m_${topicID}` }))
     item = item?.data.getCSequences?.sequence || []
+    const sequenceLength = item?.length;
+    const listLength = list?.length;
     list = list.map((t: any) => {
       let index = item.indexOf(t.id)
       return { ...t, index }
     }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
     setMeasurements(list)
     setMeasrementIds(item)
+    if (listLength && !sequenceLength) {
+      // create sequence
+      let measurementId = list.map((item: { id: string }) => item.id)
+      let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `m_${topicID}`, sequence: measurementId } }));
+      seqItem = seqItem.data.createCSequences
+      setMeasrementIds(measurementId)
+    }
     setLoading(false)
   }
 
   useEffect(() => {
-    fetchMeasurements()
+    fetchMeasurements();
   }, [])
 
   return (
-    <div className="p-8 flex m-auto justify-center">
-      <div className="">
-        <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CURRICULAR MEASUREMENTS</h3>
-          <>
-            {
-              !loading ?
-                <>
-                  {(measurements && measurements.length > 0) ? (
-                    <Fragment>
-                      <div className="flex justify-end w-8/10 m-auto ">
-                        <Buttons btnClass="mx-4" label="Add new Measurement" onClick={createNewMeasurement} />
-                      </div>
+    <Fragment>
+      {!loading ? (
+        <div className='mb-4'>
+          {measurements?.length > 0 ?
+            <Fragment>
+              <div className="flex justify-between w-8/10 px-8 py-4 mx-auto whitespace-no-wrap border-b border-gray-200">
+                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>No.</span>
+                </div>
+                <div className="w-7/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>Measurements</span>
+                </div>
+                <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>Actions</span>
+                </div>
+              </div>
+              <div className="w-8/10 m-auto">
 
-                      <div className="flex justify-between w-8/10 m-auto px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                          <span>No.</span>
-                        </div>
-                        <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                          <span>Measurement Name</span>
-                        </div>
-                        <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                          <span>Topic Name</span>
-                        </div>
-                        <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                          <span>Actions</span>
-                        </div>
-                      </div>
-
-                      <div className="w-8/10 m-auto max-h-88 overflow-y-auto">
-
-                        {/* Drag and drop listing */}
-                        <DragDropContext onDragEnd={onDragEnd}>
-                          <Droppable droppableId="droppable">
+                {/* Drag and drop listing */}
+                <DragDropContext onDragEnd={onDragEnd}>
+                  <Droppable droppableId="droppable">
+                    {(provided, snapshot) => (
+                      <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                      >
+                        {measurements.map((item, index) => (
+                          <Draggable key={item.id} draggableId={item.id} index={index}>
                             {(provided, snapshot) => (
                               <div
-                                {...provided.droppableProps}
                                 ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
                               >
-                                {measurements.map((item, index) => (
-                                  <Draggable key={item.id} draggableId={item.id} index={index}>
-                                    {(provided, snapshot) => (
-                                      <div
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                      >
-
-                                        <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200 cursor-move">
-                                          <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
-                                          <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal">
-                                            {item.name}
-                                          </div>
-                                          <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal">
-                                            {item.topic?.name}
-                                          </div>
-                                          <span className="w-3/10 h-6 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentMeasurement(item.id)}>
-                                            edit
-                                          </span>
-                                        </div>
-                                      </div>
-                                    )}
-                                  </Draggable>
-                                ))}
-
-                                {provided.placeholder}
+                                <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                                  <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4 text-gray-600">
+                                    {index + 1}.
+                                </div>
+                                  <div className="flex w-7/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal text-gray-600 cursor-move"> {item.name} </div>
+                                  <div className="flex w-2/10 px-8 py-3 items-center text-left text-s leading-4 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentMeasurement(item.id)}>
+                                    Edit
+                                  </div>
+                                </div>
                               </div>
                             )}
-                          </Droppable>
-                        </DragDropContext>
-
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
                       </div>
-                    </Fragment>
-                  ) : (
-                      <Fragment>
-                        <div className="flex justify-center mt-8">
-                          <Buttons btnClass="mx-4" label="Add new Measurement" onClick={createNewMeasurement} />
-                        </div>
-                        <p className="text-center p-16">  This curricular does not have any measurement yet. Please create a new one.</p>
-                      </Fragment>)}
-                </>
-                : <div className="py-12 my-12 m-auto text-center">Fetching Data Please wait......</div>
-            }
-          </>
-        </PageWrapper>
-      </div>
-    </div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
+
+
+              </div>
+            </Fragment>
+            : <div>
+              <p className="text-center p-16">  This topic does not have any measurement yet. Please create a new one.</p>
+            </div>}
+          <div className="w-8/10 mx-auto my-2 flex justify-center items-center px-8 py-4 border border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer" onClick={createNewMeasurement}>
+            <span className="w-6 h-6 flex items-center mr-4">
+              <IconContext.Provider value={{ size: '1.5rem', color: 'darkgray' }}>
+                <IoAdd />
+              </IconContext.Provider>
+            </span>
+            Add New Measurement
+          </div>
+        </div>
+      ) : (
+          <div>
+            <p className="text-center p-16">  Fetching measurements list...</p>
+          </div>
+        )}
+    </Fragment>
   )
 }
 
-export default MeasMntList
+export default MeasurementList

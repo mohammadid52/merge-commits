@@ -65,6 +65,28 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
    * - question source switch : to switch between checkpoint questions and doFirst questions
    */
   const queryParams = queryString.parse(location.search);
+  const thereAreCheckpoints =
+    (() => {
+      if (checkpointType === 'assessment' || checkpointType === 'checkpoint') {
+        if (state.data.lesson && state.data.lesson.checkpoints && state.data.lesson.checkpoints.items) {
+          return state.data.lesson.checkpoints.items;
+        } else {
+          return [];
+        }
+      }
+      if (checkpointType === 'doFirst') {
+        if (
+          state.data.lesson &&
+          state.data.lesson.doFirst &&
+          state.data.lesson.doFirst.questions &&
+          state.data.lesson.doFirst.questions.items
+        ) {
+          return state.data.lesson.doFirst.questions.items;
+        } else {
+          return [];
+        }
+      }
+    })().length > 0;
 
   const flattenCheckpoints = (checkpointArray: any) => {
     return checkpointArray.reduce((acc: [], checkpointObj: any) => {
@@ -77,8 +99,15 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     switch (checkpointType) {
       case 'assessment':
       case 'checkpoint':
-        const checkpoints = state.data.lesson.checkpoints.items;
-        return flattenCheckpoints(checkpoints);
+        const checkpoints =
+          state.data.lesson && state.data.lesson.checkpoints && state.data.lesson.checkpoints.items
+            ? state.data.lesson.checkpoints.items
+            : [];
+        if (checkpoints.length > 0) {
+          return flattenCheckpoints(checkpoints);
+        } else {
+          return [];
+        }
       case 'doFirst':
         const doFirst = state.data.lesson.doFirst.questions.items;
         return doFirst;
@@ -103,7 +132,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
    * ON CHECKPOINT MOUNT
    */
   useEffect(() => {
-    if (isTeacher) console.log('CP Questions - ', 'teacher CP questions loaded!');
     if (!isTeacher) setInput(initialResponseState);
 
     // console.log('Initial response state --> ', initialResponseState)
@@ -149,22 +177,24 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
 
     if (!isTeacher) {
       if (checkpointType !== 'doFirst') {
-        const firstCheckpoint = state.data.lesson.checkpoints.items[0].checkpoint.id;
-        const questionDataKey =
-          checkpointType === 'doFirst'
-            ? 'doFirst'
-            : checkpointType === 'checkpoint' || checkpointType === 'survey'
-            ? `${checkpointType}_${firstCheckpoint}`
-            : 'unknown_checkpoint';
+        if (thereAreCheckpoints) {
+          const firstCheckpoint = state.data.lesson.checkpoints.items[0].checkpoint.id;
+          const questionDataKey =
+            checkpointType === 'doFirst'
+              ? 'doFirst'
+              : checkpointType === 'checkpoint' || checkpointType === 'survey'
+              ? `${checkpointType}_${firstCheckpoint}`
+              : 'unknown_checkpoint';
 
-        if (input) {
-          dispatch({
-            type: 'SET_QUESTION_DATA',
-            payload: {
-              key: questionDataKey,
-              data: input,
-            },
-          });
+          if (input) {
+            dispatch({
+              type: 'SET_QUESTION_DATA',
+              payload: {
+                key: questionDataKey,
+                data: input,
+              },
+            });
+          }
         }
       }
 
@@ -205,20 +235,21 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     <div className={theme.section}>
       <div className={`${theme.elem.text}`}>
         <div className="w-full h-full flex flex-col flex-wrap justify-around items-center">
-          {questionSource.map((question: QuestionInterface, key: number) => {
-            return (
-              <div key={`questionParent_${key}`} id={`questionParent_${key}`}>
-                <Question
-                  isTeacher={isTeacher}
-                  question={question}
-                  questionIndex={key}
-                  questionKey={`question_${key}`}
-                  value={input}
-                  handleInputChange={handleInputChange}
-                />
-              </div>
-            );
-          })}
+          {thereAreCheckpoints &&
+            questionSource.map((question: QuestionInterface, key: number) => {
+              return (
+                <div key={`questionParent_${key}`} id={`questionParent_${key}`}>
+                  <Question
+                    isTeacher={isTeacher}
+                    question={question}
+                    questionIndex={key}
+                    questionKey={`question_${key}`}
+                    value={input}
+                    handleInputChange={handleInputChange}
+                  />
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>

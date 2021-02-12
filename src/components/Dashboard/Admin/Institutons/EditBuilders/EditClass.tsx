@@ -13,6 +13,7 @@ import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 
 import { stringToHslColor, getInitialsFromString, initials, createFilterToFetchAllItemsExcept } from '../../../../../utilities/strings';
 import { getImageFromS3 } from '../../../../../utilities/services';
+import { statusList } from '../../../../../utilities/staticData';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
@@ -47,14 +48,8 @@ const EditClass = (props: EditClassProps) => {
     { title: 'Edit Class', url: `/dashboard/class-edit?id=${urlParams.get('id')}`, last: true }
   ];
 
-  const statusList = [
-    { id: 1, name: 'Active', value: 'Active' },
-    { id: 2, name: 'Inactive', value: 'Inactive' },
-    { id: 3, name: 'Dropped', value: 'Dropped' }
-  ]
-
-  const { editClassDict } = useDictionary();
-  const { userLanguage } = useContext(GlobalContext);
+  const { clientKey, userLanguage } = useContext(GlobalContext);
+  const { editClassDict } = useDictionary(clientKey);
   const dictionary = editClassDict[userLanguage]
 
   const fetchClassData = async (classId: string) => {
@@ -291,56 +286,66 @@ const EditClass = (props: EditClassProps) => {
         </div>
 
         {classStudents ? (
+
           <Fragment>
-            <div className="mt-8 w-full m-auto px-2">
-              <div className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200 text-sm text-gray-600">
-                <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{dictionary.TABLE.SNO}</div>
-                <div className="flex w-5/10 items-center px-4 py-2">{dictionary.TABLE.NAME}</div>
-                <div className="w-3/10">{dictionary.TABLE.STATUS}</div>
-                <div className="w-1/10">{dictionary.TABLE.ACTIONS}</div>
-              </div>
-            </div>
-
-            {
-              !loading ?
-                <div className="mb-4 w-full m-auto px-2 max-h-88 overflow-y-scroll">
-                  {classStudents.length ? classStudents.map((item, index) =>
-                    <div key={item.id} className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                      <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
-                      <div className="flex w-5/10 items-center px-4 py-2">
-                        <div className="flex-shrink-0 h-10 w-10 flex items-center">
-                          {item.student.avatar ?
-                            (<img
-                              src={item.student.avatar}
-                              className="h-8 w-8 rounded-full" />) :
-                            <div className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold" style={{ background: `${stringToHslColor(getInitialsFromString(item.student.name)[0] + ' ' + getInitialsFromString(item.student.name)[1])}`, textShadow: '0.1rem 0.1rem 2px #423939b3' }} >
-                              {item.student.name ? initials(getInitialsFromString(item.student.name)[0], getInitialsFromString(item.student.name)[1]) : initials('N', 'A')}
-                            </div>}
-                        </div>
-                        <div className="ml-4">{item.student.name}</div>
+            {!loading ?
+              (classStudents.length ?
+                (
+                  <Fragment>
+                    <div className="mt-8 w-full m-auto px-2">
+                      <div className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200 text-sm text-gray-600">
+                        <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{dictionary.TABLE.SNO}</div>
+                        <div className="flex w-5/10 items-center px-4 py-2">{dictionary.TABLE.NAME}</div>
+                        <div className="w-3/10">{dictionary.TABLE.STATUS}</div>
+                        <div className="w-1/10">{dictionary.TABLE.ACTIONS}</div>
                       </div>
+                    </div>
 
+                    <div className="mb-4 w-full m-auto px-2 max-h-88 overflow-y-scroll">
                       {
-                        statusEdit === item.id ? (
-                          <div className="w-3/10 mr-6">
-                            <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={(val, name, id) => onClassStudentStatusChange(val, name, id, item.id)} />
-                          </div>) :
-                          <div className="w-3/10">
-                            {item.status || 'Active'}
-                          </div>
-                      }
+                        classStudents.map((item, index) => (
+                          <div key={item.id} className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                            <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
+                            <div className="flex w-5/10 items-center px-4 py-2 whitespace-normal">
+                              <div className="flex-shrink-0 h-10 w-10 flex items-center">
+                                {item.student.avatar ?
+                                  (<img
+                                    src={item.student.avatar}
+                                    className="h-8 w-8 rounded-full" />) :
+                                  <div className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold" style={{ background: `${stringToHslColor(getInitialsFromString(item.student.name)[0] + ' ' + getInitialsFromString(item.student.name)[1])}`, textShadow: '0.1rem 0.1rem 2px #423939b3' }} >
+                                    {item.student.name ? initials(getInitialsFromString(item.student.name)[0], getInitialsFromString(item.student.name)[1]) : initials('N', 'A')}
+                                  </div>}
+                              </div>
+                              <div className="ml-4">{item.student.name}</div>
+                            </div>
 
-                      <div className="w-1/10">
-                        {statusEdit === item.id ?
-                          <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600">{updateStatus ? 'updating...' : ''}</span>
-                          :
-                          <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit(item.id)}>
-                            Edit
+                            {
+                              statusEdit === item.id ? (
+                                <div className="w-3/10 mr-6">
+                                  <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={(val, name, id) => onClassStudentStatusChange(val, name, id, item.id)} />
+                                </div>) :
+                                <div className="w-3/10">
+                                  {item.status || 'Active'}
+                                </div>
+                            }
+
+                            <div className="w-1/10">
+                              {statusEdit === item.id ?
+                                <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
+                                :
+                                <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit(item.id)}>
+                                  Edit
                           </span>
-                        }
-                      </div>
-                    </div>) : <div className="py-12 my-12 m-auto text-center">No students</div>}
-                </div> : <div className="py-12 my-12 m-auto text-center">Loading class students...</div>
+                              }
+                            </div>
+                          </div>)
+                        )}
+                    </div>
+                  </Fragment>
+                )
+                : (<div className="py-12 my-12 m-auto text-center">No students added in the class.</div>)
+              )
+              : <div className="py-12 my-12 m-auto text-center">Loading class students list...</div>
             }
             {messages.show && (
               <div className="py-2 m-auto text-center">

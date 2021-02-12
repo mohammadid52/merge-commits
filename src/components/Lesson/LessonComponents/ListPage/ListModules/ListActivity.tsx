@@ -19,7 +19,7 @@ export interface StoryState {
 
 const List = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const [openPopup, setOpenPopup] = useState(false);
 
   //  Variables
@@ -29,7 +29,7 @@ const List = () => {
   const listArray = nrLists === null ? [''] : Array.from(Array(nrLists).keys()).map((elem: number) => '');
 
   useEffect(() => {
-    if (!cookies[`lesson-${state.classroomID}`]?.story && !state.componentState.story) {
+    if (!cookies[`lesson-${state.syllabusLessonID}`]?.story && !state.componentState.story) {
       let tempObj: StoryState = {
         story: listArray,
         additional: [
@@ -51,7 +51,6 @@ const List = () => {
       // UPDATE: somehow commenting this out does not affect the standard list,
       // curious as to why it was here in the first place
 
-      console.log('listactivity additional input leng: ', inputs.additionalInputs.length > 0);
 
       if (inputs.additionalInputs.length > 0) {
         let additional: Array<{ name: string; text: string | [] }> = [];
@@ -75,8 +74,8 @@ const List = () => {
         },
       });
 
-      setCookie(`lesson-${state.classroomID}`, {
-        ...cookies[`lesson-${state.classroomID}`],
+      setCookie(`lesson-${state.syllabusLessonID}`, {
+        ...cookies[`lesson-${state.syllabusLessonID}`],
         story: tempObj,
       });
     }
@@ -90,7 +89,6 @@ const List = () => {
       });
     }
 
-    console.log('listactivity mounted --< ', inputs.additionalInputs);
   }, []);
 
   return (

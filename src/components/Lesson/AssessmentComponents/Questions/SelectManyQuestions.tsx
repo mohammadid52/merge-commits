@@ -50,7 +50,7 @@ const SelectManyQuestions = (props: QuestionProps) => {
         </p>
       </div>
       {/*<div id={question.label} className={'flex'}>*/}
-      <div className={'flex'}>
+      <div className={'flex flex-col'}>
         {question.question.options.map(
           (option: { label: string; icon: string; color: string; text: string }, key: any) => (
             <div
@@ -59,28 +59,15 @@ const SelectManyQuestions = (props: QuestionProps) => {
               onClick={(e)=> (!isTeacher) ? handleMultiSelect(e): null}
               data-key={questionId}>
               {input.value.indexOf(`${option.label}`) >= 0 ? (
-                <div
-                  id={`${option.label}`}
-                  className="cursor-pointer w-36 h-12 p-2 text-base rounded flex justify-start items-center"
-                  style={{ backgroundColor: `${option.color}` }}
-                  data-key={questionId}>
-                  <IconContext.Provider value={{ color: '#EDF2F7', size: '1.25rem', className: 'w-auto mr-2' }}>
-                    <ImCheckboxChecked style={{ pointerEvents: 'none' }} />
-                  </IconContext.Provider>
-
-                  {option.text}
-                </div>
+                <label className="inline-flex items-center mt-3">
+                  <input id={`${option.label}`} data-key={questionId} type="checkbox" className="form-checkbox h-5 w-5 mb-2 text-pink-600" checked/><span
+                    className={`ml-2 ${theme.elem.text}`}>{option.text}</span>
+                </label>
               ) : (
-                <div
-                  id={`${option.label}`}
-                  className="bg-gray-400 text-black50 cursor-pointer w-36 h-12 p-2 text-base rounded flex justify-start items-center"
-                  data-key={questionId}>
-                  <IconContext.Provider value={{ color: '#000', size: '1.25rem', className: 'w-auto mr-2' }}>
-                    <ImCheckboxUnchecked style={{ pointerEvents: 'none' }} />
-                  </IconContext.Provider>
-
-                  {option.text}
-                </div>
+                <label className="inline-flex items-center mt-3">
+                  <input id={`${option.label}`} data-key={questionId} type="checkbox" className="form-checkbox h-5 w-5 mb-2 text-pink-600"/><span
+                  className={`ml-2 ${theme.elem.text}`}>{option.text}</span>
+                </label>
               )}
             </div>
           )

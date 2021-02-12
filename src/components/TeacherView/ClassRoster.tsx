@@ -5,13 +5,18 @@ import ProgressSwitch from '../General/LessonProgressSwitch';
 import ToolTip from '../General/ToolTip/ToolTip';
 import RosterRow from './ClassRoster/RosterRow';
 
+import * as queries from '../../graphql/queries';
+import * as subscriptions from '../../graphql/subscriptions';
+
 /**
  * Function imports
  */
-import {lc} from '../../utilities/strings';
+import { lc } from '../../utilities/strings';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import exp from 'constants';
 
 interface classRosterProps {
-  handleUpdateClassroom: () => Promise<void>;
+  handleUpdateSyllabusLesson: () => Promise<void>;
   handleShareStudentData: () => Promise<void>;
   handleQuitShare: () => void;
   handleQuitViewing: () => void;
@@ -26,162 +31,164 @@ enum SortByEnum {
 }
 
 const ClassRoster = (props: classRosterProps) => {
-  const { handleUpdateClassroom, handleShareStudentData, isSameStudentShared, handleQuitShare, handleQuitViewing, setPageViewed } = props;
+  const {
+    handleUpdateSyllabusLesson,
+    handleShareStudentData,
+    isSameStudentShared,
+    handleQuitShare,
+    handleQuitViewing,
+    setPageViewed,
+  } = props;
   const { state, dispatch } = useContext(LessonControlContext);
   const [sortBy, setSortBy] = useState<string>('');
+  const [students, setStudents] = useState<any[]>([]);
+  const [updatedStudent, setUpdatedStudent] = useState<any>({});
+  const [viewedStudent, setViewedStudent] = useState<string>('');
 
+  const [refreshRoster, setRefreshRoster] = useState<any>();
 
-  /**
-   * UPDATE THIS SORT FUNCTION TO SORT CONTEXT
-   * @param column - which column you want sorted
-   */
-  const sortStudentBy = (column: string) => {
-    const thereAreStudents = state.roster && state.roster.length > 0;
+  let subscription: any;
 
-    if(thereAreStudents){
-      if(column === SortByEnum.FNAME){
-        return state.roster.sort((a:any, b: any)=>{
-          if(lc(a.student[column]) < lc(b.student[column])){
-            return -1;
-          } else {
-            return 1;
-          }
+  // load students into roster
+  const getSyllabusLessonStudents = async () => {
+    try {
+      const syllabusLessonStudents: any = await API.graphql(
+        graphqlOperation(queries.listPersonLocations, {
+          filter: { syllabusLessonID: { contains: state.syllabusLessonID } },
         })
-      } 
-
-      if(column === SortByEnum.PAGE){
-        return state.roster.sort((a:any, b: any)=>{
-          if(lc(a.lessonProgress) < lc(b.lessonProgress)){
-            return -1;
-          } else {
-            return 1;
-          }
-        })
-      } 
-      
-      if(column === SortByEnum.ACTION) {
-        return state.roster.sort((a:any, b: any)=>{
-          if(a.lessonProgress.includes('breakdown') && b.lessonProgress.includes('breakdown') === false){
-            return -1;
-          } else {
-            return 1;
-          }
-        })
-      }
+      );
+      const studentList = syllabusLessonStudents.data.listPersonLocations.items;
+      setStudents(studentList);
+      dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: studentList } });
+      subscription = subscribeToPersonLocations();
+    } catch (e) {
+      console.error('getSyllabusLessonstudents - ', e);
     }
-  }
-
-  const studentRoster = () => {
-    switch(sortBy){
-      case 'firstName':
-        return sortStudentBy(SortByEnum.FNAME);
-        break;
-      case 'lessonProgress':
-        return sortStudentBy(SortByEnum.PAGE);
-        break;
-      case 'action':
-        return sortStudentBy(SortByEnum.ACTION);
-        break;
-      default:
-        return state.roster;
-    }
-  }
-
-  const handleSelect = async (e: any) => {
-    const { id } = e.target;
-    const selected = state.roster.filter((item: any) => {
-      return item.id === id;
-    });
-
-    // console.log('selected', id, selected[0]);
-    dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] });
-  };
-
-  const initials = (lastName: string) => {
-    let lastInitial = lastName.charAt(0).toUpperCase();
-    return lastInitial + '.';
   };
 
   useEffect(() => {
-    console.log(state.studentViewing);
+    if (state.syllabusLessonID && state.roster.length === 0) {
+      getSyllabusLessonStudents();
+    }
+  }, [state.syllabusLessonID]);
 
-    // if (state.studentViewing.studentInfo) {
-    //     handleUpdateClassroom()
-    // }
-  }, [state.studentViewing]);
+  const subscribeToPersonLocations = () => {
+    const syllabusLessonID = state.syllabusLessonID;
+    // @ts-ignore
+    const personLocationSubscription = API.graphql( graphqlOperation(subscriptions.onChangePersonLocation, { syllabusLessonID: syllabusLessonID }) ).subscribe({
+      next: (locationData: any) => {
+        const updatedStudent = locationData.value.data.onChangePersonLocation;
+        setUpdatedStudent(updatedStudent);
+      },
+    });
+    return personLocationSubscription;
+  };
+
+  useEffect(() => {
+    const updateStudentRoster = (newStudent: any) => {
+      const studentExists =
+        students.filter((student: any) => student.personAuthID === newStudent.personAuthID).length > 0;
+
+      if (studentExists) {
+        const existRoster = students.map((student: any) => {
+          if (student.personAuthID === newStudent.personAuthID) {
+            return { ...student, currentLocation: newStudent.currentLocation };
+          } else {
+            return student;
+          }
+        });
+        setStudents(existRoster);
+        dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: existRoster } });
+        setUpdatedStudent({});
+      } else {
+        const newRoster = [...students, newStudent];
+        setStudents(newRoster);
+        dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: newRoster } });
+        setUpdatedStudent({});
+      }
+    };
+    if(Object.keys(updatedStudent).length){
+      updateStudentRoster(updatedStudent)
+    }
+  }, [updatedStudent]);
+
+  const handleSelect = async (e: any) => {
+    const { id } = e.target;
+    const selected = state.roster.filter((student: any) => {
+      return student.personAuthID === id;
+    });
+
+    setViewedStudent(id);
+    dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] });
+  };
 
   const studentStatus = (status: string) => {
     switch (status) {
       case 'ACTIVE':
         return (
-          <div className='flex justify-center items-center'>
-            <span className='inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-green-400'></span>
+          <div className="flex justify-center items-center">
+            <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-green-400"></span>
           </div>
         );
       case 'IDLE':
         return (
-          <div className='flex justify-center items-center '>
-            <span className='inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-yellow-400'></span>
+          <div className="flex justify-center items-center ">
+            <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-yellow-400"></span>
           </div>
         );
       case 'OFFLINE':
         return (
-          <div className='flex justify-center items-center '>
-            <span className='inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-red-400'></span>
+          <div className="flex justify-center items-center ">
+            <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-red-400"></span>
           </div>
         );
       default:
         return (
-          <div className='flex justify-center items-center'>
-            <span className='inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-gray-400'></span>
+          <div className="flex justify-center items-center">
+            <span className="inline-flex h-4 w-4 rounded-full text-white shadow-solid bg-gray-400"></span>
           </div>
         );
     }
   };
 
   return (
-    <div
-      className={`w-full h-full bg-light-gray bg-opacity-20 overflow-y-auto overflow-x-hidden`}>
+    <div className={`w-full h-full bg-light-gray bg-opacity-20 overflow-y-auto overflow-x-hidden`}>
       {/* TABLE HEAD */}
       <div className={`w-full h-8 flex py-2 pl-2 pr-1 text-white bg-darker-gray bg-opacity-40`}>
         {/* <div className={`w-1/10 text-center text-xs flex`}></div> */}
-        <div className={`w-3.5/10 overflow-hidden mx-2 flex items-center hover:underline cursor-pointer text-xs`}
-          
-        >Student Name</div>
-        <div className={`w-3.5/10 mx-2 flex items-center overflow-hidden text-center text-xs `}
-          
-        >Current Page</div>
-        <div className={`w-2/10 mx-2 flex items-center justify-center rounded-lg text-xs`}
-          
-        >Action</div>
+        <div className={`w-3.5/10 overflow-hidden mx-2 flex items-center hover:underline cursor-pointer text-xs`}>
+          Student Name
+        </div>
+        <div className={`w-3.5/10 mx-2 flex items-center overflow-hidden text-center text-xs `}>Current Page</div>
+        <div className={`w-2/10 mx-2 flex items-center justify-center rounded-lg text-xs`}>Action</div>
       </div>
 
       {/* ROWS */}
       <div className={`w-full flex flex-col items-center`}>
         {/* STUDENTS */}
-        {state.roster && state.roster.length > 0
-          ? studentRoster().map((item: any, key: number) => (
-            <>
-            <RosterRow
-              key={key}
-              keyProp={key}
-              number={key}
-              id={item.id}
-              status={item.status}
-              firstName={item.student.firstName}
-              lastName={item.student.lastName}
-              preferredName={item.student.preferredName}
-              role={item.student.role}
-              currentLocation={item.currentLocation}
-              lessonProgress={item.lessonProgress}
-              handleSelect={handleSelect}
-              studentStatus={studentStatus}
-              handleShareStudentData={handleShareStudentData}
-              handleQuitShare={handleQuitShare}
-              handleQuitViewing={handleQuitViewing}
-              isSameStudentShared={isSameStudentShared}
-            />
-          </>
+        {state.roster.length > 0
+          ? state.roster.map((student: any, key: number) => (
+              <RosterRow
+                key={key}
+                keyProp={key}
+                number={key}
+                id={student.personAuthID}
+                status={student.person.status}
+                firstName={student.person.firstName}
+                lastName={student.person.lastName}
+                preferredName={student.person.preferredName}
+                role={student.person.role}
+                currentLocation={student.currentLocation}
+                lessonProgress={student.lessonProgress}
+                handleSelect={handleSelect}
+                studentStatus={studentStatus}
+                handleShareStudentData={handleShareStudentData}
+                handleQuitShare={handleQuitShare}
+                handleQuitViewing={handleQuitViewing}
+                viewedStudent={viewedStudent}
+                setViewedStudent={setViewedStudent}
+                isSameStudentShared={isSameStudentShared}
+              />
             ))
           : null}
       </div>

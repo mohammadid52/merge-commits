@@ -17,10 +17,10 @@ interface UserInfoProps {
 
 const ProfileEdit = (props: UserInfoProps) => {
     const history = useHistory();
-    const { dashboardProfileDict } = useDictionary();
+    const { state, userLanguage, clientKey, dispatch } = useContext(GlobalContext);
+    const { dashboardProfileDict } = useDictionary(clientKey);
     const { user, getUser, status, setStatus } = props;
     const [editUser, setEditUser] = useState(user);
-    const { state, userLanguage, dispatch } = useContext(GlobalContext);
 
     async function updatePerson() {
         const input = {
@@ -98,11 +98,7 @@ const ProfileEdit = (props: UserInfoProps) => {
         {
             code: 'ES',
             name: 'Spanish'
-        },
-        // {
-        //     code: 'VT',
-        //     name: 'Vietnamese'
-        // },
+        }
     ];
 
     let [imagePreviewURL, setImagePreviewURL] = useState(user.image);
@@ -138,7 +134,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                         </div>
 
                         <div className="h-full px-4 py-5 sm:px-6">
-                            <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
+                            <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 text-gray-900">
 
                                 {user.role === 'ST' ?
                                     // what users with STUDENT can see

@@ -1,15 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
-import {useHistory} from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
-import { Link } from 'react-router-dom';
-import Today from '../Classroom/TodayLessonTeacher';
-import Upcoming from '../Classroom//Upcoming';
-import Completed from '../Classroom/Completed';
 import * as customQueries from '../../../customGraphql/customQueries';
-// import { API, graphqlOperation } from 'aws-amplify';
+import * as customMutations from '../../../customGraphql/customMutations';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
-import Dashboard from '../Classroom/Dashboard';
+import Classroom, { Syllabus } from '../Classroom/Classroom';
+import { DashboardProps } from '../Dashboard';
 
 export interface Artist {
   id: string;
@@ -25,59 +22,99 @@ export interface CurriculumInfo {
   title: string;
 }
 
-const LessonPlanHome = () => {
+const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
+  const {
+    currentPage,
+    activeRoom,
+    visibleLessonGroup,
+    setVisibleLessonGroup,
+    lessonLoading,
+    setLessonLoading,
+    syllabusLoading,
+    setSyllabusLoading,
+  } = props;
   const [status, setStatus] = useState('');
-  const { theme } = useContext(GlobalContext);
-  const history =  useHistory();
+  const { state, theme, dispatch } = useContext(GlobalContext);
+  const history = useHistory();
   const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
 
-  async function getCourse(id: string) {
+  // useEffect(() => {
+  //   getCourse('1');
+  // }, []);
+  //
+  // async function getCourse(id: string) {
+  //   try {
+  //     const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: '1' }));
+  //     const lessons = courses.data.getCourse.classrooms.items;
+  //     setListCurriculum(lessons);
+  //     setStatus('done');
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+
+  const handleSyllabusActivation = async (syllabusID: string) => {
+    const roomID = activeRoom;
+    const syllabusArray = state.roomData.syllabus;
+    const updatedSyllabusArray = syllabusArray.map((syllabus: Syllabus) => {
+      if (syllabus.id === syllabusID) {
+        return { ...syllabus, active: true };
+      } else {
+        return { ...syllabus, active: false };
+      }
+    });
+    const roomStateObject = state.roomData.rooms.reduce((acc: {}, room: any) => {
+      if (room.id === roomID) {
+        return { ...acc, room };
+      } else {
+        return acc;
+      }
+    }, {});
+    const input = {
+      id: roomID,
+      institutionID: roomStateObject.room.institutionID,
+      classID: roomStateObject.room.classID,
+      teacherAuthID: roomStateObject.room.teacherAuthID,
+      teacherEmail: roomStateObject.room.teacherEmail,
+      name: roomStateObject.room.name,
+      maxPersons: roomStateObject.room.maxPersons,
+      activeSyllabus: syllabusID,
+    };
+
+    //console.log('lessonplanner -> roomstateObj -> ', roomStateObject )
     try {
-      const courses: any = await API.graphql(
-        graphqlOperation(customQueries.getCourse, { id: '1' })
-      );
-      const lessons = courses.data.getCourse.classrooms.items
-      setListCurriculum(lessons);
-      setStatus('done');
-    } catch (error) {
-      console.error(error);
+      const updateRoomMutation: any = API.graphql(graphqlOperation(customMutations.updateRoom, { input }));
+      const response = await updateRoomMutation;
+    } catch (e) {
+      console.error('handleSyllabusActivation: ', e);
+    } finally {
+      dispatch({
+        type: 'UPDATE_ROOM',
+        payload: {
+          property: 'syllabus',
+          data: updatedSyllabusArray,
+        },
+      });
     }
-  }
+  };
 
-
-
-  useEffect(() => {
-    getCourse('1');
-
-    // history.push('/lesson-control?id=1')
-  }, []);
-
-
-
-  
-
-  if (status !== 'done') {
-    return <ComponentLoading />;
-  }
-  {
-    return (
-      <div className='w-full'>
-        <div className='w-256 text-xl m-auto'>
-          <h2 className={`w-256 text-xl m-auto ${theme.dashboard.sectionTitle}`}>
-            Today's Lesson
-          </h2>
-          <div className={`w-256 h-9.28/10 md:h-auto flex flex-col mx-auto`}>
-            <Today link='/lesson-control?id=1' curriculums={listCurriculum} />
-            {/* <Link to="/lesson-control?id=1">
-                Teacher View 
-            </Link> */}
-            {/* <Upcoming curriculum={listCurriculum}/> */}
-            <Dashboard />
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // if (status !== 'done') {
+  //   return <ComponentLoading />;
+  // }
+  return (
+    <Classroom
+      activeRoom={activeRoom}
+      currentPage={currentPage}
+      isTeacher={true}
+      visibleLessonGroup={visibleLessonGroup}
+      setVisibleLessonGroup={setVisibleLessonGroup}
+      handleSyllabusActivation={handleSyllabusActivation}
+      lessonLoading={lessonLoading}
+      setLessonLoading={setLessonLoading}
+      syllabusLoading={syllabusLoading}
+      setSyllabusLoading={setSyllabusLoading}
+    />
+  );
 };
 
 export default LessonPlanHome;

@@ -15,8 +15,8 @@ interface UserInfoProps {
 
 const ProfileInfo = (props: UserInfoProps) => {
     const { user, status } = props;
-    const { dashboardProfileDict } = useDictionary();
-    const { theme, state, userLanguage, dispatch } = useContext(GlobalContext);
+    const { userLanguage, clientKey } = useContext(GlobalContext);
+    const { dashboardProfileDict } = useDictionary(clientKey);
     const match = useRouteMatch();
 
     const language = () => {
@@ -110,14 +110,14 @@ const ProfileInfo = (props: UserInfoProps) => {
                 <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg">
                     <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
                         <h3 className="text-lg leading-6 font-medium text-gray-900">
-                            Institution Information
+                            {dashboardProfileDict[userLanguage]['INSTITUTION_INFO']['TITLE']}
                         </h3>
                     </div>
                     <div className="px-4 py-5 sm:px-6">
                         <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
                             <div className="sm:col-span-1 p-2">
                                 <dt className="text-sm leading-5 font-medium text-gray-500">
-                                    Institution
+                                {dashboardProfileDict[userLanguage]['INSTITUTION_INFO']['INSTITUTION']}
                                 </dt>
                                 <dd className="mt-1 text-sm leading-5 text-gray-900">
                                     {`${user.institution ? user.institution : 'Rose M. Avalos P-TECH Early College'}`}
@@ -125,7 +125,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                             </div>
                             <div className="sm:col-span-1 p-2">
                                 <dt className="text-sm leading-5 font-medium text-gray-500">
-                                    Grade
+                                {dashboardProfileDict[userLanguage]['INSTITUTION_INFO']['GRADE']}
                                 </dt>
                                 <dd className="mt-1 text-sm leading-5 text-gray-900">
                                     {`${user.grade ? user.grade : 'not set'}`}

@@ -3,6 +3,7 @@ import { LessonControlContext } from '../../../../../contexts/LessonControlConte
 import SelfDisplay from '../../../../Lesson/LessonComponents/PollPage/PollBreakdown/SelfDisplay';
 
 import {PollBreakdownProps} from '../../../../Lesson/LessonComponents/PollPage/PollBreakdown/PollBreakdown';
+import { getPageLabel } from '../../../../getPageLabel';
 
 const PollBreakdownView = (props: PollBreakdownProps) => {
   const { state, theme, dispatch } = useContext(LessonControlContext);
@@ -14,7 +15,7 @@ const PollBreakdownView = (props: PollBreakdownProps) => {
 
   let displayStudentData = state.studentViewing.live
     ? state.studentViewing.studentInfo.currentLocation
-      ? state.studentViewing.studentInfo.currentLocation === 'warmup/breakdown'
+      ? getPageLabel(state.studentViewing.studentInfo.currentLocation, state.pages) === 'warmup/breakdown'
       : state.studentViewing.studentInfo.lessonProgress === 'warmup/breakdown'
     : false;
 

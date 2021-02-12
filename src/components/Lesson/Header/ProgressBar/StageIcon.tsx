@@ -15,6 +15,7 @@ import {
   FaScroll,
   FaTrophy,
 } from 'react-icons/fa';
+import { AiOutlineHome } from 'react-icons/ai';
 import StageLabels from '../../../General/LabelSwitch';
 
 interface StageIconProps {
@@ -26,6 +27,7 @@ interface StageIconProps {
   disabled: boolean;
   counter?: number;
   clickable: boolean;
+  userAtEnd?: boolean;
 }
 
 const StageIcon = (props: StageIconProps) => {
@@ -70,6 +72,8 @@ const StageIcon = (props: StageIconProps) => {
         return <FaCheck />;
       case 'list':
         return <FaListAlt />;
+      case 'home':
+        return <AiOutlineHome />;
       default:
         return <FaPencilRuler />;
     }
@@ -132,6 +136,7 @@ const StageIcon = (props: StageIconProps) => {
       return '4DEDF2F7';
     }
   };
+
 
   if (disabled) return null;
 

@@ -3,6 +3,7 @@ import { Auth } from '@aws-amplify/auth';
 import { useCookies } from 'react-cookie';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as queries from '../graphql/queries';
+import * as mutations from '../graphql/mutations';
 import { GlobalContext } from '../contexts/GlobalContext';
 import useDeviceDetect from '../customHooks/deviceDetect';
 import MobileOops from '../components/Error/MobileOops';
@@ -10,43 +11,69 @@ import ComponentLoading from './Lesson/Loading/ComponentLoading';
 
 import AuthRoutes from './AppRoutes/AuthRoutes';
 import UnauthRoutes from './AppRoutes/UnauthRoutes';
+import { getAsset } from '../assets';
 
 import * as customMutations from '../customGraphql/customMutations'
 
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
-  // const { theme, dispatch } = useContext(GlobalContext);
-  const { state, theme, dispatch } = useContext(GlobalContext);
+  const { state, theme, clientKey, dispatch } = useContext(GlobalContext);
   const [cookies, setCookie, removeCookie] = useCookies();
   const [authState, setAuthState] = useState('loading')
 
+  useEffect(() => {
+    if (authState === 'loggedIn') {
+      checkForUserInactivity()
+    } else {
+      removeCookie('auth', { path: '/' });
+      dispatch({ type: 'CLEANUP' });
+      sessionStorage.removeItem('accessToken');
+    }
+  }, [authState]);
+
+  useEffect(() => {
+    setupAppHeaders();
+    checkUserAuthenticated();
+  }, []);
+
+  const setupAppHeaders = async () => {
+    const favicon:any = document.getElementById("faviconDefault");
+    const favicon32x32:any = document.getElementById("favicon32x32");
+    const favicon16x16:any = document.getElementById("favicon16x16");
+    favicon.href = getAsset(clientKey, 'faviconDefault')
+    favicon32x32.href = getAsset(clientKey, 'favicon32x32')
+    favicon16x16.href = getAsset(clientKey, 'favicon16x16')
+  };
+
   const checkUserAuthenticated = async () => {
     try {
-        const user = await Auth.currentAuthenticatedUser()
-        if (user) {
-          const { email, sub } = user.attributes
-          let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }))
-          userInfo = userInfo.data.getPerson;
-          updateAuthState(true)
-          dispatch({
-            type: 'PREV_LOG_IN',
-            payload: { email, authId: sub },
-          });
-          dispatch({
-            type: 'SET_USER',
-            payload: {
-              id: userInfo.id,
-              firstName: userInfo.preferredName || userInfo.firstName,
-              lastName: userInfo.lastName,
-              language: userInfo.language,
-              onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
-              role: userInfo.role,
-              image: userInfo.image
-            }
-          });
-        } else {
-          updateAuthState(false)    
-        }
+      const user = await Auth.currentAuthenticatedUser()
+      if (user) {
+        const { email, sub } = user.attributes
+        let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }))
+        userInfo = userInfo.data.getPerson;
+        updateAuthState(true)
+        dispatch({
+          type: 'PREV_LOG_IN',
+          payload: { email, authId: sub },
+        });
+        // SETUP USER
+        dispatch({
+          type: 'SET_USER',
+          payload: {
+            id: userInfo.id,
+            firstName: userInfo.preferredName || userInfo.firstName,
+            lastName: userInfo.lastName,
+            language: userInfo.language,
+            onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
+            role: userInfo.role,
+            image: userInfo.image,
+            location: userInfo?.location?.items
+          }
+        });
+      } else {
+        updateAuthState(false)
+      }
     } catch (err) {
       updateAuthState(false)
     }
@@ -66,8 +93,8 @@ const MainRouter: React.FC = () => {
         }
       }
     });
-
   }
+
   const autoLogout = async () => {
     if (isUserLoggedIn()) {
       const input = {
@@ -93,20 +120,6 @@ const MainRouter: React.FC = () => {
       setAuthState('notLoggedIn')
     }
   }
-
-  useEffect(() => {
-    if (authState === 'loggedIn') {
-      checkForUserInactivity()
-    } else {
-      removeCookie('auth', { path: '/' });
-      dispatch({ type: 'CLEANUP' });
-      sessionStorage.removeItem('accessToken');
-    }
-  }, [authState]);
-
-  useEffect(() => {
-    checkUserAuthenticated();
-  }, []);
 
   if (authState === 'loading') {
     return <ComponentLoading />
@@ -136,7 +149,6 @@ const MainRouter: React.FC = () => {
       </div>
     );
   }
-
 };
 
 export default MainRouter;

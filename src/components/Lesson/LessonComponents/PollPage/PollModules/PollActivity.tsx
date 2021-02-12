@@ -21,7 +21,7 @@ export type PollInputState = Array<PollInput>;
 
 const Poll = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  const [cookies, setCookie] = useCookies([`lesson-${state.classroomID}`]);
+  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const inputs = state.data.lesson.warmUp.inputs;
   const video = state.data.lesson.warmUp.instructions.link;
   const [openPopup, setOpenPopup] = useState(false);

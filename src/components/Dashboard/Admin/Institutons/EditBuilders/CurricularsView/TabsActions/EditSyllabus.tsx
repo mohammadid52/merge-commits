@@ -106,7 +106,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
 
       setSelectedLessonsList(lessonsList)
-      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `le_${curricularId}_sy_${syllabusId}`, sequence: list } }));
+      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `lesson_${syllabusId}`, sequence: list } }));
       seqItem = seqItem.data.updateCSequences;
       console.log('seq updated');
     }
@@ -251,6 +251,11 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   const editCurrentLesson = (id: string) => {
     setEditState({ id });
   }
+
+  const cancelEdit = () => {
+    setEditState({ id: '', action: '' })
+  }
+
   const addNewLesson = async () => {
     try {
       const input = {
@@ -263,12 +268,12 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
       if (!lessonsIds.length) {
         setLessonsIds([newLesson.id])
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `le_${curricularId}_sy_${syllabusId}`, sequence: [newLesson.id] } }));
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `lesson_${syllabusId}`, sequence: [newLesson.id] } }));
         seqItem = seqItem.data.createCSequences
         console.log('seqItem', seqItem)
       } else {
         setLessonsIds([...lessonsIds, newLesson.id])
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `le_${curricularId}_sy_${syllabusId}`, sequence: [...lessonsIds, newLesson.id] } }));
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `lesson_${syllabusId}`, sequence: [...lessonsIds, newLesson.id] } }));
         seqItem = seqItem.data.updateCSequences
         console.log('seqItem', seqItem)
       }
@@ -329,9 +334,12 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           methodology: savedData.methodology,
           policies: savedData.policies,
         });
-        setDesignerIds([...savedData?.designers])
+        if (savedData.designers) {
+          setDesignerIds([...savedData?.designers])
+        }
         setSavedLessonsList([...savedData.lessons?.items]);
-      } catch {
+      } catch (err) {
+        console.log('err', err)
         setMessages({
           show: true,
           message: 'Error while fetching syllabus data.',
@@ -349,8 +357,15 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     try {
       const result: any = await API.graphql(graphqlOperation(customQueries.listLessonsTitles))
       const savedData = result.data.listLessons;
-      const updatedList = savedData?.items.map((item: { id: string, title: string }) => ({ id: item.id, name: item.title, value: item.title }))
-      setAllLessonsList([...savedData?.items])
+      const sortedList = savedData?.items?.sort((a: any, b: any) => a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1)
+      const updatedList = sortedList?.map((item: { id: string, title: string }) => (
+        {
+          id: item.id,
+          name: item.title,
+          value: item.title
+        }))
+      setAllLessonsList([...sortedList])
+      // console.log(sortedList, savedData)
       setDropdownLessonsList([...updatedList])
     } catch {
       setMessages({
@@ -386,11 +401,15 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
   const fetchLessonsSequence = async () => {
     let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
-      { id: `le_${curricularId}_sy_${syllabusId}` }))
+      { id: `lesson_${syllabusId}` }))
     item = item?.data.getCSequences?.sequence || []
     if (item) {
       setLessonsIds(item)
     }
+  }
+  const createLessonSequence = async (lessonsID: string[]) => {
+    let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `lesson_${syllabusId}`, sequence: lessonsID } }));
+    setLessonsIds(lessonsID)
   }
 
   useEffect(() => {
@@ -401,13 +420,20 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   }, []);
 
   useEffect(() => {
-    if (savedLessonsList.length) {
+    if (Array.isArray(savedLessonsList) && savedLessonsList.length) {
       updateListAndDropdown();
     }
   }, [savedLessonsList, allLessonsList])
 
   useEffect(() => {
-    if (designersList.length > 0) {
+    if (savedLessonsList?.length && !lessonsIds.length) {
+      const currentLessonsID = savedLessonsList.map(item => item.id);
+      createLessonSequence(currentLessonsID);
+    }
+  }, [savedLessonsList])
+
+  useEffect(() => {
+    if (designersList && designersList.length > 0) {
       const designers = [...designerIds].map((desID: string) => {
         const personData = designersList.find(per => per.id === desID)
         const personObj = {
@@ -578,9 +604,16 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                                                 </div>
                                               )}
                                           </div>
-                                          <span className="w-1/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentLesson(item.id)}>
-                                            {(editState.id !== item.id) ? ('edit') : editState.action}
-                                          </span>
+                                          {
+                                            (editState.id !== item.id) ?
+                                              <span className="w-1/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentLesson(item.id)}>
+                                                edit
+                                              </span>
+                                              :
+                                              <span className="w-1/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={cancelEdit}>
+                                                {editState.action ? editState.action : 'Cancel'}
+                                              </span>
+                                          }
                                         </div>
                                       </div>
                                     )}

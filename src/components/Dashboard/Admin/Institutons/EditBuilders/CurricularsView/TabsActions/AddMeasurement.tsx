@@ -33,6 +33,14 @@ const AddMeasurement = (props: AddMeasurementProps) => {
   const [validation, setValidation] = useState({ name: '', topic: '' })
   const [measurementIds, setMeasurementIds] = useState([]);
 
+  const useQuery = () => {
+    return new URLSearchParams(location.search);
+  };
+
+  const urlGetParams: any = useQuery();
+  const topicId = urlGetParams.get('tid'); // Find a code from params.
+
+
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Add Measurement', url: `/dashboard/curricular/${curricularId}/measurement/add`, last: true }
@@ -69,10 +77,13 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       value: item.name
     }));
     setTopics(list)
+    if(topicId){
+      setTopic(list.find((item:any) => item.id === topicId))
+    }
   }
-  const fetchMeasurementSequence = async () => {
+  const fetchMeasurementSequence = async (topicId: string) => {
     let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
-      { id: `m_${curricularId}` }))
+      { id: `m_${topicId}` }))
     item = item?.data.getCSequences?.sequence || []
     if (item) {
       setMeasurementIds(item)
@@ -109,11 +120,11 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       const item: any = await API.graphql(graphqlOperation(customMutations.createRubric, { input }));
       const addedItem = item.data.createRubric
       if (!measurementIds.length) {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `m_${curricularId}`, sequence: [addedItem.id] } }));
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `m_${topic.id}`, sequence: [addedItem.id] } }));
         seqItem = seqItem.data.createCSequences
         console.log('seqItem', seqItem)
       } else {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `m_${curricularId}`, sequence: [...measurementIds, addedItem.id] } }));
+        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `m_${topic.id}`, sequence: [...measurementIds, addedItem.id] } }));
         seqItem = seqItem.data.updateCSequences
         console.log('seqItem', seqItem)
       }
@@ -127,8 +138,13 @@ const AddMeasurement = (props: AddMeasurementProps) => {
 
   useEffect(() => {
     fetchTopics()
-    fetchMeasurementSequence()
   }, [])
+
+  useEffect(() => {
+    if (topic?.id) {
+      fetchMeasurementSequence(topic.id)
+    }
+  }, [topic.id])
 
   const cancelEvent = () => {
     history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
@@ -161,13 +177,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
                 validation.name && <p className="text-red-600">{validation.name}</p>
               }
             </div>
-            <div className="px-3 py-4 grid gap-x-4 grid-cols-2">
-              {/* <div>
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                  Select Sequence
-              </label>
-                <Selector placeholder="Sequence" list={sequenceList} onChange={() => console.log('')} />
-              </div> */}
+            <div className="px-3 py-4">
               <div>
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Topic <span className="text-red-500">*</span>
