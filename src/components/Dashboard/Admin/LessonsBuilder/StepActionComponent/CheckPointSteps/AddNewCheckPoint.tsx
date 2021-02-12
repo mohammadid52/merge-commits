@@ -16,7 +16,7 @@ import RichTextEditor from '../../../../../Atoms/RichTextEditor';
 import CheckBox from '../../../../../Atoms/Form/CheckBox';
 import { LessonPlansProps } from '../../LessonEdit';
 
-interface AddNewCheckPointProps {
+export interface AddNewCheckPointProps {
   changeStep: (step: string) => void
   updateLessonPlan: (plan: LessonPlansProps[], newObj: any[]) => void
   designersList?: InputValueObject[]
@@ -70,9 +70,6 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     instructionHtml: '<p></p>',
     language: { id: '1', name: "English", value: 'EN' }
   }
-  // const [checkPointData, setCheckPointData] = useState<InitialData>(initialData);
-  // const [selectedDesigners, setSelectedDesigners] = useState([]);
-  // const [questionsState, setQuestionsState] = useState(checkpQuestions);
   const [selectedBlock, setSelectedBlock] = useState('');
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({

@@ -10,10 +10,11 @@ interface SelectedCheckPointsListProps {
   activeCheckpoints?: any[]
   changeStep: (step: string) => void
   DeleteCheckpoint: (id: string) => void
+  editCheckPoint: (id: string) => void
 }
 
 const SelectedCheckPointsList = (props: SelectedCheckPointsListProps) => {
-  const { activeCheckpoints, changeStep, DeleteCheckpoint } = props;
+  const { activeCheckpoints, changeStep, DeleteCheckpoint, editCheckPoint } = props;
   const [savedCheckpoint, setSavedCheckpoint] = useState(activeCheckpoints);
 
   useEffect(() => {
@@ -21,7 +22,7 @@ const SelectedCheckPointsList = (props: SelectedCheckPointsListProps) => {
     const updatedList = checkpointList.map(item => {
       const newItem = {
         ...item,
-        content: <CheckpointQueTable changeStep={changeStep} checkpointId={item.id} DeleteCheckpoint={DeleteCheckpoint} showActionIcons />
+        content: <CheckpointQueTable changeStep={changeStep} checkpointId={item.id} DeleteCheckpoint={DeleteCheckpoint} editCheckPoint={editCheckPoint} showActionIcons />
       }
       return newItem;
     })
