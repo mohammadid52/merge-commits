@@ -17,81 +17,117 @@ export interface AnthologyContentInterface {
 }
 
 export interface AnthologyMapItem extends AnthologyContentInterface {
-  studentDataID: string;
+  studentDataID?: string;
+  lessonProgress?: string;
+  currentLocation?: string;
   status: string;
   syllabusLessonID: string;
   studentID: string;
   studentAuthID: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export type ViewEditMode = {
-  mode: 'view' | 'edit' | 'save' | '';
+  mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | '';
   studentDataID: string;
 }
 
 const Anthology = () => {
   const { state } = useContext(GlobalContext);
   const [studentData, setStudentData] = useState<AnthologyMapItem[]>([]);
-  // const [rawData, setRawData] = useState();
+  const [newStudentData, setNewStudentData] = useState<AnthologyMapItem>({
+    type: 'story',
+    title: '',
+    subTitle: '',
+    description: '',
+    content: '',
+    lessonProgress: '0',
+    currentLocation: '0',
+    status: 'ACTIVE',
+    syllabusLessonID: '',
+    studentID: state.user.email,
+    studentAuthID: state.user.authId,
+  });
 
   // For switching sections & knowing which field to edit
   const [subSection, setSubSection] = useState<string>('Stories');
   // For editing specific poems/stories
   const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({ mode: '', studentDataID: '' });
 
+  // TOP Function to load student data
+  const listStudentData = async () => {
+    try {
+      const studentDataFetch: any = await API.graphql(
+        graphqlOperation(queries.listStudentDatas, { filter: { studentAuthID: { eq: state.user.authId } } }),
+      );
+      const response = await studentDataFetch;
+      const arrayOfResponseObjects = response?.data?.listStudentDatas?.items;
+      const reducedAnthologyContent = arrayOfResponseObjects.reduce((acc: AnthologyMapItem[], contentObj: any) => {
+        if (contentObj.anthologyContent) {
+          const mapIdToItem = contentObj.anthologyContent.map((contentMapItem: AnthologyContentInterface) => {
+            return {
+              ...contentMapItem,
+              status: contentObj.status,
+              syllabusLessonID: contentObj.syllabusLessonID,
+              studentID: contentObj.studentID,
+              studentAuthID: contentObj.studentAuthID,
+              studentDataID: contentObj.id,
+              updatedAt: contentObj.updatedAt,
+            };
+          });
+          return [...acc, ...mapIdToItem];
+        } else {
+          return acc;
+        }
+      }, []);
+      setStudentData(reducedAnthologyContent);
+    } catch (e) {
+      console.error('Anthology student data fetch error: ', e);
+    }
+  };
+
   // Useeffect to load student data and process it
   useEffect(() => {
-    const listStudentData = async () => {
-      try {
-        const studentDataFetch: any = await API.graphql(
-          graphqlOperation(queries.listStudentDatas, { filter: { studentAuthID: { eq: state.user.authId } } }),
-        );
-        const response = await studentDataFetch;
-        const arrayOfResponseObjects = response?.data?.listStudentDatas?.items;
-        const reducedAnthologyContent = arrayOfResponseObjects.reduce((acc: AnthologyMapItem[], contentObj: any) => {
-          if (contentObj.anthologyContent) {
-            const mapIdToItem = contentObj.anthologyContent.map((contentMapItem: AnthologyContentInterface) => {
-              return { ...contentMapItem,
-                status: contentObj.status,
-                syllabusLessonID: contentObj.syllabusLessonID,
-                studentID: contentObj.studentID,
-                studentAuthID: contentObj.studentAuthID,
-                studentDataID: contentObj.id,
-                updatedAt: contentObj.updatedAt };
-            });
-            return [...acc, ...mapIdToItem];
-          } else {
-            return acc;
-          }
-        }, []);
-        // setRawData(arrayOfResponseObjects);
-        setStudentData(reducedAnthologyContent);
-      } catch (e) {
-        console.error('Anthology student data fetch error: ', e);
+    const initializeStudentData = async()=> {
+      if (state.user.authId) {
+        await listStudentData();
       }
-    };
-
-    if (state.user.authId) {
-      listStudentData();
     }
+    initializeStudentData();
   }, [state.user.authId]);
+
+  // Useeffect to initialize newStudentData
+  useEffect(() => {
+    if (studentData.length > 0) {
+      setNewStudentData({ ...newStudentData, syllabusLessonID: customSyllabusLessonID() });
+    }
+  }, [studentData]);
 
   // Function group to handle updating student data
   const handleEditUpdate = (e: React.ChangeEvent) => {
     const { id, value } = e.target as HTMLInputElement;
     const [key, type, studentDataID] = id.split('_');
-    const updatedStudentData = studentData.reduce((acc: AnthologyMapItem[], contentObj: any) => {
-      if (contentObj.type === type && contentObj.studentDataID === studentDataID) {
-        return [...acc, { ...contentObj, [key]: value }];
-      } else {
-        return [...acc, contentObj];
-      }
-    }, []);
-    setStudentData(updatedStudentData);
+    switch (viewEditMode.mode) {
+      case 'edit':
+        const updatedStudentData = studentData.reduce((acc: AnthologyMapItem[], contentObj: any) => {
+          if (contentObj.type === type && contentObj.studentDataID === studentDataID) {
+            return [...acc, { ...contentObj, [key]: value }];
+          } else {
+            return [...acc, contentObj];
+          }
+        }, []);
+        setStudentData(updatedStudentData);
+        break;
+      case 'create':
+        if (viewEditMode.mode === 'create') {
+          const updatedNewStudentData = { ...newStudentData, [key]: value };
+          setNewStudentData(updatedNewStudentData);
+        }
+        break;
+    }
   };
 
-  const handleEditToggle = (editMode: 'view' | 'edit' | '', studentDataID: string) => {
+  const handleEditToggle = (editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | '', studentDataID: string) => {
     setViewEditMode({ mode: editMode, studentDataID: studentDataID });
   };
 
@@ -102,6 +138,7 @@ const Anthology = () => {
     if (id !== subSection) {
       if (id !== 'subSectionTabs') {
         setSubSection(id);
+        setNewStudentData({ ...newStudentData, type: subSectionKey[id] });
       }
     }
   };
@@ -112,52 +149,96 @@ const Anthology = () => {
     'Journal': 'journal',
   };
 
-  const filterContentBySubsection = () => {
-    return studentData.filter((contentObj: AnthologyMapItem) => {
-      if (contentObj.type === subSectionKey[subSection]) return contentObj;
-    });
+  // Function group for filtering the studentData/anthology content
+  const customSyllabusLessonID = () => {
+    return `custom_${state.user.authId}_${filterAnthologyContentWithSimilarSyllabusLessonID('custom').length}`;
   };
 
-  // Function group for mutating database
-  useEffect(() => {
-    const anthologySave = async () => {
-      const getAnthologyContentByStudentDataID = studentData.filter((contentObj: AnthologyMapItem) => {
-        return contentObj.studentDataID === viewEditMode.studentDataID;
-      });
-      const removeHelperProperties = getAnthologyContentByStudentDataID.map((contentObj: AnthologyMapItem) => {
-        return {
-          type: contentObj.type,
-          title: contentObj.title,
-          subTitle: contentObj.subTitle,
-          description: contentObj.description,
-          content: contentObj.content,
-        };
-      });
+  const filterAnthologyContentBySubsection = studentData.filter((contentObj: AnthologyMapItem) => {
+    if (contentObj.type === subSectionKey[subSection]) return contentObj;
+  });
 
-      try {
-        const studentDataUpdate: any = await API.graphql(
-          graphqlOperation(mutations.updateStudentData, {
-            input: {
-              id: getAnthologyContentByStudentDataID[0].studentDataID,
-              status: getAnthologyContentByStudentDataID[0].status,
-              syllabusLessonID: getAnthologyContentByStudentDataID[0].syllabusLessonID,
-              studentID: getAnthologyContentByStudentDataID[0].studentID,
-              studentAuthID: getAnthologyContentByStudentDataID[0].studentAuthID,
-              anthologyContent: removeHelperProperties
-            },
-          }),
-        );
-      } catch (e) {
-        console.error('studentDataUpdate: ', e);
-      } finally {
-        setViewEditMode({ mode: '', studentDataID: '' });
-      }
+  const filterAnthologyContentWithSimilarSyllabusLessonID = (inputSyllabusLessonID: string) => studentData.filter((contentObj: AnthologyMapItem) => {
+    if (contentObj.syllabusLessonID.includes(inputSyllabusLessonID)) return contentObj;
+  });
+
+  const getAnthologyContentByStudentDataID = studentData.find((contentObj: AnthologyMapItem) => {
+    return contentObj.studentDataID === viewEditMode.studentDataID;
+  });
+
+  const filterAnthologyContentByType = (inputType: string) => studentData.filter((contentObj: AnthologyMapItem) => {
+    return contentObj.type === inputType;
+  });
+
+  // Function group for mutating database
+  const anthologySave = async () => {
+    const removeHelperProperties = {
+      type: getAnthologyContentByStudentDataID.type,
+      title: getAnthologyContentByStudentDataID.title,
+      subTitle: getAnthologyContentByStudentDataID.subTitle,
+      description: getAnthologyContentByStudentDataID.description,
+      content: getAnthologyContentByStudentDataID.content,
     };
 
-    if (viewEditMode.mode === 'save') {
-      anthologySave();
+    try {
+      const studentDataUpdate: any = await API.graphql(
+        graphqlOperation(mutations.updateStudentData, {
+          input: {
+            id: getAnthologyContentByStudentDataID.studentDataID,
+            status: getAnthologyContentByStudentDataID.status,
+            syllabusLessonID: getAnthologyContentByStudentDataID.syllabusLessonID,
+            studentID: state.user.email,
+            studentAuthID: state.user.authId,
+            anthologyContent: removeHelperProperties,
+          },
+        }),
+      );
+    } catch (e) {
+      console.error('studentDataUpdate: ', e);
+    } finally {
+      setViewEditMode({ mode: '', studentDataID: '' });
     }
+  };
 
+  const anthologyCreate = async () => {
+    const removeHelperProperties = {
+      type: newStudentData.type,
+      title: newStudentData.title,
+      subTitle: newStudentData.subTitle,
+      description: newStudentData.description,
+      content: newStudentData.content,
+    };
+    try {
+      const studentDataCreate: any = await API.graphql(graphqlOperation(mutations.createStudentData, {
+        input:
+          {
+            lessonProgress: newStudentData.lessonProgress,
+            currentLocation: newStudentData.currentLocation,
+            status: newStudentData.status,
+            syllabusLessonID: newStudentData.syllabusLessonID,
+            studentID: state.user.email,
+            studentAuthID: state.user.authId,
+            anthologyContent: removeHelperProperties,
+          },
+      }));
+    } catch (e) {
+      console.error('studentDataCreate: Anthology: ', e);
+    } finally {
+      setViewEditMode({ mode: '', studentDataID: '' });
+    }
+  };
+
+  // UseEffect for monitoring save/create new changes and calling functions
+  useEffect(() => {
+    const manageSaveAndCreate = async() => {
+      if (viewEditMode.mode === 'save') {
+        await anthologySave();
+      } else if (viewEditMode.mode === 'savenew') {
+        await anthologyCreate();
+        await listStudentData();
+      }
+    }
+    manageSaveAndCreate();
   }, [viewEditMode]);
 
   // RETURN
@@ -173,18 +254,20 @@ const Anthology = () => {
       <SubSectionTabs
         subSection={subSection}
         handleTabClick={handleTabClick}
-        subSectionList={['Stories', 'Poems', 'Journal']}
+        subSectionList={['Journal', 'Stories', 'Poems']}
       />
       <SectionTitle title={subSection} />
       {/*
         This section shows rows of:
-          - Lessons
+          - ADD NEW ENTRY
           - Journal entries
-          - User written stories & poems
+          - Stories
+          - Poems
     */}
       <AnthologyContent viewEditMode={viewEditMode} handleEditToggle={handleEditToggle}
                         handleEditUpdate={handleEditUpdate} subSection={subSection}
-                        content={studentData.length > 0 && filterContentBySubsection()} />
+                        createTemplate={newStudentData}
+                        content={studentData.length > 0 && filterAnthologyContentBySubsection} />
     </React.Fragment>
   );
 };
