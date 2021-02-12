@@ -752,3 +752,17 @@ export const createLessonCheckpoint = /* GraphQL */ `
     }
   }
 `;
+
+export const createCheckpointQuestions = /* GraphQL */ `
+  mutation CreateCheckpointQuestions(
+    $input: CreateCheckpointQuestionsInput!
+    $condition: ModelCheckpointQuestionsConditionInput
+  ) {
+    createCheckpointQuestions(input: $input, condition: $condition) {
+      id
+      checkpointID
+      questionID
+      required
+    }
+  }
+`;

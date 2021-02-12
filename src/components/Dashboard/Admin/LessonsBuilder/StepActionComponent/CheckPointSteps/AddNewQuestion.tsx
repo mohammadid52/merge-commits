@@ -14,7 +14,7 @@ import Selector from '../../../../../Atoms/Form/Selector';
 
 interface AddNewQuestionProps {
   changeStep: (step: string) => void
-
+  setCheckpQuestions: (obj: any) => void
 }
 interface InitialState {
   question: string
@@ -35,7 +35,7 @@ interface InputValue {
 }
 
 const AddNewQuestion = (props: AddNewQuestionProps) => {
-  const { changeStep } = props;
+  const { changeStep, setCheckpQuestions } = props;
 
   const initialState = {
     question: '',
@@ -205,7 +205,6 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
           label: questionData.label,
           type: questionData.type.value,
           question: questionData.question,
-          // isRequired:questionData.isRequired,
           // designers: selectedDesigners.map(item => item.id),
           language: questionData.language.value,
           options: filteredOptions(questionData.options)
@@ -215,6 +214,8 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
         );
         const newQuestion = results?.data?.createQuestion;
         if (newQuestion.id) {
+          newQuestion.required = questionData.isRequired;
+          setCheckpQuestions(newQuestion)
           setValidation({
             question: '',
             type: '',
@@ -349,7 +350,7 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
             {/* Other options checkboxes */}
             <div className="flex w-9/10 mx-auto mt-4">
               <div className="w-2/4 flex items-center">
-                <CheckBox value={otherOpt} onChange={() => toggleCheckBoxState("otherOpt", otherOpt)} name='otherOpt' label={`Add an "Other" Answer Option or Comment Field`} />
+                <CheckBox value={otherOpt} onChange={() => toggleCheckBoxState("otherOpt", otherOpt)} name='otherOpt' label={`Add an "Other" Answer Option and Comment Field`} />
               </div>
               <div className="w-2/4 flex items-center">
                 <CheckBox value={noneOfAbove} onChange={() => toggleCheckBoxState("noneOfAbove", noneOfAbove)} name='noneOfAbove' label={`Add a "None of the above" Answer Option`} />

@@ -223,7 +223,7 @@ const LessonEdit = (props: LessonEditProps) => {
       {/* Body */}
       <PageWrapper>
         <div className="w-full m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3>
+          {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3> */}
           <div className="grid grid-cols-5 divide-x divide-gray-400 p-4">
             <div className="sm:col-span-1">
               <WizardScroller stepsList={lessonType === 'lesson' ? lessonScrollerStep : assessmentScrollerStep} activeStep={activeStep} setActiveStep={(step) => setActiveStep(step)} />

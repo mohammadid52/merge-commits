@@ -13,11 +13,12 @@ import { getLanguageString } from '../../../../../../utilities/strings';
 
 interface QuestionLookupProps {
   changeStep: (step: string) => void
-
+  onSave: (list: any[]) => void
+  selecteList: any[]
 }
 
 const QuestionLookup = (props: QuestionLookupProps) => {
-  const { changeStep } = props;
+  const { changeStep, onSave, selecteList } = props;
   const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
   const [questionsList, setQuestionsList] = useState([]);
   const [allQuestionsList, setAllQuestionsList] = useState([]);
@@ -65,6 +66,10 @@ const QuestionLookup = (props: QuestionLookupProps) => {
     setQuestionsList(allQuestionsList);
     setSearchInput('')
   }
+  const onQuestionSave = () => {
+    const selectedQuestionsList = [...allQuestionsList].filter(item => selectedQuestionIds.includes(item.id))
+    onSave(selectedQuestionsList);
+  }
 
   const fetchQuestionsList = async () => {
     try {
@@ -91,6 +96,13 @@ const QuestionLookup = (props: QuestionLookupProps) => {
   useEffect(() => {
     fetchQuestionsList();
   }, [])
+
+  useEffect(() => {
+    if (selecteList?.length > 0) {
+      let IDs = selecteList.map(item => item.id);
+      setSelectedQuestionIds(IDs)
+    }
+  }, [selecteList])
 
   return (
     <Fragment>
@@ -121,14 +133,14 @@ const QuestionLookup = (props: QuestionLookupProps) => {
 
       <div className="p-4">
         <div className="flex justify-between my-4">
-          <p className="text-sm font-medium text-gray-600 flex items-center w-1/4 px-14"> {selectedQuestionIds?.length} Questions Selected</p>
+          <p className="text-sm font-medium text-gray-600 flex items-center w-2/4 px-14"> {selectedQuestionIds?.length} Questions Selected</p>
           <SearchInput value={searchInput} onChange={(val: string) => setSearchInput(val)} onKeyDown={searchFromList} closeAction={removeSearchAction} style="w-2/4" />
         </div>
         <div>
           <Fragment>
             <div className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-              <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>Selection.</span>
+              <div className="w-1.5/10 px-6 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <span>Selection</span>
               </div>
               <div className="w-5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 <span>Question</span>
@@ -136,7 +148,7 @@ const QuestionLookup = (props: QuestionLookupProps) => {
               <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 <span>Type</span>
               </div>
-              <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 <span>Language</span>
               </div>
             </div>
@@ -148,14 +160,14 @@ const QuestionLookup = (props: QuestionLookupProps) => {
                     <Fragment>
                       {questionsList?.length ? questionsList.map(item => (
                         <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                          <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
+                          <div className="flex w-1.5/10 items-center px-6 py-3 text-left text-s leading-4">
                             <span>
                               <CheckBox value={selectedQuestionIds?.includes(item.id)} onChange={() => selectItem(item.id)} name='selectquestion' />
                             </span>
                           </div>
                           <div className="flex w-5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.question} </div>
                           <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.type ? getTypeString(item.type) : '--'}</div>
-                          <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.language ? getLanguageString(item.language) : '--'}</div>
+                          <div className="flex w-1.5/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.language ? getLanguageString(item.language) : '--'}</div>
                         </div>
                       )) : (
                           <div className="py-12 my-6 text-center">
@@ -181,7 +193,7 @@ const QuestionLookup = (props: QuestionLookupProps) => {
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-center my-6">
             <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={() => changeStep('AddNewCheckPoint')} transparent />
-            <Buttons btnClass="py-1 px-8 text-xs ml-2" label="Save" onClick={() => console.log('')} />
+            <Buttons btnClass="py-1 px-8 text-xs ml-2" label="Save" onClick={onQuestionSave} />
           </div>
         </div>
       </div >

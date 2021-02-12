@@ -143,7 +143,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
         <div className="bg-white mx-auto border border-gray-200 rounded-xl">
           <ul className="rounded-xl">
             {accordionSteps.map((item: { id: string, title: string, header: string, titleLabel: string, titleValue: string, textEditorName: string, textEditorValue: string }, index) => (
-              <Fragment key={1}>
+              <Fragment key={item.id}>
                 <li className={`relative border-b border-gray-200 ${selectedBlock === item.id ? 'rounded-lg' : ''}`}>
                   <div className={`w-full px-8 py-6 text-left ${selectedBlock === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
                     <div className="flex items-center justify-center">
@@ -168,7 +168,6 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
               </Fragment>
             ))}
           </ul>
-
         </div>
 
         {validation.message && <div className="py-4 m-auto mt-4 text-center">

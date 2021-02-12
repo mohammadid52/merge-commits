@@ -23,11 +23,29 @@ interface CheckpointBuilderProps {
 
 const CheckpointBuilder = (props: CheckpointBuilderProps) => {
   const { designersList, lessonID, lessonPlans, updateLessonPlan } = props;
+
+  const initialCheckpData = {
+    title: '',
+    subtitle: '',
+    label: '',
+    instructionsTitle: '',
+    purposeHtml: '<p></p>',
+    objectiveHtml: '<p></p>',
+    instructionHtml: '<p></p>',
+    language: { id: '1', name: "English", value: 'EN' }
+  }
+
   const [builderStep, setBuilderStep] = useState('SelectedCheckPointsList');
-  // const [builderStep, setBuilderStep] = useState('AddNewQuestion');
-  const [savedCheckPoints, setSavedCheckpoints] = useState([]);
-  const [fileredCheckpointList, setFilteredCheckpointList] = useState([]);
+  // const [builderStep, setBuilderStep] = useState('AddNewCheckPoint');
+
   const [allCheckPointsList, setAllCheckPointsList] = useState([]);
+  const [fileredCheckpointList, setFilteredCheckpointList] = useState([]);
+  const [savedCheckPoints, setSavedCheckpoints] = useState([]);
+  const [parentLessonPlans, setParentLessonPlans] = useState(lessonPlans);
+  const [checkpointDetails, setCheckpointDetails] = useState(initialCheckpData);
+  const [selectedDesigners, setSelectedDesigners] = useState([]);
+  const [checkpQuestions, setCheckpQuestions] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false)
 
@@ -36,7 +54,9 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
       case 'SelectedCheckPointsList':
         return <SelectedCheckPointsList
           changeStep={changeBuilderStep}
-          activeCheckpoints={savedCheckPoints} />;
+          activeCheckpoints={savedCheckPoints}
+          DeleteCheckpoint={DeleteCheckpoint}
+        />;
       case 'CheckpointLookup':
         return <CheckpointLookup
           checkpointList={fileredCheckpointList}
@@ -45,27 +65,44 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
         />;
       case 'AddNewCheckPoint':
         return <AddNewCheckPoint
-          lessonPlans={lessonPlans}
+          lessonPlans={parentLessonPlans}
           updateLessonPlan={onNewCheckpCreation}
           changeStep={changeBuilderStep}
           designersList={designersList}
           lessonID={lessonID}
+          checkPointData={checkpointDetails}
+          setCheckPointData={setCheckpointDetails}
+          selectedDesigners={selectedDesigners}
+          setSelectedDesigners={setSelectedDesigners}
+          checkpQuestions={checkpQuestions}
+          setCheckpQuestions={setCheckpQuestions}
         />;
+
       case 'EditCheckPoint':
         return <EditCheckPoint changeStep={changeBuilderStep} />;
       case 'AddNewQuestion':
-        return <AddNewQuestion changeStep={changeBuilderStep} />;
+        return <AddNewQuestion changeStep={changeBuilderStep} setCheckpQuestions={onAddNewQuestion} />;
       case 'QuestionLookup':
-        return <QuestionLookup changeStep={changeBuilderStep} />;
+        return <QuestionLookup selecteList={checkpQuestions} changeStep={changeBuilderStep} onSave={saveQuestionsList} />;
       default:
         return <SelectedCheckPointsList
           changeStep={changeBuilderStep}
-          activeCheckpoints={savedCheckPoints} />;
+          activeCheckpoints={savedCheckPoints}
+          DeleteCheckpoint={DeleteCheckpoint}
+        />;
     }
   }
 
   const changeBuilderStep = (step: string) => {
     setBuilderStep(step)
+  }
+  const saveQuestionsList = (list: any[]) => {
+    setCheckpQuestions([...list])
+    setBuilderStep('AddNewCheckPoint');
+  }
+  const onAddNewQuestion = (obj: any) => {
+    setCheckpQuestions([...checkpQuestions, obj]);
+    setBuilderStep('AddNewCheckPoint');
   }
   const onNewCheckpCreation = (newLessonPlans: any, newData: any) => {
     updateLessonPlan(newLessonPlans);
@@ -74,6 +111,42 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
       ...newData
     ])
   }
+
+  const DeleteCheckpoint = async (checkpId: string) => {
+    console.log("parentLessonPlans", parentLessonPlans)
+    const lessonPlansInput = parentLessonPlans.filter((item) => item.LessonComponentID !== checkpId)
+    try {
+      const result: any = await API.graphql(graphqlOperation(customMutations.updateLesson, {
+        input: {
+          id: lessonID,
+          lessonPlan: lessonPlansInput
+        }
+      }));
+      const updatedPlan = result?.data?.updateLesson?.lessonPlan;
+      if (updatedPlan) {
+        const lessonPlanIds = updatedPlan.map((item: any) => item.LessonComponentID)
+        const updatedList = updatedPlan.map((item: any) => {
+          const checkpointDetails = allCheckPointsList.find(checkp => checkp.id === item.LessonComponentID)
+          return {
+            ...item,
+            ...checkpointDetails
+          };
+        })
+        const remainingCheckps = allCheckPointsList.filter(item => !lessonPlanIds.includes(item.id))
+        
+        // IN PROGRESS...
+        // setSavedCheckpoints(updatedList);
+        // setFilteredCheckpointList(remainingCheckps);
+        // updateLessonPlan(updatedPlan);
+        // setParentLessonPlans(updatedPlan);
+        console.info(updatedPlan, updatedList, remainingCheckps);
+
+      }
+    } catch{
+      setError(true);
+    }
+  }
+
   const updateMultiLessonPlans = async (lessonPlans: any, remainingCheckp: any) => {
     const lessonPlansInput = lessonPlans.map((item: { type: string, LessonComponentID: string, sequence: number, stage: string }) => ({
       type: item.type,
@@ -99,6 +172,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
       setError(true);
     }
   }
+
   const saveCheckpoints = async (selectedId: string[]) => {
     if (selectedId?.length > 0) {
       const updatedList = fileredCheckpointList.filter(item => selectedId.includes(item.id));
@@ -106,7 +180,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
       const newCkeckpoints = updatedList.map((item, index) => {
         return {
           ...item,
-          sequence: lessonPlans.length > 0 ? (lessonPlans.length + index) : 0,
+          sequence: (parentLessonPlans?.length || 0) + index,
           LessonComponentID: item.id,
           type: 'checkpoint',
           stage: 'checkpoint'
@@ -122,8 +196,8 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
 
   const filteredLessonPlans = () => {
     if (allCheckPointsList?.length > 0) {
-      if (lessonPlans?.length > 0) {
-        const savedLessonPlans = [...lessonPlans];
+      if (parentLessonPlans?.length > 0) {
+        const savedLessonPlans = [...parentLessonPlans];
         const lessonPlanIds = savedLessonPlans.map(item => item.LessonComponentID)
         const updatedList = savedLessonPlans.map(item => {
           const checkpointDetails = allCheckPointsList.find(checkp => checkp.id === item.LessonComponentID)
@@ -169,6 +243,10 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
   useEffect(() => {
     filteredLessonPlans();
   }, [allCheckPointsList])
+
+  useEffect(() => {
+    setParentLessonPlans(lessonPlans);
+  }, [lessonPlans])
 
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>

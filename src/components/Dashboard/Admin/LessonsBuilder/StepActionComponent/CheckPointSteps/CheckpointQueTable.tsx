@@ -11,10 +11,11 @@ interface CheckPointContentProps {
   changeStep: (step: string) => void
   checkpointId: string
   showActionIcons?: boolean
+  DeleteCheckpoint?: (id: string) => void
 }
 
 const CheckpointQueTable = (props: CheckPointContentProps) => {
-  const { changeStep, checkpointId, showActionIcons } = props;
+  const { changeStep, checkpointId, showActionIcons, DeleteCheckpoint } = props;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [questionsList, setQuestionsList] = useState([]);
@@ -34,9 +35,11 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
         const quesionsListIds = checkpointQuestions.map((item: { questionID: string }) => item.questionID);
         if (quesionsListIds?.length > 0) {
 
-          const questionsList: any = await API.graphql(graphqlOperation(queries.listQuestions, {
+          const results: any = await API.graphql(graphqlOperation(queries.listQuestions, {
             filter: { ...createFilterToFetchSpecificItemsOnly(quesionsListIds, 'id') }
           }));
+          const questionsList: any = results.data.listQuestions.items
+
           setQuestionsList(questionsList);
         }
         else {
@@ -54,7 +57,8 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
 
   useEffect(() => {
     fetchCheckpointQuestions();
-  }, [])
+  }, []);
+
   return (
     <Fragment>
       {showActionIcons && <div className="w-9/10 mx-auto my-4 flex justify-end">
@@ -63,7 +67,7 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
             <FaEdit />
           </IconContext.Provider>
         </span>
-        <span className="w-6 h-6 flex items-center cursor-pointer ml-4">
+        <span className="w-6 h-6 flex items-center cursor-pointer ml-4" onClick={() => DeleteCheckpoint(checkpointId)}>
           <IconContext.Provider value={{ size: '1.5rem', color: '#B22222' }}>
             <FaTrashAlt />
           </IconContext.Provider>
@@ -74,7 +78,7 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
           <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
             <span>No.</span>
           </div>
-          <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+          <div className="w-7/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
             <span>Question</span>
           </div>
           <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -109,7 +113,7 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
                 )}
             </Fragment>
           ) : (
-              <div className="py-12 my-6 text-center">
+              <div className="py-12 my-6 text-center text-gray-700">
                 <p> Fetching checkpoint questions please wait...</p>
               </div>
             )}

@@ -92,7 +92,7 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
           <Fragment>
             <div className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
               <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>Selection.</span>
+                <span>Selection</span>
               </div>
               <div className="w-5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 <span>Checkpoint Title</span>
