@@ -12,10 +12,9 @@ import TextArea from '../../../../../Atoms/Form/TextArea';
 import CheckBox from '../../../../../Atoms/Form/CheckBox';
 import Selector from '../../../../../Atoms/Form/Selector';
 
-interface AddNewQuestionProps {
+interface EditQuestionProps {
   changeStep: (step: string) => void
   setCheckpQuestions: (obj: any) => void
-  goBackToPreviousStep: () => void
 }
 interface InitialState {
   question: string
@@ -35,8 +34,8 @@ interface InputValue {
   value: string
 }
 
-const AddNewQuestion = (props: AddNewQuestionProps) => {
-  const { changeStep, setCheckpQuestions, goBackToPreviousStep } = props;
+const EditQuestion = (props: EditQuestionProps) => {
+  const { changeStep, setCheckpQuestions } = props;
 
   const initialState = {
     question: '',
@@ -196,7 +195,7 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
     return isValid;
   }
 
-  const saveNewQuestion = async () => {
+  const saveQuestionChanges = async () => {
     const isValid = validateForm();
     if (isValid) {
       try {
@@ -210,24 +209,24 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
           language: questionData.language.value,
           options: filteredOptions(questionData.options)
         }
-        const results: any = await API.graphql(
-          graphqlOperation(mutations.createQuestion, { input: input })
-        );
-        const newQuestion = results?.data?.createQuestion;
-        if (newQuestion.id) {
-          newQuestion.required = questionData.isRequired;
-          setCheckpQuestions(newQuestion)
-          setValidation({
-            question: '',
-            type: '',
-            label: '',
-            options: '',
-            message: 'Question details has been saved.',
-            isError: false
-          });
-        }
+        // const results: any = await API.graphql(
+        //   graphqlOperation(mutations.createQuestion, { input: input })
+        // );
+        // const newQuestion = results?.data?.createQuestion;
+        // if (newQuestion.id) {
+        //   newQuestion.required = questionData.isRequired;
+        //   setCheckpQuestions(newQuestion)
+        //   setValidation({
+        //     question: '',
+        //     type: '',
+        //     label: '',
+        //     options: '',
+        //     message: 'Question details has been saved.',
+        //     isError: false
+        //   });
+        // }
         setLoading(false)
-      } catch {
+      } catch{
         setValidation({
           question: '',
           type: '',
@@ -279,7 +278,7 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
-          <span className="font-normal text-gray-600 w-auto flex-shrink-0">Add New Question</span>
+          <span className="font-normal text-gray-600 w-auto flex-shrink-0">Edit Question</span>
         </h4>
       </div>
 
@@ -365,8 +364,8 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
             <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
           </div>}
           <div className="flex justify-center my-6">
-            <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={goBackToPreviousStep} transparent />
-            <Buttons btnClass="py-1 px-8 text-xs ml-2" label={loading ? 'Saving...' : 'Save'} onClick={saveNewQuestion} disabled={loading ? true : false} />
+            <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={() => changeStep('SelectedCheckPointsList')} transparent />
+            <Buttons btnClass="py-1 px-8 text-xs ml-2" label={loading ? 'Saving...' : 'Save'} onClick={saveQuestionChanges} disabled={loading ? true : false} />
           </div>
         </div>
       </div>
@@ -374,4 +373,4 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
   )
 }
 
-export default AddNewQuestion;
+export default EditQuestion;

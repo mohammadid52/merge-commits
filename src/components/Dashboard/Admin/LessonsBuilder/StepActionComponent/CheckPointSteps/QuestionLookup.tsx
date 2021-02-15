@@ -15,10 +15,11 @@ interface QuestionLookupProps {
   changeStep: (step: string) => void
   onSave: (list: any[]) => void
   selecteList: any[]
+  goBackToPreviousStep: () => void
 }
 
 const QuestionLookup = (props: QuestionLookupProps) => {
-  const { changeStep, onSave, selecteList } = props;
+  const { changeStep, onSave, selecteList, goBackToPreviousStep } = props;
   const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
   const [questionsList, setQuestionsList] = useState([]);
   const [allQuestionsList, setAllQuestionsList] = useState([]);
@@ -70,6 +71,7 @@ const QuestionLookup = (props: QuestionLookupProps) => {
     const selectedQuestionsList = [...allQuestionsList].filter(item => selectedQuestionIds.includes(item.id))
     onSave(selectedQuestionsList);
   }
+
 
   const fetchQuestionsList = async () => {
     try {
@@ -192,7 +194,7 @@ const QuestionLookup = (props: QuestionLookupProps) => {
         </div>
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-center my-6">
-            <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={() => changeStep('AddNewCheckPoint')} transparent />
+            <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={goBackToPreviousStep} transparent />
             <Buttons btnClass="py-1 px-8 text-xs ml-2" label="Save" onClick={onQuestionSave} />
           </div>
         </div>

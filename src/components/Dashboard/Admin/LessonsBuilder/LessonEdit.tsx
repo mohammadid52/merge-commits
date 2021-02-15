@@ -75,8 +75,8 @@ const LessonEdit = (props: LessonEditProps) => {
     lessonInstructions: instructionInitialState
   })
   const [selectedDesigners, setSelectedDesigners] = useState([]);
-  // const [activeStep, setActiveStep] = useState('Builder');
-  const [activeStep, setActiveStep] = useState('General Information');
+  const [activeStep, setActiveStep] = useState('Builder');
+  // const [activeStep, setActiveStep] = useState('General Information');
   const [loading, setLoading] = useState(false);
 
   const breadCrumsList = [
@@ -124,7 +124,7 @@ const LessonEdit = (props: LessonEditProps) => {
       });
       setSavedLessonDetails({
         ...savedLessonDetails,
-        lessonPlans: savedData.lessonPlan,
+        lessonPlans: savedData.lessonPlan?.sort((a: any, b: any) => a?.sequence - b?.sequence),
         lessonInstructions: {
           introductionTitle: savedData.introductionTitle,
           instructionsTitle: savedData.instructionsTitle,

@@ -32,7 +32,8 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
     selectedDesigners,
     setSelectedDesigners,
     checkpQuestions,
-    setCheckpQuestions
+    setCheckpQuestions,
+    previouslySelectedId
   } = props;
 
   const initialData = {
@@ -139,28 +140,48 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
     changeStep('SelectedCheckPointsList')
   }
   const makeQuestionRequired = (id: string) => {
-    // const questionsList = [...checkpQuestions];
-    // const index = questionsList.findIndex((obj => obj.id === id));
-    // questionsList[index].required = !questionsList[index].required;
-    // setCheckpQuestions(questionsList);
+    const questionsList = [...checkpQuestions];
+    const index = questionsList.findIndex((obj => obj.id === id));
+    questionsList[index].required = !questionsList[index].required;
+    setCheckpQuestions(questionsList);
+
   }
 
   const addCheckpointQuestions = async (quesId: string, checkpointID: string, required: boolean) => {
-    // try {
-    //   const input = {
-    //     checkpointID: checkpointID,
-    //     questionID: quesId,
-    //     required: required ? required : false,
-    //   };
-    //   const questions: any = await API.graphql(graphqlOperation(customMutations.createCheckpointQuestions, { input: input }));
-    // } catch {
-    //   setValidation({
-    //     title: '',
-    //     label: '',
-    //     message: 'Unable to save Checkpoint details, Please try again later.',
-    //     isError: true
-    //   });
-    // }
+    try {
+      const input = {
+        checkpointID: checkpointID,
+        questionID: quesId,
+        required: required ? required : false,
+      };
+      const questions: any = await API.graphql(graphqlOperation(customMutations.createCheckpointQuestions, { input: input }));
+    } catch {
+      setValidation({
+        title: '',
+        label: '',
+        message: 'Unable to save Checkpoint details, Please try again later.',
+        isError: true
+      });
+    }
+  }
+
+  // Removed question from checkpoint
+  const removeCheckpointQuestion = async (quesId: string) => {
+    const deletedQuestions: any = [...checkPointData?.checkpQuestions]
+    const deletedQuesID = deletedQuestions.find((item: any) => item.questionID === quesId)?.id;
+    try {
+      const input = {
+        id: deletedQuesID
+      };
+      const result: any = await API.graphql(graphqlOperation(customMutations.deleteCheckpointQuestions, { input: input }));
+    } catch {
+      setValidation({
+        title: '',
+        label: '',
+        message: 'Unable to save Checkpoint details, Please try again later.',
+        isError: true
+      });
+    }
   }
 
   const validateForm = () => {
@@ -182,99 +203,64 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
     return isValid;
   }
 
-  const saveNewCheckPoint = async () => {
+  const updateCheckPointDetails = async () => {
     const isValid = validateForm();
     if (isValid) {
-      // try {
-      //   setLoading(true)
-      //   const input = {
-      //     stage: 'checkpoint',
-      //     type: 'checkpoint',
-      //     label: checkPointData.label,
-      //     title: checkPointData.title,
-      //     subtitle: checkPointData.subtitle,
-      //     instructionsTitle: checkPointData.instructionsTitle,
-      //     instructions: checkPointData.instructionHtml,
-      //     purpose: checkPointData.purposeHtml,
-      //     objectives: checkPointData.objectiveHtml,
-      //     designers: selectedDesigners.map((item: any) => item.id),
-      //     language: checkPointData.language.value,
-      //   }
-      //   const results: any = await API.graphql(
-      //     graphqlOperation(customMutations.createCheckpoint, { input: input })
-      //   );
-      //   const newCheckpoint = results?.data?.createCheckpoint;
-      //   if (newCheckpoint) {
-      //     let lessonCheckpointInput = {
-      //       lessonID: lessonID,
-      //       checkpointID: newCheckpoint.id,
-      //       position: 0,
-      //     }
-      //     let lessonPlansInput = !lessonPlans?.length ? [
-      //       {
-      //         type: 'checkpoint',
-      //         LessonComponentID: newCheckpoint.id,
-      //         sequence: 0,
-      //         stage: 'checkpoint',
-      //       }
-      //     ] : [
-      //         ...lessonPlans,
-      //         {
-      //           type: 'checkpoint',
-      //           LessonComponentID: newCheckpoint.id,
-      //           sequence: lessonPlans.length,
-      //           stage: 'checkpoint',
-      //         }
-      //       ]
-      //     let [lessonCheckpoint, lesson]: any = await Promise.all([
-      //       await API.graphql(graphqlOperation(customMutations.createLessonCheckpoint, {
-      //         input: lessonCheckpointInput
-      //       })),
-      //       await API.graphql(graphqlOperation(customMutations.updateLesson, {
-      //         input: {
-      //           id: lessonID,
-      //           lessonPlan: lessonPlansInput
-      //         }
-      //       }))
-      //     ]);
-      //     let questions = Promise.all(
-      //       checkpQuestions.map(async (item: any) => addCheckpointQuestions(item.id, newCheckpoint.id, item.required))
-      //     )
+      try {
+        setLoading(true)
+        const input = {
+          id: checkPointData.id,
+          label: checkPointData.label,
+          title: checkPointData.title,
+          subtitle: checkPointData.subtitle,
+          instructionsTitle: checkPointData.instructionsTitle,
+          instructions: checkPointData.instructionHtml,
+          purpose: checkPointData.purposeHtml,
+          objectives: checkPointData.objectiveHtml,
+          designers: selectedDesigners.map((item: any) => item.id),
+          language: checkPointData.language.value,
+        }
+        const results: any = await API.graphql(
+          graphqlOperation(customMutations.updateCheckpoint, { input: input })
+        );
+        const newCheckpoint = results?.data?.updateCheckpoint;
+        const newQuestions: any = checkpQuestions.filter(que => !previouslySelectedId.includes(que.id));
+        const deletedQuestions: any = previouslySelectedId.filter(queId => {
+          let newArrayOfId = checkpQuestions.map((que: any) => que.id);
+          return !newArrayOfId.includes(queId)
+        });
+        if (newCheckpoint) {
+          if (newQuestions.length > 0) {
+            let newAddedQuestions = Promise.all(
+              newQuestions.map(async (item: any) => addCheckpointQuestions(item.id, newCheckpoint.id, item.required))
+            )
+          }
+          if (deletedQuestions.length > 0) {
+            let removedQuestions = Promise.all(
+              deletedQuestions.map(async (quesId: any) => removeCheckpointQuestion(quesId))
+            )
+          }
+          gobackToPreviousStep();
+        } else {
+          setValidation({
+            title: '',
+            label: '',
+            message: 'Unable to save Checkpoint details, Please try again later.',
+            isError: true
+          });
+        }
+        setLoading(false)
 
-      //     const newLessonPlans = lesson?.data?.updateLesson?.lessonPlan;
-      //     const newData = [{
-      //       type: 'checkpoint',
-      //       LessonComponentID: newCheckpoint.id,
-      //       id: newCheckpoint.id,
-      //       sequence: !lessonPlans?.length ? 0 : lessonPlans.length,
-      //       stage: 'checkpoint',
-      //       label: checkPointData.label,
-      //       title: checkPointData.title,
-      //       subtitle: checkPointData.subtitle,
-      //       language: checkPointData.language.value,
-      //     }]
-      //     updateLessonPlan(newLessonPlans, newData)
-      //     gobackToPreviousStep();
-      //   } else {
-      //     setValidation({
-      //       title: '',
-      //       label: '',
-      //       message: 'Unable to save Checkpoint details, Please try again later.',
-      //       isError: true
-      //     });
-      //   }
-      //   setLoading(false)
-
-      //   // TODO: Redirect to previous step on success.
-      // } catch{
-      //   setValidation({
-      //     title: '',
-      //     label: '',
-      //     message: 'Unable to save Checkpoint details, Please try again later.',
-      //     isError: true
-      //   });
-      //   setLoading(false)
-      // }
+        // TODO: Redirect to previous step on success.
+      } catch {
+        setValidation({
+          title: '',
+          label: '',
+          message: 'Unable to save Checkpoint details, Please try again later.',
+          isError: true
+        });
+        setLoading(false)
+      }
     }
   }
 
@@ -458,7 +444,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
           </div>}
           <div className="flex justify-center my-6">
             <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={gobackToPreviousStep} transparent />
-            <Buttons btnClass="py-1 px-8 text-xs ml-2" label={loading ? 'Saving...' : 'Save'} onClick={saveNewCheckPoint} disabled={loading ? true : false} />
+            <Buttons btnClass="py-1 px-8 text-xs ml-2" label={loading ? 'Saving...' : 'Save'} onClick={updateCheckPointDetails} disabled={loading ? true : false} />
           </div>
         </div>
       </div>

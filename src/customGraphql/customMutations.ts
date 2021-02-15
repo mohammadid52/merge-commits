@@ -740,6 +740,31 @@ export const createCheckpoint = /* GraphQL */ `
   }
 `;
 
+export const updateCheckpoint = /* GraphQL */ `
+  mutation UpdateCheckpoint(
+    $input: UpdateCheckpointInput!
+    $condition: ModelCheckpointConditionInput
+  ) {
+    updateCheckpoint(input: $input, condition: $condition) {
+      id
+      label
+      title
+      subtitle
+      stage
+      type
+      instructionsTitle
+      instructions
+      purpose
+      objectives
+      designers
+      language
+      estTime
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const createLessonCheckpoint = /* GraphQL */ `
   mutation CreateLessonCheckpoint(
     $input: CreateLessonCheckpointInput!
@@ -763,6 +788,37 @@ export const createCheckpointQuestions = /* GraphQL */ `
       checkpointID
       questionID
       required
+    }
+  }
+`;
+
+export const deleteCheckpointQuestions = /* GraphQL */ `
+  mutation DeleteCheckpointQuestions(
+    $input: DeleteCheckpointQuestionsInput!
+    $condition: ModelCheckpointQuestionsConditionInput
+  ) {
+    deleteCheckpointQuestions(input: $input, condition: $condition) {
+      id
+      checkpointID
+      questionID
+      required
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCheckpointQuestions = /* GraphQL */ `
+  mutation UpdateCheckpointQuestions(
+    $input: UpdateCheckpointQuestionsInput!
+    $condition: ModelCheckpointQuestionsConditionInput
+  ) {
+    updateCheckpointQuestions(input: $input, condition: $condition) {
+      id
+      checkpointID
+      questionID
+      required
+      createdAt
+      updatedAt
     }
   }
 `;

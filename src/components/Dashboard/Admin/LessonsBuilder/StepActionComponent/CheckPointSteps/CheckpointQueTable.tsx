@@ -5,6 +5,7 @@ import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 import * as queries from '../../../../../../graphql/queries';
 import { createFilterToFetchSpecificItemsOnly } from '../../../../../../utilities/strings';
+import Buttons from '../../../../../Atoms/Buttons';
 
 
 interface CheckPointContentProps {
@@ -66,8 +67,8 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
 
   return (
     <Fragment>
-      {showActionIcons && <div className="w-9/10 mx-auto my-4 flex justify-end">
-        <span className="w-6 h-6 flex items-center cursor-pointer mr-4" onClick={editCurrentCheckp}>
+      {showActionIcons && <div className="w-full mx-auto my-4 flex justify-end">
+        {/* <span className="w-6 h-6 flex items-center cursor-pointer mr-4" onClick={editCurrentCheckp}>
           <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
             <FaEdit />
           </IconContext.Provider>
@@ -76,7 +77,12 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
           <IconContext.Provider value={{ size: '1.5rem', color: '#B22222' }}>
             <FaTrashAlt />
           </IconContext.Provider>
-        </span>
+        </span> */}
+        <div className="flex justify-end w-6/10 items-center">
+          <Buttons btnClass="py-1 px-4 text-xs mr-2 text-indigo-600 border-indigo-600 hover:bg-gray-100  hover:text-indigo-500" label="Edit Checkpoint" onClick={editCurrentCheckp} transparent />
+          <Buttons btnClass="py-1 px-4 text-xs ml-2 text-red-600 border-red-600 hover:bg-gray-100 hover:text-red-500" label="Remove Checkpoint" onClick={() => DeleteCheckpoint(checkpointId)} transparent />
+
+        </div>
       </div>}
       <div className='mb-4'>
         <div className="flex justify-between w-9/10 px-8 py-4 mx-auto whitespace-no-wrap border-b border-gray-200">

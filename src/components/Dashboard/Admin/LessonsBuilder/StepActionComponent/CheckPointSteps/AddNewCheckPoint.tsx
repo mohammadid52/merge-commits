@@ -28,8 +28,10 @@ export interface AddNewCheckPointProps {
   setSelectedDesigners: (arr: InputValueObject[]) => void
   checkpQuestions: any[]
   setCheckpQuestions: (val: any[]) => void
+  previouslySelectedId?: string[]
 }
 export interface InitialData {
+  id?: string
   title: string
   subtitle: string
   language: InputValueObject
@@ -38,6 +40,7 @@ export interface InitialData {
   purposeHtml: string,
   objectiveHtml: string,
   instructionHtml: string,
+  checkpQuestions?: any[]
 }
 interface InputValueObject {
   id: string,
@@ -297,7 +300,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
         setLoading(false)
 
         // TODO: Redirect to previous step on success.
-      } catch{
+      } catch {
         setValidation({
           title: '',
           label: '',
@@ -460,7 +463,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                           </span>
                         </div>
                         <div className="flex w-1/10 px-6 py-1 text-s leading-4 items-center justify-center">
-                          <div className="w-6 h-6 cursor-pointer text-indigo-600" onClick={() => console.log(item.id)}>
+                          <div className="w-6 h-6 cursor-pointer text-indigo-600" onClick={() => changeStep('EditQuestion')}>
                             <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
                               <FaEdit />
                             </IconContext.Provider>
