@@ -140,8 +140,8 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
-              title: 'ANTHOLOGY',
-              name: 'Anthology',
+              title: sideBarLinksDict[userLanguage].ANTHOLOGY,
+              name: sideBarLinksDict[userLanguage].ANTHOLOGY,
               label: 'Anthology',
               path: 'anthology',
             },

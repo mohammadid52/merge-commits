@@ -17,7 +17,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
 
   return (
     <Fragment>
-      <label htmlFor={id} className="block text-m font-medium leading-5 text-gray-700">
+      <label htmlFor={id} className="block text-xs font-semibold leading-5 text-gray-700">
         {label} <span className="text-red-500"> {isRequired ? '*' : null}</span>
       </label>
       <input
