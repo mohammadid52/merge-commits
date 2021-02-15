@@ -656,6 +656,18 @@ type Lesson @model @key(fields: ["id"]) {
   connectionTitle: String
   lessonPlan: [LessonComponents]
 }
+
+type LessonRubrics 
+@model
+@key(name: "byLesson", fields: ["lessonID", "rubricID"])
+{
+  id: ID!
+  lessonID: ID!
+  rubricID: ID!
+  lesson: Lesson @connection(fields: ["lessonID"])
+  rubric: Rubric @connection(fields: ["rubricID"])
+}
+
 type LessonComponents {
   type: String
   LessonComponentID: ID!

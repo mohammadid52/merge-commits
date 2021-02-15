@@ -71,14 +71,15 @@ const Dashboard = (props: DashboardProps) => {
   const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('today');
   const [activeRoom, setActiveRoom] = useState<string>('');
   const [activeRoomName, setActiveRoomName] = useState<string>('');
+  const [activeRoomSyllabus, setActiveRoomSyllabus] = useState<string>('');
 
-  // useEffect(()=>{
-  //   copyLessonPlans();
-  // },[])
+  useEffect(()=>{
+    // copyLessonPlans();
+  },[])
 
-  // useEffect(()=>{
-  //   initRosterSyllabusLessons();
-  // },[])
+  useEffect(()=>{
+    // initRosterSyllabusLessons();
+  },[])
 
   const setUser = (user: userObject) => {
     setUserData({
@@ -158,6 +159,8 @@ const Dashboard = (props: DashboardProps) => {
           setLessonLoading={setLessonLoading}
           syllabusLoading={syllabusLoading}
           setSyllabusLoading={setsyllabusLoading}
+          activeRoomSyllabus={activeRoomSyllabus}
+          setActiveRoomSyllabus={setActiveRoomSyllabus}
         />
       ) : null}
 

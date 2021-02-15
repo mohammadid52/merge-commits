@@ -2527,6 +2527,209 @@ export const listLessons = /* GraphQL */ `
     }
   }
 `;
+export const getLessonRubrics = /* GraphQL */ `
+  query GetLessonRubrics($id: ID!) {
+    getLessonRubrics(id: $id) {
+      id
+      lessonID
+      rubricID
+      lesson {
+        id
+        title
+        type
+        label
+        instructions
+        instructionsTitle
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        coverImage
+        summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+          stage
+        }
+        createdAt
+        updatedAt
+      }
+      rubric {
+        id
+        name
+        criteria
+        distinguished
+        excelled
+        adequite
+        basic
+        topicID
+        topic {
+          id
+          curriculumID
+          learningObjectiveID
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        curriculumID
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listLessonRubricss = /* GraphQL */ `
+  query ListLessonRubricss(
+    $filter: ModelLessonRubricsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLessonRubricss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        lessonID
+        rubricID
+        lesson {
+          id
+          title
+          type
+          label
+          instructions
+          instructionsTitle
+          grades
+          artistID
+          language
+          SELStructure
+          connection
+          summary
+          purpose
+          designers
+          objectives
+          doFirstID
+          warmUpId
+          coreLessonId
+          activityId
+          assessmentID
+          filters
+          coverImage
+          summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
+          createdAt
+          updatedAt
+        }
+        rubric {
+          id
+          name
+          criteria
+          distinguished
+          excelled
+          adequite
+          basic
+          topicID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getSyllabus = /* GraphQL */ `
   query GetSyllabus($id: ID!) {
     getSyllabus(id: $id) {
