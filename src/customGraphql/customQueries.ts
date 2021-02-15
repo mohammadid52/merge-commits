@@ -1860,33 +1860,36 @@ export const getLesson = /* GraphQL */ `
       id
       title
       type
-      label
-      grades
-      artistID
       language
       purpose
       designers
       objectives
-      doFirstID
-      warmUpId
-      coreLessonId
-      activityId
-      assessmentID
-      assessment {
-        id
-        title
+      introductionTitle
+      instructionsTitle
+      summaryTitle
+      introduction
+      instructions
+      summary
+      lessonPlan {
         type
-        openingMessage
-        closingMessage
-        questions {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
+        LessonComponentID
+        sequence
+        stage
       }
+    }
+  }
+`;
+export const listCheckpoints = /* GraphQL */ `
+  query ListCheckpoints($filter: ModelCheckpointFilterInput, $limit: Int, $nextToken: String) {
+    listCheckpoints(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        label
+        title
+        subtitle
+        language
+      }
+      nextToken
     }
   }
 `;

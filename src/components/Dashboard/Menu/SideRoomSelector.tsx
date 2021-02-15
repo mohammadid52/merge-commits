@@ -26,6 +26,8 @@ const SideRoomSelector = (props: SideMenuProps) => {
     setLessonLoading,
     syllabusLoading,
     setSyllabusLoading,
+    activeRoomSyllabus,
+    setActiveRoomSyllabus,
   } = props;
   const { state, theme, dispatch } = useContext(GlobalContext);
   // Fetching results
@@ -63,7 +65,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
     const userAuthID = state.user.authId;
     const userRole = state.user.role;
     const listRoomTeacher = async () => {
-      if (userRole === 'FLW') {
+      if (userRole === 'FLW' || userRole === 'TR') {
         try {
           const classIdFromRoomsFetch: any = await API.graphql(
             graphqlOperation(customQueries.listRooms, { filter: { teacherAuthID: { eq: userAuthID } } })
@@ -84,7 +86,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
         }
       }
     };
-    userRole === 'FLW' && listRoomTeacher();
+    (userRole === 'FLW' || userRole === 'TR') && listRoomTeacher();
   }, []);
 
   useEffect(() => {
@@ -157,8 +159,8 @@ const SideRoomSelector = (props: SideMenuProps) => {
             })
           );
           const response = await syllabusMultiFetch;
-          console.log('4 --> ', `loading syllabus ${response}`)
           const arrayOfResponseObjects = response?.data?.listSyllabuss?.items;
+          console.log('4 --> ', arrayOfResponseObjects);
 
           /**
            * mappedResponseObjects explanation:
@@ -169,20 +171,18 @@ const SideRoomSelector = (props: SideMenuProps) => {
            *      show this
            *      OTHERWISE no syllabus will be active on mount
            */
-          const mappedResponseObjects = arrayOfResponseObjects.map((responseObject: any) => {
-            const activeSyllabusAll = rooms.reduce((acc: string[], room: any) => {
-              if (room.activeSyllabus !== null) {
-                return [...acc, room.activeSyllabus];
-              } else {
-                return acc;
-              }
+          const mappedResponseObjects = arrayOfResponseObjects.map((responseObject: any, idx: number) => {
+            const activeSyllabusAll = rooms.reduce((acc: any[], room: any, idx2: number) => {
+              return { ...acc, [room.id]: room.activeSyllabus };
             }, []);
-            if (activeSyllabusAll.includes(responseObject.id)) {
+
+            if (activeRoomSyllabus === responseObject.id) {
               return { ...responseObject, active: true };
             } else {
               return { ...responseObject, active: false };
             }
           });
+
 
           dispatch({
             type: 'UPDATE_ROOM',
@@ -266,7 +266,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
     // TODO: update listener below for activeRoom state
   }, [curriculumIds, state.roomData.syllabus]);
 
-  const handleRoomSelection = (e: React.MouseEvent) => {
+  const handleRoomSelection = (e: React.MouseEvent, i: number) => {
     const t = e.target as HTMLElement;
     const name = t.getAttribute('data-name');
     if (activeRoom !== t.id) {
@@ -274,6 +274,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
       setActiveRoomName(name);
       setSyllabusLoading(true); // Trigger loading ui element
       setLessonLoading(true);
+      setActiveRoomSyllabus(state.roomData.rooms[i].activeSyllabus);
     }
   };
 
@@ -290,11 +291,11 @@ const SideRoomSelector = (props: SideMenuProps) => {
               key={`room_button_sb${i}`}
               id={room.id}
               data-name={room.name}
-              onClick={handleRoomSelection}
+              onClick={(e) => handleRoomSelection(e, i)}
               className={`cursor-pointer ${linkClass} 
-              ${ activeRoom === room.id
-                  ? 'bg-grayscale-light bg-opacity-80'
-                  : 'bg-darker-gray bg-opacity-20'
+              ${activeRoom === room.id
+                ? 'bg-grayscale-light bg-opacity-80'
+                : 'bg-darker-gray bg-opacity-20'
               } 
               truncate ...`}>
               {room.name}

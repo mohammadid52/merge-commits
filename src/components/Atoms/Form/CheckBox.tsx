@@ -13,7 +13,7 @@ const CheckBox = (checkBoxProps: CheckBoxProps) => {
   const { theme } = useContext(GlobalContext);
 
   return (
-    <label className="inline-flex items-center mr-2 mt-2">
+    <label className="inline-flex justify-center items-center mr-2 mt-2">
       <input
         type="checkbox"
         checked={value ? true : false}

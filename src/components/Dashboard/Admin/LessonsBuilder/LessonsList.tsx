@@ -17,6 +17,7 @@ import { GlobalContext } from '../../../../contexts/GlobalContext';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import * as customQueries from '../../../../customGraphql/customQueries';
 import LessonsListRow from './LessonsListRow';
+import { getLanguageString } from '../../../../utilities/strings';
 
 const LessonsList = () => {
   const match = useRouteMatch();
@@ -52,15 +53,6 @@ const LessonsList = () => {
     { id: 1, name: 'Title', value: 'title' },
     { id: 2, name: 'Type', value: 'type' },
   ]
-
-  const getLanguageString = (language: string) => {
-    switch (language) {
-      case 'EN':
-        return 'English';
-      case 'ES':
-        return 'Spanish';
-    }
-  }
 
   const getType = (type: string) => {
     switch (type) {

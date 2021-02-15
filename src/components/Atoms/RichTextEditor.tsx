@@ -33,7 +33,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
   };
 
   useEffect(() => {
-    const html = initialValue;
+    const html = initialValue ? initialValue : '<p></p>';
     const contentBlock = htmlToDraft(html);
 
     let editorState;

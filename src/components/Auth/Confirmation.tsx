@@ -28,7 +28,7 @@ const Registration = () => {
     try {
       setCookie('confirm_user', input.email);
       let res = await Auth.confirmSignUp(username, code);
-      console.log(res);
+      // console.log(res);
       history.push('/new-password');
     } catch (error) {
       console.log('error confirming sign up', error);

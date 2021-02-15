@@ -671,18 +671,29 @@ export const updateLesson = /* GraphQL */ `
 mutation UpdateLesson(
   $input: UpdateLessonInput!
     $condition: ModelLessonConditionInput
-) {
-  updateLesson(input: $input, condition: $condition) {
-    id
-    title
-    type
-    language
-    purpose
-    designers
-    objectives
-    assessmentID
+  ) {
+    updateLesson(input: $input, condition: $condition) {
+      id
+      title
+      type
+      instructions
+      instructionsTitle
+      language
+      summary
+      purpose
+      designers
+      objectives
+      summaryTitle
+      introductionTitle
+      introduction
+      lessonPlan {
+        type
+        LessonComponentID
+        sequence
+        stage
+      }
+    }
   }
-}
 `;
 
 export const deleteRoomMsgs = /* GraphQL */ `
@@ -704,4 +715,54 @@ mutation UpdateAssessment(
     type
   }
 }
+`;
+
+export const createCheckpoint = /* GraphQL */ `
+  mutation CreateCheckpoint(
+    $input: CreateCheckpointInput!
+    $condition: ModelCheckpointConditionInput
+  ) {
+    createCheckpoint(input: $input, condition: $condition) {
+      id
+      label
+      title
+      subtitle
+      type
+      instructionsTitle
+      instructions
+      purpose
+      objectives
+      designers
+      language
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const createLessonCheckpoint = /* GraphQL */ `
+  mutation CreateLessonCheckpoint(
+    $input: CreateLessonCheckpointInput!
+    $condition: ModelLessonCheckpointConditionInput
+  ) {
+    createLessonCheckpoint(input: $input, condition: $condition) {
+      id
+      lessonID
+      checkpointID
+    }
+  }
+`;
+
+export const createCheckpointQuestions = /* GraphQL */ `
+  mutation CreateCheckpointQuestions(
+    $input: CreateCheckpointQuestionsInput!
+    $condition: ModelCheckpointQuestionsConditionInput
+  ) {
+    createCheckpointQuestions(input: $input, condition: $condition) {
+      id
+      checkpointID
+      questionID
+      required
+    }
+  }
 `;
