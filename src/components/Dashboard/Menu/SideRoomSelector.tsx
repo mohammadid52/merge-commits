@@ -5,6 +5,8 @@ import { API, graphqlOperation } from '@aws-amplify/api';
 import * as customQueries from '../../../customGraphql/customQueries';
 import { getArrayOfUniqueValueByProperty } from '../../../utilities/arrays';
 import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
+import { LessonControlContext } from '../../../contexts/LessonControlContext';
+import { useCookies } from 'react-cookie';
 
 interface Room {
   id: string;
@@ -30,6 +32,11 @@ const SideRoomSelector = (props: SideMenuProps) => {
     setActiveRoomSyllabus,
   } = props;
   const { state, theme, dispatch } = useContext(GlobalContext);
+
+  // Cookie setting for transition to Student/Teacher
+  const [cookies, setCookie, removeCookie] = useCookies(['room_info']);
+
+
   // Fetching results
   const [classIds, setClassIds] = useState<string[]>([]);
   const [rooms, setRooms] = useState<any[]>([]);
@@ -37,7 +44,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
   const [syllabusId, setSyllabusId] = useState<string[]>([]);
   // Menu state
   const [loaded, setLoaded] = useState<boolean>(false);
-  // const [activeRoom, setActiveRoom] = useState<string>('');
+
 
   useEffect(() => {
     const standardUserID = state.user.id;
@@ -123,6 +130,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
     userRole === 'ST' && listRooms();
   }, [classIds]);
 
+  // List curriculums associated with selected room
   useEffect(() => {
     const listRoomCurriculums = async () => {
       if (rooms.length > 0 && activeRoom !== '') {
@@ -145,6 +153,17 @@ const SideRoomSelector = (props: SideMenuProps) => {
     };
     listRoomCurriculums();
   }, [activeRoom]);
+
+  // Save info of selected room to cookie
+  useEffect(()=>{
+    const getRoomFromState = state.roomData.rooms.filter((room: any) => room.id === activeRoom);
+    if(getRoomFromState.length === 1){
+      setCookie('room_info', getRoomFromState[0])
+    } else {
+      setCookie('room_info', {})
+    }
+
+  },[activeRoom])
 
   /**
    * LISTSYLLABUS SHOULD ONLY BE DONE FOR TEACHER

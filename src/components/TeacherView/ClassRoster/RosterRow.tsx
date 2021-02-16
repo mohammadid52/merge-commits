@@ -15,7 +15,7 @@ interface RosterRowProps {
   currentLocation: string;
   lessonProgress: string;
   handleSelect: (e: any) => Promise<void>;
-  studentStatus: (status: string) => JSX.Element;
+  studentStatus: string;
   handleShareStudentData?: () => void;
   handleQuitShare: () => void;
   handleQuitViewing: () => void;
@@ -49,20 +49,24 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
   const [shareable, setShareable] = useState(true);
 
   useEffect(() => {
-    const indexToPage = state.pages[currentLocation].stage;
-    let result = /.+\/(breakdown)\/*.*/.test(indexToPage);
-
     if (currentLocation) {
-      result = /.+\/(breakdown)\/*.*/.test(indexToPage);
-    } else if (lessonProgress) {
-      result = /.+\/(breakdown)\/*.*/.test(indexToPage);
-    }
+      const indexToPage = state.pages[currentLocation].stage;
+      let result = /.+\/(breakdown)\/*.*/.test(indexToPage);
 
-    if (result) {
-      setShareable(true);
-    }
+      if (currentLocation) {
+        result = /.+\/(breakdown)\/*.*/.test(indexToPage);
+      } else if (lessonProgress) {
+        result = /.+\/(breakdown)\/*.*/.test(indexToPage);
+      }
 
-    if (!result) {
+      if (result) {
+        setShareable(true);
+      }
+
+      if (!result) {
+        setShareable(false);
+      }
+    } else {
       setShareable(false);
     }
   }, [currentLocation]);
@@ -91,7 +95,11 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
   };
 
   const getPageLabel = (locationIndex: string) => {
-    return state.pages[parseInt(locationIndex)].stage;
+    if (locationIndex === '') {
+      return 'n/a';
+    } else {
+      return state.pages[parseInt(locationIndex)].stage;
+    }
   };
 
 
