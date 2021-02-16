@@ -1,8 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
-import { studentObject } from '../../state/LessonControlState';
-import ProgressSwitch from '../General/LessonProgressSwitch';
-import ToolTip from '../General/ToolTip/ToolTip';
+
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { IoMdRefresh } from 'react-icons/io';
+
 import RosterRow from './ClassRoster/RosterRow';
 
 import * as queries from '../../graphql/queries';
@@ -45,12 +46,14 @@ const ClassRoster = (props: classRosterProps) => {
   const { state, dispatch } = useContext(LessonControlContext);
   const [cookies] = useCookies(['room_info']);
 
+  // Loading state
+  const [loading, setLoading] = useState<boolean>(false);
+
   // Roster related
   const [classStudents, setClassStudents] = useState<any[]>([]);
   const [personLocationStudents, setPersonLocationStudents] = useState<any[]>([]);
   const [updatedStudent, setUpdatedStudent] = useState<any>({});
   const [viewedStudent, setViewedStudent] = useState<string>('');
-
 
   let subscription: any;
 
@@ -89,14 +92,17 @@ const ClassRoster = (props: classRosterProps) => {
   };
 
   useEffect(() => {
-    const roomInfoCookie = cookies['room_info'];
-    if (Object.keys(roomInfoCookie).length > 0 && roomInfoCookie.hasOwnProperty('classID')) {
-      getClassStudents(roomInfoCookie['classID']);
+    if (cookies['room_info']) {
+      const roomInfoCookie = cookies['room_info'];
+      if (Object.keys(roomInfoCookie).length > 0 && roomInfoCookie.hasOwnProperty('classID')) {
+        getClassStudents(roomInfoCookie['classID']);
+      }
     }
-  }, []);
+  }, [cookies]);
 
   // load students from PersonLocation -> syllabusLessonID into roster
   const getSyllabusLessonStudents = async () => {
+    setLoading(true);
     try {
       const syllabusLessonStudents: any = await API.graphql(
         graphqlOperation(queries.listPersonLocations, {
@@ -109,6 +115,8 @@ const ClassRoster = (props: classRosterProps) => {
       subscription = subscribeToPersonLocations();
     } catch (e) {
       console.error('getSyllabusLessonstudents - ', e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -174,17 +182,15 @@ const ClassRoster = (props: classRosterProps) => {
     dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] });
   };
 
-  const studentStatus = (status: string) => {
-    switch (status) {
-      case 'ACTIVE':
-      default:
-        return 'INACTIVE';
+  const handleManualRefresh = () => {
+    if (loading === false) {
+      getSyllabusLessonStudents();
     }
   };
 
   const inactiveStudents = classStudents.filter((student: any) => {
     const isInStateRoster = state.roster.find((studentTarget: any) => studentTarget.personAuthID === student.personAuthID);
-    if(isInStateRoster === undefined){
+    if (isInStateRoster === undefined) {
       return student;
     }
   });
@@ -193,9 +199,13 @@ const ClassRoster = (props: classRosterProps) => {
     <div className={`w-full h-full bg-light-gray bg-opacity-20 overflow-y-auto overflow-x-hidden`}>
       {/* TABLE HEAD */}
       <div className={`w-full h-8 flex py-2 pl-2 pr-1 text-white bg-darker-gray bg-opacity-40`}>
-        {/* <div className={`w-1/10 text-center text-xs flex`}></div> */}
-        <div className={`w-3.5/10 overflow-hidden mx-2 flex items-center hover:underline cursor-pointer text-xs`}>
-          Student Name
+        <div className={`w-3.5/10 relative mx-2 flex items-center hover:underline cursor-pointer text-xs`}>
+          <span>Student Name</span>
+          <span className={`w-auto absolute right-0 translate-x-4`} onClick={handleManualRefresh}>
+            <IconContext.Provider value={{ color: '#EDF2F7' }}>
+              <IoMdRefresh size={28} className={`${loading ? 'animate-spin' : null}`}/>
+            </IconContext.Provider>
+          </span>
         </div>
         <div className={`w-3.5/10 mx-2 flex items-center overflow-hidden text-center text-xs `}>Current Page</div>
         <div className={`w-2/10 mx-2 flex items-center justify-center rounded-lg text-xs`}>Action</div>
@@ -203,6 +213,13 @@ const ClassRoster = (props: classRosterProps) => {
 
       {/* ROWS */}
       <div className={`w-full flex flex-col items-center`}>
+        {state.roster.length > 0 ?
+          (
+            <div className={`w-full pl-4 text-xs font-semibold text-white bg-medium-gray bg-opacity-20`}>
+              In Class
+            </div>
+          ) : null}
+
         {/* STUDENTS - Active */}
         {state.roster.length > 0
           ? state.roster.map((student: any, key: number) => (
@@ -211,7 +228,7 @@ const ClassRoster = (props: classRosterProps) => {
               keyProp={key}
               number={key}
               id={student.personAuthID}
-              status={student.person.status}
+              active={true}
               firstName={student.person.firstName}
               lastName={student.person.lastName}
               preferredName={student.person.preferredName}
@@ -219,7 +236,6 @@ const ClassRoster = (props: classRosterProps) => {
               currentLocation={student.currentLocation}
               lessonProgress={student.lessonProgress}
               handleSelect={handleSelect}
-              studentStatus={`studentStatus`}
               handleShareStudentData={handleShareStudentData}
               handleQuitShare={handleQuitShare}
               handleQuitViewing={handleQuitViewing}
@@ -231,6 +247,12 @@ const ClassRoster = (props: classRosterProps) => {
           : null}
 
         {/* STUDENTS - INActive */}
+        {inactiveStudents.length > 0 ?
+          (
+            <div className={`w-full pl-4 text-xs font-semibold text-white bg-medium-gray bg-opacity-20`}>
+              Not In Class
+            </div>
+          ) : null}
         {inactiveStudents.length > 0
           ? inactiveStudents.map((student: any, key: number) => (
             <RosterRow
@@ -238,7 +260,7 @@ const ClassRoster = (props: classRosterProps) => {
               keyProp={key}
               number={key}
               id={student.personAuthID}
-              status={student.person.status}
+              active={false}
               firstName={student.person.firstName}
               lastName={student.person.lastName}
               preferredName={student.person.preferredName}
@@ -246,7 +268,6 @@ const ClassRoster = (props: classRosterProps) => {
               currentLocation={student.currentLocation}
               lessonProgress={student.lessonProgress}
               handleSelect={handleSelect}
-              studentStatus={`studentStatus`}
               handleShareStudentData={handleShareStudentData}
               handleQuitShare={handleQuitShare}
               handleQuitViewing={handleQuitViewing}
