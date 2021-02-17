@@ -212,6 +212,12 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     } else {
       msgs.label = ''
     }
+    if (checkpQuestions?.length <= 0) {
+      isValid = false;
+      msgs.message = 'You need to add minimum one question to create a checkpoint.';
+    } else {
+      msgs.message = ''
+    }
     setValidation({ ...msgs });
     return isValid;
   }
@@ -345,23 +351,32 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
         <div>
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
-              <FormInput value={title} id='title' onChange={onInputChange} name='title' label="Title" isRequired />
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                Title <span className="text-red-500"> *</span>
+              </label>
+              <FormInput value={title} id='title' onChange={onInputChange} name='title' />
               {validation.title && <p className="text-red-600 text-sm">{validation.title}</p>}
             </div>
             <div>
-              <FormInput value={label} id='label' onChange={onInputChange} name='label' label="Checkpoint Label" isRequired />
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                Checkpoint Label <span className="text-red-500"> *</span>
+              </label>
+              <FormInput value={label} id='label' onChange={onInputChange} name='label' />
               {validation.label && <p className="text-red-600 text-sm">{validation.label}</p>}
             </div>
           </div>
 
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
-              <FormInput value={subtitle} id='subtitle' onChange={onInputChange} name='subtitle' label="Subtitle" />
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                Subtitle
+              </label>
+              <FormInput value={subtitle} id='subtitle' onChange={onInputChange} name='subtitle' />
             </div>
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 Select Language
-            </label>
+              </label>
               <Selector selectedItem={language.name} placeholder="Language" list={languageList} onChange={selectLanguage} />
             </div>
           </div>
@@ -437,38 +452,38 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                     <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>No.</span>
                     </div>
-                    <div className="w-5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <div className="w-5.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>Question</span>
                     </div>
-                    <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <div className="w-2/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>Type</span>
                     </div>
                     <div className="w-2/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>Is Required</span>
                     </div>
-                    <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    {/* <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>Action</span>
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="w-full m-auto">
                     {checkpQuestions.length > 0 ? checkpQuestions.map((item, index) => (
                       <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                         <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4"> {index + 1}.</div>
-                        <div className="flex w-5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.question} </div>
-                        <div className="flex w-1.5/10 px-8 py-3 text-left text-s leading-4 items-center justify-center whitespace-normal">{item.type}</div>
+                        <div className="flex w-5.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.question} </div>
+                        <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center justify-center whitespace-normal">{item.type}</div>
                         <div className="flex w-2/10 px-6 py-3 text-s leading-4 items-center justify-center">
                           <span className="cursor-pointer">
                             <CheckBox value={item.required ? true : false} onChange={() => makeQuestionRequired(item.id)} name='isRequired' />
                           </span>
                         </div>
-                        <div className="flex w-1/10 px-6 py-1 text-s leading-4 items-center justify-center">
+                        {/* <div className="flex w-1/10 px-6 py-1 text-s leading-4 items-center justify-center">
                           <div className="w-6 h-6 cursor-pointer text-indigo-600" onClick={() => changeStep('EditQuestion')}>
                             <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
                               <FaEdit />
                             </IconContext.Provider>
                           </div>
-                        </div>
+                        </div> */}
                       </div>
                     )) : (
                         <div className="py-12 my-6 text-center">
@@ -478,7 +493,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                   </div>
                 </div>
                 <div className="flex w-full mx-auto p-8 justify-center ">
-                  <Buttons btnClass="mr-4" onClick={() => changeStep('QuestionLookup')} label="Edit Existing Questions" />
+                  <Buttons btnClass="mr-4" onClick={() => changeStep('QuestionLookup')} label="Add Existing Questions" />
                   <Buttons btnClass="ml-4" onClick={() => changeStep('AddNewQuestion')} label="Create New Question" />
                 </div>
               </Fragment>
