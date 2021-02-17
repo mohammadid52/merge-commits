@@ -2394,6 +2394,16 @@ export const getLesson = /* GraphQL */ `
         sequence
         stage
       }
+      measurements {
+        items {
+          id
+          lessonID
+          rubricID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -2520,6 +2530,9 @@ export const listLessons = /* GraphQL */ `
           sequence
           stage
         }
+        measurements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -2638,6 +2651,9 @@ export const getLessonRubrics = /* GraphQL */ `
           LessonComponentID
           sequence
           stage
+        }
+        measurements {
+          nextToken
         }
         createdAt
         updatedAt
@@ -2920,6 +2936,9 @@ export const getSyllabusLesson = /* GraphQL */ `
           LessonComponentID
           sequence
           stage
+        }
+        measurements {
+          nextToken
         }
         createdAt
         updatedAt

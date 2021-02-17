@@ -479,6 +479,9 @@ export const onChangeSyllabusLesson = /* GraphQL */ `
           sequence
           stage
         }
+        measurements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -4904,6 +4907,16 @@ export const onCreateLesson = /* GraphQL */ `
         sequence
         stage
       }
+      measurements {
+        items {
+          id
+          lessonID
+          rubricID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -5109,6 +5122,16 @@ export const onUpdateLesson = /* GraphQL */ `
         LessonComponentID
         sequence
         stage
+      }
+      measurements {
+        items {
+          id
+          lessonID
+          rubricID
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       createdAt
       updatedAt
@@ -5316,6 +5339,16 @@ export const onDeleteLesson = /* GraphQL */ `
         sequence
         stage
       }
+      measurements {
+        items {
+          id
+          lessonID
+          rubricID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -5432,6 +5465,9 @@ export const onCreateLessonRubrics = /* GraphQL */ `
           LessonComponentID
           sequence
           stage
+        }
+        measurements {
+          nextToken
         }
         createdAt
         updatedAt
@@ -5575,6 +5611,9 @@ export const onUpdateLessonRubrics = /* GraphQL */ `
           sequence
           stage
         }
+        measurements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -5716,6 +5755,9 @@ export const onDeleteLessonRubrics = /* GraphQL */ `
           LessonComponentID
           sequence
           stage
+        }
+        measurements {
+          nextToken
         }
         createdAt
         updatedAt
@@ -5860,6 +5902,9 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
           sequence
           stage
         }
+        measurements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6001,6 +6046,9 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
           sequence
           stage
         }
+        measurements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6141,6 +6189,9 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
           LessonComponentID
           sequence
           stage
+        }
+        measurements {
+          nextToken
         }
         createdAt
         updatedAt
@@ -6289,6 +6340,9 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
           sequence
           stage
         }
+        measurements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6416,6 +6470,9 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
           sequence
           stage
         }
+        measurements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6542,6 +6599,9 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
           LessonComponentID
           sequence
           stage
+        }
+        measurements {
+          nextToken
         }
         createdAt
         updatedAt
@@ -6780,6 +6840,9 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
           sequence
           stage
         }
+        measurements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -6964,6 +7027,9 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
           sequence
           stage
         }
+        measurements {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -7147,6 +7213,9 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
           LessonComponentID
           sequence
           stage
+        }
+        measurements {
+          nextToken
         }
         createdAt
         updatedAt
