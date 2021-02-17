@@ -596,47 +596,6 @@ type StudentWord @model(queries: null) @key(name: "wordsByStudent", fields: ["st
   word: Word @connection(fields: ["wordID"])
   student: Person @connection(fields: ["studentID", "studentAuthID"])
 }
-
-type FilterGroup 
-@model 
-{
-  id: ID!
-  name: String!
-  description: String!
-  filters: [FilterGroupFilter] @connection(keyName: "filtersByGroup", fields: ["id"])
-}
-
-type FilterGroupFilter
-@model
-@key(name: "filtersByGroup", fields: ["filterGroupID"])
-{
-  id: ID!
-  filterGroupID: ID!
-  filterID: ID!
-  zoiq: Boolean
-  admin: Boolean
-  show: Boolean
-  required: Boolean
-  filter: Filter @connection(fields: ["filterID"])
-}
-
-type Filter 
-@model
-{
-  id: ID!
-  name: String!
-  description: String
-  options: [FilterOption!]! @connection(keyName: "byFilter", fields: ["id"])
-}
-
-type FilterOption 
-@model 
-@key(fields: ["id"]) 
-@key(name: "byFilter", fields: ["filterID"]) {
-  id: ID!
-  filterID: ID!
-  text: String!
-}
 type RoomMsgs
 @model
 @key(name: "byRoomID", fields: ["roomID", "createdAt"], queryField: "messagesByRoomID")
