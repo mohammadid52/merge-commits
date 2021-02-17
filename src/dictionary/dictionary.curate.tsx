@@ -121,17 +121,49 @@ const dashboardProfileDict: any = {
                 NO_OLD_PASS: 'Ingrese su contraseña anterior',
                 NO_NEW_PASS: 'Ingrese su nueva contraseña',
                 NO_CONFIRM_PASS: 'Ingrese su contraseña de confirmación',
-                NOT_MATCH: 'Su nueva contraseña y la contraseña de confirmación no coinciden'
-            }
+                NOT_MATCH: 'Su nueva contraseña y la contraseña de confirmación no coinciden',
+            },
         }
     }
 }
+
+const anthologyDict: any = {
+    'EN': {
+        TITLE: 'Notebook',
+        TABS: {
+            A: 'Journal',
+            B: 'Stories',
+            C: 'Poems',
+        },
+        ACTIONS: {
+            EDIT: 'Edit',
+            SAVE: 'Save',
+            CREATE: 'Create New',
+            CANCEL: 'Cancel'
+        },
+    },
+    'ES': {
+        TITLE: 'Cuaderno',
+        TABS: {
+            A: 'Diario',
+            B: 'Cuentos',
+            C: 'Poemas',
+        },
+        ACTIONS: {
+            EDIT: 'Editar',
+            SAVE: 'Salvar',
+            CREATE: 'Crear',
+            CANCEL: 'Cancelar'
+        },
+    },
+};
+
 
 // People - User management list
 const manageusersDict: any = {
     'EN': {
         TITLE: 'USER MANAGEMENT',
-        SUBTITLE: "People's List",
+        SUBTITLE: 'People\'s List',
         TABLE: {
             NAME: 'Name',
             ROLE: 'Role',
@@ -163,7 +195,8 @@ const sideBarLinksDict: any = {
         PEOPLE: 'People',
         LESSON_PLANNER: 'Lesson Planner',
         CLASSROOM: 'Classroom',
-        LESSON_BUILDER: 'Lesson Builder'
+        LESSON_BUILDER: 'Lesson Builder',
+        ANTHOLOGY: 'Notebook',
     },
     'ES': {
         REGISTRATION: 'Registro',
@@ -171,7 +204,8 @@ const sideBarLinksDict: any = {
         PEOPLE: 'Personas',
         LESSON_PLANNER: 'Planificador de lecciones',
         CLASSROOM: 'Aula',
-        LESSON_BUILDER: 'Constructor de lecciones'
+        LESSON_BUILDER: 'Constructor de lecciones',
+        ANTHOLOGY: 'Cuaderno',
     }
 }
 
@@ -250,15 +284,17 @@ function paginationPage(lang: string, page: number, total: number) {
     if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`
     return ''
 }
+
 export {
     paginationPage,
     BUTTONS,
     BreadcrumsTitles,
     appDict,
+    anthologyDict,
     sideBarLinksDict,
     dashboardProfileDict,
     staffBuilderDict,
     editClassDict,
     spBuilderDict,
-    manageusersDict
-}
+    manageusersDict,
+};

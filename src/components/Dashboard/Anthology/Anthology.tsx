@@ -7,6 +7,7 @@ import { API, graphqlOperation } from '@aws-amplify/api';
 import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
 import * as customMutations from '../../../customGraphql/customMutations';
+import useDictionary from '../../../customHooks/dictionary';
 
 export interface AnthologyContentInterface {
   type: string;
@@ -33,7 +34,8 @@ export type ViewEditMode = {
 }
 
 const Anthology = () => {
-  const { state } = useContext(GlobalContext);
+  const { state, userLanguage, clientKey } = useContext(GlobalContext);
+  const { anthologyDict } = useDictionary(clientKey);
   const [studentData, setStudentData] = useState<AnthologyMapItem[]>([]);
   const [newStudentData, setNewStudentData] = useState<AnthologyMapItem>({
     type: 'story',
@@ -244,7 +246,7 @@ const Anthology = () => {
   // RETURN
   return (
     <React.Fragment>
-      <SectionTitle title={`Anthology`} />
+      <SectionTitle title={anthologyDict[userLanguage].REGISTRATION} />
       {/*
         Tabs to select between:
           - Lesson Data
@@ -256,7 +258,7 @@ const Anthology = () => {
         handleTabClick={handleTabClick}
         subSectionList={['Journal', 'Stories', 'Poems']}
       />
-      <SectionTitle title={subSection} />
+      {/*<SectionTitle title={subSection} />*/}
       {/*
         This section shows rows of:
           - ADD NEW ENTRY

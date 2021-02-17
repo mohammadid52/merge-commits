@@ -36,7 +36,8 @@ export const standardTheme = {
   },
   lessonCard:{
     title: 'flex items-center text-2xl text-black font-open text-left',
-    subtitle:'text-sm text-gray-400'
+    subtitle:'text-sm text-gray-400',
+    border: 'border-dark-gray border-opacity-20'
   },
   sidemenu: {
     bg: 'bg-darker-gray',

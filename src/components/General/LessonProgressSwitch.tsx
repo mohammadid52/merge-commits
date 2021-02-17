@@ -9,6 +9,8 @@ type LabelProps = {
 
 const ProgressLabels = ({label, id}: LabelProps) => {
     switch (label) {
+        case 'n/a':
+            return <div id={id}>n/a</div>;
         case 'intro':
             return <div id={id}>Intro</div>;
         case 'warmup': 
