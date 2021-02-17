@@ -145,8 +145,9 @@ module.exports = {
       '1/2': '50%',
     },
     fontFamily: {
-      open: ['Barlow', 'sans-serif'],
+      // open: ['Barlow', 'sans-serif'],
       // 'open': ['Open Sans Condensed', 'sans-serif'],
+      'open': ['Open Sans', 'sans-serif'],
     },
     extend: {
       backgroundImage: (theme) => ({

@@ -183,15 +183,15 @@ const Login = ({ updateAuthState }: LoginProps) => {
   }, []);
 
   return (
-    <div className="w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm">
-      <div className="w-auto h-auto flex flex-row rounded-xl shadow-2xl">
-        <div className="login w-140 min-w-sm max-w-sm bg-white rounded-l-xl pt-0">
+    <div className="w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm md:bg-none sm:bg-login-bg sm:bg-cover sm:bg-center">
+      <div className="w-full md:max-w-160 sm:max-w-100 h-full max-h-160 flex flex-row rounded-xl shadow-2xl">
+        <div className="min-w-sm max-w-sm bg-white md:rounded-l-xl sm:rounded-xl pt-0">
           <div className="h-.7/10  w-full rounded-tl-xl"></div>
           <div className="relative h-9.3/10 flex flex-col items-center p-8">
-            <div className="absolute text-center text-xs mb-4" style={{ bottom: '0' }}>
+            <div className={`absolute bottom-0 text-center mb-4 leading-6 text-xs text-gray-600`}>
               <p>© Copyright 2020</p>
               <p>
-                <NavLink className="underline text-sm hover:text-blue-500" to="/privacy-policy">
+                <NavLink className="underline text-xs hover:text-blue-500" to="/privacy-policy">
                   Privacy Policy
                 </NavLink>
               </p>
@@ -212,17 +212,17 @@ const Login = ({ updateAuthState }: LoginProps) => {
                 ) : null}
               </div>
 
-              <div className="input">
-                <div className="icon">
-                  <IconContext.Provider value={{ size: '1.5rem' }}>
-                    <MdEmail />
+              <div className="input relative w-full mb-4">
+               {/* <div className="absolute left-0">
+                  <IconContext.Provider value={{ className: 'w-auto pointer-events-none'}}>
+                    <MdEmail size={18}/>
                   </IconContext.Provider>
-                </div>
+                </div>*/}
                 <label className="hidden" htmlFor="email">
                   Email
                 </label>
                 <input
-                  className="w-full px-2 py-1 ml-2 bg-off-white"
+                  className="w-full p-3 border border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
                   placeholder="Email"
                   type="text"
                   id="email"
@@ -233,33 +233,28 @@ const Login = ({ updateAuthState }: LoginProps) => {
               </div>
 
               <div className="input relative w-full">
-                <div style={{ right: 0 }} className="absolute w-6">
+                <div className="absolute w-6 right-0 transform translate-y-1/2">
                   <div
                     onClick={() => setPassToggle(!passToggle)}
                     className="text-gray-500 cursor-pointer hover:text-grayscale">
                     {passToggle ? (
-                      <IconContext.Provider value={{ size: '1.5rem' }}>
-                        <AiOutlineEye />
+                      <IconContext.Provider value={{ className: 'w-auto '}}>
+                        <AiOutlineEye size={18}/>
                       </IconContext.Provider>
                     ) : (
-                      <IconContext.Provider value={{ size: '1.5rem' }}>
-                        <AiOutlineEyeInvisible />
+                      <IconContext.Provider value={{ className: 'w-auto'}}>
+                        <AiOutlineEyeInvisible size={18}/>
                       </IconContext.Provider>
                     )}
                   </div>
                 </div>
 
-                <div className="icon">
-                  <IconContext.Provider value={{ size: '1.2rem' }}>
-                    <FaKey />
-                  </IconContext.Provider>
-                </div>
 
                 <label className="hidden" htmlFor="password">
                   Password
                 </label>
                 <input
-                  className="w-full px-2 py-1 ml-2 bg-off-white"
+                  className="w-full p-3 border border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
                   placeholder="Password"
                   type={passToggle ? 'text' : 'password'}
                   id="password"
@@ -271,23 +266,22 @@ const Login = ({ updateAuthState }: LoginProps) => {
               </div>
 
               <div className="my-3">
-                <label className="flex items-center justify-end">
+                <label className="flex items-center justify-center">
                   <input
                     type="checkbox"
                     className="form-checkbox w-4 h-10"
                     checked={isChecked}
                     onChange={toggleCheckBox}
                   />
-                  <span className="ml-2 w-auto">Remember Me</span>
+                  <span className={`w-auto ml-2 leading-6 text-xs text-gray-600`}>Remember Me</span>
                 </label>
               </div>
             </div>
 
-            {/* <Link to="/register">Register</Link> */}
             <div className="relative h-4.5/10 flex flex-col justify-center items-center">
               <button
                 disabled={isToggled}
-                className="bg-dark-red text-gray-200 rounded-xl-xl mb-4"
+                className="p-3 mb-4 bg-dark-red text-gray-200 rounded-xl font-semibold"
                 onKeyPress={handleEnter}
                 onClick={handleSubmit}>
                 {isToggled ? (
@@ -305,16 +299,10 @@ const Login = ({ updateAuthState }: LoginProps) => {
                   Forgot your password?
                 </div>
               </NavLink>
-              {/* <NavLink to='/confirm-code'>
-                <div className='text-bold text-center text-blueberry hover:text-blue-500 mb-2'>
-                  Have a confirmation code?
-                </div>
-              </NavLink> */}
             </div>
           </div>
         </div>
-        <div className="login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 bg-login-bg bg-cover bg-center"></div>
-        {/* <div className="absolute w-full h-screen scale-110 bg-login-bg" style={{filter: 'blur(24px)', WebkitFilter: 'blur(24px)'}}></div> */}
+        <div className="md:inline-block sm:hidden xs:hidden min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 bg-login-bg bg-cover bg-center"></div>
       </div>
     </div>
   );
