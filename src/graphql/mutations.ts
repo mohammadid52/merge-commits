@@ -5081,6 +5081,441 @@ export const deleteLesson = /* GraphQL */ `
     }
   }
 `;
+export const createLessonRubrics = /* GraphQL */ `
+  mutation CreateLessonRubrics(
+    $input: CreateLessonRubricsInput!
+    $condition: ModelLessonRubricsConditionInput
+  ) {
+    createLessonRubrics(input: $input, condition: $condition) {
+      id
+      lessonID
+      rubricID
+      lesson {
+        id
+        title
+        type
+        label
+        instructions
+        instructionsTitle
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        coverImage
+        summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+          stage
+        }
+        createdAt
+        updatedAt
+      }
+      rubric {
+        id
+        name
+        criteria
+        distinguished
+        excelled
+        adequite
+        basic
+        topicID
+        topic {
+          id
+          curriculumID
+          learningObjectiveID
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        curriculumID
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateLessonRubrics = /* GraphQL */ `
+  mutation UpdateLessonRubrics(
+    $input: UpdateLessonRubricsInput!
+    $condition: ModelLessonRubricsConditionInput
+  ) {
+    updateLessonRubrics(input: $input, condition: $condition) {
+      id
+      lessonID
+      rubricID
+      lesson {
+        id
+        title
+        type
+        label
+        instructions
+        instructionsTitle
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        coverImage
+        summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+          stage
+        }
+        createdAt
+        updatedAt
+      }
+      rubric {
+        id
+        name
+        criteria
+        distinguished
+        excelled
+        adequite
+        basic
+        topicID
+        topic {
+          id
+          curriculumID
+          learningObjectiveID
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        curriculumID
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteLessonRubrics = /* GraphQL */ `
+  mutation DeleteLessonRubrics(
+    $input: DeleteLessonRubricsInput!
+    $condition: ModelLessonRubricsConditionInput
+  ) {
+    deleteLessonRubrics(input: $input, condition: $condition) {
+      id
+      lessonID
+      rubricID
+      lesson {
+        id
+        title
+        type
+        label
+        instructions
+        instructionsTitle
+        theme {
+          type
+          name
+          summary
+          summaryLabel
+          connection
+          images
+        }
+        grades
+        artistID
+        artist {
+          id
+          images
+          name
+          type
+          bio
+          createdAt
+          updatedAt
+        }
+        language
+        SELStructure
+        keywords {
+          nextToken
+        }
+        connection
+        summary
+        purpose
+        designers
+        objectives
+        checkpoints {
+          nextToken
+        }
+        doFirstID
+        doFirst {
+          id
+          type
+          required
+          createdAt
+          updatedAt
+        }
+        warmUpId
+        warmUp {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        coreLessonId
+        coreLesson {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          createdAt
+          updatedAt
+        }
+        activityId
+        activity {
+          id
+          title
+          label
+          stage
+          type
+          language
+          SELTypes
+          lineNumber
+          createdAt
+          updatedAt
+        }
+        assessmentID
+        assessment {
+          id
+          title
+          type
+          openingMessage
+          closingMessage
+          createdAt
+          updatedAt
+        }
+        filters
+        coverImage
+        summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+          stage
+        }
+        createdAt
+        updatedAt
+      }
+      rubric {
+        id
+        name
+        criteria
+        distinguished
+        excelled
+        adequite
+        basic
+        topicID
+        topic {
+          id
+          curriculumID
+          learningObjectiveID
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        curriculumID
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createLessonCheckpoint = /* GraphQL */ `
   mutation CreateLessonCheckpoint(
     $input: CreateLessonCheckpointInput!

@@ -596,7 +596,6 @@ type StudentWord @model(queries: null) @key(name: "wordsByStudent", fields: ["st
   word: Word @connection(fields: ["wordID"])
   student: Person @connection(fields: ["studentID", "studentAuthID"])
 }
-
 type RoomMsgs
 @model
 @key(name: "byRoomID", fields: ["roomID", "createdAt"], queryField: "messagesByRoomID")
@@ -655,6 +654,17 @@ type Lesson @model @key(fields: ["id"]) {
   introduction: String
   connectionTitle: String
   lessonPlan: [LessonComponents]
+}
+
+type LessonRubrics 
+@model
+@key(name: "byLesson", fields: ["lessonID", "rubricID"])
+{
+  id: ID!
+  lessonID: ID!
+  rubricID: ID!
+  lesson: Lesson @connection(fields: ["lessonID"])
+  rubric: Rubric @connection(fields: ["rubricID"])
 }
 
 type LessonComponents {
