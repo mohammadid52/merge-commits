@@ -50,3 +50,11 @@ export const dateString = (separator: string, locale: 'US' | 'WORLD'): string =>
     return `${dayNumber}${separator}${monthNumber + 1}${separator}${year}`;
   }
 };
+
+export const dateFromServer = (date: string) => {
+  const dateObj = new Date(date);
+  const year = dateObj.getFullYear();
+  const month = dateObj.getUTCMonth();
+  const day = dateObj.getUTCDate();
+  return `${month}/${day}/${year}`;
+}

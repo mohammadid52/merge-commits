@@ -27,7 +27,7 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
   const history = useHistory();
   const location = useLocation();
   const urlParams: any = useParams()
-  console.log('urlParams', urlParams)
+  //console.log('urlParams', urlParams)
 
   let subscription: any;
 

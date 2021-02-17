@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
+import useDictionary from '../../../customHooks/dictionary';
 
 interface SubSectionTabs {
   isTeacher?: boolean;
@@ -10,7 +11,13 @@ interface SubSectionTabs {
 
 const SubSectionTabs = (props: SubSectionTabs) => {
   const { isTeacher, subSection, subSectionList, handleTabClick } = props;
+  const { state, userLanguage, clientKey } = useContext(GlobalContext);
+  const { anthologyDict } = useDictionary(clientKey);
   const { theme } = useContext(GlobalContext);
+
+  const getTranslation = Object.keys(anthologyDict[userLanguage].TABS).map((key: any) => {
+    return anthologyDict[userLanguage].TABS[key];
+  })
 
   return (
     <div className={`${theme.section} text-xl`}>
@@ -25,7 +32,7 @@ const SubSectionTabs = (props: SubSectionTabs) => {
                   ? 'text-black'
                   : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
               }`}>
-              {listItem}
+              {getTranslation[index]}
             </h2>
           ))}
       </div>
