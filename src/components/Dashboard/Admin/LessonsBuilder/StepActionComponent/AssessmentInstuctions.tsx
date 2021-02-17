@@ -47,7 +47,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
       titleValue: formData.instructionsTitle,
       titleLabel: 'Instructions title',
       textEditorName: 'instructions',
-      textEditorValue: typeof formData.instructions === 'object' ? formData.instructions[0] : formData.instructions
+      textEditorValue: (typeof formData.instructions === 'object' && formData.instructions) ? formData.instructions[0] : formData.instructions
     },
     {
       id: '3',

@@ -5,6 +5,8 @@ import ContentCard from '../../Atoms/ContentCard';
 import { AnthologyMapItem, ViewEditMode } from './Anthology';
 import FormInput from '../../Atoms/Form/FormInput';
 import TextArea from '../../Atoms/Form/TextArea';
+import { dateFromServer } from '../../../utilities/time';
+import useDictionary from '../../../customHooks/dictionary';
 
 interface ContentCardProps {
   viewEditMode: ViewEditMode;
@@ -17,16 +19,17 @@ interface ContentCardProps {
 
 const AnthologyContent = (props: ContentCardProps) => {
   const { viewEditMode, handleEditToggle, handleEditUpdate, subSection, createTemplate, content } = props;
-  const { theme } = useContext(GlobalContext);
+  const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
+  const { anthologyDict } = useDictionary(clientKey);
 
   const viewModeView = (contentObj: AnthologyMapItem) => (
     <>
       {/**
        *  section: TOP INFO
        */}
-      <div className={`flex`}>
-        <p className={`text-left ${theme.lessonCard.subtitle}`}>Lesson: Lesson Title</p>
-        <p className={`text-right ${theme.lessonCard.subtitle}`}>{contentObj.updatedAt}</p>
+      <div className={`flex pb-2 mb-2 border-b ${theme.lessonCard.border}`}>
+        <p className={`text-left ${theme.lessonCard.subtitle}`}>Lesson: -</p>
+        <p className={`text-right ${theme.lessonCard.subtitle}`}>Updated: {dateFromServer(contentObj.updatedAt)}</p>
       </div>
       {/**
        *  section: TITLE
@@ -40,7 +43,7 @@ const AnthologyContent = (props: ContentCardProps) => {
       {/**
        *  section: DESCRIPTION
        */}
-      <div className={`h-12 overflow-ellipsis overflow-hidden ellipsis`}>
+      <div className={`overflow-ellipsis overflow-hidden ellipsis`}>
         {contentObj.description ?
           contentObj.description :
           `No description`}
@@ -55,22 +58,26 @@ const AnthologyContent = (props: ContentCardProps) => {
       {/**
        *  section: TOP INFO
        */}
-      <div className={`flex`}>
-        <p className={`text-left ${theme.lessonCard.subtitle}`}>Lesson: Lesson Title</p>
-        <p className={`text-right ${theme.lessonCard.subtitle}`}>{contentObj.updatedAt}</p>
+      <div className={`flex pb-2 mb-2 border-b ${theme.lessonCard.border}`}>
+        <p className={`text-left ${theme.lessonCard.subtitle}`}>Lesson: -</p>
+        <p className={`text-right ${theme.lessonCard.subtitle}`}>Updated: {dateFromServer(contentObj.updatedAt)}</p>
       </div>
       {/**
        *  section: TITLE
        */}
-      <div className={``}>
+      <div className={`mt-2 `}>
         <FormInput
           id={`title_${contentObj.type}_${contentObj.studentDataID}`}
+          label={`Title`}
           onChange={handleEditUpdate}
           value={contentObj.title}
           placeHolder={contentObj.title ? contentObj.title : `Please add title...`}
         />
+      </div>
+      <div className={`mt-2 `}>
         <FormInput
           id={`subTitle_${contentObj.type}_${contentObj.studentDataID}`}
+          label={`Subtitle`}
           onChange={handleEditUpdate}
           value={contentObj.subTitle}
           placeHolder={contentObj.subTitle ? contentObj.subTitle : `Please add subtitle...`}
@@ -79,9 +86,10 @@ const AnthologyContent = (props: ContentCardProps) => {
       {/**
        *  section: DESCRIPTION
        */}
-      <div className={`h-12 overflow-ellipsis overflow-hidden ellipsis`}>
+      <div className={`mt-2 overflow-ellipsis overflow-hidden ellipsis`}>
         <FormInput
           id={`description_${contentObj.type}_${contentObj.studentDataID}`}
+          label={`Description`}
           onChange={handleEditUpdate}
           value={contentObj.description}
           placeHolder={contentObj.description ? contentObj.description : `Please add description...`}
@@ -90,9 +98,10 @@ const AnthologyContent = (props: ContentCardProps) => {
       {/**
        *  section:  CONTENT
        */}
-      <div>
+      <div className={`mt-2 mb-2`}>
         <TextArea
           id={`content_${contentObj.type}_${contentObj.studentDataID}`}
+          label={`Content`}
           onChange={handleEditUpdate}
           value={contentObj.content}
           placeHolder={contentObj.content ? contentObj.content : `Please add content...`}
@@ -106,21 +115,25 @@ const AnthologyContent = (props: ContentCardProps) => {
       {/**
        *  section: TOP INFO
        */}
-      <div className={`flex`}>
-        <p className={`text-left ${theme.lessonCard.subtitle}`}>This is a new Anthology entry</p>
+      <div className={`flex pb-2 mb-2 border-b ${theme.lessonCard.border}`}>
+        <p className={`text-left ${theme.lessonCard.subtitle}`}>This is a new entry</p>
       </div>
       {/**
        *  section: TITLE
        */}
-      <div className={``}>
+      <div className={`mt-2 `}>
         <FormInput
           id={`title_${contentObj.type}_${contentObj.studentDataID}`}
+          label={`Title`}
           onChange={handleEditUpdate}
           value={contentObj.title}
           placeHolder={contentObj.title ? contentObj.title : `Please add title...`}
         />
+      </div>
+        <div className={`mt-2 `}>
         <FormInput
           id={`subTitle_${contentObj.type}_${contentObj.studentDataID}`}
+          label={`Subtitle`}
           onChange={handleEditUpdate}
           value={contentObj.subTitle}
           placeHolder={contentObj.subTitle ? contentObj.subTitle : `Please add subtitle...`}
@@ -129,9 +142,10 @@ const AnthologyContent = (props: ContentCardProps) => {
       {/**
        *  section: DESCRIPTION
        */}
-      <div className={`h-12 overflow-ellipsis overflow-hidden ellipsis`}>
+      <div className={`mt-2 overflow-ellipsis overflow-hidden ellipsis`}>
         <FormInput
           id={`description_${contentObj.type}_${contentObj.studentDataID}`}
+          label={`Description`}
           onChange={handleEditUpdate}
           value={contentObj.description}
           placeHolder={contentObj.description ? contentObj.description : `Please add description...`}
@@ -140,9 +154,10 @@ const AnthologyContent = (props: ContentCardProps) => {
       {/**
        *  section:  CONTENT
        */}
-      <div>
+      <div className={`mt-2 mb-2`}>
         <TextArea
           id={`content_${contentObj.type}_${contentObj.studentDataID}`}
+          label={`Content`}
           onChange={handleEditUpdate}
           value={contentObj.content}
           placeHolder={contentObj.content ? contentObj.content : `Please add content...`}
@@ -161,12 +176,29 @@ const AnthologyContent = (props: ContentCardProps) => {
                 createModeView(createTemplate) :
                 null
             }
-            <div className={`flex`}>
-              <p onClick={() => handleEditToggle('create', createTemplate.syllabusLessonID)}
-                 className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}>Create New Entry</p>
-              <span className={`w-auto`}>/</span>
-              <p onClick={() => handleEditToggle('savenew', createTemplate.syllabusLessonID)}
-                 className={`w-auto mx-2 cursor-pointer font-semibold text-blueberry`}>Save New</p>
+            <div className={`flex ${(viewEditMode.mode === 'create') ? 'pt-2 mt-2' : ''}`}>
+              {
+                viewEditMode.mode === 'create' && viewEditMode.studentDataID === createTemplate.syllabusLessonID ?
+                  (
+                    <p onClick={() => handleEditToggle('', '')}
+                       className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}>{anthologyDict[userLanguage].ACTIONS.CANCEL}</p>
+                  ) :
+                  (
+                    <p onClick={() => handleEditToggle('create', createTemplate.syllabusLessonID)}
+                       className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}>{anthologyDict[userLanguage].ACTIONS.CREATE}</p>
+                  )
+              }
+              {
+                viewEditMode.mode === 'create' && viewEditMode.studentDataID === createTemplate.syllabusLessonID ?
+                  (
+                    <>
+                      <span className={`w-auto mr-2`}>/</span>
+                      <p onClick={() => handleEditToggle('savenew', createTemplate.syllabusLessonID)}
+                         className={`w-auto cursor-pointer font-semibold text-blueberry`}>{anthologyDict[userLanguage].ACTIONS.SAVE}</p>
+                    </>
+                  ) :
+                  null
+              }
             </div>
           </div>
         </ContentCard>
@@ -186,14 +218,31 @@ const AnthologyContent = (props: ContentCardProps) => {
                     {/**
                      *  section:  VIEW/EDIT BUTTON
                      */}
-                    <div className={`flex`}>
-                      <p onClick={() => handleEditToggle('view', contentObj.studentDataID)}
-                         className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}>View</p>
-                      <p onClick={() => handleEditToggle('edit', contentObj.studentDataID)}
-                         className={`w-auto mx-2 cursor-pointer font-semibold text-blueberry`}>Edit</p>
-                      <span className={`w-auto`}>/</span>
-                      <p onClick={() => handleEditToggle('save', contentObj.studentDataID)}
-                         className={`w-auto mx-2 cursor-pointer font-semibold text-blueberry`}>Save</p>
+                    <div className={`flex pt-2 mt-2`}>
+                      {/*<p onClick={() => handleEditToggle('view', contentObj.studentDataID)}
+                         className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}>View</p>*/}
+                      {
+                        viewEditMode.mode === 'edit' && viewEditMode.studentDataID === contentObj.studentDataID ?
+                          (
+                            <p onClick={() => handleEditToggle('', '')}
+                               className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}>{anthologyDict[userLanguage].ACTIONS.CANCEL}</p>
+                          ) :
+                          (
+                            <p onClick={() => handleEditToggle('edit', contentObj.studentDataID)}
+                               className={`w-auto cursor-pointer font-semibold text-blueberry`}>{anthologyDict[userLanguage].ACTIONS.EDIT}</p>
+                          )
+                      }
+                      {
+                        viewEditMode.mode === 'edit' && viewEditMode.studentDataID === contentObj.studentDataID ?
+                          (
+                            <>
+                              <span className={`w-auto mr-2`}>/</span>
+                              <p onClick={() => handleEditToggle('save', contentObj.studentDataID)}
+                                 className={`w-auto cursor-pointer font-semibold text-blueberry`}>{anthologyDict[userLanguage].ACTIONS.SAVE}</p>
+                            </>
+                          ) :
+                          null
+                      }
                     </div>
                   </div>
                 </ContentCard>
