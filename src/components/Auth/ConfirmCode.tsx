@@ -247,15 +247,15 @@ const ConfirmCode = () => {
               <img className="" src={getAsset(clientKey, 'login_page_logo')} alt="Logo" />
             </div>
 
-            <div className={`text-center mb-4 leading-6 font-semibold text-sm text-gray-600`}>
-              <p>Enter New Password</p>
+            <div className={`text-center mb-4 leading-5 text-lg font-semibold text-gray-800`}>
+              <p>Set New Password</p>
             </div>
-            <div className={`text-center mb-4 leading-6 text-xs text-gray-600`}>
+            <div className={`text-center mb-4 leading-5 text-xs text-gray-600`}>
               <p>Your password must be at least 8 characters long and include uppercase and lowercase</p>
             </div>
 
             <div className="h-3.5/10 flex-grow flex flex-col justify-center">
-              <div className="w-full h-1/10 flex flex-col justify-around items-center">
+              <div className="w-full mb-2 flex flex-col justify-around items-center">
                 {message.show ? (
                   <p
                     className={`text-xs text-center ${
@@ -267,17 +267,17 @@ const ConfirmCode = () => {
               </div>
 
               <div className="input relative w-full">
-                <div style={{ right: 0 }} className="absolute w-6">
+                <div className="absolute w-6 right-0 transform -translate-x-1">
                   <div
                     onClick={() => setNewPassToggle(!newPassToggle)}
-                    className="text-gray-500 cursor-pointer hover:text-grayscale">
+                    className="mr-2 text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2">
                     {newPassToggle ? (
-                      <IconContext.Provider value={{ size: '1.5rem' }}>
-                        <AiOutlineEye />
+                      <IconContext.Provider value={{ className: 'w-auto '}}>
+                        <AiOutlineEye size={24}/>
                       </IconContext.Provider>
                     ) : (
-                      <IconContext.Provider value={{ size: '1.5rem' }}>
-                        <AiOutlineEyeInvisible />
+                      <IconContext.Provider value={{ className: 'w-auto '}}>
+                        <AiOutlineEyeInvisible  size={24}/>
                       </IconContext.Provider>
                     )}
                   </div>
@@ -306,7 +306,7 @@ const ConfirmCode = () => {
                     checked={isChecked}
                     onChange={toggleCheckBox}
                   />
-                  <span className={`w-auto ml-2 leading-6 text-xs text-gray-600`}>Remember Me</span>
+                  <span className={`w-auto ml-2 leading-5 text-xs text-gray-600`}>Remember Me</span>
                 </label>
               </div>
             </div>

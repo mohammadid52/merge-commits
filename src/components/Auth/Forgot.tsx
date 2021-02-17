@@ -105,7 +105,7 @@ const Forgot = () => {
         <div className="min-w-sm max-w-sm bg-white md:rounded-l-xl sm:rounded-xl pt-0">
           <div className="h-.7/10  w-full rounded-tl-xl"></div>
           <div className="relative h-9.3/10 flex flex-col items-center p-8">
-            <div className={`absolute bottom-0 text-center mb-4 leading-6 text-xs text-gray-600`}>
+            <div className={`absolute bottom-0 text-center mb-4 leading-5 text-xs text-gray-600`}>
               <p>© Copyright 2020</p>
               <p>
                 <NavLink className="underline text-xs hover:text-blue-500" to="/privacy-policy">
@@ -119,16 +119,12 @@ const Forgot = () => {
 
 
 
-            <div className="h-4.5/10 flex-grow flex flex-col justify-center">
-              <div className="w-full h-1/10 flex justify-center items-center">
+            <div className="h-3.5/10 flex-grow flex flex-col justify-center">
+              <div className="w-full mb-2 flex flex-col justify-around items-center">
                 {message.show ? (
                   <p
-                    className={`text-sm text-center ${
-                      message.type === 'success'
-                        ? 'text-green-500'
-                        : message.type === 'error'
-                        ? 'text-red-500'
-                        : null
+                    className={`text-xs text-center ${
+                      message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null
                     }`}>
                     {message.message}
                   </p>
@@ -149,7 +145,7 @@ const Forgot = () => {
                   onChange={handleChange}
                 />
               </div>
-              <div className='w-auto ml-2 leading-6 text-xs text-gray-600 text-center'>
+              <div className='w-auto ml-2 leading-5 text-xs text-gray-600 text-center'>
               Enter your email to reset your password
             </div>
             </div>

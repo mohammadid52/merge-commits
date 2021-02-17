@@ -189,7 +189,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
         <div className="min-w-sm max-w-sm bg-white md:rounded-l-xl sm:rounded-xl pt-0">
           <div className="h-.7/10  w-full rounded-tl-xl"></div>
           <div className="relative h-9.3/10 flex flex-col items-center p-8">
-            <div className={`absolute bottom-0 text-center mb-4 leading-6 text-xs text-gray-600`}>
+            <div className={`absolute bottom-0 text-center mb-4 leading-5 text-xs text-gray-600`}>
               <p>© Copyright 2020</p>
               <p>
                 <NavLink className="underline text-xs hover:text-blue-500" to="/privacy-policy">
@@ -201,11 +201,11 @@ const Login = ({ updateAuthState }: LoginProps) => {
               <img className="" src={getAsset(clientKey, 'login_page_logo')} alt="login_page_logo" />
             </div>
 
-            <div className="h-4.5/10 flex-grow flex flex-col justify-center">
-              <div className="w-full h-1/10 flex justify-center items-center">
+            <div className="h-3.5/10 flex-grow flex flex-col justify-center">
+              <div className="w-full mb-2 flex flex-col justify-around items-center">
                 {message.show ? (
                   <p
-                    className={`text-sm text-center ${
+                    className={`text-xs text-center ${
                       message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null
                     }`}>
                     {message.message}
@@ -229,17 +229,17 @@ const Login = ({ updateAuthState }: LoginProps) => {
               </div>
 
               <div className="input relative w-full">
-                <div className="absolute w-6 right-0 transform translate-y-1/2">
+                <div className="absolute w-6 right-0 transform -translate-x-1">
                   <div
                     onClick={() => setPassToggle(!passToggle)}
-                    className="text-gray-500 cursor-pointer hover:text-grayscale">
+                    className="mr-2 text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2">
                     {passToggle ? (
                       <IconContext.Provider value={{ className: 'w-auto '}}>
-                        <AiOutlineEye size={18}/>
+                        <AiOutlineEye size={24} />
                       </IconContext.Provider>
                     ) : (
                       <IconContext.Provider value={{ className: 'w-auto'}}>
-                        <AiOutlineEyeInvisible size={18}/>
+                        <AiOutlineEyeInvisible size={24} />
                       </IconContext.Provider>
                     )}
                   </div>
@@ -269,7 +269,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
                     checked={isChecked}
                     onChange={toggleCheckBox}
                   />
-                  <span className={`w-auto ml-2 leading-6 text-xs text-gray-600`}>Remember Me</span>
+                  <span className={`w-auto ml-2 leading-5 text-xs text-gray-600`}>Remember Me</span>
                 </label>
               </div>
             </div>
