@@ -116,8 +116,8 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
         return <AddNewQuestion changeStep={changeBuilderStep} setCheckpQuestions={onAddNewQuestion} goBackToPreviousStep={goBackToPreviousStep} />;
       case 'QuestionLookup':
         return <QuestionLookup selecteList={checkpQuestions} changeStep={changeBuilderStep} onSave={saveQuestionsList} goBackToPreviousStep={goBackToPreviousStep} />;
-      case 'EditQuestion':
-        return <EditQuestion changeStep={changeBuilderStep} setCheckpQuestions={onAddNewQuestion} />;
+      // case 'EditQuestion':
+      //   return <EditQuestion changeStep={changeBuilderStep} setCheckpQuestions={onAddNewQuestion} />;
       default:
         return <SelectedCheckPointsList
           changeStep={changeBuilderStep}

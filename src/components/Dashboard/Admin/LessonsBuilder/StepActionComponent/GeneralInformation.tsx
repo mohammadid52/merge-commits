@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api'
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { FaTrash } from 'react-icons/fa';
 
 import { InitialData, InputValueObject } from '../LessonBuilder';
 import { languageList } from '../../../../../utilities/staticData'
 
 import * as customMutations from '../../../../../customGraphql/customMutations';
 
+import Selector from '../../../../Atoms/Form/Selector';
 import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
@@ -18,6 +21,9 @@ interface GeneralInformationProps {
   setFormData: (data: InitialData) => void
   setSelectedDesigners: (designer: InputValueObject[]) => void,
   lessonId: string
+  allMeasurement: { id: number, name: string, value: string }[]
+  lessonMeasurements: any[]
+  setLessonMeasurements: (obj: any[]) => void
 }
 const GeneralInformation = (props: GeneralInformationProps) => {
   const {
@@ -26,9 +32,14 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     selectedDesigners,
     setSelectedDesigners,
     setFormData,
-    lessonId
+    lessonId,
+    allMeasurement,
+    lessonMeasurements,
+    setLessonMeasurements
   } = props;
 
+  const [selectedMeasu, setSelectedMeasu] = useState({ id: '', name: '', value: '' });
+  const [measurementList, setMeasurementList] = useState(allMeasurement);
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({
     name: '',
@@ -69,6 +80,21 @@ const GeneralInformation = (props: GeneralInformationProps) => {
       ...formData,
       languages: updatedList
     })
+  }
+
+  const selectMeasurement = (val: string, name: string, id: string) => {
+    setSelectedMeasu({ id, name, value: val })
+  }
+
+  const addNewMeasurement = () => {
+    setLessonMeasurements([
+      ...lessonMeasurements,
+      {
+        id: selectedMeasu.id,
+        measurement: selectedMeasu.name
+      }
+    ]);
+    setSelectedMeasu({ id: '', name: '', value: '' });
   }
 
   const selectDesigner = (id: string, name: string, value: string) => {
@@ -133,7 +159,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
             isError: false
           })
         }
-      } catch{
+      } catch {
         setValidation({
           name: '',
           type: '',
@@ -145,20 +171,32 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     }
   }
 
+  useEffect(() => {
+    console.log("allMeasurement", allMeasurement)
+    if (allMeasurement?.length > 0) {
+      const measurementID = lessonMeasurements?.map(meas => meas.id)
+      const measurementList = allMeasurement.filter(item => !measurementID.includes(item.id));
+      setMeasurementList(measurementList);
+    }
+  }, [lessonMeasurements, allMeasurement])
+
   const { name, type, languages, purposeHtml, objectiveHtml } = formData;
 
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
       <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900"> General Information </h3>
+        <h3 className="text-lg leading-6 font-medium text-gray-900"> Lesson Overview</h3>
       </div>
 
       <div className="p-4">
 
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
-            <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Name" isRequired />
+            <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+              Name <span className="text-red-500"> * </span>
+            </label>
+            <FormInput value={name} id='name' onChange={onInputChange} name='name' />
             {validation.name && <p className="text-red-600 text-sm">{validation.name}</p>}
           </div>
           <div>
@@ -194,6 +232,72 @@ const GeneralInformation = (props: GeneralInformationProps) => {
             <RichTextEditor initialValue={objectiveHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')} />
           </div>
         </div>
+
+        {/* Measurements block */}
+        {type?.id === '1' && (< div className="p-6 border-gray-400 border my-4 border-dashed">
+          <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">Lesson Measurements</p>
+
+          <div className="my-12 w-6/10 m-auto flex items-center justify-center">
+            <div className="mr-4">
+              <Selector selectedItem={selectedMeasu.name} list={measurementList} placeholder="Select Lesson" onChange={selectMeasurement} />
+            </div>
+            <div className="ml-4 w-auto">
+              <Buttons btnClass="ml-4 py-1" label="Add" onClick={addNewMeasurement} disabled={selectedMeasu.value ? false : true} />
+            </div>
+          </div>
+          <div>
+            {lessonMeasurements?.length > 0 ? (<div>
+              {/* Table header */}
+              <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-no-wrap border-b border-gray-200">
+                <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>No.</span>
+                </div>
+                <div className="w-4.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>Measurement</span>
+                </div>
+                <div className="w-3/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>Topic</span>
+                </div>
+                <div className="w-2/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>Action</span>
+                </div>
+                {/** <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      <span>Action</span>
+                    </div> */}
+              </div>
+
+
+              {/* Table column */}
+              <div className="w-full m-auto max-h-88 overflow-auto">
+                {lessonMeasurements.map((item: any, index: number) => (
+                  <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                    <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4"> {index + 1}.</div>
+                    <div className="flex w-4.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.measurement} </div>
+                    <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center justify-center whitespace-normal">{item.topic ? item.topic : '--'}</div>
+                    {/* <div className="flex w-2/10 px-6 py-3 text-s leading-4 items-center justify-center">
+                      <span className="cursor-pointer">
+                            <CheckBox value={item.required ? true : false} onChange={() => makeQuestionRequired(item.id)} name='isRequired' />
+                          </span>
+                          Remove
+                        </div> */}
+                    <div className="flex w-2/10 px-8 py-3 text-s leading-4 items-center justify-center">
+                      <div className="w-6 h-6 cursor-pointer" onClick={() => console.log(item.id)}>
+                        <IconContext.Provider value={{ size: '1.5rem', color: '#B22222' }}>
+                          <FaTrash />
+                        </IconContext.Provider>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>) : (
+                <div className="py-12 my-6 text-center">
+                  <p className="text-gray-600 font-medium"> This lesson does not have any measurements, please add new one.</p>
+                </div>
+              )}
+          </div>
+
+        </div>)}
 
         {validation.message && <div className="py-4 m-auto mt-2 text-center">
           <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>

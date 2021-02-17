@@ -1,7 +1,10 @@
 import React, { useState, useEffect, Fragment } from 'react'
+import API, { graphqlOperation } from '@aws-amplify/api';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp } from 'react-icons/io5';
 import { FaRegEye, FaQuestionCircle } from 'react-icons/fa';
+
+import * as customQueries from '../../../../customGraphql/customQueries';
 
 import Buttons from '../../../Atoms/Buttons';
 import BreadCrums from '../../../Atoms/BreadCrums';
@@ -63,26 +66,26 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   }
 
   const assessmentScrollerStep = [
-    { name: "General Information", icon: <IoCardSharp /> },
+    { name: "Overview", icon: <IoCardSharp /> },
     { name: "Instructions", icon: <IoDocumentText />, isDisabled: true },
     { name: "Builder", icon: <FaQuestionCircle />, isDisabled: true },
     { name: "Preview Details", icon: <FaRegEye />, isDisabled: true }
   ];
   const lessonScrollerStep = [
-    { name: "General Information", icon: <IoCardSharp /> },
+    { name: "Overview", icon: <IoCardSharp /> },
     { name: "Preview Details", icon: <FaRegEye />, isDisabled: true }
   ];
 
   const [formData, setFormData] = useState<InitialData>(initialData);
-  // const [instructionData, setInstructionData] = useState<InstructionInitialState>(instructionInitialState)
-  // const [savedLessonDetails,setSavedLessonDetails] = useState<>()
+  const [measurementList, setMeasurementList] = useState([]);
+  const [selectedMeasurement, setSelectedMeasurement] = useState([]);
   const [savedLessonDetails, setSavedLessonDetails] = useState<SavedLessonDetailsProps>({
     lessonPlans: null,
     lessonInstructions: instructionInitialState
   })
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [lessonId, setLessonId] = useState('');
-  const [activeStep, setActiveStep] = useState('General Information');
+  const [activeStep, setActiveStep] = useState('Overview');
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
   const changeLessonType = (type: string) => {
     if (type === 'lesson') {
@@ -94,7 +97,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
-      case 'General Information':
+      case 'Overview':
         return <AddNewLessonForm
           changeLessonType={changeLessonType}
           formData={formData}
@@ -103,6 +106,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           selectedDesigners={selectedDesigners}
           setSelectedDesigners={setSelectedDesigners}
           postLessonCreation={postLessonCreation}
+          allMeasurement={measurementList}
+          lessonMeasurements={selectedMeasurement}
+          setLessonMeasurements={setSelectedMeasurement}
         />;
       case 'Instructions':
         return <AssessmentInstuctions
@@ -125,6 +131,25 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       //     setSelectedDesigners={setSelectedDesigners}
       //     postLessonCreation={postLessonCreation}
       //   />;
+    }
+  }
+
+
+  const fetchMeasurementList = async () => {
+    try {
+      let list: any = await API.graphql(graphqlOperation(customQueries.listRubrics));
+      list = list.data.listRubrics?.items || []
+      const measuList = list.sort((a: any, b: any) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
+      const filteredList = measuList.map((item: any) => {
+        return {
+          id: item.id,
+          name: item.name,
+          value: item.name
+        }
+      })
+      setMeasurementList(filteredList);
+    } catch {
+      console.log("Error while fetching lesson data");
     }
   }
 
@@ -160,6 +185,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   }, [formData.type?.id])
 
+  useEffect(() => {
+    fetchMeasurementList();
+  }, [])
   return (
     <div className="w-full h-full">
 
