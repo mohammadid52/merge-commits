@@ -100,30 +100,27 @@ const Forgot = () => {
   };
 
   return (
-    <div className='w-full h-screen flex flex-col items-center justify-center text-sm'>
-      <div className='w-auto h-auto flex flex-row rounded-xl shadow-2xl'>
-        <div className='login w-140 min-w-sm max-w-sm bg-white rounded-l-xl pt-0'>
-          <div className='h-.7/10 w-full rounded-t-xl'></div>
-          <div className='relative h-9.3/10 flex flex-col items-center justify-center p-8'>
-            <div className='absolute text-center text-xs mb-3' style={{ bottom: '0' }}>
+    <div className="w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm md:bg-none sm:bg-login-bg sm:bg-cover sm:bg-center">
+      <div className="w-full md:max-w-160 sm:max-w-100 h-full max-h-160 flex flex-row rounded-xl shadow-2xl">
+        <div className="min-w-sm max-w-sm bg-white md:rounded-l-xl sm:rounded-xl pt-0">
+          <div className="h-.7/10  w-full rounded-tl-xl"></div>
+          <div className="relative h-9.3/10 flex flex-col items-center p-8">
+            <div className={`absolute bottom-0 text-center mb-4 leading-6 text-xs text-gray-600`}>
               <p>© Copyright 2020</p>
               <p>
-                <NavLink className='underline text-sm hover:text-blue-500' to='/privacy-policy'>
+                <NavLink className="underline text-xs hover:text-blue-500" to="/privacy-policy">
                   Privacy Policy
                 </NavLink>
               </p>
             </div>
-            <div className='h-24 w-56'>
-              <img
-                src={getAsset(clientKey, 'login_page_logo')}
-                alt='Logo'
-              />
+            <div className="h-24 w-56">
+              <img className="" src={getAsset(clientKey, 'login_page_logo')} alt="login_page_logo" />
             </div>
 
-            
 
-            <div className='h-2.5/10 flex-grow flex flex-col justify-center'>
-              <div className='w-full h-1/10 flex justify-center items-center'>
+
+            <div className="h-4.5/10 flex-grow flex flex-col justify-center">
+              <div className="w-full h-1/10 flex justify-center items-center">
                 {message.show ? (
                   <p
                     className={`text-sm text-center ${
@@ -139,16 +136,11 @@ const Forgot = () => {
               </div>
 
               <div className='input'>
-                <div className='icon'>
-                  <IconContext.Provider value={{ size: '1.5rem' }}>
-                    <MdEmail />
-                  </IconContext.Provider>
-                </div>
                 <label className='hidden' htmlFor='email'>
                   Email
                 </label>
                 <input
-                  className='w-full bg-off-white px-2 py-1 ml-2'
+                  className='"w-full p-3 border border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10'
                   placeholder='Email'
                   type='text'
                   id='email'
@@ -157,14 +149,14 @@ const Forgot = () => {
                   onChange={handleChange}
                 />
               </div>
-              <div className='h-2/10 flex justify-center items-center text-center text-sm text-gray-800'>
+              <div className='w-auto ml-2 leading-6 text-xs text-gray-600 text-center'>
               Enter your email to reset your password
             </div>
             </div>
 
             <div className='h-3.5/10 flex flex-col justify-center items-center'>
               <button
-                className='bg-dark-red text-gray-200 rounded-xl mb-4'
+                className="p-3 mb-4 bg-dark-red text-gray-200 rounded-xl font-semibold"
                 onKeyPress={handleEnter}
                 onClick={handleSubmit}>
                 Submit
@@ -175,8 +167,7 @@ const Forgot = () => {
             </div>
           </div>
         </div>
-        <div className='login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 bg-login-bg bg-cover bg-center'></div>
-        {/* <div className="absolute w-full h-screen scale-110 bg-login-bg" style={{filter: 'blur(24px)', WebkitFilter: 'blur(24px)'}}></div> */}
+        <div className='md:inline-block sm:hidden xs:hidden min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 bg-login-bg bg-cover bg-center'></div>
       </div>
     </div>
   );

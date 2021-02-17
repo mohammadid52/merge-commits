@@ -155,6 +155,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
   const handleEnter = (e: any) => {
     if (e.key === 'Enter') {
       handleSubmit();
+      toggleLoading(true);
     }
   };
 
@@ -213,11 +214,6 @@ const Login = ({ updateAuthState }: LoginProps) => {
               </div>
 
               <div className="input relative w-full mb-4">
-               {/* <div className="absolute left-0">
-                  <IconContext.Provider value={{ className: 'w-auto pointer-events-none'}}>
-                    <MdEmail size={18}/>
-                  </IconContext.Provider>
-                </div>*/}
                 <label className="hidden" htmlFor="email">
                   Email
                 </label>
@@ -266,7 +262,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
               </div>
 
               <div className="my-3">
-                <label className="flex items-center justify-center">
+                <label className="flex items-center justify-end">
                   <input
                     type="checkbox"
                     className="form-checkbox w-4 h-10"

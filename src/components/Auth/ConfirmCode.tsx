@@ -28,19 +28,17 @@ const ConfirmCode = () => {
   const [passwordInput, setPasswordInput] = useState({
     password: '',
     match: '',
-  })
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [newPassToggle, setNewPassToggle] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
-
   const checkLoginCred = () => {
-
     const auth = cookies.cred;
     if (auth?.isChecked) {
       setIsChecked(auth.isChecked);
     }
-  }
+  };
 
   useEffect(() => {
     populateCodeAndEmail();
@@ -53,23 +51,23 @@ const ConfirmCode = () => {
 
   const populateCodeAndEmail = () => {
     const params = useQuery();
-    const confirmCode = params.get('code');                                                                            // Find a code from params.
-    const emailId = params.get('email');                                                                               // Find an email from params.
-    const isValidCode = confirmCode && ((/^\d{6}$/gm)).test(confirmCode);                                             // validate element to have 6 digit number. e.g. 234567
-    const isValidEmail = emailId && ((/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi).test(emailId));         // validate email id.
+    const confirmCode = params.get('code'); // Find a code from params.
+    const emailId = params.get('email'); // Find an email from params.
+    const isValidCode = confirmCode && /^\d{6}$/gm.test(confirmCode); // validate element to have 6 digit number. e.g. 234567
+    const isValidEmail = emailId && /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi.test(emailId); // validate email id.
 
     if (isValidCode && isValidEmail) {
       setConfirmInput({
         ...confirmInput,
         code: confirmCode,
-        email: emailId
-      })
+        email: emailId,
+      });
     } else {
       setMessage({
         show: true,
         type: 'error',
         message: 'Invalid account confirmation URL. Please check your email',
-      })
+      });
     }
   };
 
@@ -83,7 +81,6 @@ const ConfirmCode = () => {
       const forgot = await Auth.forgotPasswordSubmit(username, code, password);
       console.log(forgot);
       history.push('/login');
-
     } catch (error) {
       console.error('error signing in', error);
       setMessage(() => {
@@ -92,15 +89,13 @@ const ConfirmCode = () => {
             return {
               show: true,
               type: 'error',
-              message:
-                'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+              message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
             };
           case 'InvalidParameterException':
             return {
               show: true,
               type: 'error',
-              message:
-                'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+              message: 'Password must be at least 8 characters, include uppercase, lowercase and numbers',
             };
           case 'UserNotFoundException':
             return {
@@ -122,16 +117,16 @@ const ConfirmCode = () => {
             };
         }
       });
-      toggleLoading(false)
+      toggleLoading(false);
     }
-  }
+  };
 
   const confirmAndLogin = async () => {
     let username = confirmInput.email;
     let tempPassword = 'xIconoclast.5x';
     let password = passwordInput.password;
     let code = confirmInput.code;
-    toggleLoading(true)
+    toggleLoading(true);
     try {
       const confirmRes = await Auth.confirmSignUp(username, code);
       console.log(confirmRes);
@@ -145,7 +140,7 @@ const ConfirmCode = () => {
         setCookie('cred', {
           email: username,
           isChecked: isChecked,
-          password: password
+          password: password,
         });
       } else {
         removeCookie('cred');
@@ -153,7 +148,6 @@ const ConfirmCode = () => {
       setCookie('auth', { email: username, authId: user.username }, { path: '/' });
       history.push('/dashboard');
     } catch (error) {
-
       // Handle code mismatch and code expiration errors.
 
       if (error.code === 'NotAuthorizedException') {
@@ -172,13 +166,13 @@ const ConfirmCode = () => {
                 show: true,
                 type: 'error',
                 message: 'Invalid account confirmation URL. Please check your email or Register first',
-              }
+              };
           }
         });
         toggleLoading(false);
       }
     }
-  }
+  };
 
   const validation = () => {
     let validated = false;
@@ -222,134 +216,127 @@ const ConfirmCode = () => {
   const handleEnter = (e: any) => {
     if (e.key === 'Enter') {
       validation();
+      toggleLoading(true);
     }
   };
 
   const handleSubmit = () => {
     validation();
+    toggleLoading(true);
   };
 
   const toggleCheckBox = () => {
     setIsChecked(!isChecked);
-  }
+  };
 
   return (
-    <div className='w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm'>
-      <div className='w-auto h-auto flex flex-row rounded-xl shadow-2xl'>
-        <div className='login w-140 min-w-sm max-w-sm bg-white rounded-l-xl pt-0'>
-          <div className='h-.7/10  w-full rounded-tl-xl'></div>
-          <div className='relative h-9.3/10 flex flex-col items-center p-8'>
-            <div className='absolute text-center text-xs mb-4' style={{ bottom: '0' }}>
+    <div className="w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm md:bg-none sm:bg-login-bg sm:bg-cover sm:bg-center">
+      <div className="w-full md:max-w-160 sm:max-w-100 h-full max-h-160 flex flex-row rounded-xl shadow-2xl">
+        <div className="min-w-sm max-w-sm bg-white md:rounded-l-xl sm:rounded-xl pt-0">
+          <div className="h-.7/10  w-full rounded-tl-xl"></div>
+          <div className="relative h-9.3/10 flex flex-col items-center p-8">
+            <div className="absolute text-center text-xs mb-4" style={{ bottom: '0' }}>
               <p>© Copyright 2020</p>
               <p>
-                <NavLink className='underline text-sm hover:text-blue-500' to='/privacy-policy'>
+                <NavLink className="underline text-xs hover:text-blue-500" to="/privacy-policy">
                   Privacy Policy
-                  </NavLink>
+                </NavLink>
               </p>
             </div>
-            <div className='h-24 w-56'>
-              <img
-                className=''
-                src={getAsset(clientKey, 'login_page_logo')}
-                alt='Logo'
-              />
+            <div className="h-24 w-56">
+              <img className="" src={getAsset(clientKey, 'login_page_logo')} alt="Logo" />
             </div>
 
-            <div className='w-full h-1/10 flex flex-col justify-around'>
-              <div className='text-3xl text-xl text-center text-base mb-4 text-gray-800 font-bold'>
-                Enter New Password
-              </div>
+            <div className={`text-center mb-4 leading-6 font-semibold text-sm text-gray-600`}>
+              <p>Enter New Password</p>
             </div>
-            <div className='w-full h-1/10 flex flex-col justify-around'>
-              <div className='text-center text-sm text-gray-700'>
-                Your password must be at least 8 characters long and include uppercase and lowercase
-              </div>
+            <div className={`text-center mb-4 leading-6 text-xs text-gray-600`}>
+              <p>Your password must be at least 8 characters long and include uppercase and lowercase</p>
             </div>
 
-            <div className='h-3.5/10 flex-grow flex flex-col justify-center'>
-              <div className='w-full h-1/10 flex flex-col justify-around items-center'>
+            <div className="h-3.5/10 flex-grow flex flex-col justify-center">
+              <div className="w-full h-1/10 flex flex-col justify-around items-center">
                 {message.show ? (
                   <p
                     className={`text-xs text-center ${
-                      message.type === 'success'
-                        ? 'text-green-500'
-                        : message.type === 'error'
-                          ? 'text-red-500'
-                          : null
-                      }`}>
+                      message.type === 'success' ? 'text-green-500' : message.type === 'error' ? 'text-red-500' : null
+                    }`}>
                     {message.message}
                   </p>
                 ) : null}
               </div>
-              <div className='input relative w-full'>
-                <div style={{ right: 0 }} className='absolute w-6'>
+
+              <div className="input relative w-full">
+                <div style={{ right: 0 }} className="absolute w-6">
                   <div
                     onClick={() => setNewPassToggle(!newPassToggle)}
-                    className='text-gray-500 cursor-pointer hover:text-grayscale'>
+                    className="text-gray-500 cursor-pointer hover:text-grayscale">
                     {newPassToggle ? (
                       <IconContext.Provider value={{ size: '1.5rem' }}>
                         <AiOutlineEye />
                       </IconContext.Provider>
                     ) : (
-                        <IconContext.Provider value={{ size: '1.5rem' }}>
-                          <AiOutlineEyeInvisible />
-                        </IconContext.Provider>
-                      )}
+                      <IconContext.Provider value={{ size: '1.5rem' }}>
+                        <AiOutlineEyeInvisible />
+                      </IconContext.Provider>
+                    )}
                   </div>
                 </div>
 
-                <div className='icon'>
-                  <IconContext.Provider value={{ size: '1.5rem' }}>
-                    <FaKey />
-                  </IconContext.Provider>
-                </div>
-                <label className='hidden' htmlFor='password'>
+                <label className="hidden" htmlFor="password">
                   New Password
-                  </label>
+                </label>
                 <input
-                  className='w-full bg-off-white px-2 py-1 ml-2'
-                  placeholder='New Password'
+                  className="w-full p-3 border border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
+                  placeholder="New Password"
                   type={newPassToggle ? 'text' : 'password'}
-                  id='password'
-                  name='password'
+                  id="password"
+                  name="password"
                   value={passwordInput.password}
                   onChange={handlePasswordChange}
                   onKeyDown={handleEnter}
                 />
               </div>
+
               <div className="my-3">
                 <label className="flex items-center justify-end">
-                  <input type="checkbox" className="form-checkbox w-4 h-10" checked={isChecked} onChange={toggleCheckBox} />
-                  <span className="ml-2 w-auto">Remember Me</span>
+                  <input
+                    type="checkbox"
+                    className="form-checkbox w-4 h-10"
+                    checked={isChecked}
+                    onChange={toggleCheckBox}
+                  />
+                  <span className={`w-auto ml-2 leading-6 text-xs text-gray-600`}>Remember Me</span>
                 </label>
               </div>
             </div>
 
-            <div className='h-3/10 flex flex-col justify-center items-center'>
-              <div
-                className='cursor-pointer text-center rounded-lg bg-dark-red text-gray-200 mb-2'
-                style={{ borderRadius: '2rem', padding: '.75rem' }}
+            <div className="relative h-4.5/10 flex flex-col justify-center items-center">
+              <button
+                disabled={isLoading}
+                className="p-3 mb-4 bg-dark-red text-gray-200 rounded-xl font-semibold"
                 onKeyPress={handleEnter}
                 onClick={handleSubmit}>
-                Login
-                </div>
+                {isLoading ? (
+                  <IconContext.Provider
+                    value={{ size: '1.5rem', color: '#ffffff', className: 'relative animate-spin' }}>
+                    <AiOutlineLoading3Quarters />
+                  </IconContext.Provider>
+                ) : (
+                  'Login'
+                )}
+              </button>
+
               {isLoading && (
-                <IconContext.Provider
-                  value={{ size: '1.5rem', color: '#488AC7', className: 'relative animate-spin' }}>
+                <IconContext.Provider value={{ size: '1.5rem', color: '#488AC7', className: 'relative animate-spin' }}>
                   <AiOutlineLoading3Quarters />
                 </IconContext.Provider>
               )}
-              {/* <NavLink to='/login'>
-                <div className='text-bold text-center text-blueberry hover:text-blue-500'>
-                  Back to login
-                  </div>
-              </NavLink> */}
             </div>
           </div>
         </div>
 
-        <div className='login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 bg-login-bg bg-cover bg-center'></div>
-
+        <div className="login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 bg-login-bg bg-cover bg-center"></div>
       </div>
     </div>
   );
