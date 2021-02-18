@@ -9,7 +9,7 @@ import CheckBox from '../../../../../Atoms/Form/CheckBox';
 import Buttons from '../../../../../Atoms/Buttons';
 
 import * as queries from '../../../../../../graphql/queries';
-import { getLanguageString } from '../../../../../../utilities/strings';
+import { getLanguageString, getTypeString } from '../../../../../../utilities/strings';
 
 interface QuestionLookupProps {
   changeStep: (step: string) => void
@@ -38,20 +38,6 @@ const QuestionLookup = (props: QuestionLookupProps) => {
     setSelectedQuestionIds(updatedList);
   }
 
-  const getTypeString = (type: string) => {
-    switch (type) {
-      case 'text':
-        return 'Text';
-      case 'input':
-        return 'Input';
-      case 'selectMany':
-        return 'Select Many';
-      case 'selectOne':
-        return 'Select One';
-      default:
-        return 'Text';
-    }
-  }
   const searchFromList = () => {
     const currentQuesList = [...allQuestionsList];
     const newList = currentQuesList.filter(item => {

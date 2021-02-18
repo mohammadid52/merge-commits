@@ -250,3 +250,19 @@ export const getLanguageString = (language: string) => {
       return 'Spanish';
   }
 }
+
+
+export const getTypeString = (type: string) => {
+  switch (type) {
+    case 'text':
+      return 'Text';
+    case 'input':
+      return 'Input';
+    case 'selectMany':
+      return 'Select Many';
+    case 'selectOne':
+      return 'Select One';
+    default:
+      return 'Text';
+  }
+}

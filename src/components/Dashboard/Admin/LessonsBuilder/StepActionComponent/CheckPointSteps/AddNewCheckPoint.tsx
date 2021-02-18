@@ -1,8 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api'
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaEdit } from 'react-icons/fa';
-import { IoCaretDownCircleOutline, IoCaretUpCircleOutline } from 'react-icons/io5';
+import { IoCaretDownCircleOutline, IoCaretUpCircleOutline, IoOptionsOutline } from 'react-icons/io5';
 import { IoIosKeypad } from 'react-icons/io';
 import { RiArrowRightLine } from 'react-icons/ri';
 
@@ -16,6 +15,7 @@ import RichTextEditor from '../../../../../Atoms/RichTextEditor';
 import CheckBox from '../../../../../Atoms/Form/CheckBox';
 import { LessonPlansProps } from '../../LessonEdit';
 
+import { getTypeString } from '../../../../../../utilities/strings';
 export interface AddNewCheckPointProps {
   changeStep: (step: string) => void
   updateLessonPlan: (plan: LessonPlansProps[], newObj: any[]) => void
@@ -74,6 +74,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     language: { id: '1', name: "English", value: 'EN' }
   }
   const [selectedBlock, setSelectedBlock] = useState('');
+  const [questionOptions, setQuestionOptions] = useState({ quesId: '', options: [] });
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({
     title: '',
@@ -81,8 +82,6 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     message: '',
     isError: true
   });
-
-  // const selectedQuestionsList: any = [];
 
   const languageList = [
     { id: 1, name: 'English', value: 'EN' },
@@ -165,7 +164,13 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     }
     setSelectedDesigners(updatedList)
   }
-
+  const showOptions = (quesId: string, options: any[]) => {
+    if (questionOptions.quesId !== quesId) {
+      setQuestionOptions({ quesId, options })
+    } else {
+      setQuestionOptions({ quesId: '', options: [] })
+    }
+  }
   const gobackToPreviousStep = () => {
     setCheckPointData(initialData);
     setSelectedDesigners([]);
@@ -447,44 +452,52 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
             </div>
           ) : (
               <Fragment>
-                <div>
+                <div className="max-h-112 overflow-auto">
                   <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-no-wrap border-b border-gray-200">
                     <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>No.</span>
                     </div>
-                    <div className="w-5.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <div className="w-5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>Question</span>
                     </div>
-                    <div className="w-2/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>Type</span>
                     </div>
-                    <div className="w-2/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>Is Required</span>
                     </div>
-                    {/* <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>Action</span>
-                    </div> */}
+                    <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      <span>Options</span>
+                    </div>
                   </div>
 
                   <div className="w-full m-auto">
                     {checkpQuestions.length > 0 ? checkpQuestions.map((item, index) => (
-                      <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4"> {index + 1}.</div>
-                        <div className="flex w-5.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.question} </div>
-                        <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center justify-center whitespace-normal">{item.type}</div>
-                        <div className="flex w-2/10 px-6 py-3 text-s leading-4 items-center justify-center">
-                          <span className="cursor-pointer">
-                            <CheckBox value={item.required ? true : false} onChange={() => makeQuestionRequired(item.id)} name='isRequired' />
-                          </span>
-                        </div>
-                        {/* <div className="flex w-1/10 px-6 py-1 text-s leading-4 items-center justify-center">
-                          <div className="w-6 h-6 cursor-pointer text-indigo-600" onClick={() => changeStep('EditQuestion')}>
-                            <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
-                              <FaEdit />
-                            </IconContext.Provider>
+                      <Fragment key={item.id}>
+                        <div key={item.id} className={`flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200 ${questionOptions.quesId === item.id && 'bg-gray-200'}`}>
+                          <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4"> {index + 1}.</div>
+                          <div className="flex w-5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.question} </div>
+                          <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.type ? getTypeString(item.type) : '--'}</div>
+                          <div className="flex w-1.5/10 px-6 py-3 text-s leading-4 items-center justify-center">
+                            <span className="cursor-pointer">
+                              <CheckBox value={item.required ? true : false} onChange={() => makeQuestionRequired(item.id)} name='isRequired' />
+                            </span>
                           </div>
-                        </div> */}
-                      </div>
+                          <div className="flex w-1/10 px-6 py-1 text-s leading-4 items-center justify-center">
+                            {(item.type === 'selectMany' || item.type === 'selectOne') && (<div className="w-6 h-6 cursor-pointer text-indigo-600" onClick={() => showOptions(item.id, item.options)}>
+                              <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+                                <IoOptionsOutline />
+                              </IconContext.Provider>
+                            </div>)}
+                          </div>
+                        </div>
+                        {(questionOptions.quesId === item.id) && (<div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b border-gray-200">
+                          <p className="text-gray-900 px-2 py-2 text-base">Options:</p>
+                          {questionOptions.options?.map((item, index) => (
+                            <span className="px-12 py-2" key={item.label}>{index + 1}. {item.text}</span>
+                          ))}
+                        </div>)}
+                      </Fragment>
                     )) : (
                         <div className="py-12 my-6 text-center">
                           <p> This checkpoint does not have any questions</p>
