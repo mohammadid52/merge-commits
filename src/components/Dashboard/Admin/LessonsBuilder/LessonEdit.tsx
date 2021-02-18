@@ -157,7 +157,7 @@ const LessonEdit = (props: LessonEditProps) => {
       const designers = designersList.filter((item: any) => savedData?.designers?.includes(item.id));
       setSelectedDesigners(designers)
       setLoading(false);
-    } catch{
+    } catch {
       console.log("Error while fetching lesson data");
       history.push(`/dashboard/lesson-builder`)
     }
