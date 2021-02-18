@@ -99,6 +99,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     switch (currentStep) {
       case 'Overview':
         return <AddNewLessonForm
+          lessonId={lessonId}
           changeLessonType={changeLessonType}
           formData={formData}
           setFormData={setFormData}
@@ -144,7 +145,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         return {
           id: item.id,
           name: item.name,
-          value: item.name
+          value: item.name,
+          topic: item?.topic?.name
         }
       })
       setMeasurementList(filteredList);

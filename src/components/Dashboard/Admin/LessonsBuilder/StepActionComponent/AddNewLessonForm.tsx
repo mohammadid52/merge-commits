@@ -11,6 +11,7 @@ import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
 import Buttons from '../../../../Atoms/Buttons';
+import ModalPopUp from '../../../../Molecules/ModalPopUp';
 
 import { languageList } from '../../../../../utilities/staticData';
 import { InitialData, InputValueObject } from '../LessonBuilder';
@@ -23,9 +24,10 @@ interface AddNewLessonFormProps {
   setFormData: (data: InitialData) => void
   setSelectedDesigners: (designer: InputValueObject[]) => void,
   postLessonCreation: (lessonId: string) => void
-  allMeasurement: { id: number, name: string, value: string }[]
+  allMeasurement: { id: number, name: string, value: string, topic?: string }[]
   lessonMeasurements: any[]
   setLessonMeasurements: (obj: any[]) => void
+  lessonId: string
 }
 
 const AddNewLessonForm = (props: AddNewLessonFormProps) => {
@@ -39,12 +41,18 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     postLessonCreation,
     allMeasurement,
     lessonMeasurements,
-    setLessonMeasurements
+    setLessonMeasurements,
+    lessonId
   } = props;
 
   const [selectedMeasu, setSelectedMeasu] = useState({ id: '', name: '', value: '' });
   const [measurementList, setMeasurementList] = useState(allMeasurement);
   const [loading, setLoading] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState({
+    id: '',
+    state: false,
+    message: 'Are you sure you want to remove this measurement?'
+  });
   const [validation, setValidation] = useState({
     name: '',
     type: '',
@@ -98,7 +106,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       ...lessonMeasurements,
       {
         id: selectedMeasu.id,
-        measurement: selectedMeasu.name
+        measurement: selectedMeasu.name,
+        topic: allMeasurement.find(item => item.id.toString() === selectedMeasu.id)?.topic || ''
       }
     ]);
     setSelectedMeasu({ id: '', name: '', value: '' });
@@ -137,6 +146,42 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       [fieldHtml]: html,
       [field]: text
     })
+  }
+  const toggleModal = (id?: string) => {
+    setShowDeleteModal({
+      ...showDeleteModal,
+      id: (id ? id : ''),
+      state: !showDeleteModal.state
+    })
+  }
+
+  const deleteMeasurement = async () => {
+    if (showDeleteModal?.id) {
+      const filteredRubrics = [...lessonMeasurements].filter(item => item.id !== showDeleteModal?.id)
+      setLessonMeasurements([...filteredRubrics]);
+    }
+    toggleModal();
+  }
+  const saveMeasurements = async (lessonId: string, rubricsId: string) => {
+    try {
+      const input = {
+        lessonID: lessonId,
+        rubricID: rubricsId,
+      }
+      const results: any = await API.graphql(
+        graphqlOperation(customMutations.createLessonRubrics, { input: input })
+      );
+      const lessonRubric = results.data.createLessonRubrics;
+
+    } catch {
+      setValidation({
+        name: '',
+        type: '',
+        languages: '',
+        message: 'Error while adding measurement,please try later.',
+        isError: true
+      });
+    }
   }
 
   const validateForm = () => {
@@ -189,9 +234,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           graphqlOperation(customMutations.createLesson, { input: input })
         );
         const lessonsData = results?.data?.createLesson;
-        setLoading(false);
-        postLessonCreation(lessonsData?.id);
-        if (lessonsData) {
+        if (lessonsData?.id) {
+
+          let rubrics = Promise.all(
+            lessonMeasurements.map(async (item: any) => saveMeasurements(lessonsData?.id, item.id))
+          )
+          setLoading(false);
+          postLessonCreation(lessonsData?.id);
           setValidation({
             name: '',
             type: '',
@@ -299,7 +348,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                 <div className="w-4.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>Measurement</span>
                 </div>
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>Topic</span>
                 </div>
                 <div className="w-2/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -317,7 +366,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                   <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                     <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4"> {index + 1}.</div>
                     <div className="flex w-4.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.measurement} </div>
-                    <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center justify-center whitespace-normal">{item.topic}</div>
+                    <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.topic ? item.topic : '--'}</div>
                     {/* <div className="flex w-2/10 px-6 py-3 text-s leading-4 items-center justify-center">
                       <span className="cursor-pointer">
                             <CheckBox value={item.required ? true : false} onChange={() => makeQuestionRequired(item.id)} name='isRequired' />
@@ -325,7 +374,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                           Remove
                         </div> */}
                     <div className="flex w-2/10 px-8 py-3 text-s leading-4 items-center justify-center">
-                      <div className="w-6 h-6 cursor-pointer" onClick={() => console.log(item.id)}>
+                      <div className="w-6 h-6 cursor-pointer" onClick={() => toggleModal(item.id)}>
                         <IconContext.Provider value={{ size: '1.5rem', color: '#B22222' }}>
                           <FaTrash />
                         </IconContext.Provider>
@@ -346,8 +395,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         {validation.message && <div className="py-2 m-auto mt-2 text-center">
           <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
         </div>}
+        {showDeleteModal.state &&
+          <ModalPopUp deleteModal closeAction={toggleModal} saveAction={deleteMeasurement} message={showDeleteModal.message} />
+        }
         <div className="flex mb-8 mt-4 justify-center">
-          <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveFormData} disabled={loading ? true : false} />
+          <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveFormData} disabled={(loading || lessonId) ? true : false} />
         </div>
       </div>
 

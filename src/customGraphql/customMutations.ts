@@ -807,3 +807,51 @@ export const updateCheckpointQuestions = /* GraphQL */ `
     }
   }
 `;
+
+export const createLessonRubrics = /* GraphQL */ `
+  mutation CreateLessonRubrics($input: CreateLessonRubricsInput!, $condition: ModelLessonRubricsConditionInput) {
+    createLessonRubrics(input: $input, condition: $condition) {
+      id
+      lessonID
+      rubricID
+      rubric {
+        id
+        name
+        criteria
+        distinguished
+        excelled
+        adequite
+        basic
+        topicID
+        topic {
+          id
+          curriculumID
+          learningObjectiveID
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        curriculumID
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteLessonRubrics = /* GraphQL */ `
+  mutation DeleteLessonRubrics(
+    $input: DeleteLessonRubricsInput!
+    $condition: ModelLessonRubricsConditionInput
+  ) {
+    deleteLessonRubrics(input: $input, condition: $condition) {
+      id
+      lessonID
+      rubricID
+      createdAt
+      updatedAt
+    }
+  }
+`;
