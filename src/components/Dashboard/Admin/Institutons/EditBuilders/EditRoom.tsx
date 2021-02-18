@@ -527,25 +527,25 @@ const EditRoom = (props: EditRoomProps) => {
 
             <div>
               <div className="px-3 py-4">
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   Teacher  <span className="text-red-500"> *</span>
                 </label>
                 <SelectorWithAvatar selectedItem={teacher} list={teachersList} placeholder="Select teacher" onChange={selectTeacher} />
               </div>
               <div className="px-3 py-4">
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   Class Name  <span className="text-red-500"> *</span>
                 </label>
                 <Selector selectedItem={classRoom.value} placeholder="Select Class" list={classList} onChange={selectClass} />
               </div>
               <div className="px-3 py-4">
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   Curriculum
               </label>
                 <Selector selectedItem={curricular.value} placeholder="Select Curriculum" list={curricularList} onChange={selectCurriculum} />
               </div>
               <div className="px-3 py-4">
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   Max.Students (Add number between 1 to 30)  <span className="text-red-500"> *</span>
                 </label>
                 <input

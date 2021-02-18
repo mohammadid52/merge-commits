@@ -303,14 +303,14 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
 
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
-            <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+            <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
               Select Type <span className="text-red-500">*</span>
             </label>
             <Selector selectedItem={type.name} placeholder="Type" list={typeList} onChange={(val, name, id) => onSelectOption(val, name, id, 'type')} />
             {validation.type && <p className="text-red-600 text-sm">{validation.type}</p>}
           </div>
           <div>
-            <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+            <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
               Select Language
             </label>
             <Selector selectedItem={language.name} placeholder="Language" list={languageList} onChange={(val, name, id) => onSelectOption(val, name, id, 'language')} />

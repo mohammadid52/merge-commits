@@ -241,7 +241,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
                 <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Syllabus Name" isRequired />
               </div>
               <div>
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   Select Designers
                 </label>
                 <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
@@ -249,7 +249,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
             </div>
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   Select Language
               </label>
                 <MultipleSelector selectedItems={languages} placeholder="Language" list={languageList} onChange={selectLanguage} />
