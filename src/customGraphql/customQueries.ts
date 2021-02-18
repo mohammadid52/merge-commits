@@ -1709,6 +1709,12 @@ export const listLessonsTitles = /* GraphQL */ `
         type
         language
         designers
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+          stage
+        }
       }
       nextToken
     }

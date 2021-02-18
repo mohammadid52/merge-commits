@@ -10,8 +10,13 @@ interface PatternObject {
  * @param outputPattern
  */
 export const formatPattern = (pattern: string, separator: string, inputPattern: string, outputPattern: string) => {
-  if(typeof pattern === 'undefined' || typeof separator === 'undefined' || typeof inputPattern === 'undefined' || typeof outputPattern === 'undefined'){
-    return 'param undefined...'
+  if (
+    typeof pattern === 'undefined' ||
+    typeof separator === 'undefined' ||
+    typeof inputPattern === 'undefined' ||
+    typeof outputPattern === 'undefined'
+  ) {
+    return 'param undefined...';
   }
 
   const patternStringObject = pattern.split(separator);
@@ -236,11 +241,11 @@ export const reorder = (list: any, startIndex: number, endIndex: number) => {
 
 export const getClientKey = () => {
   const url = window.location.href;
-  if (url.indexOf('localhost') >= 0) return 'iconoclast'
-  if (url.indexOf('iconoclast') >= 0) return 'iconoclast'
-  if (url.indexOf('curate') >= 0) return 'curate'
-  else '' 
-}
+  if (url.indexOf('localhost') >= 0) return 'iconoclast';
+  if (url.indexOf('iconoclast') >= 0) return 'iconoclast';
+  if (url.indexOf('curate') >= 0) return 'curate';
+  else '';
+};
 
 export const getLanguageString = (language: string) => {
   switch (language) {
@@ -249,8 +254,7 @@ export const getLanguageString = (language: string) => {
     case 'ES':
       return 'Spanish';
   }
-}
-
+};
 
 export const getTypeString = (type: string) => {
   switch (type) {
@@ -265,4 +269,15 @@ export const getTypeString = (type: string) => {
     default:
       return 'Text';
   }
-}
+};
+
+export const getLessonType = (type: string) => {
+  switch (type) {
+    case 'lesson':
+      return 'Lesson';
+    case 'survey':
+      return 'Survey';
+    case 'assessment':
+      return 'Assessment';
+  }
+};
