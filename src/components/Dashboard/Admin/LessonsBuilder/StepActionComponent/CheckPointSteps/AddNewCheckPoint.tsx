@@ -346,7 +346,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
-          <span className="font-normal text-gray-600 w-auto flex-shrink-0">Add New Checkpoint</span>
+          <span className="font-normal text-gray-600 w-auto flex-shrink-0">Create New Checkpoint</span>
 
         </h4>
       </div>
