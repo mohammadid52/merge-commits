@@ -135,7 +135,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const assessmentsSurveys =
     state.roomData.lessons.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
-          if (lesson.lessonID.includes('on-boarding-survey-1') || lesson.lessonID.includes('assessment')) {
+          // if (lesson.lessonID.includes('on-boarding-survey-1') || lesson.lessonID.includes('assessment')) {
+          if (lesson.lesson.type.includes('survey') || lesson.lesson.type.includes('assessment')) {
             return lesson;
           }
         })
