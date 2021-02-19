@@ -219,8 +219,6 @@ const AnthologyContent = (props: ContentCardProps) => {
                      *  section:  VIEW/EDIT BUTTON
                      */}
                     <div className={`flex pt-2 mt-2`}>
-                      {/*<p onClick={() => handleEditToggle('view', contentObj.studentDataID)}
-                         className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}>View</p>*/}
                       {
                         viewEditMode.mode === 'edit' && viewEditMode.studentDataID === contentObj.studentDataID ?
                           (

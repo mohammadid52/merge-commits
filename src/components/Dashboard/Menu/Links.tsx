@@ -5,9 +5,11 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaRulerVertical, FaQuestionCircle } from 'react-icons/fa';
 import { AiOutlineSchedule, AiOutlineUsergroupAdd, AiOutlineBook } from 'react-icons/ai';
-import useDictionary from '../../../customHooks/dictionary';
 import { IoIosPeople } from 'react-icons/io';
 import { IoBookOutline, IoSchoolOutline } from 'react-icons/io5';
+import { BsReverseLayoutSidebarReverse} from 'react-icons/bs';
+
+import useDictionary from '../../../customHooks/dictionary';
 
 type LinkObject = {
   name: string;
@@ -117,6 +119,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
             },
           ];
         });
+      case 'TR':
       case 'FLW':
         return setLinks((links) => {
           return [
@@ -132,6 +135,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               label: 'Lesson Planner',
               path: 'lesson-planner',
+            },
+            {
+              title: sideBarLinksDict[userLanguage].NOTICEBOARD,
+              name: sideBarLinksDict[userLanguage].NOTICEBOARD,
+              label: 'Noticeboard',
+              path: 'noticeboard',
             },
           ];
         });
@@ -177,7 +186,14 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
    */
   useEffect(() => {
     if (pageUrlEndsWith('dashboard')) {
-      setCurrentPage('classroom');
+      if (role === 'FLW' || role === 'TR') {
+        setCurrentPage('lesson-planner');
+      } else if (role === 'ST') {
+        setCurrentPage('classroom');
+      } else {
+        setCurrentPage('manage-institutions');
+      }
+
     }
     if (pageUrlContains('/dashboard/manage-users')) {
       setCurrentPage('manage-users');
@@ -199,6 +215,9 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     }
     if (pageUrlContains('/dashboard/anthology')) {
       setCurrentPage('anthology');
+    }
+    if (pageUrlContains('/dashboard/noticeboard')) {
+      setCurrentPage('noticeboard');
     }
     if (pageUrlContains('/dashboard/assessments')) {
       setCurrentPage('assessments');
@@ -232,6 +251,8 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         return <IoSchoolOutline id={url} />;
       case 'Anthology':
         return <AiOutlineBook id={url} />;
+      case 'Noticeboard':
+        return <BsReverseLayoutSidebarReverse id={url} />
       default:
         return '';
     }

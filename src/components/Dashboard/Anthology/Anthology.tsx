@@ -243,6 +243,10 @@ const Anthology = () => {
     manageSaveAndCreate();
   }, [viewEditMode]);
 
+  const getTranslation = Object.keys(anthologyDict[userLanguage].TABS).map((key: any) => {
+    return anthologyDict[userLanguage].TABS[key];
+  })
+
   // RETURN
   return (
     <React.Fragment>
@@ -257,6 +261,7 @@ const Anthology = () => {
         subSection={subSection}
         handleTabClick={handleTabClick}
         subSectionList={['Journal', 'Stories', 'Poems']}
+        translations={getTranslation}
       />
       {/*<SectionTitle title={subSection} />*/}
       {/*
