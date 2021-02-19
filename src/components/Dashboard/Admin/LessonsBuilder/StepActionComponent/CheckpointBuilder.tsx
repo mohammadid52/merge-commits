@@ -236,9 +236,17 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           lessonPlan: lessonPlansInput
         }
       }));
+      const deletedlessonCheckp = result?.data?.updateLesson?.checkpoints;
+      const deletedlessonCheckpId = deletedlessonCheckp?.items.find((obj: any) => obj.checkpointID === checkpId).id;
+      if (deletedlessonCheckpId) {
+        const result: any = await API.graphql(graphqlOperation(customMutations.deleteLessonCheckpoint, {
+          input: {
+            id: deletedlessonCheckpId,
+          }
+        }))
+      }
       const updatedPlan = result?.data?.updateLesson?.lessonPlan;
       if (updatedPlan) {
-        // const lessonPlanIds = updatedPlan.map((item: any) => item.LessonComponentID)
         const updatedList = updatedPlan.map((item: any) => {
           const checkpointDetails = allCheckPointsList.find(checkp => checkp.id === item.LessonComponentID)
           return {
@@ -246,7 +254,6 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
             ...checkpointDetails
           };
         })
-        // const remainingCheckps = allCheckPointsList.filter(item => !lessonPlanIds.includes(item.id))
 
         setSavedCheckpoints(() => {
           updateLessonPlan(updatedPlan);
@@ -321,6 +328,22 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     }
   }
 
+  // Update data in lesson checkpoint table.
+  const saveLessonCheckpointMutation = async (checkpointID: string) => {
+    try {
+      let lessonCheckpointInput = {
+        lessonID: lessonID,
+        checkpointID: checkpointID,
+        position: 0,
+      }
+      await API.graphql(graphqlOperation(customMutations.createLessonCheckpoint, {
+        input: lessonCheckpointInput
+      }))
+    } catch {
+      setError(true);
+    }
+  }
+
   const saveCheckpoints = async (selectedId: string[]) => {
     if (selectedId?.length > 0) {
       const updatedList = fileredCheckpointList.filter(item => selectedId.includes(item.id));
@@ -339,6 +362,9 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
         ...newCkeckpoints
       ]
       await updateMultiLessonPlans(lessonComponentPlans, remainingCheckp);
+      let lessonCheckpoints = Promise.all(
+        updatedList.map(async (item: any) => saveLessonCheckpointMutation(item.id))
+      )
     }
   }
 

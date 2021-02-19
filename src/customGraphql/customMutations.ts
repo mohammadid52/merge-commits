@@ -686,6 +686,17 @@ export const updateLesson = /* GraphQL */ `
         sequence
         stage
       }
+      checkpoints {
+        items {
+          id
+          lessonID
+          checkpointID
+          position
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
     }
   }
 `;
@@ -759,6 +770,20 @@ export const createLessonCheckpoint = /* GraphQL */ `
       id
       lessonID
       checkpointID
+    }
+  }
+`;
+
+export const deleteLessonCheckpoint = /* GraphQL */ `
+  mutation DeleteLessonCheckpoint(
+    $input: DeleteLessonCheckpointInput!
+    $condition: ModelLessonCheckpointConditionInput
+  ) {
+    deleteLessonCheckpoint(input: $input, condition: $condition) {
+      id
+      lessonID
+      checkpointID
+      position
     }
   }
 `;
