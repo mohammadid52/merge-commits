@@ -14,6 +14,7 @@ import SideWidgetBar from './SideWidgetBar/SideWidgetBar';
 import SideRoomSelector from './Menu/SideRoomSelector';
 import { copyLessonPlans } from '../../uniqueScripts/CopyLessonPlans_to_SyllabusLessons';
 import { initRosterSyllabusLessons } from '../../uniqueScripts/InitRoster_in_SyllabusLessons';
+import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -212,6 +213,7 @@ const Dashboard = (props: DashboardProps) => {
                 )}
               />
               <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
+              <Route path={`${match.url}/noticeboard`} render={() => <NoticeboardAdmin />} />
               <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
               <Route path={`${match.url}/registration`} render={() => <Registration />} />
               <Route path={`${match.url}/profile`} render={() => <Profile />} />
