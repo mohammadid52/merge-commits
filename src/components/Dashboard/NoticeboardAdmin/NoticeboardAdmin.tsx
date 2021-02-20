@@ -8,19 +8,26 @@ import * as mutations from '../../../graphql/mutations';
 import * as customMutations from '../../../customGraphql/customMutations';
 import useDictionary from '../../../customHooks/dictionary';
 import NoticeboardAdminContent from './NoticeboardAdminContent';
+import { AnthologyMapItem } from '../Anthology/Anthology';
 
 export interface NoticeboardAdmin {
 
 }
 
+export interface Quote {
+  text: string;
+  author: String;
+}
+
 export interface NoticeboardWidgetMapItem {
   id: string;
   teacherID: string;
-  placement: 'sidebar' | 'topbar';
+  type: string;
+  placement: string;
   title: string;
   description: string;
-  content: string;
-  image: string;
+  content?: { text: string; image: string; };
+  quotes?: Quote[];
   active: boolean;
 }
 
@@ -33,24 +40,157 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   const {} = props;
   const { state, userLanguage, clientKey } = useContext(GlobalContext);
   const {} = useDictionary(clientKey);
+  const [widgetData, setWidgetData] = useState<NoticeboardWidgetMapItem[]>([]);
+  const [newWidgetData, setNewWidgetData] = useState<NoticeboardWidgetMapItem>();
 
   // For switching sections & knowing which field to edit
   const [subSection, setSubSection] = useState<string>('Sidebar Widgets');
   // For editing specific poems/stories
   const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({ mode: '', widgetID: '' });
 
+  useEffect(() => {
+    const widgetFetchData = [
+      {
+        id: '1',
+        teacherID: 'teacher_1',
+        type: 'default',
+        placement: 'sidebar',
+        title: 'title_1',
+        description: 'short description 1',
+        content: {
+          text: 'any content text',
+          image: '',
+        },
+        active: true,
+      }, {
+        id: '2',
+        teacherID: 'teacher_1',
+        type: 'default',
+        placement: 'sidebar',
+        title: 'title_2',
+        description: 'short description 2',
+        content: {
+          text: 'any content text',
+          image: '',
+        },
+        active: true,
+      }, {
+        id: '3',
+        teacherID: 'teacher_1',
+        type: 'default',
+        placement: 'sidebar',
+        title: 'title_3',
+        description: 'short description 3',
+        content: {
+          text: 'any content text',
+          image: '',
+        },
+        active: false,
+      }, {
+        id: '4',
+        teacherID: 'teacher_1',
+        type: 'default',
+        placement: 'topbar',
+        title: 'title_4',
+        description: 'short description 4',
+        content: {
+          text: 'any content text',
+          image: '',
+        },
+        active: true,
+      }, {
+        id: '5',
+        teacherID: 'teacher_1',
+        type: 'quote',
+        placement: 'topbar',
+        title: 'title_5_quotes',
+        description: 'quote description',
+        content: {
+          text: 'any content text',
+          image: '',
+        },
+        quotes:
+          [
+            {
+              text: 'quote 1',
+              author: 'quote author 1',
+            },
+            {
+              text: 'quote 2',
+              author: 'quote author 2',
+            },
+            {
+              text: 'quote 3',
+              author: 'quote author 3',
+            },
+          ],
+        active: true,
+      },
+    ];
+    setWidgetData(widgetFetchData);
+  }, []);
 
   // Function group to handle updating student data
   const handleEditUpdate = (e: React.ChangeEvent) => {
-    const { id, value } = e.target as HTMLInputElement;
-    const [key, type, widgetID] = id.split('_');
+    const target = e.target as any;
+    const { id, value } = target;
+    const basekey = e.target.getAttribute('data-basekey');
+    const nestkey1 = e.target.getAttribute('data-nestkey1');
+    const nestkey2 = e.target.getAttribute('data-nestkey2');
 
-    console.log('update --> ', widgetID);
+    switch (viewEditMode.mode) {
+      case 'edit':
+        const updatedWidgetData = widgetData.reduce((acc: NoticeboardWidgetMapItem[], widgetObj: any) => {
+          if (widgetObj.id === id) {
+            if (basekey && nestkey1) {
+              if (Array.isArray(widgetObj[basekey])) {
+                return [...acc, {
+                  ...widgetObj, [basekey]:
+                    widgetObj[basekey].map((nestedObj: any, idx: number) => {
+                      if (idx === parseInt(nestkey2)) {
+                        return { ...nestedObj, [nestkey1]: value };
+                      } else {
+                        return nestedObj;
+                      }
+                    }),
+
+                }];
+              }
+              if (typeof widgetObj[basekey] === 'object' && Object.keys(widgetObj[basekey]).length > 0 && !Array.isArray(widgetObj[basekey])) {
+                return [...acc, { ...widgetObj, [basekey]: { [nestkey1]: value } }];
+              }
+            } else {
+              return [...acc, { ...widgetObj, [basekey]: value }];
+            }
+          } else {
+            return [...acc, widgetObj];
+          }
+        }, []);
+        setWidgetData(updatedWidgetData);
+        break;
+      case 'create':
+        if (viewEditMode.mode === 'create') {
+          const updatedNewWidgetData = { ...newWidgetData, [basekey]: value };
+          setNewWidgetData(updatedNewWidgetData);
+        }
+        break;
+    }
   };
 
 
   const handleEditToggle = (editMode: ViewEditMode['mode'], widgetID: string) => {
     setViewEditMode({ mode: editMode, widgetID: widgetID });
+  };
+
+  const handleActivation = (id: string) => {
+    const updatedWidgetData = widgetData.reduce((acc: NoticeboardWidgetMapItem[], widgetObj: any) => {
+      if (widgetObj.id === id) {
+        return [...acc, { ...widgetObj, active: !widgetObj.active }];
+      } else {
+        return [...acc, widgetObj];
+      }
+    }, []);
+    setWidgetData(updatedWidgetData);
   };
 
 
@@ -71,49 +211,10 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     'Sidebar Widgets': 'sidebar',
   };
 
-  const widgetData = [
-    {
-      id: '1',
-      teacherID: 'teacher_1',
-      placement: 'sidebar',
-      title: 'title_1',
-      description: 'short description 1',
-      content: 'here is some content',
-      image: '',
-      active: true,
-    }, {
-      id: '2',
-      teacherID: 'teacher_1',
-      placement: 'sidebar',
-      title: 'title_2',
-      description: 'short description 2',
-      content: 'here is some content',
-      image: '',
-      active: true,
-    }, {
-      id: '3',
-      teacherID: 'teacher_1',
-      placement: 'sidebar',
-      title: 'title_3',
-      description: 'short description 3',
-      content: 'here is some content',
-      image: '',
-      active: false,
-    }, {
-      id: '4',
-      teacherID: 'teacher_1',
-      placement: 'topbar',
-      title: 'title_4',
-      description: 'short description 4',
-      content: 'here is some content',
-      image: '',
-      active: true,
-    },
-  ];
 
   const filterWidgetContentBySubsection = widgetData.filter((widgetObj: NoticeboardWidgetMapItem) => {
-    if(widgetObj.placement === subSectionKey[subSection]) return widgetObj;
-  })
+    if (widgetObj.placement === subSectionKey[subSection]) return widgetObj;
+  });
 
   return (
     <React.Fragment>
@@ -128,7 +229,9 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
                       handleTabClick={handleTabClick} />
 
       <NoticeboardAdminContent viewEditMode={viewEditMode} handleEditToggle={handleEditToggle}
-                               handleEditUpdate={handleEditUpdate} subSection={subSection} content={widgetData.length > 0 && filterWidgetContentBySubsection} />
+                               handleEditUpdate={handleEditUpdate} handleActivation={handleActivation}
+                               subSection={subSection}
+                               content={widgetData.length > 0 && filterWidgetContentBySubsection} />
 
     </React.Fragment>
   );
