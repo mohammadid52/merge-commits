@@ -204,7 +204,8 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         );
         // console.log('classroom data', classroom);
         setLesson(classroom.data.getSyllabusLesson);
-        getOrCreateStudentData();
+        console.log(classroom.data.getSyllabusLesson)
+        // getOrCreateStudentData();
         subscription = subscribeToSyllabusLesson();
       } catch (error) {
         console.error(error);

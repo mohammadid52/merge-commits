@@ -197,6 +197,7 @@ const sideBarLinksDict: any = {
         CLASSROOM: 'Classroom',
         LESSON_BUILDER: 'Lesson Builder',
         ANTHOLOGY: 'Notebook',
+        NOTICEBOARD: 'Noticeboard'
     },
     'ES': {
         REGISTRATION: 'Registro',
@@ -206,6 +207,7 @@ const sideBarLinksDict: any = {
         CLASSROOM: 'Aula',
         LESSON_BUILDER: 'Constructor de lecciones',
         ANTHOLOGY: 'Cuaderno',
+        NOTICEBOARD: 'Tablón de anuncios'
     }
 }
 
