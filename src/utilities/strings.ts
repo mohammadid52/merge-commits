@@ -281,3 +281,20 @@ export const getLessonType = (type: string) => {
       return 'Assessment';
   }
 };
+
+export const getUserRoleString = (role: string) => {
+  switch (role) {
+    case 'ADM':
+      return 'Admin';
+    case 'BLD':
+      return 'Builder';
+    case 'FLW':
+      return 'Fellow';
+    case 'CRD':
+      return 'Coordinator';
+    case 'TR':
+      return 'Teacher';
+    case 'ST':
+      return 'Student';
+  }
+};
