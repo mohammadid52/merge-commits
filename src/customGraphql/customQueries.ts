@@ -1,3 +1,8 @@
+export const getCP = /* GraphQL */
+`
+  
+`;
+
 export const getPerson = /* GraphQL */ `
   query GetPerson($email: String!, $authId: String!) {
     getPerson(email: $email, authId: $authId) {
