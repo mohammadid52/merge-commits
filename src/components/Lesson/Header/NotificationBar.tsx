@@ -34,24 +34,24 @@ const NotificationBar: React.FC = () => {
       notifications.filter((notification: Notification) => notification.type.includes('breakdown')).length > 0;
 
     //  FOR BREAKDOWN SHARING NOTIFICATION
-    if (state.displayData) {
-      if (
-        state.displayData.breakdownComponent !== null &&
-        state.displayData.breakdownComponent !== '' &&
-        !containsBreakdownMessage
-      ) {
-        setNotifications([
-          ...notifications,
-          { message: 'The teacher is requesting you to come to the breakdown!', type: 'breakdown' },
-        ]);
-      } else if (
-        state.displayData.breakdownComponent === null ||
-        state.displayData.breakdownComponent === '' ||
-        state.displayData.breakdownComponent === state.pages[state.currentPage].stage
-      ) {
-        setNotifications(notifications.filter((notification: Notification) => notification.type !== 'breakdown'));
-      }
-    }
+    // if (state.displayData) {
+    //   if (
+    //     state.displayData.breakdownComponent !== null &&
+    //     state.displayData.breakdownComponent !== '' &&
+    //     !containsBreakdownMessage
+    //   ) {
+    //     setNotifications([
+    //       ...notifications,
+    //       { message: 'The teacher is requesting you to come to the breakdown!', type: 'breakdown' },
+    //     ]);
+    //   } else if (
+    //     state.displayData.breakdownComponent === null ||
+    //     state.displayData.breakdownComponent === '' ||
+    //     state.displayData.breakdownComponent === state.pages[state.currentPage].stage
+    //   ) {
+    //     setNotifications(notifications.filter((notification: Notification) => notification.type !== 'breakdown'));
+    //   }
+    // }
   }, [state.displayData, state.currentPage]);
 
   return (
