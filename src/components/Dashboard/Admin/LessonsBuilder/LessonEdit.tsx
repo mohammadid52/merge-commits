@@ -73,10 +73,12 @@ const LessonEdit = (props: LessonEditProps) => {
   const [savedLessonDetails, setSavedLessonDetails] = useState<SavedLessonDetailsProps>({
     lessonPlans: null,
     lessonInstructions: instructionInitialState
-  })
+  });
+  const [measurementList, setMeasurementList] = useState([]);
+  const [selectedMeasurement, setSelectedMeasurement] = useState([]);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   // const [activeStep, setActiveStep] = useState('Builder');
-  const [activeStep, setActiveStep] = useState('General Information');
+  const [activeStep, setActiveStep] = useState('Overview');
   const [loading, setLoading] = useState(false);
 
   const breadCrumsList = [
@@ -89,13 +91,13 @@ const LessonEdit = (props: LessonEditProps) => {
     },
   ]
   const assessmentScrollerStep = [
-    { name: "General Information", icon: <IoCardSharp /> },
+    { name: "Overview", icon: <IoCardSharp /> },
     { name: "Instructions", icon: <IoDocumentText /> },
     { name: "Builder", icon: <FaQuestionCircle /> },
     { name: "Preview Details", icon: <FaRegEye /> }
   ];
   const lessonScrollerStep = [
-    { name: "General Information", icon: <IoCardSharp /> },
+    { name: "Overview", icon: <IoCardSharp /> },
     { name: "Preview Details", icon: <FaRegEye /> }
   ];
 
@@ -106,6 +108,24 @@ const LessonEdit = (props: LessonEditProps) => {
   ];
   const goBack = () => {
     history.push('/dashboard/lesson-builder')
+  }
+
+  const fetchMeasurementList = async () => {
+    try {
+      let list: any = await API.graphql(graphqlOperation(customQueries.listRubrics));
+      list = list.data.listRubrics?.items || []
+      const measuList = list.sort((a: any, b: any) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
+      const filteredList = measuList.map((item: any) => {
+        return {
+          id: item.id,
+          name: item.name,
+          value: item.name
+        }
+      })
+      setMeasurementList(filteredList);
+    } catch {
+      console.log("Error while fetching lesson data");
+    }
   }
 
   const fetchLessonDetails = async () => {
@@ -124,7 +144,7 @@ const LessonEdit = (props: LessonEditProps) => {
       });
       setSavedLessonDetails({
         ...savedLessonDetails,
-        lessonPlans: savedData.lessonPlan,
+        lessonPlans: savedData.lessonPlan?.sort((a: any, b: any) => a?.sequence - b?.sequence),
         lessonInstructions: {
           introductionTitle: savedData.introductionTitle,
           instructionsTitle: savedData.instructionsTitle,
@@ -137,7 +157,7 @@ const LessonEdit = (props: LessonEditProps) => {
       const designers = designersList.filter((item: any) => savedData?.designers?.includes(item.id));
       setSelectedDesigners(designers)
       setLoading(false);
-    } catch{
+    } catch {
       console.log("Error while fetching lesson data");
       history.push(`/dashboard/lesson-builder`)
     }
@@ -150,6 +170,7 @@ const LessonEdit = (props: LessonEditProps) => {
     } else {
       setLoading(true)
       fetchLessonDetails();
+      fetchMeasurementList();
     }
   }
 
@@ -172,7 +193,7 @@ const LessonEdit = (props: LessonEditProps) => {
 
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
-      case 'General Information':
+      case 'Overview':
         return <GeneralInformation
           formData={formData}
           setFormData={setFormData}
@@ -180,6 +201,9 @@ const LessonEdit = (props: LessonEditProps) => {
           selectedDesigners={selectedDesigners}
           setSelectedDesigners={setSelectedDesigners}
           lessonId={lessonId || assessmentId}
+          allMeasurement={measurementList}
+          lessonMeasurements={selectedMeasurement}
+          setLessonMeasurements={setSelectedMeasurement}
         />;
       case 'Instructions':
         return <AssessmentInstuctions

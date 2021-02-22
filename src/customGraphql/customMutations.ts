@@ -634,44 +634,38 @@ export const createRoomMsgs = /* GraphQL */ `
   }
 `;
 export const createLesson = /* GraphQL */ `
-mutation CreateLesson(
-  $input: CreateLessonInput!
-    $condition: ModelLessonConditionInput
-) {
-  createLesson(input: $input, condition: $condition) {
-    id
-    title
-    type
-    label
-    artistID
-    language
-    purpose
-    designers
-    objectives
-    doFirstID
-    warmUpId
-    coreLessonId
-    activityId
-    assessmentID
+  mutation CreateLesson($input: CreateLessonInput!, $condition: ModelLessonConditionInput) {
+    createLesson(input: $input, condition: $condition) {
+      id
+      title
+      type
+      label
+      artistID
+      language
+      purpose
+      designers
+      objectives
+      doFirstID
+      warmUpId
+      coreLessonId
+      activityId
+      assessmentID
+    }
   }
-}
 `;
 
 export const updateRoomMsgs = /* GraphQL */ `
-mutation UpdateRoomMsgs($input: UpdateRoomMsgsInput!, $condition: ModelRoomMsgsConditionInput) {
-  updateRoomMsgs(input: $input, condition: $condition) {
-    id
-    body
-    createdAt
-    updatedAt
+  mutation UpdateRoomMsgs($input: UpdateRoomMsgsInput!, $condition: ModelRoomMsgsConditionInput) {
+    updateRoomMsgs(input: $input, condition: $condition) {
+      id
+      body
+      createdAt
+      updatedAt
+    }
   }
-}
 `;
 export const updateLesson = /* GraphQL */ `
-mutation UpdateLesson(
-  $input: UpdateLessonInput!
-    $condition: ModelLessonConditionInput
-  ) {
+  mutation UpdateLesson($input: UpdateLessonInput!, $condition: ModelLessonConditionInput) {
     updateLesson(input: $input, condition: $condition) {
       id
       title
@@ -692,36 +686,41 @@ mutation UpdateLesson(
         sequence
         stage
       }
+      checkpoints {
+        items {
+          id
+          lessonID
+          checkpointID
+          position
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
     }
   }
 `;
 
 export const deleteRoomMsgs = /* GraphQL */ `
-mutation DeleteRoomMsgs($input: DeleteRoomMsgsInput!, $condition: ModelRoomMsgsConditionInput) {
-  deleteRoomMsgs(input: $input, condition: $condition) {
-    id
+  mutation DeleteRoomMsgs($input: DeleteRoomMsgsInput!, $condition: ModelRoomMsgsConditionInput) {
+    deleteRoomMsgs(input: $input, condition: $condition) {
+      id
+    }
   }
-}
 `;
 
 export const updateAssessment = /* GraphQL */ `
-mutation UpdateAssessment(
-  $input: UpdateAssessmentInput!
-    $condition: ModelAssessmentConditionInput
-) {
-  updateAssessment(input: $input, condition: $condition) {
-    id
-    title
-    type
+  mutation UpdateAssessment($input: UpdateAssessmentInput!, $condition: ModelAssessmentConditionInput) {
+    updateAssessment(input: $input, condition: $condition) {
+      id
+      title
+      type
+    }
   }
-}
 `;
 
 export const createCheckpoint = /* GraphQL */ `
-  mutation CreateCheckpoint(
-    $input: CreateCheckpointInput!
-    $condition: ModelCheckpointConditionInput
-  ) {
+  mutation CreateCheckpoint($input: CreateCheckpointInput!, $condition: ModelCheckpointConditionInput) {
     createCheckpoint(input: $input, condition: $condition) {
       id
       label
@@ -734,6 +733,28 @@ export const createCheckpoint = /* GraphQL */ `
       objectives
       designers
       language
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const updateCheckpoint = /* GraphQL */ `
+  mutation UpdateCheckpoint($input: UpdateCheckpointInput!, $condition: ModelCheckpointConditionInput) {
+    updateCheckpoint(input: $input, condition: $condition) {
+      id
+      label
+      title
+      subtitle
+      stage
+      type
+      instructionsTitle
+      instructions
+      purpose
+      objectives
+      designers
+      language
+      estTime
       createdAt
       updatedAt
     }
@@ -753,6 +774,20 @@ export const createLessonCheckpoint = /* GraphQL */ `
   }
 `;
 
+export const deleteLessonCheckpoint = /* GraphQL */ `
+  mutation DeleteLessonCheckpoint(
+    $input: DeleteLessonCheckpointInput!
+    $condition: ModelLessonCheckpointConditionInput
+  ) {
+    deleteLessonCheckpoint(input: $input, condition: $condition) {
+      id
+      lessonID
+      checkpointID
+      position
+    }
+  }
+`;
+
 export const createCheckpointQuestions = /* GraphQL */ `
   mutation CreateCheckpointQuestions(
     $input: CreateCheckpointQuestionsInput!
@@ -763,6 +798,85 @@ export const createCheckpointQuestions = /* GraphQL */ `
       checkpointID
       questionID
       required
+    }
+  }
+`;
+
+export const deleteCheckpointQuestions = /* GraphQL */ `
+  mutation DeleteCheckpointQuestions(
+    $input: DeleteCheckpointQuestionsInput!
+    $condition: ModelCheckpointQuestionsConditionInput
+  ) {
+    deleteCheckpointQuestions(input: $input, condition: $condition) {
+      id
+      checkpointID
+      questionID
+      required
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCheckpointQuestions = /* GraphQL */ `
+  mutation UpdateCheckpointQuestions(
+    $input: UpdateCheckpointQuestionsInput!
+    $condition: ModelCheckpointQuestionsConditionInput
+  ) {
+    updateCheckpointQuestions(input: $input, condition: $condition) {
+      id
+      checkpointID
+      questionID
+      required
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const createLessonRubrics = /* GraphQL */ `
+  mutation CreateLessonRubrics($input: CreateLessonRubricsInput!, $condition: ModelLessonRubricsConditionInput) {
+    createLessonRubrics(input: $input, condition: $condition) {
+      id
+      lessonID
+      rubricID
+      rubric {
+        id
+        name
+        criteria
+        distinguished
+        excelled
+        adequite
+        basic
+        topicID
+        topic {
+          id
+          curriculumID
+          learningObjectiveID
+          name
+          description
+          createdAt
+          updatedAt
+        }
+        curriculumID
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteLessonRubrics = /* GraphQL */ `
+  mutation DeleteLessonRubrics(
+    $input: DeleteLessonRubricsInput!
+    $condition: ModelLessonRubricsConditionInput
+  ) {
+    deleteLessonRubrics(input: $input, condition: $condition) {
+      id
+      lessonID
+      rubricID
+      createdAt
+      updatedAt
     }
   }
 `;

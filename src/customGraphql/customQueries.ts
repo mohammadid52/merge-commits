@@ -1709,6 +1709,12 @@ export const listLessonsTitles = /* GraphQL */ `
         type
         language
         designers
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+          stage
+        }
       }
       nextToken
     }
@@ -1876,6 +1882,9 @@ export const getLesson = /* GraphQL */ `
         sequence
         stage
       }
+      measurements {
+        nextToken
+      }
     }
   }
 `;
@@ -1888,6 +1897,26 @@ export const listCheckpoints = /* GraphQL */ `
         title
         subtitle
         language
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listLessonRubricss = /* GraphQL */ `
+  query ListLessonRubricss($filter: ModelLessonRubricsFilterInput, $limit: Int, $nextToken: String) {
+    listLessonRubricss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        lessonID
+        rubricID
+        rubric {
+          id
+          name
+          topicID
+        }
+        createdAt
+        updatedAt
       }
       nextToken
     }

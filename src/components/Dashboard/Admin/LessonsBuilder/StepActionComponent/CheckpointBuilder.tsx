@@ -7,11 +7,14 @@ import EditCheckPoint from './CheckPointSteps/EditCheckPoint';
 import AddNewQuestion from './CheckPointSteps/AddNewQuestion';
 import QuestionLookup from './CheckPointSteps/QuestionLookup';
 import SelectedCheckPointsList from './CheckPointSteps/SelectedCheckPointsList';
+import EditQuestion from './CheckPointSteps/EditQuestion';
 import { LessonPlansProps } from '../LessonEdit';
+import { InitialData } from './CheckPointSteps/AddNewCheckPoint';
 
 import * as queries from '../../../../../graphql/queries';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
+import { reorder, createFilterToFetchSpecificItemsOnly } from '../../../../../utilities/strings';
 
 interface CheckpointBuilderProps {
   designersList?: { id: string, name: string, value: string }[]
@@ -21,7 +24,13 @@ interface CheckpointBuilderProps {
 }
 
 // TODO: Replace type any with actual type wherever required.
-// TODO: Add comments to entire lesson builder component flow.
+
+
+/** 
+ * This coponent is responsible for rendering all components for 
+ * checkpoint builder ( Step 3 in Assessment builder)
+ */
+
 
 const CheckpointBuilder = (props: CheckpointBuilderProps) => {
   const { designersList, lessonID, lessonPlans, updateLessonPlan } = props;
@@ -44,10 +53,10 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
   const [fileredCheckpointList, setFilteredCheckpointList] = useState([]);
   const [savedCheckPoints, setSavedCheckpoints] = useState([]);
   const [parentLessonPlans, setParentLessonPlans] = useState(lessonPlans);
-  const [checkpointDetails, setCheckpointDetails] = useState(initialCheckpData);
+  const [checkpointDetails, setCheckpointDetails] = useState<InitialData>(initialCheckpData);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [checkpQuestions, setCheckpQuestions] = useState([]);
-
+  const [previouslySelectedId, setPreviouslySelectedId] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false)
 
@@ -56,14 +65,16 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     { id: 2, name: 'Spanish', value: 'ES' },
   ];
 
+  // Funtion to render diffrent components based on states.
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
       case 'SelectedCheckPointsList':
         return <SelectedCheckPointsList
           changeStep={changeBuilderStep}
           activeCheckpoints={savedCheckPoints}
-          DeleteCheckpoint={DeleteCheckpoint}
+          DeleteCheckpoint={(id) => DeleteCheckpoint(id, lessonPlans)}
           editCheckPoint={fetchCheckDetails}
+          onDragEnd={onDragEnd}
         />;
       case 'CheckpointLookup':
         return <CheckpointLookup
@@ -98,33 +109,52 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           selectedDesigners={selectedDesigners}
           setSelectedDesigners={setSelectedDesigners}
           checkpQuestions={checkpQuestions}
-          setCheckpQuestions={setCheckpQuestions} />;
+          setCheckpQuestions={setCheckpQuestions}
+          previouslySelectedId={previouslySelectedId} />;
 
       case 'AddNewQuestion':
-        return <AddNewQuestion changeStep={changeBuilderStep} setCheckpQuestions={onAddNewQuestion} />;
+        return <AddNewQuestion changeStep={changeBuilderStep} setCheckpQuestions={onAddNewQuestion} goBackToPreviousStep={goBackToPreviousStep} />;
       case 'QuestionLookup':
-        return <QuestionLookup selecteList={checkpQuestions} changeStep={changeBuilderStep} onSave={saveQuestionsList} />;
+        return <QuestionLookup selecteList={checkpQuestions} changeStep={changeBuilderStep} onSave={saveQuestionsList} goBackToPreviousStep={goBackToPreviousStep} />;
+      // case 'EditQuestion':
+      //   return <EditQuestion changeStep={changeBuilderStep} setCheckpQuestions={onAddNewQuestion} />;
       default:
         return <SelectedCheckPointsList
           changeStep={changeBuilderStep}
           activeCheckpoints={savedCheckPoints}
-          DeleteCheckpoint={DeleteCheckpoint}
+          DeleteCheckpoint={(id) => DeleteCheckpoint(id, lessonPlans)}
           editCheckPoint={fetchCheckDetails}
+          onDragEnd={onDragEnd}
         />;
     }
   }
 
+  // To change step inside checkpoint builder.
   const changeBuilderStep = (step: string) => {
     setBuilderStep(step)
   }
+
+  // Remember questions selected questions list from question lookup while creating new checkpoint.
   const saveQuestionsList = (list: any[]) => {
-    setCheckpQuestions([...list])
-    setBuilderStep('AddNewCheckPoint');
+    setCheckpQuestions([...list]);
+    goBackToPreviousStep()
   }
+
+  // Moving to add/edit checkpoint view from question lookup
+  const goBackToPreviousStep = () => {
+    if (checkpointDetails?.id) {
+      setBuilderStep('EditCheckPoint');
+    } else {
+      setBuilderStep('AddNewCheckPoint');
+    }
+  }
+  // Create new question while creating new checkpoint.
   const onAddNewQuestion = (obj: any) => {
     setCheckpQuestions([...checkpQuestions, obj]);
-    setBuilderStep('AddNewCheckPoint');
+    goBackToPreviousStep()
   }
+
+  // Update list after creating new checkpoint.
   const onNewCheckpCreation = (newLessonPlans: any, newData: any) => {
     updateLessonPlan(newLessonPlans);
     setSavedCheckpoints([
@@ -133,6 +163,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     ])
   }
 
+  // To fetch checkpoint details for edit checkpoint view.
   const fetchCheckDetails = async (checkpId: string) => {
     try {
       setLoading(true);
@@ -147,6 +178,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
         const selectedLanguage: any = languageList.find(item => item.value === results.language);
         setCheckpointDetails({
           ...checkpointDetails,
+          id: checkpId,
           title: results.title,
           subtitle: results.subtitle,
           label: results.label,
@@ -155,8 +187,28 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           objectiveHtml: results.objectives,
           instructionHtml: results.instructions,
           language: selectedLanguage,
+          checkpQuestions: results?.questions?.items
         });
         setSelectedDesigners(designers);
+        const checkpointQuestions = results?.questions?.items;
+        const quesionsListIds = checkpointQuestions.map((item: { questionID: string }) => item.questionID);
+        if (quesionsListIds?.length > 0) {
+          const results: any = await API.graphql(graphqlOperation(queries.listQuestions, {
+            filter: { ...createFilterToFetchSpecificItemsOnly(quesionsListIds, 'id') }
+          }));
+          const questionsList: any = results.data.listQuestions.items
+          const questionsWithState = questionsList.map((item: any) => {
+            return {
+              ...item,
+              required: checkpointQuestions.find((que: any) => que.questionID === item.id)?.required || false
+            }
+          })
+          setCheckpQuestions(questionsWithState);
+          setPreviouslySelectedId(quesionsListIds);
+        }
+        else {
+          setCheckpQuestions([])
+        }
       }
       setLoading(false);
     } catch (error) {
@@ -166,9 +218,17 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     }
   }
 
-  const DeleteCheckpoint = async (checkpId: string) => {
-    console.log("parentLessonPlans", parentLessonPlans)
-    const lessonPlansInput = parentLessonPlans.filter((item) => item.LessonComponentID !== checkpId)
+  // Delete selected checkpoint from Assessment/Survey.
+  const DeleteCheckpoint = async (checkpId: string, lessonPlans: LessonPlansProps[]) => {
+    let previousList = [...lessonPlans];
+    const selectedItem = previousList.find((item) => item.LessonComponentID === checkpId)
+    const lessonPlansInput = previousList.filter((item) => item.LessonComponentID !== checkpId)
+      .map(item => {
+        if (item.sequence > selectedItem.sequence) {
+          item.sequence = item?.sequence - 1
+        }
+        return item
+      });
     try {
       const result: any = await API.graphql(graphqlOperation(customMutations.updateLesson, {
         input: {
@@ -176,9 +236,17 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           lessonPlan: lessonPlansInput
         }
       }));
+      const deletedlessonCheckp = result?.data?.updateLesson?.checkpoints;
+      const deletedlessonCheckpId = deletedlessonCheckp?.items.find((obj: any) => obj.checkpointID === checkpId).id;
+      if (deletedlessonCheckpId) {
+        const result: any = await API.graphql(graphqlOperation(customMutations.deleteLessonCheckpoint, {
+          input: {
+            id: deletedlessonCheckpId,
+          }
+        }))
+      }
       const updatedPlan = result?.data?.updateLesson?.lessonPlan;
       if (updatedPlan) {
-        const lessonPlanIds = updatedPlan.map((item: any) => item.LessonComponentID)
         const updatedList = updatedPlan.map((item: any) => {
           const checkpointDetails = allCheckPointsList.find(checkp => checkp.id === item.LessonComponentID)
           return {
@@ -186,18 +254,51 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
             ...checkpointDetails
           };
         })
-        const remainingCheckps = allCheckPointsList.filter(item => !lessonPlanIds.includes(item.id))
 
-        // IN PROGRESS...
-        setSavedCheckpoints(updatedList);
-        // setFilteredCheckpointList(remainingCheckps);
-        updateLessonPlan(updatedPlan);
-        // setParentLessonPlans(updatedPlan);
-        console.info(updatedPlan, updatedList, remainingCheckps);
-
+        setSavedCheckpoints(() => {
+          updateLessonPlan(updatedPlan);
+          return updatedList;
+        });
       }
-    } catch{
+    } catch {
       setError(true);
+    }
+  }
+
+  // Drag functionality for checkpoint's list.
+  const onDragEnd = async (result: any) => {
+
+    if (result.source.index !== result.destination.index) {
+      const updatedPlan: any = reorder(lessonPlans, result.source.index, result.destination.index);
+      updatedPlan.map((item: { sequence: number }, index: any) => {
+        item.sequence = index;
+        return item
+      });
+      const updatedList = updatedPlan.map((item: any) => {
+        const checkpointDetails = allCheckPointsList.find(checkp => checkp.id === item.LessonComponentID)
+        return {
+          ...item,
+          ...checkpointDetails
+        };
+      })
+      // setSavedCheckpoints(updatedList);
+      // updateLessonPlan(updatedPlan);
+
+      setSavedCheckpoints(() => {
+        updateLessonPlan(updatedPlan);
+        return updatedList;
+      });
+
+      try {
+        const result: any = await API.graphql(graphqlOperation(customMutations.updateLesson, {
+          input: {
+            id: lessonID,
+            lessonPlan: updatedPlan
+          }
+        }));
+      } catch {
+        setError(true);
+      }
     }
   }
 
@@ -222,7 +323,23 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
         setFilteredCheckpointList(remainingCheckp);
         setBuilderStep('SelectedCheckPointsList')
       }
-    } catch{
+    } catch {
+      setError(true);
+    }
+  }
+
+  // Update data in lesson checkpoint table.
+  const saveLessonCheckpointMutation = async (checkpointID: string) => {
+    try {
+      let lessonCheckpointInput = {
+        lessonID: lessonID,
+        checkpointID: checkpointID,
+        position: 0,
+      }
+      await API.graphql(graphqlOperation(customMutations.createLessonCheckpoint, {
+        input: lessonCheckpointInput
+      }))
+    } catch {
       setError(true);
     }
   }
@@ -245,6 +362,9 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
         ...newCkeckpoints
       ]
       await updateMultiLessonPlans(lessonComponentPlans, remainingCheckp);
+      let lessonCheckpoints = Promise.all(
+        updatedList.map(async (item: any) => saveLessonCheckpointMutation(item.id))
+      )
     }
   }
 

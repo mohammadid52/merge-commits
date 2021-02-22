@@ -1,11 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 import * as queries from '../../../../../../graphql/queries';
 import { createFilterToFetchSpecificItemsOnly } from '../../../../../../utilities/strings';
-
+import Buttons from '../../../../../Atoms/Buttons';
+import { getTypeString } from '../../../../../../utilities/strings';
 
 interface CheckPointContentProps {
   changeStep: (step: string) => void
@@ -66,17 +65,11 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
 
   return (
     <Fragment>
-      {showActionIcons && <div className="w-9/10 mx-auto my-4 flex justify-end">
-        <span className="w-6 h-6 flex items-center cursor-pointer mr-4" onClick={editCurrentCheckp}>
-          <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
-            <FaEdit />
-          </IconContext.Provider>
-        </span>
-        <span className="w-6 h-6 flex items-center cursor-pointer ml-4" onClick={() => DeleteCheckpoint(checkpointId)}>
-          <IconContext.Provider value={{ size: '1.5rem', color: '#B22222' }}>
-            <FaTrashAlt />
-          </IconContext.Provider>
-        </span>
+      {showActionIcons && <div className="w-full mx-auto my-4 flex justify-end">
+        <div className="flex justify-end w-6/10 items-center">
+          <Buttons btnClass="py-1 px-4 text-xs mr-2 text-indigo-600 border-indigo-600 hover:bg-gray-100  hover:text-indigo-500" label="Edit Checkpoint" onClick={editCurrentCheckp} transparent />
+          <Buttons btnClass="py-1 px-4 text-xs ml-2 text-red-600 border-red-600 hover:bg-gray-100 hover:text-red-500" label="Remove Checkpoint" onClick={() => DeleteCheckpoint(checkpointId)} transparent />
+        </div>
       </div>}
       <div className='mb-4'>
         <div className="flex justify-between w-9/10 px-8 py-4 mx-auto whitespace-no-wrap border-b border-gray-200">
@@ -103,7 +96,7 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
                       {index + 1}.
                     </div>
                     <div className="flex w-7/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.question} </div>
-                    <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.type}</div>
+                    <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.type ? getTypeString(item.type) : '--'}</div>
                     {/* <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.language}</div> */}
                   </div>
                 )) : (

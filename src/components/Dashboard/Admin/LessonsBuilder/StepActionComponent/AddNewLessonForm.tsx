@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api'
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { FaTrash } from 'react-icons/fa';
 // import { v4 as uuidv4 } from 'uuid';
 
 import * as customMutations from '../../../../../customGraphql/customMutations';
@@ -9,6 +11,7 @@ import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
 import Buttons from '../../../../Atoms/Buttons';
+import ModalPopUp from '../../../../Molecules/ModalPopUp';
 
 import { languageList } from '../../../../../utilities/staticData';
 import { InitialData, InputValueObject } from '../LessonBuilder';
@@ -21,6 +24,10 @@ interface AddNewLessonFormProps {
   setFormData: (data: InitialData) => void
   setSelectedDesigners: (designer: InputValueObject[]) => void,
   postLessonCreation: (lessonId: string) => void
+  allMeasurement: { id: number, name: string, value: string, topic?: string }[]
+  lessonMeasurements: any[]
+  setLessonMeasurements: (obj: any[]) => void
+  lessonId: string
 }
 
 const AddNewLessonForm = (props: AddNewLessonFormProps) => {
@@ -31,10 +38,21 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     setSelectedDesigners,
     changeLessonType,
     setFormData,
-    postLessonCreation
+    postLessonCreation,
+    allMeasurement,
+    lessonMeasurements,
+    setLessonMeasurements,
+    lessonId
   } = props;
 
+  const [selectedMeasu, setSelectedMeasu] = useState({ id: '', name: '', value: '' });
+  const [measurementList, setMeasurementList] = useState(allMeasurement);
   const [loading, setLoading] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState({
+    id: '',
+    state: false,
+    message: 'Are you sure you want to remove this measurement?'
+  });
   const [validation, setValidation] = useState({
     name: '',
     type: '',
@@ -79,6 +97,21 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       })
     }
   }
+  const selectMeasurement = (val: string, name: string, id: string) => {
+    setSelectedMeasu({ id, name, value: val })
+  }
+
+  const addNewMeasurement = () => {
+    setLessonMeasurements([
+      ...lessonMeasurements,
+      {
+        id: selectedMeasu.id,
+        measurement: selectedMeasu.name,
+        topic: allMeasurement.find(item => item.id.toString() === selectedMeasu.id)?.topic || ''
+      }
+    ]);
+    setSelectedMeasu({ id: '', name: '', value: '' });
+  }
 
   const selectLanguage = (id: string, name: string, value: string) => {
     let updatedList;
@@ -113,6 +146,42 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       [fieldHtml]: html,
       [field]: text
     })
+  }
+  const toggleModal = (id?: string) => {
+    setShowDeleteModal({
+      ...showDeleteModal,
+      id: (id ? id : ''),
+      state: !showDeleteModal.state
+    })
+  }
+
+  const deleteMeasurement = async () => {
+    if (showDeleteModal?.id) {
+      const filteredRubrics = [...lessonMeasurements].filter(item => item.id !== showDeleteModal?.id)
+      setLessonMeasurements([...filteredRubrics]);
+    }
+    toggleModal();
+  }
+  const saveMeasurements = async (lessonId: string, rubricsId: string) => {
+    try {
+      const input = {
+        lessonID: lessonId,
+        rubricID: rubricsId,
+      }
+      const results: any = await API.graphql(
+        graphqlOperation(customMutations.createLessonRubrics, { input: input })
+      );
+      const lessonRubric = results.data.createLessonRubrics;
+
+    } catch {
+      setValidation({
+        name: '',
+        type: '',
+        languages: '',
+        message: 'Error while adding measurement,please try later.',
+        isError: true
+      });
+    }
   }
 
   const validateForm = () => {
@@ -165,9 +234,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           graphqlOperation(customMutations.createLesson, { input: input })
         );
         const lessonsData = results?.data?.createLesson;
-        setLoading(false);
-        postLessonCreation(lessonsData?.id);
-        if (lessonsData) {
+        if (lessonsData?.id) {
+
+          let rubrics = Promise.all(
+            lessonMeasurements.map(async (item: any) => saveMeasurements(lessonsData?.id, item.id))
+          )
+          setLoading(false);
+          postLessonCreation(lessonsData?.id);
           setValidation({
             name: '',
             type: '',
@@ -176,7 +249,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             isError: false
           })
         }
-      } catch{
+      } catch {
         setValidation({
           name: '',
           type: '',
@@ -189,20 +262,30 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     }
   }
 
+  useEffect(() => {
+    if (allMeasurement?.length > 0) {
+      const measurementID = lessonMeasurements?.map(meas => meas.id)
+      const measurementList = allMeasurement.filter(item => !measurementID.includes(item.id));
+      setMeasurementList(measurementList);
+    }
+  }, [lessonMeasurements, allMeasurement])
+
   const { name, type, languages, purpose, purposeHtml, objective, objectiveHtml } = formData;
 
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
       <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900"> General Information </h3>
+        <h3 className="text-lg leading-6 font-medium text-gray-900">Lesson Overview </h3>
       </div>
 
       <div className="p-4">
-
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
-            <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Name" isRequired />
+            <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+              Name <span className="text-red-500"> * </span>
+            </label>
+            <FormInput value={name} id='name' onChange={onInputChange} name='name' />
             {validation.name && <p className="text-red-600 text-sm">{validation.name}</p>}
           </div>
           <div>
@@ -244,15 +327,83 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           </div>
         </div>
 
+        {formData.type?.id === '1' && (< div className="p-6 border-gray-400 border my-4 border-dashed">
+          <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">Lesson Measurements</p>
+
+          <div className="my-12 w-6/10 m-auto flex items-center justify-center">
+            <div className="mr-4">
+              <Selector selectedItem={selectedMeasu.name} list={measurementList} placeholder="Select Lesson" onChange={selectMeasurement} />
+            </div>
+            <div className="ml-4 w-auto">
+              <Buttons btnClass="ml-4 py-1" label="Add" onClick={addNewMeasurement} disabled={selectedMeasu.value ? false : true} />
+            </div>
+          </div>
+          <div>
+            {lessonMeasurements?.length > 0 ? (<div>
+              {/* Table header */}
+              <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-no-wrap border-b border-gray-200">
+                <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>No.</span>
+                </div>
+                <div className="w-4.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>Measurement</span>
+                </div>
+                <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>Topic</span>
+                </div>
+                <div className="w-2/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>Action</span>
+                </div>
+                {/** <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      <span>Action</span>
+                    </div> */}
+              </div>
+
+
+              {/* Table column */}
+              <div className="w-full m-auto max-h-88 overflow-auto">
+                {lessonMeasurements.map((item: any, index: number) => (
+                  <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                    <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4"> {index + 1}.</div>
+                    <div className="flex w-4.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.measurement} </div>
+                    <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.topic ? item.topic : '--'}</div>
+                    {/* <div className="flex w-2/10 px-6 py-3 text-s leading-4 items-center justify-center">
+                      <span className="cursor-pointer">
+                            <CheckBox value={item.required ? true : false} onChange={() => makeQuestionRequired(item.id)} name='isRequired' />
+                          </span>
+                          Remove
+                        </div> */}
+                    <div className="flex w-2/10 px-8 py-3 text-s leading-4 items-center justify-center">
+                      <div className="w-6 h-6 cursor-pointer" onClick={() => toggleModal(item.id)}>
+                        <IconContext.Provider value={{ size: '1.5rem', color: '#B22222' }}>
+                          <FaTrash />
+                        </IconContext.Provider>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>) : (
+                <div className="py-12 my-6 text-center">
+                  <p className="text-gray-600 font-medium"> This lesson does not have any measurements, please add new one.</p>
+                </div>
+              )}
+          </div>
+
+        </div>)}
+
         {validation.message && <div className="py-2 m-auto mt-2 text-center">
           <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
         </div>}
+        {showDeleteModal.state &&
+          <ModalPopUp deleteModal closeAction={toggleModal} saveAction={deleteMeasurement} message={showDeleteModal.message} />
+        }
         <div className="flex mb-8 mt-4 justify-center">
-          <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveFormData} disabled={loading ? true : false} />
+          <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveFormData} disabled={(loading || lessonId) ? true : false} />
         </div>
-
       </div>
-    </div>
+
+    </div >
   )
 }
 

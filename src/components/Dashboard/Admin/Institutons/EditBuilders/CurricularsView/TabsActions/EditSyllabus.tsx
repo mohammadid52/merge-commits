@@ -13,7 +13,7 @@ import TextArea from '../../../../../../Atoms/Form/TextArea'
 import Selector from '../../../../../../Atoms/Form/Selector'
 import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector'
 import { languageList, statusList } from '../../../../../../../utilities/staticData'
-import { reorder } from '../../../../../../../utilities/strings';
+import { reorder, getLessonType } from '../../../../../../../utilities/strings';
 
 // TODO: Check wether mutations and queries are needed for fetching all the data or not.
 import * as mutations from '../../../../../../../graphql/mutations'
@@ -183,7 +183,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         })
         setSyllabusData(initialData);
         setIsLoading(false);
-      } catch{
+      } catch {
         setMessages({
           show: true,
           message: 'Unable to update syllabus details please try again later.',
@@ -237,7 +237,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       const newLesson = result.data.updateSyllabusLesson;
       setEditState({ id: '' });
       updateStatusOnTable(newLesson.lessonID, newLesson.status);
-    } catch{
+    } catch {
       setMessages({
         show: true,
         message: 'Error while updating lesson status please try later.',
@@ -258,11 +258,27 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
   const addNewLesson = async () => {
     try {
+      const selectedLesson = allLessonsList.find(item => item.id === selecetedLesson.id)
+      const lessonComponentPlan: any = selectedLesson?.lessonPlan && selectedLesson.lessonPlan.map((item: any) => {
+        return {
+          disabled: false,
+          open: selectedLesson.type !== 'lesson' ? true : false,
+          active: selectedLesson.type !== 'lesson' ? true : false,
+          stage: `checkpoint?id=${item.LessonComponentID}`,
+          type: 'survey',
+          displayMode: 'SELF',
+        }
+      })
       const input = {
         syllabusID: syllabusId,
         lessonID: selecetedLesson.id,
+        displayData: {
+          breakdownComponent: selectedLesson?.type
+        },
+        lessonPlan: lessonComponentPlan?.length > 0 ? lessonComponentPlan : [],
         status: 'Active'
       }
+
       const result: any = await API.graphql(graphqlOperation(customMutations.createSyllabusLesson, { input: input }));
       const newLesson = result.data.createSyllabusLesson;
 
@@ -282,7 +298,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       setSavedLessonsList([
         ...savedLessonsList, newLesson
       ]);
-    } catch{
+    } catch {
       setMessages({
         show: true,
         message: 'Error while adding new lesson please try later.',
@@ -358,10 +374,10 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       const result: any = await API.graphql(graphqlOperation(customQueries.listLessonsTitles))
       const savedData = result.data.listLessons;
       const sortedList = savedData?.items?.sort((a: any, b: any) => a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1)
-      const updatedList = sortedList?.map((item: { id: string, title: string }) => (
+      const updatedList = sortedList?.map((item: { id: string, title: string, type: string }) => (
         {
           id: item.id,
-          name: item.title,
+          name: `${item.title} - ${item.type && getLessonType(item.type)}`,
           value: item.title
         }))
       setAllLessonsList([...sortedList])
@@ -479,7 +495,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                     <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Syllabus Name" isRequired />
                   </div>
                   <div>
-                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                       Select Designers
                     </label>
                     <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
@@ -487,7 +503,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                 </div>
                 <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                   <div>
-                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                       Select Language
                   </label>
                     <MultipleSelector selectedItems={languages} placeholder="Language" list={languageList} onChange={selectLanguage} />

@@ -333,13 +333,13 @@ const EditCurricular = (props: EditCurricularProps) => {
             </div> */}
 
             <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                 Select Language
               </label>
               <MultipleSelector selectedItems={languages} placeholder="Select Languages" list={languageList} onChange={selectLanguage} />
             </div>
             <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                 Select Designers
               </label>
               <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
