@@ -46,7 +46,7 @@ const useStudentTimer = (inputs?: inputs) => {
   //PAGE SWITCH => SAVE TTRIGGER after 10 secs
   useEffect(() => {
     if (!state.viewing) {
-      if (typeOfTimeout === 'edit' || typeOfTimeout === '') {
+      if (typeOfTimeout === '') {
         console.log('%c save timer: ', 'background: #222; color: #bada55', 'page switch save triggered after 10s');
 
         setTypeOfTimeout('pageSwitch');

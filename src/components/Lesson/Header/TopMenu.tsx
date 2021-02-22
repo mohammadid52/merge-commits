@@ -35,12 +35,7 @@ const TopMenu = (props: { handlePopup: () => void }) => {
   };
 
   const handleBack = () => {
-    if (state.currentPage === 1) {
-      history.push(`/lesson`);
-      dispatch({ type: 'PAGE_BACK' });
-    }
-
-    if (state.currentPage > 1) {
+    if (state.currentPage > 0) {
       history.push(`${match.url}/${state.pages[state.currentPage - 1].stage}`);
       dispatch({ type: 'PAGE_BACK' });
     }

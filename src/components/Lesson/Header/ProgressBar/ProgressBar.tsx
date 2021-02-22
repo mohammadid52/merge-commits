@@ -47,9 +47,9 @@ const ProgressBar = () => {
     setClickable(earliestStoppingPoint);
   }, [state.pages]);
 
-  useEffect(()=>{
-    // console.log('state.pages progress bar MOD: ', state.pages)
-  },[state.pages])
+  // useEffect(()=>{
+  //    console.log('state.pages progress bar MOD: ', state.pages)
+  // },[state.pages])
 
   /**
    *
