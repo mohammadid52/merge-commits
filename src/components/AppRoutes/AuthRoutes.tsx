@@ -10,6 +10,8 @@ interface AuthRoutesProps {
     updateAuthState: Function
 }
 
+// Routes for authenticated users
+
 const AuthRoutes = ({ updateAuthState }: AuthRoutesProps) => {
     return (
         <Switch>
