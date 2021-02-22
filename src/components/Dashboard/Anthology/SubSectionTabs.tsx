@@ -7,17 +7,13 @@ interface SubSectionTabs {
   subSection: string;
   subSectionList: string[];
   handleTabClick: (e: React.MouseEvent<Element>) => void;
+  translations?: string[]
 }
 
 const SubSectionTabs = (props: SubSectionTabs) => {
-  const { isTeacher, subSection, subSectionList, handleTabClick } = props;
-  const { state, userLanguage, clientKey } = useContext(GlobalContext);
-  const { anthologyDict } = useDictionary(clientKey);
-  const { theme } = useContext(GlobalContext);
+  const { isTeacher, subSection, subSectionList, handleTabClick, translations } = props;
+  const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
 
-  const getTranslation = Object.keys(anthologyDict[userLanguage].TABS).map((key: any) => {
-    return anthologyDict[userLanguage].TABS[key];
-  })
 
   return (
     <div className={`${theme.section} text-xl`}>
@@ -32,7 +28,7 @@ const SubSectionTabs = (props: SubSectionTabs) => {
                   ? 'text-black'
                   : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
               }`}>
-              {getTranslation[index]}
+              {translations ? translations[index] : listItem}
             </h2>
           ))}
       </div>
