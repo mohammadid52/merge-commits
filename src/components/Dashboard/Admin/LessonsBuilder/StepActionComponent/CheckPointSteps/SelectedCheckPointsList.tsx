@@ -11,10 +11,11 @@ interface SelectedCheckPointsListProps {
   changeStep: (step: string) => void
   DeleteCheckpoint: (id: string) => void
   editCheckPoint: (id: string) => void
+  onDragEnd: (result: any) => void
 }
 
 const SelectedCheckPointsList = (props: SelectedCheckPointsListProps) => {
-  const { activeCheckpoints, changeStep, DeleteCheckpoint, editCheckPoint } = props;
+  const { activeCheckpoints, changeStep, DeleteCheckpoint, editCheckPoint, onDragEnd } = props;
   const [savedCheckpoint, setSavedCheckpoint] = useState(activeCheckpoints);
 
   useEffect(() => {
@@ -27,7 +28,7 @@ const SelectedCheckPointsList = (props: SelectedCheckPointsListProps) => {
       return newItem;
     })
     setSavedCheckpoint(updatedList)
-  }, [activeCheckpoints])
+  }, [activeCheckpoints]);
 
   return (
     <Fragment>
@@ -55,7 +56,7 @@ const SelectedCheckPointsList = (props: SelectedCheckPointsListProps) => {
           </div>
         ) : (
             <div>
-              <DragableAccordion titleList={savedCheckpoint} />
+              <DragableAccordion titleList={savedCheckpoint} onDragEnd={onDragEnd} />
               <div className="flex w-full mx-auto p-8 justify-center">
                 <Buttons btnClass="mr-4" onClick={() => changeStep('CheckpointLookup')} label="Add Existing Checkpoint" />
                 <Buttons btnClass="ml-4" onClick={() => changeStep('AddNewCheckPoint')} label="Create New Checkpoint" />

@@ -160,7 +160,7 @@ const AddTopic = (props: AddTopicProps) => {
             </div>
 
             <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                 Select Learning objective <span className="text-red-500">*</span>
               </label>
               <Selector selectedItem={learning.value} placeholder="Learning objective" list={learnings} onChange={selectLearning} />

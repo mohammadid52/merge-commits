@@ -282,7 +282,7 @@ const InstitutionAdd = () => {
                   </div>
 
                   <div className='sm:col-span-3 px-3 py-2'>
-                    <label className="block text-m font-medium mb-1  leading-5 text-gray-700">
+                    <label className="block text-xs font-semibold mb-1  leading-5 text-gray-700">
                       State
                     </label>
                     <Selector selectedItem={state} placeholder="Select state" list={statesList} onChange={onStateSelect} />

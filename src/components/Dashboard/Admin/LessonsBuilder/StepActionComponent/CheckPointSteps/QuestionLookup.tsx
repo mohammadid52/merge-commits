@@ -9,16 +9,17 @@ import CheckBox from '../../../../../Atoms/Form/CheckBox';
 import Buttons from '../../../../../Atoms/Buttons';
 
 import * as queries from '../../../../../../graphql/queries';
-import { getLanguageString } from '../../../../../../utilities/strings';
+import { getLanguageString, getTypeString } from '../../../../../../utilities/strings';
 
 interface QuestionLookupProps {
   changeStep: (step: string) => void
   onSave: (list: any[]) => void
   selecteList: any[]
+  goBackToPreviousStep: () => void
 }
 
 const QuestionLookup = (props: QuestionLookupProps) => {
-  const { changeStep, onSave, selecteList } = props;
+  const { changeStep, onSave, selecteList, goBackToPreviousStep } = props;
   const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
   const [questionsList, setQuestionsList] = useState([]);
   const [allQuestionsList, setAllQuestionsList] = useState([]);
@@ -37,20 +38,6 @@ const QuestionLookup = (props: QuestionLookupProps) => {
     setSelectedQuestionIds(updatedList);
   }
 
-  const getTypeString = (type: string) => {
-    switch (type) {
-      case 'text':
-        return 'Text';
-      case 'input':
-        return 'Input';
-      case 'selectMany':
-        return 'Select Many';
-      case 'selectOne':
-        return 'Select One';
-      default:
-        return 'Text';
-    }
-  }
   const searchFromList = () => {
     const currentQuesList = [...allQuestionsList];
     const newList = currentQuesList.filter(item => {
@@ -70,6 +57,7 @@ const QuestionLookup = (props: QuestionLookupProps) => {
     const selectedQuestionsList = [...allQuestionsList].filter(item => selectedQuestionIds.includes(item.id))
     onSave(selectedQuestionsList);
   }
+
 
   const fetchQuestionsList = async () => {
     try {
@@ -192,7 +180,7 @@ const QuestionLookup = (props: QuestionLookupProps) => {
         </div>
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-center my-6">
-            <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={() => changeStep('AddNewCheckPoint')} transparent />
+            <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={goBackToPreviousStep} transparent />
             <Buttons btnClass="py-1 px-8 text-xs ml-2" label="Save" onClick={onQuestionSave} />
           </div>
         </div>

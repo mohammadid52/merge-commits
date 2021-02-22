@@ -165,13 +165,13 @@ const EditMeasurement = (props: EditMeasurementProps) => {
                   </div>
                   <div className="px-3 py-4">
                     {/* <div>
-                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                       Select Sequence
                     </label>
                     <Selector selectedItem={measurement.topic.value} placeholder="topic" list={topics} onChange={selectTopic} />
                   </div> */}
                     <div>
-                      <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                      <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                         Select Topic
                     </label>
                       <Selector selectedItem={measurement.topic.value} placeholder="Topic" list={topics} onChange={selectTopic} />

@@ -95,13 +95,13 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
                 <span>Selection</span>
               </div>
               <div className="w-5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>Checkpoint Title</span>
+                Checkpoint Title
               </div>
-              <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>Language</span>
+              <div className="w-3/10 px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                Language
               </div>
               <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>View</span>
+                <span></span>
               </div>
             </div>
 

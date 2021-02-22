@@ -158,7 +158,7 @@ const EditTopic = (props: EditTopicProps) => {
               </div>
 
               <div className="px-3 py-4">
-                <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   Select Learning objective <span className="text-red-500">*</span>
                 </label>
                 <Selector selectedItem={topic.learning.value} placeholder="Learning objective" list={learnings} onChange={selectLearning} />
@@ -168,7 +168,7 @@ const EditTopic = (props: EditTopicProps) => {
               </div>
 
               {/* <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                 Select Sequence
               </label>
               <Selector placeholder="Sequence" list={sequenceList} onChange={() => console.log('')} />
