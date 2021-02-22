@@ -207,7 +207,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         // console.log('classroom data', classroom);
         setLesson(classroom.data.getSyllabusLesson);
         // console.log(classroom.data.getSyllabusLesson)
-        // getOrCreateStudentData();
+        getOrCreateStudentData();
         subscription = subscribeToSyllabusLesson();
       } catch (error) {
         console.error(error);
@@ -324,12 +324,12 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       }
     }, []);
     try {
-      const checkpoints: any = await API.graphql(graphqlOperation(queries.listCheckpoints, {
+      const checkpoints: any = await API.graphql(graphqlOperation(customQueries.listCheckpoints, {
         filter: { ...createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id') },
       }));
 
       // TODO: cleanup dirty merge of checkpoints into fetched lesson data
-
+      console.log(createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id'))
       setLesson({...lesson, lesson: {...lesson.lesson, checkpoints: checkpoints.data.listCheckpoints}});
     } catch (e) {
       console.error('err fetch checkpoints ::: ', e);
