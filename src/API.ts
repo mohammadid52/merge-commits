@@ -1996,6 +1996,59 @@ export type DeletePersonLocationInput = {
   personAuthID: string,
 };
 
+export type CreateNoticeboardWidgetInput = {
+  id?: string | null,
+  teacherAuthID: string,
+  teacherEmail: string,
+  type?: string | null,
+  placement?: string | null,
+  title?: string | null,
+  description?: string | null,
+  content?: WidgetContentInput | null,
+  quotes?: Array< QuotesInput | null > | null,
+  active?: boolean | null,
+};
+
+export type WidgetContentInput = {
+  text?: string | null,
+  image?: string | null,
+};
+
+export type QuotesInput = {
+  text?: string | null,
+  author?: string | null,
+};
+
+export type ModelNoticeboardWidgetConditionInput = {
+  teacherAuthID?: ModelStringInput | null,
+  teacherEmail?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  placement?: ModelStringInput | null,
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  active?: ModelBooleanInput | null,
+  and?: Array< ModelNoticeboardWidgetConditionInput | null > | null,
+  or?: Array< ModelNoticeboardWidgetConditionInput | null > | null,
+  not?: ModelNoticeboardWidgetConditionInput | null,
+};
+
+export type UpdateNoticeboardWidgetInput = {
+  id: string,
+  teacherAuthID?: string | null,
+  teacherEmail?: string | null,
+  type?: string | null,
+  placement?: string | null,
+  title?: string | null,
+  description?: string | null,
+  content?: WidgetContentInput | null,
+  quotes?: Array< QuotesInput | null > | null,
+  active?: boolean | null,
+};
+
+export type DeleteNoticeboardWidgetInput = {
+  id?: string | null,
+};
+
 export type ModelStringKeyConditionInput = {
   eq?: string | null,
   le?: string | null,
@@ -2518,6 +2571,20 @@ export type ModelPersonLocationFilterInput = {
   and?: Array< ModelPersonLocationFilterInput | null > | null,
   or?: Array< ModelPersonLocationFilterInput | null > | null,
   not?: ModelPersonLocationFilterInput | null,
+};
+
+export type ModelNoticeboardWidgetFilterInput = {
+  id?: ModelIDInput | null,
+  teacherAuthID?: ModelStringInput | null,
+  teacherEmail?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  placement?: ModelStringInput | null,
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  active?: ModelBooleanInput | null,
+  and?: Array< ModelNoticeboardWidgetFilterInput | null > | null,
+  or?: Array< ModelNoticeboardWidgetFilterInput | null > | null,
+  not?: ModelNoticeboardWidgetFilterInput | null,
 };
 
 export type CreatePersonMutationVariables = {
@@ -13176,6 +13243,198 @@ export type DeletePersonLocationMutation = {
   } | null,
 };
 
+export type CreateNoticeboardWidgetMutationVariables = {
+  input: CreateNoticeboardWidgetInput,
+  condition?: ModelNoticeboardWidgetConditionInput | null,
+};
+
+export type CreateNoticeboardWidgetMutation = {
+  createNoticeboardWidget:  {
+    __typename: "NoticeboardWidget",
+    id: string,
+    teacherAuthID: string,
+    teacherEmail: string,
+    type: string | null,
+    placement: string | null,
+    title: string | null,
+    description: string | null,
+    content:  {
+      __typename: "WidgetContent",
+      text: string | null,
+      image: string | null,
+    } | null,
+    quotes:  Array< {
+      __typename: "Quotes",
+      text: string | null,
+      author: string | null,
+    } | null > | null,
+    active: boolean | null,
+    teacher:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateNoticeboardWidgetMutationVariables = {
+  input: UpdateNoticeboardWidgetInput,
+  condition?: ModelNoticeboardWidgetConditionInput | null,
+};
+
+export type UpdateNoticeboardWidgetMutation = {
+  updateNoticeboardWidget:  {
+    __typename: "NoticeboardWidget",
+    id: string,
+    teacherAuthID: string,
+    teacherEmail: string,
+    type: string | null,
+    placement: string | null,
+    title: string | null,
+    description: string | null,
+    content:  {
+      __typename: "WidgetContent",
+      text: string | null,
+      image: string | null,
+    } | null,
+    quotes:  Array< {
+      __typename: "Quotes",
+      text: string | null,
+      author: string | null,
+    } | null > | null,
+    active: boolean | null,
+    teacher:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteNoticeboardWidgetMutationVariables = {
+  input: DeleteNoticeboardWidgetInput,
+  condition?: ModelNoticeboardWidgetConditionInput | null,
+};
+
+export type DeleteNoticeboardWidgetMutation = {
+  deleteNoticeboardWidget:  {
+    __typename: "NoticeboardWidget",
+    id: string,
+    teacherAuthID: string,
+    teacherEmail: string,
+    type: string | null,
+    placement: string | null,
+    title: string | null,
+    description: string | null,
+    content:  {
+      __typename: "WidgetContent",
+      text: string | null,
+      image: string | null,
+    } | null,
+    quotes:  Array< {
+      __typename: "Quotes",
+      text: string | null,
+      author: string | null,
+    } | null > | null,
+    active: boolean | null,
+    teacher:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type GetPersonQueryVariables = {
   email: string,
   authId: string,
@@ -17755,6 +18014,130 @@ export type ListPersonLocationsQuery = {
         repeat: string | null,
         notes: string | null,
         activeSyllabus: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken: string | null,
+  } | null,
+};
+
+export type GetNoticeboardWidgetQueryVariables = {
+  id: string,
+};
+
+export type GetNoticeboardWidgetQuery = {
+  getNoticeboardWidget:  {
+    __typename: "NoticeboardWidget",
+    id: string,
+    teacherAuthID: string,
+    teacherEmail: string,
+    type: string | null,
+    placement: string | null,
+    title: string | null,
+    description: string | null,
+    content:  {
+      __typename: "WidgetContent",
+      text: string | null,
+      image: string | null,
+    } | null,
+    quotes:  Array< {
+      __typename: "Quotes",
+      text: string | null,
+      author: string | null,
+    } | null > | null,
+    active: boolean | null,
+    teacher:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListNoticeboardWidgetsQueryVariables = {
+  filter?: ModelNoticeboardWidgetFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListNoticeboardWidgetsQuery = {
+  listNoticeboardWidgets:  {
+    __typename: "ModelNoticeboardWidgetConnection",
+    items:  Array< {
+      __typename: "NoticeboardWidget",
+      id: string,
+      teacherAuthID: string,
+      teacherEmail: string,
+      type: string | null,
+      placement: string | null,
+      title: string | null,
+      description: string | null,
+      content:  {
+        __typename: "WidgetContent",
+        text: string | null,
+        image: string | null,
+      } | null,
+      quotes:  Array< {
+        __typename: "Quotes",
+        text: string | null,
+        author: string | null,
+      } | null > | null,
+      active: boolean | null,
+      teacher:  {
+        __typename: "Person",
+        id: string,
+        authId: string,
+        status: PersonStatus,
+        email: string,
+        role: Role,
+        type: string | null,
+        firstName: string,
+        preferredName: string | null,
+        lastName: string,
+        externalId: string | null,
+        grade: string | null,
+        onBoardSurvey: boolean | null,
+        offBoardSurvey: boolean | null,
+        phone: string | null,
+        birthdate: string | null,
+        image: string | null,
+        language: Language,
+        filters: Array< string | null > | null,
+        lastLoggedIn: string | null,
+        lastLoggedOut: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -27984,6 +28367,183 @@ export type OnDeletePersonLocationSubscription = {
       repeat: string | null,
       notes: string | null,
       activeSyllabus: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateNoticeboardWidgetSubscription = {
+  onCreateNoticeboardWidget:  {
+    __typename: "NoticeboardWidget",
+    id: string,
+    teacherAuthID: string,
+    teacherEmail: string,
+    type: string | null,
+    placement: string | null,
+    title: string | null,
+    description: string | null,
+    content:  {
+      __typename: "WidgetContent",
+      text: string | null,
+      image: string | null,
+    } | null,
+    quotes:  Array< {
+      __typename: "Quotes",
+      text: string | null,
+      author: string | null,
+    } | null > | null,
+    active: boolean | null,
+    teacher:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateNoticeboardWidgetSubscription = {
+  onUpdateNoticeboardWidget:  {
+    __typename: "NoticeboardWidget",
+    id: string,
+    teacherAuthID: string,
+    teacherEmail: string,
+    type: string | null,
+    placement: string | null,
+    title: string | null,
+    description: string | null,
+    content:  {
+      __typename: "WidgetContent",
+      text: string | null,
+      image: string | null,
+    } | null,
+    quotes:  Array< {
+      __typename: "Quotes",
+      text: string | null,
+      author: string | null,
+    } | null > | null,
+    active: boolean | null,
+    teacher:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteNoticeboardWidgetSubscription = {
+  onDeleteNoticeboardWidget:  {
+    __typename: "NoticeboardWidget",
+    id: string,
+    teacherAuthID: string,
+    teacherEmail: string,
+    type: string | null,
+    placement: string | null,
+    title: string | null,
+    description: string | null,
+    content:  {
+      __typename: "WidgetContent",
+      text: string | null,
+      image: string | null,
+    } | null,
+    quotes:  Array< {
+      __typename: "Quotes",
+      text: string | null,
+      author: string | null,
+    } | null > | null,
+    active: boolean | null,
+    teacher:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type: string | null,
+      firstName: string,
+      preferredName: string | null,
+      lastName: string,
+      externalId: string | null,
+      grade: string | null,
+      onBoardSurvey: boolean | null,
+      offBoardSurvey: boolean | null,
+      phone: string | null,
+      birthdate: string | null,
+      image: string | null,
+      language: Language,
+      filters: Array< string | null > | null,
+      lastLoggedIn: string | null,
+      lastLoggedOut: string | null,
+      classes:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken: string | null,
+      } | null,
+      wordbank:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,

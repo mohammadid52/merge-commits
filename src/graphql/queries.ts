@@ -4075,6 +4075,119 @@ export const listPersonLocations = /* GraphQL */ `
     }
   }
 `;
+export const getNoticeboardWidget = /* GraphQL */ `
+  query GetNoticeboardWidget($id: ID!) {
+    getNoticeboardWidget(id: $id) {
+      id
+      teacherAuthID
+      teacherEmail
+      type
+      placement
+      title
+      description
+      content {
+        text
+        image
+      }
+      quotes {
+        text
+        author
+      }
+      active
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listNoticeboardWidgets = /* GraphQL */ `
+  query ListNoticeboardWidgets(
+    $filter: ModelNoticeboardWidgetFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listNoticeboardWidgets(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        teacherAuthID
+        teacherEmail
+        type
+        placement
+        title
+        description
+        content {
+          text
+          image
+        }
+        quotes {
+          text
+          author
+        }
+        active
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID

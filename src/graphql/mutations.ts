@@ -9479,3 +9479,174 @@ export const deletePersonLocation = /* GraphQL */ `
     }
   }
 `;
+export const createNoticeboardWidget = /* GraphQL */ `
+  mutation CreateNoticeboardWidget(
+    $input: CreateNoticeboardWidgetInput!
+    $condition: ModelNoticeboardWidgetConditionInput
+  ) {
+    createNoticeboardWidget(input: $input, condition: $condition) {
+      id
+      teacherAuthID
+      teacherEmail
+      type
+      placement
+      title
+      description
+      content {
+        text
+        image
+      }
+      quotes {
+        text
+        author
+      }
+      active
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateNoticeboardWidget = /* GraphQL */ `
+  mutation UpdateNoticeboardWidget(
+    $input: UpdateNoticeboardWidgetInput!
+    $condition: ModelNoticeboardWidgetConditionInput
+  ) {
+    updateNoticeboardWidget(input: $input, condition: $condition) {
+      id
+      teacherAuthID
+      teacherEmail
+      type
+      placement
+      title
+      description
+      content {
+        text
+        image
+      }
+      quotes {
+        text
+        author
+      }
+      active
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteNoticeboardWidget = /* GraphQL */ `
+  mutation DeleteNoticeboardWidget(
+    $input: DeleteNoticeboardWidgetInput!
+    $condition: ModelNoticeboardWidgetConditionInput
+  ) {
+    deleteNoticeboardWidget(input: $input, condition: $condition) {
+      id
+      teacherAuthID
+      teacherEmail
+      type
+      placement
+      title
+      description
+      content {
+        text
+        image
+      }
+      quotes {
+        text
+        author
+      }
+      active
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;

@@ -9068,3 +9068,165 @@ export const onDeletePersonLocation = /* GraphQL */ `
     }
   }
 `;
+export const onCreateNoticeboardWidget = /* GraphQL */ `
+  subscription OnCreateNoticeboardWidget {
+    onCreateNoticeboardWidget {
+      id
+      teacherAuthID
+      teacherEmail
+      type
+      placement
+      title
+      description
+      content {
+        text
+        image
+      }
+      quotes {
+        text
+        author
+      }
+      active
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateNoticeboardWidget = /* GraphQL */ `
+  subscription OnUpdateNoticeboardWidget {
+    onUpdateNoticeboardWidget {
+      id
+      teacherAuthID
+      teacherEmail
+      type
+      placement
+      title
+      description
+      content {
+        text
+        image
+      }
+      quotes {
+        text
+        author
+      }
+      active
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteNoticeboardWidget = /* GraphQL */ `
+  subscription OnDeleteNoticeboardWidget {
+    onDeleteNoticeboardWidget {
+      id
+      teacherAuthID
+      teacherEmail
+      type
+      placement
+      title
+      description
+      content {
+        text
+        image
+      }
+      quotes {
+        text
+        author
+      }
+      active
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;

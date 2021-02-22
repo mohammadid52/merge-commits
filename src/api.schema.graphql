@@ -854,6 +854,30 @@ type PersonLocation @model
   room: Room @connection(fields: ["roomID"])
 }
 
+type WidgetContent {
+	text: String
+	image: String
+}
+
+type Quotes {
+	text: String
+	author: String
+}
+
+type NoticeboardWidget @model {
+	id: ID!
+  teacherAuthID: String!
+  teacherEmail: String!
+	type: String
+	placement: String
+	title: String
+	description: String
+	content: WidgetContent
+	quotes: [Quotes]
+	active: Boolean
+  teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
+}
+
 type Subscription {
   onChangePersonLocation(syllabusLessonID: ID!): PersonLocation
     @aws_subscribe(mutations: ["createPersonLocation", "updatePersonLocation", "deletePersonLocation"])
