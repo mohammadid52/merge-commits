@@ -15,7 +15,7 @@ const Intro = () => {
   const imgArray = state.data.lesson.artist.images;
 
   useEffect(() => {
-    // console.log('andrew', state.data.lesson);
+    console.log('test', 'test');
 
     dispatch({ type: 'ACTIVATE_LESSON', payload: '' });
   }, []);

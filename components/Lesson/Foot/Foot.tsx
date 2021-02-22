@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { LessonContext } from '../../../contexts/LessonContext';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { getAsset } from '../../../assets';
+import { getAsset } from '../../../src/assets';
 
 const Branding: React.FC = () => {
   const { state, theme, dispatch } = useContext(LessonContext);

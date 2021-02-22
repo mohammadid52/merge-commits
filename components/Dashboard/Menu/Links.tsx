@@ -45,7 +45,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   }, [role]);
 
   const userLinks = (role: string): void => {
-    console.log('role', role)
+    // console.log('role', role)
     switch (role) {
       case 'SUP':
         return setLinks((links) => {

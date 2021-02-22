@@ -1,11 +1,11 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { lessonState, PagesType } from '../state/LessonState';
-import { lessonReducer } from '../reducers/LessonReducer';
-import * as customSubscriptions from '../customGraphql/customSubscriptions';
-import * as customMutations from '../customGraphql/customMutations';
-import * as mutations from '../graphql/mutations';
-import * as customQueries from '../customGraphql/customQueries';
+import { lessonState, PagesType } from '../src/state/LessonState';
+import { lessonReducer } from '../src/reducers/LessonReducer';
+import * as customSubscriptions from '../src/customGraphql/customSubscriptions';
+import * as customMutations from '../src/customGraphql/customMutations';
+import * as mutations from '../src/graphql/mutations';
+import * as customQueries from '../src/customGraphql/customQueries';
 // import { API, graphqlOperation } from 'aws-amplify';
 import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';

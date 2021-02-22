@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { LessonActions } from '../reducers/LessonReducer';
+import { LessonActions } from '../src/reducers/LessonReducer';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import * as customMutations from '../customGraphql/customMutations';
+import * as customMutations from '../src/customGraphql/customMutations';
 import { type } from 'os';
 import { AnthologyContentInterface } from '../components/Dashboard/Anthology/Anthology';
 

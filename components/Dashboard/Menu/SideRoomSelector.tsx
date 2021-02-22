@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { SideMenuProps } from '../Dashboard';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { API, graphqlOperation } from '@aws-amplify/api';
-import * as customQueries from '../../../customGraphql/customQueries';
-import { getArrayOfUniqueValueByProperty } from '../../../utilities/arrays';
-import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
+import * as customQueries from '../../../src/customGraphql/customQueries';
+import { getArrayOfUniqueValueByProperty } from '../../../src/utilities/arrays';
+import {createFilterToFetchSpecificItemsOnly} from '../../../src/utilities/strings';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 import { useCookies } from 'react-cookie';
 
