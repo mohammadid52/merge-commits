@@ -329,7 +329,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       }));
 
       // TODO: cleanup dirty merge of checkpoints into fetched lesson data
-      console.log(createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id'))
+      // console.log(createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id'))
       setLesson({...lesson, lesson: {...lesson.lesson, checkpoints: checkpoints.data.listCheckpoints}});
     } catch (e) {
       console.error('err fetch checkpoints ::: ', e);

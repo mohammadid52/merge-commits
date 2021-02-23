@@ -44,44 +44,44 @@ const useStudentTimer = (inputs?: inputs) => {
 
   // SAVING
   //PAGE SWITCH => SAVE TTRIGGER after 10 secs
-  useEffect(() => {
-    if (!state.viewing) {
-      if (typeOfTimeout === '') {
-        console.log('%c save timer: ', 'background: #222; color: #bada55', 'page switch save triggered after 10s');
-
-        setTypeOfTimeout('pageSwitch');
-
-        const pageEditTimeout = setTimeout(() => {
-          dispatch({ type: 'INCREMENT_SAVE_COUNT' });
-          setTypeOfTimeout('');
-          console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
-        }, 10000);
-      }
-    }
-    // return () => clearTimeout(activityTimeout);
-  }, [state.currentPage]);
+  // useEffect(() => {
+  //   if (!state.viewing) {
+  //     if (typeOfTimeout === '') {
+  //       console.log('%c save timer: ', 'background: #222; color: #bada55', 'page switch save triggered after 10s');
+  //
+  //       setTypeOfTimeout('pageSwitch');
+  //
+  //       const pageEditTimeout = setTimeout(() => {
+  //         dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+  //         setTypeOfTimeout('');
+  //         console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
+  //       }, 10000);
+  //     }
+  //   }
+  //   // return () => clearTimeout(activityTimeout);
+  // }, [state.currentPage]);
 
   // TEACHER VIEWING & STUDENT EDIT => SAVE TRIGGER after 1 secs
-  useEffect(() => {
-    if (state.viewing) {
-      clearTimeout(activityTimeout);
-      setactivityTimeout(setTimeout(() => dispatch({ type: 'INCREMENT_SAVE_COUNT' }), 1000));
-    }
-    if (!state.viewing) {
-      if (typeOfTimeout === '') {
-        console.log('%c save timer: ', 'background: #bada55; color: #25362a', 'edit save triggered after 60s');
-
-        setTypeOfTimeout('edit');
-
-        const editTimeout = setTimeout(() => {
-          dispatch({ type: 'INCREMENT_SAVE_COUNT' });
-          setTypeOfTimeout('');
-          console.log('%c save timer: ', 'background: #00FF00; color: #bada55', 'saved');
-        }, 60000);
-      }
-    }
-    return () => clearTimeout(activityTimeout);
-  }, [state.viewing, state.componentState]);
+  // useEffect(() => {
+  //   if (state.viewing) {
+  //     clearTimeout(activityTimeout);
+  //     setactivityTimeout(setTimeout(() => dispatch({ type: 'INCREMENT_SAVE_COUNT' }), 1000));
+  //   }
+  //   if (!state.viewing) {
+  //     if (typeOfTimeout === '') {
+  //       console.log('%c save timer: ', 'background: #bada55; color: #25362a', 'edit save triggered after 60s');
+  //
+  //       setTypeOfTimeout('edit');
+  //
+  //       const editTimeout = setTimeout(() => {
+  //         dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+  //         setTypeOfTimeout('');
+  //         console.log('%c save timer: ', 'background: #00FF00; color: #bada55', 'saved');
+  //       }, 60000);
+  //     }
+  //   }
+  //   return () => clearTimeout(activityTimeout);
+  // }, [state.viewing, state.componentState]);
 
   useEffect(() => {
     if (params.state.studentStatus === 'ACTIVE' && params.state.subscription._state === 'closed') {

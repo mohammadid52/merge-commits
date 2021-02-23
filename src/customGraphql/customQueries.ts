@@ -1896,43 +1896,27 @@ export const listCheckpoints = /* GraphQL */ `
   ) {
     listCheckpoints(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
+    title
+    subtitle
+    id
       questions {
         nextToken
         items {
           question {
             id
+            label
             question
+            type
+            options {
+              color
+              icon
+              label
+              text
+            }
           }
           checkpointID
           createdAt
           id
-          checkpoint {
-            questions {
-              items {
-                id
-                question {
-                  options {
-                    label
-                    icon
-                    color
-                    text
-                  }
-                  label
-                  note
-                  id
-                  question
-                  sourceId
-                  type
-                }
-                questionID
-              }
-            }
-            instructions
-            instructionsTitle
-            title
-            subtitle
-            type
-          }
         }
       }
       instructions
