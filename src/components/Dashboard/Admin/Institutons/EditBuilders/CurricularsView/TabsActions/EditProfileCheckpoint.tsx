@@ -15,11 +15,11 @@ import Buttons from '../../../../../../Atoms/Buttons';
 import AddQuestion from './QuestionComponents/AddQuestion';
 import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
 
-interface AddProfileCheckpointProps {
+interface EditProfileCheckpointProps {
 
 }
 
-const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
+const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
   const { } = props;
   const history = useHistory();
   const urlParams: any = useParams()
@@ -114,7 +114,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
   const { title, language, label } = checkpointData;
 
   return (
-    <div className="w-9/10 h-full px-4 pb-4">
+    <div className="w-full h-full px-4 pb-4">
 
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
@@ -251,4 +251,4 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
   )
 }
 
-export default AddProfileCheckpoint
+export default EditProfileCheckpoint

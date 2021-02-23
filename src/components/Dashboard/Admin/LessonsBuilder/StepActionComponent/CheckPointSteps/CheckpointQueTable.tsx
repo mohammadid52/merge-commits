@@ -7,7 +7,7 @@ import Buttons from '../../../../../Atoms/Buttons';
 import { getTypeString } from '../../../../../../utilities/strings';
 
 interface CheckPointContentProps {
-  changeStep: (step: string) => void
+  changeStep?: (step?: string) => void
   checkpointId: string
   showActionIcons?: boolean
   DeleteCheckpoint?: (id: string) => void
