@@ -13,6 +13,12 @@ const TopMenu = (props: { handlePopup: () => void }) => {
   const match = useRouteMatch();
   const userAtEnd = state.currentPage + 1 === state.pages.length;
 
+  const [barType, setBarType] = useState<string>('');
+
+  useEffect(() => {
+    state.data.lesson.type && setBarType(state.data.lesson.type);
+  }, [state.data.lesson.type]);
+
   useEffect(() => {
     if (state.pages[state.currentPage + 1]) {
       if (state.pages[state.currentPage + 1].open) {
@@ -35,12 +41,7 @@ const TopMenu = (props: { handlePopup: () => void }) => {
   };
 
   const handleBack = () => {
-    if (state.currentPage === 1) {
-      history.push(`/lesson`);
-      dispatch({ type: 'PAGE_BACK' });
-    }
-
-    if (state.currentPage > 1) {
+    if (state.currentPage > 0) {
       history.push(`${match.url}/${state.pages[state.currentPage - 1].stage}`);
       dispatch({ type: 'PAGE_BACK' });
     }
@@ -71,7 +72,7 @@ const TopMenu = (props: { handlePopup: () => void }) => {
 
             {/* PROGRESS BAR */}
 
-            <ProgressBar />
+            <ProgressBar barType={barType} />
 
             {/* FORWARD BUTTON */}
 
@@ -94,7 +95,14 @@ const TopMenu = (props: { handlePopup: () => void }) => {
       </div>
 
       {/* ICON LABEL HOVER BAR */}
-      <div className={`w-full h-6 bg-darker-gray`} />
+      {
+        barType === 'lesson' ?
+          (
+            <div className={`w-full h-6 bg-darker-gray`} />
+          ) :
+          null
+      }
+
     </>
   );
 };

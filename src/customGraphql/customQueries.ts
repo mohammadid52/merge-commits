@@ -1889,18 +1889,42 @@ export const getLesson = /* GraphQL */ `
   }
 `;
 export const listCheckpoints = /* GraphQL */ `
-  query ListCheckpoints($filter: ModelCheckpointFilterInput, $limit: Int, $nextToken: String) {
+  query ListCheckpoints(
+    $filter: ModelCheckpointFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listCheckpoints(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        label
-        title
-        subtitle
-        language
+    items {
+    title
+    subtitle
+    id
+      questions {
+        nextToken
+        items {
+          question {
+            id
+            label
+            question
+            type
+            options {
+              color
+              icon
+              label
+              text
+            }
+          }
+          checkpointID
+          createdAt
+          id
+        }
       }
-      nextToken
+      instructions
+      instructionsTitle
+      label
     }
   }
+}
 `;
 
 export const listLessonRubricss = /* GraphQL */ `
@@ -1919,6 +1943,26 @@ export const listLessonRubricss = /* GraphQL */ `
         updatedAt
       }
       nextToken
+    }
+  }
+`;
+
+export const getPersonInstitutions = /* GraphQL */ `
+  query GetPerson($email: String!, $authId: String!) {
+    getPerson(email: $email, authId: $authId) {
+      id
+      authId
+      email
+      classes {
+        items {
+          classID
+          class {
+            id
+            institutionID
+          }
+        }
+        nextToken
+      }
     }
   }
 `;

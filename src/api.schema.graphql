@@ -75,6 +75,7 @@ type Institution
   curricula: [Curriculum] @connection(keyName: "curriculumByInstitution", fields: ["id"])
   classes: [Class] @connection(keyName: "classByInstitution", fields: ["id"])
   filters: [String]
+  checkpoints: [commonCheckpoint] @connection(keyName: "byType", fields: ["id"])
 }
 
 type ServiceProvider 
@@ -170,6 +171,7 @@ type Curriculum
   institution: Institution @connection(fields: ["institutionID"])
   designers: [String]
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
+  checkpoints: [commonCheckpoint] @connection(keyName: "byType", fields: ["id"])
 }
 type Topic
 @model 
@@ -507,6 +509,16 @@ type Checkpoint @model {
   estTime: Int
 }
 
+type commonCheckpoint @model(queries: null) @key(name: "byType", fields: ["typeID", "checkpointID"]) {
+  id: ID!
+  type: String!
+  typeID: ID!
+  checkpointID: ID!
+  institution: Institution @connection(fields: ["typeID"])
+  curriculum: Curriculum @connection(fields: ["typeID"])
+  checkpoint: Checkpoint @connection(fields: ["checkpointID"])
+}
+
 type CheckpointQuestions
   @model(queries: null)
   @key(name: "byCheckpoint", fields: ["checkpointID", "questionID"])
@@ -765,6 +777,7 @@ type AnthologyContent {
 type QuestionData @model {
   id: ID!
   syllabusLessonID: ID!
+  checkpointID: ID!
   email: String!
   authID: String!
   person: Person @connection(fields: ["email", "authID"])
@@ -852,6 +865,36 @@ type PersonLocation @model
   person: Person @connection(fields: ["personEmail", "personAuthID"])
   syllabusLesson: SyllabusLesson @connection(fields: ["syllabusLessonID"])
   room: Room @connection(fields: ["roomID"])
+}
+
+type WidgetContent {
+	text: String
+	image: String
+}
+
+type Quotes {
+	text: String
+	author: String
+}
+
+type NoticeboardWidget @model {
+	id: ID!
+  teacherAuthID: String!
+  teacherEmail: String!
+	type: String
+	placement: String
+	title: String
+	description: String
+	content: WidgetContent
+	quotes: [Quotes]
+	active: Boolean
+  teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
+}
+
+type Dummytable{
+id:ID!
+test:String
+
 }
 
 type Subscription {

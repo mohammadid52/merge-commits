@@ -37,12 +37,21 @@ const MainRouter: React.FC = () => {
   }, []);
 
   const setupAppHeaders = async () => {
+    document.title = getAsset(clientKey, 'appTitle')
     const favicon:any = document.getElementById("faviconDefault");
     const favicon32x32:any = document.getElementById("favicon32x32");
     const favicon16x16:any = document.getElementById("favicon16x16");
+    const manifest:any = document.getElementById("manifest");
+    const maskIcon:any = document.getElementById("maskIcon");
     favicon.href = getAsset(clientKey, 'faviconDefault')
     favicon32x32.href = getAsset(clientKey, 'favicon32x32')
     favicon16x16.href = getAsset(clientKey, 'favicon16x16')
+    manifest.href = getAsset(clientKey, 'manifest')
+    maskIcon.href = getAsset(clientKey, 'maskIcon')
+    document.querySelector('meta[name="apple-mobile-web-app-title"]').setAttribute("content", getAsset(clientKey, 'webAppTitle'));
+    document.querySelector('meta[name="application-name"]').setAttribute("content", getAsset(clientKey, 'appName'));
+    document.querySelector('meta[name="msapplication-TileImage"]').setAttribute("content", getAsset(clientKey, 'tileImage'));
+    document.querySelector('meta[name="msapplication-config"]').setAttribute("content", getAsset(clientKey, 'msapplicationConfig'));
   };
 
   const checkUserAuthenticated = async () => {

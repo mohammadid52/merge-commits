@@ -59,7 +59,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
           const arrayOfResponseObjects = response?.data?.listClassStudents?.items;
           const arrayOfClassIDs = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'classID');
           setClassIds(arrayOfClassIDs);
-          console.log('1 -> ', arrayOfClassIDs);
+          // console.log('1 -> ', arrayOfClassIDs);
         } catch (e) {
           console.error('Classes Fetch ERR: ', e);
         }
@@ -80,7 +80,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
           const response = await classIdFromRoomsFetch;
           const arrayOfResponseObjects = response?.data?.listRooms?.items;
           setRooms(arrayOfResponseObjects);
-          console.log('1 -> ', arrayOfResponseObjects);
+          // console.log('1 -> ', arrayOfResponseObjects);
           dispatch({
             type: 'UPDATE_ROOM',
             payload: {
@@ -119,7 +119,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
               data: arrayOfResponseObjects,
             },
           });
-          console.log('2 --> ', arrayOfResponseObjects);
+          // console.log('2 --> ', arrayOfResponseObjects);
         } catch (e) {
           console.error('Rooms Fetch ERR: ', e);
         } finally {
@@ -145,7 +145,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
           const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
           const arrayOfCurriculumIds = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'curriculumID');
           setCurriculumIds(arrayOfCurriculumIds);
-          console.log('3 --> ', arrayOfCurriculumIds);
+          // console.log('3 --> ', arrayOfCurriculumIds);
         } catch (e) {
           console.error('RoomCurriculums fetch ERR: ', e);
         }
@@ -179,7 +179,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
           );
           const response = await syllabusMultiFetch;
           const arrayOfResponseObjects = response?.data?.listSyllabuss?.items;
-          console.log('4 --> ', arrayOfResponseObjects);
+          // console.log('4 --> ', arrayOfResponseObjects);
 
           /**
            * mappedResponseObjects explanation:

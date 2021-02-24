@@ -22,9 +22,9 @@ const Branding: React.FC = () => {
     return dispatch({ type: 'NO_CONTINUE' });
   }, [state.pages, state.currentPage]);
 
-  useEffect(() => {
-    console.log('match url: ', history.location.pathname);
-  }, []);
+  // useEffect(() => {
+  //   console.log('match url: ', history.location.pathname);
+  // }, []);
 
   const handleForward = () => {
     if (state.canContinue && state.currentPage < state.pages.length - 1) {

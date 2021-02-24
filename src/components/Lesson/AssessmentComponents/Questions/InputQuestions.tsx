@@ -12,7 +12,7 @@ const InputQuestions = (props: QuestionProps) => {
   /**
    * Teacher switch
    */
-  const { isTeacher, questionIndex, question, handleInputChange, questionKey, value } = props;
+  const { visible, isTeacher, questionIndex, question, handleInputChange, questionKey, value } = props;
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
 
@@ -31,23 +31,26 @@ const InputQuestions = (props: QuestionProps) => {
   };
 
   return (
-    question && (
-      <div key={`question_${questionId}`} className={`${theme.elem.text} w-auto`}>
-        <label className={theme.elem.text} htmlFor={question.question.label}>
-          <p>
-            <b>{questionIndex + 1}. </b>
-            {question.question.question}
-          </p>
-        </label>
-        <input
-          id={questionId}
-          className={`${theme.elem.textInput} w-full rounded-xl`}
-          type="text"
-          name={question.question.label}
-          value={contents.value}
-          onChange={(e)=> (!isTeacher) ? handleTextInputChange(e): null}
-        />
-      </div>
+    visible &&
+      (
+        question && (
+          <div key={`question_${questionId}`} className={`${theme.elem.text} w-auto`}>
+            <label className={theme.elem.text} htmlFor={question.question.label}>
+              <p>
+                <b>{questionIndex + 1}. </b>
+                {question.question.question}
+              </p>
+            </label>
+            <input
+              id={questionId}
+              className={`${theme.elem.textInput} w-full rounded-xl`}
+            type="text"
+            name={question.question.label}
+            value={contents.value}
+            onChange={(e)=> (!isTeacher) ? handleTextInputChange(e): null}
+          />
+        </div>
+      )
     )
   );
 };

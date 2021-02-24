@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { lessonState, PagesType } from '../state/LessonState';
+import { lessonState } from '../state/LessonState';
 import { lessonReducer } from '../reducers/LessonReducer';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 import * as customMutations from '../customGraphql/customMutations';
@@ -9,8 +9,9 @@ import * as customQueries from '../customGraphql/customQueries';
 // import { API, graphqlOperation } from 'aws-amplify';
 import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import queryString from 'query-string';
 import { standardTheme } from './GlobalContext';
+import * as queries from '../graphql/queries';
+import { createFilterToFetchSpecificItemsOnly } from '../utilities/strings';
 
 interface LessonProps {
   children: React.ReactNode;
@@ -30,6 +31,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const urlParams: any = useParams()
   const [data, setData] = useState<DataObject>();
   const [lesson, setLesson] = useState<DataObject>();
+  const [checkpoints, setCheckpoints] = useState<DataObject>();
   const [subscriptionData, setSubscriptionData] = useState<any>();
 
   const [state, dispatch] = useReducer(lessonReducer, lessonState);
@@ -204,8 +206,8 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         );
         // console.log('classroom data', classroom);
         setLesson(classroom.data.getSyllabusLesson);
-        console.log(classroom.data.getSyllabusLesson)
-        // getOrCreateStudentData();
+        // console.log(classroom.data.getSyllabusLesson)
+        getOrCreateStudentData();
         subscription = subscribeToSyllabusLesson();
       } catch (error) {
         console.error(error);
@@ -254,26 +256,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   }, []);
 
   useEffect(() => {
-    if (lesson) {
-      const wordBank: Array<string> = ['Mimo provoz'];
-
-      dispatch({
-        type: 'SET_INITIAL_STATE',
-        payload: {
-          syllabusLessonID: lesson.id,
-          data: lesson,
-          pages: lesson.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
-            return !item.disabled;
-          }),
-          displayData: lesson.displayData,
-          word_bank: wordBank,
-          subscribeFunc: subscribeToSyllabusLesson,
-        },
-      });
-    }
-  }, [lesson]);
-
-  useEffect(() => {
     if(subscriptionData){
 
       dispatch({
@@ -302,6 +284,59 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       });
     }
   }, [data]);
+
+  useEffect(() => {
+    if (lesson) {
+      dispatch({
+        type: 'SET_INITIAL_STATE',
+        payload: {
+          syllabusLessonID: lesson.id,
+          data: lesson,
+          pages: lesson.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
+            return !item.disabled;
+          }),
+          displayData: lesson.displayData,
+          word_bank: [''],
+          subscribeFunc: subscribeToSyllabusLesson,
+        },
+      });
+    }
+  }, [lesson, checkpoints]);
+
+  useEffect(() => {
+    if (state.data && state.data.lessonPlan) {
+      getAllCheckpoints();
+    }
+  }, [state.data.lessonPlan]);
+
+  /**
+   * Function and useEffect for getting/setting checkpoints if
+   * condition is met and lesson plans include
+   * checkpoints in their name
+   */
+  const getAllCheckpoints = async () => {
+    const allCheckpointIDS = state.data.lessonPlan.reduce((acc: string[], lessonPlanObj: any) => {
+      const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
+      if (isCheckpoint) {
+        return [...acc, lessonPlanObj.stage.match(/[^?id=]*$/g)[0]];
+      } else {
+        return acc;
+      }
+    }, []);
+    try {
+      const checkpoints: any = await API.graphql(graphqlOperation(customQueries.listCheckpoints, {
+        filter: { ...createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id') },
+      }));
+
+      // TODO: cleanup dirty merge of checkpoints into fetched lesson data
+      // console.log(createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id'))
+      setLesson({...lesson, lesson: {...lesson.lesson, checkpoints: checkpoints.data.listCheckpoints}});
+    } catch (e) {
+      console.error('err fetch checkpoints ::: ', e);
+    }
+  };
+
+
 
   return (
     <LessonContext.Provider
