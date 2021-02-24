@@ -777,6 +777,7 @@ type AnthologyContent {
 type QuestionData @model {
   id: ID!
   syllabusLessonID: ID!
+  checkpointID: ID!
   email: String!
   authID: String!
   person: Person @connection(fields: ["email", "authID"])
