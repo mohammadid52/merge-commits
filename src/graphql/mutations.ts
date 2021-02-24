@@ -8101,6 +8101,7 @@ export const createQuestionData = /* GraphQL */ `
     createQuestionData(input: $input, condition: $condition) {
       id
       syllabusLessonID
+      checkpointID
       email
       authID
       person {
@@ -8216,6 +8217,7 @@ export const updateQuestionData = /* GraphQL */ `
     updateQuestionData(input: $input, condition: $condition) {
       id
       syllabusLessonID
+      checkpointID
       email
       authID
       person {
@@ -8331,6 +8333,7 @@ export const deleteQuestionData = /* GraphQL */ `
     deleteQuestionData(input: $input, condition: $condition) {
       id
       syllabusLessonID
+      checkpointID
       email
       authID
       person {
@@ -8526,6 +8529,7 @@ export const createQuestionDataStudentData = /* GraphQL */ `
       questionData {
         id
         syllabusLessonID
+        checkpointID
         email
         authID
         person {
@@ -8670,6 +8674,7 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
       questionData {
         id
         syllabusLessonID
+        checkpointID
         email
         authID
         person {
@@ -8814,6 +8819,7 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
       questionData {
         id
         syllabusLessonID
+        checkpointID
         email
         authID
         person {

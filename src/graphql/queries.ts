@@ -3410,6 +3410,7 @@ export const getQuestionData = /* GraphQL */ `
     getQuestionData(id: $id) {
       id
       syllabusLessonID
+      checkpointID
       email
       authID
       person {
@@ -3527,6 +3528,7 @@ export const listQuestionDatas = /* GraphQL */ `
       items {
         id
         syllabusLessonID
+        checkpointID
         email
         authID
         person {
