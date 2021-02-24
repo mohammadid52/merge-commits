@@ -8,7 +8,7 @@ import Popup from '../../../General/Popup';
 import { useOutsideAlerter } from '../../../General/hooks/outsideAlerter';
 
 interface SaveQuitProps {
-  id: string;
+  id?: string;
   feedback?: {
     like: string;
     text: string;
@@ -44,13 +44,9 @@ const SaveQuit = (props: SaveQuitProps) => {
       activityData: state.componentState.poem ? state.componentState.poem : null,
     };
 
-    // console.log('update', data);
-
     try {
       const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
-      // console.log(dataObject)
       dispatch({ type: 'SAVED_CHANGES' });
-      // console.log('state', state)
     } catch (error) {
       console.error(error);
     }
@@ -64,13 +60,10 @@ const SaveQuit = (props: SaveQuitProps) => {
       onBoardSurvey: true,
     };
 
-    // console.log(updatedStudent, 'updatedSurvey');
-
     try {
       const updatedStudentData: any = await API.graphql(
         graphqlOperation(customMutations.updateSurveyStatus, { input: updatedStudent })
       );
-      // console.log(updatedStudentData);
     } catch (err) {
       console.error(err);
     }
@@ -88,20 +81,11 @@ const SaveQuit = (props: SaveQuitProps) => {
   }
 
   const saveQuestionData = async (responseObj: any) => {
-    let questiondDataObject = {
-      syllabusLessonID: '1',
-      componentType: 'checkpoint',
-      lessonID: state.data.lesson.id,
-      authID: state.studentAuthID,
-      email: state.studentUsername,
-      responseObject: responseObj,
-    };
-
     try {
       const questionData = await API.graphql(
-        graphqlOperation(customMutations.createQuestionData, { input: questiondDataObject })
+        graphqlOperation(customMutations.createQuestionData, { input: responseObj })
       );
-      console.log(questionData, 'questionData');
+      console.log('responseObj -> ', responseObj);
     } catch (err) {
       console.error(err);
     } finally {
@@ -121,7 +105,6 @@ const SaveQuit = (props: SaveQuitProps) => {
       const feedbackData = await API.graphql(
         graphqlOperation(customMutations.createFeedback, { input: feedbackInput })
       );
-      // console.log(feedbackData);
     } catch (error) {
       console.error(error);
     }
@@ -129,10 +112,18 @@ const SaveQuit = (props: SaveQuitProps) => {
 
   const handleSave = async () => {
     if (typeof state.questionData === 'object') {
-      let keys = Object.keys(state.questionData); // doFirst, checkpoint_1
+      let  checkpointIdKeys = Object.keys(state.questionData); // doFirst, checkpoint_1
 
-      await keys.reduce((_: any, key: string) => {
-        const responseObject = state.questionData[key];
+      await  checkpointIdKeys.reduce((_: any, key: string) => {
+        let responseObject = {
+          syllabusLessonID: state.syllabusLessonID,
+          checkpointID: key,
+          componentType: state.data.lesson.type,
+          lessonID: state.data.lesson.id,
+          authID: state.studentAuthID,
+          email: state.studentUsername,
+          responseObject: state.questionData[key],
+        };
 
         saveQuestionData(responseObject);
       }, null);

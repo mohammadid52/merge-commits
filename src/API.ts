@@ -1798,6 +1798,7 @@ export type DeleteStudentDataInput = {
 export type CreateQuestionDataInput = {
   id?: string | null,
   syllabusLessonID: string,
+  checkpointID: string,
   email: string,
   authID: string,
   componentType?: string | null,
@@ -1807,12 +1808,13 @@ export type CreateQuestionDataInput = {
 };
 
 export type QuestionResponseInput = {
-  qid?: number | null,
+  qid?: string | null,
   response?: Array< string | null > | null,
 };
 
 export type ModelQuestionDataConditionInput = {
   syllabusLessonID?: ModelIDInput | null,
+  checkpointID?: ModelIDInput | null,
   email?: ModelStringInput | null,
   authID?: ModelStringInput | null,
   componentType?: ModelStringInput | null,
@@ -1826,6 +1828,7 @@ export type ModelQuestionDataConditionInput = {
 export type UpdateQuestionDataInput = {
   id: string,
   syllabusLessonID?: string | null,
+  checkpointID?: string | null,
   email?: string | null,
   authID?: string | null,
   componentType?: string | null,
@@ -2532,6 +2535,7 @@ export type ModelStudentDataFilterInput = {
 export type ModelQuestionDataFilterInput = {
   id?: ModelIDInput | null,
   syllabusLessonID?: ModelIDInput | null,
+  checkpointID?: ModelIDInput | null,
   email?: ModelStringInput | null,
   authID?: ModelStringInput | null,
   componentType?: ModelStringInput | null,
@@ -11780,6 +11784,7 @@ export type CreateQuestionDataMutation = {
     __typename: "QuestionData",
     id: string,
     syllabusLessonID: string,
+    checkpointID: string,
     email: string,
     authID: string,
     person:  {
@@ -11820,7 +11825,7 @@ export type CreateQuestionDataMutation = {
     lessonID: string | null,
     responseObject:  Array< {
       __typename: "QuestionResponse",
-      qid: number | null,
+      qid: string | null,
       response: Array< string | null > | null,
     } | null > | null,
     syllabusLesson:  {
@@ -11907,6 +11912,7 @@ export type UpdateQuestionDataMutation = {
     __typename: "QuestionData",
     id: string,
     syllabusLessonID: string,
+    checkpointID: string,
     email: string,
     authID: string,
     person:  {
@@ -11947,7 +11953,7 @@ export type UpdateQuestionDataMutation = {
     lessonID: string | null,
     responseObject:  Array< {
       __typename: "QuestionResponse",
-      qid: number | null,
+      qid: string | null,
       response: Array< string | null > | null,
     } | null > | null,
     syllabusLesson:  {
@@ -12034,6 +12040,7 @@ export type DeleteQuestionDataMutation = {
     __typename: "QuestionData",
     id: string,
     syllabusLessonID: string,
+    checkpointID: string,
     email: string,
     authID: string,
     person:  {
@@ -12074,7 +12081,7 @@ export type DeleteQuestionDataMutation = {
     lessonID: string | null,
     responseObject:  Array< {
       __typename: "QuestionResponse",
-      qid: number | null,
+      qid: string | null,
       response: Array< string | null > | null,
     } | null > | null,
     syllabusLesson:  {
@@ -12251,6 +12258,7 @@ export type CreateQuestionDataStudentDataMutation = {
       __typename: "QuestionData",
       id: string,
       syllabusLessonID: string,
+      checkpointID: string,
       email: string,
       authID: string,
       person:  {
@@ -12283,7 +12291,7 @@ export type CreateQuestionDataStudentDataMutation = {
       lessonID: string | null,
       responseObject:  Array< {
         __typename: "QuestionResponse",
-        qid: number | null,
+        qid: string | null,
         response: Array< string | null > | null,
       } | null > | null,
       syllabusLesson:  {
@@ -12410,6 +12418,7 @@ export type UpdateQuestionDataStudentDataMutation = {
       __typename: "QuestionData",
       id: string,
       syllabusLessonID: string,
+      checkpointID: string,
       email: string,
       authID: string,
       person:  {
@@ -12442,7 +12451,7 @@ export type UpdateQuestionDataStudentDataMutation = {
       lessonID: string | null,
       responseObject:  Array< {
         __typename: "QuestionResponse",
-        qid: number | null,
+        qid: string | null,
         response: Array< string | null > | null,
       } | null > | null,
       syllabusLesson:  {
@@ -12569,6 +12578,7 @@ export type DeleteQuestionDataStudentDataMutation = {
       __typename: "QuestionData",
       id: string,
       syllabusLessonID: string,
+      checkpointID: string,
       email: string,
       authID: string,
       person:  {
@@ -12601,7 +12611,7 @@ export type DeleteQuestionDataStudentDataMutation = {
       lessonID: string | null,
       responseObject:  Array< {
         __typename: "QuestionResponse",
-        qid: number | null,
+        qid: string | null,
         response: Array< string | null > | null,
       } | null > | null,
       syllabusLesson:  {
@@ -17850,6 +17860,7 @@ export type GetQuestionDataQuery = {
     __typename: "QuestionData",
     id: string,
     syllabusLessonID: string,
+    checkpointID: string,
     email: string,
     authID: string,
     person:  {
@@ -17890,7 +17901,7 @@ export type GetQuestionDataQuery = {
     lessonID: string | null,
     responseObject:  Array< {
       __typename: "QuestionResponse",
-      qid: number | null,
+      qid: string | null,
       response: Array< string | null > | null,
     } | null > | null,
     syllabusLesson:  {
@@ -17980,6 +17991,7 @@ export type ListQuestionDatasQuery = {
       __typename: "QuestionData",
       id: string,
       syllabusLessonID: string,
+      checkpointID: string,
       email: string,
       authID: string,
       person:  {
@@ -18012,7 +18024,7 @@ export type ListQuestionDatasQuery = {
       lessonID: string | null,
       responseObject:  Array< {
         __typename: "QuestionResponse",
-        qid: number | null,
+        qid: string | null,
         response: Array< string | null > | null,
       } | null > | null,
       syllabusLesson:  {
@@ -27564,6 +27576,7 @@ export type OnCreateQuestionDataSubscription = {
     __typename: "QuestionData",
     id: string,
     syllabusLessonID: string,
+    checkpointID: string,
     email: string,
     authID: string,
     person:  {
@@ -27604,7 +27617,7 @@ export type OnCreateQuestionDataSubscription = {
     lessonID: string | null,
     responseObject:  Array< {
       __typename: "QuestionResponse",
-      qid: number | null,
+      qid: string | null,
       response: Array< string | null > | null,
     } | null > | null,
     syllabusLesson:  {
@@ -27686,6 +27699,7 @@ export type OnUpdateQuestionDataSubscription = {
     __typename: "QuestionData",
     id: string,
     syllabusLessonID: string,
+    checkpointID: string,
     email: string,
     authID: string,
     person:  {
@@ -27726,7 +27740,7 @@ export type OnUpdateQuestionDataSubscription = {
     lessonID: string | null,
     responseObject:  Array< {
       __typename: "QuestionResponse",
-      qid: number | null,
+      qid: string | null,
       response: Array< string | null > | null,
     } | null > | null,
     syllabusLesson:  {
@@ -27808,6 +27822,7 @@ export type OnDeleteQuestionDataSubscription = {
     __typename: "QuestionData",
     id: string,
     syllabusLessonID: string,
+    checkpointID: string,
     email: string,
     authID: string,
     person:  {
@@ -27848,7 +27863,7 @@ export type OnDeleteQuestionDataSubscription = {
     lessonID: string | null,
     responseObject:  Array< {
       __typename: "QuestionResponse",
-      qid: number | null,
+      qid: string | null,
       response: Array< string | null > | null,
     } | null > | null,
     syllabusLesson:  {
@@ -28020,6 +28035,7 @@ export type OnCreateQuestionDataStudentDataSubscription = {
       __typename: "QuestionData",
       id: string,
       syllabusLessonID: string,
+      checkpointID: string,
       email: string,
       authID: string,
       person:  {
@@ -28052,7 +28068,7 @@ export type OnCreateQuestionDataStudentDataSubscription = {
       lessonID: string | null,
       responseObject:  Array< {
         __typename: "QuestionResponse",
-        qid: number | null,
+        qid: string | null,
         response: Array< string | null > | null,
       } | null > | null,
       syllabusLesson:  {
@@ -28174,6 +28190,7 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
       __typename: "QuestionData",
       id: string,
       syllabusLessonID: string,
+      checkpointID: string,
       email: string,
       authID: string,
       person:  {
@@ -28206,7 +28223,7 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
       lessonID: string | null,
       responseObject:  Array< {
         __typename: "QuestionResponse",
-        qid: number | null,
+        qid: string | null,
         response: Array< string | null > | null,
       } | null > | null,
       syllabusLesson:  {
@@ -28328,6 +28345,7 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
       __typename: "QuestionData",
       id: string,
       syllabusLessonID: string,
+      checkpointID: string,
       email: string,
       authID: string,
       person:  {
@@ -28360,7 +28378,7 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
       lessonID: string | null,
       responseObject:  Array< {
         __typename: "QuestionResponse",
-        qid: number | null,
+        qid: string | null,
         response: Array< string | null > | null,
       } | null > | null,
       syllabusLesson:  {

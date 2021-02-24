@@ -33,6 +33,7 @@ interface ResponseObject {
 }
 
 export interface QuestionInterface {
+  checkpointID?: string;
   id: string;
   label: string;
   options: any[];
@@ -93,24 +94,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       }
     }
   }, [input]);
-
-  /**
-   * HANDLE CHANGE OF QUESTION SELECTION
-   */
-  const handleInputChange = (id: number | string, value: string | string[]) => {
-    const valueArray = typeof value === 'string' ? [value] : value;
-    const mappedInput = input.map((obj: ResponseObject) => {
-      if (obj.qid === id) {
-        return {
-          qid: id,
-          response: valueArray,
-        };
-      } else {
-        return obj;
-      }
-    });
-    setInput(mappedInput);
-  };
 
   /**
    * 1. CHECK if there are checkpoints
@@ -188,10 +171,22 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
    * and their answers e.g:
    * [..., {qid: "1", response: ['response']}]
    */
-  const initialResponseState = allQuestions.reduce((acc: any[], questionObj: QuestionParentInterface) => {
-    const questionIdString = questionObj.question.id.toString();
-    return [...acc, { qid: questionIdString, response: [] }];
-  }, []);
+  const initialResponseState = allQuestions.reduce((acc: any, questionObj: QuestionParentInterface) => {
+      const checkpointIdString = questionObj.checkpointID.toString();
+      const questionIdString = questionObj.question.id.toString();
+
+      if(acc.hasOwnProperty(checkpointIdString)){
+        return {
+          ...acc,
+          [checkpointIdString]: [...acc[checkpointIdString],
+            { qid: questionIdString, response: [] }] };
+      } else {
+        return {
+          ...acc,
+          [checkpointIdString]: [
+            { qid: questionIdString, response: [] }] };
+      }
+    }, []);
 
 
   /**
@@ -214,6 +209,32 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     }
   }
 
+  /**
+   * HANDLE CHANGE OF QUESTION SELECTION
+   */
+  const handleInputChange = (id: number | string, value: string | string[], checkpointID: string) => {
+    const valueArray = typeof value === 'string' ? [value] : value;
+    const updatedInput = Object.keys(input).reduce((acc: any, checkpointIDgroup: any) => {
+      if(checkpointIDgroup === checkpointID){
+        //@ts-ignore
+        const mappedInput = input[checkpointIDgroup].map((obj: ResponseObject) => {
+          if (obj.qid === id) {
+            return {
+              qid: id,
+              response: valueArray,
+            };
+          } else {
+            return obj;
+          }
+        });
+        return {...acc, [checkpointIDgroup]:mappedInput}
+      } else {
+        return {...acc, [checkpointIDgroup]:input[checkpointIDgroup]}
+      }
+    },{})
+    setInput(updatedInput);
+  };
+
   if (status !== 'loaded') return null;
 
   return (
@@ -231,6 +252,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                 }
                 <div key={`questionParent_${idx}`} id={`questionParent_${idx}`}>
                   <Question
+                    checkpointID={allQuestions[idx].checkpointID}
                     visible={true}
                     isTeacher={isTeacher}
                     question={question}

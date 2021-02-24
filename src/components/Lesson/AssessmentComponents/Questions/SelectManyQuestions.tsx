@@ -15,7 +15,7 @@ const SelectManyQuestions = (props: QuestionProps) => {
   /**
    * Teacher switch
    */
-  const { visible, isTeacher, questionIndex, question, handleInputChange, questionKey, value } = props;
+  const { checkpointID, visible, isTeacher, questionIndex, question, handleInputChange, questionKey, value } = props;
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
 
@@ -33,11 +33,11 @@ const SelectManyQuestions = (props: QuestionProps) => {
 
     if (input.value.indexOf(id) === -1) {
       setInput({ id: questionId, value: [...input.value, id] });
-      handleInputChange(questionId, [...input.value, id]);
+      handleInputChange(questionId, [...input.value, id], checkpointID);
     } else {
       const filterOutId = input.value.filter((elem: string) => elem !== id);
       setInput({ id: questionId, value: filterOutId });
-      handleInputChange(questionId, filterOutId);
+      handleInputChange(questionId, filterOutId, checkpointID);
     }
   };
 
