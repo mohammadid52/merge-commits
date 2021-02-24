@@ -12,23 +12,13 @@ const TextQuestions = (props: QuestionProps) => {
   /**
    * Teacher switch
    */
-  const { isTeacher, questionIndex, question, handleInputChange, questionKey, value } = props;
+  const { visible, isTeacher, questionIndex, question, handleInputChange, questionKey, value } = props;
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
 
   const [contents, setContents] = useState<TextInputState>({ id: '', value: '' });
 
   const questionId = question.question.id;
-
-  // useEffect(() => {
-  //   if ( state.questionData[checkpointID] && state.questionData[checkpointID][question.id] && state.questionData[checkpointID][question.id] !== '' ) {
-  //     setContents(state.questionData[checkpointID][question.id])
-  //   }
-  //
-  //   if( state.questionData[checkpointID] === undefined || state.questionData[checkpointID][question.id] === undefined ) {
-  //     setContents('');
-  //   }
-  // }, [])
 
   // TODO: change this code for doFirst / Assessment / Checkpoint
   const handleTextInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -41,20 +31,22 @@ const TextQuestions = (props: QuestionProps) => {
   };
 
   return (
-    <div key={`question_${questionId}`} className={`${theme.elem.text} w-auto`}>
-      <label className={theme.elem.text} htmlFor={question.question.label}>
-        <p className={theme.elem.text}>
-          <b>{questionIndex + 1}. </b>
-          {question.question.question}
-        </p>
-      </label>
-      <textarea
-        id={questionId}
-        className={`h-40 ${theme.elem.textInput} w-full rounded-xl`}
-        value={contents.value}
-        onChange={(e)=> (!isTeacher) ? handleTextInputChange(e): null}
-      />
-    </div>
+    visible && (
+      <div key={`question_${questionId}`} className={`${theme.elem.text} w-auto`}>
+        <label className={theme.elem.text} htmlFor={question.question.label}>
+          <p className={theme.elem.text}>
+            <b>{questionIndex + 1}. </b>
+            {question.question.question}
+          </p>
+        </label>
+        <textarea
+          id={questionId}
+          className={`h-40 ${theme.elem.textInput} w-full rounded-xl`}
+          value={contents.value}
+          onChange={(e) => (!isTeacher) ? handleTextInputChange(e) : null}
+        />
+      </div>
+    )
   );
 };
 

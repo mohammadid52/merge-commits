@@ -12,6 +12,7 @@ import SelectOneQuestions from './Questions/SelectOneQuestions';
 import SelectManyQuestions from './Questions/SelectManyQuestions';
 
 export interface QuestionProps {
+  visible?: boolean;
   isTeacher?: boolean;
   question?: QuestionInterface;
   questionIndex?: number;
@@ -24,11 +25,9 @@ const Question = (props: QuestionProps) => {
   /**
    * Teacher switch
    */
-  const { isTeacher, question, questionIndex, questionKey, handleInputChange, value } = props;
+  const { visible, isTeacher, question, questionIndex, questionKey, handleInputChange, value } = props;
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
-
-  const cloneQuestion = JSON.parse(JSON.stringify(question));
 
   /**
    * Function for returning different question-types e.g. selectOne, selectMany, etc.
@@ -36,10 +35,11 @@ const Question = (props: QuestionProps) => {
    * @param key
    */
   const questionSwitch = (questionIndex: number, key: string) => {
-    switch (cloneQuestion.question.type) {
+    switch (question.question.type) {
       case 'input':
         return (
           <InputQuestions
+            visible={visible}
             isTeacher={isTeacher}
             question={question}
             questionIndex={questionIndex}
@@ -51,6 +51,7 @@ const Question = (props: QuestionProps) => {
       case 'text':
         return (
           <TextQuestions
+            visible={visible}
             isTeacher={isTeacher}
             question={question}
             questionIndex={questionIndex}
@@ -62,6 +63,7 @@ const Question = (props: QuestionProps) => {
       case 'selectOne':
         return (
           <SelectOneQuestions
+            visible={visible}
             isTeacher={isTeacher}
             question={question}
             questionIndex={questionIndex}
@@ -73,6 +75,7 @@ const Question = (props: QuestionProps) => {
       case 'selectMany':
         return (
           <SelectManyQuestions
+            visible={visible}
             isTeacher={isTeacher}
             question={question}
             questionIndex={questionIndex}
@@ -88,7 +91,7 @@ const Question = (props: QuestionProps) => {
 
   return (
     <>
-      {question && cloneQuestion ? questionSwitch(questionIndex, questionKey) : null}
+      {question && question.question.type ? questionSwitch(questionIndex, questionKey) : null}
     </>
   );
 };

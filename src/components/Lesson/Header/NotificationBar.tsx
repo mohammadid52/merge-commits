@@ -40,10 +40,10 @@ const NotificationBar: React.FC = () => {
         state.displayData.breakdownComponent !== '' &&
         !containsBreakdownMessage
       ) {
-        setNotifications([
-          ...notifications,
-          { message: 'The teacher is requesting you to come to the breakdown!', type: 'breakdown' },
-        ]);
+        // setNotifications([
+        //   ...notifications,
+        //   { message: 'The teacher is requesting you to come to the breakdown!', type: 'breakdown' },
+        // ]);
       } else if (
         state.displayData.breakdownComponent === null ||
         state.displayData.breakdownComponent === '' ||

@@ -20,11 +20,12 @@ const Checkpoint = (props: { isTeacher?: boolean }) => {
 
   useEffect(()=>{
     const lessonType = state.data.lesson.type;
+    const lessonTitle = state.data.lesson.title;
 
     if (lessonType === 'lesson'){
       setTitle('Checkpoint Questions');
     } else {
-      setTitle('Assessment Questions');
+      setTitle(`${lessonTitle} - Assessment Questions`);
     }
   },[])
 
