@@ -194,6 +194,17 @@ export const getInstitution = /* GraphQL */ `
         nextToken
       }
       filters
+      checkpoints {
+        items {
+          id
+          type
+          typeID
+          checkpointID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -244,6 +255,9 @@ export const listInstitutions = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -393,6 +407,9 @@ export const getRoom = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -601,6 +618,9 @@ export const getClass = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -856,6 +876,9 @@ export const getCurriculum = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -874,6 +897,17 @@ export const getCurriculum = /* GraphQL */ `
           languages
           designers
           status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      checkpoints {
+        items {
+          id
+          type
+          typeID
+          checkpointID
           createdAt
           updatedAt
         }
@@ -929,6 +963,9 @@ export const listCurriculums = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -970,6 +1007,9 @@ export const getTopic = /* GraphQL */ `
         }
         designers
         syllabi {
+          nextToken
+        }
+        checkpoints {
           nextToken
         }
         createdAt
@@ -1233,6 +1273,9 @@ export const getRoomCurriculum = /* GraphQL */ `
         }
         designers
         syllabi {
+          nextToken
+        }
+        checkpoints {
           nextToken
         }
         createdAt

@@ -75,6 +75,7 @@ type Institution
   curricula: [Curriculum] @connection(keyName: "curriculumByInstitution", fields: ["id"])
   classes: [Class] @connection(keyName: "classByInstitution", fields: ["id"])
   filters: [String]
+  checkpoints: [commonCheckpoint] @connection(keyName: "byType", fields: ["id"])
 }
 
 type ServiceProvider 
@@ -170,6 +171,7 @@ type Curriculum
   institution: Institution @connection(fields: ["institutionID"])
   designers: [String]
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
+  checkpoints: [commonCheckpoint] @connection(keyName: "byType", fields: ["id"])
 }
 type Topic
 @model 
@@ -505,6 +507,16 @@ type Checkpoint @model {
   designers: [String]
   language: String
   estTime: Int
+}
+
+type commonCheckpoint @model(queries: null) @key(name: "byType", fields: ["typeID", "checkpointID"]) {
+  id: ID!
+  type: String!
+  typeID: ID!
+  checkpointID: ID!
+  institution: Institution @connection(fields: ["typeID"])
+  curriculum: Curriculum @connection(fields: ["typeID"])
+  checkpoint: Checkpoint @connection(fields: ["checkpointID"])
 }
 
 type CheckpointQuestions
