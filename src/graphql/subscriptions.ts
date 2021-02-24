@@ -7732,6 +7732,7 @@ export const onCreateQuestionData = /* GraphQL */ `
     onCreateQuestionData {
       id
       syllabusLessonID
+      checkpointID
       email
       authID
       person {
@@ -7844,6 +7845,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
     onUpdateQuestionData {
       id
       syllabusLessonID
+      checkpointID
       email
       authID
       person {
@@ -7956,6 +7958,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
     onDeleteQuestionData {
       id
       syllabusLessonID
+      checkpointID
       email
       authID
       person {
@@ -8148,6 +8151,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
       questionData {
         id
         syllabusLessonID
+        checkpointID
         email
         authID
         person {
@@ -8289,6 +8293,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
       questionData {
         id
         syllabusLessonID
+        checkpointID
         email
         authID
         person {
@@ -8430,6 +8435,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
       questionData {
         id
         syllabusLessonID
+        checkpointID
         email
         authID
         person {
