@@ -65,9 +65,7 @@ export type LessonActions =
       type: 'SET_QUESTION_DATA';
       payload: {
         key: string;
-        data: {
-          [key: string]: any;
-        };
+        data: any;
       };
     }
   | {
@@ -304,7 +302,7 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
       let updatedQuestionData: any = state.questionData;
 
       if (!updatedQuestionData[action.payload.key]) {
-        updatedQuestionData[action.payload.key] = action.payload.data;
+        updatedQuestionData = action.payload.data;
         return {
           ...state,
           questionData: updatedQuestionData,

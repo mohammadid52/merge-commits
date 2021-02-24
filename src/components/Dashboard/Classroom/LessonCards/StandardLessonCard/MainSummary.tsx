@@ -19,8 +19,8 @@ const MainSummary = (props: LessonCardProps) => {
               {lessonProps.complete && lessonProps.endDate ? 'Completed on ' + reverseDateString() : ''}
             </span>
       </h1>
-      <p className="overflow-ellipsis overflow-hidden ... text-sm text-left">
-        {lessonProps.lesson && lessonProps.lesson.summary ? lessonProps.lesson.summary : null}
+      <p className='overflow-ellipsis overflow-hidden ... text-sm text-left'
+         dangerouslySetInnerHTML={{ __html: lessonProps.lesson && lessonProps.lesson.summary ? lessonProps.lesson.summary : '' }}>
       </p>
     </div>
   );
