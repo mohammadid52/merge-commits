@@ -3,6 +3,7 @@ import { LessonContext } from '../../../contexts/LessonContext';
 import CheckpointQuestions from './CheckpointQuestions';
 import Banner from '../LessonComponents/Banner';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
+import SaveQuit from '../LessonComponents/Outro/SaveQuit';
 
 const Checkpoint = (props: { isTeacher?: boolean }) => {
   /**
@@ -41,6 +42,7 @@ const Checkpoint = (props: { isTeacher?: boolean }) => {
     <div className={theme.section}>
       <Banner isTeacher={isTeacher} title={title} iconName={'FaCheck'} />
       <CheckpointQuestions isTeacher={isTeacher} checkpointType={`checkpoint`} handleSetTitle={handleSetTitle} />
+      <SaveQuit />
     </div>
   );
 };
