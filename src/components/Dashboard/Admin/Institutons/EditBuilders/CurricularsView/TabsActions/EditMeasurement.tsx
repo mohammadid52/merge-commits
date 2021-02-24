@@ -188,7 +188,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
                     <TextArea rows={3} id='excelled' value={measurement.excelled} onChange={onInputChange} name='excelled' label="Excelled" />
                   </div>
                   <div className="px-3 py-4">
-                    <TextArea rows={3} id='adequite' value={measurement.adequite} onChange={onInputChange} name='adequite' label="Adequite" />
+                    <TextArea rows={3} id='adequite' value={measurement.adequite} onChange={onInputChange} name='adequite' label="Adequate" />
                   </div>
                   <div className="px-3 py-4">
                     <TextArea rows={3} id='basic' value={measurement.basic} onChange={onInputChange} name='basic' label="Basic" />
