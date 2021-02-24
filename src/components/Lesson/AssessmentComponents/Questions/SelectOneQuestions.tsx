@@ -14,7 +14,7 @@ const SelectOneQuestions = (props: QuestionProps) => {
   /**
    * Teacher switch
    */
-  const { visible, isTeacher, questionIndex, question, handleInputChange, questionKey, value } = props;
+  const { checkpointID, visible, isTeacher, questionIndex, question, handleInputChange, questionKey, value } = props;
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
 
@@ -22,22 +22,11 @@ const SelectOneQuestions = (props: QuestionProps) => {
 
   const questionId = question.question.id;
 
-  // const contextInput = () => state.questionData.find((q: any) => q.qid === questionId);
-  //
-  // useEffect(() => {
-  //   if (state.questionData.length > 0) {
-  //     const contextInput = state.questionData.find((q: any) => q.qid === questionId);
-  //     setInput({ id: contextInput.qid, value: contextInput.response[0] });
-  //   }
-  // }, [state.questionData]);
-
   // TODO: change this code for doFirst / Assessment / Checkpoint
   const handleRadioSelect = (e: React.MouseEvent<HTMLElement>) => {
     const { id } = e.target as HTMLElement;
-    // const val = e.target.getAttribute('data-value');
     setInput({ id: questionId, value: id });
-    handleInputChange(questionId, id);
-    // console.log('ctxc input   ', contextInput())
+    handleInputChange(questionId, id, checkpointID);
   };
   return (
     <>

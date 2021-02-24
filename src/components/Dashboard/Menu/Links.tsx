@@ -142,6 +142,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               label: 'Noticeboard',
               path: 'noticeboard',
             },
+            {
+              title: sideBarLinksDict[userLanguage].LESSON_BUILDER,
+              name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
+              label: 'Lesson Builder',
+              path: 'lesson-builder',
+            },
           ];
         });
       case 'ST':

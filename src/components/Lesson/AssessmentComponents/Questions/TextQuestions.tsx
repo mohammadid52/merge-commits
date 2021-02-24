@@ -12,7 +12,7 @@ const TextQuestions = (props: QuestionProps) => {
   /**
    * Teacher switch
    */
-  const { visible, isTeacher, questionIndex, question, handleInputChange, questionKey, value } = props;
+  const { checkpointID, visible, isTeacher, questionIndex, question, handleInputChange, questionKey, value } = props;
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
 
@@ -27,7 +27,7 @@ const TextQuestions = (props: QuestionProps) => {
       id: questionId,
       value: value,
     });
-    handleInputChange(questionId, value);
+    handleInputChange(questionId, value, checkpointID);
   };
 
   return (
