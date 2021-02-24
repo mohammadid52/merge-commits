@@ -1,9 +1,12 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { IoArrowUndoCircleOutline, IoOptionsOutline } from 'react-icons/io5';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
+import API, { graphqlOperation } from '@aws-amplify/api'
 
 import { getTypeString } from '../../../../../../../utilities/strings';
+import * as customQueries from '../../../../../../../customGraphql/customQueries';
+import * as customMutations from '../../../../../../../customGraphql/customMutations';
 
 import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector';
 import SectionTitle from '../../../../../../Atoms/SectionTitle';
@@ -37,17 +40,18 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     // { id: '4', question: 'Question four', type: 'text' },
   ]
   const [checkpointData, setCheckpointData] = useState(initialData);
+  const [designersList, setDesignersList] = useState([]);
   const [selectedDesigners, setSelectedDesigner] = useState([]);
   const [checkpQuestions, setCheckpQuestions] = useState(tempQuestionData);
   const [questionOptions, setQuestionOptions] = useState({ quesId: '', options: [] });
   const [currentState, setCurrentState] = useState('checkpoint');
+  const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({
     title: '',
     label: '',
     message: '',
     isError: true
   });
-  const designersList: any = [];
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
@@ -108,10 +112,124 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     setCurrentState('checkpoint')
   }
 
-  const saveNewCheckpoint = () => {
-
+  const addCheckpointQuestions = async (quesId: string, checkpointID: string, required: boolean) => {
+    try {
+      const input = {
+        checkpointID: checkpointID,
+        questionID: quesId,
+        required: false,
+      };
+      const questions: any = await API.graphql(graphqlOperation(customMutations.createCheckpointQuestions, { input: input }));
+    } catch {
+      setValidation({
+        title: '',
+        label: '',
+        message: 'Unable to save Checkpoint details, Please try again later.',
+        isError: true
+      });
+    }
   }
+
+  const validateForm = () => {
+    let isValid = true
+    const msgs = validation;
+    if (!checkpointData.title?.trim().length) {
+      isValid = false;
+      msgs.title = 'Checkpoint title is required';
+    } else {
+      msgs.title = ''
+    }
+    if (!checkpointData.label?.trim().length) {
+      isValid = false;
+      msgs.label = 'Checkpoint label is required';
+    } else {
+      msgs.label = ''
+    }
+    if (checkpQuestions?.length <= 0) {
+      isValid = false;
+      msgs.message = 'You need to add minimum one question to create a checkpoint.';
+    } else {
+      msgs.message = ''
+    }
+    setValidation({ ...msgs });
+    return isValid;
+  }
+
+  const saveNewCheckpoint = async () => {
+    const isValid = validateForm();
+    if (isValid) {
+      try {
+        setLoading(true)
+        const input = {
+          stage: 'checkpoint',
+          type: 'profile',
+          label: checkpointData.label,
+          title: checkpointData.title,
+          designers: selectedDesigners.map((item: any) => item.id),
+          language: checkpointData.language.value,
+        }
+        const results: any = await API.graphql(
+          graphqlOperation(customMutations.createCheckpoint, { input: input })
+        );
+        const newCheckpoint = results?.data?.createCheckpoint;
+        if (newCheckpoint) {
+          let profileCheckpointInput = {
+            type: 'curricular',
+            typeID: curricularId,
+            checkpointID: newCheckpoint.id,
+          }
+          await API.graphql(graphqlOperation(customMutations.createCommonCheckpoint, {
+            input: profileCheckpointInput
+          }))
+
+          let questions = Promise.all(
+            checkpQuestions.map(async (item: any) => addCheckpointQuestions(item.id, newCheckpoint.id, item.required))
+          )
+          history.goBack();
+        } else {
+          setValidation({
+            title: '',
+            label: '',
+            message: 'Unable to save Checkpoint details, Please try again later.',
+            isError: true
+          });
+        }
+        setLoading(false)
+
+        // TODO: Redirect to previous step on success.
+      } catch {
+        setValidation({
+          title: '',
+          label: '',
+          message: 'Unable to save Checkpoint details, Please try again later.',
+          isError: true
+        });
+        setLoading(false)
+      }
+    }
+  }
+  const addQuesToCheckpoint = (obj: any) => {
+    setCheckpQuestions([...checkpQuestions, obj])
+  }
+
   const { title, language, label } = checkpointData;
+
+  const fetchPersonsList = async () => {
+    const result: any = await API.graphql(graphqlOperation(customQueries.listPersons, {
+      filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "BLD" } }] }
+    }))
+    const savedData = result.data.listPersons;
+    const updatedList = savedData?.items.map((item: { id: string, firstName: string, lastName: string }) => ({
+      id: item?.id,
+      name: `${item?.firstName || ''} ${item.lastName || ''}`,
+      value: `${item?.firstName || ''} ${item.lastName || ''}`
+    }))
+    setDesignersList(updatedList);
+  }
+
+  useEffect(() => {
+    fetchPersonsList();
+  }, []);
 
   return (
     <div className="w-9/10 h-full px-4 pb-4">
@@ -129,8 +247,8 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
       <PageWrapper>
         {currentState !== 'checkpoint' ? (
           <Fragment>
-            {currentState === 'addQuestion' && <AddQuestion goBackToPreviousStep={backToInitials} />}
-            {currentState === 'questionsList' && <SelectPreviousQuestion goBackToPreviousStep={backToInitials} />}
+            {currentState === 'addQuestion' && <AddQuestion goBackToPreviousStep={backToInitials} addNewQuestion={addQuesToCheckpoint} />}
+            {currentState === 'questionsList' && <SelectPreviousQuestion selectedList={checkpQuestions} goBackToPreviousStep={backToInitials} setCheckpQuestions={setCheckpQuestions} />}
           </Fragment>
         ) : (
             <Fragment>
@@ -240,9 +358,12 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
 
                 </div>
               </div>
+              {validation.message && <div className="py-4 m-auto mt-2 text-center">
+                <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
+              </div>}
               <div className="flex my-8 justify-center">
                 <Buttons btnClass="py-3 px-10 mr-4" label="Cancel" onClick={history.goBack} transparent />
-                <Buttons btnClass="py-3 px-10 ml-4" label="Save" onClick={saveNewCheckpoint} />
+                <Buttons btnClass="py-3 px-10 ml-4" label={loading ? 'Saving...' : 'Save'} onClick={saveNewCheckpoint} disabled={loading ? true : false} />
               </div>
             </Fragment>
           )}

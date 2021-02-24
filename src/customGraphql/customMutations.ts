@@ -880,3 +880,18 @@ export const deleteLessonRubrics = /* GraphQL */ `
     }
   }
 `;
+export const createCommonCheckpoint = /* GraphQL */ `
+  mutation CreateCommonCheckpoint(
+    $input: CreateCommonCheckpointInput!
+    $condition: ModelcommonCheckpointConditionInput
+  ) {
+    createCommonCheckpoint(input: $input, condition: $condition) {
+      id
+      type
+      typeID
+      checkpointID
+      createdAt
+      updatedAt
+    }
+  }
+`;

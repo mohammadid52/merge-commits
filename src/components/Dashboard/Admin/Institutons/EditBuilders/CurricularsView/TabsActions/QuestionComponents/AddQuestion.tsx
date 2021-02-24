@@ -12,6 +12,7 @@ import * as mutations from '../../../../../../../../graphql/mutations';
 
 interface AddQuestionProps {
   goBackToPreviousStep: () => void
+  addNewQuestion: (obj: any) => void
 }
 
 interface InitialState {
@@ -34,7 +35,7 @@ interface InputValue {
 
 const AddQuestion = (props: AddQuestionProps) => {
 
-  const { goBackToPreviousStep } = props;
+  const { goBackToPreviousStep, addNewQuestion } = props;
 
   const initialState = {
     question: '',
@@ -214,7 +215,6 @@ const AddQuestion = (props: AddQuestionProps) => {
         const newQuestion = results?.data?.createQuestion;
         if (newQuestion.id) {
           newQuestion.required = questionData.isRequired;
-          // setCheckpQuestions(newQuestion)
           setValidation({
             question: '',
             type: '',
@@ -223,6 +223,7 @@ const AddQuestion = (props: AddQuestionProps) => {
             message: 'Question details has been saved.',
             isError: false
           });
+          addNewQuestion(newQuestion)
           goBackToPreviousStep();
         }
         setLoading(false)
@@ -257,10 +258,10 @@ const AddQuestion = (props: AddQuestionProps) => {
   const { question, label, type, language, options, otherOpt, noneOfAbove } = questionData;
   return (
     <Fragment>
-      <div className="w-7/10 m-auto">
+      <div className="w-8/10 m-auto">
         <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">ADD NEW CHECKPOINT QUESTION</h3>
       </div>
-      <div className="w-7/10 m-auto">
+      <div className="w-8/10 m-auto">
         <div className="">
 
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
@@ -289,8 +290,6 @@ const AddQuestion = (props: AddQuestionProps) => {
               <Selector selectedItem={language.name} placeholder="Language" list={languageList} onChange={(val, name, id) => onSelectOption(val, name, id, 'language')} />
             </div>
           </div>
-
-
 
           {(type.value === 'selectOne' || type.value === 'selectMany') && (<div className="p-6">
             <div className="p-6 border-gray-400 border border-dashed">

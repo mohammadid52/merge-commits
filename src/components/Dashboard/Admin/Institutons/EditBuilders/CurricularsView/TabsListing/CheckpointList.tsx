@@ -1,8 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-// import API, { graphqlOperation } from '@aws-amplify/api';
+import API, { graphqlOperation } from '@aws-amplify/api';
 
 // import { reorder } from '../../../../../../../utilities/strings';
+import * as customQueries from '../../../../../../../customGraphql/customQueries';
 
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import DragableAccordion from '../../../../../../Atoms/DragableAccordion';
@@ -36,20 +37,20 @@ const CheckpointList = (props: CheckpointListProps) => {
 
   }
 
-  const fetchCurricularCheckpoint = () => {
-    const checkpointList: any = [
-      { id: '1', title: 'Checkpoint 1' },
-      { id: '2', title: 'Checkpoint 2' },
-      { id: '3', title: 'Checkpoint 3' },
-    ];
-    const updatedList = checkpointList.map((item: any) => {
-      const newItem = {
-        ...item,
-        content: <CheckpointQueTable changeStep={changeStep} checkpointId={item.id} DeleteCheckpoint={DeleteCheckpoint} editCheckPoint={editCheckPoint} showActionIcons />
-      }
-      return newItem;
-    })
-    setCheckPoints(updatedList)
+  const fetchCurricularCheckpoint = async () => {
+    const result: any = await API.graphql(graphqlOperation(customQueries.getCurriculumCheckpoints, { id: curricularId }))
+    const curricularCheckp: any = result.data?.getCurriculum?.checkpoints?.items;
+    if (curricularCheckp.length > 0) {
+      let checkpointList = curricularCheckp.map((item: any) => {
+        return {
+          id: item.checkpointID,
+          commonCheckpointId: item.id,
+          title: item?.checkpoint?.title,
+          content: <CheckpointQueTable changeStep={changeStep} checkpointId={item.checkpointID} DeleteCheckpoint={DeleteCheckpoint} editCheckPoint={editCheckPoint} showActionIcons />
+        }
+      })
+      setCheckPoints(checkpointList)
+    }
   }
 
   useEffect(() => {
@@ -75,6 +76,7 @@ const CheckpointList = (props: CheckpointListProps) => {
             ) : (
                 <Fragment>
                   <div className="flex justify-center mt-8">
+                    <Buttons btnClass="mr-3" label="Add Existing Checkpoint" onClick={addExistingCheckpoint} />
                     <Buttons btnClass="mx-4" label="Add new Checkpoint" onClick={createNewCheckpoint} />
                   </div>
                   <p className="text-center p-16">  This curricular does not have any checkpoints yet. Please create a new one.</p>

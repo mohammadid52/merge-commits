@@ -10,10 +10,12 @@ import { getLanguageString, getTypeString } from '../../../../../../../../utilit
 
 interface SelectPreviousQuestionProps {
   goBackToPreviousStep: () => void
+  setCheckpQuestions: (obj: any) => void
+  selectedList: any[]
 }
 
 const SelectPreviousQuestion = (props: SelectPreviousQuestionProps) => {
-  const { goBackToPreviousStep } = props;
+  const { goBackToPreviousStep, setCheckpQuestions, selectedList } = props;
   const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
   const [questionsList, setQuestionsList] = useState([]);
   const [allQuestionsList, setAllQuestionsList] = useState([]);
@@ -49,7 +51,8 @@ const SelectPreviousQuestion = (props: SelectPreviousQuestionProps) => {
   }
   const onQuestionSave = () => {
     const selectedQuestionsList = [...allQuestionsList].filter(item => selectedQuestionIds.includes(item.id))
-    // onSave(selectedQuestionsList);
+    setCheckpQuestions(selectedQuestionsList);
+    goBackToPreviousStep();
   }
 
 
@@ -79,12 +82,12 @@ const SelectPreviousQuestion = (props: SelectPreviousQuestionProps) => {
     fetchQuestionsList();
   }, [])
 
-  // useEffect(() => {
-  //   if (selecteList?.length > 0) {
-  //     let IDs = selecteList.map(item => item.id);
-  //     setSelectedQuestionIds(IDs)
-  //   }
-  // }, [selecteList]);
+  useEffect(() => {
+    if (selectedList?.length > 0) {
+      let IDs = selectedList.map(item => item.id);
+      setSelectedQuestionIds(IDs)
+    }
+  }, [selectedList]);
 
   return (
     <Fragment>

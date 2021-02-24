@@ -80,7 +80,9 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
     try {
       setLoading(true);
       const fetchCheckpointsData: any = await API.graphql(
-        graphqlOperation(customQueries.listCheckpoints)
+        graphqlOperation(customQueries.listCheckpoints,{
+          filter: { type: { eq: 'profile' } },
+        })
       );
       if (!fetchCheckpointsData) {
         throw new Error('fail!');

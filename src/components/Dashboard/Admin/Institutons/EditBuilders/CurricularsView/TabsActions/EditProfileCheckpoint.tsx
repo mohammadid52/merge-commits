@@ -129,8 +129,8 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
       <PageWrapper>
         {currentState !== 'checkpoint' ? (
           <Fragment>
-            {currentState === 'addQuestion' && <AddQuestion goBackToPreviousStep={backToInitials} />}
-            {currentState === 'questionsList' && <SelectPreviousQuestion goBackToPreviousStep={backToInitials} />}
+            {/* {currentState === 'addQuestion' && <AddQuestion goBackToPreviousStep={backToInitials} />} */}
+            {/* {currentState === 'questionsList' && <SelectPreviousQuestion goBackToPreviousStep={backToInitials} setCheckpQuestions={setCheckpQuestions} />} */}
           </Fragment>
         ) : (
             <Fragment>
