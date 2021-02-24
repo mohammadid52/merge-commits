@@ -1946,3 +1946,23 @@ export const listLessonRubricss = /* GraphQL */ `
     }
   }
 `;
+
+export const getPersonInstitutions = /* GraphQL */ `
+  query GetPerson($email: String!, $authId: String!) {
+    getPerson(email: $email, authId: $authId) {
+      id
+      authId
+      email
+      classes {
+        items {
+          classID
+          class {
+            id
+            institutionID
+          }
+        }
+        nextToken
+      }
+    }
+  }
+`;

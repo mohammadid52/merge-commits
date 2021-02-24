@@ -259,6 +259,17 @@ export const createInstitution = /* GraphQL */ `
         nextToken
       }
       filters
+      checkpoints {
+        items {
+          id
+          type
+          typeID
+          checkpointID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -356,6 +367,17 @@ export const updateInstitution = /* GraphQL */ `
         nextToken
       }
       filters
+      checkpoints {
+        items {
+          id
+          type
+          typeID
+          checkpointID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -453,6 +475,17 @@ export const deleteInstitution = /* GraphQL */ `
         nextToken
       }
       filters
+      checkpoints {
+        items {
+          id
+          type
+          typeID
+          checkpointID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -498,6 +531,9 @@ export const createServiceProvider = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -546,6 +582,9 @@ export const updateServiceProvider = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -594,6 +633,9 @@ export const deleteServiceProvider = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -816,6 +858,9 @@ export const createRoom = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -947,6 +992,9 @@ export const updateRoom = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1078,6 +1126,9 @@ export const deleteRoom = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1206,6 +1257,9 @@ export const createClass = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1289,6 +1343,9 @@ export const updateClass = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1372,6 +1429,9 @@ export const deleteClass = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1695,6 +1755,9 @@ export const createCurriculum = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1713,6 +1776,17 @@ export const createCurriculum = /* GraphQL */ `
           languages
           designers
           status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      checkpoints {
+        items {
+          id
+          type
+          typeID
+          checkpointID
           createdAt
           updatedAt
         }
@@ -1766,6 +1840,9 @@ export const updateCurriculum = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1784,6 +1861,17 @@ export const updateCurriculum = /* GraphQL */ `
           languages
           designers
           status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      checkpoints {
+        items {
+          id
+          type
+          typeID
+          checkpointID
           createdAt
           updatedAt
         }
@@ -1837,6 +1925,9 @@ export const deleteCurriculum = /* GraphQL */ `
           nextToken
         }
         filters
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1855,6 +1946,17 @@ export const deleteCurriculum = /* GraphQL */ `
           languages
           designers
           status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      checkpoints {
+        items {
+          id
+          type
+          typeID
+          checkpointID
           createdAt
           updatedAt
         }
@@ -1902,6 +2004,9 @@ export const createTopic = /* GraphQL */ `
         }
         designers
         syllabi {
+          nextToken
+        }
+        checkpoints {
           nextToken
         }
         createdAt
@@ -1961,6 +2066,9 @@ export const updateTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -2016,6 +2124,9 @@ export const deleteTopic = /* GraphQL */ `
         }
         designers
         syllabi {
+          nextToken
+        }
+        checkpoints {
           nextToken
         }
         createdAt
@@ -2306,6 +2417,9 @@ export const createTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -2351,6 +2465,9 @@ export const updateTeacherCurriculum = /* GraphQL */ `
         }
         designers
         syllabi {
+          nextToken
+        }
+        checkpoints {
           nextToken
         }
         createdAt
@@ -2400,6 +2517,9 @@ export const deleteTeacherCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -2445,6 +2565,9 @@ export const createRoomCurriculum = /* GraphQL */ `
         }
         designers
         syllabi {
+          nextToken
+        }
+        checkpoints {
           nextToken
         }
         createdAt
@@ -2494,6 +2617,9 @@ export const updateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        checkpoints {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -2539,6 +2665,9 @@ export const deleteRoomCurriculum = /* GraphQL */ `
         }
         designers
         syllabi {
+          nextToken
+        }
+        checkpoints {
           nextToken
         }
         createdAt
@@ -3357,6 +3486,327 @@ export const deleteCheckpoint = /* GraphQL */ `
       designers
       language
       estTime
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCommonCheckpoint = /* GraphQL */ `
+  mutation CreateCommonCheckpoint(
+    $input: CreateCommonCheckpointInput!
+    $condition: ModelcommonCheckpointConditionInput
+  ) {
+    createCommonCheckpoint(input: $input, condition: $condition) {
+      id
+      type
+      typeID
+      checkpointID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        designers
+        syllabi {
+          nextToken
+        }
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      checkpoint {
+        id
+        label
+        title
+        subtitle
+        stage
+        type
+        instructionsTitle
+        instructions
+        questions {
+          nextToken
+        }
+        purpose
+        objectives
+        designers
+        language
+        estTime
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCommonCheckpoint = /* GraphQL */ `
+  mutation UpdateCommonCheckpoint(
+    $input: UpdateCommonCheckpointInput!
+    $condition: ModelcommonCheckpointConditionInput
+  ) {
+    updateCommonCheckpoint(input: $input, condition: $condition) {
+      id
+      type
+      typeID
+      checkpointID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        designers
+        syllabi {
+          nextToken
+        }
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      checkpoint {
+        id
+        label
+        title
+        subtitle
+        stage
+        type
+        instructionsTitle
+        instructions
+        questions {
+          nextToken
+        }
+        purpose
+        objectives
+        designers
+        language
+        estTime
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCommonCheckpoint = /* GraphQL */ `
+  mutation DeleteCommonCheckpoint(
+    $input: DeleteCommonCheckpointInput!
+    $condition: ModelcommonCheckpointConditionInput
+  ) {
+    deleteCommonCheckpoint(input: $input, condition: $condition) {
+      id
+      type
+      typeID
+      checkpointID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        designers
+        syllabi {
+          nextToken
+        }
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      checkpoint {
+        id
+        label
+        title
+        subtitle
+        stage
+        type
+        instructionsTitle
+        instructions
+        questions {
+          nextToken
+        }
+        purpose
+        objectives
+        designers
+        language
+        estTime
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -7651,6 +8101,7 @@ export const createQuestionData = /* GraphQL */ `
     createQuestionData(input: $input, condition: $condition) {
       id
       syllabusLessonID
+      checkpointID
       email
       authID
       person {
@@ -7766,6 +8217,7 @@ export const updateQuestionData = /* GraphQL */ `
     updateQuestionData(input: $input, condition: $condition) {
       id
       syllabusLessonID
+      checkpointID
       email
       authID
       person {
@@ -7881,6 +8333,7 @@ export const deleteQuestionData = /* GraphQL */ `
     deleteQuestionData(input: $input, condition: $condition) {
       id
       syllabusLessonID
+      checkpointID
       email
       authID
       person {
@@ -8076,6 +8529,7 @@ export const createQuestionDataStudentData = /* GraphQL */ `
       questionData {
         id
         syllabusLessonID
+        checkpointID
         email
         authID
         person {
@@ -8220,6 +8674,7 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
       questionData {
         id
         syllabusLessonID
+        checkpointID
         email
         authID
         person {
@@ -8364,6 +8819,7 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
       questionData {
         id
         syllabusLessonID
+        checkpointID
         email
         authID
         person {
