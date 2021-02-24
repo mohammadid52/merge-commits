@@ -1947,7 +1947,7 @@ export const listLessonRubricss = /* GraphQL */ `
   }
 `;
 
-export const getPersonInstitutions = /* GraphQL */ `
+export const getPersonData = /* GraphQL */ `
   query GetPerson($email: String!, $authId: String!) {
     getPerson(email: $email, authId: $authId) {
       id
@@ -1959,6 +1959,70 @@ export const getPersonInstitutions = /* GraphQL */ `
           class {
             id
             institutionID
+            institution {
+              name
+              checkpoints {
+                items {
+                  type
+                  typeID
+                  checkpoint {
+                    id
+                    label
+                    title
+                    questions {
+                      items {
+                        id
+                        required
+                        question {
+                          id
+                          label
+                          type
+                          question
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            rooms {
+              items {
+                id
+                curricula {
+                  items {
+                    curriculumID
+                    curriculum {
+                      name
+                      checkpoints {
+                        items {
+                          type
+                          typeID
+                          checkpoint {
+                            id
+                            label
+                            title
+                            questions {
+                              items {
+                                id
+                                required
+                                question {
+                                  id
+                                  label
+                                  type
+                                  question
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  nextToken
+                }
+              }
+              nextToken
+            }
           }
         }
         nextToken
