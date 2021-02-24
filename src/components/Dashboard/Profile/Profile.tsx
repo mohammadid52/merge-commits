@@ -16,6 +16,7 @@ import ProfileVault from './ProfileVault';
 import ProfileEdit from './ProfileEdit';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import * as customMutations from '../../../customGraphql/customMutations';
+import * as customQueries from '../../../customGraphql/customQueries';
 import ToolTip from '../../General/ToolTip/ToolTip'
 import ProfileCropModal from './ProfileCropModal';
 import { getImageFromS3 } from '../../../utilities/services';
@@ -227,6 +228,12 @@ const Profile: React.FC = () => {
   async function getUser() {
     try {
       const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: state.user.email, authId: state.user.authId }))
+      // try {
+      //   const userData: any = await API.graphql(graphqlOperation(customQueries.getPersonData, { email: state.user.email, authId: state.user.authId }))
+      //   console.log('useruseruseruser', userData.data.getPerson)
+      // } catch (err) {
+      //   console.log('err', err)
+      // }
       setPerson(user.data.getPerson);
       setStatus('done');
     } catch (error) {

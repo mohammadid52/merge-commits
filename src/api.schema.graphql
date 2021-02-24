@@ -588,7 +588,7 @@ type QuestionType @model {
 
 
 type QuestionResponse {
-  qid: Int,
+  qid: String,
   response: [String]
 }
 
