@@ -281,3 +281,29 @@ export const getLessonType = (type: string) => {
       return 'Assessment';
   }
 };
+
+/**
+ * Function which returns TRUE if the current string is different
+ * from the one preceding it
+ * USEFUL to determine if a specific label should be shown or not
+ * in a map sequence over an array
+ * @param before
+ * @param current
+ * @param after
+ */
+export const checkIfFirstNewInSequence = (before: string, current: string, after: string) => {
+  const notSameAsBefore = current !== before;
+  const sameAsAfter = current === after;
+
+  if(notSameAsBefore && sameAsAfter){
+    return true;
+  } else {
+    if(typeof before === 'undefined'){
+      return true;
+    } else if(notSameAsBefore && typeof after === 'undefined'){
+      return true;
+    } else {
+      return false;
+    }
+  }
+}

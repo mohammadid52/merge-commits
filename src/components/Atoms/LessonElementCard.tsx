@@ -1,21 +1,19 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
 
-interface ContentCardProps {
+interface LessonElementCard {
   keyProps?: string | number;
   children?: React.ReactNode;
 }
 
-const ContentCard = (props: ContentCardProps) => {
+const LessonElementCard = (props: LessonElementCard) => {
   const {keyProps, children} = props;
   const { theme } = useContext(GlobalContext);
   return (
-    <div key={keyProps} className={`${theme.section} p-4 text-xl h-auto`}>
-      <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>
+    <div key={keyProps} className={`p-4 rounded-xl bg-light-gray bg-opacity-50 mb-4`}>
         {children}
-      </div>
     </div>
   );
 };
 
-export default ContentCard;
+export default LessonElementCard;
