@@ -247,6 +247,23 @@ export const getClientKey = () => {
   else '';
 };
 
+/**
+ * Function used to fiterout uniqitems based on specific key
+ * from an array of objects
+ * @param arr
+ * @param key
+ */
+export const getUniqItems = (arr: any[], key: string) => {
+  let uniqItems: any = [];
+  const updatedArray = arr.filter((item) => {
+    if (uniqItems.indexOf(item[key]) < 0) {
+      uniqItems.push(item[key]);
+      return item;
+    }
+  });
+  return updatedArray;
+};
+
 export const getLanguageString = (language: string) => {
   switch (language) {
     case 'EN':
