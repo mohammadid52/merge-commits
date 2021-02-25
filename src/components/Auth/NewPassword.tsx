@@ -239,7 +239,7 @@ const NewPassword = () => {
 
             <div className='h-3/10 flex flex-col justify-center items-center'>
               <button
-                className='bg-dark-red text-gray-200 rounded-lg mb-4'
+                className={`${getAsset(clientKey, 'authButtonColor')} text-gray-200 rounded-lg mb-4`}
                 onKeyPress={handleEnter}
                 onClick={handleSubmit}>
                 Set New Password
@@ -247,7 +247,7 @@ const NewPassword = () => {
             </div>
           </div>
         </div>
-        <div className='login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 bg-login-bg bg-cover bg-center'></div>
+        <div className={`login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 ${getAsset(clientKey, 'authBackground')} bg-cover bg-center`}></div>
       </div>
     </div>
   );

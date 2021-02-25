@@ -329,8 +329,8 @@ const Reset = () => {
 
             <div className='h-3/10 flex flex-col justify-center items-center'>
               <div
-                className='cursor-pointer text-center rounded-lg bg-dark-red text-gray-200 mb-2'
-                style={{ borderRadius: '2rem', padding: '.75rem' }}
+                className={`cursor-pointer text-center rounded-lg ${getAsset(clientKey, 'authButtonColor')} text-gray-200 mb-2`}
+                style={{ borderRadius: '2rem', padding: '0.75rem' }}
                 onKeyPress={handleEnter}
                 onClick={handleSubmit}>
                 Reset Password
@@ -344,7 +344,7 @@ const Reset = () => {
           </div>
         </div>
 
-        <div className='login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 bg-login-bg bg-cover bg-center'></div>
+        <div className={`login w-140 min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 ${getAsset(clientKey, 'authBackground')} bg-cover bg-center`}></div>
 
       </div>
     </div>

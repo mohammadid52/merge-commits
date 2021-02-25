@@ -14,6 +14,8 @@ const iconoclast_assets:any = {
     appName: 'Iconoclast',
     tileImage: 'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/mstile-144x144.png',
     msapplicationConfig: 'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/browserconfig.xml',
+    authBackground : 'bg-iconoclast-bg',
+    authButtonColor : 'bg-dark-red'
 }
 
 const curate_assets:any = {
@@ -32,6 +34,8 @@ const curate_assets:any = {
     appName: 'Project Curate',
     tileImage: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/mstile-150x150.png',
     msapplicationConfig: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/browserconfig.xml',
+    authBackground : 'bg-curate-bg',
+    authButtonColor : 'bg-theme-blue'
 }
 
 export function getAsset(clientKey: string, key: string) {
