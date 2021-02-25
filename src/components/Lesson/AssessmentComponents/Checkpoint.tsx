@@ -42,7 +42,12 @@ const Checkpoint = (props: { isTeacher?: boolean }) => {
     <div className={theme.section}>
       <Banner isTeacher={isTeacher} title={title} iconName={'FaCheck'} />
       <CheckpointQuestions isTeacher={isTeacher} checkpointType={`checkpoint`} handleSetTitle={handleSetTitle} />
-      <SaveQuit />
+      {
+        !isTeacher &&
+        (
+          <SaveQuit />
+        )
+      }
     </div>
   );
 };

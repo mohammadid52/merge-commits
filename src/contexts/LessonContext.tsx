@@ -388,7 +388,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       });
     }
   }, [lesson]);
-  // }, [lesson, checkpoints]);
 
 
 
