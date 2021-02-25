@@ -238,7 +238,9 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
           {
             questionSource().length > 0 &&
               allQuestionGroups.map((questionGroup: any, idx0: number) => {
-                const part1 = <QuestionGroupInfo key={`qgroup_${idx0}`} checkpointID={questionGroup[0].checkpointID} showTitle={checkIfFirstNewInSequence(questionGroup[idx0-1],questionGroup[idx0],questionGroup[idx0+1])}/>
+                const part1 = <QuestionGroupInfo key={`qgroup_${idx0}`} isTeacher={isTeacher}
+                                                 checkpointID={questionGroup[0].checkpointID}
+                                                 showTitle={checkIfFirstNewInSequence(questionGroup[idx0 - 1], questionGroup[idx0], questionGroup[idx0 + 1])} />;
                 const part2 = questionGroup.map((question: QuestionInterface, idx: number) => {
                   const realIndex = indexInc[idx0] + idx;
                   return (
