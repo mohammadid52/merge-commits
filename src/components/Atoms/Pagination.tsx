@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { IconContext } from 'react-icons';
 import { FaAngleRight, FaAngleLeft } from 'react-icons/fa';
 import { GlobalContext } from '../../contexts/GlobalContext';
+import { getAsset } from '../../assets';
 
 interface PaginationProps {
   currentPage: number;
@@ -19,10 +20,11 @@ interface PageArrowsProps {
 }
 
 const Active = (activeProps: { page: number }) => {
-  const { theme } = useContext(GlobalContext);
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   return (
-    <button className={`${theme.btn.indigo} w-auto py-2 px-4 rounded-full ml-2 cursor-default hover:outline-none focus:outline-none `}>
+    <button className={`${theme.btn[themeColor]} w-auto py-2 px-4 rounded-full ml-2 cursor-default hover:outline-none focus:outline-none `}>
       {activeProps.page}
     </button>
   )
