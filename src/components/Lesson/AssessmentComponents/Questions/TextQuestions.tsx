@@ -32,9 +32,9 @@ const TextQuestions = (props: QuestionProps) => {
 
   return (
     visible && (
-      <div key={`question_${questionId}`} className={`${theme.elem.text} w-auto`}>
-        <label className={theme.elem.text} htmlFor={question.question.label}>
-          <p className={theme.elem.text}>
+      <div key={`question_${questionId}`} className={`${theme.elem.text} w-auto my-4`}>
+        <label htmlFor={question.question.label}>
+          <p className={`${theme.elem.text} mb-4`}>
             <b>{questionIndex + 1}. </b>
             {question.question.question}
           </p>

@@ -298,38 +298,35 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
       let clearQuestions = {};
       return { ...state, questionData: clearQuestions };
     case 'SET_QUESTION_DATA':
-      let payloadKeys = Object.keys(action.payload.data);
-      let updatedQuestionData: any = state.questionData;
+      // let payloadKeys = Object.keys(action.payload.data);
+      // let updatedQuestionData: any = state.questionData;
+      //
+      // if (!updatedQuestionData[action.payload.key]) {
+      //   updatedQuestionData = action.payload.data;
+      //   return {
+      //     ...state,
+      //     questionData: updatedQuestionData,
+      //   };
+      // }
+      //
+      // let updatedQuestionDataObject = updatedQuestionData[action.payload.key];
+      //
+      // payloadKeys.forEach((key: string) => {
+      //   if (
+      //     action.payload.data[key] !== '' &&
+      //     action.payload.data[key] !== null &&
+      //     action.payload.data[key] !== undefined
+      //   ) {
+      //     updatedQuestionDataObject[key] = action.payload.data[key];
+      //   }
+      // });
 
-      if (!updatedQuestionData[action.payload.key]) {
-        updatedQuestionData = action.payload.data;
-        return {
-          ...state,
-          questionData: updatedQuestionData,
-        };
-      }
-
-      let updatedQuestionDataObject = updatedQuestionData[action.payload.key];
-
-      payloadKeys.forEach((key: string) => {
-        if (
-          action.payload.data[key] !== '' &&
-          action.payload.data[key] !== null &&
-          action.payload.data[key] !== undefined
-        ) {
-          updatedQuestionDataObject[key] = action.payload.data[key];
-        }
-      });
-
-      // console.log('here', updatedQuestionDataObject);
+      console.log('reducer payload -> ', action.payload.data)
 
       return {
         ...state,
         studentStatus: 'ACTIVE',
-        questionData: {
-          ...state.questionData,
-          [action.payload.key]: updatedQuestionDataObject,
-        },
+        questionData: action.payload.data,
       };
     case 'ACTIVATE_LESSON':
       return {

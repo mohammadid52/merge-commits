@@ -1,29 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { LessonContext } from '../../../contexts/LessonContext';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
-
-/**
- * ICON IMPORTS
- */
-
-/**
- * MAIN QUESTION COMPONENT IMPORTS
- */
-
-/**
- * QUESTION SELECTOR COMPONENT IMPORT
- */
+import InstructionBlock from '../LessonComponents/InstructionBlock';
+import Banner from '../LessonComponents/Banner';
 
 interface QuestionGroupInfoProps {
   isTeacher?: boolean;
   checkpointID: string;
+  showTitle?: boolean;
 }
 
 const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
   /**
    * Teacher switch
    */
-  const { isTeacher, checkpointID } = props;
+  const { isTeacher, checkpointID, showTitle } = props;
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme } = switchContext;
 
@@ -59,10 +50,11 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
     <div className={theme.section}>
       <div className={`${theme.elem.text}`}>
         <div className='w-full h-full flex flex-col flex-wrap justify-around items-center'>
-          <p>{info.title ? info.title : 'Please add title'}</p>
-          <p>{info.subtitle ? info.subtitle : 'Please add subtitle'}</p>
-          <p>{info.instructions ? info.instructions : 'Please add instructions'}</p>
-          <p>{info.instructionsTitle ? info.instructionsTitle : 'Please add instructions title'}</p>
+          <Banner titleSection={showTitle ? info.title : null} subtitleSection={info.subtitle} />
+
+              <InstructionBlock titleVisible={true} instructionsTitle={info.instructionsTitle}
+                                instructions={info.instructions} />
+
         </div>
       </div>
     </div>
