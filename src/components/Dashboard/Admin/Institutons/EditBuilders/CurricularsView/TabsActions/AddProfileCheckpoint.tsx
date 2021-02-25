@@ -33,16 +33,10 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     label: '',
     language: { id: '1', name: "English", value: 'EN' }
   }
-  const tempQuestionData: any = [
-    // { id: '1', question: 'Question one', type: 'text' },
-    // { id: '2', question: 'Question two', type: 'text' },
-    // { id: '3', question: 'Question three', type: 'selectMany' },
-    // { id: '4', question: 'Question four', type: 'text' },
-  ]
   const [checkpointData, setCheckpointData] = useState(initialData);
   const [designersList, setDesignersList] = useState([]);
   const [selectedDesigners, setSelectedDesigner] = useState([]);
-  const [checkpQuestions, setCheckpQuestions] = useState(tempQuestionData);
+  const [checkpQuestions, setCheckpQuestions] = useState([]);
   const [questionOptions, setQuestionOptions] = useState({ quesId: '', options: [] });
   const [currentState, setCurrentState] = useState('checkpoint');
   const [loading, setLoading] = useState(false);

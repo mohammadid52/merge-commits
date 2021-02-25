@@ -2045,3 +2045,42 @@ export const getCurriculumCheckpoints = /* GraphQL */ `
     }
   }
 `;
+export const getCheckpointDetails = /* GraphQL */ `
+  query GetCheckpoint($id: ID!) {
+    getCheckpoint(id: $id) {
+      id
+      label
+      title
+      stage
+      type
+      questions {
+        items {
+          id
+          questionID
+          required
+          question {
+            id
+            label
+            type
+            question
+            designers
+            language
+            sourceId
+            note
+            options {
+              text
+              label
+              icon
+              color
+            }
+            createdAt
+            updatedAt
+          }
+        }
+        nextToken
+      }
+      designers
+      language
+    }
+  }
+`;

@@ -114,7 +114,7 @@ const InstitutionsHome = () => {
           render={() => <AddProfileCheckpoint />}           // Add new Checkpoint to curricular
         />
         <Route
-          path={`${match.url}/curricular/:curricularId/checkpoint/edit`}
+          path={`${match.url}/curricular/:curricularId/checkpoint/edit/:id`}
           render={() => <EditProfileCheckpoint />}           // Edit curricular Checkpoint 
         />
         <Route
