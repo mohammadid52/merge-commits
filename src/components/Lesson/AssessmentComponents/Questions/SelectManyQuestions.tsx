@@ -44,7 +44,7 @@ const SelectManyQuestions = (props: QuestionProps) => {
 
   return (
     visible && (
-        <div key={questionKey} className={'flex flex-col'}>
+        <div key={questionKey} className={'flex flex-col mb-4'}>
           <label htmlFor={question.question.label}>
             <p className={`${theme.elem.text} mb-4`}>
               <b>{questionIndex + 1}. </b>
@@ -61,15 +61,15 @@ const SelectManyQuestions = (props: QuestionProps) => {
                   onClick={(e) => (!isTeacher) ? handleMultiSelect(e) : null}
                 data-key={questionId}>
                 {input.value.indexOf(`${option.label}`) >= 0 ? (
-                  <label className="inline-flex items-center mt-3">
-                    <input id={`${option.label}`} data-key={questionId} type="checkbox" className="form-checkbox h-5 w-5 mb-2 text-pink-600" checked/><span
-                    className={`ml-2 ${theme.elem.text}`}>{option.text}</span>
+                  <label className="inline-flex items-center mb-2">
+                    <input id={`${option.label}`} data-key={questionId} type="checkbox" className="form-checkbox h-5 w-5 text-pink-600" checked/>
+                    <span className={`ml-2 ${theme.elem.text}`}>{option.text}</span>
                   </label>
                 ) : (
-                  <label className='inline-flex items-center mt-3'>
+                  <label className='inline-flex items-center mb-2'>
                     <input id={`${option.label}`} data-key={questionId} type='checkbox'
-                           className='form-checkbox h-5 w-5 mb-2 text-pink-600' /><span
-                    className={`ml-2 ${theme.elem.text}`}>{option.text}</span>
+                           className='form-checkbox h-5 w-5 text-pink-600' />
+                           <span className={`ml-2 ${theme.elem.text}`}>{option.text}</span>
                   </label>
                 )}
                 </div>

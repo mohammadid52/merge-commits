@@ -32,7 +32,7 @@ const SelectOneQuestions = (props: QuestionProps) => {
   return (
     <>
       {visible && (
-          <div key={questionKey} className={'flex flex-col'} id={`question_${questionId}`}>
+          <div key={questionKey} className={'flex flex-col mb-4'} id={`question_${questionId}`}>
             <label htmlFor={question.question.label}>
               <p className={`${theme.elem.text} mb-4`}>
                 <b>{questionIndex + 1}. </b>
