@@ -64,7 +64,7 @@ export type LessonActions =
   | {
       type: 'SET_QUESTION_DATA';
       payload: {
-        key: string;
+        // key: string;
         data: any;
       };
     }

@@ -31,7 +31,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const urlParams: any = useParams()
   const [data, setData] = useState<DataObject>();
   const [lesson, setLesson] = useState<DataObject>();
-  const [checkpoints, setCheckpoints] = useState<DataObject>();
   const [subscriptionData, setSubscriptionData] = useState<any>();
 
   const [state, dispatch] = useReducer(lessonReducer, lessonState);
@@ -100,7 +99,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       lessonProgress: state.lessonProgress,
     };
     try {
-      //console.log('created', newLocation);
       const newPersonLocationMutation: any = await API.graphql(
         graphqlOperation(mutations.createPersonLocation, { input: newLocation })
       );
@@ -110,7 +108,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       setRecentOp('created');
     }
   }
-  //
 
   async function updatePersonLocation() {
     const updatedLocation = {
@@ -219,7 +216,19 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         filter: { ...createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id') },
       }));
 
+      //  STORE FULL CHECKPOINT OBJECTS
       setLesson({ ...lesson, lesson: { ...lesson.lesson, checkpoints: checkpoints.data.listCheckpoints } });
+
+      // INIT CONTEXT WITH EMPTY QUESTIONDATA!
+      const initCheckpointsObj = checkpoints.data.listCheckpoints.items.reduce((acc: any, checkpointObj: any) => {
+        return { ...acc, [checkpointObj.id]: {} };
+      }, {});
+      dispatch({
+        type: 'SET_QUESTION_DATA',
+        payload: {
+          data: initCheckpointsObj,
+        },
+      });
 
     } catch (e) {
       console.error('err fetch checkpoints ::: ', e);
@@ -242,9 +251,9 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
   const handleSave = async () => {
     if (typeof state.questionData === 'object') {
-      let  checkpointIdKeys = Object.keys(state.questionData); // doFirst, checkpoint_1
-
-      await  checkpointIdKeys.reduce((_: any, key: string) => {
+      let checkpointIdKeys = Object.keys(state.questionData); // doFirst, checkpoint_1
+      console.log('handleCreate Checkpoint -> idKeys -> ', state.questionData);
+      await checkpointIdKeys.reduce((_: any, key: string) => {
         let responseObject = {
           syllabusLessonID: state.syllabusLessonID,
           checkpointID: key,
@@ -282,23 +291,35 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       );
 
       if (questionDatas.data.listQuestionDatas.items.length === 0) {
-        console.log('NO question data, creating -> ', checkpoints);
-        handleSave()
+        console.log('NO question data, creating -> ', Object.keys(state.questionData));
+        handleSave();
+      } else {
+        console.log('EXISTS question data, --> ', 'skip creation');
       }
     } catch (e) {
       console.error('getOrCreateQuestionData -> ', e);
     }
   }
 
+  // Collect and fetch checkpoints when lesson loaded
   useEffect(() => {
     const getAdditionalLessonData = async () => {
       if (state.data && state.data.lessonPlan) {
         await getAllCheckpoints();
-        // await getOrCreateQuestionData();
       }
     };
     getAdditionalLessonData();
   }, [state.data.lessonPlan]);
+
+  // Init questionData in DB if necessary
+  useEffect(() => {
+    const initQuestionDataDB = async () => {
+      if (state.data.lesson.type === 'lesson') await getOrCreateQuestionData();
+    };
+    if (Object.keys(state.questionData).length > 0) {
+      initQuestionDataDB();
+    }
+  }, [state.questionData]);
 
   /**
    * GET SYLLABUS LESSON
