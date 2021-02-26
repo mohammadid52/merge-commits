@@ -43,7 +43,7 @@ const Checkpoint = (props: { isTeacher?: boolean }) => {
       <Banner isTeacher={isTeacher} title={title} iconName={'FaCheck'} />
       <CheckpointQuestions isTeacher={isTeacher} checkpointType={`checkpoint`} handleSetTitle={handleSetTitle} />
       {
-        !isTeacher &&
+        !isTeacher && state.data.lesson.type !== 'lesson' &&
         (
           <SaveQuit />
         )

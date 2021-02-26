@@ -32,7 +32,6 @@ const SelectOneQuestions = (props: QuestionProps) => {
   return (
     <>
       {visible && (
-        <LessonElementCard>
           <div key={questionKey} className={'flex flex-col'} id={`question_${questionId}`}>
             <label htmlFor={question.question.label}>
               <p className={`${theme.elem.text} mb-4`}>
@@ -67,7 +66,6 @@ const SelectOneQuestions = (props: QuestionProps) => {
               )}
             </div>
           </div>
-        </LessonElementCard>
       )}
     </>
   );

@@ -1,16 +1,16 @@
-import React, { useContext } from 'react';
-import { LessonContext } from '../../../contexts/LessonContext';
+import React from 'react';
 import Banner from './Banner';
 
 interface InstructionBlockProps {
+  isTeacher?: boolean;
   titleVisible?: boolean;
   instructionsTitle?: string;
   instructions?: string | string[];
 }
 
 const InstructionsBlock = (props: InstructionBlockProps) => {
-  const { titleVisible, instructionsTitle, instructions } = props;
-  const { state, theme } = useContext(LessonContext);
+  const { isTeacher, titleVisible, instructionsTitle, instructions } = props;
+  // const { state, theme } = useContext(LessonContext);
 
   // const [videoMode, setVideoMode] = useState(false);
   // const instructionsArr = state.data.lesson.coreLesson.instructions.text;

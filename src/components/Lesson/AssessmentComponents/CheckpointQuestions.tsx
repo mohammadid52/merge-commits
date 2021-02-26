@@ -14,6 +14,7 @@ import { LessonControlContext } from '../../../contexts/LessonControlContext';
 import Question from './Question';
 import QuestionGroupInfo from './QuestionGroupInfo';
 import { checkIfFirstNewInSequence } from '../../../utilities/strings';
+import LessonElementCard from '../../Atoms/LessonElementCard';
 
 interface CheckpointQuestionsProps {
   isTeacher?: boolean;
@@ -234,34 +235,41 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   return (
     <div className={theme.section}>
       <div className={`${theme.elem.text}`}>
+
         <div className='w-full h-full flex flex-col flex-wrap justify-around items-center'>
+
           {
             questionSource().length > 0 &&
-              allQuestionGroups.map((questionGroup: any, idx0: number) => {
-                const part1 = <QuestionGroupInfo key={`qgroup_${idx0}`} isTeacher={isTeacher}
-                                                 checkpointID={questionGroup[0].checkpointID}
-                                                 showTitle={checkIfFirstNewInSequence(questionGroup[idx0 - 1], questionGroup[idx0], questionGroup[idx0 + 1])} />;
-                const part2 = questionGroup.map((question: QuestionInterface, idx: number) => {
-                  const realIndex = indexInc[idx0] + idx;
-                  return (
-                    <React.Fragment key={`questionFragment_${realIndex}`}>
-                      <div key={`questionParent_${realIndex}`} id={`questionParent_${realIndex}`}>
-                        <Question
-                          checkpointID={question.checkpointID ? question.checkpointID : 'undefined-checkpointID'}
-                          visible={true}
-                          isTeacher={isTeacher}
-                          question={question}
-                          questionIndex={realIndex}
-                          questionKey={`question_${realIndex}`}
-                          value={input}
-                          handleInputChange={handleInputChange}
-                        />
-                      </div>
-                    </React.Fragment>
-                  );
-                })
-                return [part1, ...part2];
+            allQuestionGroups.map((questionGroup: any, idx0: number) => {
+              const part1 = <QuestionGroupInfo key={`qgroup_${idx0}`} isTeacher={isTeacher}
+                                               checkpointID={questionGroup[0].checkpointID}
+                                               showTitle={checkIfFirstNewInSequence(questionGroup[idx0 - 1], questionGroup[idx0], questionGroup[idx0 + 1])} />;
+              const part2 = questionGroup.map((question: QuestionInterface, idx: number) => {
+                const realIndex = indexInc[idx0] + idx;
+                return (
+                  <React.Fragment key={`questionFragment_${realIndex}`}>
+                    <div key={`questionParent_${realIndex}`} id={`questionParent_${realIndex}`}>
+                      <Question
+                        checkpointID={question.checkpointID ? question.checkpointID : 'undefined-checkpointID'}
+                        visible={true}
+                        isTeacher={isTeacher}
+                        question={question}
+                        questionIndex={realIndex}
+                        questionKey={`question_${realIndex}`}
+                        value={input}
+                        handleInputChange={handleInputChange}
+                      />
+                    </div>
+                  </React.Fragment>
+                );
               })
+              const part3 = (
+                <LessonElementCard key={`questiongroup_${idx0}`}>
+                  {part2}
+                </LessonElementCard>
+              );
+              return [part1, part3];
+            })
           }
         </div>
       </div>

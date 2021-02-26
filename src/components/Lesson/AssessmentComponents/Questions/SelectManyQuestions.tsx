@@ -44,7 +44,6 @@ const SelectManyQuestions = (props: QuestionProps) => {
 
   return (
     visible && (
-      <LessonElementCard>
         <div key={questionKey} className={'flex flex-col'}>
           <label htmlFor={question.question.label}>
             <p className={`${theme.elem.text} mb-4`}>
@@ -78,7 +77,6 @@ const SelectManyQuestions = (props: QuestionProps) => {
             )}
           </div>
         </div>
-      </LessonElementCard>
     )
   );
 };

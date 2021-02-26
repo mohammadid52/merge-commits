@@ -50,10 +50,10 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
     <div className={theme.section}>
       <div className={`${theme.elem.text}`}>
         <div className='w-full h-full flex flex-col flex-wrap justify-around items-center'>
-         {/* <Banner titleSection={showTitle ? info.title : null} subtitleSection={info.subtitle} />
+          <Banner isTeacher={isTeacher} titleSection={showTitle ? info.title : null} subtitleSection={info.subtitle} />
 
-              <InstructionBlock titleVisible={true} instructionsTitle={info.instructionsTitle}
-                                instructions={info.instructions} />*/}
+              <InstructionBlock isTeacher={isTeacher} titleVisible={true} instructionsTitle={info.instructionsTitle}
+                                instructions={info.instructions} />
 
         </div>
       </div>
