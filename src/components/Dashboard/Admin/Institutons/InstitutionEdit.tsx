@@ -1,20 +1,21 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
 import { useHistory } from 'react-router-dom';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { FaPlus, FaEdit, FaTrashAlt } from 'react-icons/fa';
 
-import * as customMutations from '../../../../customGraphql/customMutations';
 import FormInput from '../../../Atoms/Form/FormInput';
 import Loader from '../../../Atoms/Loader';
-import { FaPlus, FaEdit, FaTrashAlt } from 'react-icons/fa';
-import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Buttons from '../../../Atoms/Buttons';
 import Selector from '../../../Atoms/Form/Selector';
 import CheckBox from '../../../Atoms/Form/CheckBox';
+import ProfileCropModal from '../../Profile/ProfileCropModal';
+import InstitutionPopUp from './InstitutionPopUp';
+
 import { getImageFromS3 } from '../../../../utilities/services';
 import { statesList } from '../../../../utilities/staticData';
-import InstitutionPopUp from './InstitutionPopUp';
+import * as customMutations from '../../../../customGraphql/customMutations';
 
 
 interface InstitutionEditProps {

@@ -2006,6 +2006,12 @@ export const getPersonData = /* GraphQL */ `
                                   label
                                   type
                                   question
+                                  options {
+                                    text
+                                    label
+                                    icon
+                                    color
+                                  }
                                 }
                               }
                             }
@@ -2081,6 +2087,73 @@ export const getCheckpointDetails = /* GraphQL */ `
       }
       designers
       language
+    }
+  }
+`;
+
+export const listQuestionDatas = /* GraphQL */ `
+  query ListQuestionDatas(
+    $filter: ModelQuestionDataFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listQuestionDatas(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        syllabusLessonID
+        checkpointID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+        }
+        syllabusLesson {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
     }
   }
 `;

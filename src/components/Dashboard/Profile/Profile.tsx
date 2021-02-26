@@ -409,6 +409,7 @@ const Profile: React.FC = () => {
                         status={status}
                         setStatus={setStatus}
                         getUser={getUser}
+                        stdCheckpoints={stdCheckpoints}
                       />
                     )}
                   />
