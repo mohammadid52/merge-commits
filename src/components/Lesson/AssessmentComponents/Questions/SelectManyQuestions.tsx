@@ -44,9 +44,9 @@ const SelectManyQuestions = (props: QuestionProps) => {
 
   return (
     visible && (
-        <div key={questionKey} className={'flex flex-col mb-4'}>
+        <div key={questionKey} className={'flex flex-col my-4'}>
           <label htmlFor={question.question.label}>
-            <p className={`${theme.elem.text} mb-4`}>
+            <p className={`${theme.elem.text} ${theme.underline} mb-4`}>
               <b>{questionIndex + 1}. </b>
               {question.question.question}
             </p>

@@ -10,7 +10,7 @@ const LessonElementCard = (props: LessonElementCard) => {
   const {keyProps, children} = props;
   const { theme } = useContext(GlobalContext);
   return (
-    <div key={keyProps} className={`p-4 rounded-xl bg-light-gray bg-opacity-50 mb-4`}>
+    <div key={keyProps} className={`mb-4`}>
         {children}
     </div>
   );
