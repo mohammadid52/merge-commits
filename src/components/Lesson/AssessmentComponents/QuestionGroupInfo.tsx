@@ -32,10 +32,17 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
 
   const getQuestionGroupInfo = () => {
     const getCheckpointObj = state.data.lesson.checkpoints.items.find((checkpointObj: any) => checkpointObj.id === checkpointID);
+
+    const quickRepair = (str: string) => {
+      if(str){
+        return str.replace('color: black', 'color: white');
+      } else return '';
+    }
+
     setInfo({
       title: getCheckpointObj?.title,
       subtitle: getCheckpointObj?.subtitle,
-      instructions: getCheckpointObj?.instructions,
+      instructions: quickRepair(getCheckpointObj?.instructions),
       instructionsTitle: getCheckpointObj?.instructionsTitle
     })
   };

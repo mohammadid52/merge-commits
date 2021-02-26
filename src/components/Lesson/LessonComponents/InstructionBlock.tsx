@@ -19,6 +19,12 @@ const InstructionsBlock = (props: InstructionBlockProps) => {
   //   setVideoMode(!videoMode);
   // };
 
+  const quickRepair = (str: string) => {
+    if(str){
+      return str.replace('color: black', 'color: white');
+    } else return '';
+  }
+
   return (
     <>
       {/**
@@ -46,7 +52,7 @@ const InstructionsBlock = (props: InstructionBlockProps) => {
      */}
     {
       Array.isArray(instructions) && instructions.map((inst: any, key: number) => (
-        <p key={key} className='mb-1' dangerouslySetInnerHTML={{ __html: inst }}>
+        <p key={key} className='mb-1' dangerouslySetInnerHTML={{ __html: quickRepair(inst) }}>
         </p>
       ))
     }
