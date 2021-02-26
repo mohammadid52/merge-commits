@@ -25,6 +25,7 @@ import SectionTitle from '../../Atoms/SectionTitle';
 import Buttons from '../../Atoms/Buttons';
 import Loader from '../../Atoms/Loader';
 import useDictionary from '../../../customHooks/dictionary';
+import { getUniqItems } from '../../../utilities/strings';
 
 export interface UserInfo {
   authId: string
@@ -82,7 +83,8 @@ const Profile: React.FC = () => {
   const [showCropper, setShowCropper] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [upImage, setUpImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState('')
+  const [imageUrl, setImageUrl] = useState('');
+  const [stdCheckpoints, setStdCheckpoints] = useState([]);
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
@@ -227,12 +229,17 @@ const Profile: React.FC = () => {
   async function getUser() {
     try {
       const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: state.user.email, authId: state.user.authId }))
-      // try {
-      //   const userData: any = await API.graphql(graphqlOperation(customQueries.getPersonData, { email: state.user.email, authId: state.user.authId }))
-      //   console.log('useruseruseruser', userData.data.getPerson)
-      // } catch (err) {
-      //   console.log('err', err)
-      // }
+      const results: any = await API.graphql(graphqlOperation(customQueries.getPersonData, { email: state.user.email, authId: state.user.authId }))
+      const userData: any = results.data.getPerson;
+      const studentClasses: any = userData.classes?.items.map((item: any) => item.class);
+      const studentInstitutions: any = studentClasses?.map((item: any) => item.institution);
+      const studentRooms: any = studentClasses?.map((item: any) => item.rooms?.items)?.flat(1);
+      const studentCurriculars: any = studentRooms.map((item: any) => item?.curricula?.items).flat(1);
+      const uniqCurriculars: any = getUniqItems(studentCurriculars, 'curriculumID');
+      const studCurriCheckp: any = uniqCurriculars.map((item: any) => item?.curriculum?.checkpoints?.items).flat(1);
+      const studentCheckpoints: any = studCurriCheckp.map((item: any) => item?.checkpoint);
+      const uniqCheckpoints: any = getUniqItems(studentCheckpoints, 'id')
+      setStdCheckpoints([...uniqCheckpoints]);
       setPerson(user.data.getPerson);
       setStatus('done');
     } catch (error) {
@@ -384,6 +391,7 @@ const Profile: React.FC = () => {
                       <ProfileInfo
                         user={person}
                         status={status}
+                        stdCheckpoints={stdCheckpoints}
                       />
                     )}
                   />
@@ -401,6 +409,7 @@ const Profile: React.FC = () => {
                         status={status}
                         setStatus={setStatus}
                         getUser={getUser}
+                        stdCheckpoints={stdCheckpoints}
                       />
                     )}
                   />

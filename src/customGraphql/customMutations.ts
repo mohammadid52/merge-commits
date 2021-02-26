@@ -895,3 +895,16 @@ export const createCommonCheckpoint = /* GraphQL */ `
     }
   }
 `;
+export const deleteCommonCheckpoint = /* GraphQL */ `
+  mutation DeleteCommonCheckpoint(
+    $input: DeleteCommonCheckpointInput!
+    $condition: ModelcommonCheckpointConditionInput
+  ) {
+    deleteCommonCheckpoint(input: $input, condition: $condition) {
+      id
+      type
+      typeID
+      checkpointID
+    }
+  }
+`;

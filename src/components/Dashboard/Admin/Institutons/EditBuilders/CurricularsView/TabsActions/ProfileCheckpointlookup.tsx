@@ -12,8 +12,9 @@ import SearchInput from '../../../../../../Atoms/Form/SearchInput';
 import CheckBox from '../../../../../../Atoms/Form/CheckBox';
 
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
-import CheckpointQueTable from '../../../../LessonsBuilder/StepActionComponent/CheckPointSteps/CheckpointQueTable';
+import * as customMutations from '../../../../../../../customGraphql/customMutations';
 import { getLanguageString } from '../../../../../../../utilities/strings';
+import CheckpointQueTable from '../../../../LessonsBuilder/StepActionComponent/CheckPointSteps/CheckpointQueTable';
 
 interface ProfileCheckpointlookupProps {
 
@@ -71,24 +72,48 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
     setFilteredList([...allCheckpointList]);
     setSearchInput('')
   }
+  const saveCommonCurricular = async (checkpointID: string) => {
+    let profileCheckpointInput = {
+      type: 'curricular',
+      typeID: curricularId,
+      checkpointID: checkpointID,
+    }
+    await API.graphql(graphqlOperation(customMutations.createCommonCheckpoint, {
+      input: profileCheckpointInput
+    }))
+  }
 
-  const saveCurricularCheckpoints = () => {
+  const saveCurricularCheckpoints = async () => {
+    setLoading(true);
+    let newCheckpoints: any = await Promise.all(
+      selectedCheckpointIds.map(async (selectedId: string) => saveCommonCurricular(selectedId))
+    )
+    history.goBack();
+    setLoading(false);
 
   }
 
   const fetchCheckpointLists = async () => {
     try {
       setLoading(true);
-      const fetchCheckpointsData: any = await API.graphql(
-        graphqlOperation(customQueries.listCheckpoints,{
-          filter: { type: { eq: 'profile' } },
-        })
-      );
-      if (!fetchCheckpointsData) {
+      const [allCheckpointList, curricularCheckp]: any = await Promise.all([
+        await API.graphql(
+          graphqlOperation(customQueries.listCheckpoints, {
+            filter: { type: { eq: 'profile' } },
+          })),
+        await API.graphql(
+          graphqlOperation(customQueries.getCurriculumCheckpoints, {
+            id: curricularId
+          })),
+      ]);
+      if (!allCheckpointList) {
         throw new Error('fail!');
       } else {
-        const checkpointList = fetchCheckpointsData.data?.listCheckpoints?.items;
-        const sortedList = checkpointList.sort((a: any, b: any) => a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1)
+        const checkpointList = allCheckpointList.data?.listCheckpoints?.items;
+        const savedCheckpointId = curricularCheckp.data?.getCurriculum?.checkpoints?.items.map((item: { checkpointID: string }) => item.checkpointID)
+        const sortedList = checkpointList
+          .filter((chechpoint: any) => !savedCheckpointId.includes(chechpoint.id))
+          .sort((a: any, b: any) => a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1);
         setAllCheckpointList(sortedList);
         setFilteredList(sortedList)
       }
@@ -148,7 +173,7 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
                     <Fragment>
 
                       {allCheckpointList?.length ? filteredList.map(item => (
-                        <Fragment>
+                        <Fragment key={item.id}>
                           {/* Table row */}
                           <div key={item.id} className={`flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200 ${expandId === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
                             <div className="flex w-1.5/10 items-center px-8 py-3 text-left text-s leading-4">
@@ -182,7 +207,7 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
                       ))
                         : (
                           <div className="py-12 my-6 text-center">
-                            <p> Checkpoint collection is empty please create a new checkpoint.</p>
+                            <p> Other checkpoint list is empty, please create a new checkpoint.</p>
                           </div>
                         )
                       }
@@ -192,7 +217,7 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
                     </div>}
                 </Fragment>
               ) : (<div className="py-12 my-6 text-center">
-                <p> Fetching Checkpoint list Please wait... </p>
+                <p> {selectedCheckpointIds.length > 0 ? 'Updating checkpoints please wait...' : 'Fetching Checkpoint list Please wait...'} </p>
               </div>)}
             </div>
           </Fragment>
@@ -200,7 +225,9 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-center my-6">
             <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={history.goBack} transparent />
-            <Buttons btnClass="py-1 px-8 text-xs ml-2" label="Save" onClick={saveCurricularCheckpoints} />
+            {
+              allCheckpointList.length > 0 && <Buttons btnClass="py-1 px-8 text-xs ml-2" label={loading ? 'Saving...' : 'Save'} onClick={saveCurricularCheckpoints} disabled={(loading || selectedCheckpointIds.length === 0) ? true : false} />
+            }
           </div>
         </div>
       </PageWrapper>
