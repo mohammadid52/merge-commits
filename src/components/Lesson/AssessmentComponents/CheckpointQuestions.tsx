@@ -71,7 +71,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   useEffect(() => {
     if (state.data.lesson.checkpoints && state.data.lesson.checkpoints.items) {
       if (!isTeacher) {
-        setInput(initialResponseState);
+        // setInput(initialResponseState);
       }
       setStatus('loaded');
     }
@@ -135,17 +135,33 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
    * @param checkpointArray
    */
   const flattenCheckpoints = (checkpointArray: any) => {
-    return checkpointArray.reduce((acc: [], checkpointObj: any) => {
-      const questionItems = checkpointObj?.questions?.items; // Array of question objects
-      return [...acc, ...questionItems];
-    }, []);
+    if(checkpointArray.length > 0){
+
+      return checkpointArray.reduce((acc: [], checkpointObj: any):any => {
+        if(checkpointObj.hasOwnProperty('questions')){
+          const questionItems = checkpointObj?.questions?.items; // Array of question objects
+          return [...acc, ...questionItems];
+        } else {
+          return acc;
+        }
+      }, []);
+
+    } else return [];
   };
 
   const collectQuestionGroups = (checkpointArray: any) => {
-    return checkpointArray.reduce((acc: [], checkpointObj: any) => {
-      const questionItems = checkpointObj?.questions?.items; // Array of question objects
-      return [...acc, questionItems];
-    }, []);
+    if(checkpointArray.length > 0){
+
+      return checkpointArray.reduce((acc: [], checkpointObj: any):any => {
+        if(checkpointObj.hasOwnProperty('questions')){
+          const questionItems = checkpointObj?.questions?.items; // Array of question objects
+          return [...acc, questionItems];
+        } else {
+          return acc;
+        }
+      }, []);
+
+    } else return [];
   };
 
   /**
@@ -153,7 +169,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
    */
 
   const allQuestions = flattenCheckpoints(questionSource());
-
   const allQuestionGroups = collectQuestionGroups(questionSource());
 
   const startIndex = (inArr: any, inc: number = 0, idxArr: number[]):number[] => {
@@ -271,6 +286,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
               return [part1, part3];
             })
           }
+
         </div>
       </div>
     </div>
