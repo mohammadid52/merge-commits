@@ -1,26 +1,42 @@
-import React, { useState, useContext, useEffect } from 'react';
-// import { API, graphqlOperation } from 'aws-amplify';
+import React, { useState, useContext, useEffect, Fragment } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import * as customMutations from '../../../customGraphql/customMutations';
 import { NavLink, useHistory } from 'react-router-dom';
+
 import DropdownForm from './DropdownForm';
 import { UserInfo } from './Profile';
+import * as customMutations from '../../../customGraphql/customMutations';
+import * as customQueries from '../../../customGraphql/customQueries';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
+import MultipleSelector from '../../Atoms/Form/MultipleSelector';
+import FormInput from '../../Atoms/Form/FormInput';
+import Selector from '../../Atoms/Form/Selector';
+
+
 interface UserInfoProps {
   user: UserInfo
   status: string
   getUser: () => void
   setStatus: React.Dispatch<React.SetStateAction<string>>
+  stdCheckpoints: any[]
 }
 
 const ProfileEdit = (props: UserInfoProps) => {
   const history = useHistory();
   const { state, userLanguage, clientKey, dispatch } = useContext(GlobalContext);
   const { dashboardProfileDict } = useDictionary(clientKey);
-  const { user, getUser, status, setStatus } = props;
+  const { user, getUser, status, setStatus, stdCheckpoints } = props;
   const [editUser, setEditUser] = useState(user);
+  const [checkpointData, setCheckpointData] = useState([]);
+
+  const onInputChange = (e: any) => {
+    setCheckpointData({
+      ...checkpointData,
+      [e.target.name]: e.target.value
+    })
+
+  }
 
   async function updatePerson() {
     const input = {
@@ -60,6 +76,7 @@ const ProfileEdit = (props: UserInfoProps) => {
       console.error(error)
     }
   }
+
 
   async function setPerson() {
     const updateUser = await updatePerson();
@@ -101,6 +118,23 @@ const ProfileEdit = (props: UserInfoProps) => {
     }
   ];
 
+  const convertToSelectorList = (options: any) => {
+    const newArr: any = options.map((item: any, index: number) => ({
+      id: index,
+      name: item.text,
+      value: item.text
+    }))
+    return newArr;
+  }
+  const convertToMultiSelectList = (options: any) => {
+    const newArr: any = options.map((item: any, index: number) => ({
+      id: item.label,
+      name: item.text,
+      value: item.text
+    }))
+    return newArr;
+  }
+
   let [imagePreviewURL, setImagePreviewURL] = useState(user.image);
   let imagePreview = null;
   if (imagePreview) {
@@ -113,7 +147,17 @@ const ProfileEdit = (props: UserInfoProps) => {
       ;
   }
 
-
+  // const getQuestionData = async (id: string) => {
+  //   try {
+  //     const results: any = await API.graphql(graphqlOperation(customQueries.getQuestionData, { id: 'f24134b2-346d-433c-b3e4-1fe50149abe2' }))
+  //     console.log('results', results)
+  //   } catch {
+  //     console.log();
+  //   }
+  // }
+  // useEffect(() => {
+  //   getQuestionData('');
+  // }, [])
 
   if (status !== 'done') {
     return (
@@ -128,7 +172,7 @@ const ProfileEdit = (props: UserInfoProps) => {
           <div className="h-auto bg-white shadow-5 sm:rounded-lg mb-4">
 
             <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
+              <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
                 {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
               </h3>
             </div>
@@ -159,7 +203,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                       />
                     </div>
 
-                    <div className="sm:col-span-3 p-2">
+                    {/* <div className="sm:col-span-3 p-2">
                       <label htmlFor="phone" className="block text-sm font-medium leading-5 text-gray-700">
                         {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['CONTACT']}
                       </label>
@@ -179,7 +223,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                           defaultValue={user.birthdate}
                         />
                       </div>
-                    </div>
+                    </div> */}
                   </>
 
                   :
@@ -248,6 +292,52 @@ const ProfileEdit = (props: UserInfoProps) => {
 
 
           </div>
+          {stdCheckpoints?.length > 0 ? (
+            <Fragment>
+              {stdCheckpoints.map((checkpoint: any) => (
+                <Fragment key={checkpoint.id}>
+                  <div className="h-auto bg-white shadow-5 sm:rounded-lg mb-4 text-gray-900">
+                    <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+                      <h3 className="text-lg leading-6 font-medium uppercase">
+                        {checkpoint.title}
+                      </h3>
+                    </div>
+
+                    <div className="h-full px-4 py-5 sm:px-6">
+                      <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 text-gray-900">
+
+                        {checkpoint.questions?.items.map((item: any) => (
+                          <div className="sm:col-span-3 p-2 flex items-end">
+                            <div className="flex flex-col justify-between">
+                              {item.question.type === 'text' ? <FormInput value={''} id={item.question.id} name="" label={item?.question?.question} onChange={onInputChange} /> : null}
+                              {item.question.type === 'input' ? <FormInput id={item.question.id} label={item?.question?.question} /> : null}
+                              {item.question.type === 'selectOne' ? <Fragment>
+                                <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
+                                  {item?.question?.question}
+                                </label>
+                                <Selector selectedItem={''} placeholder="" list={convertToSelectorList(item?.question?.options)} onChange={() => console.log('')} />
+                              </Fragment>
+                                : null}
+                              {item.question.type === 'selectMany' ?
+                                <Fragment>
+                                  <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
+                                    {item?.question?.question}
+                                  </label>
+                                  <MultipleSelector list={convertToMultiSelectList(item?.question?.options)} selectedItems={[]} placeholder="" onChange={() => console.log('')} />
+                                </Fragment>
+                                : null}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+
+                  </div>
+                </Fragment>
+              ))}
+            </Fragment>) : null}
+
 
           {/* <div className="h-auto bg-white shadow-5 sm:rounded-lg">
             

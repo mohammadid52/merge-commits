@@ -146,19 +146,19 @@ const UserEdit = (props: UserInfoProps) => {
             </div>
 
             <div className='h-full px-4 py-5 sm:px-6'>
-              <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6'>
+              <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 text-gray-900'>
                 <div className='sm:col-span-3 p-2'>
                   <label
                     htmlFor='firstName'
                     className='block text-m font-medium leading-5 text-gray-700'>
                     First Name
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
+                  <div className='mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm'>
                     <input
                       id='firstName'
                       type='text'
                       onChange={onChange}
-                      className='form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5'
+                      className='form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 text-gray-900'
                       defaultValue={user.firstName}
                     />
                   </div>
@@ -170,7 +170,7 @@ const UserEdit = (props: UserInfoProps) => {
                     className='block text-m font-medium leading-5 text-gray-700'>
                     Last Name
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
+                  <div className='border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
                     <input
                       id='lastName'
                       type='text'
@@ -205,7 +205,7 @@ const UserEdit = (props: UserInfoProps) => {
                     className='block text-m font-medium leading-5 text-gray-700'>
                     Nickname
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
+                  <div className='mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm'>
                     <input
                       id='preferredName'
                       type='text'
@@ -246,7 +246,7 @@ const UserEdit = (props: UserInfoProps) => {
                     className='block text-m font-medium leading-5 text-gray-700'>
                     Contact Number
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
+                  <div className='mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm'>
                     <input
                       id='phone'
                       onChange={onChange}
@@ -267,14 +267,14 @@ const UserEdit = (props: UserInfoProps) => {
             </div>
 
             <div className='h-full px-4 py-5 sm:px-6'>
-              <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6'>
+              <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 text-gray-900'>
                 <div className='sm:col-span-3 p-2'>
                   <label
                     htmlFor='institution'
                     className='block text-m font-medium leading-5 text-gray-700'>
                     Institution
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
+                  <div className='mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm'>
                     <input
                       id='institution'
                       type='text'
@@ -291,7 +291,7 @@ const UserEdit = (props: UserInfoProps) => {
                     className='block text-m font-medium leading-5 text-gray-700'>
                     Grade
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
+                  <div className='mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm'>
                     <input
                       id='grade'
                       onChange={onChange}

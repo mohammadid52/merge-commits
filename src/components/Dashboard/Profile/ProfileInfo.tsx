@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaEdit } from 'react-icons/fa';
 import { NavLink, useRouteMatch } from 'react-router-dom';
@@ -13,10 +13,11 @@ import { getUserRoleString } from '../../../utilities/strings';
 interface UserInfoProps {
   user: UserInfo
   status: string
+  stdCheckpoints: any[]
 }
 
 const ProfileInfo = (props: UserInfoProps) => {
-  const { user, status } = props;
+  const { user, status, stdCheckpoints } = props;
   const { userLanguage, clientKey } = useContext(GlobalContext);
   const { dashboardProfileDict } = useDictionary(clientKey);
   const match = useRouteMatch();
@@ -48,7 +49,7 @@ const ProfileInfo = (props: UserInfoProps) => {
       <div className="w-full md:px-4 pt-4">
         <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
           <div className="flex justify-between border-b border-gray-200 sm:px-6">
-            <h3 className="px-4 py-5 text-lg leading-6 font-medium text-gray-900">
+            <h3 className="px-4 py-5 text-lg leading-6 font-medium text-gray-900 uppercase">
               {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['TITLE']}
             </h3>
             {/* <div className="py-2 flex">
@@ -124,6 +125,55 @@ const ProfileInfo = (props: UserInfoProps) => {
             </dl>
           </div>
         </div>
+
+        {stdCheckpoints?.length > 0 ? (
+          <Fragment>
+            {stdCheckpoints.map((checkpoint: any) => <Fragment key={checkpoint.id}>
+              <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
+                <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+                  <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
+                    {checkpoint.title}
+                  </h3>
+                </div>
+                <div className="px-4 py-5 sm:px-6">
+                  <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
+
+                    {checkpoint.questions?.items.map((item: any) => (
+                      <div className="sm:col-span-1 p-2">
+                        <dt className="text-sm leading-5 font-medium text-gray-500">
+                          {/* {dashboardProfileDict[userLanguage]['INSTITUTION_INFO']['INSTITUTION']} */}
+                          {item.question.question}
+                        </dt>
+                        <dd className="mt-1 text-sm leading-5 text-gray-900">
+                          --
+                          {/* {`${user.institution ? user.institution : 'Rose M. Avalos P-TECH Early College'}`} */}
+                        </dd>
+                      </div>
+                    ))}
+
+                    {/* <div className="sm:col-span-1 p-2">
+                      <dt className="text-sm leading-5 font-medium text-gray-500">
+                        {dashboardProfileDict[userLanguage]['INSTITUTION_INFO']['INSTITUTION']}
+                      </dt>
+                      <dd className="mt-1 text-sm leading-5 text-gray-900">
+                        {`${user.institution ? user.institution : 'Rose M. Avalos P-TECH Early College'}`}
+                      </dd>
+                    </div> */}
+
+                    {/* <div className="sm:col-span-1 p-2">
+                      <dt className="text-sm leading-5 font-medium text-gray-500">
+                        {dashboardProfileDict[userLanguage]['INSTITUTION_INFO']['GRADE']}
+                      </dt>
+                      <dd className="mt-1 text-sm leading-5 text-gray-900">
+                        {`${user.grade ? user.grade : 'not set'}`}
+                      </dd>
+                    </div> */}
+
+                  </dl>
+                </div>
+              </div>
+            </Fragment>)}
+          </Fragment>) : null}
 
         {/* <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg">
           <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
