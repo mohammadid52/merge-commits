@@ -25,7 +25,7 @@ import SectionTitle from '../../Atoms/SectionTitle';
 import Buttons from '../../Atoms/Buttons';
 import Loader from '../../Atoms/Loader';
 import useDictionary from '../../../customHooks/dictionary';
-import { getUniqItems } from '../../../utilities/strings';
+import { getUniqItems, createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
 
 export interface UserInfo {
   authId: string
@@ -85,11 +85,18 @@ const Profile: React.FC = () => {
   const [upImage, setUpImage] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
   const [stdCheckpoints, setStdCheckpoints] = useState([]);
+  const [questionData, setQuestionData] = useState([]);
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
     { title: BreadcrumsTitles[userLanguage]['PROFILE'], url: '/dashboard/profile', last: true },
   ]
+
+  /**
+   * Profile component structure needs to be reform to reduce unnecessary API calls.
+   * 
+   * 
+   */
 
   // TODO: 
   // Set type for file instead of any
@@ -225,10 +232,36 @@ const Profile: React.FC = () => {
       console.error("Error Deleting image on graphql", error)
     }
   }
+  const getQuestionData = async (checkpointIDs: any[]) => {
+    const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
+      return {
+        'checkpointID': {
+          eq: item,
+        },
+      };
+    });
+    const filter = {
+      and: [
+        { email: { eq: state.user.email } },
+        { authID: { eq: state.user.authId } },
+        {
+          or: [
+            ...checkpointIDFilter,
+          ]
+        }
+      ]
+
+    }
+    const results: any = await API.graphql(graphqlOperation(customQueries.listQuestionDatas
+      , { filter: filter }
+    ));
+    const questionData: any = results.data.listQuestionDatas?.items;
+    setQuestionData(questionData);
+    console.log(questionData, "questionData")
+  }
 
   async function getUser() {
     try {
-      const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: state.user.email, authId: state.user.authId }))
       const results: any = await API.graphql(graphqlOperation(customQueries.getPersonData, { email: state.user.email, authId: state.user.authId }))
       const userData: any = results.data.getPerson;
       const studentClasses: any = userData.classes?.items.map((item: any) => item.class);
@@ -239,8 +272,14 @@ const Profile: React.FC = () => {
       const studCurriCheckp: any = uniqCurriculars.map((item: any) => item?.curriculum?.checkpoints?.items).flat(1);
       const studentCheckpoints: any = studCurriCheckp.map((item: any) => item?.checkpoint);
       const uniqCheckpoints: any = getUniqItems(studentCheckpoints, 'id')
+      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item.id);
+      const personalInfo: any = { ...userData }
+      delete personalInfo.classes;
+      if (uniqCheckpointIDs?.length > 0) {
+        getQuestionData(uniqCheckpointIDs);
+      }
       setStdCheckpoints([...uniqCheckpoints]);
-      setPerson(user.data.getPerson);
+      setPerson(personalInfo);
       setStatus('done');
     } catch (error) {
       console.error(error)
@@ -392,6 +431,7 @@ const Profile: React.FC = () => {
                         user={person}
                         status={status}
                         stdCheckpoints={stdCheckpoints}
+                        questionData={questionData}
                       />
                     )}
                   />
@@ -410,6 +450,7 @@ const Profile: React.FC = () => {
                         setStatus={setStatus}
                         getUser={getUser}
                         stdCheckpoints={stdCheckpoints}
+                        questionData={questionData}
                       />
                     )}
                   />

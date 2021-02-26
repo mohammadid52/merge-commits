@@ -1949,6 +1949,23 @@ export const getPersonData = /* GraphQL */ `
       id
       authId
       email
+      status
+      role
+      type
+      firstName
+      preferredName
+      lastName
+      externalId
+      grade
+      onBoardSurvey
+      offBoardSurvey
+      phone
+      birthdate
+      image
+      language
+      filters
+      lastLoggedIn
+      lastLoggedOut
       classes {
         items {
           classID

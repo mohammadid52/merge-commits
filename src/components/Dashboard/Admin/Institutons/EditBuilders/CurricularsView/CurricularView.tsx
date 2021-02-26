@@ -81,7 +81,7 @@ const CurricularView = (props: CurricularViewProps) => {
   const tabs = [
     { index: 0, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList savedSyllabi={curricularData.syllabusList} curricularId={currID} loading={loading} /> },
     { index: 1, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjective curricularId={currID} /> },
-    { index: 2, title: 'Checkpoints', icon: <FiUserCheck />, active: false, content: <CheckpointList curricularId={currID} /> },
+    { index: 2, title: 'Demographics & Information', icon: <FiUserCheck />, active: false, content: <CheckpointList curricularId={currID} /> },
   ]
 
   const updateTab = (tab: number) => {

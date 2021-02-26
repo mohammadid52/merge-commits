@@ -393,7 +393,9 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     try {
       setLoading(true);
       const fetchCheckpointsData: any = await API.graphql(
-        graphqlOperation(customQueries.listCheckpoints)
+        graphqlOperation(customQueries.listCheckpoints, {
+          filter: { type: { ne: 'profile' } },
+        })
       );
       if (!fetchCheckpointsData) {
         throw new Error('fail!');

@@ -264,6 +264,13 @@ export const getUniqItems = (arr: any[], key: string) => {
   return updatedArray;
 };
 
+export const convertArrayIntoObj = (answerArray: any[]) => {
+  return answerArray.reduce((obj: any, item: any) => {
+    obj[Object.keys(item)[0]] = Object.values(item)[0];
+    return obj;
+  }, {});
+};
+
 export const getLanguageString = (language: string) => {
   switch (language) {
     case 'EN':
