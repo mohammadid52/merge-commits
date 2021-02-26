@@ -71,7 +71,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   useEffect(() => {
     if (state.data.lesson.checkpoints && state.data.lesson.checkpoints.items) {
       if (!isTeacher) {
-        // setInput(initialResponseState);
+        setInput(initialResponseState);
       }
       setStatus('loaded');
     }
