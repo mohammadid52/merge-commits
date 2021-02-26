@@ -209,7 +209,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     const allCheckpointIDS = state.data.lessonPlan.reduce((acc: string[], lessonPlanObj: any) => {
       const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
       if (isCheckpoint) {
-        return [...acc, lessonPlanObj.stage.match(/[^?id=]*$/g)[0]];
+        return [...acc, lessonPlanObj.stage.match(/checkpoint\?id=(.*)/)[1]];
       } else {
         return acc;
       }
@@ -220,6 +220,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       }));
 
       setLesson({ ...lesson, lesson: { ...lesson.lesson, checkpoints: checkpoints.data.listCheckpoints } });
+
     } catch (e) {
       console.error('err fetch checkpoints ::: ', e);
     }
@@ -238,6 +239,26 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       console.error(err);
     }
   };
+
+  const handleSave = async () => {
+    if (typeof state.questionData === 'object') {
+      let  checkpointIdKeys = Object.keys(state.questionData); // doFirst, checkpoint_1
+
+      await  checkpointIdKeys.reduce((_: any, key: string) => {
+        let responseObject = {
+          syllabusLessonID: state.syllabusLessonID,
+          checkpointID: key,
+          componentType: state.data.lesson.type,
+          lessonID: state.data.lesson.id,
+          authID: state.studentAuthID,
+          email: state.studentUsername,
+          responseObject: state.questionData[key],
+        };
+
+        saveQuestionData(responseObject);
+      }, null);
+    }
+  }
 
   async function getOrCreateQuestionData() {
     const { lessonID } = urlParams;
@@ -260,9 +281,9 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         }),
       );
 
-
       if (questionDatas.data.listQuestionDatas.items.length === 0) {
-        console.log('lesson checkpoints -> ', checkpoints);
+        console.log('NO question data, creating -> ', checkpoints);
+        handleSave()
       }
     } catch (e) {
       console.error('getOrCreateQuestionData -> ', e);
