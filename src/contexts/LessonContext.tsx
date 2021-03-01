@@ -43,6 +43,9 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [personLocationObj, setPersonLocationObj] = useState<any>();
   const [recentOp, setRecentOp] = useState<string>('');
+  const [recentQuestionOp, setRecentQuestionOp] = useState<string>('');
+
+  const [checkpointsLoaded, setCheckpointsLoaded] = useState<boolean>(false);
 
   // INIT PERSON LOCATION STATE
   useEffect(() => {
@@ -211,61 +214,75 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         return acc;
       }
     }, []);
-    try {
-      const checkpoints: any = await API.graphql(graphqlOperation(customQueries.listCheckpoints, {
-        filter: { ...createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id') },
-      }));
+    if (allCheckpointIDS.length > 0) {
 
-      //  STORE FULL CHECKPOINT OBJECTS
-      setLesson({ ...lesson, lesson: { ...lesson.lesson, checkpoints: checkpoints.data.listCheckpoints } });
+      try {
+        const checkpoints: any = await API.graphql(graphqlOperation(customQueries.listCheckpoints, {
+          filter: { ...createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id') },
+        }));
 
-      // INIT CONTEXT WITH EMPTY QUESTIONDATA!
-      const initCheckpointsObj = checkpoints.data.listCheckpoints.items.reduce((acc: any, checkpointObj: any) => {
-        return { ...acc, [checkpointObj.id]: {} };
-      }, {});
-      dispatch({
-        type: 'SET_QUESTION_DATA',
-        payload: {
-          data: initCheckpointsObj,
-        },
-      });
+        //  STORE FULL CHECKPOINT OBJECTS
+        setLesson({ ...lesson, lesson: { ...lesson.lesson, checkpoints: checkpoints.data.listCheckpoints } });
 
-    } catch (e) {
-      console.error('err fetch checkpoints ::: ', e);
+        // INIT CONTEXT WITH EMPTY QUESTIONDATA!
+        const initCheckpointsObj = checkpoints.data.listCheckpoints.items.reduce((acc: any, checkpointObj: any) => {
+          return { ...acc, [checkpointObj.id]: {} };
+        }, {});
+        dispatch({
+          type: 'SET_QUESTION_DATA',
+          payload: {
+            data: initCheckpointsObj,
+          },
+        });
+
+      } catch (e) {
+        console.error('err fetch checkpoints ::: ', e);
+      } finally {
+        setCheckpointsLoaded(true);
+      }
+    } else {
+      setCheckpointsLoaded(false);
     }
   };
 
   /**
    * GET or CREATE QUESTION DATA
    */
-  const saveQuestionData = async (responseObj: any) => {
+  const createQuestionData = async (responseObj: any) => {
     try {
       const newQuestionData = await API.graphql(
         graphqlOperation(customMutations.createQuestionData, { input: responseObj }),
       );
-      console.log('responseObj -> ', responseObj);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleSave = async () => {
+  const handleCreateQuestionData = async () => {
+    let studentID: string;
+    let studentAuthID: string;
+
+    await Auth.currentAuthenticatedUser().then((user) => {
+      studentID = user.attributes.email;
+      studentAuthID = user.attributes.sub;
+    });
+
     if (typeof state.questionData === 'object') {
       let checkpointIdKeys = Object.keys(state.questionData); // doFirst, checkpoint_1
-      console.log('handleCreate Checkpoint -> idKeys -> ', state.questionData);
       await checkpointIdKeys.reduce((_: any, key: string) => {
         let responseObject = {
           syllabusLessonID: state.syllabusLessonID,
           checkpointID: key,
           componentType: state.data.lesson.type,
           lessonID: state.data.lesson.id,
-          authID: state.studentAuthID,
-          email: state.studentUsername,
+          authID: studentAuthID,
+          email: studentID,
           responseObject: state.questionData[key],
         };
 
-        saveQuestionData(responseObject);
+        createQuestionData(responseObject);
       }, null);
+      setRecentQuestionOp('created');
     }
   }
 
@@ -275,10 +292,11 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     let studentAuthID: string;
 
     await Auth.currentAuthenticatedUser().then((user) => {
-      // console.log(user);
       studentID = user.attributes.email;
       studentAuthID = user.attributes.sub;
     });
+
+    console.log('getOrCreateQuestionData -> recentQuestionOp, ', recentQuestionOp)
 
     try {
       const questionDatas: any = await API.graphql(
@@ -289,12 +307,27 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
           },
         }),
       );
+      const questionDataUpdateArray = questionDatas.data.listQuestionDatas.items.reduce((acc: any[], val: any) => {
+        return [...acc, {
+          id: val.id,
+          checkpointID: val.checkpointID,
+        }];
+      }, []);
 
-      if (questionDatas.data.listQuestionDatas.items.length === 0) {
-        console.log('NO question data, creating -> ', Object.keys(state.questionData));
-        handleSave();
-      } else {
-        console.log('EXISTS question data, --> ', 'skip creation');
+      const noQuestionDatas = questionDatas.data.listQuestionDatas.items.length === 0;
+      const existQuestionDatas = questionDatas.data.listQuestionDatas.items.length > 0;
+
+      if (noQuestionDatas && recentQuestionOp === '') {
+        await handleCreateQuestionData();
+      }
+
+      if (
+        existQuestionDatas && recentQuestionOp === '' ||
+        existQuestionDatas && recentQuestionOp === 'created'
+      ) {
+        console.log('qData exists, this is update array ->', questionDataUpdateArray)
+        dispatch({ type: 'SET_QUESTION_DATA_UPDATE', payload: { data: questionDataUpdateArray } });
+        setRecentQuestionOp('fetched');
       }
     } catch (e) {
       console.error('getOrCreateQuestionData -> ', e);
@@ -308,18 +341,22 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         await getAllCheckpoints();
       }
     };
-    getAdditionalLessonData();
-  }, [state.data.lessonPlan]);
+    if (!checkpointsLoaded) {
+      getAdditionalLessonData();
+    }
+  }, [state.data.lesson]);
 
   // Init questionData in DB if necessary
   useEffect(() => {
     const initQuestionDataDB = async () => {
-      if (state.data.lesson.type === 'lesson') await getOrCreateQuestionData();
+      await getOrCreateQuestionData();
     };
-    if (Object.keys(state.questionData).length > 0) {
-      initQuestionDataDB();
+    if (checkpointsLoaded && state.data.lesson.type === 'lesson') {
+      if (recentQuestionOp === '' || recentQuestionOp === 'created') {
+        getOrCreateQuestionData();
+      }
     }
-  }, [state.questionData]);
+  }, [checkpointsLoaded, recentQuestionOp]);
 
   /**
    * GET SYLLABUS LESSON

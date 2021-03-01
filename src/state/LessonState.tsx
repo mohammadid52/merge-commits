@@ -10,7 +10,12 @@ export type PagesType = Array<{
     // save: boolean;
 }> | null
 
-export interface LessonStateType  {
+export type QuestionDataUpdate = Array<{
+    id: string;
+    checkpointID: string;
+}> | null
+
+export interface LessonStateType {
     status: string;
     error: string;
     syllabusLessonID: string,
@@ -36,6 +41,7 @@ export interface LessonStateType  {
     questionData?: {
         [key: string]: string | null
     }
+    questionDataUpdate: QuestionDataUpdate
     new_words: Array<string>;
     word_bank?: Array<string>;
     lessonComplete: boolean;
@@ -60,6 +66,7 @@ export const lessonState: LessonStateType = {
     canContinue: false,
     componentState: {},
     questionData: {},
+    questionDataUpdate: null,
     viewing: false,
     displayData: {},
     pages: null,

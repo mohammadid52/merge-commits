@@ -64,7 +64,12 @@ export type LessonActions =
   | {
       type: 'SET_QUESTION_DATA';
       payload: {
-        // key: string;
+        data: any;
+      };
+    }
+  | {
+      type: 'SET_QUESTION_DATA_UPDATE';
+      payload: {
         data: any;
       };
     }
@@ -145,7 +150,6 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
         word_bank: action.payload.word_bank,
         displayData: action.payload.displayData,
         subscribeFunc: action.payload.subscribeFunc,
-        // timer: action.payload.timer
       };
     case 'SET_CURRENT_PAGE':
       return {
@@ -321,12 +325,17 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
       //   }
       // });
 
-      console.log('reducer payload -> ', action.payload.data)
+      // console.log('reducer payload -> ', action.payload.data);
 
       return {
         ...state,
         studentStatus: 'ACTIVE',
         questionData: action.payload.data,
+      };
+    case 'SET_QUESTION_DATA_UPDATE':
+      return {
+        ...state,
+        questionDataUpdate: action.payload.data,
       };
     case 'ACTIVATE_LESSON':
       return {

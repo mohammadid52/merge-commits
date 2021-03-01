@@ -1896,6 +1896,7 @@ export const listCheckpoints = /* GraphQL */ `
         title
         subtitle
         id
+        type
         questions {
           nextToken
           items {

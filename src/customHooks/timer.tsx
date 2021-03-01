@@ -49,8 +49,6 @@ const useStudentTimer = (inputs?: inputs) => {
   const [activityTimeout, setactivityTimeout] = useState<any>();
   const [typeOfTimeout, setTypeOfTimeout] = useState<'pageSwitch' | 'edit' | ''>('');
 
-  const [updatedQuestionDataObj, setUpdateQuestionDataObj] = useState<any>();
-
   // SAVING
   //PAGE SWITCH => SAVE TTRIGGER after 10 secs
   useEffect(() => {
@@ -78,7 +76,7 @@ const useStudentTimer = (inputs?: inputs) => {
     if(isLesson) {
       if (state.viewing) {
         clearTimeout(activityTimeout);
-        setactivityTimeout(setTimeout(() => dispatch({ type: 'INCREMENT_SAVE_COUNT' }), 1000));
+        setactivityTimeout(setTimeout(() => dispatch({ type: 'INCREMENT_SAVE_COUNT' }), 2000));
       }
       if (!state.viewing) {
         if (typeOfTimeout === '') {
@@ -115,10 +113,8 @@ const useStudentTimer = (inputs?: inputs) => {
   }, [params.state.studentStatus]);
 
   useEffect(() => {
-    // console.log('teacher viewing savecount: ', params.state.saveCount);
     updateStudentData('autosave');
-    getQuestionDataOnly()
-    // getAllCheckpoints()
+    handleUpdateQuestionData();
   }, [params.state.saveCount]);
 
   const getWarmupDataSource = () => {
@@ -192,7 +188,6 @@ const useStudentTimer = (inputs?: inputs) => {
       };
   
       try {
-        // console.log(' timer save: ', data);
         const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
         dispatch({ type: 'SAVED_CHANGES' });
       } catch (error) {
@@ -205,33 +200,6 @@ const useStudentTimer = (inputs?: inputs) => {
 
 
   /**
-   * Function and useEffect for getting/setting checkpoints if
-   * condition is met and lesson plans include
-   * checkpoints in their name
-   */
-  const getAllCheckpoints = async () => {
-    const allCheckpointIDS = state.data.lessonPlan.reduce((acc: string[], lessonPlanObj: any) => {
-      const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
-      if (isCheckpoint) {
-        return [...acc, lessonPlanObj.stage.match(/checkpoint\?id=(.*)/)[1]];
-      } else {
-        return acc;
-      }
-    }, []);
-    try {
-      const checkpoints: any = await API.graphql(graphqlOperation(customQueries.listCheckpoints, {
-        filter: { ...createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id') },
-      }));
-
-      console.log('checkpoints timer', checkpoints)
-
-    } catch (e) {
-      console.error('err fetch checkpoints ::: ', e);
-    }
-  };
-
-
-  /**
    * GET or CREATE QUESTION DATA
    */
   const updateQuestionData = async (responseObj: any) => {
@@ -239,71 +207,33 @@ const useStudentTimer = (inputs?: inputs) => {
       const updatedQuestionData = await API.graphql(
         graphqlOperation(mutations.updateQuestionData, { input: responseObj }),
       );
-      console.log('responseObj -> ', responseObj);
+      console.log('updateQuestionData responseObj -> ', responseObj);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleUpdate = async () => {
+  const handleUpdateQuestionData = async () => {
     if (typeof state.questionData === 'object') {
-      let checkpointIdKeys = Object.keys(state.questionData); // doFirst, checkpoint_1
-      console.log('handleCreate Checkpoint -> idKeys -> ', state.questionData);
-      await checkpointIdKeys.reduce((_: any, key: string) => {
-        let responseObject = {
-          syllabusLessonID: state.syllabusLessonID,
-          checkpointID: key,
-          componentType: state.data.lesson.type,
-          lessonID: state.data.lesson.id,
-          authID: state.studentAuthID,
-          email: state.studentUsername,
-          responseObject: state.questionData[key],
-        };
+      let questionDataUpdateArray = state.questionDataUpdate;
+      if(questionDataUpdateArray){
 
-        // updateQuestionData(responseObject);
-      }, null);
-    }
-  }
+        await questionDataUpdateArray.reduce((_: any, val: any) => {
+          let responseObject = {
+            id: val.id,
+            syllabusLessonID: state.syllabusLessonID,
+            checkpointID: val.checkpointID,
+            componentType: state.data.lesson.type,
+            lessonID: state.data.lesson.id,
+            authID: state.studentAuthID,
+            email: state.studentUsername,
+            responseObject: state.questionData[val.checkpointID],
+          };
 
+          updateQuestionData(responseObject);
+        }, null);
 
-  async function getQuestionDataOnly() {
-    const { lessonID } = urlParams;
-    let studentID: string;
-    let studentAuthID: string;
-
-    await Auth.currentAuthenticatedUser().then((user) => {
-      // console.log(user);
-      studentID = user.attributes.email;
-      studentAuthID = user.attributes.sub;
-    });
-
-    try {
-      const questionDatas: any = await API.graphql(
-        graphqlOperation(queries.listQuestionDatas, {
-          filter: {
-            syllabusLessonID: { eq: lessonID },
-            email: { eq: studentID },
-          },
-        }),
-      );
-
-      if (questionDatas.data.listQuestionDatas.items.length > 0) {
-        console.log('NO question data, creating -> ', Object.keys(state.questionData));
-
-        /**
-         *
-         *
-         * MODIFY INCOMING QUESTION DATAS HERE
-         * SAVE THEM BACK TO DATABASE
-         *
-         *
-         */
-
-
-        // handleUpdate();
       }
-    } catch (e) {
-      console.error('getOrCreateQuestionData -> ', e);
     }
   }
 

@@ -5,6 +5,17 @@ import Banner from '../LessonComponents/Banner';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 import SaveQuit from '../LessonComponents/Outro/SaveQuit';
 
+export interface CheckpointInterface {
+  title: string;
+  subtitle: string;
+  id: string;
+  type: string;
+  questions: any;
+  instructions: string;
+  instructionsTitle: string;
+  label: string;
+}
+
 const Checkpoint = (props: { isTeacher?: boolean }) => {
   /**
    * Teacher switch
