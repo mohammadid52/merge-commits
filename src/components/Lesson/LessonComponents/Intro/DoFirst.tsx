@@ -45,9 +45,9 @@ const DoFirst = () => {
 
   return (
     <div className={`w-full h-full rounded-xl`}>
-      <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
-        Do First 
-      </h3>
+      {/*<h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
+        Do First
+      </h3>*/}
       <CheckpointQuestions checkpointType={`doFirst`}/>
     </div>
   );
