@@ -45,8 +45,18 @@ const ProfileEdit = (props: UserInfoProps) => {
   }
   const onMultipleSelection = (id: string, name: string, value: string, checkpointID: string, questionID: string) => {
     const selectedQuestion = checkpointData[checkpointID] ? checkpointData[checkpointID][questionID] : [];
+
     if (selectedQuestion?.length > 0) {
-      const selectedOption: any = selectedQuestion.find((item: any) => item.id === id);
+      if (typeof (selectedQuestion) === 'string') {
+        setCheckpointData({
+          ...checkpointData,
+          [checkpointID]: {
+            ...checkpointData[checkpointID],
+            [questionID]: []
+          }
+        })
+      }
+      const selectedOption: any = selectedQuestion?.find((item: any) => item.id === id);
       let updatedList;
       if (selectedOption) {
         const newList = selectedQuestion.filter((item: any) => item.id !== id);
@@ -93,6 +103,25 @@ const ProfileEdit = (props: UserInfoProps) => {
     history.push('/dashboard/profile');
   }
 
+  const updateQuestionData = async (responseObj: any) => {
+    try {
+      const questionData = await API.graphql(
+        graphqlOperation(customMutations.updateQuestionData, { input: responseObj })
+      );
+      console.log("Question data updated");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const updatePersonCheckpointData = async (questionDataId: string, questions: any[]) => {
+    let responseObject = {
+      id: questionDataId,
+      responseObject: questions,
+    };
+    updateQuestionData(responseObject);
+  }
+
   const createQuestionData = async (responseObj: any) => {
     try {
       const questionData = await API.graphql(
@@ -114,17 +143,32 @@ const ProfileEdit = (props: UserInfoProps) => {
     };
     createQuestionData(responseObject);
   }
+
   const saveAllCheckpointData = async () => {
+    setLoading(true);
     const checkpId = Object.keys(checkpointData);
     const allCheckpoints = checkpId.map(itemID => ({
       checkpointId: itemID,
       questions: checkpointData ? getQuestionArray(checkpointData[itemID]) : []
     }))
-
-    let checkpoints = Promise.all(
-      allCheckpoints.map(async (item: any) => savePersonCheckpointData(item.checkpointId, item.questions))
-    )
+    if (questionData?.length === 0) {
+      let checkpoints = Promise.all(
+        allCheckpoints.map(async (item: any) => savePersonCheckpointData(item.checkpointId, item.questions))
+      )
+    } else {
+      let checkpoints = Promise.all(
+        allCheckpoints.map(async (item: any) => {
+          const currentItem: any = questionData?.find((question: any) => question.checkpointID === item.checkpointId)
+          if (currentItem) {
+            return updatePersonCheckpointData(currentItem.id, item.questions)
+          } else {
+            return savePersonCheckpointData(item.checkpointId, item.questions)
+          }
+        })
+      )
+    }
   }
+
   async function updatePerson() {
     const input = {
       id: editUser.id,
@@ -211,11 +255,27 @@ const ProfileEdit = (props: UserInfoProps) => {
   }
   const convertToMultiSelectList = (options: any) => {
     const newArr: any = options.map((item: any, index: number) => ({
-      id: item.label,
+      id: index.toString(),
       name: item.text,
       value: item.text
     }))
     return newArr;
+  }
+
+  const selectedMultiOptions = (options: any[]) => {
+    if (typeof (options) === 'string') {
+      return [{ id: '0', name: options, value: options }]
+    }
+    if (options && typeof (options[0]) === "string") {
+      const newArr: any = options?.map((option: any, index: number) => ({
+        id: index.toString(),
+        name: option,
+        value: option
+      }))
+      return [...newArr];
+    } else {
+      return [...options]
+    }
   }
 
   let imagePreview = null;
@@ -230,19 +290,21 @@ const ProfileEdit = (props: UserInfoProps) => {
   }
   const extractItemFromArray = (responceArray: any[]) => {
     const answerArray: any = responceArray.map((item: any) => ({
-      [item['qid']]: item?.response?.join('')
+      [item['qid']]: item?.response?.length > 1 ? [...selectedMultiOptions(item.response)] : item?.response?.join('')
     }));
     return convertArrayIntoObj(answerArray);
   }
 
   useEffect(() => {
-    const updatedListArray: any = questionData.map((item: any) => ({
-      [item['checkpointID']]: extractItemFromArray(item.responseObject)
-    }))
-    const updatedListObj: any = convertArrayIntoObj(updatedListArray);
-    setCheckpointData({
-      ...updatedListObj
-    })
+    if (questionData?.length > 0) {
+      const updatedListArray: any = questionData.map((item: any) => ({
+        [item['checkpointID']]: extractItemFromArray(item.responseObject)
+      }))
+      const updatedListObj: any = convertArrayIntoObj(updatedListArray);
+      setCheckpointData({
+        ...updatedListObj
+      })
+    }
   }, [questionData])
 
   if (status !== 'done') {
@@ -421,7 +483,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                                     </label>
                                     <MultipleSelector
                                       list={convertToMultiSelectList(item?.question?.options)}
-                                      selectedItems={(checkpointData[checkpoint.id] && checkpointData[checkpoint.id][item.question.id]) ? checkpointData[checkpoint.id][item.question.id] : []}
+                                      selectedItems={(checkpointData[checkpoint.id] && checkpointData[checkpoint.id][item.question.id]) ? selectedMultiOptions(checkpointData[checkpoint.id][item.question.id]) : []}
                                       placeholder=""
                                       onChange={(id, name, value) => onMultipleSelection(id, name, value, checkpoint.id, item.question.id)} />
                                   </Fragment>

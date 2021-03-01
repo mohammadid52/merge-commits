@@ -345,7 +345,29 @@ export const createQuestionData = /* GraphQL */ `
     }
   }
 `;
-
+export const updateQuestionData = /* GraphQL */ `
+  mutation UpdateQuestionData(
+    $input: UpdateQuestionDataInput!
+    $condition: ModelQuestionDataConditionInput
+  ) {
+    updateQuestionData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      checkpointID
+      email
+      authID
+      componentType
+      scheduleID
+      lessonID
+      responseObject {
+        qid
+        response
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const updateSurveyStatus = /* GraphQL */ `
   mutation UpdatePerson($input: UpdatePersonInput!, $condition: ModelPersonConditionInput) {
     updatePerson(input: $input, condition: $condition) {

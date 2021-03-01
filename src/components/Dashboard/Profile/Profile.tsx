@@ -244,6 +244,7 @@ const Profile: React.FC = () => {
       and: [
         { email: { eq: state.user.email } },
         { authID: { eq: state.user.authId } },
+        { syllabusLessonID: { eq: '999999' } },
         {
           or: [
             ...checkpointIDFilter,
