@@ -326,15 +326,21 @@ const Profile: React.FC = () => {
                   {person.image ?
                     (
                       <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
-                        {!imageLoading ? <img
-                          className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
-                          src={imageUrl}
-                        /> :
+                        {!imageLoading ? (<Fragment>
+                          <label className="cursor-pointer">
+                            <img
+                              className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                              src={imageUrl}
+                            />
+                            <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
+                          </label>
+                        </Fragment>)
+                          :
                           <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-lightI">
                             <Loader />
                           </div>
                         }
-                        <span className="hidden group-focus:flex justify-around mt-6">
+                        {/* <span className="hidden group-focus:flex justify-around mt-6">
                           <label className="w-8 cursor-pointer">
                             <IconContext.Provider value={{ size: '1.6rem', color: '#B22222' }}>
                               <FaEdit />
@@ -346,7 +352,7 @@ const Profile: React.FC = () => {
                               <FaTrashAlt />
                             </IconContext.Provider>
                           </span>
-                        </span>
+                        </span> */}
                       </button>) :
                     (
                       <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
@@ -355,7 +361,6 @@ const Profile: React.FC = () => {
                         </IconContext.Provider> : <Loader />}
                         <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
                       </label>
-
                     )
                   }
                   <span className="absolute top-7 left-8 w-8 h-8">
