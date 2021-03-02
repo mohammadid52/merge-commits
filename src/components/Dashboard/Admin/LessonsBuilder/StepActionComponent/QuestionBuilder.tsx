@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import AddQuestionModal from '../HelperComponents/AddQuestionModal';
 import Buttons from '../../../../Atoms/Buttons';
+import { getAsset } from '../../../../../assets';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 interface QuestionBuilderProps {
   setActiveStep: (step: string) => void
@@ -14,6 +16,9 @@ const QuestionBuilder = (props: QuestionBuilderProps) => {
   const { setActiveStep } = props;
   const [showModal, setShowModal] = useState(false);
 
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  
   const questionsList = [
     { id: '1' },
     { id: '2' }
@@ -83,12 +88,12 @@ const QuestionBuilder = (props: QuestionBuilderProps) => {
                               <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">Where-youre-from</div>
                               <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">text Input</div>
                               <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center">
-                                <span className="w-auto cursor-pointer text-indigo-600">
-                                  <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+                                <span className={`w-auto cursor-pointer ${theme.textColor[themeColor] }`}>
+                                  <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                                     <FaEdit />
                                   </IconContext.Provider>
                                 </span>
-                                <span className="w-auto cursor-pointer text-indigo-600">
+                                <span className={`w-auto cursor-pointer ${theme.textColor[themeColor] }`}>
                                   <IconContext.Provider value={{ size: '1.5rem', color: '#B22222' }}>
                                     <FaTrashAlt />
                                   </IconContext.Provider>

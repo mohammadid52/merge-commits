@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment, useEffect, useContext } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useHistory, useParams } from 'react-router';
 import { IoArrowUndoCircleOutline, IoCaretDownCircleOutline, IoCaretUpCircleOutline } from 'react-icons/io5';
@@ -15,6 +15,8 @@ import * as customQueries from '../../../../../../../customGraphql/customQueries
 import * as customMutations from '../../../../../../../customGraphql/customMutations';
 import { getLanguageString } from '../../../../../../../utilities/strings';
 import CheckpointQueTable from '../../../../LessonsBuilder/StepActionComponent/CheckPointSteps/CheckpointQueTable';
+import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
+import { getAsset } from '../../../../../../../assets';
 
 interface ProfileCheckpointlookupProps {
 
@@ -22,6 +24,8 @@ interface ProfileCheckpointlookupProps {
 
 const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
   const { } = props;
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const urlParams: any = useParams()
   const curricularId = urlParams.curricularId;
@@ -189,8 +193,8 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
                             </div>
                             <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.language ? getLanguageString(item.language) : '--'}</div>
                             <div className="flex w-1.5/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
-                              <span className="w-6 h-6 cursor-pointer text-indigo-600" onClick={() => viewCheckpoint(item.id)}>
-                                <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+                              <span className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => viewCheckpoint(item.id)}>
+                                <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                                   {expandId === item.id ? <IoCaretUpCircleOutline /> : <IoCaretDownCircleOutline />}
                                 </IconContext.Provider>
                               </span>

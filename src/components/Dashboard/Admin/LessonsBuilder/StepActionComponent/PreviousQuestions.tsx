@@ -1,8 +1,12 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useContext } from 'react'
+import { getAsset } from '../../../../../assets';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import SearchInput from '../../../../Atoms/Form/SearchInput';
 
 const PreviousQuestions = () => {
   const questionsList = [];
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
@@ -42,8 +46,8 @@ const PreviousQuestions = () => {
                 <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">Where-youre-from</div>
                 <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">text Input</div>
                 <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center">
-                  <span className="w-6 flex items-center cursor-pointer text-indigo-600" onClick={() => console.log("add")}>
-                    Add
+                  <span className={`w-6 flex items-center cursor-pointer ${theme.textColor[themeColor] }`} onClick={() => console.log("add")}>
+                    Add 
                   </span>
                 </div>
               </div>

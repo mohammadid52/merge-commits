@@ -1,5 +1,7 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useContext } from 'react'
 import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { getAsset } from '../../assets';
+import { GlobalContext } from '../../contexts/GlobalContext';
 
 interface WizardScrollerProps {
   stepsList: { name: string, icon: React.ReactNode, isDisabled?: boolean }[]
@@ -8,6 +10,9 @@ interface WizardScrollerProps {
 }
 const WizardScroller = (props: WizardScrollerProps) => {
   const { stepsList, activeStep, setActiveStep } = props;
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+
   const changeActiveSteps = (isDisabled: boolean, step: string) => {
     if (!isDisabled) {
       setActiveStep(step);
@@ -33,14 +38,14 @@ const WizardScroller = (props: WizardScrollerProps) => {
               </div>) : null}
 
               <div className={`flex justify-start items-center mx-1 ${stepItem.isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`} onClick={() => changeActiveSteps(stepItem.isDisabled || false, stepItem.name)}>
-                <div className={`w-10 h-10 mx-2 rounded-full text-lg text-white flex items-center ${activeStep === stepItem.name ? 'bg-indigo-500 ' : 'bg-gray-400 '}`}>
+                <div className={`w-10 h-10 mx-2 rounded-full text-lg text-white flex items-center ${activeStep === stepItem.name ? theme.backGround[themeColor] : 'bg-gray-400 '}`}>
                   <span>
                     <IconContext.Provider value={{ size: '1.5rem', color: '#ffffff' }}>
                       {stepItem.icon}
                     </IconContext.Provider>
                   </span>
                 </div>
-                <div className={`text-xs md:text-base mx-2 w-auto ${activeStep === stepItem.name ? 'text-indigo-600 font-medium ' : ''} ${stepItem.isDisabled ? 'text-gray-500' : ''}`}>{stepItem.name}</div>
+                <div className={`text-xs md:text-base mx-2 w-auto ${activeStep === stepItem.name ? `${theme.textColor[themeColor]} font-medium` : ''} ${stepItem.isDisabled ? 'text-gray-500' : ''}`}>{stepItem.name}</div>
               </div>
             </div>
 

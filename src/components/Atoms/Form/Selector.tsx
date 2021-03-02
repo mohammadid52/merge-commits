@@ -1,4 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
+import { getAsset } from '../../../assets';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 
 interface SelectorProps {
   list?: { id: number, name: string }[]
@@ -13,6 +15,8 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   const { list, selectedItem, btnClass, arrowHidden, placeholder, onChange } = selectorProps;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const updateSelectedItem = (str: string, name: string, id: string) => {
     setShowList(!showList);
@@ -60,8 +64,8 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                   key={key}
                   onClick={() => updateSelectedItem(item.value, item.name, item.id)}
                   id={item.id}
-                  role="option" className={`hover:bg-indigo-400 hover:text-white flex cursor-pointer select-none relative py-2 px-4`}>
-                  <span className={`${selectedItem === item.name ? 'display' : 'hidden'} text-indigo-600 relative w-auto flex items-center`}>
+                  role="option" className={`hover:${theme.backGroundLight[themeColor]} hover:text-white flex cursor-pointer select-none relative py-2 px-4`}>
+                  <span className={`${selectedItem === item.name ? 'display' : 'hidden'} ${theme.textColor[themeColor]} relative w-auto flex items-center`}>
                     <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect, Fragment, useContext } from 'react'
 import { IoMdAddCircleOutline, IoMdRemoveCircleOutline } from 'react-icons/io';
 import API, { graphqlOperation } from '@aws-amplify/api'
 import { IconContext } from 'react-icons/lib/esm/iconContext';
@@ -9,6 +9,8 @@ import Selector from '../../../../../../../Atoms/Form/Selector';
 import Buttons from '../../../../../../../Atoms/Buttons';
 
 import * as mutations from '../../../../../../../../graphql/mutations';
+import { GlobalContext } from '../../../../../../../../contexts/GlobalContext';
+import { getAsset } from '../../../../../../../../assets';
 
 interface AddQuestionProps {
   goBackToPreviousStep: () => void
@@ -36,6 +38,8 @@ interface InputValue {
 const AddQuestion = (props: AddQuestionProps) => {
 
   const { goBackToPreviousStep, addNewQuestion } = props;
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const initialState = {
     question: '',
@@ -302,13 +306,13 @@ const AddQuestion = (props: AddQuestionProps) => {
                     <FormInput value={item.text} id={item.label} onChange={(e) => optionInputChange(index, e)} name={item.label} />
                   </div>
                   <div className="w-1/10 flex items-center">
-                    <span className="w-auto cursor-pointer text-indigo-600" onClick={() => onOptionAdd(index)}>
-                      <IconContext.Provider value={{ size: '2rem', color: '#667eea' }}>
+                    <span className="w-auto cursor-pointer" onClick={() => onOptionAdd(index)}>
+                      <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
                         <IoMdAddCircleOutline />
                       </IconContext.Provider>
                     </span>
-                    <span className="w-auto cursor-pointer text-indigo-600" onClick={() => onOptionRemove(index)}>
-                      <IconContext.Provider value={{ size: '2rem', color: '#667eea' }}>
+                    <span className="w-auto cursor-pointer" onClick={() => onOptionRemove(index)}>
+                      <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
                         <IoMdRemoveCircleOutline />
                       </IconContext.Provider>
                     </span>

@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useContext } from 'react'
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoIosKeypad } from 'react-icons/io';
 import { RiArrowRightLine } from 'react-icons/ri';
@@ -10,6 +10,8 @@ import SearchInput from '../../../../../Atoms/Form/SearchInput';
 import CheckBox from '../../../../../Atoms/Form/CheckBox';
 import Buttons from '../../../../../Atoms/Buttons';
 import CheckpointQueTable from './CheckpointQueTable';
+import { getAsset } from '../../../../../../assets';
+import { GlobalContext } from '../../../../../../contexts/GlobalContext';
 interface CheckpointLookupProps {
   changeStep: (step: string) => void
   onSave: (ids: string[]) => void
@@ -18,6 +20,10 @@ interface CheckpointLookupProps {
 
 const CheckpointLookup = (props: CheckpointLookupProps) => {
   const { changeStep, onSave, checkpointList } = props;
+
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  
   const [selectedCheckpointIds, setSelectedCheckpointIds] = useState([]);
   const [expandId, setExpandedId] = useState('');
   const [searchInput, setSearchInput] = useState('');
@@ -123,8 +129,8 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
                     </div>
                     <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.language ? getLanguageString(item.language) : '--'}</div>
                     <div className="flex w-1.5/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
-                      <span className="w-6 h-6 cursor-pointer text-indigo-600" onClick={() => viewCheckpoint(item.id)}>
-                        <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+                      <span className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor] }`} onClick={() => viewCheckpoint(item.id)}>
+                        <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                           {expandId === item.id ? <IoCaretUpCircleOutline /> : <IoCaretDownCircleOutline />}
                         </IconContext.Provider>
                       </span>

@@ -18,13 +18,15 @@ import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import * as customQueries from '../../../../customGraphql/customQueries';
 import LessonsListRow from './LessonsListRow';
 import { getLanguageString } from '../../../../utilities/strings';
+import { getAsset } from '../../../../assets';
 
 const LessonsList = () => {
   const match = useRouteMatch();
   const history = useHistory();
 
-  const { theme } = useContext(GlobalContext);
-
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  
   const [status, setStatus] = useState('');
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
@@ -240,7 +242,7 @@ const LessonsList = () => {
             <SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchLessonsFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
             <Selector placeholder="Sort By" list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none border-r-0" arrowHidden={true} />
             <button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400 border rounded border-l-0 rounded-l-none ${theme.outlineNone} `} onClick={toggleSortDimention}>
-              <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+              <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                 {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
               </IconContext.Provider>
             </button>
