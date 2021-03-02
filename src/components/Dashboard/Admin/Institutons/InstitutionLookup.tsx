@@ -16,6 +16,7 @@ import Pagination from '../../../Atoms/Pagination';
 import SearchInput from '../../../Atoms/Form/SearchInput';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageCountSelector from '../../../Atoms/PageCountSelector';
+import { getAsset } from '../../../../assets';
 
 /**
  * This component represents the bulk code of the institutions-lookup/all-institutions page
@@ -25,7 +26,8 @@ import PageCountSelector from '../../../Atoms/PageCountSelector';
 const InstitutionLookup: React.FC = () => {
   const match = useRouteMatch();
   const history = useHistory();
-  const { theme } = useContext(GlobalContext);
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const [status, setStatus] = useState('');
   const [institutionsData, setInstitutionsData] = useState([]);
   const [currentList, setCurrentList] = useState([]);
@@ -233,7 +235,7 @@ const InstitutionLookup: React.FC = () => {
             <SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchUserFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
             <Selector placeholder="Sort By" list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none border-r-0" arrowHidden={true} />
             <button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400 border rounded border-l-0 rounded-l-none ${theme.outlineNone} `} onClick={toggleSortDimention}>
-              <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+              <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                 {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
               </IconContext.Provider>
             </button>

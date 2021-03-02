@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { GlobalContext } from '../../contexts/GlobalContext';
+import { getAsset } from '../../assets';
 
 interface TabsProps {
   activeTab?: number,
@@ -15,7 +16,8 @@ interface TabsProps {
 
 const UnderlinedTabs = (props: TabsProps) => {
   const { tabs, activeTab } = props;
-  const { theme } = useContext(GlobalContext);
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const [openTab, setOpenTab] = React.useState(activeTab || 0)
 
   const changeActiveTab = (tab: number) => {
@@ -33,13 +35,13 @@ const UnderlinedTabs = (props: TabsProps) => {
               onClick={() => {
                 changeActiveTab(tab.index)
               }}
-              className={`font-bold uppercase bg-white text-xs p-3 px-8 border-b-2 flex items-center h-full justify-center hover:border-indigo-600 ${theme.outlineNone} ${openTab === tab.index
-                  ? 'bg-gray-100 border-indigo-600 '
-                  : ''
+              className={`font-bold uppercase bg-white text-xs p-3 px-8 border-b-2 flex items-center h-full justify-center hover:${theme.borderColor[themeColor]} ${theme.outlineNone} ${openTab === tab.index
+                ? `bg-gray-100 ${theme.borderColor[themeColor] }`
+                : ''
                 }`}
               type="button">
               <span className="w-8 h-8 flex items-center mr-4">
-                <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+                <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                   {tab.icon}
                 </IconContext.Provider>
               </span>

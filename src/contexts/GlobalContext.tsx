@@ -74,6 +74,18 @@ export const standardTheme = {
     iconoclastIndigo: '#667eea',
     curateBlue: '#0081CB',
   },
+  iconColor: {
+    iconoclastIndigo: '#667eea',
+    curateBlue: '#0081CB',
+  },
+  textColor: {
+    iconoclastIndigo: 'text-indigo-600',
+    curateBlue: ' text-theme-blue',
+  },
+  borderColor: {
+    iconoclastIndigo: 'border-indigo-600',
+    curateBlue: 'border-theme-blue',
+  },
   modals: {
     header: 'flex items-center justify-between p-4 border-solid rounded-t bg-white text-gray-900 border-gray-200',
     footer: 'flex items-center justify-end p-4 border-t border-solid rounded-b bg-white text-gray-900 border-gray-200',

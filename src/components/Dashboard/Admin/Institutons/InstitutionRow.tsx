@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
+import { getAsset } from '../../../../assets';
 import {
   stringToHslColor,
   getHostNameFromUrl,
@@ -9,6 +10,7 @@ import {
   formatPhoneNumber
 } from '../../../../utilities/strings';
 import { getImageFromS3 } from '../../../../utilities/services';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 interface InstitutionRowProps {
   id?: string;
@@ -29,6 +31,8 @@ const InstitutionRow: React.FC<InstitutionRowProps> = (
 ) => {
   const match = useRouteMatch();
   const history = useHistory();
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const [imageUrl, setImageUrl] = useState();
 
   const handleInstitutionView = () => {
@@ -80,7 +84,7 @@ const InstitutionRow: React.FC<InstitutionRowProps> = (
         </span>
       </div>
       <div className="w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleInstitutionView} >
-        <div id={instRowPrps.id} className="flex justify-center text-indigo-600 hover:text-indigo-900">Edit</div>
+        <div id={instRowPrps.id} className={`flex justify-center ${theme.textColor[themeColor]}`}>Edit</div>
       </div>
     </div>
   );
