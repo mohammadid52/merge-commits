@@ -44,7 +44,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Lessons', url: '/dashborad/lesson-builder', last: false },
-    { title: 'Lesson Builder', url: `${match.url}`, last: true },
+    { title: 'Lesson Plan Builder', url: `${match.url}`, last: true },
   ]
 
   const initialData = {
@@ -196,7 +196,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="LESSON BUILDER" subtitle="Build lessons, surveys or assessments from here." />
+        <SectionTitle title="LESSON PLAN BUILDER" subtitle="Build lessons, surveys or assessments here." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>

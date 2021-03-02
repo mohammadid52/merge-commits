@@ -79,7 +79,7 @@ const CurricularView = (props: CurricularViewProps) => {
     { title: 'Curricular Info', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
   ]
   const tabs = [
-    { index: 0, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList savedSyllabi={curricularData.syllabusList} curricularId={currID} loading={loading} /> },
+    { index: 0, title: 'Units', icon: <BiNotepad />, active: false, content: <SyllabusList savedSyllabi={curricularData.syllabusList} curricularId={currID} loading={loading} /> },
     { index: 1, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjective curricularId={currID} /> },
     { index: 2, title: 'Demographics & Information', icon: <FiUserCheck />, active: false, content: <CheckpointList curricularId={currID} /> },
   ]

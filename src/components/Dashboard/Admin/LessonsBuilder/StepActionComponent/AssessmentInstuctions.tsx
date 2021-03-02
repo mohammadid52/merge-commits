@@ -35,17 +35,17 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
       header: 'Welcome Message',
       title: 'introductionTitle',
       titleValue: formData.introductionTitle,
-      titleLabel: 'Introduction title',
+      titleLabel: 'Welcome Message Title',
       textEditorName: 'introduction',
       textEditorValue: formData.introduction
     },
     {
       id: '2',
       name: 'instructions',
-      header: `${lessonType === 'survey' ? 'Survey' : 'Assessment'} Instruction`,
+      header: `${lessonType === 'survey' ? 'Survey' : 'Assessment'} Instructions`,
       title: 'instructionsTitle',
       titleValue: formData.instructionsTitle,
-      titleLabel: 'Instructions title',
+      titleLabel: `${lessonType === 'survey' ? 'Survey' : 'Assessment'} Instructions Title`,
       textEditorName: 'instructions',
       textEditorValue: (typeof formData.instructions === 'object' && formData.instructions) ? formData.instructions[0] : formData.instructions
     },

@@ -85,14 +85,14 @@ const SyllabusList = (props: SyllabusListProps) => {
     <div className="p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CURRICULAR SYLLABUS</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CURRICULAR UNITS</h3>
           {!isLoading ? (
 
             <Fragment>
               {(syllabusList && syllabusList.length > 0) ? (
                 <Fragment>
                   <div className="flex justify-end w-8/10 m-auto ">
-                    <Buttons btnClass="mx-4" label="Add new Syllabus" onClick={createNewSyllabus} />
+                    <Buttons btnClass="mx-4" label="Add new Unit" onClick={createNewSyllabus} />
                   </div>
                   <div className="my-8 w-8/10 m-auto">
 
@@ -101,7 +101,7 @@ const SyllabusList = (props: SyllabusListProps) => {
                         <span>No.</span>
                       </div>
                       <div className="w-7/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>Syllabus Name</span>
+                        <span>Unit Name</span>
                       </div>
                       {/* <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>Description</span>
