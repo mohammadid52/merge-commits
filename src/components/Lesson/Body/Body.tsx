@@ -93,7 +93,7 @@ const Body = () => {
   }, [state.currentPage, state.pages]);
 
   return (
-    <div className={`z-0 px-4 pb-4 pt-4 ${theme.bg}`}>
+    <div className={`z-0 px-4 pb-4 pt-4 ${theme.bg} ${state.data.lesson.type === 'survey' ? 'mt-12' :''}`}>
       <Switch>
         <Route exact path={`${match.url}/`}>
           {

@@ -4,8 +4,9 @@ import { useHistory } from 'react-router-dom';
 import { useOutsideAlerter } from '../General/hooks/outsideAlerter';
 import PositiveAlert from '../General/Popup';
 import { LessonContext } from '../../contexts/LessonContext';
-import TopMenu from '../Lesson/Header/TopMenu';
+import LessonTopMenu from '../Lesson/Header/LessonTopMenu';
 import SideMenu from '../Lesson/Header/SideMenu';
+import SurveyTopMenu from '../Lesson/Header/SurveyTopMenu';
 
 const LessonHeaderBar = () => {
   const history = useHistory();
@@ -39,7 +40,7 @@ const LessonHeaderBar = () => {
   };
 
   return (
-    <div className={`z-40 relative center w-full h-.7/10 ${theme.toolbar.bg} text-gray-200 shadow-2xl`}>
+    <div className={`z-40 relative center w-full ${state.data.lesson.type === 'lesson' ? 'h-.7/10' : ''} ${theme.toolbar.bg} text-gray-200 shadow-2xl`}>
       {/**
        *
        * Potentially need to fix html below
@@ -60,7 +61,17 @@ const LessonHeaderBar = () => {
         />
       </div>
 
-      <TopMenu handlePopup={handlePopup} />
+      {
+        state.data.lesson.type === 'lesson' && (
+          <LessonTopMenu handlePopup={handlePopup} />
+        )
+      }
+      {
+        state.data.lesson.type === 'survey' && (
+          <SurveyTopMenu />
+        )
+      }
+
 
       {/*<NotificationBar />*/}
 

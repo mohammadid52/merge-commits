@@ -28,7 +28,7 @@ const AnthologyContent = (props: ContentCardProps) => {
        *  section: TOP INFO
        */}
       <div className={`flex pb-2 mb-2 border-b ${theme.lessonCard.border}`}>
-        <p className={`text-left ${theme.lessonCard.subtitle}`}>Lesson: -</p>
+        {/*<p className={`text-left ${theme.lessonCard.subtitle}`}>Lesson: -</p>*/}
         <p className={`text-right ${theme.lessonCard.subtitle}`}>Updated: {dateFromServer(contentObj.updatedAt)}</p>
       </div>
       {/**
@@ -37,17 +37,16 @@ const AnthologyContent = (props: ContentCardProps) => {
       <div className={``}>
         <h4
           className={`w-auto ${theme.lessonCard.title}`}>{contentObj.title ? contentObj.title : `No title`}</h4>
-        <p
-          className={`text-left ${theme.lessonCard.subtitle}`}>{contentObj.subTitle ? contentObj.subTitle : `No subtitle`}</p>
+        {/*<p className={`text-left ${theme.lessonCard.subtitle}`}>{contentObj.subTitle ? contentObj.subTitle : `No subtitle`}</p>*/}
       </div>
       {/**
        *  section: DESCRIPTION
        */}
-      <div className={`overflow-ellipsis overflow-hidden ellipsis`}>
+      {/*<div className={`overflow-ellipsis overflow-hidden ellipsis`}>
         {contentObj.description ?
           contentObj.description :
           `No description`}
-      </div>
+      </div>*/}
       {/**
        *  section:  CONTENT
        */}
@@ -59,7 +58,7 @@ const AnthologyContent = (props: ContentCardProps) => {
        *  section: TOP INFO
        */}
       <div className={`flex pb-2 mb-2 border-b ${theme.lessonCard.border}`}>
-        <p className={`text-left ${theme.lessonCard.subtitle}`}>Lesson: -</p>
+        {/*<p className={`text-left ${theme.lessonCard.subtitle}`}>Lesson: -</p>*/}
         <p className={`text-right ${theme.lessonCard.subtitle}`}>Updated: {dateFromServer(contentObj.updatedAt)}</p>
       </div>
       {/**
@@ -75,25 +74,25 @@ const AnthologyContent = (props: ContentCardProps) => {
         />
       </div>
       <div className={`mt-2 `}>
-        <FormInput
+      {/*  <FormInput
           id={`subTitle_${contentObj.type}_${contentObj.studentDataID}`}
           label={`Subtitle`}
           onChange={handleEditUpdate}
           value={contentObj.subTitle}
           placeHolder={contentObj.subTitle ? contentObj.subTitle : `Please add subtitle...`}
-        />
+        />*/}
       </div>
       {/**
        *  section: DESCRIPTION
        */}
       <div className={`mt-2 overflow-ellipsis overflow-hidden ellipsis`}>
-        <FormInput
+       {/* <FormInput
           id={`description_${contentObj.type}_${contentObj.studentDataID}`}
           label={`Description`}
           onChange={handleEditUpdate}
           value={contentObj.description}
           placeHolder={contentObj.description ? contentObj.description : `Please add description...`}
-        />
+        />*/}
       </div>
       {/**
        *  section:  CONTENT
@@ -131,25 +130,25 @@ const AnthologyContent = (props: ContentCardProps) => {
         />
       </div>
         <div className={`mt-2 `}>
-        <FormInput
+     {/*   <FormInput
           id={`subTitle_${contentObj.type}_${contentObj.studentDataID}`}
           label={`Subtitle`}
           onChange={handleEditUpdate}
           value={contentObj.subTitle}
           placeHolder={contentObj.subTitle ? contentObj.subTitle : `Please add subtitle...`}
-        />
+        />*/}
       </div>
       {/**
        *  section: DESCRIPTION
        */}
       <div className={`mt-2 overflow-ellipsis overflow-hidden ellipsis`}>
-        <FormInput
+      {/*  <FormInput
           id={`description_${contentObj.type}_${contentObj.studentDataID}`}
           label={`Description`}
           onChange={handleEditUpdate}
           value={contentObj.description}
           placeHolder={contentObj.description ? contentObj.description : `Please add description...`}
-        />
+        />*/}
       </div>
       {/**
        *  section:  CONTENT

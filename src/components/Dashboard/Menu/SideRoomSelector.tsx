@@ -302,7 +302,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
 
   return (
     <div className={`${theme.sidemenu.secondary} mr-2`}>
-      <div className={roomsTitle}>Rooms:</div>
+      <div className={roomsTitle}>Classrooms:</div>
       {rooms.length > 0 ? (
         rooms.map((room: Room, i: number) => {
           return (
@@ -323,7 +323,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
         })
       ) : loaded === false ? (
         <>
-          <p className={`${linkClass}`}>Loading rooms...</p>
+          <p className={`${linkClass}`}>Loading classrooms...</p>
         </>
       ) : (
         <>

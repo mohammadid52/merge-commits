@@ -10,7 +10,7 @@ const SyllabusSwitch = (props: DashboardProps) => {
   return (
     <>
       {syllabusLoading ? (
-        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>Loading syllabus...</div>
+        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>Loading units...</div>
       ) : null}
 
       {!syllabusLoading && state.roomData?.syllabus?.length > 0
@@ -21,8 +21,8 @@ const SyllabusSwitch = (props: DashboardProps) => {
                 id={`testSyllabus_${i}`}
                 className={`${theme.dashboard.card} ${theme.elem.textDark}`}>
                 <div className={``}>
-                  <p className={`text-sm text-darker-gray`}>Name: {syllabus.name}</p>
-                  <p className={`text-sm text-darker-gray`}>Description: {syllabus.description}</p>
+                  <p className={`text-sm text-darker-gray`}><b>Unit Name: </b>{syllabus.name}</p>
+                  <p className={`text-sm text-darker-gray`}><b>Description:</b> {syllabus.description}</p>
                 </div>
 
                 {!syllabus.active ? (
@@ -42,11 +42,11 @@ const SyllabusSwitch = (props: DashboardProps) => {
         : null}
 
       {activeRoom === '' ? (
-        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>Select a room...</div>
+        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}> ⬅️ Select a classroom to see applicable units ...</div>
       ) : null}
 
       {activeRoom !== '' && !syllabusLoading && state.roomData?.syllabus?.length === 0 ? (
-        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>No syllabus...</div>
+        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>No units...</div>
       ) : null}
     </>
   );

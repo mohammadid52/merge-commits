@@ -109,7 +109,7 @@ const Registration = () => {
           <div className='h-.7/10  w-full rounded-tl-xl'></div>
           <div className='relative h-9.3/10 flex flex-col items-center p-8'>
             <div className='absolute text-center text-xs mb-4' style={{ bottom: '0' }}>
-              <p>© Copyright 2020</p>
+              <p>© Copyright 2021</p>
               <p>
                 <NavLink className='underline text-sm hover:text-blue-500' to='/privacy-policy'>
                   Privacy Policy

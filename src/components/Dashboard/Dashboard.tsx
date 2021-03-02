@@ -68,7 +68,7 @@ const Dashboard = (props: DashboardProps) => {
   const [syllabusLoading, setsyllabusLoading] = useState<boolean>(false);
 
   // Page switching
-  const [currentPage, setCurrentPage] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<string>('classroom');
   const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('today');
   const [activeRoom, setActiveRoom] = useState<string>('');
   const [activeRoomName, setActiveRoomName] = useState<string>('');
@@ -134,9 +134,13 @@ const Dashboard = (props: DashboardProps) => {
       });
       if (state.user?.role === 'FLW' || state.user?.role === 'TR') {
         setCurrentPage('lesson-planner');
-      } else if (userData.role === 'ST') {
+      }
+      if (userData.role === 'ST') {
         setCurrentPage('classroom');
-      } else setCurrentPage('manage-institutions');
+      }
+      if(userData.role === 'ADM'){
+        setCurrentPage('manage-institutions');
+      }
     }
   }, []);
 
