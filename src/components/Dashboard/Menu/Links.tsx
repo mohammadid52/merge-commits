@@ -194,9 +194,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     if (pageUrlEndsWith('dashboard')) {
       if (role === 'FLW' || role === 'TR') {
         setCurrentPage('lesson-planner');
-      } else if (role === 'ST') {
+      }
+      if (role === 'ST') {
         setCurrentPage('classroom');
-      } else {
+      }
+
+      if(role === 'ADM'){
         setCurrentPage('manage-institutions');
       }
 

@@ -56,7 +56,7 @@ const Checkpoint = (props: { isTeacher?: boolean }) => {
       {
         lessonType === 'lesson' &&
         (
-          <Banner isTeacher={isTeacher} title={title} iconName={'FaCheck'} />
+          <Banner isTeacher={isTeacher} title={`${title}`} iconName={'FaCheck'} />
         )
       }
       <CheckpointQuestions isTeacher={isTeacher} checkpointType={`checkpoint`} handleSetTitle={handleSetTitle} />

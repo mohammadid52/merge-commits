@@ -7,6 +7,9 @@ import { GlobalContext } from '../../../../contexts/GlobalContext';
 import Popup from '../../../General/Popup';
 import { useOutsideAlerter } from '../../../General/hooks/outsideAlerter';
 import { Auth } from '@aws-amplify/auth';
+import { FiLogOut } from 'react-icons/all';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { AiOutlineSave } from 'react-icons/ai';
 
 interface SaveQuitProps {
   id?: string;
@@ -93,12 +96,15 @@ const SaveQuit = (props: SaveQuitProps) => {
         </div>
       ) : null}
 
-      <div className="w-full flex flex-col mt-4">
+      <div className="w-full flex flex-col my-4">
         <button
           type="submit"
-          className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 font-bold flex justify-center items-center rounded-xl mt-4 ${theme.elem.text}`}
+          className={`self-center w-auto px-4 h-10 font-semibold bg-blueberry hover:bg-blue-500 hover:text-underline text-white flex justify-center items-center rounded-full my-4`}
           onClick={handleClick}>
-          Save and Go to Dashboard
+          <IconContext.Provider value={{ className: 'w-auto mr-2', style: { cursor: 'pointer' } }}>
+            <AiOutlineSave size={24}/>
+          </IconContext.Provider>
+          <div>Save and Go to Dashboard</div>
         </button>
       </div>
     </>

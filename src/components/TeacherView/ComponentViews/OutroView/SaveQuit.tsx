@@ -15,10 +15,10 @@ const SaveQuit = (props: props) => {
   
 
   return (
-    <div className='w-full flex flex-col mt-4'>
+    <div className='w-full flex flex-col my-4'>
     <button
       type='submit'
-      className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 font-bold flex justify-center items-center rounded-xl mt-4 ${theme.elem.text}`}
+      className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 font-bold flex justify-center items-center rounded-xl my-4 ${theme.elem.text}`}
       /* onClick={() => setAlert(!alert)} */>
       Save and Go to Dashboard
     </button>
