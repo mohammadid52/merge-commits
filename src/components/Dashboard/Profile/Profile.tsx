@@ -361,7 +361,6 @@ const Profile: React.FC = () => {
                         </IconContext.Provider> : <Loader />}
                         <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
                       </label>
-
                     )
                   }
                   <span className="absolute top-7 left-8 w-8 h-8">

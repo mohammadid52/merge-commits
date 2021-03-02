@@ -9,11 +9,16 @@ import {Auth} from '@aws-amplify/auth';
 import { validate } from 'json-schema';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
+import Buttons from '../../Atoms/Buttons';
 
 const ChangePassword = () => {
     const [oldPassToggle, setOldPassToggle] = useState(false);
     const [passToggle, setPassToggle] = useState(false);
     const [passMatchToggle, setPassMatchToggle] = useState(false);
+    const [saveModal,setSaveModal] = useState({
+        show:false,
+        message:''
+    })
     const history = useHistory();
 
     const { userLanguage, clientKey } = useContext(GlobalContext);
@@ -160,7 +165,7 @@ const ChangePassword = () => {
                     </h3>
                 </div>
 
-                <div className="h-full px-4 py-5 sm:px-6">
+                <div className="h-full px-4 py-5 sm:px-6 text-gray-800">
                     <div className="text-center text-sm">{dictionary['CHANGE_PASSWORD']['INFO']}</div>
                     <div className="w-full h-auto flex flex-col justify-between items-center my-4">
 
@@ -262,21 +267,34 @@ const ChangePassword = () => {
                 </div>
 
 
-            <div className="px-4 pt-4 w-full flex justify-end">
-                <div className="flex w-5.8/10">
-                <span className="inline-flex rounded-md shadow-sm">
-                    <NavLink to={`/dashboard/profile`}>
+            <div className="px-4 pt-4 w-full flex justify-center">
+                {/* <div className="flex w-5.8/10"> */}
+                {/* <span className="inline-flex rounded-md shadow-sm"> */}
+                    {/* <NavLink to={`/dashboard/profile`}>
                     <button type="button" className="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
                     {dictionary['CHANGE_PASSWORD']['CANCEL']}
                     </button>
-                    </NavLink>
-                </span>
-                <div className="ml-3 inline-flex rounded-md shadow-5">
-                    <button onClick={handleSubmit} className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700">
+                    </NavLink> */}
+                    <Buttons
+                        btnClass="py-2 w-2.5/10 px-4 text-xs mr-2"
+                        label={dictionary['CHANGE_PASSWORD']['CANCEL']}
+                        onClick={()=>history.push('/dashboard/profile')}
+                        transparent
+                    />
+                {/* </span> */}
+                {/* <div className="ml-3 inline-flex rounded-md shadow-5"> */}
+                    {/* <button onClick={handleSubmit} className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700">
                     {dictionary['CHANGE_PASSWORD']['SAVE']}
-                    </button>
-                </div>
-                </div>
+                    </button> */}
+
+                    <Buttons
+                        btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
+                        label={dictionary['CHANGE_PASSWORD']['SAVE']}
+                        onClick={handleSubmit}
+              />
+
+                {/* </div> */}
+                {/* </div> */}
             </div>
 
         </div>
