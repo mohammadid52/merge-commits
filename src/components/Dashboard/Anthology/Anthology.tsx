@@ -250,7 +250,7 @@ const Anthology = () => {
   // RETURN
   return (
     <React.Fragment>
-      <SectionTitle title={anthologyDict[userLanguage].REGISTRATION} />
+      <SectionTitle title={anthologyDict[userLanguage].TITLE} />
       {/*
         Tabs to select between:
           - Lesson Data

@@ -117,6 +117,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               label: 'Lesson Builder',
               path: 'lesson-builder',
             },
+            {
+              title: sideBarLinksDict[userLanguage].ANTHOLOGY,
+              name: sideBarLinksDict[userLanguage].ANTHOLOGY,
+              label: 'Anthology',
+              path: 'anthology',
+            },
           ];
         });
       case 'TR':
