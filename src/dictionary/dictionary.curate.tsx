@@ -196,7 +196,7 @@ const manageusersDict: any = {
 const sideBarLinksDict: any = {
     'EN': {
         REGISTRATION: 'Registration',
-        INSTITUTIONS: 'Institution',
+        INSTITUTIONS: 'Institutions',
         PEOPLE: 'People',
         LESSON_PLANNER: 'Lesson Planner',
         CLASSROOM: 'Classroom',
