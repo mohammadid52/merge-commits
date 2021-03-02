@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment, useEffect, useContext } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useHistory, useParams } from 'react-router';
 import { IoArrowUndoCircleOutline, IoOptionsOutline } from 'react-icons/io5';
@@ -17,6 +17,8 @@ import Selector from '../../../../../../Atoms/Form/Selector';
 import Buttons from '../../../../../../Atoms/Buttons';
 import AddQuestion from './QuestionComponents/AddQuestion';
 import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
+import { getAsset } from '../../../../../../../assets';
+import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 
 interface EditProfileCheckpointProps {
 
@@ -26,6 +28,8 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
   const { } = props;
   const history = useHistory();
   const urlParams: any = useParams()
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const curricularId = urlParams.curricularId;
   const checkpointId = urlParams.id;
   const initialData = {
@@ -384,8 +388,8 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                                       </span>
                                     </div> */}
                                     <div className="flex w-1.5/10 px-6 py-1 text-s leading-4 items-center justify-center">
-                                      {(item.type === 'selectMany' || item.type === 'selectOne') && (<div className="w-6 h-6 cursor-pointer text-indigo-600" onClick={() => showOptions(item.id, item.options)}>
-                                        <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+                                      {(item.type === 'selectMany' || item.type === 'selectOne') && (<div className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => showOptions(item.id, item.options)}>
+                                        <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                                           <IoOptionsOutline />
                                         </IconContext.Provider>
                                       </div>)}

@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import { getAsset } from '../../../../assets';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 interface LessonsListRow {
   id: string,
@@ -13,6 +15,8 @@ const LessonsListRow = (props: LessonsListRow) => {
 
   const match = useRouteMatch();
   const history = useHistory();
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const handleLessonsEdit = (type: string) => {
     if (type === 'Lesson') {
@@ -51,7 +55,7 @@ const LessonsListRow = (props: LessonsListRow) => {
         </span>
       </div>
 
-      <div className="w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap text-indigo-600 hover:text-indigo-900 text-sm leading-5 font-medium" onClick={() => handleLessonsEdit(type)} >
+      <div className={`w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap ${theme.textColor[themeColor] } text-sm leading-5 font-medium`} onClick={() => handleLessonsEdit(type)} >
         <span className="w-auto">Edit</span>
       </div>
     </div>

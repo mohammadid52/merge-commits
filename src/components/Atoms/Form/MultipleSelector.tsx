@@ -1,4 +1,6 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useContext } from 'react'
+import { getAsset } from '../../../assets';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 
 interface MultipleSelectorProps {
   list?: { id: string, name: string, value?: string }[]
@@ -13,6 +15,9 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
   const { list, selectedItems, btnClass, arrowHidden, placeholder, onChange } = props;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
+
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const onFocus = () => {
     if (!showList) {
@@ -59,8 +64,8 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
                   key={key}
                   onClick={() => onChange(item.id, item.name, item.value)}
                   id={item.id}
-                  role="option" className={`hover:bg-indigo-400 hover:text-white flex cursor-pointer select-none relative py-2 px-4`}>
-                  <span className={`${selectedItems.find(i => i.id === item.id) ? 'display' : 'hidden'} text-indigo-600 relative w-auto flex items-center`}>
+                  role="option" className={`hover:${theme.backGroundLight[themeColor]} hover:text-white flex cursor-pointer select-none relative py-2 px-4`}>
+                  <span className={`${selectedItems.find(i => i.id === item.id) ? 'display' : 'hidden'} ${theme.textColor[themeColor]} relative w-auto flex items-center`}>
                     <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect, Fragment, useContext } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api'
 
 import * as customMutations from '../../../../../customGraphql/customMutations';
@@ -7,6 +7,8 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
 import { InstructionInitialState } from '../LessonEdit';
+import { getAsset } from '../../../../../assets';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 interface AssessmentInstuctionsProps {
   savedInstructions?: InstructionInitialState
@@ -19,7 +21,8 @@ interface AssessmentInstuctionsProps {
 const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
 
   const { savedInstructions, lessonId, updateParentState, lessonType } = props;
-
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const [formData, setFormData] = useState<InstructionInitialState>(savedInstructions);
   const [loading, setLoading] = useState(false);
@@ -147,7 +150,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
                 <li className={`relative border-b border-gray-200 ${selectedBlock === item.id ? 'rounded-lg' : ''}`}>
                   <div className={`w-full px-8 py-6 text-left ${selectedBlock === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
                     <div className="flex items-center justify-center">
-                      <span className={`text-xs md:text-base font-medium cursor-pointer text-center text-indigo-500 ${selectedBlock === item.id && 'text-indigo-600'}`} onClick={() => setSelectedBlock(item.id)}>
+                      <span className={`text-xs md:text-base font-medium cursor-pointer text-center ${theme.textColor[themeColor] } ${selectedBlock === item.id ? 'font-bold' : 'font-medium'}`} onClick={() => setSelectedBlock(item.id)}>
                         {item.header}
                       </span>
                     </div>

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useContext, useState } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api'
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoIosKeypad } from 'react-icons/io';
@@ -16,6 +16,8 @@ import RichTextEditor from '../../../../../Atoms/RichTextEditor';
 import { AddNewCheckPointProps } from './AddNewCheckPoint';
 
 import { getTypeString } from '../../../../../../utilities/strings';
+import { getAsset } from '../../../../../../assets';
+import { GlobalContext } from '../../../../../../contexts/GlobalContext';
 
 interface EditCheckPointProps {
   changeStep: (step: string) => void
@@ -36,6 +38,9 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
     setCheckpQuestions,
     previouslySelectedId
   } = props;
+
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const initialData = {
     title: '',
@@ -362,11 +367,11 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
                   <li className={`relative border-b border-gray-200 ${selectedBlock === item.id ? 'rounded-lg' : ''}`}>
                     <div className={`w-full px-8 py-6 text-left ${selectedBlock === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
                       <div className="flex items-center justify-between" onClick={() => toggleView(item.id)}>
-                        <span className={`text-xs md:text-base font-medium cursor-pointer text-left text-indigo-500 ${selectedBlock === item.id && 'text-indigo-600'}`}>
+                        <span className={`text-xs md:text-base cursor-pointer text-left ${theme.textColor[themeColor] } ${selectedBlock === item.id ? 'font-bold' : 'font-medium '}`}>
                           {item.header}
                         </span>
                         <span className="w-8 h-8 flex items-center cursor-pointer">
-                          <IconContext.Provider value={{ size: '2rem', color: '#667eea' }}>
+                          <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
                             {(selectedBlock === item.id) ? <IoCaretUpCircleOutline /> : <IoCaretDownCircleOutline />}
                           </IconContext.Provider>
                         </span>
@@ -440,8 +445,8 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
                             </span>
                           </div>
                           <div className="flex w-1/10 px-6 py-1 text-s leading-4 items-center justify-center">
-                            {(item.type === 'selectMany' || item.type === 'selectOne') && (<div className="w-6 h-6 cursor-pointer text-indigo-600" onClick={() => showOptions(item.id, item.options)}>
-                              <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+                            {(item.type === 'selectMany' || item.type === 'selectOne') && (<div className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor] }`} onClick={() => showOptions(item.id, item.options)}>
+                              <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                                 <IoOptionsOutline />
                               </IconContext.Provider>
                             </div>)}

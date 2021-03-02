@@ -94,6 +94,10 @@ export const standardTheme = {
     iconoclastIndigo: 'border-indigo-400',
     curateBlue: 'border-blue-400',
   },
+  backGround : {
+    iconoclastIndigo: 'bg-indigo-500',
+    curateBlue: 'bg-blue-500',
+  },
   backGroundLight : {
     iconoclastIndigo: 'bg-indigo-400',
     curateBlue: 'bg-blue-400',

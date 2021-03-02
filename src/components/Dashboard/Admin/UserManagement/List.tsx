@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import UserRole from './UserRole';
 import UserStatus from './UserStatus';
 import { getImageFromS3 } from '../../../../utilities/services';
+import { getAsset } from '../../../../assets';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 interface ListProps {
     item: any
@@ -13,6 +15,8 @@ const List = (props: ListProps) => {
     const match = useRouteMatch();
     const history = useHistory();
     const [imageUrl, setImageUrl] = useState('')
+    const { theme, clientKey } = useContext(GlobalContext);
+    const themeColor = getAsset(clientKey, 'themeClassName');
 
     const initials = (firstName: string, lastName: string) => {
         let firstInitial = firstName.charAt(0).toUpperCase()
@@ -89,7 +93,7 @@ const List = (props: ListProps) => {
                 </div>
             </div>
             <div className="w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleLink} >
-                <div id={item.id} className="flex justify-center text-indigo-600 hover:text-indigo-900">Edit</div>
+                <div id={item.id} className={`flex justify-center ${theme.textColor[themeColor] }`}>Edit</div>
             </div>
 
 
