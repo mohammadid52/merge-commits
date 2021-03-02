@@ -296,7 +296,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       studentAuthID = user.attributes.sub;
     });
 
-    console.log('getOrCreateQuestionData -> recentQuestionOp, ', recentQuestionOp)
+    // console.log('getOrCreateQuestionData -> recentQuestionOp, ', recentQuestionOp)
 
     try {
       const questionDatas: any = await API.graphql(
