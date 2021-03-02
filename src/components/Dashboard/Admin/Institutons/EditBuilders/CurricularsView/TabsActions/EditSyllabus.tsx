@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useHistory, useLocation, useParams } from 'react-router'
 import { IoArrowUndoCircleOutline } from 'react-icons/io5'
 import API, { graphqlOperation } from '@aws-amplify/api'
@@ -20,6 +20,8 @@ import * as mutations from '../../../../../../../graphql/mutations'
 import * as queries from '../../../../../../../graphql/queries'
 import * as customQueries from '../../../../../../../customGraphql/customQueries'
 import * as customMutations from '../../../../../../../customGraphql/customMutations'
+import { getAsset } from '../../../../../../../assets';
+import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 
 interface EditSyllabusProps {
 
@@ -45,6 +47,9 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   const { } = props;
   const history = useHistory();
   const location = useLocation();
+
+  const { clientKey, theme } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const initialData = {
     name: '',
@@ -93,7 +98,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Edit Syllabus', url: `/dashboard/curricular/${curricularId}/syllabus/edit?id=${syllabusId}`, last: true }
+    { title: 'Edit Unit', url: `/dashboard/curricular/${curricularId}/syllabus/edit?id=${syllabusId}`, last: true }
   ];
 
   const onDragEnd = async (result: any) => {
@@ -178,7 +183,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         const newSyllabus = await API.graphql(graphqlOperation(mutations.updateSyllabus, { input: input }));
         setMessages({
           show: true,
-          message: 'Syllabus details has been updated.',
+          message: 'Unit details has been updated.',
           isError: false
         })
         setSyllabusData(initialData);
@@ -186,7 +191,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       } catch {
         setMessages({
           show: true,
-          message: 'Unable to update syllabus details please try again later.',
+          message: 'Unable to update unit details please try again later.',
           isError: true
         })
       }
@@ -196,7 +201,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     if (syllabusData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Syllabus name is required please enter name.',
+        message: 'Unit name is required please enter name.',
         isError: true
       })
       return false;
@@ -358,12 +363,12 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         console.log('err', err)
         setMessages({
           show: true,
-          message: 'Error while fetching syllabus data.',
+          message: 'Error while fetching unit data.',
           isError: true
         })
       }
     } else {
-      console.log('can not find syllabus id')
+      console.log('can not find unit id')
       history.push('/dashboard/manage-institutions')
     }
 
@@ -471,7 +476,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Edit Syllabus" subtitle="Edit curricular syllabus." />
+        <SectionTitle title="Edit Unit" subtitle="Edit curricular unit." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -492,7 +497,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
                 <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                   <div>
-                    <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Syllabus Name" isRequired />
+                    <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Unit Name" isRequired />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
@@ -622,11 +627,11 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                                           </div>
                                           {
                                             (editState.id !== item.id) ?
-                                              <span className="w-1/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentLesson(item.id)}>
+                                              <span className={`w-1/10 flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`} onClick={() => editCurrentLesson(item.id)}>
                                                 edit
                                               </span>
                                               :
-                                              <span className="w-1/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={cancelEdit}>
+                                              <span className={`w-1/10 flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`} onClick={cancelEdit}>
                                                 {editState.action ? editState.action : 'Cancel'}
                                               </span>
                                           }

@@ -62,7 +62,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   });
 
   const typeList: any = [
-    { id: '1', name: 'Lesson', value: 'lesson' },
+    { id: '1', name: 'Lecture', value: 'lesson' },
     { id: '2', name: 'Assessment', value: 'assessment' },
     { id: '3', name: 'Survey', value: 'survey' }
   ];

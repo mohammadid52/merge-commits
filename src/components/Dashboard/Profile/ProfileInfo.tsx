@@ -14,10 +14,11 @@ interface UserInfoProps {
   user: UserInfo
   status: string
   stdCheckpoints: any[]
+  questionData: any[]
 }
 
 const ProfileInfo = (props: UserInfoProps) => {
-  const { user, status, stdCheckpoints } = props;
+  const { user, status, stdCheckpoints, questionData } = props;
   const { userLanguage, clientKey } = useContext(GlobalContext);
   const { dashboardProfileDict } = useDictionary(clientKey);
   const match = useRouteMatch();
@@ -36,6 +37,13 @@ const ProfileInfo = (props: UserInfoProps) => {
   //     (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear()
   //   )
   // }
+  const getQuestionResponse = (checkpointID: string, questionID: string) => {
+    const selectedCheckp: any = questionData.find(item => item.checkpointID === checkpointID);
+    if (selectedCheckp) {
+      const questionResponce: any = selectedCheckp.responseObject?.find((item: any) => item.qid === questionID)?.response
+      return questionResponce ? questionResponce.join(',') : '--'
+    }
+  }
 
   if (status !== 'done') {
     return (
@@ -52,9 +60,6 @@ const ProfileInfo = (props: UserInfoProps) => {
             <h3 className="px-4 py-5 text-lg leading-6 font-medium text-gray-900 uppercase">
               {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['TITLE']}
             </h3>
-            {/* <div className="py-2 flex">
-              <Dropdown />
-            </div> */}
           </div>
           <div className="px-4 py-5 sm:px-6">
             <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
@@ -145,63 +150,16 @@ const ProfileInfo = (props: UserInfoProps) => {
                           {item.question.question}
                         </dt>
                         <dd className="mt-1 text-sm leading-5 text-gray-900">
-                          --
+                          {getQuestionResponse(checkpoint.id, item.question.id) || '--'}
                           {/* {`${user.institution ? user.institution : 'Rose M. Avalos P-TECH Early College'}`} */}
                         </dd>
                       </div>
                     ))}
-
-                    {/* <div className="sm:col-span-1 p-2">
-                      <dt className="text-sm leading-5 font-medium text-gray-500">
-                        {dashboardProfileDict[userLanguage]['INSTITUTION_INFO']['INSTITUTION']}
-                      </dt>
-                      <dd className="mt-1 text-sm leading-5 text-gray-900">
-                        {`${user.institution ? user.institution : 'Rose M. Avalos P-TECH Early College'}`}
-                      </dd>
-                    </div> */}
-
-                    {/* <div className="sm:col-span-1 p-2">
-                      <dt className="text-sm leading-5 font-medium text-gray-500">
-                        {dashboardProfileDict[userLanguage]['INSTITUTION_INFO']['GRADE']}
-                      </dt>
-                      <dd className="mt-1 text-sm leading-5 text-gray-900">
-                        {`${user.grade ? user.grade : 'not set'}`}
-                      </dd>
-                    </div> */}
-
                   </dl>
                 </div>
               </div>
             </Fragment>)}
           </Fragment>) : null}
-
-        {/* <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg">
-          <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              {dashboardProfileDict[userLanguage]['INSTITUTION_INFO']['TITLE']}
-            </h3>
-          </div>
-          <div className="px-4 py-5 sm:px-6">
-            <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {dashboardProfileDict[userLanguage]['INSTITUTION_INFO']['INSTITUTION']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">
-                  {`${user.institution ? user.institution : 'Rose M. Avalos P-TECH Early College'}`}
-                </dd>
-              </div>
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {dashboardProfileDict[userLanguage]['INSTITUTION_INFO']['GRADE']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">
-                  {`${user.grade ? user.grade : 'not set'}`}
-                </dd>
-              </div>
-            </dl>
-          </div>
-        </div> */}
       </div>
     )
   }

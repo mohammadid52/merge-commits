@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, useContext } from 'react';
 import { IoAdd, IoCaretDownCircleOutline, IoCaretUpCircleOutline } from 'react-icons/io5';
 import { useHistory } from 'react-router';
 import API, { graphqlOperation } from '@aws-amplify/api';
@@ -7,12 +7,13 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import MeasurementList from './MeasMntList';
 
-import Buttons from '../../../../../../Atoms/Buttons';
 import { reorder } from '../../../../../../../utilities/strings';
 
 import * as mutations from '../../../../../../../graphql/mutations';
 import * as queries from '../../../../../../../graphql/queries';
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
+import { getAsset } from '../../../../../../../assets';
+import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 
 
 interface TopicsListComponentProps {
@@ -23,6 +24,8 @@ interface TopicsListComponentProps {
 const TopicsListComponent = (props: TopicsListComponentProps) => {
   const { curricularId, learningId } = props;
   const history = useHistory();
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const [openRow, setOpenRow] = useState('');
   const [loading, setLoading] = useState(false)
@@ -128,12 +131,12 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
                                   >
                                     <div key={item.id} className={`flex justify-between w-full px-8 py-4 whitespace-no-wrap border border-b-0 border-gray-200 hover:bg-gray-200 ${(openRow === item.id) && 'bg-gray-200'}`}>
                                       <div className="flex w-8.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer text-gray-900 hover:text-gray-800" onClick={() => expandRow(item.id)}> {item.name} </div>
-                                      <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentTopic(item.id)}>
+                                      <div className={`flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => editCurrentTopic(item.id)}>
                                         Edit
                                       </div>
                                       <div className="flex w-1.5/10 items-center px-8 py-3 text-left text-s leading-4 justify-end" onClick={() => expandRow(item.id)}>
                                         <span className="w-6 h-6 flex items-center cursor-pointer">
-                                          <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+                                          <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                                             {(openRow !== item.id) ? <IoCaretDownCircleOutline /> : <IoCaretUpCircleOutline />}
                                           </IconContext.Provider>
                                         </span>

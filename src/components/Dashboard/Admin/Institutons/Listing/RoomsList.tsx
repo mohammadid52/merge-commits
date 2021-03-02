@@ -1,6 +1,9 @@
-import React, { useEffect, useState, Fragment } from 'react'
+import React, { useEffect, useState, Fragment, useContext } from 'react'
 import { useHistory } from 'react-router'
 import API, { graphqlOperation } from '@aws-amplify/api';
+
+import { getAsset } from '../../../../../assets';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 import * as queries from '../../../../../graphql/queries';
 import PageWrapper from '../../../../Atoms/PageWrapper'
@@ -12,6 +15,8 @@ interface RoomListProps {
 
 const RoomsList = (props: RoomListProps) => {
   const { instId } = props;
+  const { clientKey, theme } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const [roomList, setRoomList] = useState([]);
   const [loading, setLoading] = useState([]);
@@ -93,7 +98,7 @@ const RoomsList = (props: RoomListProps) => {
                     <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4">{item.class?.name}</div>
                     <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4">{item.teacher?.firstName || ''} {item.teacher?.lastName || ''}</div>
                     <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4">{item.maxPersons}</div>
-                    <span className="w-1/10 h-6 flex items-center cursor-pointer text-left px-8 py-3 text-indigo-600 hover:text-indigo-900" onClick={() => editCurrentRoom(item.id)}>
+                    <span className={`w-1/10 h-6 flex items-center cursor-pointer text-left px-8 py-3 ${theme.textColor[themeColor]}`} onClick={() => editCurrentRoom(item.id)}>
                       edit
                   </span>
                   </div>

@@ -85,7 +85,7 @@ const LessonEdit = (props: LessonEditProps) => {
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Lessons', url: '/dashborad/lesson-builder', last: false },
     {
-      title: 'Lesson Builder',
+      title: 'Lesson Plan Builder',
       url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : `assessmentId=${assessmentId}`}`,
       last: true
     },
@@ -238,7 +238,7 @@ const LessonEdit = (props: LessonEditProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="LESSON BUILDER" subtitle="Build lessons, surveys or assessments from here." />
+        <SectionTitle title="LESSON PLAN BUILDER" subtitle="Build lessons, surveys or assessments here." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={goBack} Icon={IoArrowUndoCircleOutline} />
         </div>

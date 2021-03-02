@@ -3,24 +3,25 @@ import { useHistory } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoClose } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import SectionTitle from '../../../../Atoms/SectionTitle';
 import PageWrapper from '../../../../Atoms/PageWrapper'
 import BreadCrums from '../../../../Atoms/BreadCrums';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
-import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
+import Selector from '../../../../Atoms/Form/Selector';
 
 import { stringToHslColor, getInitialsFromString, initials, createFilterToFetchAllItemsExcept } from '../../../../../utilities/strings';
 import { getImageFromS3 } from '../../../../../utilities/services';
 import { statusList } from '../../../../../utilities/staticData';
+import { getAsset } from '../../../../../assets';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as queries from '../../../../../graphql/queries';
 import * as mutations from '../../../../../graphql/mutations';
-import Selector from '../../../../Atoms/Form/Selector';
 import useDictionary from '../../../../../customHooks/dictionary';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 interface EditClassProps { }
 
@@ -48,7 +49,8 @@ const EditClass = (props: EditClassProps) => {
     { title: 'Edit Class', url: `/dashboard/class-edit?id=${urlParams.get('id')}`, last: true }
   ];
 
-  const { clientKey, userLanguage } = useContext(GlobalContext);
+  const { clientKey, userLanguage, theme } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const { editClassDict } = useDictionary(clientKey);
   const dictionary = editClassDict[userLanguage]
 
@@ -331,9 +333,9 @@ const EditClass = (props: EditClassProps) => {
 
                             <div className="w-1/10">
                               {statusEdit === item.id ?
-                                <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
+                                <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
                                 :
-                                <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit(item.id)}>
+                                <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit(item.id)}>
                                   Edit
                           </span>
                               }

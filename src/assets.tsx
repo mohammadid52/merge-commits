@@ -21,7 +21,7 @@ const iconoclast_assets: any = {
 
 const curate_assets: any = {
     appTitle: 'Project Curate',
-    main_logo: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/curate_full_logo_white.png',
+    main_logo: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/ProjectCurateLogo-WhiteLetters.png',
     login_page_logo: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/ProjectCurate_Logo.png',
     loading_logo: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/ProjectCurate_Logo.png',
     logo_symbol: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/curate_blue_icon_169x169+(2).png',

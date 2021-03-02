@@ -68,7 +68,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
       header: 'Checkpoint Instructions',
       title: 'instructionsTitle',
       titleValue: checkPointData.instructionsTitle,
-      titleLabel: 'Instructions title',
+      titleLabel: 'Checkpoint Instructions Title',
       textEditorName: 'instructionHtml',
       textEditorValue: checkPointData.instructionHtml
     },

@@ -9,6 +9,7 @@ import useDictionary from '../../../../../customHooks/dictionary';
 
 import { createFilterToFetchAllItemsExcept } from '../../../../../utilities/strings';
 import { statusList } from '../../../../../utilities/staticData';
+import { getAsset } from '../../../../../assets';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
@@ -20,7 +21,8 @@ interface ServiceProvidersProps {
 }
 
 const ServiceProviders = (props: ServiceProvidersProps) => {
-  const { userLanguage, clientKey } = useContext(GlobalContext);
+  const { userLanguage, clientKey, theme } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const { spBuilderDict, BUTTONS } = useDictionary(clientKey);
   const dictionary = spBuilderDict[userLanguage]
 
@@ -170,9 +172,9 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
                     }
                     <div className="w-1/10 flex items-center px-8 py-3 text-left text-s leading-4">
                       {statusEdit === item.id ?
-                        <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
+                        <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
                         :
-                        <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit(item.id)}>
+                        <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit(item.id)}>
                           {BUTTONS[userLanguage].EDIT}
                         </span>
                       }

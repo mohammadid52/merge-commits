@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useContext, Fragment } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { AiOutlineUsergroupAdd, AiOutlineArrowUp } from 'react-icons/ai';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import * as queries from '../../../../graphql/queries';
+import { getAsset } from '../../../../assets';
 
-import Pagination from '../../../Atoms/Pagination';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import List from './List';
 import ListStudents from './ListStudents'
+import List from './List';
+import Pagination from '../../../Atoms/Pagination';
 import Buttons from '../../../Atoms/Buttons';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
@@ -27,7 +28,8 @@ import Selector from '../../../Atoms/Form/Selector';
 */}
 
 const UserLookup = () => {
-	const { state, theme } = useContext(GlobalContext);
+	const { state, theme, clientKey } = useContext(GlobalContext);
+	const themeColor = getAsset(clientKey, 'themeClassName');
 	const history = useHistory();
 	const [status, setStatus] = useState('');
 	const [userList, setUserList] = useState([]);
@@ -225,7 +227,7 @@ const UserLookup = () => {
 						<SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchUserFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
 						<Selector placeholder="Sort By" list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none border-r-0" arrowHidden={true} />
 						<button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400 border rounded ${theme.outlineNone} ${sortingType.asc ? 'border-l-0 rounded-l-none' : 'border-r-0 rounded-r-none transform rotate-180'}`} onClick={toggleSortDimention}>
-							<IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+							<IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
 								<AiOutlineArrowUp />
 							</IconContext.Provider>
 						</button>
