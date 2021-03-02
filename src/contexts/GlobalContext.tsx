@@ -59,6 +59,10 @@ export const standardTheme = {
     curateBlue: 'bg-theme-blue text-white hover:bg-blue-500 active:bg-blue-500 focus:bg-blue-500',
     cancel: 'bg-white text-gray-600 border border-gray-600 hover:bg-gray-200',
   },
+  btnTransparent: {
+    iconoclastIndigo: 'text-indigo-600 border-indigo-600 hover:text-indigo-500',
+    curateBlue: 'text-theme-blue border-theme-blue hover:text-blue-500',
+  },
   text: {
     default: 'text-black80',
     secondary: 'text-gray-500',
@@ -85,6 +89,14 @@ export const standardTheme = {
   borderColor: {
     iconoclastIndigo: 'border-indigo-600',
     curateBlue: 'border-theme-blue',
+  },
+  borderColorLight: {
+    iconoclastIndigo: 'border-indigo-400',
+    curateBlue: 'border-blue-400',
+  },
+  backGroundLight : {
+    iconoclastIndigo: 'bg-indigo-400',
+    curateBlue: 'bg-blue-400',
   },
   modals: {
     header: 'flex items-center justify-between p-4 border-solid rounded-t bg-white text-gray-900 border-gray-200',

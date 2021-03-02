@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useHistory, useLocation, useParams } from 'react-router'
 import { IoArrowUndoCircleOutline } from 'react-icons/io5'
 import API, { graphqlOperation } from '@aws-amplify/api'
@@ -20,6 +20,8 @@ import * as mutations from '../../../../../../../graphql/mutations'
 import * as queries from '../../../../../../../graphql/queries'
 import * as customQueries from '../../../../../../../customGraphql/customQueries'
 import * as customMutations from '../../../../../../../customGraphql/customMutations'
+import { getAsset } from '../../../../../../../assets';
+import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 
 interface EditSyllabusProps {
 
@@ -45,6 +47,9 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   const { } = props;
   const history = useHistory();
   const location = useLocation();
+
+  const { clientKey, theme } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const initialData = {
     name: '',
@@ -622,11 +627,11 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                                           </div>
                                           {
                                             (editState.id !== item.id) ?
-                                              <span className="w-1/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentLesson(item.id)}>
+                                              <span className={`w-1/10 flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`} onClick={() => editCurrentLesson(item.id)}>
                                                 edit
                                               </span>
                                               :
-                                              <span className="w-1/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={cancelEdit}>
+                                              <span className={`w-1/10 flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`} onClick={cancelEdit}>
                                                 {editState.action ? editState.action : 'Cancel'}
                                               </span>
                                           }

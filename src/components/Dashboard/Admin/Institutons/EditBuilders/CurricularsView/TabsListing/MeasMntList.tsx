@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
@@ -10,6 +10,8 @@ import { reorder } from '../../../../../../../utilities/strings';
 import * as mutations from '../../../../../../../graphql/mutations';
 import * as queries from '../../../../../../../graphql/queries';
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
+import { getAsset } from '../../../../../../../assets';
+import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 
 interface MeasurementListProps {
   curricularId: string
@@ -18,6 +20,8 @@ interface MeasurementListProps {
 
 const MeasurementList = (props: MeasurementListProps) => {
   const { curricularId, topicID } = props;
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [measurements, setMeasurements] = useState([])
@@ -120,7 +124,7 @@ const MeasurementList = (props: MeasurementListProps) => {
                                     {index + 1}.
                                 </div>
                                   <div className="flex w-7/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal text-gray-600 cursor-move"> {item.name} </div>
-                                  <div className="flex w-2/10 px-8 py-3 items-center text-left text-s leading-4 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentMeasurement(item.id)}>
+                                  <div className={`flex w-2/10 px-8 py-3 items-center text-left text-s leading-4 cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => editCurrentMeasurement(item.id)}>
                                     Edit
                                   </div>
                                 </div>

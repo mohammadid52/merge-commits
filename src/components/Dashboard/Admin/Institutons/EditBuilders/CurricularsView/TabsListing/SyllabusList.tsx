@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import API, { graphqlOperation } from '@aws-amplify/api';
@@ -8,6 +8,8 @@ import Buttons from '../../../../../../Atoms/Buttons';
 import { reorder } from '../../../../../../../utilities/strings';
 import * as mutations from '../../../../../../../graphql/mutations';
 import * as queries from '../../../../../../../graphql/queries';
+import { getAsset } from '../../../../../../../assets';
+import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 
 interface SyllabusListProps {
   savedSyllabi?: any[]
@@ -21,6 +23,9 @@ const SyllabusList = (props: SyllabusListProps) => {
   const [syllabusList, setSyllabusList] = useState(savedSyllabi);
   const [syllabusIds, setSyllabusIds] = useState([]);
   const history = useHistory();
+
+  const { clientKey, theme } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const onDragEnd = async (result: any) => {
     if (result.source.index !== result.destination.index) {
@@ -137,9 +142,9 @@ const SyllabusList = (props: SyllabusListProps) => {
                                         {/* <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                                           {item.description ? item.description : ''}
                                         </div> */}
-                                        <span className="w-2/10 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentSyllabus(item.id)}>
+                                        <span className={`w-2/10 flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]} `} onClick={() => editCurrentSyllabus(item.id)}>
                                           edit
-                                    </span>
+                                        </span>
                                       </div>
                                     </div>
                                   )}

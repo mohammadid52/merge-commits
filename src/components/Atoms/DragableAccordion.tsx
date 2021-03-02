@@ -4,6 +4,7 @@ import { IoCaretDownCircleOutline, IoCaretUpCircleOutline } from 'react-icons/io
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import { GlobalContext } from '../../contexts/GlobalContext';
+import { getAsset } from '../../assets';
 
 interface DragableAccordionProps {
   titleList: { id: string, title: string, subtitle?: string, content: React.ReactNode }[]
@@ -14,7 +15,8 @@ interface DragableAccordionProps {
 }
 
 const DragableAccordion = (props: DragableAccordionProps) => {
-  const { theme } = useContext(GlobalContext);
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const { titleList, showSequence, showEdit, onItemEdit, onDragEnd } = props;
   const [selectedItem, setSelectedItem] = useState('');
 
@@ -54,19 +56,19 @@ const DragableAccordion = (props: DragableAccordionProps) => {
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
-                            <div className={`w-full px-8 py-6 text-left ${theme.outlineNone} ${selectedItem === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
+                            <div className={`w-full px-8 py-6 text-left ${theme.outlineNone} ${selectedItem === item.id ? `border rounded-lg ${theme.borderColorLight[themeColor]}` : ''}`}>
                               <div className="flex items-center justify-between">
-                                <span className={`text-xs md:text-base font-medium cursor-pointer ${selectedItem === item.id && 'text-indigo-600'}`} onClick={() => changeView(item.id)}>
+                                <span className={`text-xs md:text-base font-medium cursor-pointer ${selectedItem === item.id && theme.textColor[themeColor]} `} onClick={() => changeView(item.id)}>
                                   <span>{item.title}</span><br />
                                   <span className="text-sm leading-6 text-gray-500">{item.subtitle ? item.subtitle : ''}</span>
                                 </span>
                                 {showEdit && (
-                                  <div className="w-auto text-xs md:text-base text-indigo-600 mx-16 cursor-pointer">
+                                  <div className={`w-auto text-xs md:text-base mx-16 cursor-pointer ${theme.textColor[themeColor]} `}>
                                     <span onClick={() => onItemEdit(item.id)}>Edit</span>
                                   </div>
                                 )}
                                 <span className="w-8 h-8 flex items-center cursor-pointer" onClick={() => changeView(item.id)}>
-                                  <IconContext.Provider value={{ size: '2rem', color: '#667eea' }}>
+                                  <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
                                     {(selectedItem === item.id) ? <IoCaretUpCircleOutline /> : <IoCaretDownCircleOutline />}
                                   </IconContext.Provider>
                                 </span>
