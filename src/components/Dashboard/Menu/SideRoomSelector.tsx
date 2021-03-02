@@ -72,7 +72,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
           const arrayOfResponseObjects = response?.data?.listClassStudents?.items;
           const arrayOfClassIDs = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'classID');
           setClassIds(arrayOfClassIDs);
-          console.log('1 -> ', 'loadiung student rooms');
+          // console.log('1 -> ', 'loadiung student rooms');
         } catch (e) {
           console.error('Classes Fetch ERR: ', e);
         }
