@@ -393,6 +393,7 @@ export const getClassroom = /* GraphQL */ `
   }
 `;
 
+
 export const listLessonPlans = /* GraphQL */ `
   query ListClassrooms {
     listClassrooms {
@@ -1895,6 +1896,7 @@ export const listCheckpoints = /* GraphQL */ `
         title
         subtitle
         id
+        type
         questions {
           nextToken
           items {

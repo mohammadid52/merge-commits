@@ -32,6 +32,8 @@ const Body = () => {
   const location = useLocation();
   const match = useRouteMatch();
 
+  const lessonType = state.data.lesson.type;
+
   /**
    * TODO:
    *  list/tchart/multilist need to
@@ -94,7 +96,20 @@ const Body = () => {
     <div className={`z-0 px-4 pb-4 pt-4 ${theme.bg}`}>
       <Switch>
         <Route exact path={`${match.url}/`}>
-          <Intro />
+          {
+            (() => {
+              if (lessonType === 'assessment' || lessonType === 'survey') {
+                return (
+                  <>
+                    <Intro />
+                    <Checkpoint isTeacher={false} />
+                  </>
+                );
+              } else {
+                return (<Intro />);
+              }
+            })()
+          }
         </Route>
         <Route path={`${match.url}/warmup`}>{pageFetch('warmup')}</Route>
         <Route path={`${match.url}/corelesson`}>{pageFetch('corelesson')}</Route>

@@ -18,8 +18,8 @@ export const standardTheme = {
   elem: {
     bg: 'bg-dark-block',
     title: 'text-lg font-semibold text-gray-200',
-    text: 'text-sm text-gray-200 mb-2',
-    textDark: 'text-sm text-darker-gray mb-2',
+    text: 'text-sm text-gray-200',
+    textDark: 'text-sm text-darker-gray',
     textInput: 'bg-darker-gray text-blue-100 py-2 px-4',
     shadow: 'shadow-elem-dark',
     card: 'rounded-lg bg-white bg-opacity-20',

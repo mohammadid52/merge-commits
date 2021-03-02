@@ -891,12 +891,6 @@ type NoticeboardWidget @model {
   teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
 }
 
-type Dummytable{
-id:ID!
-test:String
-
-}
-
 type Subscription {
   onChangePersonLocation(syllabusLessonID: ID!): PersonLocation
     @aws_subscribe(mutations: ["createPersonLocation", "updatePersonLocation", "deletePersonLocation"])

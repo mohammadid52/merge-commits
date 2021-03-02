@@ -4,6 +4,12 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../customGraphql/customMutations';
 import { type } from 'os';
 import { AnthologyContentInterface } from '../components/Dashboard/Anthology/Anthology';
+import * as customQueries from '../customGraphql/customQueries';
+import { createFilterToFetchSpecificItemsOnly } from '../utilities/strings';
+import * as mutations from '../graphql/mutations';
+import { Auth } from '@aws-amplify/auth';
+import * as queries from '../graphql/queries';
+import { useParams } from 'react-router-dom';
 
 
 
@@ -27,6 +33,7 @@ interface timerStateType {
 }
 
 const useStudentTimer = (inputs?: inputs) => {
+  const urlParams: any = useParams()
   const { subscription, subscribeFunc, dispatch, callback, state } = inputs;
   const [params, setParams] = useState<timerStateType>({
     subscription: subscription,
@@ -69,7 +76,7 @@ const useStudentTimer = (inputs?: inputs) => {
     if(isLesson) {
       if (state.viewing) {
         clearTimeout(activityTimeout);
-        setactivityTimeout(setTimeout(() => dispatch({ type: 'INCREMENT_SAVE_COUNT' }), 1000));
+        setactivityTimeout(setTimeout(() => dispatch({ type: 'INCREMENT_SAVE_COUNT' }), 2000));
       }
       if (!state.viewing) {
         if (typeOfTimeout === '') {
@@ -106,8 +113,8 @@ const useStudentTimer = (inputs?: inputs) => {
   }, [params.state.studentStatus]);
 
   useEffect(() => {
-    // console.log('teacher viewing savecount: ', params.state.saveCount);
     updateStudentData('autosave');
+    handleUpdateQuestionData();
   }, [params.state.saveCount]);
 
   const getWarmupDataSource = () => {
@@ -181,7 +188,6 @@ const useStudentTimer = (inputs?: inputs) => {
       };
   
       try {
-        // console.log(' timer save: ', data);
         const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
         dispatch({ type: 'SAVED_CHANGES' });
       } catch (error) {
@@ -191,6 +197,46 @@ const useStudentTimer = (inputs?: inputs) => {
       console.log('studentDataID not yet created')
     }
   };
+
+
+  /**
+   * GET or CREATE QUESTION DATA
+   */
+  const updateQuestionData = async (responseObj: any) => {
+    try {
+      const updatedQuestionData = await API.graphql(
+        graphqlOperation(mutations.updateQuestionData, { input: responseObj }),
+      );
+      console.log('updateQuestionData responseObj -> ', responseObj);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleUpdateQuestionData = async () => {
+    if (typeof state.questionData === 'object') {
+      let questionDataUpdateArray = state.questionDataUpdate;
+      if(questionDataUpdateArray){
+
+        await questionDataUpdateArray.reduce((_: any, val: any) => {
+          let responseObject = {
+            id: val.id,
+            syllabusLessonID: state.syllabusLessonID,
+            checkpointID: val.checkpointID,
+            componentType: state.data.lesson.type,
+            lessonID: state.data.lesson.id,
+            authID: state.studentAuthID,
+            email: state.studentUsername,
+            responseObject: state.questionData[val.checkpointID],
+          };
+
+          updateQuestionData(responseObject);
+        }, null);
+
+      }
+    }
+  }
+
 
   const changeParams = (key: string, updatedValue: any) => {
     setParams((prev) => {
