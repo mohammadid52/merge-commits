@@ -14,10 +14,16 @@ const SurveyTopMenu = () => {
   }, [state.questionData]);
 
   const getTotalQuestionNumber = (): number => {
-    const questionGroups = state.data.lesson.checkpoints.items.map((checkpoint: CheckpointInterface) => checkpoint.questions.items);
-    return questionGroups.reduce((acc: number, group: any) => {
-      return acc + group.length;
-    }, 0);
+    const questionGroups = state.data.lesson.checkpoints.items.map((checkpoint: CheckpointInterface) => {
+      if (checkpoint && checkpoint.questions) {
+        return checkpoint.questions.items;
+      }
+    });
+    if (questionGroups && questionGroups.length > 0) {
+      return questionGroups.reduce((acc: number, group: any[]) => {
+        return acc + group?.length;
+      }, 0);
+    }
   };
 
   const getTotalQuestionAnsweredNumber = (): number => {
