@@ -25,6 +25,7 @@ const SaveQuit = (props: SaveQuitProps) => {
   const { id, feedback } = props;
   const history = useHistory();
   const { visible, setVisible, ref } = useOutsideAlerter(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   /**
    * QUESTION SAVING
@@ -42,7 +43,7 @@ const SaveQuit = (props: SaveQuitProps) => {
     } catch (err) {
       console.error(err);
     } finally {
-      handleClick();
+      handlePopup();
       history.push('/dashboard');
     }
   };
@@ -72,25 +73,35 @@ const SaveQuit = (props: SaveQuitProps) => {
         createQuestionData(responseObject);
       }, null);
     }
-
-
   };
 
-  const handleClick = () => {
+  const handleManualSave = () => {
+    if (!isSaving) {
+      setIsSaving(true);
+      if (state.data.lesson.type === 'lesson') {
+        dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+        history.push('/dashboard');
+      } else {
+        handleCreateQuestionData();
+      }
+    }
+  };
+
+  const handlePopup = () => {
     setVisible((prevState: any) => !prevState);
   };
 
   return (
     <>
       {alert ? (
-        <div className={`${alert ? 'absolute z-100 top-0' : 'hidden'}`} onClick={handleClick}>
+        <div className={`${alert ? 'absolute z-100 top-0' : 'hidden'}`} onClick={handlePopup}>
           <Popup
             alert={visible}
             setAlert={setVisible}
-            header="You have completed a lesson!"
-            button1="Save your lesson"
+            header='You have completed a lesson!'
+            button1='Save your lesson'
             svg='smile'
-            handleButton1={handleCreateQuestionData}
+            handleButton1={handleManualSave}
             fill='screen'
           />
         </div>
@@ -98,11 +109,11 @@ const SaveQuit = (props: SaveQuitProps) => {
 
       <div className="w-full flex flex-col my-4">
         <button
-          type="submit"
+          type='submit'
           className={`self-center w-auto px-4 h-10 font-semibold bg-blueberry hover:bg-blue-500 hover:text-underline text-white flex justify-center items-center rounded-full my-4`}
-          onClick={handleClick}>
+          onClick={handlePopup}>
           <IconContext.Provider value={{ className: 'w-auto mr-2', style: { cursor: 'pointer' } }}>
-            <AiOutlineSave size={24}/>
+            <AiOutlineSave size={24} />
           </IconContext.Provider>
           <div>Save and Go to Dashboard</div>
         </button>

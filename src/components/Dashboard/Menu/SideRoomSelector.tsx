@@ -45,7 +45,20 @@ const SideRoomSelector = (props: SideMenuProps) => {
   // Menu state
   const [loaded, setLoaded] = useState<boolean>(false);
 
+  /**
+   * INIT ADMIN NOT LOADING ANYTHING
+   */
+  useEffect(() => {
+    const userAuthID = state.user.authId;
+    const userRole = state.user.role;
+    if(userRole === 'ADM') {
+      setLoaded(true);
+    }
+  }, []);
 
+  /**
+   * INIT STUDENT ROOM
+   */
   useEffect(() => {
     const standardUserID = state.user.id;
     const userRole = state.user.role;
@@ -59,7 +72,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
           const arrayOfResponseObjects = response?.data?.listClassStudents?.items;
           const arrayOfClassIDs = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'classID');
           setClassIds(arrayOfClassIDs);
-          // console.log('1 -> ', arrayOfClassIDs);
+          // console.log('1 -> ', 'loadiung student rooms');
         } catch (e) {
           console.error('Classes Fetch ERR: ', e);
         }
@@ -68,6 +81,9 @@ const SideRoomSelector = (props: SideMenuProps) => {
     userRole === 'ST' && listClassStudents();
   }, []);
 
+  /**
+   * INIT TEACHER ROOM
+   */
   useEffect(() => {
     const userAuthID = state.user.authId;
     const userRole = state.user.role;
@@ -93,8 +109,9 @@ const SideRoomSelector = (props: SideMenuProps) => {
         }
       }
     };
-    (userRole === 'FLW' || userRole === 'TR') && listRoomTeacher();
+    (userRole === 'FLW' || userRole === 'TR' ) && listRoomTeacher();
   }, []);
+
 
   useEffect(() => {
     const userRole = state.user.role;
