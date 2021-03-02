@@ -31,7 +31,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const urlParams: any = useParams()
   const [data, setData] = useState<DataObject>();
   const [lesson, setLesson] = useState<DataObject>();
-  const [checkpoints, setCheckpoints] = useState<DataObject>();
   const [subscriptionData, setSubscriptionData] = useState<any>();
 
   const [state, dispatch] = useReducer(lessonReducer, lessonState);
@@ -44,6 +43,9 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [personLocationObj, setPersonLocationObj] = useState<any>();
   const [recentOp, setRecentOp] = useState<string>('');
+  const [recentQuestionOp, setRecentQuestionOp] = useState<string>('');
+
+  const [checkpointsLoaded, setCheckpointsLoaded] = useState<boolean>(false);
 
   // INIT PERSON LOCATION STATE
   useEffect(() => {
@@ -100,7 +102,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       lessonProgress: state.lessonProgress,
     };
     try {
-      //console.log('created', newLocation);
       const newPersonLocationMutation: any = await API.graphql(
         graphqlOperation(mutations.createPersonLocation, { input: newLocation })
       );
@@ -110,7 +111,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       setRecentOp('created');
     }
   }
-  //
 
   async function updatePersonLocation() {
     const updatedLocation = {
@@ -141,8 +141,11 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
   //  END OF LOCATION TRACKING SCRIPT
 
+  /**
+   * GET or CREATE STUDENT DATA
+   */
   async function getOrCreateStudentData() {
-    const { lessonID } = urlParams
+    const { lessonID } = urlParams;
     let studentID: string;
     let studentAuthID: string;
 
@@ -197,16 +200,175 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     }
   }
 
+  /**
+   * Function and useEffect for getting/setting checkpoints if
+   * condition is met and lesson plans include
+   * checkpoints in their name
+   */
+  const getAllCheckpoints = async () => {
+    const allCheckpointIDS = state.data.lessonPlan.reduce((acc: string[], lessonPlanObj: any) => {
+      const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
+      if (isCheckpoint) {
+        return [...acc, lessonPlanObj.stage.match(/checkpoint\?id=(.*)/)[1]];
+      } else {
+        return acc;
+      }
+    }, []);
+    if (allCheckpointIDS.length > 0) {
+
+      try {
+        const checkpoints: any = await API.graphql(graphqlOperation(customQueries.listCheckpoints, {
+          filter: { ...createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id') },
+        }));
+
+        //  STORE FULL CHECKPOINT OBJECTS
+        setLesson({ ...lesson, lesson: { ...lesson.lesson, checkpoints: checkpoints.data.listCheckpoints } });
+
+        // INIT CONTEXT WITH EMPTY QUESTIONDATA!
+        const initCheckpointsObj = checkpoints.data.listCheckpoints.items.reduce((acc: any, checkpointObj: any) => {
+          return { ...acc, [checkpointObj.id]: {} };
+        }, {});
+        dispatch({
+          type: 'SET_QUESTION_DATA',
+          payload: {
+            data: initCheckpointsObj,
+          },
+        });
+
+      } catch (e) {
+        console.error('err fetch checkpoints ::: ', e);
+      } finally {
+        setCheckpointsLoaded(true);
+      }
+    } else {
+      setCheckpointsLoaded(false);
+    }
+  };
+
+  /**
+   * GET or CREATE QUESTION DATA
+   */
+  const createQuestionData = async (responseObj: any) => {
+    try {
+      const newQuestionData = await API.graphql(
+        graphqlOperation(customMutations.createQuestionData, { input: responseObj }),
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleCreateQuestionData = async () => {
+    let studentID: string;
+    let studentAuthID: string;
+
+    await Auth.currentAuthenticatedUser().then((user) => {
+      studentID = user.attributes.email;
+      studentAuthID = user.attributes.sub;
+    });
+
+    if (typeof state.questionData === 'object') {
+      let checkpointIdKeys = Object.keys(state.questionData); // doFirst, checkpoint_1
+      await checkpointIdKeys.reduce((_: any, key: string) => {
+        let responseObject = {
+          syllabusLessonID: state.syllabusLessonID,
+          checkpointID: key,
+          componentType: state.data.lesson.type,
+          lessonID: state.data.lesson.id,
+          authID: studentAuthID,
+          email: studentID,
+          responseObject: state.questionData[key],
+        };
+
+        createQuestionData(responseObject);
+      }, null);
+      setRecentQuestionOp('created');
+    }
+  }
+
+  async function getOrCreateQuestionData() {
+    const { lessonID } = urlParams;
+    let studentID: string;
+    let studentAuthID: string;
+
+    await Auth.currentAuthenticatedUser().then((user) => {
+      studentID = user.attributes.email;
+      studentAuthID = user.attributes.sub;
+    });
+
+    console.log('getOrCreateQuestionData -> recentQuestionOp, ', recentQuestionOp)
+
+    try {
+      const questionDatas: any = await API.graphql(
+        graphqlOperation(queries.listQuestionDatas, {
+          filter: {
+            syllabusLessonID: { eq: lessonID },
+            email: { eq: studentID },
+          },
+        }),
+      );
+      const questionDataUpdateArray = questionDatas.data.listQuestionDatas.items.reduce((acc: any[], val: any) => {
+        return [...acc, {
+          id: val.id,
+          checkpointID: val.checkpointID,
+        }];
+      }, []);
+
+      const noQuestionDatas = questionDatas.data.listQuestionDatas.items.length === 0;
+      const existQuestionDatas = questionDatas.data.listQuestionDatas.items.length > 0;
+
+      if (noQuestionDatas && recentQuestionOp === '') {
+        await handleCreateQuestionData();
+      }
+
+      if (
+        existQuestionDatas && recentQuestionOp === '' ||
+        existQuestionDatas && recentQuestionOp === 'created'
+      ) {
+        console.log('qData exists, this is update array ->', questionDataUpdateArray)
+        dispatch({ type: 'SET_QUESTION_DATA_UPDATE', payload: { data: questionDataUpdateArray } });
+        setRecentQuestionOp('fetched');
+      }
+    } catch (e) {
+      console.error('getOrCreateQuestionData -> ', e);
+    }
+  }
+
+  // Collect and fetch checkpoints when lesson loaded
+  useEffect(() => {
+    const getAdditionalLessonData = async () => {
+      if (state.data && state.data.lessonPlan) {
+        await getAllCheckpoints();
+      }
+    };
+    if (!checkpointsLoaded) {
+      getAdditionalLessonData();
+    }
+  }, [state.data.lesson]);
+
+  // Init questionData in DB if necessary
+  useEffect(() => {
+    const initQuestionDataDB = async () => {
+      await getOrCreateQuestionData();
+    };
+    if (checkpointsLoaded && state.data.lesson.type === 'lesson') {
+      if (recentQuestionOp === '' || recentQuestionOp === 'created') {
+        getOrCreateQuestionData();
+      }
+    }
+  }, [checkpointsLoaded, recentQuestionOp]);
+
+  /**
+   * GET SYLLABUS LESSON
+   */
   async function getSyllabusLesson() {
     const { lessonID } = urlParams;
     if (lessonID) {
       try {
         const classroom: any = await API.graphql(
-          graphqlOperation(customQueries.getSyllabusLesson, { id: lessonID })
+          graphqlOperation(customQueries.getSyllabusLesson, { id: lessonID }),
         );
-        // console.log('classroom data', classroom);
         setLesson(classroom.data.getSyllabusLesson);
-        // console.log(classroom.data.getSyllabusLesson)
         getOrCreateStudentData();
         subscription = subscribeToSyllabusLesson();
       } catch (error) {
@@ -217,7 +379,10 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     }
   }
 
-  // TODO: rename to subscribeToSyllabusLesson
+
+  /**
+   * SUBSCRIBE TO SYLLABUS LESSON
+   */
   const subscribeToSyllabusLesson = () => {
     const { lessonID } = urlParams;
     // @ts-ignore
@@ -301,40 +466,8 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         },
       });
     }
-  }, [lesson, checkpoints]);
+  }, [lesson]);
 
-  useEffect(() => {
-    if (state.data && state.data.lessonPlan) {
-      getAllCheckpoints();
-    }
-  }, [state.data.lessonPlan]);
-
-  /**
-   * Function and useEffect for getting/setting checkpoints if
-   * condition is met and lesson plans include
-   * checkpoints in their name
-   */
-  const getAllCheckpoints = async () => {
-    const allCheckpointIDS = state.data.lessonPlan.reduce((acc: string[], lessonPlanObj: any) => {
-      const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
-      if (isCheckpoint) {
-        return [...acc, lessonPlanObj.stage.match(/[^?id=]*$/g)[0]];
-      } else {
-        return acc;
-      }
-    }, []);
-    try {
-      const checkpoints: any = await API.graphql(graphqlOperation(customQueries.listCheckpoints, {
-        filter: { ...createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id') },
-      }));
-
-      // TODO: cleanup dirty merge of checkpoints into fetched lesson data
-      // console.log(createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id'))
-      setLesson({...lesson, lesson: {...lesson.lesson, checkpoints: checkpoints.data.listCheckpoints}});
-    } catch (e) {
-      console.error('err fetch checkpoints ::: ', e);
-    }
-  };
 
 
 

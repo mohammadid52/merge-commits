@@ -4,6 +4,7 @@ import { LessonControlContext } from '../../../../contexts/LessonControlContext'
 
 import { QuestionInterface } from '../CheckpointQuestions';
 import { QuestionProps } from '../Question';
+import LessonElementCard from '../../../Atoms/LessonElementCard';
 
 interface SelectOneRowState {
   id: string;
@@ -31,39 +32,40 @@ const SelectOneQuestions = (props: QuestionProps) => {
   return (
     <>
       {visible && (
-        <div key={questionKey} className={'flex flex-col mb-3'} id={`question_${questionId}`}>
-          <p className={theme.elem.text}>
-            <b>{questionIndex + 1}. </b>
-            {question.question.question}
-          </p>
-          <div className={`flex justify-center`}>
-            {question.question.options.map(
-              (
-                option: {
-                  label: string;
-                  icon: string;
-                  color: string;
-                  text: string;
-                },
-                questionOptionIndex: number
+          <div key={questionKey} className={'flex flex-col my-4'} id={`question_${questionId}`}>
+            <label htmlFor={question.question.label}>
+              <p className={`font-semibold ${theme.elem.text} ${theme.underline} pb-2 mb-4`}>
+                <b>{questionIndex + 1}. </b>
+                {question.question.question}
+              </p>
+            </label>
+            <div className={`flex justify-center`}>
+              {question.question.options.map(
+                (
+                  option: {
+                    label: string;
+                    icon: string;
+                    color: string;
+                    text: string;
+                  },
+                  questionOptionIndex: number,
               ) => {
                 return (
                   <React.Fragment key={`question_${questionId}_${questionOptionIndex}`}>
                     <span
                       id={option.label}
-                      style={{ width: '18px', height: '18px' }}
-                      className={`flex-shrink-0 mx-4 rounded-full cursor-pointer border 
+                      className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border 
                 ${input.value === option.label ? 'bg-sea-green border-white' : 'bg-white border-black '}`}
                       data-value={option.label}
                       onClick={(e) => (!isTeacher ? handleRadioSelect(e) : null)}
                     />
-                    <span>{option.text}</span>
+                    <span className={`w-24`}>{option.text}</span>
                   </React.Fragment>
                 );
-              }
-            )}
+                }
+              )}
+            </div>
           </div>
-        </div>
       )}
     </>
   );

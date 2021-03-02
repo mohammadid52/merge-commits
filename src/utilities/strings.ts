@@ -247,6 +247,23 @@ export const getClientKey = () => {
   else '';
 };
 
+/**
+ * Function used to fiterout uniqitems based on specific key
+ * from an array of objects
+ * @param arr
+ * @param key
+ */
+export const getUniqItems = (arr: any[], key: string) => {
+  let uniqItems: any = [];
+  const updatedArray = arr.filter((item) => {
+    if (uniqItems.indexOf(item[key]) < 0) {
+      uniqItems.push(item[key]);
+      return item;
+    }
+  });
+  return updatedArray;
+};
+
 export const getLanguageString = (language: string) => {
   switch (language) {
     case 'EN':
@@ -298,3 +315,28 @@ export const getUserRoleString = (role: string) => {
       return 'Student';
   }
 };
+/**
+ * Function which returns TRUE if the current string is different
+ * from the one preceding it
+ * USEFUL to determine if a specific label should be shown or not
+ * in a map sequence over an array
+ * @param before
+ * @param current
+ * @param after
+ */
+export const checkIfFirstNewInSequence = (before: string, current: string, after: string) => {
+  const notSameAsBefore = current !== before;
+  const sameAsAfter = current === after;
+
+  if(notSameAsBefore && sameAsAfter){
+    return true;
+  } else {
+    if(typeof before === 'undefined'){
+      return true;
+    } else if(notSameAsBefore && typeof after === 'undefined'){
+      return true;
+    } else {
+      return false;
+    }
+  }
+}

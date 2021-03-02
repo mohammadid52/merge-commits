@@ -34,9 +34,9 @@ const InputQuestions = (props: QuestionProps) => {
     visible &&
       (
         question && (
-          <div key={`question_${questionId}`} className={`${theme.elem.text} w-auto`}>
-            <label className={theme.elem.text} htmlFor={question.question.label}>
-              <p>
+          <div key={`question_${questionId}`} className={`w-auto my-4`}>
+            <label htmlFor={question.question.label}>
+              <p className={`font-semibold ${theme.elem.text} ${theme.underline} pb-2 mb-4`}>
                 <b>{questionIndex + 1}. </b>
                 {question.question.question}
               </p>
