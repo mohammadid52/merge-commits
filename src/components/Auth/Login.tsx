@@ -190,7 +190,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
           <div className="h-.7/10  w-full rounded-tl-xl"></div>
           <div className="relative h-9.3/10 flex flex-col items-center p-8">
             <div className={`absolute bottom-0 text-center mb-4 leading-5 text-xs text-gray-600`}>
-              <p>© Copyright 2020</p>
+              <p>© Copyright {new Date().getFullYear()}</p>
               <p>
                 <NavLink className="underline text-xs hover:text-blue-500" to="/privacy-policy">
                   Privacy Policy

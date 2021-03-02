@@ -35,7 +35,7 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
         : null}
 
       {activeRoom === '' ? (
-        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>Select a room...</div>
+        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>⬆️ Select unit to see applicable lessons...</div>
       ) : null}
 
       {activeRoom !== '' && !lessonLoading && lessons.length === 0 ? (

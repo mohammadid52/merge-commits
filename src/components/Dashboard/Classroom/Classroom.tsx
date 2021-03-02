@@ -206,7 +206,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 text-xl m-auto`}>
             <h2 className={`text-xl w-full border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
-              Syllabus Control:
+              Unit Manager
             </h2>
           </div>
         </div>
