@@ -53,7 +53,7 @@ const EditRoom = (props: EditRoomProps) => {
   const params = useQuery();
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Edit Room', url: `/dashboard/room-edit?id=${params.get('id')}`, last: true }
+    { title: 'Edit Classroom', url: `/dashboard/room-edit?id=${params.get('id')}`, last: true }
   ];
 
   const selectTeacher = (val: string, name: string, id: string) => {
@@ -148,7 +148,7 @@ const EditRoom = (props: EditRoomProps) => {
       if (InstituteList.length === 0) {
         setMessages({
           show: true,
-          message: 'Please create an institute before creating room.',
+          message: 'Please create an institute before creating Classroom.',
           isError: true
         })
       }
@@ -293,42 +293,42 @@ const EditRoom = (props: EditRoomProps) => {
     if (roomData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Room name is required please enter name.',
+        message: 'Classroom name is required please enter name.',
         isError: true
       })
       return false;
     } else if (roomData.institute.id === '') {
       setMessages({
         show: true,
-        message: 'Please select an institute to add room.',
+        message: 'Please select an institute to add Classroom.',
         isError: true
       })
       return false;
     } else if (roomData.teacher.id === '') {
       setMessages({
         show: true,
-        message: 'Please select a teacher for the room.',
+        message: 'Please select a teacher for the Classroom.',
         isError: true
       })
       return false;
     } else if (roomData.classRoom.id === '') {
       setMessages({
         show: true,
-        message: 'Please select a class for the room.',
+        message: 'Please select a class for the Classroom.',
         isError: true
       })
       return false;
     } else if (roomData.maxPersons == '') {
       setMessages({
         show: true,
-        message: 'Please set Max students limit for the room.',
+        message: 'Please set Max students limit for the Classroom.',
         isError: true
       })
       return false;
     } else if (roomData.maxPersons > '30') {
       setMessages({
         show: true,
-        message: 'One room can allow max. 30 students.',
+        message: 'One Classroom can allow max. 30 students.',
         isError: true
       })
       return false;
@@ -337,7 +337,7 @@ const EditRoom = (props: EditRoomProps) => {
       if (!isUniq) {
         setMessages({
           show: true,
-          message: 'This room name is already exist, please add another name.',
+          message: 'This Classroom name is already exist, please add another name.',
           isError: true
         })
         return false;
@@ -362,13 +362,13 @@ const EditRoom = (props: EditRoomProps) => {
         const addCurricular: any = await API.graphql(graphqlOperation(mutation.updateRoomCurriculum, { input: curricularInput }))
         setMessages({
           show: true,
-          message: 'Room details has been updated.',
+          message: 'Classroom details has been updated.',
           isError: false
         })
       } catch {
         setMessages({
           show: true,
-          message: 'Error while updating room curricular. Please try that later.',
+          message: 'Error while updating Classroom curricular. Please try that later.',
           isError: true
         })
       }
@@ -401,7 +401,7 @@ const EditRoom = (props: EditRoomProps) => {
       } catch{
         setMessages({
           show: true,
-          message: 'Error while updating room details. Please try again later.',
+          message: 'Error while updating Classroom details. Please try again later.',
           isError: true
         })
       }
@@ -455,7 +455,7 @@ const EditRoom = (props: EditRoomProps) => {
       } catch {
         setMessages({
           show: true,
-          message: 'Error while fetching room data, please try again later.',
+          message: 'Error while fetching Classroom data, please try again later.',
           isError: true
         })
       }
@@ -499,7 +499,7 @@ const EditRoom = (props: EditRoomProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Edit Room" subtitle="Edit room information" />
+        <SectionTitle title="Edit Classroom" subtitle="Edit Classroom information" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -511,7 +511,7 @@ const EditRoom = (props: EditRoomProps) => {
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">ROOM INFORMATION</h3>
           <div className="">
             <div className="px-3 py-4">
-              <FormInput value={name} id='name' onChange={editInputField} name='name' label="Room Name" placeHolder="Add room name" isRequired />
+              <FormInput value={name} id='name' onChange={editInputField} name='name' label="Classroom Name" placeHolder="Add Classroom name" isRequired />
             </div>
             {/* 
               **
