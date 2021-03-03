@@ -2,28 +2,31 @@ import { lessonControlStateType, lessonControlState } from '../state/LessonContr
 
 type lessonControlActions =
   | {
-      type: 'INITIAL_LESSON_SETUP';
-      payload: any;
-    }
+  type: 'INITIAL_LESSON_SETUP';
+  payload: any;
+} | {
+  type: 'UPDATE_LESSON_DATA';
+  payload: { [key: string]: any };
+}
   | {
-      type: 'UPDATE_STUDENT_ROSTER';
-      payload: any;
-    }
+  type: 'UPDATE_STUDENT_ROSTER';
+  payload: any;
+}
   | {
-      type:
-        | 'OPEN_LESSON'
-        | 'DISABLE_LESSON'
-        | 'CLOSE_LESSON'
-        | 'DELETE_DISPLAY_DATA'
-        | 'SET_DISPLAY_DATA'
-        | 'SET_STUDENT_VIEWING'
-        | 'SET_SHARE_MODE'
-        | 'QUIT_SHARE_MODE'
-        | 'SAVED_CHANGES'
-        | 'UPDATE_STUDENT_DATA'
-        | 'QUIT_STUDENT_VIEWING'
-        | 'RESET_DONE'
-        | 'START_CLASSROOM'
+  type:
+    | 'OPEN_LESSON'
+    | 'DISABLE_LESSON'
+    | 'CLOSE_LESSON'
+    | 'DELETE_DISPLAY_DATA'
+    | 'SET_DISPLAY_DATA'
+    | 'SET_STUDENT_VIEWING'
+    | 'SET_SHARE_MODE'
+    | 'QUIT_SHARE_MODE'
+    | 'SAVED_CHANGES'
+    | 'UPDATE_STUDENT_DATA'
+    | 'QUIT_STUDENT_VIEWING'
+    | 'RESET_DONE'
+    | 'START_CLASSROOM'
         | 'COMPLETE_CLASSROOM';
       payload: any;
     }
@@ -45,6 +48,11 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         complete: action.payload.complete,
         startDate: action.payload.startDate,
         endDate: action.payload.endDate,
+      };
+    case 'UPDATE_LESSON_DATA':
+      return {
+        ...state,
+        data: action.payload.data,
       };
     case 'UPDATE_STUDENT_ROSTER':
       //console.log('lesson control reducer students: ', action.payload.students);

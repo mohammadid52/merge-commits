@@ -332,7 +332,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
 
           <div className="my-12 w-6/10 m-auto flex items-center justify-center">
             <div className="mr-4">
-              <Selector selectedItem={selectedMeasu.name} list={measurementList} placeholder="Select Lesson" onChange={selectMeasurement} />
+              <Selector selectedItem={selectedMeasu.name} list={measurementList} placeholder="Select Measurement" onChange={selectMeasurement} />
             </div>
             <div className="ml-4 w-auto">
               <Buttons btnClass="ml-4 py-1" label="Add" onClick={addNewMeasurement} disabled={selectedMeasu.value ? false : true} />

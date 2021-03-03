@@ -12,12 +12,13 @@ import SelectOneQuestions from './Questions/SelectOneQuestions';
 import SelectManyQuestions from './Questions/SelectManyQuestions';
 
 export interface QuestionProps {
+  checkpointID?: string;
   visible?: boolean;
   isTeacher?: boolean;
   question?: QuestionInterface;
   questionIndex?: number;
   questionKey: any;
-  handleInputChange?: (id: number | string, value: string | string[]) => void;
+  handleInputChange?: (id: number | string, value: string | string[], checkpointID: string) => void;
   value?: ResponseState;
 }
 
@@ -25,7 +26,7 @@ const Question = (props: QuestionProps) => {
   /**
    * Teacher switch
    */
-  const { visible, isTeacher, question, questionIndex, questionKey, handleInputChange, value } = props;
+  const { checkpointID, visible, isTeacher, question, questionIndex, questionKey, handleInputChange, value } = props;
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
 
@@ -39,6 +40,7 @@ const Question = (props: QuestionProps) => {
       case 'input':
         return (
           <InputQuestions
+            checkpointID={checkpointID}
             visible={visible}
             isTeacher={isTeacher}
             question={question}
@@ -51,6 +53,7 @@ const Question = (props: QuestionProps) => {
       case 'text':
         return (
           <TextQuestions
+            checkpointID={checkpointID}
             visible={visible}
             isTeacher={isTeacher}
             question={question}
@@ -63,6 +66,7 @@ const Question = (props: QuestionProps) => {
       case 'selectOne':
         return (
           <SelectOneQuestions
+            checkpointID={checkpointID}
             visible={visible}
             isTeacher={isTeacher}
             question={question}
@@ -75,6 +79,7 @@ const Question = (props: QuestionProps) => {
       case 'selectMany':
         return (
           <SelectManyQuestions
+            checkpointID={checkpointID}
             visible={visible}
             isTeacher={isTeacher}
             question={question}

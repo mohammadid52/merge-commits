@@ -151,8 +151,10 @@ module.exports = {
     },
     extend: {
       backgroundImage: (theme) => ({
-        'login-bg':
+        'iconoclast-bg':
           "url('https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/iconoclast_frontpage_bg.jpg')",
+        'curate-bg':
+          "url('https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/LoginImage_PC.jpg')",
       }),
       backgroundOpacity: {
         10: '0.1',
@@ -511,6 +513,8 @@ module.exports = {
         'darker-gray': '#272730',
         'medium-gray': '#505062',
         'light-gray': '#797986',
+        'theme-blue': '#0081CB', //Projectcurate theme blue color.
+        
         // Official iconoclast blue
         dark: '#051429',
         'dark-bg': '#333449',

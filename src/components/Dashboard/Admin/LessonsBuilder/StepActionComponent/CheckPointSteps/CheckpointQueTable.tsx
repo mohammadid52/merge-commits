@@ -1,13 +1,15 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState, useContext } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api';
 
 import * as queries from '../../../../../../graphql/queries';
 import { createFilterToFetchSpecificItemsOnly } from '../../../../../../utilities/strings';
 import Buttons from '../../../../../Atoms/Buttons';
 import { getTypeString } from '../../../../../../utilities/strings';
+import { getAsset } from '../../../../../../assets';
+import { GlobalContext } from '../../../../../../contexts/GlobalContext';
 
 interface CheckPointContentProps {
-  changeStep: (step: string) => void
+  changeStep?: (step?: string) => void
   checkpointId: string
   showActionIcons?: boolean
   DeleteCheckpoint?: (id: string) => void
@@ -16,6 +18,10 @@ interface CheckPointContentProps {
 
 const CheckpointQueTable = (props: CheckPointContentProps) => {
   const { changeStep, checkpointId, showActionIcons, DeleteCheckpoint, editCheckPoint } = props;
+
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [questionsList, setQuestionsList] = useState([]);
@@ -67,7 +73,7 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
     <Fragment>
       {showActionIcons && <div className="w-full mx-auto my-4 flex justify-end">
         <div className="flex justify-end w-6/10 items-center">
-          <Buttons btnClass="py-1 px-4 text-xs mr-2 text-indigo-600 border-indigo-600 hover:bg-gray-100  hover:text-indigo-500" label="Edit Checkpoint" onClick={editCurrentCheckp} transparent />
+          <Buttons btnClass={`py-1 px-4 text-xs mr-2 hover:bg-gray-100 ${theme.btnTransparent[themeColor]}`} label="Edit Checkpoint" onClick={editCurrentCheckp} transparent />
           <Buttons btnClass="py-1 px-4 text-xs ml-2 text-red-600 border-red-600 hover:bg-gray-100 hover:text-red-500" label="Remove Checkpoint" onClick={() => DeleteCheckpoint(checkpointId)} transparent />
         </div>
       </div>}

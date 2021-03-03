@@ -588,7 +588,7 @@ type QuestionType @model {
 
 
 type QuestionResponse {
-  qid: Int,
+  qid: String,
   response: [String]
 }
 
@@ -769,6 +769,7 @@ type StudentData
 
 type AnthologyContent {
   type: String
+  subType: String
 	title: String
 	subTitle: String
 	description: String
@@ -889,12 +890,6 @@ type NoticeboardWidget @model {
 	quotes: [Quotes]
 	active: Boolean
   teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
-}
-
-type Dummytable{
-id:ID!
-test:String
-
 }
 
 type Subscription {

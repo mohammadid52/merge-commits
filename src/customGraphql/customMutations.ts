@@ -208,6 +208,7 @@ export const updateStudentData = /* GraphQL */ `
       }
       anthologyContent {
         type
+        subType
         title
         subTitle
         description
@@ -345,7 +346,29 @@ export const createQuestionData = /* GraphQL */ `
     }
   }
 `;
-
+export const updateQuestionData = /* GraphQL */ `
+  mutation UpdateQuestionData(
+    $input: UpdateQuestionDataInput!
+    $condition: ModelQuestionDataConditionInput
+  ) {
+    updateQuestionData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      checkpointID
+      email
+      authID
+      componentType
+      scheduleID
+      lessonID
+      responseObject {
+        qid
+        response
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const updateSurveyStatus = /* GraphQL */ `
   mutation UpdatePerson($input: UpdatePersonInput!, $condition: ModelPersonConditionInput) {
     updatePerson(input: $input, condition: $condition) {
@@ -877,6 +900,34 @@ export const deleteLessonRubrics = /* GraphQL */ `
       rubricID
       createdAt
       updatedAt
+    }
+  }
+`;
+export const createCommonCheckpoint = /* GraphQL */ `
+  mutation CreateCommonCheckpoint(
+    $input: CreateCommonCheckpointInput!
+    $condition: ModelcommonCheckpointConditionInput
+  ) {
+    createCommonCheckpoint(input: $input, condition: $condition) {
+      id
+      type
+      typeID
+      checkpointID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCommonCheckpoint = /* GraphQL */ `
+  mutation DeleteCommonCheckpoint(
+    $input: DeleteCommonCheckpointInput!
+    $condition: ModelcommonCheckpointConditionInput
+  ) {
+    deleteCommonCheckpoint(input: $input, condition: $condition) {
+      id
+      type
+      typeID
+      checkpointID
     }
   }
 `;

@@ -3298,6 +3298,7 @@ export const getStudentData = /* GraphQL */ `
       }
       anthologyContent {
         type
+        subType
         title
         subTitle
         description
@@ -3393,6 +3394,7 @@ export const listStudentDatas = /* GraphQL */ `
         }
         anthologyContent {
           type
+          subType
           title
           subTitle
           description

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { IconContext } from 'react-icons';
 import { FaAngleRight, FaAngleLeft } from 'react-icons/fa';
 import { GlobalContext } from '../../contexts/GlobalContext';
+import { getAsset } from '../../assets';
 
 interface PaginationProps {
   currentPage: number;
@@ -19,10 +20,11 @@ interface PageArrowsProps {
 }
 
 const Active = (activeProps: { page: number }) => {
-  const { theme } = useContext(GlobalContext);
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   return (
-    <button className={`${theme.btn.indigo} w-auto py-2 px-4 rounded-full ml-2 cursor-default hover:outline-none focus:outline-none `}>
+    <button className={`${theme.btn[themeColor]} w-auto py-2 px-4 rounded-full ml-2 cursor-default hover:outline-none focus:outline-none `}>
       {activeProps.page}
     </button>
   )
@@ -71,7 +73,8 @@ const PageCount = (pageCountProps: { currentPage: number, lastPage: boolean, fir
 
 const PageArrows: React.FC<PageArrowsProps> = (pageProps: PageArrowsProps) => {
   const { active, onClick, isBack } = pageProps;
-  const { theme } = useContext(GlobalContext);
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   return (
     <button
@@ -79,7 +82,7 @@ const PageArrows: React.FC<PageArrowsProps> = (pageProps: PageArrowsProps) => {
       className={`btn btn-default w-20 ${theme.outlineNone} ${!active ? 'cursor-default' : ''}`}
       disabled={!active}>
       <span className="w-6 cursor-pointer">
-        <IconContext.Provider value={{ size: '1.5rem', color: `${active ? '#667eea' : 'darkgrey'}` }}>
+        <IconContext.Provider value={{ size: '1.5rem', color: `${active ? theme.iconColor[themeColor] : 'darkgrey'}` }}>
           {isBack ? <FaAngleLeft /> : <FaAngleRight />}
         </IconContext.Provider>
       </span>
@@ -89,16 +92,19 @@ const PageArrows: React.FC<PageArrowsProps> = (pageProps: PageArrowsProps) => {
 
 const Pagination: React.FC<PaginationProps> = (pageProps: PaginationProps) => {
   const { currentPage, lastPage, firstPage, setNext, setPrev } = pageProps
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+
   return (
     <div className="flex flex-wrap items-center justify-center">
       <PageArrows onClick={setPrev} active={currentPage !== 1} isBack={true} />
-      {currentPage !== 1 && <span className="w-auto mr-2 text-indigo-600"> . . . </span>}
+      {currentPage !== 1 && <span className={`w-auto mr-2 ${theme.textColor[themeColor]}`}> . . . </span>}
       <PageCount
         firstPage={firstPage}
         lastPage={lastPage}
         currentPage={currentPage}
       />
-      {!lastPage && <span className="w-auto ml-2 text-indigo-600"> . . . </span>}
+      {!lastPage && <span className={`w-auto ml-2 ${theme.textColor[themeColor]}`}> . . . </span>}
       <PageArrows onClick={setNext} active={!lastPage} />
     </div>
   )

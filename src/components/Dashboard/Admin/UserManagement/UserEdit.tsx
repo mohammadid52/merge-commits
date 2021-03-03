@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import DropdownForm from './DropdownForm';
 import { UserInfo } from './User';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
+import Buttons from '../../../Atoms/Buttons';
 
 interface UserInfoProps {
   user: UserInfo;
@@ -52,9 +53,9 @@ const UserEdit = (props: UserInfoProps) => {
     const get = await getUserById(editUser.id);
   }
 
-  const onSubmit = (e: any) => {
+  const onSubmit = () => {
     setPerson();
-    e.preventDefault();
+    // e.preventDefault();
   };
 
   const onChange = (e: any) => {
@@ -137,7 +138,7 @@ const UserEdit = (props: UserInfoProps) => {
   {
     return (
       <div className='h-full w-full md:px-2 pt-2'>
-        <form onSubmit={onSubmit}>
+        <form>
           <div className='h-full shadow-5 bg-white sm:rounded-lg mb-4'>
             <div className='px-4 py-5 border-b border-gray-200 sm:px-6'>
               <h3 className='text-lg leading-6 font-medium text-gray-900'>
@@ -146,19 +147,19 @@ const UserEdit = (props: UserInfoProps) => {
             </div>
 
             <div className='h-full px-4 py-5 sm:px-6'>
-              <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6'>
+              <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 text-gray-900'>
                 <div className='sm:col-span-3 p-2'>
                   <label
                     htmlFor='firstName'
                     className='block text-m font-medium leading-5 text-gray-700'>
                     First Name
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
+                  <div className='mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm'>
                     <input
                       id='firstName'
                       type='text'
                       onChange={onChange}
-                      className='form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5'
+                      className='form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 text-gray-900'
                       defaultValue={user.firstName}
                     />
                   </div>
@@ -170,7 +171,7 @@ const UserEdit = (props: UserInfoProps) => {
                     className='block text-m font-medium leading-5 text-gray-700'>
                     Last Name
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
+                  <div className='border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
                     <input
                       id='lastName'
                       type='text'
@@ -205,7 +206,7 @@ const UserEdit = (props: UserInfoProps) => {
                     className='block text-m font-medium leading-5 text-gray-700'>
                     Nickname
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
+                  <div className='mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm'>
                     <input
                       id='preferredName'
                       type='text'
@@ -240,13 +241,13 @@ const UserEdit = (props: UserInfoProps) => {
                   />
                 </div>
 
-                <div className='sm:col-span-3 p-2'>
+                {/* <div className='sm:col-span-3 p-2'>
                   <label
                     htmlFor='phone'
                     className='block text-m font-medium leading-5 text-gray-700'>
                     Contact Number
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
+                  <div className='mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm'>
                     <input
                       id='phone'
                       onChange={onChange}
@@ -254,11 +255,11 @@ const UserEdit = (props: UserInfoProps) => {
                       defaultValue={user.phone}
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
-
+          {/* 
           <div className='h-full bg-white shadow-5 sm:rounded-lg'>
             <div className='px-4 py-5 border-b border-gray-200 sm:px-6'>
               <h3 className='text-lg leading-6 font-medium text-gray-900'>
@@ -267,14 +268,14 @@ const UserEdit = (props: UserInfoProps) => {
             </div>
 
             <div className='h-full px-4 py-5 sm:px-6'>
-              <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6'>
+              <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 text-gray-900'>
                 <div className='sm:col-span-3 p-2'>
                   <label
                     htmlFor='institution'
                     className='block text-m font-medium leading-5 text-gray-700'>
                     Institution
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
+                  <div className='mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm'>
                     <input
                       id='institution'
                       type='text'
@@ -291,7 +292,7 @@ const UserEdit = (props: UserInfoProps) => {
                     className='block text-m font-medium leading-5 text-gray-700'>
                     Grade
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
+                  <div className='mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm'>
                     <input
                       id='grade'
                       onChange={onChange}
@@ -302,26 +303,21 @@ const UserEdit = (props: UserInfoProps) => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <div className='px-4 pt-4 w-full flex justify-end'>
-            <div className='flex w-4/10'>
-              <span className='inline-flex rounded-md shadow-sm'>
-                <button
-                  type='button'
-                  onClick={history.goBack}
-                  className='py-2 px-4 border border-gray-300 rounded-md text-m leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out'>
-                  Cancel
-                </button>
-              </span>
-              <span className='ml-3 inline-flex rounded-md shadow-sm'>
-                <button
-                  type='submit'
-                  className='inline-flex justify-center py-2 px-4 border border-transparent text-m leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out'>
-                  Save
-                </button>
-              </span>
-            </div>
+
+          <div className="px-4 pt-4 w-full flex justify-end">
+            <Buttons
+              btnClass="py-2 w-2.5/10 px-4 text-xs mr-2"
+              label={'Cancel'}
+              onClick={history.goBack}
+              transparent
+            />
+            <Buttons
+              btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
+              label={'Save'}
+              onClick={onSubmit}
+            />
           </div>
         </form>
       </div>

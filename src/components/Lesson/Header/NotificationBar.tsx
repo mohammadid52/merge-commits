@@ -55,19 +55,24 @@ const NotificationBar: React.FC = () => {
   }, [state.displayData, state.currentPage]);
 
   return (
-    <div className={`w-full mt-8`}>
-      {notifications.length > 0
-        ? notifications.map((notification: Notification, key: number) => (
-            <div
-              key={key}
-              className={`${theme.section} ${key > 0 ? 'mt-2' : ''} ${
-                notification.type === 'breakdown' ? 'bg-orange-600' : 'bg-sea-green'
-              } rounded-lg bg-opacity-40 border border-white border-opacity-40 text-sm text-white animate-fadeIn`}>
-              {notification.message}
-            </div>
-          ))
-        : null}
-    </div>
+    <>
+      {
+        notifications.length > 0 &&
+        <div className={`w-full mt-8`}>
+          {notifications.length > 0
+            ? notifications.map((notification: Notification, key: number) => (
+              <div
+                key={key}
+                className={`${theme.section} ${key > 0 ? 'mt-2' : ''} ${
+                  notification.type === 'breakdown' ? 'bg-orange-600' : 'bg-sea-green'
+                } rounded-lg bg-opacity-40 border border-white border-opacity-40 text-sm text-white animate-fadeIn`}>
+                {notification.message}
+              </div>
+            ))
+            : null}
+        </div>
+      }
+    </>
   );
 };
 

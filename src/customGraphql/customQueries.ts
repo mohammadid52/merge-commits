@@ -393,6 +393,7 @@ export const getClassroom = /* GraphQL */ `
   }
 `;
 
+
 export const listLessonPlans = /* GraphQL */ `
   query ListClassrooms {
     listClassrooms {
@@ -1889,42 +1890,39 @@ export const getLesson = /* GraphQL */ `
   }
 `;
 export const listCheckpoints = /* GraphQL */ `
-  query ListCheckpoints(
-    $filter: ModelCheckpointFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListCheckpoints($filter: ModelCheckpointFilterInput, $limit: Int, $nextToken: String) {
     listCheckpoints(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-    title
-    subtitle
-    id
-      questions {
-        nextToken
-        items {
-          question {
-            id
-            label
-            question
-            type
-            options {
-              color
-              icon
+      items {
+        title
+        subtitle
+        id
+        type
+        questions {
+          nextToken
+          items {
+            question {
+              id
               label
-              text
+              question
+              type
+              options {
+                color
+                icon
+                label
+                text
+              }
             }
+            checkpointID
+            createdAt
+            id
           }
-          checkpointID
-          createdAt
-          id
         }
+        instructions
+        instructionsTitle
+        label
       }
-      instructions
-      instructionsTitle
-      label
     }
   }
-}
 `;
 
 export const listLessonRubricss = /* GraphQL */ `
@@ -1947,22 +1945,234 @@ export const listLessonRubricss = /* GraphQL */ `
   }
 `;
 
-export const getPersonInstitutions = /* GraphQL */ `
+export const getPersonData = /* GraphQL */ `
   query GetPerson($email: String!, $authId: String!) {
     getPerson(email: $email, authId: $authId) {
       id
       authId
       email
+      status
+      role
+      type
+      firstName
+      preferredName
+      lastName
+      externalId
+      grade
+      onBoardSurvey
+      offBoardSurvey
+      phone
+      birthdate
+      image
+      language
+      filters
+      lastLoggedIn
+      lastLoggedOut
       classes {
         items {
           classID
           class {
             id
             institutionID
+            institution {
+              name
+              checkpoints {
+                items {
+                  type
+                  typeID
+                  checkpoint {
+                    id
+                    label
+                    title
+                    questions {
+                      items {
+                        id
+                        required
+                        question {
+                          id
+                          label
+                          type
+                          question
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            rooms {
+              items {
+                id
+                curricula {
+                  items {
+                    curriculumID
+                    curriculum {
+                      name
+                      checkpoints {
+                        items {
+                          type
+                          typeID
+                          checkpoint {
+                            id
+                            label
+                            title
+                            questions {
+                              items {
+                                id
+                                required
+                                question {
+                                  id
+                                  label
+                                  type
+                                  question
+                                  options {
+                                    text
+                                    label
+                                    icon
+                                    color
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  nextToken
+                }
+              }
+              nextToken
+            }
           }
         }
         nextToken
       }
+    }
+  }
+`;
+export const getCurriculumCheckpoints = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      checkpoints {
+        items {
+          id
+          type
+          typeID
+          checkpointID
+          checkpoint {
+            title
+            subtitle
+          }
+        }
+      }
+    }
+  }
+`;
+export const getCheckpointDetails = /* GraphQL */ `
+  query GetCheckpoint($id: ID!) {
+    getCheckpoint(id: $id) {
+      id
+      label
+      title
+      stage
+      type
+      questions {
+        items {
+          id
+          questionID
+          required
+          question {
+            id
+            label
+            type
+            question
+            designers
+            language
+            sourceId
+            note
+            options {
+              text
+              label
+              icon
+              color
+            }
+            createdAt
+            updatedAt
+          }
+        }
+        nextToken
+      }
+      designers
+      language
+    }
+  }
+`;
+
+export const listQuestionDatas = /* GraphQL */ `
+  query ListQuestionDatas(
+    $filter: ModelQuestionDataFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listQuestionDatas(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        syllabusLessonID
+        checkpointID
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+        }
+        syllabusLesson {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
     }
   }
 `;

@@ -38,11 +38,14 @@ const dashboardProfileDict: any = {
         PERSONAL_INFO: {
             TITLE: 'Personal Information',
             FULL_NAME: 'Full Name',
+            FIRST_NAME: 'First Name',
+            LAST_NAME: 'Last Name',
             NICKNAME: 'Nickname',
             BIRTHDAY: 'Birthday',
             LANGUAGE: 'Language',
             EMAIL: 'Email address',
-            CONTACT: 'Contact Number'
+            CONTACT: 'Contact Number',
+            ROLE: 'Role'
         },
         INSTITUTION_INFO: {
             TITLE: 'Institution Information',
@@ -85,11 +88,14 @@ const dashboardProfileDict: any = {
         PERSONAL_INFO: {
             TITLE: 'Informacion personal',
             FULL_NAME: 'nombre completo',
+            FIRST_NAME: 'Nombre de pila',
+            LAST_NAME: 'Apellido',
             NICKNAME: 'apodo',
             BIRTHDAY: 'Cumpleaños',
             LANGUAGE: 'Idioma',
             EMAIL: 'dirección de correo electrónico',
-            CONTACT: 'número de contacto'
+            CONTACT: 'número de contacto',
+            ROLE: 'Papel'
         },
         INSTITUTION_INFO: {
             TITLE: 'Información institucional',
@@ -158,7 +164,6 @@ const anthologyDict: any = {
     },
 };
 
-
 // People - User management list
 const manageusersDict: any = {
     'EN': {
@@ -191,9 +196,9 @@ const manageusersDict: any = {
 const sideBarLinksDict: any = {
     'EN': {
         REGISTRATION: 'Registration',
-        INSTITUTIONS: 'Institution',
+        INSTITUTIONS: 'Institutions',
         PEOPLE: 'People',
-        LESSON_PLANNER: 'Lesson Planner',
+        LESSON_PLANNER: 'Homeroom',
         CLASSROOM: 'Classroom',
         LESSON_BUILDER: 'Lesson Builder',
         ANTHOLOGY: 'Notebook',
@@ -203,7 +208,7 @@ const sideBarLinksDict: any = {
         REGISTRATION: 'Registro',
         INSTITUTIONS: 'Institución',
         PEOPLE: 'Personas',
-        LESSON_PLANNER: 'Planificador de lecciones',
+        LESSON_PLANNER: 'Pasillo',
         CLASSROOM: 'Aula',
         LESSON_BUILDER: 'Constructor de lecciones',
         ANTHOLOGY: 'Cuaderno',

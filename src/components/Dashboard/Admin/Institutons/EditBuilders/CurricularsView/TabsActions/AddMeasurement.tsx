@@ -199,7 +199,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
               <TextArea rows={3} id='excelled' value={excelled} onChange={onInputChange} name='excelled' label="Excelled" />
             </div>
             <div className="px-3 py-4">
-              <TextArea rows={3} id='adequite' value={adequite} onChange={onInputChange} name='adequite' label="Adequite" />
+              <TextArea rows={3} id='adequite' value={adequite} onChange={onInputChange} name='adequite' label="Adequate" />
             </div>
             <div className="px-3 py-4">
               <TextArea rows={3} id='basic' value={basic} onChange={onInputChange} name='basic' label="Basic" />

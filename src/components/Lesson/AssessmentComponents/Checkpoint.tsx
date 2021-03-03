@@ -3,6 +3,18 @@ import { LessonContext } from '../../../contexts/LessonContext';
 import CheckpointQuestions from './CheckpointQuestions';
 import Banner from '../LessonComponents/Banner';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
+import SaveQuit from '../LessonComponents/Outro/SaveQuit';
+
+export interface CheckpointInterface {
+  title: string;
+  subtitle: string;
+  id: string;
+  type: string;
+  questions: any;
+  instructions: string;
+  instructionsTitle: string;
+  label: string;
+}
 
 const Checkpoint = (props: { isTeacher?: boolean }) => {
   /**
@@ -14,20 +26,22 @@ const Checkpoint = (props: { isTeacher?: boolean }) => {
 
   const [title, setTitle] = useState('');
 
+  const lessonType = state.data.lesson.type;
+
   const handleSetTitle = (title: string) => {
     setTitle(title);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const lessonType = state.data.lesson.type;
     const lessonTitle = state.data.lesson.title;
 
-    if (lessonType === 'lesson'){
+    if (lessonType === 'lesson') {
       setTitle('Checkpoint Questions');
     } else {
       setTitle(`${lessonTitle} - Assessment Questions`);
     }
-  },[])
+  }, []);
 
   useEffect(() => {
     if (!isTeacher) {
@@ -39,8 +53,19 @@ const Checkpoint = (props: { isTeacher?: boolean }) => {
 
   return (
     <div className={theme.section}>
-      <Banner isTeacher={isTeacher} title={title} iconName={'FaCheck'} />
+      {
+        lessonType === 'lesson' &&
+        (
+          <Banner isTeacher={isTeacher} title={`${title}`} iconName={'FaCheck'} />
+        )
+      }
       <CheckpointQuestions isTeacher={isTeacher} checkpointType={`checkpoint`} handleSetTitle={handleSetTitle} />
+      {
+        !isTeacher && state.data.lesson.type !== 'lesson' &&
+        (
+          <SaveQuit />
+        )
+      }
     </div>
   );
 };

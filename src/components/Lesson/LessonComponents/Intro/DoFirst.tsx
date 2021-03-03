@@ -20,22 +20,6 @@ const DoFirst = () => {
    */
 
   useEffect(() => {
-    // let questionDataKeys = [];
-    // if ( state.questionData.doFirst ) { questionDataKeys = Object.keys(state.questionData.doFirst) }
-    //
-    // if (!input && questionDataKeys.length > 0) {
-    //   setInput(() => {
-    //     return state.questionData.doFirst;
-    //   });
-    // }
-    //
-    // if (!input  && questionDataKeys.length <= 0) {
-    //
-    //   setInput(() => {
-    //     return setInitialState(questionArray)
-    //   });
-    // }
-
     if ( cookies[`lesson-${state.syllabusLessonID}`]?.doFirst ) {
       setInput(() => {
         return cookies[`lesson-${state.syllabusLessonID}`].doFirst
@@ -47,17 +31,6 @@ const DoFirst = () => {
 
 
   useEffect(() => {
-
-    // if (input && state.questionData.doFirst !== input) {
-    //   dispatch({
-    //     type: 'SET_QUESTION_DATA',
-    //     payload: {
-    //       key: 'doFirst',
-    //       data: input
-    //     },
-    //   });
-    // }
-
     setCookie(`lesson-${state.syllabusLessonID}`, {
       ...cookies[`lesson-${state.syllabusLessonID}`],
       doFirst: input
@@ -72,9 +45,9 @@ const DoFirst = () => {
 
   return (
     <div className={`w-full h-full rounded-xl`}>
-      <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
-        Do First 
-      </h3>
+      {/*<h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
+        Do First
+      </h3>*/}
       <CheckpointQuestions checkpointType={`doFirst`}/>
     </div>
   );

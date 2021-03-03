@@ -6,19 +6,23 @@ import { LessonControlContext } from '../../../contexts/LessonControlContext';
 /**
  * ICON IMPORTS FROM react-icons
  */
-import { FaPoll, FaCheck, FaQuestion } from 'react-icons/fa';
+import { FaPoll, FaCheck, FaQuestion, FaHourglassStart } from 'react-icons/fa';
 
 interface BannerProps {
   isTeacher?: boolean
   title?: string;
-  iconName: string;
+  titleSection?: string;
+  subtitleSection?: string;
+  subtitle?: string;
+  titleParagraph?: string;
+  iconName?: string;
 }
 
 const Banner = (props: BannerProps) => {
   /**
    * Teacher switch
    */
-  const {isTeacher, title, iconName} = props;
+  const { isTeacher, title, titleSection, subtitleSection, subtitle, titleParagraph, iconName } = props;
   const switchContext = (isTeacher) ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme } = switchContext;
 
@@ -28,6 +32,8 @@ const Banner = (props: BannerProps) => {
    */
   const switchIcon = (nameString: string) => {
     switch (nameString) {
+      case 'FaHourglassStart':
+        return <FaHourglassStart />;
       case 'FaPoll':
         return <FaPoll/>;
       case 'FaCheck':
@@ -38,14 +44,48 @@ const Banner = (props: BannerProps) => {
   }
 
   return (
-    <div className={`w-full h-1/10 text-4xl ${theme.banner}`}>
-      <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
-        <div className="w-auto h-auto mr-2">
-          {switchIcon(iconName)}
-        </div>
-      </IconContext.Provider>
-      {title}
-    </div>
+    <>
+      {
+        title && (
+          <div className={`w-full text-4xl ${theme.banner}`}>
+            {
+              iconName && (
+                <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
+                  <div className='w-8 h-auto ml-0 mr-2'>
+                    {switchIcon(iconName)}
+                  </div>
+                </IconContext.Provider>
+              )
+            }
+            <h1 dangerouslySetInnerHTML={{ __html: title }} />
+          </div>
+        )
+      }
+
+      {
+        titleSection && (
+          <h3 className={`w-full text-2xl ${theme.banner} font-semibold`}>
+            <span dangerouslySetInnerHTML={{ __html: titleSection }} />
+          </h3>
+        )
+      }
+
+      {
+        subtitleSection && (
+          <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
+            <span dangerouslySetInnerHTML={{ __html: subtitleSection }} />
+          </h3>
+        )
+      }
+
+      {
+        subtitle && (
+          <h4 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
+            <span dangerouslySetInnerHTML={{ __html: subtitle }} />
+          </h4>
+        )
+      }
+    </>
   );
 };
 

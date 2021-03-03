@@ -53,7 +53,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   const params = useQuery();
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Room Creation', url: '/dashboard/room-creation', last: true }
+    { title: 'Classroom Creation', url: '/dashboard/room-creation', last: true }
   ];
 
   const selectTeacher = (val: string, name: string, id: string) => {
@@ -148,7 +148,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       if (InstituteList.length === 0) {
         setMessages({
           show: true,
-          message: 'Please create an institute before creating room.',
+          message: 'Please create an institute before creating Classroom.',
           isError: true
         })
       }
@@ -295,42 +295,42 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     if (roomData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Room name is required please enter name.',
+        message: 'Classroom name is required please enter name.',
         isError: true
       })
       return false;
     } else if (roomData.institute.id === '') {
       setMessages({
         show: true,
-        message: 'Please select an institute to add room.',
+        message: 'Please select an institute to add Classroom.',
         isError: true
       })
       return false;
     } else if (roomData.teacher.id === '') {
       setMessages({
         show: true,
-        message: 'Please select a teacher for the room.',
+        message: 'Please select a teacher for the Classroom.',
         isError: true
       })
       return false;
     } else if (roomData.classRoom.id === '') {
       setMessages({
         show: true,
-        message: 'Please select a class for the room.',
+        message: 'Please select a class for the Classroom.',
         isError: true
       })
       return false;
     } else if (roomData.maxPersons == '') {
       setMessages({
         show: true,
-        message: 'Please set Max students limit for the room.',
+        message: 'Please set Max students limit for the Classroom.',
         isError: true
       })
       return false;
     } else if (parseInt(roomData.maxPersons) < 1 || parseInt(roomData.maxPersons) > 30) {
       setMessages({
         show: true,
-        message: 'One room can allow max. 30 students.',
+        message: 'One Classroom can allow max. 30 students.',
         isError: true
       })
       return false;
@@ -339,7 +339,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       if (!isUniq) {
         setMessages({
           show: true,
-          message: 'This room name is already exist, please add another name.',
+          message: 'This Classroom name is already exist, please add another name.',
           isError: true
         })
         return false;
@@ -362,7 +362,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         const addCurricular: any = await API.graphql(graphqlOperation(mutation.createRoomCurriculum, { input: curricularInput }))
         setMessages({
           show: true,
-          message: 'New room details has been saved.',
+          message: 'New Classroom details has been saved.',
           isError: false
         })
         setRoomData(initialData)
@@ -370,7 +370,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       } catch {
         setMessages({
           show: true,
-          message: 'Error while adding room curricular. Please try again later.',
+          message: 'Error while adding Classroom curricular. Please try again later.',
           isError: true
         })
         setLoading(false)
@@ -378,7 +378,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     } else {
       setMessages({
         show: true,
-        message: 'Error while adding room curricular. Please try again later.',
+        message: 'Error while adding Classroom curricular. Please try again later.',
         isError: true
       })
       setLoading(false)
@@ -406,7 +406,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         } else {
           setMessages({
             show: true,
-            message: 'New room details has been saved.',
+            message: 'New Classroom details has been saved.',
             isError: false
           })
           setRoomData(initialData)
@@ -415,7 +415,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       } catch {
         setMessages({
           show: true,
-          message: 'Error while creating room. Please try again later.',
+          message: 'Error while creating Classroom. Please try again later.',
           isError: true
         })
         setLoading(false)
@@ -484,7 +484,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Create New Room" subtitle="Add new room to the list" />
+        <SectionTitle title="Create New Classroom" subtitle="Add new Classroom to the list" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -493,10 +493,10 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">ROOM INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CLASSROOM INFORMATION</h3>
           <div className="">
             <div className="px-3 py-4">
-              <FormInput value={name} id='name' onChange={editInputField} name='name' label="Room Name" placeHolder="Add room name" isRequired />
+              <FormInput value={name} id='name' onChange={editInputField} name='name' label="Classroom Name" placeHolder="Add Classroom name" isRequired />
             </div>
             {/* 
               **
