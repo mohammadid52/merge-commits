@@ -32,6 +32,7 @@ export interface AnthologyMapItem extends AnthologyContentInterface {
 export type ViewEditMode = {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | '';
   studentDataID: string;
+  idx: number;
 }
 
 const Anthology = () => {
@@ -39,7 +40,7 @@ const Anthology = () => {
   const { anthologyDict } = useDictionary(clientKey);
   const [studentData, setStudentData] = useState<AnthologyMapItem[]>([]);
   const [newStudentData, setNewStudentData] = useState<AnthologyMapItem>({
-    type: 'work',
+    type: 'journal',
     subType: '',
     title: '',
     subTitle: '',
@@ -54,9 +55,9 @@ const Anthology = () => {
   });
 
   // For switching sections & knowing which field to edit
-  const [subSection, setSubSection] = useState<string>('Stories');
+  const [subSection, setSubSection] = useState<string>('Journal');
   // For editing specific poems/stories
-  const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({ mode: '', studentDataID: '' });
+  const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({ mode: '', studentDataID: '', idx: 0 });
 
   // TOP Function to load student data
   const listStudentData = async () => {
@@ -102,9 +103,7 @@ const Anthology = () => {
 
   // Useeffect to initialize newStudentData
   useEffect(() => {
-    if (studentData.length > 0) {
       setNewStudentData({ ...newStudentData, syllabusLessonID: customSyllabusLessonID() });
-    }
   }, [studentData]);
 
   // Function group to handle updating student data
@@ -113,8 +112,8 @@ const Anthology = () => {
     const [key, type, studentDataID] = id.split('_');
     switch (viewEditMode.mode) {
       case 'edit':
-        const updatedStudentData = studentData.reduce((acc: AnthologyMapItem[], contentObj: any) => {
-          if (contentObj.type === type && contentObj.studentDataID === studentDataID) {
+        const updatedStudentData = studentData.reduce((acc: AnthologyMapItem[], contentObj: any, idx: number) => {
+          if (contentObj.type === type && contentObj.studentDataID === studentDataID && idx === viewEditMode.idx) {
             return [...acc, { ...contentObj, [key]: value }];
           } else {
             return [...acc, contentObj];
@@ -131,8 +130,8 @@ const Anthology = () => {
     }
   };
 
-  const handleEditToggle = (editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | '', studentDataID: string) => {
-    setViewEditMode({ mode: editMode, studentDataID: studentDataID });
+  const handleEditToggle = (editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | '', studentDataID: string, idx: number) => {
+    setViewEditMode({ mode: editMode, studentDataID: studentDataID, idx: idx });
   };
 
   // Function group to handle section-switching
@@ -142,16 +141,15 @@ const Anthology = () => {
     if (id !== subSection) {
       if (id !== 'subSectionTabs') {
         setSubSection(id);
-        setNewStudentData({ ...newStudentData, type: subSectionKey[id] });
+        setNewStudentData({ ...newStudentData, type: subSectionKey[id][0] });
       }
     }
   };
 
   const subSectionKey: any = {
-    'Stories': 'story',
-    'Poems': 'poem',
-    'Notes':'notes',
-    'Journal': 'journal',
+    'Journal': ['journal'],
+    'Work': ['poem', 'story'],
+    'Notes': ['notes'],
   };
 
   // Function group for filtering the studentData/anthology content
@@ -160,7 +158,7 @@ const Anthology = () => {
   };
 
   const filterAnthologyContentBySubsection = studentData.filter((contentObj: AnthologyMapItem) => {
-    if (contentObj.type === subSectionKey[subSection]) return contentObj;
+    if (subSectionKey[subSection].includes(contentObj.type)) return contentObj;
   });
 
   const filterAnthologyContentWithSimilarSyllabusLessonID = (inputSyllabusLessonID: string) => studentData.filter((contentObj: AnthologyMapItem) => {
@@ -171,14 +169,13 @@ const Anthology = () => {
     return contentObj.studentDataID === viewEditMode.studentDataID;
   });
 
-  const filterAnthologyContentByType = (inputType: string) => studentData.filter((contentObj: AnthologyMapItem) => {
-    return contentObj.type === inputType;
-  });
+  const getContentObjIndex = (contentObj: AnthologyMapItem) => studentData.indexOf(contentObj);
 
   // Function group for mutating database
   const anthologySave = async () => {
     const removeHelperProperties = {
       type: getAnthologyContentByStudentDataID.type,
+      subType: getAnthologyContentByStudentDataID.subType,
       title: getAnthologyContentByStudentDataID.title,
       subTitle: getAnthologyContentByStudentDataID.subTitle,
       description: getAnthologyContentByStudentDataID.description,
@@ -201,18 +198,32 @@ const Anthology = () => {
     } catch (e) {
       console.error('studentDataUpdate: ', e);
     } finally {
-      setViewEditMode({ mode: '', studentDataID: '' });
+      setViewEditMode({ mode: '', studentDataID: '', idx: 0 });
     }
   };
 
   const anthologyCreate = async () => {
     const removeHelperProperties = {
       type: newStudentData.type,
+      subType: newStudentData.subType,
       title: newStudentData.title,
       subTitle: newStudentData.subTitle,
       description: newStudentData.description,
       content: newStudentData.content,
     };
+
+    console.log('input: ', {
+      'input':
+        {
+          lessonProgress: newStudentData.lessonProgress,
+          currentLocation: newStudentData.currentLocation,
+          status: newStudentData.status,
+          syllabusLessonID: newStudentData.syllabusLessonID,
+          studentID: state.user.email,
+          studentAuthID: state.user.authId,
+          anthologyContent: removeHelperProperties,
+        },
+    });
     try {
       const studentDataCreate: any = await API.graphql(graphqlOperation(mutations.createStudentData, {
         input:
@@ -229,7 +240,7 @@ const Anthology = () => {
     } catch (e) {
       console.error('studentDataCreate: Anthology: ', e);
     } finally {
-      setViewEditMode({ mode: '', studentDataID: '' });
+      setViewEditMode({ mode: '', studentDataID: '', idx: 0 });
     }
   };
 
@@ -263,7 +274,7 @@ const Anthology = () => {
       <SubSectionTabs
         subSection={subSection}
         handleTabClick={handleTabClick}
-        subSectionList={['Journal', 'Stories', 'Poems']}
+        subSectionList={Object.keys(subSectionKey)}
         translations={getTranslation}
       />
       {/*<SectionTitle title={subSection} />*/}
@@ -277,7 +288,8 @@ const Anthology = () => {
       <AnthologyContent viewEditMode={viewEditMode} handleEditToggle={handleEditToggle}
                         handleEditUpdate={handleEditUpdate} subSection={subSection}
                         createTemplate={newStudentData}
-                        content={studentData.length > 0 && filterAnthologyContentBySubsection} />
+                        content={studentData.length > 0 && filterAnthologyContentBySubsection}
+                        getContentObjIndex={getContentObjIndex} />
     </React.Fragment>
   );
 };

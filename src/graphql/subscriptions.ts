@@ -354,6 +354,7 @@ export const onChangeStudentData = /* GraphQL */ `
       }
       anthologyContent {
         type
+        subType
         title
         subTitle
         description
@@ -8139,6 +8140,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
         }
         anthologyContent {
           type
+          subType
           title
           subTitle
           description
@@ -8281,6 +8283,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
         }
         anthologyContent {
           type
+          subType
           title
           subTitle
           description
@@ -8423,6 +8426,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
         }
         anthologyContent {
           type
+          subType
           title
           subTitle
           description
