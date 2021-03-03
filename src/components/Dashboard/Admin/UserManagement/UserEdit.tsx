@@ -259,7 +259,7 @@ const UserEdit = (props: UserInfoProps) => {
               </div>
             </div>
           </div>
-{/* 
+          {/* 
           <div className='h-full bg-white shadow-5 sm:rounded-lg'>
             <div className='px-4 py-5 border-b border-gray-200 sm:px-6'>
               <h3 className='text-lg leading-6 font-medium text-gray-900'>
@@ -305,19 +305,19 @@ const UserEdit = (props: UserInfoProps) => {
             </div>
           </div> */}
 
-          
-            <div className="px-4 pt-4 w-full flex justify-end">
+
+          <div className="px-4 pt-4 w-full flex justify-end">
             <Buttons
-                        btnClass="py-2 w-2.5/10 px-4 text-xs mr-2"
-                        label={'Cancel'}
-                        onClick={history.goBack}
-                        transparent
-                    />
-                    <Buttons
-                        btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
-                        label={'Save'}
-                        onClick={onSubmit}
-              />
+              btnClass="py-2 w-2.5/10 px-4 text-xs mr-2"
+              label={'Cancel'}
+              onClick={history.goBack}
+              transparent
+            />
+            <Buttons
+              btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
+              label={'Save'}
+              onClick={onSubmit}
+            />
           </div>
         </form>
       </div>
