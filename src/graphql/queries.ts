@@ -3394,6 +3394,7 @@ export const listStudentDatas = /* GraphQL */ `
         }
         anthologyContent {
           type
+          subType
           title
           subTitle
           description

@@ -7713,6 +7713,7 @@ export const createStudentData = /* GraphQL */ `
       }
       anthologyContent {
         type
+        subType
         title
         subTitle
         description
@@ -7898,6 +7899,7 @@ export const updateStudentData = /* GraphQL */ `
       }
       anthologyContent {
         type
+        subType
         title
         subTitle
         description
@@ -8083,6 +8085,7 @@ export const deleteStudentData = /* GraphQL */ `
       }
       anthologyContent {
         type
+        subType
         title
         subTitle
         description
@@ -8517,6 +8520,7 @@ export const createQuestionDataStudentData = /* GraphQL */ `
         }
         anthologyContent {
           type
+          subType
           title
           subTitle
           description
@@ -8662,6 +8666,7 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
         }
         anthologyContent {
           type
+          subType
           title
           subTitle
           description
@@ -8807,6 +8812,7 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
         }
         anthologyContent {
           type
+          subType
           title
           subTitle
           description

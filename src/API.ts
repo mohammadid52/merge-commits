@@ -1758,6 +1758,7 @@ export type CreateStudentDataInput = {
 
 export type AnthologyContentInput = {
   type?: string | null,
+  subType?: string | null,
   title?: string | null,
   subTitle?: string | null,
   description?: string | null,
@@ -11342,6 +11343,7 @@ export type CreateStudentDataMutation = {
     anthologyContent:  Array< {
       __typename: "AnthologyContent",
       type: string | null,
+      subType: string | null,
       title: string | null,
       subTitle: string | null,
       description: string | null,
@@ -11553,6 +11555,7 @@ export type UpdateStudentDataMutation = {
     anthologyContent:  Array< {
       __typename: "AnthologyContent",
       type: string | null,
+      subType: string | null,
       title: string | null,
       subTitle: string | null,
       description: string | null,
@@ -11764,6 +11767,7 @@ export type DeleteStudentDataMutation = {
     anthologyContent:  Array< {
       __typename: "AnthologyContent",
       type: string | null,
+      subType: string | null,
       title: string | null,
       subTitle: string | null,
       description: string | null,
@@ -12245,6 +12249,7 @@ export type CreateQuestionDataStudentDataMutation = {
       anthologyContent:  Array< {
         __typename: "AnthologyContent",
         type: string | null,
+        subType: string | null,
         title: string | null,
         subTitle: string | null,
         description: string | null,
@@ -12405,6 +12410,7 @@ export type UpdateQuestionDataStudentDataMutation = {
       anthologyContent:  Array< {
         __typename: "AnthologyContent",
         type: string | null,
+        subType: string | null,
         title: string | null,
         subTitle: string | null,
         description: string | null,
@@ -12565,6 +12571,7 @@ export type DeleteQuestionDataStudentDataMutation = {
       anthologyContent:  Array< {
         __typename: "AnthologyContent",
         type: string | null,
+        subType: string | null,
         title: string | null,
         subTitle: string | null,
         description: string | null,
@@ -17740,6 +17747,7 @@ export type GetStudentDataQuery = {
     anthologyContent:  Array< {
       __typename: "AnthologyContent",
       type: string | null,
+      subType: string | null,
       title: string | null,
       subTitle: string | null,
       description: string | null,
@@ -17839,6 +17847,7 @@ export type ListStudentDatasQuery = {
       anthologyContent:  Array< {
         __typename: "AnthologyContent",
         type: string | null,
+        subType: string | null,
         title: string | null,
         subTitle: string | null,
         description: string | null,
@@ -19425,6 +19434,7 @@ export type OnChangeStudentDataSubscription = {
     anthologyContent:  Array< {
       __typename: "AnthologyContent",
       type: string | null,
+      subType: string | null,
       title: string | null,
       subTitle: string | null,
       description: string | null,
@@ -28022,6 +28032,7 @@ export type OnCreateQuestionDataStudentDataSubscription = {
       anthologyContent:  Array< {
         __typename: "AnthologyContent",
         type: string | null,
+        subType: string | null,
         title: string | null,
         subTitle: string | null,
         description: string | null,
@@ -28177,6 +28188,7 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
       anthologyContent:  Array< {
         __typename: "AnthologyContent",
         type: string | null,
+        subType: string | null,
         title: string | null,
         subTitle: string | null,
         description: string | null,
@@ -28332,6 +28344,7 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
       anthologyContent:  Array< {
         __typename: "AnthologyContent",
         type: string | null,
+        subType: string | null,
         title: string | null,
         subTitle: string | null,
         description: string | null,

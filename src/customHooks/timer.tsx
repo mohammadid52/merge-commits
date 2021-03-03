@@ -155,7 +155,7 @@ const useStudentTimer = (inputs?: inputs) => {
     return lessonPlan.reduce((acc: AnthologyContentInterface[], lessonPlanObj: { disabled: boolean; open: boolean; active: boolean; stage: string; type: string; displayMode: string }) => {
       if (lessonPlanObj.type === 'story' || lessonPlanObj.type === 'poem') {
         const template: AnthologyContentInterface = {
-          type: 'Work',
+          type: 'work',
           subType: lessonPlanObj.type,
           title: '',
           subTitle: '',
