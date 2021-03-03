@@ -161,9 +161,9 @@ const SyllabusList = (props: SyllabusListProps) => {
               ) : (
                   <Fragment>
                     <div className="flex justify-center mt-8">
-                      <Buttons btnClass="mx-4" label="Add new Syllabus" onClick={createNewSyllabus} />
+                      <Buttons btnClass="mx-4" label="Add new unit" onClick={createNewSyllabus} />
                     </div>
-                    <p className="text-center p-16">  This curricular does not have any syllabus yet. Please create a new one.</p>
+                    <p className="text-center p-16">  This curricular does not have any units yet. Please create a new one.</p>
                   </Fragment>)}
             </Fragment>
           ) : (<p className="text-center p-16">  Fetching details...</p>)}
