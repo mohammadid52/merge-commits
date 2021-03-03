@@ -176,7 +176,7 @@ const InstitutionAdd = () => {
         }
         const newInstitute = await API.graphql(graphqlOperation(customMutations.createInstitution, { input: instituteData }));
         history.push(`institution?id=${instituteData.id}`)
-      } catch{
+      } catch {
         setError({
           show: true,
           errorMsg: 'Unable to add new institute. Please try again later.'
@@ -213,15 +213,20 @@ const InstitutionAdd = () => {
           <div className="w-2/10 p-4 mr-6 flex flex-col text-center items-center">
             {imageUrl ? (
               <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
-                {!imageLoading ? <img
-                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
-                  src={imageUrl}
-                /> :
+                {!imageLoading ?
+                  <label className="cursor-pointer">
+                    <img
+                      className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                      src={imageUrl}
+                    />
+                    <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
+                  </label>
+                  :
                   <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-lightI">
                     <Loader />
                   </div>
                 }
-                <span className="hidden group-focus:flex justify-around mt-6">
+                {/* <span className="hidden group-focus:flex justify-around mt-6">
                   <label className="w-8 cursor-pointer">
                     <IconContext.Provider value={{ size: '1.6rem', color: '#B22222' }}>
                       <FaEdit />
@@ -233,7 +238,7 @@ const InstitutionAdd = () => {
                       <FaTrashAlt />
                     </IconContext.Provider>
                   </span>
-                </span>
+                </span> */}
               </button>) :
               <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
                 {!imageLoading ?
