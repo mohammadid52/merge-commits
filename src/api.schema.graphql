@@ -769,6 +769,7 @@ type StudentData
 
 type AnthologyContent {
   type: String
+  subType: String
 	title: String
 	subTitle: String
 	description: String
