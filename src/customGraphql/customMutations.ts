@@ -208,6 +208,7 @@ export const updateStudentData = /* GraphQL */ `
       }
       anthologyContent {
         type
+        subType
         title
         subTitle
         description
