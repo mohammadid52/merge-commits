@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
+import Banner from '../Banner';
 import QuoteBlock from './QuoteBlock';
 import Keyword from './Keyword';
-import Banner from './Banner';
 import DoFirst from './DoFirst';
 import Connect from './Connect';
 import InstructionBlock from '../InstructionBlock';
@@ -29,7 +29,7 @@ const Intro = () => {
 
   return (
     <div className={theme.section}>
-      <Banner />
+      <Banner title={state.data.lesson.title} iconName={'FaHourglassStart'}/>
       <div
         className='h-96 flex flex-col mb-4 justify-between items-center bg-cover bg-right-top rounded-xl z-10'
         style={{ backgroundImage: `url(${imgArray[0]})` }}>

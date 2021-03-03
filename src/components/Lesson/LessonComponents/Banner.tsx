@@ -6,7 +6,7 @@ import { LessonControlContext } from '../../../contexts/LessonControlContext';
 /**
  * ICON IMPORTS FROM react-icons
  */
-import { FaPoll, FaCheck, FaQuestion } from 'react-icons/fa';
+import { FaPoll, FaCheck, FaQuestion, FaHourglassStart } from 'react-icons/fa';
 
 interface BannerProps {
   isTeacher?: boolean
@@ -32,6 +32,8 @@ const Banner = (props: BannerProps) => {
    */
   const switchIcon = (nameString: string) => {
     switch (nameString) {
+      case 'FaHourglassStart':
+        return <FaHourglassStart />;
       case 'FaPoll':
         return <FaPoll/>;
       case 'FaCheck':
@@ -49,7 +51,7 @@ const Banner = (props: BannerProps) => {
             {
               iconName && (
                 <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
-                  <div className='w-auto h-auto mr-2'>
+                  <div className='w-8 h-auto ml-0 mr-2'>
                     {switchIcon(iconName)}
                   </div>
                 </IconContext.Provider>

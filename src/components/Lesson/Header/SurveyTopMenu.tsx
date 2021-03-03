@@ -41,7 +41,12 @@ const SurveyTopMenu = () => {
     <div
       className={`fixed h-1.1/10 w-full z-50 py-4 px-6  flex flex-col justify-center items-center content-center ${theme.toolbar.bg} shadow-1 `}>
       <div className={`h-8 max-w-256 flex flex-col justify-between`}>
-        <div className={`h-2 ${theme.elem.text}`}>Survey Progress:</div>
+        <div className={`h-2 ${theme.elem.text}`}>
+          <span>Survey Progress:  </span>
+          <span
+            className={`font-bold`}>{getTotalQuestionAnsweredNumber()}/{getTotalQuestionNumber()}</span>
+          <span>  questions answered</span>
+        </div>
         <div className='overflow-hidden h-2 text-xs flex rounded-full bg-medium-gray'>
           <div style={{ width: `${completion}%` }}
                className='transition duration-500 ease-in-out shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-sea-green'></div>
