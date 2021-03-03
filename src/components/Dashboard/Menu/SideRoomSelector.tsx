@@ -344,7 +344,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
         </>
       ) : (
         <>
-          <p className={`${linkClass}`}>No available rooms.</p>
+          <p className={`${linkClass}`}>No classrooms assigned to user</p>
         </>
       )}
     </div>

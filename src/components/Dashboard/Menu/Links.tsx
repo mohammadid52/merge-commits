@@ -262,7 +262,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       case 'Classroom':
         return <IoBookOutline id={url} />;
       case 'Lesson Planner':
-        return <FaDoorOpen id={url} />;
+        return <FaAppleAlt id={url} />;
       case 'Lesson Builder':
         return <IoMdBuild id={url} />;
       case 'Institutions':
