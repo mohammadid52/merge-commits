@@ -151,34 +151,45 @@ const useStudentTimer = (inputs?: inputs) => {
   }
 
   const getAnthologyContent = () => {
-    const lessonPlan = state.data.lessonPlan;
-    return lessonPlan.reduce((acc: AnthologyContentInterface[], lessonPlanObj: { disabled: boolean; open: boolean; active: boolean; stage: string; type: string; displayMode: string }) => {
-      if (lessonPlanObj.type === 'story' || lessonPlanObj.type === 'poem') {
-        const template: AnthologyContentInterface = {
-          type: 'work',
-          subType: lessonPlanObj.type,
-          title: '',
-          subTitle: '',
-          description: '',
-          content: '',
-        };
-        const templateOutput = () => {
-          switch (lessonPlanObj.type) {
-            case 'story':
-              return {
-                ...template,
-                title: (params.state.componentState?.story) ? params.state.componentState?.story.title : '',
-                content: (params.state.componentState?.story) ? params.state.componentState.story.story : '',
-              };
-            case 'poem':
-              return {
-                ...template,
-                title: (params.state.componentState?.poem) ? params.state.componentState?.poem.title : '',
-                content: (params.state.componentState?.poem) ? params.state.componentState.poem?.editInput : '',
-              };
-          }
-        };
-        return [...acc, templateOutput()];
+    const template: AnthologyContentInterface = {
+      type: 'work',
+      subType: '',
+      title: '',
+      subTitle: '',
+      description: '',
+      content: '',
+    };
+    return Object.keys(params.state.componentState).reduce((acc: AnthologyContentInterface[], componentKey: string) => {
+      const output = () => {
+        switch (componentKey) {
+          case 'story':
+            return {
+              ...template,
+              subType: 'story',
+              title: (params.state.componentState?.story) ? params.state.componentState?.story.title : '',
+              content: (params.state.componentState?.story) ? params.state.componentState.story.story : '',
+            };
+          case 'poem':
+            return {
+              ...template,
+              subType: 'poem',
+              title: (params.state.componentState?.poem) ? params.state.componentState?.poem.title : '',
+              content: (params.state.componentState?.poem) ? params.state.componentState.poem?.editInput : '',
+            };
+          case 'notes':
+            return {
+              ...template,
+              subType: 'notes',
+              title: (params.state.componentState?.notes) ? params.state.data.lesson.title : '',
+              content: (params.state.componentState?.notes) ? params.state.componentState.notes?.content : '',
+            };
+          default:
+            return {};
+        }
+      };
+
+      if (Object.keys(output()).length > 0) {
+        return [...acc, output()];
       } else {
         return acc;
       }

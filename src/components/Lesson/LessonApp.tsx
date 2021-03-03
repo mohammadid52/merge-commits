@@ -11,6 +11,7 @@ import queryString from 'query-string';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
 import * as customQueries from '../../customGraphql/customQueries';
+import NotesForm from './LessonComponents/Notes/NotesForm';
 
 const LessonApp = () => {
   const { state, theme } = useContext(LessonContext);
@@ -23,6 +24,7 @@ const LessonApp = () => {
     <div className={`${theme.bg} w-full md:h-screen flex flex-col items-start`}>
       <LessonHeaderBar />
       <NotificationBar />
+      <NotesForm/>
       <Body />
       <Foot />
     </div>
