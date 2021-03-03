@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom';
 import { GlobalContext } from '../../contexts/GlobalContext';
+import { getAsset } from '../../assets';
 
 interface BreadCrumProps {
   items: { title: string, url: string, last: boolean }[]
@@ -9,12 +10,12 @@ interface BreadCrumProps {
 const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
 
   const { items } = brdPrps;
-  const { theme } = useContext(GlobalContext);
-
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   return (
     <div className="flex flex-row my-4 py-4">
-      <div className={`w-auto ${theme.verticalBorder}`}>
+      <div className={`w-auto border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
         <nav className="w-full flex" >
           <ol className="list-none flex items-center justify-start">
             {items.map((item, i) => (
@@ -36,7 +37,7 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     className={`${theme.text.default} stroke-current inline-block h-4 w-4`}>
-                    <polyline points="9 18 15 12 9 6"></polyline> 
+                    <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
                 )}
               </li>

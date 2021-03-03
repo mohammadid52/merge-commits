@@ -1,6 +1,9 @@
-import React, { useEffect, useState, Fragment } from 'react'
+import React, { useEffect, useState, Fragment, useContext } from 'react'
 import { useHistory } from 'react-router'
 import API, { graphqlOperation } from '@aws-amplify/api';
+
+import { getAsset } from '../../../../../assets';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 import * as queries from '../../../../../graphql/queries';
 import PageWrapper from '../../../../Atoms/PageWrapper'
@@ -8,16 +11,19 @@ import Buttons from '../../../../Atoms/Buttons'
 
 interface RoomListProps {
   instId: string
+  instName: string
 }
 
 const RoomsList = (props: RoomListProps) => {
-  const { instId } = props;
+  const { instId, instName } = props;
+  const { clientKey, theme } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const [roomList, setRoomList] = useState([]);
   const [loading, setLoading] = useState([]);
   const [messages, setMessages] = useState({
     show: false,
-    message: 'This institute does not have any room. Please create a new room.',
+    message: 'This institute does not have any classroom. Please create a new classroom.',
     isError: false
   })
   const createNewRoom = () => {
@@ -40,7 +46,7 @@ const RoomsList = (props: RoomListProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while fetching room data please Try again later.',
+        message: 'Error while fetching classroom data please Try again later.',
         isError: true
       })
     }
@@ -54,12 +60,12 @@ const RoomsList = (props: RoomListProps) => {
     <div className="py-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">INSTITUTE ROOMS</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{instName ? instName.toUpperCase() : 'INSTITUTE' } CLASSROOMS</h3>
 
           {roomList.length > 0 ? (
             <Fragment>
               <div className="flex justify-end">
-                <Buttons btnClass="mx-4" label="Create new Room" onClick={createNewRoom} />
+                <Buttons btnClass="mx-4" label="Create new Classroom" onClick={createNewRoom} />
               </div>
 
               <div className="flex justify-between w-full  px-8 py-4 border-b border-gray-200">
@@ -67,7 +73,7 @@ const RoomsList = (props: RoomListProps) => {
                   <span>No.</span>
                 </div>
                 <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Room Name</span>
+                  <span>Classroom Name</span>
                 </div>
                 <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>Class Name</span>
@@ -93,7 +99,7 @@ const RoomsList = (props: RoomListProps) => {
                     <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4">{item.class?.name}</div>
                     <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4">{item.teacher?.firstName || ''} {item.teacher?.lastName || ''}</div>
                     <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4">{item.maxPersons}</div>
-                    <span className="w-1/10 h-6 flex items-center cursor-pointer text-left px-8 py-3 text-indigo-600 hover:text-indigo-900" onClick={() => editCurrentRoom(item.id)}>
+                    <span className={`w-1/10 h-6 flex items-center cursor-pointer text-left px-8 py-3 ${theme.textColor[themeColor]}`} onClick={() => editCurrentRoom(item.id)}>
                       edit
                   </span>
                   </div>
@@ -105,7 +111,7 @@ const RoomsList = (props: RoomListProps) => {
           ) : (
               <Fragment>
                 <div className="flex justify-center mt-8">
-                  <Buttons btnClass="mx-4" label="Create new Room" onClick={createNewRoom} />
+                  <Buttons btnClass="mx-4" label="Create new Classroom" onClick={createNewRoom} />
                 </div>
                 <p className={`text-center p-16 ${messages.isError ? 'text-red-600' : ''}`}>{messages.message} </p>
               </Fragment>

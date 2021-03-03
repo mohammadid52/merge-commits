@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useContext } from 'react'
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoIosKeypad } from 'react-icons/io';
 import { RiArrowRightLine } from 'react-icons/ri';
@@ -10,6 +10,8 @@ import SearchInput from '../../../../../Atoms/Form/SearchInput';
 import CheckBox from '../../../../../Atoms/Form/CheckBox';
 import Buttons from '../../../../../Atoms/Buttons';
 import CheckpointQueTable from './CheckpointQueTable';
+import { getAsset } from '../../../../../../assets';
+import { GlobalContext } from '../../../../../../contexts/GlobalContext';
 interface CheckpointLookupProps {
   changeStep: (step: string) => void
   onSave: (ids: string[]) => void
@@ -18,6 +20,10 @@ interface CheckpointLookupProps {
 
 const CheckpointLookup = (props: CheckpointLookupProps) => {
   const { changeStep, onSave, checkpointList } = props;
+
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  
   const [selectedCheckpointIds, setSelectedCheckpointIds] = useState([]);
   const [expandId, setExpandedId] = useState('');
   const [searchInput, setSearchInput] = useState('');
@@ -85,22 +91,22 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
 
       <div className="p-4">
         <div className="flex justify-between my-4">
-          <p className="text-sm font-medium text-gray-600 flex items-center w-1/4 px-14"> {selectedCheckpointIds?.length} Checkpoints Selected</p>
+          <p className="text-sm font-medium text-gray-600 flex items-center w-2/4 px-14"> {selectedCheckpointIds?.length} Checkpoints Selected</p>
           <SearchInput value={searchInput} onChange={(val: string) => setSearchInput(val)} onKeyDown={searchFromList} closeAction={removeSearchAction} style="w-2/4" />
         </div>
         <div>
           <Fragment>
             <div className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-              <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="w-1.5/10 px-6 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 <span>Selection</span>
               </div>
               <div className="w-5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 Checkpoint Title
               </div>
-              <div className="w-3/10 px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="w-2/10 px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 Language
               </div>
-              <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 <span></span>
               </div>
             </div>
@@ -110,7 +116,7 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
                 <Fragment>
                   {/* Table row */}
                   <div key={item.id} className={`flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200 ${expandId === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
-                    <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
+                    <div className="flex w-1.5/10 items-center px-8 py-3 text-left text-s leading-4">
                       <span>
                         <CheckBox value={selectedCheckpointIds?.includes(item.id)} onChange={() => selectItem(item.id)} name='selectcheckpoint' />
                       </span>
@@ -121,10 +127,10 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
                         <span className="text-sm leading-6 text-gray-500">{item.subtitle ? item.subtitle : ''}</span>
                       </div>
                     </div>
-                    <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.language ? getLanguageString(item.language) : '--'}</div>
-                    <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
-                      <span className="w-6 h-6 cursor-pointer text-indigo-600" onClick={() => viewCheckpoint(item.id)}>
-                        <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+                    <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.language ? getLanguageString(item.language) : '--'}</div>
+                    <div className="flex w-1.5/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
+                      <span className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor] }`} onClick={() => viewCheckpoint(item.id)}>
+                        <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                           {expandId === item.id ? <IoCaretUpCircleOutline /> : <IoCaretDownCircleOutline />}
                         </IconContext.Provider>
                       </span>

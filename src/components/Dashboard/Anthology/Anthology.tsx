@@ -11,6 +11,7 @@ import useDictionary from '../../../customHooks/dictionary';
 
 export interface AnthologyContentInterface {
   type: string;
+  subType: string;
   title: string;
   subTitle: string;
   description: string;
@@ -38,7 +39,8 @@ const Anthology = () => {
   const { anthologyDict } = useDictionary(clientKey);
   const [studentData, setStudentData] = useState<AnthologyMapItem[]>([]);
   const [newStudentData, setNewStudentData] = useState<AnthologyMapItem>({
-    type: 'story',
+    type: 'work',
+    subType: '',
     title: '',
     subTitle: '',
     description: '',
@@ -148,6 +150,7 @@ const Anthology = () => {
   const subSectionKey: any = {
     'Stories': 'story',
     'Poems': 'poem',
+    'Notes':'notes',
     'Journal': 'journal',
   };
 
@@ -250,7 +253,7 @@ const Anthology = () => {
   // RETURN
   return (
     <React.Fragment>
-      <SectionTitle title={anthologyDict[userLanguage].REGISTRATION} />
+      <SectionTitle title={anthologyDict[userLanguage].TITLE} />
       {/*
         Tabs to select between:
           - Lesson Data

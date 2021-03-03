@@ -57,7 +57,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Add Syllabus', url: `/dashboard/manage-institutions/curricular/${curricularId}/syllabus/add`, last: true }
+    { title: 'Add Unit', url: `/dashboard/manage-institutions/curricular/${curricularId}/syllabus/add`, last: true }
   ];
 
   const onInputChange = (e: any) => {
@@ -162,7 +162,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
         }
         setMessages({
           show: true,
-          message: 'New syllabus has been saved.',
+          message: 'New unit has been saved.',
           isError: false
         })
         setSyllabusData(initialData);
@@ -170,12 +170,12 @@ const AddSyllabus = (props: AddSyllabusProps) => {
         if (newItem) {
           history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
         } else {
-          console.log('Could not add syllabus');
+          console.log('Could not add unit');
         }
       } catch{
         setMessages({
           show: true,
-          message: 'Unable to save new syllabus please try again later.',
+          message: 'Unable to save new unit please try again later.',
           isError: true
         })
       }
@@ -186,7 +186,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
     if (syllabusData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Syllabus name is required please enter name.',
+        message: 'Unit name is required please enter name.',
         isError: true
       })
       return false;
@@ -224,7 +224,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Add Syllabus" subtitle="Add new syllabus to curricular." />
+        <SectionTitle title="Add Unit" subtitle="Add new unit to curricular." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -233,12 +233,12 @@ const AddSyllabus = (props: AddSyllabusProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">SYLLABUS INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">UNIT INFORMATION</h3>
           <div className="">
 
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
-                <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Syllabus Name" isRequired />
+                <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Unit Name" isRequired />
               </div>
               <div>
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">

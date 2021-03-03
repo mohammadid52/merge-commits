@@ -24,6 +24,9 @@ import EditMeasurement from './EditBuilders/CurricularsView/TabsActions/EditMeas
 import EditSyllabus from './EditBuilders/CurricularsView/TabsActions/EditSyllabus';
 import AddLearningObjective from './EditBuilders/CurricularsView/TabsActions/AddLearningObjective';
 import EditLearningObjective from './EditBuilders/CurricularsView/TabsActions/EditLearningObjective';
+import AddProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
+import ProfileCheckpointlookup from './EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
+import EditProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
 
 const InstitutionsHome = () => {
   const match = useRouteMatch();
@@ -105,6 +108,18 @@ const InstitutionsHome = () => {
         <Route
           path={`${match.url}/curricular/:curricularId/syllabus/edit`}
           render={() => <EditSyllabus />}          // Edit curricular syllabus
+        />
+        <Route
+          path={`${match.url}/curricular/:curricularId/checkpoint/addNew`}
+          render={() => <AddProfileCheckpoint />}           // Add new Checkpoint to curricular
+        />
+        <Route
+          path={`${match.url}/curricular/:curricularId/checkpoint/edit/:id`}
+          render={() => <EditProfileCheckpoint />}           // Edit curricular Checkpoint 
+        />
+        <Route
+          path={`${match.url}/curricular/:curricularId/checkpoint/addPrevious`}
+          render={() => <ProfileCheckpointlookup />}          // Add existing Checkpoint to curricular
         />
         <Route
           path={`${match.url}/curricular`}

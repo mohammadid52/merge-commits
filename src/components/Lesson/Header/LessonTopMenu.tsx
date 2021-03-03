@@ -6,7 +6,7 @@ import ProgressBar from './ProgressBar/ProgressBar';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineHome } from 'react-icons/ai';
 
-const TopMenu = (props: { handlePopup: () => void }) => {
+const LessonTopMenu = (props: { handlePopup: () => void }) => {
   const { state, dispatch, theme } = useContext(LessonContext);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const history = useHistory();
@@ -107,4 +107,4 @@ const TopMenu = (props: { handlePopup: () => void }) => {
   );
 };
 
-export default TopMenu;
+export default LessonTopMenu;

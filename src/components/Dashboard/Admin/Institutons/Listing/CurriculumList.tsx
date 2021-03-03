@@ -1,7 +1,10 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useContext } from 'react'
 import { useHistory } from 'react-router'
+
 import PageWrapper from '../../../../Atoms/PageWrapper'
 import Buttons from '../../../../Atoms/Buttons'
+import { getAsset } from '../../../../../assets';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 interface CurriculumListProps {
   curricular: { items: { name?: string, id: string }[] }
@@ -12,6 +15,8 @@ const CurriculumList = (props: CurriculumListProps) => {
 
   const { curricular, instId } = props;
   const history = useHistory();
+  const { clientKey, theme } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const createNewCurricular = () => {
     history.push(`/dashboard/manage-institutions/institution/curricular-creation?id=${instId}`)
@@ -50,7 +55,7 @@ const CurriculumList = (props: CurriculumListProps) => {
                     <div className="flex w-6/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                       {item.name ? item.name : ''}
                     </div>
-                    <span className="w-3/10 h-6 flex items-center text-left px-8 py-3 text-indigo-600 hover:text-indigo-900 cursor-pointer" onClick={() => editCurrentCurricular(item.id)}>
+                    <span className={`w-3/10 h-6 flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => editCurrentCurricular(item.id)}>
                       View
                     </span>
                   </div>

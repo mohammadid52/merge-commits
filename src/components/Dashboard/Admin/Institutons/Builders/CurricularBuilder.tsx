@@ -50,6 +50,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const [institutionList, setInstitutionList] = useState(null);
   const [designersList, setDesignersList] = useState([]);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
+  const [selectedCheckpoints, setSelectedCheckpoints] = useState([]);
   const [curricularData, setCurricularData] = useState<InitialData>(initialData);
   const [loading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState({
@@ -61,7 +62,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     return new URLSearchParams(location.search);
   };
   const params = useQuery();
-
+  const checkpointsList: any = [];
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
     { title: 'Curricular Creation', url: '/dashboard/curricular-creation', last: true }
@@ -106,6 +107,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     }
     setSelectedDesigners(updatedList)
   }
+  const selectCheckpoint = () => {
+
+  }
   const selectInstitute = (val: string, name: string, id: string) => {
     setCurricularData({
       ...curricularData,
@@ -147,7 +151,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         })
         setCurricularData(initialData);
         setIsLoading(false);
-      } catch{
+      } catch {
         setMessages({
           show: true,
           message: 'Unable to save new curriculum please try again later.',
@@ -167,7 +171,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         value: `${item.name ? item.name : ''}`
       }));
       setInstitutionList(InstituteList);
-    } catch{
+    } catch {
       setMessages({
         show: true,
         message: 'Unable to fetch institution list pleas try later.',
@@ -336,6 +340,12 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
                 Select Designers
               </label>
               <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
+            </div>
+            <div className="px-3 py-4">
+              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                Select Checkpoint
+              </label>
+              <MultipleSelector selectedItems={selectedCheckpoints} placeholder="Checkpoints" list={checkpointsList} onChange={selectCheckpoint} />
             </div>
             <div className="px-3 py-4">
               <TextArea value={description} id='description' onChange={onChange} name='description' label="Description" />

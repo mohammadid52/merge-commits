@@ -5,6 +5,7 @@ import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import { BiNotepad } from 'react-icons/bi';
 import { MdSpeakerNotes } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
+import { FiUserCheck } from 'react-icons/fi';
 
 import * as queries from '../../../../../../graphql/queries';
 import * as customQueries from '../../../../../../customGraphql/customQueries';
@@ -20,6 +21,7 @@ import UnderlinedTabs from '../../../../../Atoms/UnderlinedTabs';
 
 import SyllabusList from './TabsListing/SyllabusList';
 import LearningObjective from './TabsListing/LearningObjective';
+import CheckpointList from './TabsListing/CheckpointList';
 
 interface CurricularViewProps {
   tabProps?: any
@@ -77,8 +79,9 @@ const CurricularView = (props: CurricularViewProps) => {
     { title: 'Curricular Info', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
   ]
   const tabs = [
-    { index: 0, title: 'Syllabus', icon: <BiNotepad />, active: false, content: <SyllabusList savedSyllabi={curricularData.syllabusList} curricularId={currID} loading={loading} /> },
+    { index: 0, title: 'Units', icon: <BiNotepad />, active: false, content: <SyllabusList savedSyllabi={curricularData.syllabusList} curricularId={currID} loading={loading} /> },
     { index: 1, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjective curricularId={currID} /> },
+    { index: 2, title: 'Demographics & Information', icon: <FiUserCheck />, active: false, content: <CheckpointList curricularId={currID} /> },
   ]
 
   const updateTab = (tab: number) => {

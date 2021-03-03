@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useContext } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api'
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoCaretDownCircleOutline, IoCaretUpCircleOutline, IoOptionsOutline } from 'react-icons/io5';
@@ -16,6 +16,8 @@ import CheckBox from '../../../../../Atoms/Form/CheckBox';
 import { LessonPlansProps } from '../../LessonEdit';
 
 import { getTypeString } from '../../../../../../utilities/strings';
+import { getAsset } from '../../../../../../assets';
+import { GlobalContext } from '../../../../../../contexts/GlobalContext';
 export interface AddNewCheckPointProps {
   changeStep: (step: string) => void
   updateLessonPlan: (plan: LessonPlansProps[], newObj: any[]) => void
@@ -83,6 +85,9 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     isError: true
   });
 
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  
   const languageList = [
     { id: 1, name: 'English', value: 'EN' },
     { id: 2, name: 'Spanish', value: 'ES' },
@@ -94,7 +99,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
       header: 'Checkpoint Instructions',
       title: 'instructionsTitle',
       titleValue: checkPointData.instructionsTitle,
-      titleLabel: 'Instructions title',
+      titleLabel: 'Checkpoint Instructions Title',
       textEditorName: 'instructionHtml',
       textEditorValue: checkPointData.instructionHtml
     },
@@ -406,11 +411,11 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                   <li className={`relative border-b border-gray-200 ${selectedBlock === item.id ? 'rounded-lg' : ''}`}>
                     <div className={`w-full px-8 py-6 text-left ${selectedBlock === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
                       <div className="flex items-center justify-between" onClick={() => toggleView(item.id)}>
-                        <span className={`text-xs md:text-base font-medium cursor-pointer text-left text-indigo-500 ${selectedBlock === item.id && 'text-indigo-600'}`}>
+                        <span className={`text-xs md:text-base cursor-pointer text-left ${theme.textColor[themeColor] } ${selectedBlock === item.id ? 'font-bold' : 'font-medium'}`}>
                           {item.header}
                         </span>
                         <span className="w-8 h-8 flex items-center cursor-pointer">
-                          <IconContext.Provider value={{ size: '2rem', color: '#667eea' }}>
+                          <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
                             {(selectedBlock === item.id) ? <IoCaretUpCircleOutline /> : <IoCaretDownCircleOutline />}
                           </IconContext.Provider>
                         </span>
@@ -484,8 +489,8 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                             </span>
                           </div>
                           <div className="flex w-1/10 px-6 py-1 text-s leading-4 items-center justify-center">
-                            {(item.type === 'selectMany' || item.type === 'selectOne') && (<div className="w-6 h-6 cursor-pointer text-indigo-600" onClick={() => showOptions(item.id, item.options)}>
-                              <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+                            {(item.type === 'selectMany' || item.type === 'selectOne') && (<div className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor] }`} onClick={() => showOptions(item.id, item.options)}>
+                              <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                                 <IoOptionsOutline />
                               </IconContext.Provider>
                             </div>)}

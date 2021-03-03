@@ -184,13 +184,13 @@ const Login = ({ updateAuthState }: LoginProps) => {
   }, []);
 
   return (
-    <div className="w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm md:bg-none sm:bg-login-bg sm:bg-cover sm:bg-center">
+    <div className="w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm md:bg-none sm:bg-cover sm:bg-center">
       <div className="w-full md:max-w-160 sm:max-w-100 h-full max-h-160 flex flex-row rounded-xl shadow-2xl">
         <div className="min-w-sm max-w-sm bg-white md:rounded-l-xl sm:rounded-xl pt-0">
           <div className="h-.7/10  w-full rounded-tl-xl"></div>
           <div className="relative h-9.3/10 flex flex-col items-center p-8">
             <div className={`absolute bottom-0 text-center mb-4 leading-5 text-xs text-gray-600`}>
-              <p>© Copyright 2020</p>
+              <p>© Copyright {new Date().getFullYear()}</p>
               <p>
                 <NavLink className="underline text-xs hover:text-blue-500" to="/privacy-policy">
                   Privacy Policy
@@ -277,7 +277,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
             <div className="relative h-4.5/10 flex flex-col justify-center items-center">
               <button
                 disabled={isToggled}
-                className="p-3 mb-4 bg-dark-red text-gray-200 rounded-xl font-semibold"
+                className={`p-3 mb-4 ${getAsset(clientKey, 'authButtonColor')} text-gray-200 rounded-xl font-semibold`}
                 onKeyPress={handleEnter}
                 onClick={handleSubmit}>
                 {isToggled ? (
@@ -298,7 +298,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
             </div>
           </div>
         </div>
-        <div className="md:inline-block sm:hidden xs:hidden min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 bg-login-bg bg-cover bg-center"></div>
+        <div className={`md:inline-block sm:hidden xs:hidden min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 ${getAsset(clientKey, 'authBackground')} bg-cover bg-center`}></div>
       </div>
     </div>
   );

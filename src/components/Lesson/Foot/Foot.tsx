@@ -55,15 +55,20 @@ const Branding: React.FC = () => {
           {/* BACK */}
           <div className='w-3.3/10 flex justify-center items-center'>
 
-              <div
-                className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
-                  state.currentPage > 0
-                    ? 'cursor-pointer bg-dark-red'
-                    : 'cursor-default bg-darker-gray'
-                } }`}
-                onClick={handleBack}>
-                <div className='w-auto h-auto text-white'>Back</div>
-              </div>
+            {
+              state.data.lesson.type === 'lesson' && (
+                <div
+                  className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
+                    state.currentPage > 0
+                      ? 'cursor-pointer bg-dark-red'
+                      : 'cursor-default bg-darker-gray'
+                  } }`}
+                  onClick={handleBack}>
+                  <div className='w-auto h-auto text-white'>Back</div>
+                </div>
+              )
+            }
+
 
           </div>
 
@@ -71,7 +76,7 @@ const Branding: React.FC = () => {
           <div className='w-3.3/10 flex justify-center items-center'>
             <NavLink to='/dashboard'>
               <img
-                className='h-12 px-4'
+                className='h-20 px-4'
                 src={getAsset(clientKey, 'main_logo')}
                 alt='Logo'
               />
@@ -80,18 +85,24 @@ const Branding: React.FC = () => {
 
           {/* CONTINUE */}
           <div className='w-3.3/10 flex justify-center items-center'>
-              <div
-                className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
-                  state.canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark-gray cursor-default'
-                } `}
-                onClick={handleForward}>
-                <div className='w-auto h-auto text-white'>Continue</div>
-              </div>
+
+            {
+              state.data.lesson.type === 'lesson' && (
+                <div
+                  className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
+                    state.canContinue ? 'bg-sea-green cursor-pointer' : 'bg-dark-gray cursor-default'
+                  } `}
+                  onClick={handleForward}>
+                  <div className='w-auto h-auto text-white'>Continue</div>
+                </div>
+              )
+            }
+
           </div>
         </div>
       </div>
     </>
   );
-};
+}
 
 export default Branding;

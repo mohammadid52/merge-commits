@@ -45,7 +45,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     { index: 1, title: 'Staff', icon: <IoPeople />, active: true, content: <StaffBuilder serviceProviders={institute.serviceProviders} instituteId={instProps?.institute?.id} /> },
     { index: 2, title: 'Classes', icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={institute?.classes} instId={institute?.id} /> },
     { index: 3, title: 'Curricular', icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} instId={institute?.id} /> },
-    { index: 4, title: 'Rooms', icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id} /> }
+    { index: 4, title: 'Classrooms', icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id} instName={institute?.name}/> }
   ]
 
   const updateTab = (tab: number) => {

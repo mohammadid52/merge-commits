@@ -16,6 +16,7 @@ import ProfileVault from './ProfileVault';
 import ProfileEdit from './ProfileEdit';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import * as customMutations from '../../../customGraphql/customMutations';
+import * as customQueries from '../../../customGraphql/customQueries';
 import ToolTip from '../../General/ToolTip/ToolTip'
 import ProfileCropModal from './ProfileCropModal';
 import { getImageFromS3 } from '../../../utilities/services';
@@ -24,6 +25,7 @@ import SectionTitle from '../../Atoms/SectionTitle';
 import Buttons from '../../Atoms/Buttons';
 import Loader from '../../Atoms/Loader';
 import useDictionary from '../../../customHooks/dictionary';
+import { getUniqItems, createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
 
 export interface UserInfo {
   authId: string
@@ -81,12 +83,20 @@ const Profile: React.FC = () => {
   const [showCropper, setShowCropper] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [upImage, setUpImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState('')
+  const [imageUrl, setImageUrl] = useState('');
+  const [stdCheckpoints, setStdCheckpoints] = useState([]);
+  const [questionData, setQuestionData] = useState([]);
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
     { title: BreadcrumsTitles[userLanguage]['PROFILE'], url: '/dashboard/profile', last: true },
   ]
+
+  /**
+   * Profile component structure needs to be reform to reduce unnecessary API calls.
+   * 
+   * 
+   */
 
   // TODO: 
   // Set type for file instead of any
@@ -196,7 +206,6 @@ const Profile: React.FC = () => {
     await removeImageUrlFromDb();
   }
 
-
   const removeImageUrlFromDb = async () => {
     const input = {
       id: person.id,
@@ -223,11 +232,55 @@ const Profile: React.FC = () => {
       console.error("Error Deleting image on graphql", error)
     }
   }
+  const getQuestionData = async (checkpointIDs: any[]) => {
+    const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
+      return {
+        'checkpointID': {
+          eq: item,
+        },
+      };
+    });
+    const filter = {
+      and: [
+        { email: { eq: state.user.email } },
+        { authID: { eq: state.user.authId } },
+        { syllabusLessonID: { eq: '999999' } },
+        {
+          or: [
+            ...checkpointIDFilter,
+          ]
+        }
+      ]
+
+    }
+    const results: any = await API.graphql(graphqlOperation(customQueries.listQuestionDatas
+      , { filter: filter }
+    ));
+    const questionData: any = results.data.listQuestionDatas?.items;
+    setQuestionData(questionData);
+    console.log(questionData, "questionData")
+  }
 
   async function getUser() {
     try {
-      const user: any = await API.graphql(graphqlOperation(queries.getPerson, { email: state.user.email, authId: state.user.authId }))
-      setPerson(user.data.getPerson);
+      const results: any = await API.graphql(graphqlOperation(customQueries.getPersonData, { email: state.user.email, authId: state.user.authId }))
+      const userData: any = results.data.getPerson;
+      const studentClasses: any = userData.classes?.items.map((item: any) => item.class);
+      const studentInstitutions: any = studentClasses?.map((item: any) => item.institution);
+      const studentRooms: any = studentClasses?.map((item: any) => item.rooms?.items)?.flat(1);
+      const studentCurriculars: any = studentRooms.map((item: any) => item?.curricula?.items).flat(1);
+      const uniqCurriculars: any = getUniqItems(studentCurriculars, 'curriculumID');
+      const studCurriCheckp: any = uniqCurriculars.map((item: any) => item?.curriculum?.checkpoints?.items).flat(1);
+      const studentCheckpoints: any = studCurriCheckp.map((item: any) => item?.checkpoint);
+      const uniqCheckpoints: any = getUniqItems(studentCheckpoints, 'id')
+      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item.id);
+      const personalInfo: any = { ...userData }
+      delete personalInfo.classes;
+      if (uniqCheckpointIDs?.length > 0) {
+        getQuestionData(uniqCheckpointIDs);
+      }
+      setStdCheckpoints([...uniqCheckpoints]);
+      setPerson(personalInfo);
       setStatus('done');
     } catch (error) {
       console.error(error)
@@ -273,15 +326,21 @@ const Profile: React.FC = () => {
                   {person.image ?
                     (
                       <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
-                        {!imageLoading ? <img
-                          className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
-                          src={imageUrl}
-                        /> :
+                        {!imageLoading ? (<Fragment>
+                          <label className="cursor-pointer">
+                            <img
+                              className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                              src={imageUrl}
+                            />
+                            <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
+                          </label>
+                        </Fragment>)
+                          :
                           <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-lightI">
                             <Loader />
                           </div>
                         }
-                        <span className="hidden group-focus:flex justify-around mt-6">
+                        {/* <span className="hidden group-focus:flex justify-around mt-6">
                           <label className="w-8 cursor-pointer">
                             <IconContext.Provider value={{ size: '1.6rem', color: '#B22222' }}>
                               <FaEdit />
@@ -293,7 +352,7 @@ const Profile: React.FC = () => {
                               <FaTrashAlt />
                             </IconContext.Provider>
                           </span>
-                        </span>
+                        </span> */}
                       </button>) :
                     (
                       <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
@@ -302,7 +361,6 @@ const Profile: React.FC = () => {
                         </IconContext.Provider> : <Loader />}
                         <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
                       </label>
-
                     )
                   }
                   <span className="absolute top-7 left-8 w-8 h-8">
@@ -313,7 +371,7 @@ const Profile: React.FC = () => {
                     </NavLink>
                   </span>
                 </div>
-
+                <p className="text-gray-600 my-2">Click the circle above to update profile picture.</p>
                 <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
                   {`${person.preferredName ? person.preferredName : person.firstName} ${person.lastName}`}
                   <p className="text-md md:text-lg">{person.institution}</p>
@@ -378,6 +436,8 @@ const Profile: React.FC = () => {
                       <ProfileInfo
                         user={person}
                         status={status}
+                        stdCheckpoints={stdCheckpoints}
+                        questionData={questionData}
                       />
                     )}
                   />
@@ -395,6 +455,8 @@ const Profile: React.FC = () => {
                         status={status}
                         setStatus={setStatus}
                         getUser={getUser}
+                        stdCheckpoints={stdCheckpoints}
+                        questionData={questionData}
                       />
                     )}
                   />

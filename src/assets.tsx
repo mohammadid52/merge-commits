@@ -1,4 +1,4 @@
-const iconoclast_assets:any = {
+const iconoclast_assets: any = {
     appTitle: 'Iconoclast Artists',
     main_logo: 'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-WHITE.svg',
     login_page_logo: 'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg',
@@ -14,13 +14,16 @@ const iconoclast_assets:any = {
     appName: 'Iconoclast',
     tileImage: 'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/mstile-144x144.png',
     msapplicationConfig: 'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/browserconfig.xml',
+    authBackground: 'bg-iconoclast-bg',
+    authButtonColor: 'bg-dark-red',
+    themeClassName: 'iconoclastIndigo',
 }
 
-const curate_assets:any = {
+const curate_assets: any = {
     appTitle: 'Project Curate',
-    main_logo: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/curate_full_logo_white.png',
-    login_page_logo: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/curate_full_logo.png',
-    loading_logo: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/curate_full_logo.png',
+    main_logo: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/ProjectCurateLogo-WhiteLetters.png',
+    login_page_logo: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/ProjectCurate_Logo.png',
+    loading_logo: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/ProjectCurate_Logo.png',
     logo_symbol: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/curate_blue_icon_169x169+(2).png',
     faviconDefault: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/favicon.ico',
     favicon16x16: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/favicon-16x16.png',
@@ -32,6 +35,9 @@ const curate_assets:any = {
     appName: 'Project Curate',
     tileImage: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/mstile-150x150.png',
     msapplicationConfig: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/browserconfig.xml',
+    authBackground: 'bg-curate-bg',
+    authButtonColor: 'bg-theme-blue',
+    themeClassName: 'curateBlue',
 }
 
 export function getAsset(clientKey: string, key: string) {

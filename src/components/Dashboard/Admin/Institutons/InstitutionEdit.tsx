@@ -1,20 +1,21 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
 import { useHistory } from 'react-router-dom';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { FaPlus, FaEdit, FaTrashAlt } from 'react-icons/fa';
 
-import * as customMutations from '../../../../customGraphql/customMutations';
 import FormInput from '../../../Atoms/Form/FormInput';
 import Loader from '../../../Atoms/Loader';
-import { FaPlus, FaEdit, FaTrashAlt } from 'react-icons/fa';
-import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Buttons from '../../../Atoms/Buttons';
 import Selector from '../../../Atoms/Form/Selector';
 import CheckBox from '../../../Atoms/Form/CheckBox';
+import ProfileCropModal from '../../Profile/ProfileCropModal';
+import InstitutionPopUp from './InstitutionPopUp';
+
 import { getImageFromS3 } from '../../../../utilities/services';
 import { statesList } from '../../../../utilities/staticData';
-import InstitutionPopUp from './InstitutionPopUp';
+import * as customMutations from '../../../../customGraphql/customMutations';
 
 
 interface InstitutionEditProps {
@@ -134,7 +135,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
         const updatedList = await API.graphql(graphqlOperation(customMutations.updateInstitution, { input: input }));
         instEditPrps.toggleUpdateState()
         history.goBack();
-      } catch{
+      } catch {
         setError({
           show: true,
           errorMsg: 'Unable to update institute details. Please try again later.'
@@ -290,15 +291,20 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
       <div className="w-2/10 p-4 mr-6 flex flex-col text-center items-center">
         {image ? (
           <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
-            {!imageLoading ? <img
-              className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
-              src={imageUrl}
-            /> :
+            {!imageLoading ?
+              <label className="cursor-pointer">
+                <img
+                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                  src={imageUrl}
+                />
+                <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
+              </label> :
               <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-lightI">
                 <Loader />
               </div>
             }
-            <span className="hidden group-focus:flex justify-around mt-6">
+
+            {/* <span className="hidden group-focus:flex justify-around mt-6">
               <label className="w-8 cursor-pointer">
                 <IconContext.Provider value={{ size: '1.6rem', color: '#B22222' }}>
                   <FaEdit />
@@ -310,7 +316,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
                   <FaTrashAlt />
                 </IconContext.Provider>
               </span>
-            </span>
+            </span> */}
           </button>) :
           <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
             {!imageLoading ?

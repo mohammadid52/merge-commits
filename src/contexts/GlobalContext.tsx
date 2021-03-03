@@ -18,8 +18,8 @@ export const standardTheme = {
   elem: {
     bg: 'bg-dark-block',
     title: 'text-lg font-semibold text-gray-200',
-    text: 'text-sm text-gray-200 mb-2',
-    textDark: 'text-sm text-darker-gray mb-2',
+    text: 'text-sm text-gray-200',
+    textDark: 'text-sm text-darker-gray',
     textInput: 'bg-darker-gray text-blue-100 py-2 px-4',
     shadow: 'shadow-elem-dark',
     card: 'rounded-lg bg-white bg-opacity-20',
@@ -34,9 +34,9 @@ export const standardTheme = {
     bg: 'bg-darker-gray',
     card: 'p-2 relative bg-white rounded border border-dark-gray border-opacity-10 h-auto flex',
   },
-  lessonCard:{
+  lessonCard: {
     title: 'flex items-center text-2xl text-black font-open text-left',
-    subtitle:'text-sm text-gray-400',
+    subtitle: 'text-sm text-gray-400',
     border: 'border-dark-gray border-opacity-20'
   },
   sidemenu: {
@@ -55,8 +55,13 @@ export const standardTheme = {
     text: 'text-gray-200',
   },
   btn: {
-    indigo: 'bg-indigo-500 text-white hover:bg-indigo-600 active:bg-indigo-600 focus:bg-indigo-600',
+    iconoclastIndigo: 'bg-indigo-500 text-white hover:bg-indigo-600 active:bg-indigo-600 focus:bg-indigo-600',
+    curateBlue: 'bg-theme-blue text-white hover:bg-blue-500 active:bg-blue-500 focus:bg-blue-500',
     cancel: 'bg-white text-gray-600 border border-gray-600 hover:bg-gray-200',
+  },
+  btnTransparent: {
+    iconoclastIndigo: 'text-indigo-600 border-indigo-600 hover:text-indigo-500',
+    curateBlue: 'text-theme-blue border-theme-blue hover:text-blue-500',
   },
   text: {
     default: 'text-black80',
@@ -65,7 +70,38 @@ export const standardTheme = {
   },
   formSelect: 'bg-white border-gray-400 text-gray-900 border',
   outlineNone: 'outline-none hover:outline-none active:outline-none focus:outline-none',
-  verticalBorder: 'border-l-6 border-indigo-700 pl-4',
+  verticalBorder: {
+    iconoclastIndigo: 'border-indigo-700',
+    curateBlue: 'border-theme-blue',
+  },
+  searchIcon: {
+    iconoclastIndigo: '#667eea',
+    curateBlue: '#0081CB',
+  },
+  iconColor: {
+    iconoclastIndigo: '#667eea',
+    curateBlue: '#0081CB',
+  },
+  textColor: {
+    iconoclastIndigo: 'text-indigo-600',
+    curateBlue: ' text-theme-blue',
+  },
+  borderColor: {
+    iconoclastIndigo: 'border-indigo-600',
+    curateBlue: 'border-theme-blue',
+  },
+  borderColorLight: {
+    iconoclastIndigo: 'border-indigo-400',
+    curateBlue: 'border-blue-400',
+  },
+  backGround : {
+    iconoclastIndigo: 'bg-indigo-500',
+    curateBlue: 'bg-blue-500',
+  },
+  backGroundLight : {
+    iconoclastIndigo: 'bg-indigo-400',
+    curateBlue: 'bg-blue-400',
+  },
   modals: {
     header: 'flex items-center justify-between p-4 border-solid rounded-t bg-white text-gray-900 border-gray-200',
     footer: 'flex items-center justify-end p-4 border-t border-solid rounded-b bg-white text-gray-900 border-gray-200',
@@ -93,7 +129,7 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
 
   useEffect(() => {
 
-    if (state.user && state.user.location && state.user.location.length > 0){
+    if (state.user && state.user.location && state.user.location.length > 0) {
       updatePersonLocation();
     } else {
       // console.log('dashboard: ', 'user location not initialized yet...')

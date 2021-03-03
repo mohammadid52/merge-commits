@@ -69,14 +69,14 @@ const UserInformation = (props: UserInfoProps) => {
                     status={user.status} />
                 </dd>
               </div>
-              <div className="sm:col-span-1 p-2">
+              {/* <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
                   Birthday
                 </dt>
                 <dd className="mt-2 text-base leading-5 text-gray-900">
                   {`${user.birthdate ? user.birthdate : 'not set'}`}
                 </dd>
-              </div>
+              </div> */}
               <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
                   Email Address
@@ -85,14 +85,14 @@ const UserInformation = (props: UserInfoProps) => {
                   {`${user.email}`}
                 </dd>
               </div>
-              <div className="sm:col-span-1 p-2">
+              {/* <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
                   Contact Number
                 </dt>
                 <dd className="mt-2 text-base leading-5 text-gray-900">
                   {`${user.phone}`}
                 </dd>
-              </div>
+              </div> */}
               <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
                   Account Created
@@ -106,7 +106,8 @@ const UserInformation = (props: UserInfoProps) => {
 
         </div>
 
-        <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg">
+        {/* TODO: NEED TO CONFIRM FOR GIVING ACCESS TO ADMIN ON PROFILE BUILDER. */}
+        {/* <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg">
           <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Institution Information
@@ -132,7 +133,7 @@ const UserInformation = (props: UserInfoProps) => {
               </div>
             </dl>
           </div>
-        </div>
+        </div> */}
       </div>
     )
   }

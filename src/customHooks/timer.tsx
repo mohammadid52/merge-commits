@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { LessonActions } from '../reducers/LessonReducer';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../customGraphql/customMutations';
-import { type } from 'os';
 import { AnthologyContentInterface } from '../components/Dashboard/Anthology/Anthology';
-
+import * as mutations from '../graphql/mutations';
+import { useParams } from 'react-router-dom';
 
 
 interface inputs {
@@ -27,6 +27,7 @@ interface timerStateType {
 }
 
 const useStudentTimer = (inputs?: inputs) => {
+  const urlParams: any = useParams()
   const { subscription, subscribeFunc, dispatch, callback, state } = inputs;
   const [params, setParams] = useState<timerStateType>({
     subscription: subscription,
@@ -42,47 +43,60 @@ const useStudentTimer = (inputs?: inputs) => {
   const [activityTimeout, setactivityTimeout] = useState<any>();
   const [typeOfTimeout, setTypeOfTimeout] = useState<'pageSwitch' | 'edit' | ''>('');
 
-  // SAVING
+  /**
+   *
+   * TIMERS & TRIGGERS
+   *
+   */
   //PAGE SWITCH => SAVE TTRIGGER after 10 secs
-  // useEffect(() => {
-  //   if (!state.viewing) {
-  //     if (typeOfTimeout === '') {
-  //       console.log('%c save timer: ', 'background: #222; color: #bada55', 'page switch save triggered after 10s');
-  //
-  //       setTypeOfTimeout('pageSwitch');
-  //
-  //       const pageEditTimeout = setTimeout(() => {
-  //         dispatch({ type: 'INCREMENT_SAVE_COUNT' });
-  //         setTypeOfTimeout('');
-  //         console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
-  //       }, 10000);
-  //     }
-  //   }
-  //   // return () => clearTimeout(activityTimeout);
-  // }, [state.currentPage]);
+  useEffect(() => {
+    const isLesson = state.data.lesson.type === 'lesson';
+    if (isLesson) {
+      if (!state.viewing) {
+        if (typeOfTimeout === '') {
+          console.log('%c save timer: ', 'background: #222; color: #bada55', 'page switch save triggered after 10s');
+
+          setTypeOfTimeout('pageSwitch');
+
+          const pageEditTimeout = setTimeout(() => {
+            dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+            setTypeOfTimeout('');
+            console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
+          }, 10000);
+        }
+      }
+    }
+  }, [state.currentPage]);
 
   // TEACHER VIEWING & STUDENT EDIT => SAVE TRIGGER after 1 secs
-  // useEffect(() => {
-  //   if (state.viewing) {
-  //     clearTimeout(activityTimeout);
-  //     setactivityTimeout(setTimeout(() => dispatch({ type: 'INCREMENT_SAVE_COUNT' }), 1000));
-  //   }
-  //   if (!state.viewing) {
-  //     if (typeOfTimeout === '') {
-  //       console.log('%c save timer: ', 'background: #bada55; color: #25362a', 'edit save triggered after 60s');
-  //
-  //       setTypeOfTimeout('edit');
-  //
-  //       const editTimeout = setTimeout(() => {
-  //         dispatch({ type: 'INCREMENT_SAVE_COUNT' });
-  //         setTypeOfTimeout('');
-  //         console.log('%c save timer: ', 'background: #00FF00; color: #bada55', 'saved');
-  //       }, 60000);
-  //     }
-  //   }
-  //   return () => clearTimeout(activityTimeout);
-  // }, [state.viewing, state.componentState]);
+  // COMPONENT CHANGE --> save after 60 secs
+  // COMPONENT CHANGE --> checkpoint in lesson && lesson
+  useEffect(() => {
+    const isLesson = state.data.lesson.type === 'lesson';
+    if(isLesson) {
+      if (state.viewing) {
+        clearTimeout(activityTimeout);
+        setactivityTimeout(setTimeout(() => dispatch({ type: 'INCREMENT_SAVE_COUNT' }), 2000));
+      }
+      if (!state.viewing) {
+        if (typeOfTimeout === '') {
+          console.log('%c save timer: ', 'background: #bada55; color: #25362a', 'edit save triggered after 60s');
 
+          setTypeOfTimeout('edit');
+
+          const editTimeout = setTimeout(() => {
+            dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+            setTypeOfTimeout('');
+            console.log('%c save timer: ', 'background: #00FF00; color: #bada55', 'saved');
+          }, 60000);
+        }
+      }
+    }
+    return () => clearTimeout(activityTimeout);
+  }, [state.viewing, state.componentState, state.questionData]);
+
+  // STUDENT STATUS SAVE TRIGGER
+  // --- CAN MAYBE BE DELETED ---
   useEffect(() => {
     if (params.state.studentStatus === 'ACTIVE' && params.state.subscription._state === 'closed') {
       params.subscribeFunc();
@@ -100,14 +114,26 @@ const useStudentTimer = (inputs?: inputs) => {
     }
   }, [params.state.studentStatus]);
 
+
+  /**
+   *
+   * SAVE TRIGGER
+   *
+   */
   useEffect(() => {
-    // console.log('teacher viewing savecount: ', params.state.saveCount);
-    updateStudentData('autosave');
+      updateStudentData('autosave');
+      handleUpdateQuestionData();
   }, [params.state.saveCount]);
 
+
+  /**
+   *
+   * CONTENT - SAVE
+   *
+   */
   const getWarmupDataSource = () => {
     const warmupType = state.data.lesson.warmUp.type;
-    switch(warmupType){
+    switch (warmupType) {
       case 'story':
       case 'list':
         return params.state.componentState.story;
@@ -129,7 +155,8 @@ const useStudentTimer = (inputs?: inputs) => {
     return lessonPlan.reduce((acc: AnthologyContentInterface[], lessonPlanObj: { disabled: boolean; open: boolean; active: boolean; stage: string; type: string; displayMode: string }) => {
       if (lessonPlanObj.type === 'story' || lessonPlanObj.type === 'poem') {
         const template: AnthologyContentInterface = {
-          type: lessonPlanObj.type,
+          type: 'Work',
+          subType: lessonPlanObj.type,
           title: '',
           subTitle: '',
           description: '',
@@ -158,6 +185,12 @@ const useStudentTimer = (inputs?: inputs) => {
     }, []);
   };
 
+
+  /**
+   *
+   * FUNCTIONS - SAVE
+   *
+   */
   const updateStudentData = async (saveType?: string) => {
     if (state.studentDataID) {
       let data = {
@@ -174,11 +207,11 @@ const useStudentTimer = (inputs?: inputs) => {
         activityData: params.state.componentState.poem ? params.state.componentState.poem : null,
         anthologyContent: getAnthologyContent(),
       };
-  
+
       try {
-        // console.log(' timer save: ', data);
         const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
         dispatch({ type: 'SAVED_CHANGES' });
+
       } catch (error) {
         console.error(error);
       }
@@ -187,6 +220,51 @@ const useStudentTimer = (inputs?: inputs) => {
     }
   };
 
+
+  /**
+   * GET or CREATE QUESTION DATA
+   */
+  const updateQuestionData = async (responseObj: any) => {
+    try {
+      const updatedQuestionData = await API.graphql(
+        graphqlOperation(mutations.updateQuestionData, { input: responseObj }),
+      );
+      // console.log('updateQuestionData responseObj -> ', responseObj);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleUpdateQuestionData = async () => {
+    if (typeof state.questionData === 'object') {
+      let questionDataUpdateArray = state.questionDataUpdate;
+      if(questionDataUpdateArray){
+
+        await questionDataUpdateArray.reduce((_: any, val: any) => {
+          let responseObject = {
+            id: val.id,
+            syllabusLessonID: state.syllabusLessonID,
+            checkpointID: val.checkpointID,
+            componentType: state.data.lesson.type,
+            lessonID: state.data.lesson.id,
+            authID: state.studentAuthID,
+            email: state.studentUsername,
+            responseObject: state.questionData[val.checkpointID],
+          };
+
+          updateQuestionData(responseObject);
+        }, null);
+
+      }
+
+    }
+  }
+
+  /**
+   *
+   * LEGACY CODE
+   *
+   */
   const changeParams = (key: string, updatedValue: any) => {
     setParams((prev) => {
       return {

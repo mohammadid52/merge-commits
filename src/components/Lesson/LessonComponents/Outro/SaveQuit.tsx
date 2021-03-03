@@ -6,9 +6,13 @@ import * as customMutations from '../../../../customGraphql/customMutations';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import Popup from '../../../General/Popup';
 import { useOutsideAlerter } from '../../../General/hooks/outsideAlerter';
+import { Auth } from '@aws-amplify/auth';
+import { FiLogOut } from 'react-icons/all';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { AiOutlineSave } from 'react-icons/ai';
 
 interface SaveQuitProps {
-  id: string;
+  id?: string;
   feedback?: {
     like: string;
     text: string;
@@ -21,165 +25,97 @@ const SaveQuit = (props: SaveQuitProps) => {
   const { id, feedback } = props;
   const history = useHistory();
   const { visible, setVisible, ref } = useOutsideAlerter(false);
-
-  const updateStudentData = async () => {
-    let lessonProgress =
-      state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
-
-    let currentLocation = state.pages[state.currentPage].stage === '' ? 'intro' : state.pages[state.currentPage].stage;
-
-    // console.log('thisone', state )
-
-    let data = {
-      id: state.studentDataID,
-      lessonProgress: lessonProgress,
-      currentLocation: currentLocation,
-      status: state.studentStatus,
-      saveType: 'finalSave',
-      syllabusLessonID: state.syllabusLessonID,
-      studentID: state.studentUsername,
-      studentAuthID: state.studentAuthID,
-      warmupData: state.componentState.story ? state.componentState.story : null,
-      corelessonData: state.componentState.lyrics ? state.componentState.lyrics : null,
-      activityData: state.componentState.poem ? state.componentState.poem : null,
-    };
-
-    // console.log('update', data);
-
-    try {
-      const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
-      // console.log(dataObject)
-      dispatch({ type: 'SAVED_CHANGES' });
-      // console.log('state', state)
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const updateStudentProfile = async () => {
-    let updatedStudent = {
-      id: globalStateAccess.user.id,
-      authId: globalStateAccess.user.authId,
-      email: globalStateAccess.user.email,
-      onBoardSurvey: true,
-    };
-
-    // console.log(updatedStudent, 'updatedSurvey');
-
-    try {
-      const updatedStudentData: any = await API.graphql(
-        graphqlOperation(customMutations.updateSurveyStatus, { input: updatedStudent })
-      );
-      // console.log(updatedStudentData);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   /**
    * QUESTION SAVING
    */
 
-  const clearQuestionData = () => {
-    dispatch({
-      type: 'CLEAR_QUESTION_DATA',
-      payload: {}
-    });
-  }
 
-  const saveQuestionData = async (responseObj: any) => {
-    let questiondDataObject = {
-      syllabusLessonID: '1',
-      componentType: 'checkpoint',
-      lessonID: state.data.lesson.id,
-      authID: state.studentAuthID,
-      email: state.studentUsername,
-      responseObject: responseObj,
-    };
-
+  /**
+   * GET or CREATE QUESTION DATA
+   */
+  const createQuestionData = async (responseObj: any) => {
     try {
-      const questionData = await API.graphql(
-        graphqlOperation(customMutations.createQuestionData, { input: questiondDataObject })
+      const newQuestionData = await API.graphql(
+        graphqlOperation(customMutations.createQuestionData, { input: responseObj }),
       );
-      console.log(questionData, 'questionData');
     } catch (err) {
       console.error(err);
     } finally {
-      clearQuestionData();
-      console.log('questionData cleared -> ', 'nothing...');
-    }
-  };
-
-  const saveLessonFeedback = async () => {
-    let feedbackInput = {
-      syllabusLessonID: '1',
-      liked: feedback.like,
-      comment: feedback.text,
-    };
-
-    try {
-      const feedbackData = await API.graphql(
-        graphqlOperation(customMutations.createFeedback, { input: feedbackInput })
-      );
-      // console.log(feedbackData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleSave = async () => {
-    if (typeof state.questionData === 'object') {
-      let keys = Object.keys(state.questionData); // doFirst, checkpoint_1
-
-      await keys.reduce((_: any, key: string) => {
-        const responseObject = state.questionData[key];
-
-        saveQuestionData(responseObject);
-      }, null);
-
-      if (typeof feedback !== 'undefined') {
-        if (feedback?.like !== '' || feedback?.text !== '') {
-          await saveLessonFeedback();
-        }
-      }
-
-      if (id === 'on-boarding-survey-1') {
-        await updateStudentProfile();
-      }
-
-      await updateStudentData();
-
+      handlePopup();
       history.push('/dashboard');
     }
-    handleClick;
   };
 
-  const handleClick = () => {
+  const handleCreateQuestionData = async () => {
+    let studentID: string;
+    let studentAuthID: string;
+
+    await Auth.currentAuthenticatedUser().then((user) => {
+      studentID = user.attributes.email;
+      studentAuthID = user.attributes.sub;
+    });
+
+    if (typeof state.questionData === 'object') {
+      let checkpointIdKeys = Object.keys(state.questionData); // doFirst, checkpoint_1
+      await checkpointIdKeys.reduce((_: any, key: string) => {
+        let responseObject = {
+          syllabusLessonID: state.syllabusLessonID,
+          checkpointID: key,
+          componentType: state.data.lesson.type,
+          lessonID: state.data.lesson.id,
+          authID: studentAuthID,
+          email: studentID,
+          responseObject: state.questionData[key],
+        };
+
+        createQuestionData(responseObject);
+      }, null);
+    }
+  };
+
+  const handleManualSave = () => {
+    if (!isSaving) {
+      setIsSaving(true);
+      if (state.data.lesson.type === 'lesson') {
+        dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+        history.push('/dashboard');
+      } else {
+        handleCreateQuestionData();
+      }
+    }
+  };
+
+  const handlePopup = () => {
     setVisible((prevState: any) => !prevState);
   };
 
   return (
     <>
       {alert ? (
-        <div className={`${alert ? 'absolute z-100 top-0' : 'hidden'}`} onClick={handleClick}>
+        <div className={`${alert ? 'absolute z-100 top-0' : 'hidden'}`} onClick={handlePopup}>
           <Popup
             alert={visible}
             setAlert={setVisible}
-            header="You have completed a lesson!"
-            button1="Save your lesson"
-            svg="smile"
-            handleButton1={handleSave}
-            fill="screen"
+            header='You have completed a lesson!'
+            button1='Save your lesson'
+            svg='smile'
+            handleButton1={handleManualSave}
+            fill='screen'
           />
         </div>
       ) : null}
 
-      <div className="w-full flex flex-col mt-4">
+      <div className="w-full flex flex-col my-4">
         <button
-          type="submit"
-          className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 font-bold flex justify-center items-center rounded-xl mt-4 ${theme.elem.text}`}
-          onClick={handleClick}>
-          Save and Go to Dashboard
+          type='submit'
+          className={`self-center w-auto px-4 h-10 font-semibold bg-blueberry hover:bg-blue-500 hover:text-underline text-white flex justify-center items-center rounded-full my-4`}
+          onClick={handlePopup}>
+          <IconContext.Provider value={{ className: 'w-auto mr-2', style: { cursor: 'pointer' } }}>
+            <AiOutlineSave size={24} />
+          </IconContext.Provider>
+          <div>Save and Go to Dashboard</div>
         </button>
       </div>
     </>

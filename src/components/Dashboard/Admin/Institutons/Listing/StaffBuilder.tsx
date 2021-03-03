@@ -9,6 +9,7 @@ import PageWrapper from '../../../../Atoms/PageWrapper';
 import { getInitialsFromString, initials, stringToHslColor, createFilterToFetchSpecificItemsOnly } from '../../../../../utilities/strings';
 import { getImageFromS3 } from '../../../../../utilities/services';
 import { statusList } from '../../../../../utilities/staticData';
+import { getAsset } from '../../../../../assets';
 
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
@@ -23,7 +24,8 @@ interface StaffBuilderProps {
 }
 
 const StaffBuilder = (props: StaffBuilderProps) => {
-  const { userLanguage, clientKey } = useContext(GlobalContext);
+  const { userLanguage, clientKey, theme } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const { staffBuilderDict } = useDictionary(clientKey);
   const dictionary = staffBuilderDict[userLanguage]
   const [availableUsers, setAvailableUsers] = useState([]);
@@ -257,9 +259,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                           }
                           <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center">
                             {statusEdit === item.id ?
-                              <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
+                              <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
                               :
-                              <span className="w-6 h-6 flex items-center cursor-pointer text-indigo-600" onClick={() => setStatusEdit(item.id)}>
+                              <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit(item.id)}>
                                 Edit
                               </span>
                             }

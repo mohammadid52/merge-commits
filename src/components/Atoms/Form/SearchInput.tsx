@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { IconContext } from 'react-icons';
 import { IoSearchSharp, IoClose } from 'react-icons/io5';
 import { GlobalContext } from '../../../contexts/GlobalContext';
+import { getAsset } from '../../../assets';
 
 interface SearchProps {
   value?: string
@@ -13,7 +14,8 @@ interface SearchProps {
 
 const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
   const { value, onChange, onKeyDown, closeAction, style } = searchProps;
-  const { theme } = useContext(GlobalContext);
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const search = (code: number) => {
     if (code === 13) {
@@ -23,7 +25,7 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
   return (
     <div className={`flex w-auto py-3 px-4 rounded  ${theme.formSelect} ${theme.outlineNone} ${style ? style : ''}`}>
       <span className="w-6 mr-4 cursor-pointer" onClick={onKeyDown}>
-        <IconContext.Provider value={{ size: '1.5rem', color: '#667eea' }}>
+        <IconContext.Provider value={{ size: '1.5rem', color: theme.searchIcon[themeColor] }}>
           <IoSearchSharp />
         </IconContext.Provider>
       </span>

@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { useState, useEffect } from 'react';
 import { GlobalContext } from '../../contexts/GlobalContext';
 
 interface ContentCardProps {

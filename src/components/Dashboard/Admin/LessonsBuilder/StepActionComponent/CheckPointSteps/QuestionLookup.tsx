@@ -25,7 +25,7 @@ const QuestionLookup = (props: QuestionLookupProps) => {
   const [allQuestionsList, setAllQuestionsList] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(false);
 
   const selectItem = (questId: string) => {
     const selectedItem = selectedQuestionIds.find(id => id === questId);

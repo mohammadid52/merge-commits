@@ -3,11 +3,14 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 // Iconz
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaRulerVertical, FaQuestionCircle } from 'react-icons/fa';
-import { AiOutlineSchedule, AiOutlineUsergroupAdd, AiOutlineBook } from 'react-icons/ai';
-import { IoIosPeople } from 'react-icons/io';
+import { FaRulerVertical, FaQuestionCircle, FaAppleAlt, FaDoorOpen } from 'react-icons/fa';
+import { AiOutlineSchedule, AiOutlineUsergroupAdd, AiOutlineBook, } from 'react-icons/ai';
+import { RiDoorClosedLine, } from 'react-icons/ri';
+import { HiOutlineOfficeBuilding, } from 'react-icons/hi';
+import { IoIosPeople, IoMdBuild, } from 'react-icons/io';
+import { GiShinyApple, } from 'react-icons/gi';
 import { IoBookOutline, IoSchoolOutline } from 'react-icons/io5';
-import { BsReverseLayoutSidebarReverse} from 'react-icons/bs';
+import { BsReverseLayoutSidebarReverse } from 'react-icons/bs';
 
 import useDictionary from '../../../customHooks/dictionary';
 
@@ -117,6 +120,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               label: 'Lesson Builder',
               path: 'lesson-builder',
             },
+            {
+              title: sideBarLinksDict[userLanguage].ANTHOLOGY,
+              name: sideBarLinksDict[userLanguage].ANTHOLOGY,
+              label: 'Anthology',
+              path: 'anthology',
+            },
           ];
         });
       case 'TR':
@@ -141,6 +150,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].NOTICEBOARD,
               label: 'Noticeboard',
               path: 'noticeboard',
+            },
+            {
+              title: sideBarLinksDict[userLanguage].LESSON_BUILDER,
+              name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
+              label: 'Lesson Builder',
+              path: 'lesson-builder',
             },
           ];
         });
@@ -188,9 +203,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     if (pageUrlEndsWith('dashboard')) {
       if (role === 'FLW' || role === 'TR') {
         setCurrentPage('lesson-planner');
-      } else if (role === 'ST') {
+      }
+      if (role === 'ST') {
         setCurrentPage('classroom');
-      } else {
+      }
+
+      if (role === 'ADM') {
         setCurrentPage('manage-institutions');
       }
 
@@ -244,11 +262,11 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       case 'Classroom':
         return <IoBookOutline id={url} />;
       case 'Lesson Planner':
-        return <AiOutlineSchedule id={url} />;
+        return <FaAppleAlt id={url} />;
       case 'Lesson Builder':
-        return <FaRulerVertical id={url} />;
+        return <IoMdBuild id={url} />;
       case 'Institutions':
-        return <IoSchoolOutline id={url} />;
+        return <HiOutlineOfficeBuilding id={url} />;
       case 'Anthology':
         return <AiOutlineBook id={url} />;
       case 'Noticeboard':
@@ -267,15 +285,15 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     <div className={`link w-full h-12 z-40`}>
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string, label: string }, key: number) => (
-            <div key={`link_${key}`} id={link.path} onClick={handleLink}>
-              <div id={link.path} className={`${linkClass} ${currentPage === link.path && activeClass}`}>
-                <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
-                  {getMenuIcon(link.label, link.path)}
-                </IconContext.Provider>
-                {link.name}
-              </div>
+          <div key={`link_${key}`} id={link.path} onClick={handleLink}>
+            <div id={link.path} className={`${linkClass} ${currentPage === link.path && activeClass}`}>
+              <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
+                {getMenuIcon(link.label, link.path)}
+              </IconContext.Provider>
+              {link.name}
             </div>
-          ))
+          </div>
+        ))
         : null}
     </div>
   );

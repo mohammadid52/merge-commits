@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoMdAddCircleOutline, IoMdRemoveCircleOutline } from 'react-icons/io';
 
@@ -8,6 +8,8 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import TextArea from '../../../../Atoms/Form/TextArea';
 import CheckBox from '../../../../Atoms/Form/CheckBox';
 import Selector from '../../../../Atoms/Form/Selector';
+import { getAsset } from '../../../../../assets';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 interface AddQuestionModalProps {
   closeAction: () => void
@@ -32,6 +34,10 @@ interface InputValue {
 const AddQuestionModal = (props: AddQuestionModalProps) => {
 
   const { closeAction, saveAction, setActiveStep } = props;
+
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  
   const initialState = {
     question: '',
     notes: '',
@@ -118,12 +124,12 @@ const AddQuestionModal = (props: AddQuestionModalProps) => {
               </div>
               <div className="w-1/10 flex items-center">
                 <span className="w-auto cursor-pointer text-indigo-600">
-                  <IconContext.Provider value={{ size: '2rem', color: '#667eea' }}>
+                  <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
                     <IoMdAddCircleOutline />
                   </IconContext.Provider>
                 </span>
                 <span className="w-auto cursor-pointer text-indigo-600">
-                  <IconContext.Provider value={{ size: '2rem', color: '#667eea' }}>
+                  <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
                     <IoMdRemoveCircleOutline />
                   </IconContext.Provider>
                 </span>
@@ -137,12 +143,12 @@ const AddQuestionModal = (props: AddQuestionModalProps) => {
               </div>
               <div className="w-1/10 flex items-center">
                 <span className="w-auto cursor-pointer text-indigo-600">
-                  <IconContext.Provider value={{ size: '2rem', color: '#667eea' }}>
+                  <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
                     <IoMdAddCircleOutline />
                   </IconContext.Provider>
                 </span>
                 <span className="w-auto cursor-pointer text-indigo-600">
-                  <IconContext.Provider value={{ size: '2rem', color: '#667eea' }}>
+                  <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
                     <IoMdRemoveCircleOutline />
                   </IconContext.Provider>
                 </span>
@@ -155,12 +161,12 @@ const AddQuestionModal = (props: AddQuestionModalProps) => {
               </div>
               <div className="w-1/10 flex items-center">
                 <span className="w-auto cursor-pointer text-indigo-600">
-                  <IconContext.Provider value={{ size: '2rem', color: '#667eea' }}>
+                  <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
                     <IoMdAddCircleOutline />
                   </IconContext.Provider>
                 </span>
                 <span className="w-auto cursor-pointer text-indigo-600">
-                  <IconContext.Provider value={{ size: '2rem', color: '#667eea' }}>
+                  <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
                     <IoMdRemoveCircleOutline />
                   </IconContext.Provider>
                 </span>
