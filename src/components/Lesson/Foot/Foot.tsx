@@ -76,7 +76,7 @@ const Branding: React.FC = () => {
           <div className='w-3.3/10 flex justify-center items-center'>
             <NavLink to='/dashboard'>
               <img
-                className='h-18 px-4'
+                className='h-20 px-4'
                 src={getAsset(clientKey, 'main_logo')}
                 alt='Logo'
               />
