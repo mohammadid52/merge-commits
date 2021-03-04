@@ -62,7 +62,7 @@ const useStudentTimer = (inputs?: inputs) => {
             dispatch({ type: 'INCREMENT_SAVE_COUNT' });
             setTypeOfTimeout('');
             console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
-          }, 10000);
+          }, 5000);
         }
       }
     }
@@ -88,7 +88,7 @@ const useStudentTimer = (inputs?: inputs) => {
             dispatch({ type: 'INCREMENT_SAVE_COUNT' });
             setTypeOfTimeout('');
             console.log('%c save timer: ', 'background: #00FF00; color: #bada55', 'saved');
-          }, 60000);
+          }, 30000);
         }
       }
     }
