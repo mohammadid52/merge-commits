@@ -121,8 +121,8 @@ const useStudentTimer = (inputs?: inputs) => {
    *
    */
   useEffect(() => {
-      updateStudentData('autosave');
-      handleUpdateQuestionData();
+      // updateStudentData('autosave');
+      // handleUpdateQuestionData();
   }, [params.state.saveCount]);
 
 
@@ -179,6 +179,7 @@ const useStudentTimer = (inputs?: inputs) => {
           case 'notes':
             return {
               ...template,
+              type: 'notes',
               subType: 'notes',
               title: (params.state.componentState?.notes) ? params.state.data.lesson.title : '',
               content: (params.state.componentState?.notes) ? params.state.componentState.notes?.content : '',

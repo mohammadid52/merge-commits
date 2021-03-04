@@ -534,7 +534,7 @@ module.exports = {
         'medium-blue': '#30445e',
         'med-dark-blue': '#273548',
         'off-white': '#ffffffe6',
-        'mustard-yellow': '#C7A748',
+        'mustard': '#febd01',
         'orange-light': '#e4a04f',
         'orange-medium': '#e4714f',
         'pink-light': '#c64575',

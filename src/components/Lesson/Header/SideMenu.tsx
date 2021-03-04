@@ -1,15 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaRegThumbsUp } from 'react-icons/fa';
 import { AiOutlineHome } from 'react-icons/ai';
 import { LessonContext } from '../../../contexts/LessonContext';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../customGraphql/customMutations';
 import useStudentTimer from '../../../customHooks/timer';
 import NotesWidget from '../LessonComponents/Notes/NotesWidget';
+import { LessonHeaderBarProps } from '../../Header/LessonHeaderBar';
 
-const SideMenu = (props: { handlePopup: () => void }) => {
+const SideMenu = (props: LessonHeaderBarProps) => {
+  const {overlay, setOverlay} = props;
   const [cookies, setCookie] = useCookies(['lesson']);
   const { theme, state, dispatch } = useContext(LessonContext);
   const [isToggled, setIsToggled] = useState<string[]>(['']);
@@ -102,15 +103,19 @@ const SideMenu = (props: { handlePopup: () => void }) => {
             <AiOutlineHome />
           </IconContext.Provider>
           {/* </NavLink> */}
-          <p className="text-xs text-gray-200 text-center">Home</p>
+          <p className='text-xs text-gray-200 text-center'>Home</p>
         </div>
 
         {/**
          * NOTES
          */}
-         <NotesWidget/>
+        <NotesWidget overlay={overlay} setOverlay={setOverlay}/>
+
 
       </div>
+
+
+
     </>
   );
 };

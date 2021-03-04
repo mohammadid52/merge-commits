@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import ContentCard from '../../Atoms/ContentCard';
 import { AnthologyMapItem, ViewEditMode } from './Anthology';
@@ -7,11 +6,13 @@ import FormInput from '../../Atoms/Form/FormInput';
 import TextArea from '../../Atoms/Form/TextArea';
 import { dateFromServer } from '../../../utilities/time';
 import useDictionary from '../../../customHooks/dictionary';
+import RichTextEditor from '../../Atoms/RichTextEditor';
 
 interface ContentCardProps {
   viewEditMode: ViewEditMode;
   handleEditToggle: (editMode: string, studentDataID: string, idx: number) => void;
   handleEditUpdate: (e: React.ChangeEvent) => void;
+  handleWYSIWYGupdate: (id: any, value: any) => void;
   subSection: string;
   createTemplate: any;
   content?: any;
@@ -23,6 +24,7 @@ const AnthologyContent = (props: ContentCardProps) => {
     viewEditMode,
     handleEditToggle,
     handleEditUpdate,
+    handleWYSIWYGupdate,
     subSection,
     createTemplate,
     content,
@@ -30,6 +32,15 @@ const AnthologyContent = (props: ContentCardProps) => {
   } = props;
   const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
   const { anthologyDict } = useDictionary(clientKey);
+  const [notesData, setNotesData] = useState<{ key: string, value: string }>({ key: '', value: '' });
+
+  const setEditorContent = (html: string, text: string, idKey: string) => {
+    setNotesData({
+      key: idKey,
+      value: html,
+    });
+    handleWYSIWYGupdate(idKey, html);
+  };
 
   const viewModeView = (contentObj: AnthologyMapItem) => (
     <>
@@ -45,7 +56,7 @@ const AnthologyContent = (props: ContentCardProps) => {
        */}
       <div className={``}>
         <h4
-          className={`w-auto ${theme.lessonCard.title}`}>{contentObj.title ? contentObj.title : `No title`}</h4>
+          className={`mb-2 w-auto ${theme.lessonCard.title}`}>{contentObj.title ? contentObj.title : `No title`}</h4>
         {/*<p className={`text-left ${theme.lessonCard.subtitle}`}>{contentObj.subTitle ? contentObj.subTitle : `No subtitle`}</p>*/}
       </div>
       {/**
@@ -59,6 +70,11 @@ const AnthologyContent = (props: ContentCardProps) => {
       {/**
        *  section:  CONTENT
        */}
+      <div className={`p-3 border-l overflow-ellipsis overflow-hidden ellipsis`}>
+        {contentObj.content ?
+          <p dangerouslySetInnerHTML={{ __html: contentObj.content }} /> :
+          `No content`}
+      </div>
     </>);
 
   const editModeView = (contentObj: AnthologyMapItem) => (
@@ -73,7 +89,7 @@ const AnthologyContent = (props: ContentCardProps) => {
       {/**
        *  section: TITLE
        */}
-      <div className={`mt-2 `}>
+      <div className={`mb-2`}>
         <FormInput
           id={`title_${contentObj.type}_${contentObj.studentDataID}`}
           label={`Title`}
@@ -83,7 +99,7 @@ const AnthologyContent = (props: ContentCardProps) => {
         />
       </div>
       <div className={`mt-2 `}>
-      {/*  <FormInput
+        {/*  <FormInput
           id={`subTitle_${contentObj.type}_${contentObj.studentDataID}`}
           label={`Subtitle`}
           onChange={handleEditUpdate}
@@ -107,13 +123,15 @@ const AnthologyContent = (props: ContentCardProps) => {
        *  section:  CONTENT
        */}
       <div className={`mt-2 mb-2`}>
-        <TextArea
+        {/*<TextArea
           id={`content_${contentObj.type}_${contentObj.studentDataID}`}
           label={`Content`}
           onChange={handleEditUpdate}
           value={contentObj.content}
           placeHolder={contentObj.content ? contentObj.content : `Please add content...`}
-        />
+        />*/}
+        <RichTextEditor initialValue={contentObj.content}
+                        onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, `content_${contentObj.type}_${contentObj.studentDataID}`)} />
       </div>
     </>
   );
@@ -129,7 +147,7 @@ const AnthologyContent = (props: ContentCardProps) => {
       {/**
        *  section: TITLE
        */}
-      <div className={`mt-2 `}>
+      <div className={`pb-2 mb-2`}>
         <FormInput
           id={`title_${contentObj.type}_${contentObj.studentDataID}`}
           label={`Title`}
@@ -138,8 +156,8 @@ const AnthologyContent = (props: ContentCardProps) => {
           placeHolder={contentObj.title ? contentObj.title : `Please add title...`}
         />
       </div>
-        <div className={`mt-2 `}>
-     {/*   <FormInput
+      <div className={`mt-2 `}>
+        {/*   <FormInput
           id={`subTitle_${contentObj.type}_${contentObj.studentDataID}`}
           label={`Subtitle`}
           onChange={handleEditUpdate}
@@ -163,13 +181,8 @@ const AnthologyContent = (props: ContentCardProps) => {
        *  section:  CONTENT
        */}
       <div className={`mt-2 mb-2`}>
-        <TextArea
-          id={`content_${contentObj.type}_${contentObj.studentDataID}`}
-          label={`Content`}
-          onChange={handleEditUpdate}
-          value={contentObj.content}
-          placeHolder={contentObj.content ? contentObj.content : `Please add content...`}
-        />
+        <RichTextEditor initialValue={contentObj.content}
+                        onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, `content_${contentObj.type}_${contentObj.studentDataID}`)} />
       </div>
     </>)
   ;

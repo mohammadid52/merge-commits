@@ -130,6 +130,28 @@ const Anthology = () => {
     }
   };
 
+  const handleWYSIWYGupdate = (id: string, value: string) => {
+    const [key, type, studentDataID] = id.split('_');
+    switch (viewEditMode.mode) {
+      case 'edit':
+        const updatedStudentData = studentData.reduce((acc: AnthologyMapItem[], contentObj: any, idx: number) => {
+          if (contentObj.type === type && contentObj.studentDataID === studentDataID && idx === viewEditMode.idx) {
+            return [...acc, { ...contentObj, [key]: value }];
+          } else {
+            return [...acc, contentObj];
+          }
+        }, []);
+        setStudentData(updatedStudentData);
+        break;
+      case 'create':
+        if (viewEditMode.mode === 'create') {
+          const updatedNewStudentData = { ...newStudentData, [key]: value };
+          setNewStudentData(updatedNewStudentData);
+        }
+        break;
+    }
+  };
+
   const handleEditToggle = (editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | '', studentDataID: string, idx: number) => {
     setViewEditMode({ mode: editMode, studentDataID: studentDataID, idx: idx });
   };
@@ -286,7 +308,9 @@ const Anthology = () => {
           - Poems
     */}
       <AnthologyContent viewEditMode={viewEditMode} handleEditToggle={handleEditToggle}
-                        handleEditUpdate={handleEditUpdate} subSection={subSection}
+                        handleEditUpdate={handleEditUpdate}
+                        handleWYSIWYGupdate={handleWYSIWYGupdate}
+                        subSection={subSection}
                         createTemplate={newStudentData}
                         content={studentData.length > 0 && filterAnthologyContentBySubsection}
                         getContentObjIndex={getContentObjIndex} />
