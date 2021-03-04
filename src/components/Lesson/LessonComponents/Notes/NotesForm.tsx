@@ -30,11 +30,11 @@ const NotesForm = (props: LessonHeaderBarProps) => {
   return (
     <div className={`
         ${overlay === 'notes' ? theme.section : null} 
-        ${overlay === 'notes' ? 'opacity-100 -translate-y-0' : 'opacity-0 -translate-y-64'}
+        ${overlay === 'notes' ? 'opacity-100 -translate-y-0 z-100' : 'opacity-0 -translate-y-256 z-0'}
         transform transition duration-300 ease-in-out ...
       `}>
-      <div className={`p-4 rounded-br-xl bg-mustard`}>
-        <Banner title={`Notepad`} />
+      <div className={`px-4 pb-4 rounded-br-xl bg-tahini`}>
+        <Banner subtitle={`Class Notes`} />
         <RichTextEditor initialValue={`Take notes here...`}
                         onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'content')} />
       </div>

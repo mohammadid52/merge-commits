@@ -535,6 +535,7 @@ module.exports = {
         'med-dark-blue': '#273548',
         'off-white': '#ffffffe6',
         'mustard': '#febd01',
+        'tahini': '#c4b896',
         'orange-light': '#e4a04f',
         'orange-medium': '#e4714f',
         'pink-light': '#c64575',
