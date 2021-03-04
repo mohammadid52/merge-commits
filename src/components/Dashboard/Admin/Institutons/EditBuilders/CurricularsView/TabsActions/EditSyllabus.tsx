@@ -98,7 +98,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Edit Unit', url: `/dashboard/curricular/${curricularId}/syllabus/edit?id=${syllabusId}`, last: true }
+    { title: 'Unit Builder', url: `/dashboard/curricular/${curricularId}/syllabus/edit?id=${syllabusId}`, last: true }
   ];
 
   const onDragEnd = async (result: any) => {
@@ -476,7 +476,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Edit Unit" subtitle="Edit curricular unit." />
+        <SectionTitle title="Unit Builder" subtitle="Update curriculum units here." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -518,24 +518,24 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
                 <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                   <div>
-                    <TextArea value={description} rows={2} id='description' onChange={onInputChange} name='description' label="Description" />
+                    <TextArea value={description} rows={5} id='description' onChange={onInputChange} name='description' label="Description" />
                   </div>
                   <div>
-                    <TextArea value={purpose} rows={2} id='purpose' onChange={onInputChange} name='purpose' label="Purpose" />
+                    <TextArea value={purpose} rows={5} id='purpose' onChange={onInputChange} name='purpose' label="Purpose" />
                   </div>
                 </div>
 
                 <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                   <div>
-                    <TextArea value={objectives} rows={2} id='objectives' onChange={onInputChange} name='objectives' label="Objectives" />
+                    <TextArea value={objectives} rows={5} id='objectives' onChange={onInputChange} name='objectives' label="Objectives" />
                   </div>
                   <div>
-                    <TextArea value={methodology} rows={2} id='methodology' onChange={onInputChange} name='methodology' label="Methodology" />
+                    <TextArea value={methodology} rows={5} id='methodology' onChange={onInputChange} name='methodology' label="Methodology" />
                   </div>
                 </div>
                 <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                   <div>
-                    <TextArea value={policies} rows={2} id='policies' onChange={onInputChange} name='policies' label="Policies" />
+                    <TextArea value={policies} rows={5} id='policies' onChange={onInputChange} name='policies' label="Policies" />
                   </div>
                 </div>
                 {(messages.show && !messages.lessonError) ? (<div className="py-2 m-auto text-center">
@@ -551,7 +551,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
             <div className='bg-white shadow-5 sm:rounded-lg mb-4'>
               <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
                 <h3 className="text-lg text-center leading-6 font-medium text-gray-900">
-                  LESSONS
+                  LESSON PLAN MANAGER
                 </h3>
               </div>
               <div className="w-9.5/10 m-auto p-4">
