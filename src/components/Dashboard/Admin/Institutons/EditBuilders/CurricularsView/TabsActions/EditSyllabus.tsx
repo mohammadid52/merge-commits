@@ -101,6 +101,14 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     { title: 'Unit Builder', url: `/dashboard/curricular/${curricularId}/syllabus/edit?id=${syllabusId}`, last: true }
   ];
 
+  const gotoLessonBuilder = (id: string, type: string) => {
+    if (type === 'lesson') {
+      history.push(`/dashboard/lesson-builder/lesson/edit?lessonId=${id}`);
+    } else {
+      history.push(`/dashboard/lesson-builder/lesson/edit?assessmentId=${id}`)
+    }
+  }
+
   const onDragEnd = async (result: any) => {
     if (result.source.index !== result.destination.index) {
       const list = reorder(lessonsIds, result.source.index, result.destination.index)
@@ -608,12 +616,12 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
                                       >
-                                        <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200 cursor-move">
+                                        <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                                           <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
-                                          <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal">
+                                          <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer" onClick={() => gotoLessonBuilder(item.id, item.type)}>
                                             {item.title ? item.title : '--'}
                                           </div>
-                                          <div className="flex w-2/10 items-center px-8 py-3 text-left text-s text-gray-500 leading-4 font-medium whitespace-normal">
+                                          <div className="flex w-2/10 items-center px-8 py-3 text-left text-s text-gray-500 leading-4 font-medium whitespace-normal cursor-pointer" onClick={() => gotoLessonBuilder(item.id, item.type)}>
                                             {item.type ? item.type : '--'}
                                           </div>
                                           <div className="flex w-3/10 items-center px-8 py-3 text-left text-s text-gray-500 leading-4 font-medium ">
@@ -627,7 +635,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                                           </div>
                                           {
                                             (editState.id !== item.id) ?
-                                              <span className={`w-1/10 flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`} onClick={() => editCurrentLesson(item.id)}>
+                                              <span className={`w-1/10 flex items-center text-left cursor-pointer px-8 py-3 ${theme.textColor[themeColor]}`} onClick={() => editCurrentLesson(item.id)}>
                                                 edit
                                               </span>
                                               :
