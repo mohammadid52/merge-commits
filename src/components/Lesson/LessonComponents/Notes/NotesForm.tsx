@@ -3,9 +3,11 @@ import { LessonContext } from '../../../../contexts/LessonContext';
 import RichTextEditor from '../../../Atoms/RichTextEditor';
 import Banner from '../Banner';
 import { LessonHeaderBarProps } from '../../../Header/LessonHeaderBar';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { FaRegWindowMinimize } from 'react-icons/fa';
 
 const NotesForm = (props: LessonHeaderBarProps) => {
-  const { overlay } = props;
+  const { overlay, setOverlay } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
 
   const [notesData, setNotesData] = useState<{ content: string }>({ content: '' });
@@ -33,7 +35,13 @@ const NotesForm = (props: LessonHeaderBarProps) => {
         ${overlay === 'notes' ? 'opacity-100 -translate-y-0 z-100' : 'opacity-0 -translate-y-256 z-0'}
         transform transition duration-300 ease-in-out ...
       `}>
-      <div className={`px-4 pb-4 rounded-br-xl bg-tahini`}>
+      <div className={`relative px-4 pb-4 rounded-br-xl bg-tahini`}>
+        <div className={`absolute w-auto right-0 top-0 p-4 text-white cursor-pointer z-50 transition duration-500 ease-in-out transform translate-y-0 hover:-translate-y-2`}
+             onClick={() => setOverlay('')}>
+          <IconContext.Provider value={{className: 'w-auto h-auto'}}>
+            <FaRegWindowMinimize size={24}/>
+          </IconContext.Provider>
+        </div>
         <Banner subtitle={`Class Notes`} />
         <RichTextEditor initialValue={`Take notes here...`}
                         onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'content')} />

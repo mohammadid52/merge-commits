@@ -12,6 +12,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
 import * as customQueries from '../../customGraphql/customQueries';
 import NotesForm from './LessonComponents/Notes/NotesForm';
+import set = Reflect.set;
 
 const LessonApp = () => {
   const { state, theme } = useContext(LessonContext);
@@ -32,7 +33,7 @@ const LessonApp = () => {
        *    - Make a component for the overlay
        */}
       <div className={`fixed w-1/2 right-1/2 top-1/2 transform translate-x-1/2 -translate-y-1/2 ${overlay === '' ? 'z-0' : 'z-50'}`}>
-        <NotesForm overlay={overlay}/>
+        <NotesForm overlay={overlay} setOverlay={setOverlay}/>
       </div>
 
       <Body />
