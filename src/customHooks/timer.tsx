@@ -121,8 +121,8 @@ const useStudentTimer = (inputs?: inputs) => {
    *
    */
   useEffect(() => {
-      // updateStudentData('autosave');
-      // handleUpdateQuestionData();
+      updateStudentData('autosave');
+      handleUpdateQuestionData();
   }, [params.state.saveCount]);
 
 
