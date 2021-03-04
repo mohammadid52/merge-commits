@@ -7,7 +7,6 @@ import { MdSpeakerNotes } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
 import { FiUserCheck } from 'react-icons/fi';
 
-import * as queries from '../../../../../../graphql/queries';
 import * as customQueries from '../../../../../../customGraphql/customQueries';
 
 import { languageList } from '../../../../../../utilities/staticData';
@@ -76,7 +75,7 @@ const CurricularView = (props: CurricularViewProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Curricular Info', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
+    { title: 'Curriculum Builder', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
   ]
   const tabs = [
     { index: 0, title: 'Units', icon: <BiNotepad />, active: false, content: <SyllabusList savedSyllabi={curricularData.syllabusList} curricularId={currID} loading={loading} /> },
@@ -149,7 +148,7 @@ const CurricularView = (props: CurricularViewProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Curricular Info" subtitle="Curricular information" />
+        <SectionTitle title="Curriculum Builder" subtitle="Build curriculum, units and lesson plans here" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
           {currentPath !== 'edit' ? (
