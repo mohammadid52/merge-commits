@@ -36,10 +36,10 @@ const NotesForm = (props: LessonHeaderBarProps) => {
         transform transition duration-300 ease-in-out ...
       `}>
       <div className={`relative px-4 pb-4 rounded-br-xl bg-tahini`}>
-        <div className={`absolute w-auto right-0 top-0 p-4 text-white cursor-pointer z-50 transition duration-500 ease-in-out transform translate-y-0 hover:-translate-y-2`}
+        <div className={`absolute w-auto right-0 top-0 p-2 m-4 text-white cursor-pointer z-50 transition duration-200 ease-in-out rounded bg-white bg-opacity-10 hover:bg-opacity-40`}
              onClick={() => setOverlay('')}>
           <IconContext.Provider value={{className: 'w-auto h-auto'}}>
-            <FaRegWindowMinimize size={24}/>
+            <FaRegWindowMinimize size={18}/>
           </IconContext.Provider>
         </div>
         <Banner subtitle={`Class Notes`} />
