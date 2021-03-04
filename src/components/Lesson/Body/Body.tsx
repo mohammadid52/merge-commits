@@ -5,6 +5,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customQueries from '../../../customGraphql/customQueries';
 import queryString from 'query-string';
 import * as mutations from '../../../graphql/mutations';
+import NotesForm from '../LessonComponents/Notes/NotesForm';
 
 const Intro = lazy(() => import('../LessonComponents/Intro/Intro'));
 const Story = lazy(() => import('../LessonComponents/StoryPage/Story'));
@@ -93,49 +94,55 @@ const Body = () => {
   }, [state.currentPage, state.pages]);
 
   return (
-    <div className={`z-0 px-4 pb-4 pt-8 ${theme.bg} ${state.data.lesson.type === 'survey' ? 'mt-12' :''}`}>
-      <Switch>
-        <Route exact path={`${match.url}/`}>
-          {
-            (() => {
-              if (lessonType === 'assessment' || lessonType === 'survey') {
-                return (
-                  <>
-                    <Intro />
-                    <Checkpoint isTeacher={false} />
-                  </>
-                );
-              } else {
-                return (<Intro />);
-              }
-            })()
-          }
-        </Route>
-        <Route path={`${match.url}/warmup`}>{pageFetch('warmup')}</Route>
-        <Route path={`${match.url}/corelesson`}>{pageFetch('corelesson')}</Route>
-        <Route path={`${match.url}/activity`}>{pageFetch('activity')}</Route>
-        <Route path={`${match.url}/outro`}>
-          <Outro />
-        </Route>
-        <Route path={`${match.url}/checkpoint`}>
-          <Checkpoint />
-        </Route>
-        {/*<Route path={`${match.url}/assessment`}>
+    <>
+      <div className={`z-0 px-4 pb-4 pt-8 ${theme.bg} ${state.data.lesson.type === 'survey' ? 'mt-12' : ''}`}>
+
+        {/**
+         *  COMPONENT SWITCH
+         */}
+        <Switch>
+          <Route exact path={`${match.url}/`}>
+            {
+              (() => {
+                if (lessonType === 'assessment' || lessonType === 'survey') {
+                  return (
+                    <>
+                      <Intro />
+                      <Checkpoint isTeacher={false} />
+                    </>
+                  );
+                } else {
+                  return (<Intro />);
+                }
+              })()
+            }
+          </Route>
+          <Route path={`${match.url}/warmup`}>{pageFetch('warmup')}</Route>
+          <Route path={`${match.url}/corelesson`}>{pageFetch('corelesson')}</Route>
+          <Route path={`${match.url}/activity`}>{pageFetch('activity')}</Route>
+          <Route path={`${match.url}/outro`}>
+            <Outro />
+          </Route>
+          <Route path={`${match.url}/checkpoint`}>
+            <Checkpoint />
+          </Route>
+          {/*<Route path={`${match.url}/assessment`}>
           <Assessments />
         </Route>*/}
-        <Route
-          path={`${match.url}/intro`}
-          render={({ location }) => (
-            <Redirect
-              to={{
-                pathname: `${match.url}`,
-                state: { from: location },
-              }}
-            />
-          )}
-        />
-      </Switch>
-    </div>
+          <Route
+            path={`${match.url}/intro`}
+            render={({ location }) => (
+              <Redirect
+                to={{
+                  pathname: `${match.url}`,
+                  state: { from: location },
+                }}
+              />
+            )}
+          />
+        </Switch>
+      </div>
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { SetStateAction, useContext, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
 import { useOutsideAlerter } from '../General/hooks/outsideAlerter';
@@ -8,7 +8,14 @@ import LessonTopMenu from '../Lesson/Header/LessonTopMenu';
 import SideMenu from '../Lesson/Header/SideMenu';
 import SurveyTopMenu from '../Lesson/Header/SurveyTopMenu';
 
-const LessonHeaderBar = () => {
+export interface LessonHeaderBarProps {
+  handlePopup?: () => void;
+  setOverlay?: React.Dispatch<SetStateAction<string>>;
+  overlay?: string;
+}
+
+const LessonHeaderBar = (props: LessonHeaderBarProps) => {
+  const {overlay, setOverlay} = props;
   const history = useHistory();
   const { theme, state, dispatch } = useContext(LessonContext);
   const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
@@ -83,7 +90,7 @@ const LessonHeaderBar = () => {
        *
        */}
 
-      <SideMenu handlePopup={handlePopup} />
+      <SideMenu handlePopup={handlePopup} overlay={overlay} setOverlay={setOverlay}/>
     </div>
   );
 };

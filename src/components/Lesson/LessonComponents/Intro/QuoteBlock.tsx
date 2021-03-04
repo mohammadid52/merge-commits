@@ -72,9 +72,9 @@ const QuoteBlock = () => {
       </div>
 
       {/* READ ICON - RIGHT TEXT */}
-      <div className={`${showReadMe ? 'visible' : 'hidden'} absolute w-auto overflow-x-hidden top-1 right-0 transform translate-x-full`}>
+      {/*<div className={`${showReadMe ? 'visible' : 'hidden'} absolute w-auto overflow-x-hidden top-1 right-0 transform translate-x-full`}>
         <p className='animate-bounce ml-2'>&larr; Read Me!</p>
-      </div>
+      </div>*/}
 
       <div className='h-full text-left flex flex-col mr-8 items-start'>
         {/* BIO */}
