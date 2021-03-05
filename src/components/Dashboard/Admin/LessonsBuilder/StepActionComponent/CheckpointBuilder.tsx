@@ -39,6 +39,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     title: '',
     subtitle: '',
     label: '',
+    estTime: 0,
     instructionsTitle: '',
     purposeHtml: '<p></p>',
     objectiveHtml: '<p></p>',
@@ -187,7 +188,8 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           objectiveHtml: results.objectives,
           instructionHtml: results.instructions,
           language: selectedLanguage,
-          checkpQuestions: results?.questions?.items
+          checkpQuestions: results?.questions?.items,
+          estTime: results?.estTime
         });
         setSelectedDesigners(designers);
         const checkpointQuestions = results?.questions?.items;
