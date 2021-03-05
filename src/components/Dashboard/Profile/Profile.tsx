@@ -375,7 +375,7 @@ const Profile = (props: ProfilePageProps) => {
                     </NavLink>
                   </span>
                 </div>
-                <p className="text-gray-600 my-2">Click the circle above to update profile picture.</p>
+                <p className="text-gray-600 my-2">{dashboardProfileDict[userLanguage]['PROFILE_INSTRUCTON']} </p>
                 <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
                   {`${person.preferredName ? person.preferredName : person.firstName} ${person.lastName}`}
                   <p className="text-md md:text-lg">{person.institution}</p>
