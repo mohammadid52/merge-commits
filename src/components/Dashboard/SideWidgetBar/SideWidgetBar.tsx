@@ -39,9 +39,9 @@ const SideWidgetBar = (props: DashboardProps) => {
        */}
       {
       <ImageWidget
-      source={`https://selready.s3.us-east-2.amazonaws.com/SpongeBobMeme.jpeg`}
+      source={`https://iconoclastimages141704-uat.s3.amazonaws.com/public/CurateImage.jpg`}
       altdesc={`fun-meme`}
-      title={`Meme`}
+      title={`Reflection`}
       card={true}
       classProp={`w-auto h-auto`}
       />

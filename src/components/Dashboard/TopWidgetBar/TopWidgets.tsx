@@ -2,39 +2,21 @@ import React, { useEffect, useState } from 'react';
 
 const quotes = [
   {
-    quote: 'Education is the most powerful weapon which you can use to change the world',
-    source: 'Nelson Mandela',
+    quote: 'The principles of restorative justice ask us to look at who has a stake in a given offense and to regard these people with full consideration of their humanity.',
+    source: 'Aremisia Solstice',
   },
   {
-    quote: 'The cure for boredom is curiosity. There is no cure for curiosity',
-    source: 'Dorothy Parker',
+    quote: 'I think it is healing behavior, to look at something so broken and see the possibility and wholeness in it.',
+    source: 'adrienne maree brown ',
   },
   {
-    quote:
-      'If You are planning for a year, sow rice; if you are planning for a decade, plant trees; if you are planning for a lifetime, educate people',
-    source: 'Chinese Proverb',
+    quote: 'First forget inspiration. Habit is more dependable. Habit will sustain you whether youre inspired or not. Habit will help you finish and polish your stories. Inspiration wont. Habit is persistence in practice.',
+    source: 'Octavia Butler',
   },
+
   {
-    quote: 'It’s not that I’m so smart, it’s just that I stay with problems longer',
-    source: 'Albert Einstein',
-  },
-  {
-    quote: 'An investment in knowledge pays the best interest',
-    source: 'Benjamin Franklin',
-  },
-  {
-    quote:
-      'Some people think only intellect counts: knowing how to solve problems, knowing how to get by, knowing how to identify an advantage and seize it. But the functions of intellect are insufficient without courage, love, friendship, compassion, and empathy',
-    source: 'Dean Koontz',
-  },
-  {
-    quote:
-      'Good writing is remembering detail. Most people want to forget. Don’t forget things that were painful or embarrassing or silly. Turn them into a story that tells the truth',
-    source: 'Paula Danziger',
-  },
-  {
-    quote: 'The beautiful thing about learning is that no one can take it away from you',
-    source: 'B. B. King',
+    quote: 'The denunciation of injustice implies the rejection of the use of Christianity to legitimize the established order',
+    source: 'Gustavo Gutierrez ',
   },
 ];
 
