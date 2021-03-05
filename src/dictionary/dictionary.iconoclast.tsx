@@ -138,8 +138,8 @@ const anthologyDict: any = {
         TITLE: 'Notebook',
         TABS: {
             A: 'Journal',
-            B: 'Stories',
-            C: 'Poems',
+            B: 'Class Work',
+            C: 'Class Notes',
         },
         ACTIONS: {
             EDIT: 'Edit',
@@ -152,8 +152,8 @@ const anthologyDict: any = {
         TITLE: 'Cuaderno',
         TABS: {
             A: 'Diario',
-            B: 'Cuentos',
-            C: 'Poemas',
+            B: 'Class Work',
+            C: 'Class Notes',
         },
         ACTIONS: {
             EDIT: 'Editar',

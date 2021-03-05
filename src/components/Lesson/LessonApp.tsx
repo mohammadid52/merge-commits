@@ -11,9 +11,12 @@ import queryString from 'query-string';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
 import * as customQueries from '../../customGraphql/customQueries';
+import NotesForm from './LessonComponents/Notes/NotesForm';
+import set = Reflect.set;
 
 const LessonApp = () => {
   const { state, theme } = useContext(LessonContext);
+  const [overlay, setOverlay] = useState<string>('');
 
   if (state.status !== 'loaded') {
     return <LessonLoading />;
@@ -21,8 +24,18 @@ const LessonApp = () => {
 
   return (
     <div className={`${theme.bg} w-full md:h-screen flex flex-col items-start`}>
-      <LessonHeaderBar />
-      <NotificationBar />
+      <LessonHeaderBar overlay={overlay} setOverlay={setOverlay}/>
+      {/*<NotificationBar />*/}
+
+      {/**
+       *  COMPONENT OVERLAY
+       *  TODO:
+       *    - Make a component for the overlay
+       */}
+      <div className={`fixed w-1/2 right-1/2 top-1/2 transform translate-x-1/2 -translate-y-1/2 ${overlay === '' ? 'z-0' : 'z-50'}`}>
+        <NotesForm overlay={overlay} setOverlay={setOverlay}/>
+      </div>
+
       <Body />
       <Foot />
     </div>

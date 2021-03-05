@@ -326,6 +326,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
               <Loader />}
             <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
           </label>}
+        <p className="text-gray-600 my-4">Click the circle above to update institution image.</p>
       </div>
 
 

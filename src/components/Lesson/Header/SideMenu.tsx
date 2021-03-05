@@ -1,14 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaRegThumbsUp } from 'react-icons/fa';
 import { AiOutlineHome } from 'react-icons/ai';
 import { LessonContext } from '../../../contexts/LessonContext';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../customGraphql/customMutations';
 import useStudentTimer from '../../../customHooks/timer';
+import NotesWidget from '../LessonComponents/Notes/NotesWidget';
+import { LessonHeaderBarProps } from '../../Header/LessonHeaderBar';
 
-const SideMenu = (props: { handlePopup: () => void }) => {
+const SideMenu = (props: LessonHeaderBarProps) => {
+  const {overlay, setOverlay} = props;
   const [cookies, setCookie] = useCookies(['lesson']);
   const { theme, state, dispatch } = useContext(LessonContext);
   const [isToggled, setIsToggled] = useState<string[]>(['']);
@@ -77,34 +79,43 @@ const SideMenu = (props: { handlePopup: () => void }) => {
   return (
     <>
       <div className={`absolute top-5 right-0 w-auto h-auto flex flex-col justify-end items-center px-6 pt-1`}>
-        {!state.viewing ? (
-          <div
-            id="lesson-done"
-            className={`hidden cursor-pointer flex flex-col justify-center items-center mb-4`}
-            onClick={handleDone}>
-            <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
-              <FaRegThumbsUp className={`${isToggled.includes('lesson-done') && 'animate-jiggle'}`} />
-            </IconContext.Provider>
-            <p className={`text-xs text-gray-200 text-center`}>Done</p>
-          </div>
-        ) : (
+
+        {/**
+         * AUTOSAVE
+         */}
+        {state.viewing ? (
           <div className={`cursor-default flex flex-col justify-center items-center mb-4`}>
-            <div className="relative flex items-center justify-center h-4 w-4 m-1">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-4 w-4 bg-green-600"></span>
+            <div className='relative flex items-center justify-center h-4 w-4 m-1'>
+              <span
+                className='animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75' />
+              <span className='relative inline-flex rounded-full h-4 w-4 bg-green-600' />
             </div>
             <p className={`self-end text-xs text-gray-200 text-center`}>AutoSave</p>
           </div>
-        )}
+        ) : null}
+
+        {/**
+         * HOME
+         */}
         <div className={`cursor-pointer flex flex-col justify-center items-center mb-4`} onClick={props.handlePopup}>
           {/* <NavLink to='/dashboard'> */}
           <IconContext.Provider value={{ size: '1.5rem' }}>
             <AiOutlineHome />
           </IconContext.Provider>
           {/* </NavLink> */}
-          <p className="text-xs text-gray-200 text-center">Home</p>
+          <p className='text-xs text-gray-200 text-center'>Home</p>
         </div>
+
+        {/**
+         * NOTES
+         */}
+        <NotesWidget overlay={overlay} setOverlay={setOverlay}/>
+
+
       </div>
+
+
+
     </>
   );
 };

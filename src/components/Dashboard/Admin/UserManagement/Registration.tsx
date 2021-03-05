@@ -141,7 +141,7 @@ const Registration = () => {
           phone: '00',
           birthdate: '10-10-2020',
           grade: '1',
-          role: 'ST',
+          role: '',
           externalId: '3',
         }
       })
@@ -307,7 +307,7 @@ const Registration = () => {
   }
 
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = () => {
     validation();
   }
 
@@ -482,13 +482,18 @@ const Registration = () => {
           </div>
         </div>
 
-        <div className="w-full flex justify-end">
-          <span className="w-2/10 inline-flex rounded-md shadow-sm">
+        <div className="w-1.5/10 ml-auto">
+          {/* <span className="w-2/10 inline-flex rounded-md shadow-sm">
             <button type="submit" onClick={handleSubmit}
               className="text-white bg-indigo-600 hover:bg-indigo-500 focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 h-10 inline-flex justify-center py-2 px-4 border border-transparent text-m leading-5 font-medium rounded-md focus:outline-none transition duration-150 ease-in-out">
               Submit
             </button>
-          </span>
+          </span> */}
+          <Buttons
+            btnClass="py-2 px-4 text-xs w-full"
+            label={'Submit'}
+            onClick={handleSubmit}
+          />
         </div>
       </div>
     </div>

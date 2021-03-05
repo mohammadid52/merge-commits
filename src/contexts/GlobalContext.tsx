@@ -13,7 +13,7 @@ export const standardTheme = {
     cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue',
   },
   blockQuote: 'px-4 border-l-4 border-white border-opacity-50 bg-black bg-opacity-40',
-  banner: 'w-auto pb-2 mb-2 relative font-open font-medium text-left flex flex-row items-center text-gray-200 mt-4',
+  banner: 'w-auto pb-2 mb-2 relative font-open font-medium text-left flex flex-row items-center text-gray-100 mt-4',
   section: 'w-full max-w-256 mx-auto  flex flex-col justify-between items-center z-50',
   elem: {
     bg: 'bg-dark-block',

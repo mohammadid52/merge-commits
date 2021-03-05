@@ -50,7 +50,6 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const [institutionList, setInstitutionList] = useState(null);
   const [designersList, setDesignersList] = useState([]);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
-  const [selectedCheckpoints, setSelectedCheckpoints] = useState([]);
   const [curricularData, setCurricularData] = useState<InitialData>(initialData);
   const [loading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState({
@@ -107,9 +106,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     }
     setSelectedDesigners(updatedList)
   }
-  const selectCheckpoint = () => {
 
-  }
   const selectInstitute = (val: string, name: string, id: string) => {
     setCurricularData({
       ...curricularData,
@@ -143,7 +140,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           languages: languagesCode,
           designers: designers
         }
-        const newCurricular = await API.graphql(graphqlOperation(customMutations.createCurriculum, { input: input }));
+        const response: any = await API.graphql(graphqlOperation(customMutations.createCurriculum, { input: input }));
+        const newCurricular: any = response?.data?.createCurriculum;
         setMessages({
           show: true,
           message: 'New curriculum has been saved.',
@@ -151,6 +149,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         })
         setCurricularData(initialData);
         setIsLoading(false);
+        if (newCurricular?.id) {
+          history.push(`/dashboard/manage-institutions/curricular/${newCurricular.id}/syllabus/add`)
+        }
       } catch {
         setMessages({
           show: true,
@@ -340,12 +341,6 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
                 Select Designers
               </label>
               <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
-            </div>
-            <div className="px-3 py-4">
-              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                Select Checkpoint
-              </label>
-              <MultipleSelector selectedItems={selectedCheckpoints} placeholder="Checkpoints" list={checkpointsList} onChange={selectCheckpoint} />
             </div>
             <div className="px-3 py-4">
               <TextArea value={description} id='description' onChange={onChange} name='description' label="Description" />

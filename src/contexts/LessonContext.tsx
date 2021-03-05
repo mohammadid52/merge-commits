@@ -325,7 +325,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         existQuestionDatas && recentQuestionOp === '' ||
         existQuestionDatas && recentQuestionOp === 'created'
       ) {
-        console.log('qData exists, this is update array ->', questionDataUpdateArray)
         dispatch({ type: 'SET_QUESTION_DATA_UPDATE', payload: { data: questionDataUpdateArray } });
         setRecentQuestionOp('fetched');
       }
@@ -440,12 +439,13 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   useEffect(() => {
     if (data) {
       let initialComponentState: any = {};
+      let initialComponentStateSecondary: any = { notes: '' };
       lesson.lessonPlan.forEach((item: { type: string; stage: string }) => {
         initialComponentState[item.type] = data[item.stage];
       });
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB',
-        payload: initialComponentState,
+        payload: { ...initialComponentState, ...initialComponentStateSecondary },
       });
     }
   }, [data]);
