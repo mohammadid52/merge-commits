@@ -46,9 +46,9 @@ export const TeacherNotifications = () => {
         <p className={`text-sm p-2 font-semibold border-b border-dark-gray border-opacity-10`}>Teacher's Note:</p>
         <div key={`teacher_side_note`} className={`p-2 border-b border-dark-gray  border-opacity-10`}>
           <p className={`text-xs text-dark-gray`}>
-            Please complete the remaining parts of the lessons and be prepared to discuss what you've learnt next class.
+          We invite you to use your Notebook for continued reflection throughtout the workshop today.
           </p>
-          <p className={`text-xs text-dark-gray`}>- Marlon.</p>
+          <p className={`text-xs text-dark-gray`}><em>- Brandi</em></p>
         </div>
       </div>
     </div>
@@ -61,8 +61,8 @@ export const MediaRecommendation = () => {
       <div className={`bg-white border border-dark-gray border-opacity-10 rounded`}>
         <p className={`text-sm p-2 font-semibold border-b border-dark-gray  border-opacity-10`}>Recommended Book:</p>
         <div key={`teacher_side_note`} className={`p-2 border-b border-dark-gray  border-opacity-10`}>
-          <p className={`text-sm font-semibold text-dark-gray`}>The Late Mattia Pascal</p>
-          <p className={`text-xs text-dark-gray`}>By Luigi Pirandello</p>
+          <p className={`text-sm font-medium text-dark-gray border-b pb-2`}>Beyond Survival: Strategies and Stories from the Transformative Justice Movement</p>
+          <p className={`text-xs text-dark-gray pt-2`}><a href="https://www.amazon.com/Beyond-Survival-Strategies-Transformative-Movement/dp/184935362X" target="_blank"> <b>Click to purchase on Amazon</b></a></p>
         </div>
       </div>
     </div>

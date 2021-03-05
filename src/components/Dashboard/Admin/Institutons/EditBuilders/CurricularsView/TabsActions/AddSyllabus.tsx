@@ -57,7 +57,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Add Unit', url: `/dashboard/manage-institutions/curricular/${curricularId}/syllabus/add`, last: true }
+    { title: 'Unit Builder', url: `/dashboard/manage-institutions/curricular/${curricularId}/syllabus/add`, last: true }
   ];
 
   const onInputChange = (e: any) => {
@@ -172,7 +172,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
         } else {
           console.log('Could not add unit');
         }
-      } catch{
+      } catch {
         setMessages({
           show: true,
           message: 'Unable to save new unit please try again later.',
@@ -224,7 +224,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Add Unit" subtitle="Add new unit to curricular." />
+        <SectionTitle title="Unit Builder" subtitle="Create curriculum units here." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -258,24 +258,24 @@ const AddSyllabus = (props: AddSyllabusProps) => {
 
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
-                <TextArea value={description} rows={2} id='description' onChange={onInputChange} name='description' label="Description" />
+                <TextArea value={description} rows={5} id='description' onChange={onInputChange} name='description' label="Description" />
               </div>
               <div>
-                <TextArea value={purpose} rows={2} id='purpose' onChange={onInputChange} name='purpose' label="Purpose" />
+                <TextArea value={purpose} rows={5} id='purpose' onChange={onInputChange} name='purpose' label="Purpose" />
               </div>
             </div>
 
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
-                <TextArea value={objectives} rows={2} id='objectives' onChange={onInputChange} name='objectives' label="Objectives" />
+                <TextArea value={objectives} rows={5} id='objectives' onChange={onInputChange} name='objectives' label="Objectives" />
               </div>
               <div>
-                <TextArea value={methodology} rows={2} id='methodology' onChange={onInputChange} name='methodology' label="Methodology" />
+                <TextArea value={methodology} rows={5} id='methodology' onChange={onInputChange} name='methodology' label="Methodology" />
               </div>
             </div>
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
-                <TextArea value={policies} rows={2} id='policies' onChange={onInputChange} name='policies' label="Policies" />
+                <TextArea value={policies} rows={5} id='policies' onChange={onInputChange} name='policies' label="Policies" />
               </div>
 
             </div>
