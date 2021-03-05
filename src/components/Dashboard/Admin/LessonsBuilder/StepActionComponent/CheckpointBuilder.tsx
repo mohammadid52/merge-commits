@@ -39,7 +39,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     title: '',
     subtitle: '',
     label: '',
-    estTime: 0,
+    estTime: '',
     instructionsTitle: '',
     purposeHtml: '<p></p>',
     objectiveHtml: '<p></p>',
