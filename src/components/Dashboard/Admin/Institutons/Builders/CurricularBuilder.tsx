@@ -64,7 +64,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const checkpointsList: any = [];
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Curricular Creation', url: '/dashboard/curricular-creation', last: true }
+    { title: 'New Curriculum', url: '/dashboard/curricular-creation', last: true }
   ];
 
   const onChange = (e: any) => {
@@ -303,7 +303,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Create New Curricular" subtitle="Add new curricular to the list" />
+        <SectionTitle title="Create New Curriculum" subtitle="Add new curriculum to the list" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -312,10 +312,10 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CURRICULAR INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CURRICULUM INFORMATION</h3>
           <div className="">
             <div className="px-3 py-4">
-              <FormInput value={name} id='curricularName' onChange={onChange} name='name' label="Curricular Name" isRequired />
+              <FormInput value={name} id='curricularName' onChange={onChange} name='name' label="Curriculum Name" isRequired />
             </div>
 
             {/* 
