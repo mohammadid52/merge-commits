@@ -58,9 +58,14 @@ const DragableAccordion = (props: DragableAccordionProps) => {
                           >
                             <div className={`w-full px-8 py-6 text-left ${theme.outlineNone} ${selectedItem === item.id ? `border rounded-lg ${theme.borderColorLight[themeColor]}` : ''}`}>
                               <div className="flex items-center justify-between">
-                                <span className={`text-xs md:text-base font-medium cursor-pointer ${selectedItem === item.id && theme.textColor[themeColor]} `} onClick={() => changeView(item.id)}>
-                                  <span>{item.title}</span><br />
-                                  <span className="text-sm leading-6 text-gray-500">{item.subtitle ? item.subtitle : ''}</span>
+                                <span className={`text-xs md:text-base font-medium cursor-pointer flex ${selectedItem === item.id && theme.textColor[themeColor]} `} onClick={() => changeView(item.id)}>
+                                  <div className="w-auto">
+                                    <span className="mr-4">{index + 1}. </span>
+                                  </div>
+                                  <div>
+                                    <span>{item.title}</span><br />
+                                    <span className="text-sm leading-6 text-gray-500">{item.subtitle ? item.subtitle : ''}</span>
+                                  </div>
                                 </span>
                                 {showEdit && (
                                   <div className={`w-auto text-xs md:text-base mx-16 cursor-pointer ${theme.textColor[themeColor]} `}>
