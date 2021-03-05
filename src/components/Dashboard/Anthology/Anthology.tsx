@@ -234,18 +234,6 @@ const Anthology = () => {
       content: newStudentData.content,
     };
 
-    console.log('input: ', {
-      'input':
-        {
-          lessonProgress: newStudentData.lessonProgress,
-          currentLocation: newStudentData.currentLocation,
-          status: newStudentData.status,
-          syllabusLessonID: newStudentData.syllabusLessonID,
-          studentID: state.user.email,
-          studentAuthID: state.user.authId,
-          anthologyContent: removeHelperProperties,
-        },
-    });
     try {
       const studentDataCreate: any = await API.graphql(graphqlOperation(mutations.createStudentData, {
         input:
