@@ -48,8 +48,12 @@ export interface UserInfo {
   birthdate?: string
 }
 
-const Profile: React.FC = () => {
+interface ProfilePageProps {
+  updateAuthState?: Function
+}
 
+const Profile = (props: ProfilePageProps) => {
+  const { updateAuthState } = props;
   const [person, setPerson] = useState<UserInfo>(
     {
       id: '',
@@ -469,7 +473,7 @@ const Profile: React.FC = () => {
                   <Route
                     path={`${match.url}/password`}
                     render={() => (
-                      <ChangePassword />
+                      <ChangePassword updateAuthState={updateAuthState}/>
                     )}
                   />
                 </Switch>

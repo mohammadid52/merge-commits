@@ -73,6 +73,8 @@ const dashboardProfileDict: any = {
             SAVE: 'Save New Password',
             CANCEL: 'Cancel',
             SUCCESS_MSG: 'Success',
+            WARN_MSG: 'This will log you out and take you to the reset password page, do you want to continue?',
+            CONTINUE_BTN:'Continue',
             ERRORS: {
                 NO_OLD_PASS: 'Please enter your old password',
                 NO_NEW_PASS: 'Please enter your new password',
@@ -123,6 +125,8 @@ const dashboardProfileDict: any = {
             SAVE: 'Guardar nueva contraseña',
             CANCEL: 'Cancelar',
             SUCCESS_MSG: 'Éxito',
+            WARN_MSG: 'TBD',
+            CONTINUE_BTN:'TBD',
             ERRORS: {
                 NO_OLD_PASS: 'Ingrese su contraseña anterior',
                 NO_NEW_PASS: 'Ingrese su nueva contraseña',
