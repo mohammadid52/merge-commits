@@ -16,6 +16,8 @@ import InstitutionPopUp from './InstitutionPopUp';
 import { getImageFromS3 } from '../../../../utilities/services';
 import { statesList } from '../../../../utilities/staticData';
 import * as customMutations from '../../../../customGraphql/customMutations';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
+import useDictionary from '../../../../customHooks/dictionary';
 
 
 interface InstitutionEditProps {
@@ -56,6 +58,8 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
   const [upImage, setUpImage] = useState(null);
   const [imageLoading, setImageLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
+  const { InstitutionEdit ,BreadcrumsTitles } = useDictionary(clientKey);
   const [showModal, setShowModal] = useState({
     warnModal: false,
     infoModal: false,
@@ -68,11 +72,11 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
   const history = useHistory();
 
   const institutionTypeList = [
-    { id: 1, name: 'School', value: 'School' },
-    { id: 2, name: 'After School', value: 'After School' },
-    { id: 3, name: 'Day Camp', value: 'Day Camp' },
-    { id: 4, name: 'Summer Camp', value: 'Summer Camp' },
-    { id: 5, name: '501C3', value: '501C3' },
+    { id: 1, name: InstitutionEdit[userLanguage]['INSTITUTION_TYPE']['SCHOOL'], value: 'School' },
+    { id: 2, name: InstitutionEdit[userLanguage]['INSTITUTION_TYPE']['AFTERSCHOOL'], value: 'After School' },
+    { id: 3, name: InstitutionEdit[userLanguage]['INSTITUTION_TYPE']['DAYCAMP'], value: 'Day Camp' },
+    { id: 4, name: InstitutionEdit[userLanguage]['INSTITUTION_TYPE']['SUMMERCAMP'], value: 'Summer Camp' },
+    { id: 5, name: InstitutionEdit[userLanguage]['INSTITUTION_TYPE']['C3'], value: '501C3' },
   ]
 
   const handleEditFormChange = (e: React.FormEvent /* <HTMLFormElement> */) => {
@@ -326,7 +330,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
               <Loader />}
             <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
           </label>}
-        <p className="text-gray-600 my-4">Click the circle above to update institution image.</p>
+        <p className="text-gray-600 my-4">{InstitutionEdit[userLanguage]['INFO']}</p>
       </div>
 
 
@@ -337,50 +341,50 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
             {/* TITLE */}
             <div className='w-full px-4 py-5 border-b border-gray-200 sm:px-6'>
               <h3 className='text-lg leading-6 font-medium text-gray-900'>
-                Edit Information
+              {InstitutionEdit[userLanguage]['FORM']['TITLE']}
               </h3>
             </div>
             {/* FORM */}
             <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 px-4 py-5'>
               <div className='sm:col-span-6 px-3 py-4'>
                 <div className="w-3/10">
-                  <Selector selectedItem={type} placeholder="Institution Type" list={institutionTypeList} onChange={onTypeSelect} />
+                  <Selector selectedItem={type} placeholder={InstitutionEdit[userLanguage]['FORM']['INSTITUTION_TYPE']} list={institutionTypeList} onChange={onTypeSelect} />
                 </div>
               </div>
               <div className='sm:col-span-3 px-3 py-2'>
-                <FormInput value={name} onChange={handleEditFormChange} id='name' name='name' label="Institution Name" placeHolder="i.e. Iconoclast Artist" isRequired />
+                <FormInput value={name} onChange={handleEditFormChange} id='name' name='name' label={InstitutionEdit[userLanguage]['FORM']['NAME_INPUT_LABEL']} placeHolder={InstitutionEdit[userLanguage]['FORM']['NAME_INPUT_PLACEHOLDER']} isRequired />
               </div>
               <div className='sm:col-span-3 px-3 py-2'>
-                <FormInput value={website} onChange={handleEditFormChange} id='website' name='website' label="Website(*please enter complete url.) " placeHolder="i.e. https://iconoclastartists.org/" />
+                <FormInput value={website} onChange={handleEditFormChange} id='website' name='website' label={InstitutionEdit[userLanguage]['FORM']['WEBSITE_INPUT_PLACEHOLDER']} placeHolder={InstitutionEdit[userLanguage]['FORM']['WEBSITE_INPUT_PLACEHOLDER']} />
               </div>
               <div className='sm:col-span-3 px-3 py-2'>
-                <FormInput value={address} id='address' onChange={handleEditFormChange} name='address' label="Address line 1" />
-              </div>
-
-              <div className='sm:col-span-3 px-3 py-2'>
-                <FormInput value={addressLine2} id='addressLine2' onChange={handleEditFormChange} name='addressLine2' label="Address line 2" />
+                <FormInput value={address} id='address' onChange={handleEditFormChange} name='address' label={InstitutionEdit[userLanguage]['FORM']['ADDRESS_INPUT_LABEL']} />
               </div>
 
               <div className='sm:col-span-3 px-3 py-2'>
-                <FormInput value={city} id='city' onChange={handleEditFormChange} name='city' label="City" />
+                <FormInput value={addressLine2} id='addressLine2' onChange={handleEditFormChange} name='addressLine2' label={InstitutionEdit[userLanguage]['FORM']['ADDRESS2_INPUT_LABEL']} />
+              </div>
+
+              <div className='sm:col-span-3 px-3 py-2'>
+                <FormInput value={city} id='city' onChange={handleEditFormChange} name='city' label={InstitutionEdit[userLanguage]['FORM']['CITY']} />
               </div>
 
               <div className='sm:col-span-3 px-3 py-2'>
                 <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
-                  State
+                {InstitutionEdit[userLanguage]['FORM']['STATE_LABEL']}
                 </label>
                 <Selector selectedItem={state} placeholder="State" list={statesList} onChange={onStateSelect} />
               </div>
 
               <div className='sm:col-span-3 px-3 py-2'>
-                <FormInput value={zip} id='zip' onChange={handleEditFormChange} name='zip' label="Zip" />
+                <FormInput value={zip} id='zip' onChange={handleEditFormChange} name='zip' label={InstitutionEdit[userLanguage]['FORM']['ZIP_LABBEL']} />
               </div>
 
               <div className='sm:col-span-3 px-3 py-2'>
-                <FormInput value={phone} id='phone' onChange={handleEditFormChange} name='phone' label="Phone" />
+                <FormInput value={phone} id='phone' onChange={handleEditFormChange} name='phone' label={InstitutionEdit[userLanguage]['FORM']['PHONE_LABEL']} />
               </div>
               <div className='sm:col-span-3 px-3 py-2 flex items-center'>
-                <CheckBox value={isServiceProvider} onChange={onServiceProviderChange} name='isServiceProvider' label="Service Provider" />
+                <CheckBox value={isServiceProvider} onChange={onServiceProviderChange} name='isServiceProvider' label={InstitutionEdit[userLanguage]['FORM']['SERVICEPROVIDER_LABEL']} />
               </div>
             </div>
           </div>
@@ -392,8 +396,8 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
           {/* Cancel-save buttons */}
           <div className='px-4 w-full flex justify-end'>
             <div className='flex w-4/10'>
-              <Buttons label="Cancel" btnClass='w-full px-6 py-4 mr-2' onClick={history.goBack} transparent />
-              <Buttons label="Save" btnClass='w-full px-6 py-4 ml-2' onClick={handleEditFormSubmit} />
+              <Buttons label={InstitutionEdit[userLanguage]['BUTTON']['CANCEL']} btnClass='w-full px-6 py-4 mr-2' onClick={history.goBack} transparent />
+              <Buttons label={InstitutionEdit[userLanguage]['BUTTON']['SAVE']} btnClass='w-full px-6 py-4 ml-2' onClick={handleEditFormSubmit} />
             </div>
           </div>
         </form>

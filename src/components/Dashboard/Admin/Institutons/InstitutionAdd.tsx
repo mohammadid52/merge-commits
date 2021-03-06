@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useHistory } from 'react-router-dom';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
@@ -18,6 +18,8 @@ import Loader from '../../../Atoms/Loader';
 import * as customMutations from '../../../../customGraphql/customMutations';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import { statesList } from '../../../../utilities/staticData';
+import useDictionary from '../../../../customHooks/dictionary';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 const InstitutionAdd = () => {
 
@@ -42,22 +44,24 @@ const InstitutionAdd = () => {
   const [imageLoading, setImageLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [s3Image, setS3Image] = useState(null);
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
+  const { InstitutionAdd ,BreadcrumsTitles } = useDictionary(clientKey);
   const [error, setError] = useState({
     show: true,
     errorMsg: ''
   })
 
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Institution Management', url: '/dashboard/manage-institutions', last: false },
-    { title: 'Add New Institute', url: `/dashboard/manage-institutions/add`, last: true }
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'], url: '/dashboard/manage-institutions', last: false },
+    { title: BreadcrumsTitles[userLanguage]['ADD_INSTITUTION'], url: `/dashboard/manage-institutions/add`, last: true }
   ];
   const institutionTypeList = [
-    { id: 1, name: 'School', value: 'School' },
-    { id: 2, name: 'After School', value: 'After School' },
-    { id: 3, name: 'Day Camp', value: 'Day Camp' },
-    { id: 4, name: 'Summer Camp', value: 'Summer Camp' },
-    { id: 5, name: '501C3', value: '501C3' },
+    { id: 1, name: InstitutionAdd[userLanguage]['INSTITUTION_TYPE']['SCHOOL'], value: 'School' },
+    { id: 2, name: InstitutionAdd[userLanguage]['INSTITUTION_TYPE']['AFTERSCHOOL'], value: 'After School' },
+    { id: 3, name: InstitutionAdd[userLanguage]['INSTITUTION_TYPE']['DAYCAMP'], value: 'Day Camp' },
+    { id: 4, name: InstitutionAdd[userLanguage]['INSTITUTION_TYPE']['SUMMERCAMP'], value: 'Summer Camp' },
+    { id: 5, name: InstitutionAdd[userLanguage]['INSTITUTION_TYPE']['C3'], value: '501C3' },
   ]
 
   const removeErrorMSg = () => {
@@ -199,7 +203,7 @@ const InstitutionAdd = () => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Add Institution" subtitle="Add new institution to the list" />
+        <SectionTitle title={InstitutionAdd[userLanguage]['TITLE']} subtitle={InstitutionAdd[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -248,7 +252,7 @@ const InstitutionAdd = () => {
                   <Loader />}
                 <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
               </label>}
-            <p className="text-gray-600 my-4">Click the circle above to update institution image.</p>
+            <p className="text-gray-600 my-4">{InstitutionAdd[userLanguage]['INFO']}</p>
           </div>
 
 
@@ -259,50 +263,50 @@ const InstitutionAdd = () => {
                 {/* TITLE */}
                 <div className='w-full px-4 py-5 border-b border-gray-200 sm:px-6'>
                   <h3 className='text-lg leading-6 font-medium text-gray-900'>
-                    Institute Information
+                  {InstitutionAdd[userLanguage]['FORM']['TITLE']}
                   </h3>
                 </div>
                 {/* FORM */}
                 <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 px-4 py-5'>
                   <div className='sm:col-span-6 px-3 py-4'>
                     <div className="w-3/10">
-                      <Selector selectedItem={type} placeholder="Institution Type" list={institutionTypeList} onChange={onTypeSelect} />
+                      <Selector selectedItem={type} placeholder={InstitutionAdd[userLanguage]['FORM']['INSTITUTION_TYPE']} list={institutionTypeList} onChange={onTypeSelect} />
                     </div>
                   </div>
                   <div className='sm:col-span-3 px-3 py-2'>
-                    <FormInput value={name} onChange={onInputChange} id='name' name='name' label="Institution Name" placeHolder="i.e. Iconoclast Artist" isRequired />
+                    <FormInput value={name} onChange={onInputChange} id='name' name='name' label={InstitutionAdd[userLanguage]['FORM']['NAME_INPUT_LABEL']} placeHolder={InstitutionAdd[userLanguage]['FORM']['NAME_INPUT_PLACEHOLDER']} isRequired />
                   </div>
                   <div className='sm:col-span-3 px-3 py-2'>
-                    <FormInput value={website} onChange={onInputChange} id='website' name='website' label="Website(*please enter complete url.) " placeHolder="i.e. https://iconoclastartists.org/" />
+                    <FormInput value={website} onChange={onInputChange} id='website' name='website' label={InstitutionAdd[userLanguage]['FORM']['WEBSITE_INPUT_LABEL']} placeHolder={InstitutionAdd[userLanguage]['FORM']['WEBSITE_INPUT_PLACEHOLDER']} />
                   </div>
                   <div className='sm:col-span-3 px-3 py-2'>
-                    <FormInput value={address} id='address' onChange={onInputChange} name='address' label="Address line 1" />
-                  </div>
-
-                  <div className='sm:col-span-3 px-3 py-2'>
-                    <FormInput value={addressLine2} id='addressLine2' onChange={onInputChange} name='addressLine2' label="Address line 2" />
+                    <FormInput value={address} id='address' onChange={onInputChange} name='address' label={InstitutionAdd[userLanguage]['FORM']['ADDRESS_INPUT_LABEL']} />
                   </div>
 
                   <div className='sm:col-span-3 px-3 py-2'>
-                    <FormInput value={city} id='city' onChange={onInputChange} name='city' label="City" />
+                    <FormInput value={addressLine2} id='addressLine2' onChange={onInputChange} name='addressLine2' label={InstitutionAdd[userLanguage]['FORM']['ADDRESS2_INPUT_LABEL']} />
+                  </div>
+
+                  <div className='sm:col-span-3 px-3 py-2'>
+                    <FormInput value={city} id='city' onChange={onInputChange} name='city' label={InstitutionAdd[userLanguage]['FORM']['CITY_LABEL']} />
                   </div>
 
                   <div className='sm:col-span-3 px-3 py-2'>
                     <label className="block text-xs font-semibold mb-1  leading-5 text-gray-700">
-                      State
+                    {InstitutionAdd[userLanguage]['FORM']['STATE_LABEL']}
                     </label>
                     <Selector selectedItem={state} placeholder="Select state" list={statesList} onChange={onStateSelect} />
                   </div>
 
                   <div className='sm:col-span-3 px-3 py-2'>
-                    <FormInput value={zip} id='zip' onChange={onInputChange} name='zip' label="Zip" />
+                    <FormInput value={zip} id='zip' onChange={onInputChange} name='zip' label={InstitutionAdd[userLanguage]['FORM']['ZIP_LABEL']} />
                   </div>
 
                   <div className='sm:col-span-3 px-3 py-2'>
-                    <FormInput value={phone} id='phone' onChange={onInputChange} name='phone' label="Phone" />
+                    <FormInput value={phone} id='phone' onChange={onInputChange} name='phone' label={InstitutionAdd[userLanguage]['FORM']['PHONE_LABEL']} />
                   </div>
                   <div className='sm:col-span-3 px-3 py-2 flex items-center'>
-                    <CheckBox value={isServiceProvider} onChange={handdleCheckBox} name='isServiceProvider' label="Service Provider" />
+                    <CheckBox value={isServiceProvider} onChange={handdleCheckBox} name='isServiceProvider' label={InstitutionAdd[userLanguage]['FORM']['SERVICEPROVIDER_LABEL']} />
                   </div>
                 </div>
               </div>
@@ -314,8 +318,8 @@ const InstitutionAdd = () => {
               {/* Cancel-save buttons */}
               <div className='px-4 w-full flex justify-end'>
                 <div className='flex w-4/10'>
-                  <Buttons label="Cancel" btnClass='w-full px-6 py-4 mr-2' onClick={history.goBack} transparent />
-                  <Buttons label="Save" btnClass='w-full px-6 py-4 ml-2' onClick={addNewInstitution} />
+                  <Buttons label={InstitutionAdd[userLanguage]['BUTTON']['CANCEL']} btnClass='w-full px-6 py-4 mr-2' onClick={history.goBack} transparent />
+                  <Buttons label={InstitutionAdd[userLanguage]['BUTTON']['SAVE']} btnClass='w-full px-6 py-4 ml-2' onClick={addNewInstitution} />
                 </div>
               </div>
             </form>

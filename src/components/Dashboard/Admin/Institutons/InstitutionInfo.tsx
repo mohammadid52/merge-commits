@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { FaGraduationCap, FaChalkboardTeacher, FaHotel, FaHandshake } from 'react-icons/fa';
 
@@ -11,6 +11,8 @@ import StaffBuilder from './Listing/StaffBuilder';
 import ServiceProviders from './Listing/ServiceProviders';
 import CurriculumList from './Listing/CurriculumList';
 import RoomsList from './Listing/RoomsList';
+import useDictionary from '../../../../customHooks/dictionary';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -39,13 +41,15 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const { institute, tabProps } = instProps;
   const match = useRouteMatch();
   const [imageUrl, setImageUrl] = useState();
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
+  const { Institute_info ,BreadcrumsTitles } = useDictionary(clientKey);
 
   const tabs = [
-    { index: 0, title: 'Service Providers', icon: <FaHandshake />, active: false, content: <ServiceProviders serviceProviders={institute.serviceProviders} instId={institute?.id} updateServiceProviders={instProps.updateServiceProviders} /> },
-    { index: 1, title: 'Staff', icon: <IoPeople />, active: true, content: <StaffBuilder serviceProviders={institute.serviceProviders} instituteId={instProps?.institute?.id} /> },
-    { index: 2, title: 'Classes', icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={institute?.classes} instId={institute?.id} /> },
-    { index: 3, title: 'Curricular', icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} instId={institute?.id} /> },
-    { index: 4, title: 'Classrooms', icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id} instName={institute?.name}/> }
+    { index: 0, title: `${Institute_info[userLanguage]['TABS']['SERVICE_PROVIDER']}`, icon: <FaHandshake />, active: false, content: <ServiceProviders serviceProviders={institute.serviceProviders} instId={institute?.id} updateServiceProviders={instProps.updateServiceProviders} /> },
+    { index: 1, title: `${Institute_info[userLanguage]['TABS']['STAFF']}`, icon: <IoPeople />, active: true, content: <StaffBuilder serviceProviders={institute.serviceProviders} instituteId={instProps?.institute?.id} /> },
+    { index: 2, title: `${Institute_info[userLanguage]['TABS']['CLASSES']}`, icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={institute?.classes} instId={institute?.id} /> },
+    { index: 3, title: `${Institute_info[userLanguage]['TABS']['CURRICULAR']}`, icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} instId={institute?.id} /> },
+    { index: 4, title: `${Institute_info[userLanguage]['TABS']['CLASSROOMS']}`, icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id} instName={institute?.name}/> }
   ]
 
   const updateTab = (tab: number) => {
@@ -94,14 +98,14 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 
             <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
               <h3 className="text-lg leading-6 font-medium text-gray-900">
-                General Information
+                {Institute_info[userLanguage]['TITLE']}
               </h3>
             </div>
 
             <div className="grid grid-cols-2 divide-x divide-gray-400 p-4">
               <div className="p-8">
                 <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                  <span className="text-gray-900 mr-2 w-3/10">Address:</span>
+                  <span className="text-gray-900 mr-2 w-3/10"> {Institute_info[userLanguage]['ADDRESS']}:</span>
                   <span className="w-auto">
                     {address && (<Fragment>{address + ', '} <br /></Fragment>)}
                     {addressLine2 && (<Fragment>{addressLine2 + ', '} <br /></Fragment>)}
@@ -110,17 +114,17 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   </span>
                 </p>
                 <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                  <span className="text-gray-900 mr-2 w-3/10">Contact No:</span>
+                  <span className="text-gray-900 mr-2 w-3/10"> {Institute_info[userLanguage]['CONTACT']}:</span>
                   <span className="w-auto">{phone ? formatPhoneNumber(phone) : '--'}</span>
                 </p>
               </div>
               <div className="p-8">
                 <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                  <span className="text-gray-900 mr-2 w-3/10">Institution Type:</span>
+                  <span className="text-gray-900 mr-2 w-3/10"> {Institute_info[userLanguage]['INSTITUTION_TYPE']}:</span>
                   <span className="w-auto">{type ? type : '--'}</span>
                 </p>
                 <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                  <span className="text-gray-900 mr-2 w-3/10">Website:</span>
+                  <span className="text-gray-900 mr-2 w-3/10"> {Institute_info[userLanguage]['WEBSITE']}:</span>
                   {
                     website ?
                       <span className="w-auto hover:text-blue-700"><a href={website} target="_blank">{getHostNameFromUrl(website)}</a></span>
@@ -128,7 +132,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   }
                 </p>
                 <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                  <span className="text-gray-900 mr-2 w-3/10">Service Provider:</span>
+                  <span className="text-gray-900 mr-2 w-3/10"> {Institute_info[userLanguage]['SERVICE_PROVIDER']}:</span>
                   <span className="w-auto">{isServiceProvider ? 'YES' : 'NO'}</span>
                 </p>
               </div>

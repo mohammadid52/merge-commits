@@ -5,6 +5,7 @@ import PageWrapper from '../../../../Atoms/PageWrapper'
 import Buttons from '../../../../Atoms/Buttons'
 import { getAsset } from '../../../../../assets';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../customHooks/dictionary';
 
 interface CurriculumListProps {
   curricular: { items: { name?: string, id: string }[] }
@@ -15,8 +16,10 @@ const CurriculumList = (props: CurriculumListProps) => {
 
   const { curricular, instId } = props;
   const history = useHistory();
-  const { clientKey, theme } = useContext(GlobalContext);
+  const { clientKey, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const {  InstitueCurriculam,BreadcrumsTitles } = useDictionary(clientKey);
+
 
   const createNewCurricular = () => {
     history.push(`/dashboard/manage-institutions/institution/curricular-creation?id=${instId}`)
@@ -30,21 +33,21 @@ const CurriculumList = (props: CurriculumListProps) => {
     <div className="p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">INSTITUTE CURRICULAR</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{InstitueCurriculam[userLanguage]['TITLE']}</h3>
           {(curricular.items && curricular.items.length > 0) ? (
             <Fragment>
               <div className="flex justify-end w-8/10 m-auto ">
-                <Buttons btnClass="mx-4" label="Add new Curricular" onClick={createNewCurricular} />
+                <Buttons btnClass="mx-4" label={InstitueCurriculam[userLanguage]['BUTTON']['ADD']} onClick={createNewCurricular} />
               </div>
               <div className="flex justify-between w-8/10 m-auto px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>No.</span>
+                  <span>{InstitueCurriculam[userLanguage]['NO']}</span>
                 </div>
                 <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Curricular Name</span>
+                  <span>{InstitueCurriculam[userLanguage]['NAME']}</span>
                 </div>
                 <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Actions</span>
+                  <span>{InstitueCurriculam[userLanguage]['ACTION']}</span>
                 </div>
               </div>
 
@@ -56,7 +59,7 @@ const CurriculumList = (props: CurriculumListProps) => {
                       {item.name ? item.name : ''}
                     </div>
                     <span className={`w-3/10 h-6 flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => editCurrentCurricular(item.id)}>
-                      View
+                    {InstitueCurriculam[userLanguage]['VIEW']}
                     </span>
                   </div>
                 ))}
@@ -65,9 +68,9 @@ const CurriculumList = (props: CurriculumListProps) => {
           ) : (
               <Fragment>
                 <div className="flex justify-center mt-8">
-                  <Buttons btnClass="mx-4" label="Add new Curricular" onClick={createNewCurricular} />
+                  <Buttons btnClass="mx-4" label={InstitueCurriculam[userLanguage]['BUTTON']['ADD']} onClick={createNewCurricular} />
                 </div>
-                <p className="text-center p-16">  This institute does not have any curriculum. Please create a new curriculum.</p>
+                <p className="text-center p-16"> {InstitueCurriculam[userLanguage]['INFO']}</p>
               </Fragment>)}
         </PageWrapper>
       </div>

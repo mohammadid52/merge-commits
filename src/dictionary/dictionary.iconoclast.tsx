@@ -21,12 +21,18 @@ const BreadcrumsTitles: any = {
     'EN': {
         HOME: 'HOME',
         PROFILE: 'PROFILE',
-        PEOPLE: 'PEOPLE'
+        PEOPLE: 'PEOPLE',
+        INSTITUTION_MANAGEMENT:'Institution Management',
+        ADD_INSTITUTION:'Add New Institute',
+        INSTITUTION_INFO:'Institute Info',
     },
     'ES': {
         HOME: 'CASA',
         PROFILE: 'PERFIL',
-        PEOPLE: 'PERSONAS'
+        PEOPLE: 'PERSONAS',
+        INSTITUTION_MANAGEMENT:'TBD',
+        ADD_INSTITUTION:'TBD',
+        INSTITUTION_INFO:'TBD'
     }
 }
 // Profile Display and edit section
@@ -290,6 +296,314 @@ const editClassDict: any = {
     }
 }
 
+const InstitutionDict:any={
+    'EN':{
+        TITLE:'INSTITUTIONS MANAGEMENT',
+        SUBTITLE:'Institutions List',
+        TABLE:{
+
+            NAME:'Institute Name',
+            TYPE:'Type',
+            WEBSITE:'Website',
+            CONTACT:'Contact No.',
+            ACTION:'Actions',
+            NORESULT:'No Results'
+        },
+        SHOWPAGE:'Showing Page',
+        OF:'of',
+        PAGES:'pages',
+        SORTBY:'Sort By',
+        
+        BUTTON:{
+            Add:'Add New Institution'
+        }
+    },
+    'ES':{
+        TITLE:'TBD',
+        SUBTITLE:'TBD',
+        TABLE:{
+
+            NAME:'TBD',
+            TYPE:'TBD',
+            WEBSITE:'TBD',
+            CONTACT:'TBD',
+            ACTION:'TBD',
+            NORESULT:'TBD'
+        },
+        SHOWPAGE:'TBD',
+        OF:'TBD',
+        PAGES:'TBD',
+        SORTBY:'TBD',
+        BUTTON:{
+            Add:'TBD'
+        }
+
+    }
+}
+
+const Institute_info:any={
+    'EN':{
+        TITLE:'General Information',
+        ADDRESS:'Address',
+        CONTACT:'Contact No',
+        INSTITUTION_TYPE:'Institution Type',
+        WEBSITE:'Website',
+        SERVICE_PROVIDER:'Service Provider',
+        TABS:{
+            SERVICE_PROVIDER:'Service Providers',
+            STAFF:'Staff',
+            CLASSES:'Classes',
+            CURRICULAR:'Curricular',
+            CLASSROOMS:'Classrooms'
+
+        }
+    },
+    'ES':{
+        TITLE:'TBD',
+        ADDRESS:'TBD',
+        CONTACT:'TBD',
+        INSTITUTION_TYPE:'TBD',
+        WEBSITE:'TBD',
+        SERVICE_PROVIDER:'TBD',
+        TABS:{
+            SERVICE_PROVIDER:'TBD',
+            STAFF:'TBD',
+            CLASSES:'TBD',
+            CURRICULAR:'TBD',
+            CLASSROOMS:'TBD'
+        }
+    }
+}
+
+const InstitutionEdit:any={
+    'EN':{
+        INFO:'Click the circle above to update institution image.',
+
+        FORM:{
+
+            TITLE:'Edit Information',
+            INSTITUTION_TYPE:'Institution Type',
+            NAME_INPUT_LABEL:'Institution Name',
+            NAME_INPUT_PLACEHOLDER:'i.e. Iconoclast Artist',
+            WEBSITE_INPUT_LABEL:'Website(*please enter complete url.) ',
+            WEBSITE_INPUT_PLACEHOLDER:'i.e. https://iconoclastartists.org/',
+            ADDRESS_INPUT_LABEL:'Address line 1',
+            ADDRESS2_INPUT_LABEL:'Address line 2',
+            CITY_LABEL:'City',
+            STATE_LABEL:'State',
+            ZIP_LABEL:'Zip',
+            PHONE_LABEL:'Phone',
+            SERVICEPROVIDER_LABEL:'Service Provider'
+
+        },
+        INSTITUTION_TYPE:{
+            SCHOOL:'School',
+            AFTERSCHOOL:'After School',
+            DAYCAMP:'Day Camp',
+            SUMMERCAMP:'Summer Camp',
+            C3:'501C3'
+        },
+        BUTTON:{
+            CANCEL:'Cancel',
+            SAVE:'Save'
+        }
+    },
+    'ES':{
+        INFO:'TBD',
+        FORM:{
+
+            TITLE:'TBD',
+            INSTITUTION_TYPE:'TBD',
+            NAME_INPUT_LABEL:'TBD',
+            NAME_INPUT_PLACEHOLDER:'TBD',
+            WEBSITE_INPUT_LABEL:'TBD',
+            WEBSITE_INPUT_PLACEHOLDER:'TBD',
+            ADDRESS_INPUT_LABEL:'TBD',
+            ADDRESS2_INPUT_LABEL:'TBD',
+            CITY_LABEL:'TBD',
+            STATE_LABEL:'TBD',
+            ZIP_LABEL:'TBD',
+            PHONE_LABEL:'TBD',
+            SERVICEPROVIDER_LABEL:'TBD'
+
+        },
+        INSTITUTION_TYPE:{
+            SCHOOL:'TBD',
+            AFTERSCHOOL:'TBD',
+            DAYCAMP:'TBD',
+            SUMMERCAMP:'TBD',
+            C3:'TBD'
+        },
+        BUTTON:{
+            CANCEL:'TBD',
+            SAVE:'TBD'
+        }
+
+
+    }
+
+}
+
+
+const InstitutionAdd:any={
+    'EN':{
+        INFO:'Click the circle above to update institution image.',
+        TITLE:'Add Institution',
+        SUBTITLE:'Add new institution to the list',
+        FORM:{
+
+            TITLE:'Institute Information',
+            INSTITUTION_TYPE:'Institution Type',
+            NAME_INPUT_LABEL:'Institution Name',
+            NAME_INPUT_PLACEHOLDER:'i.e. Iconoclast Artist',
+            WEBSITE_INPUT_LABEL:'Website(*please enter complete url.) ',
+            WEBSITE_INPUT_PLACEHOLDER:'i.e. https://iconoclastartists.org/',
+            ADDRESS_INPUT_LABEL:'Address line 1',
+            ADDRESS2_INPUT_LABEL:'Address line 2',
+            CITY_LABEL:'City',
+            STATE_LABEL:'State',
+            ZIP_LABEL:'Zip',
+            PHONE_LABEL:'Phone',
+            SERVICEPROVIDER_LABEL:'Service Provider'
+
+        },
+        INSTITUTION_TYPE:{
+            SCHOOL:'School',
+            AFTERSCHOOL:'After School',
+            DAYCAMP:'Day Camp',
+            SUMMERCAMP:'Summer Camp',
+            C3:'501C3'
+        },
+        BUTTON:{
+            CANCEL:'Cancel',
+            SAVE:'Save'
+        }
+    },
+    'ES':{
+        INFO:'TBD',
+        TITLE:'TBD',
+        SUBTITLE:'TBD',
+
+        FORM:{
+
+            TITLE:'TBD',
+            INSTITUTION_TYPE:'TBD',
+            NAME_INPUT_LABEL:'TBD',
+            NAME_INPUT_PLACEHOLDER:'TBD',
+            WEBSITE_INPUT_LABEL:'TBD',
+            WEBSITE_INPUT_PLACEHOLDER:'TBD',
+            ADDRESS_INPUT_LABEL:'TBD',
+            ADDRESS2_INPUT_LABEL:'TBD',
+            CITY_LABEL:'TBD',
+            STATE_LABEL:'TBD',
+            ZIP_LABEL:'TBD',
+            PHONE_LABEL:'TBD',
+            SERVICEPROVIDER_LABEL:'TBD'
+
+        },
+        INSTITUTION_TYPE:{
+            SCHOOL:'TBD',
+            AFTERSCHOOL:'TBD',
+            DAYCAMP:'TBD',
+            SUMMERCAMP:'TBD',
+            C3:'TBD'
+        },
+        BUTTON:{
+            CANCEL:'TBD',
+            SAVE:'TBD'
+        }
+
+
+    }
+
+}
+
+
+const Institute_class:any={
+    'EN':{
+        TITLE:'INSTITUTE CLASSES',
+        NO:'No.',
+        CLASSNAME:'Class Name',
+        ACTION:'Actions',
+        EDIT:'edit',
+        INFO:'This institute does not have any class. Please create a new class.',
+        BUTTON:{
+            CREATE:'Create new class'
+        }
+    },
+    'ES':{
+        TITLE:'TBD',
+        NO:'TBD',
+        CLASSNAME:'TBD',
+        ACTION:'TBD',
+        EDIT:'TBD',
+        INFO:'TBD',
+        BUTTON:{
+            CREATE:'TBD'
+        }
+    }
+    
+
+}
+const InstitueCurriculam:any={
+    'EN':{
+        TITLE:'INSTITUTE CURRICULAR',
+        BUTTON:{
+            ADD:'Add new Curricular'
+        },
+        NO:'No.',
+        NAME:'Curricular Name',
+        ACTION:'Actions',
+        VIEW:'View',
+        INFO:'This institute does not have any curriculum. Please create a new curriculum.'
+
+    },
+    'ES':{
+        TITLE:'TBD',
+        BUTTON:{
+            ADD:'TBD'
+        },
+        NO:'TBD',
+        NAME:'TBD',
+        ACTION:'TBD',
+        VIEW:'TBD',
+        INFO:'TBD'
+    }
+}
+
+const InstitueRomms:any={
+    'EN':{
+        TITLE:'CLASSROOMS',
+        NO:'No.',
+        CLASSROOMS_NAME:'Classroom Name',
+        CLASS_NAME:'Class Name',
+        TEACHER:'Teacher',
+        MXSTUDENTS:'Max. Students',
+        ACTION:'Actions',
+        EDIT:'edit',
+        BUTTON:{
+            CREATE:'Create new Classroom'
+        },
+    },
+    'ES':{
+        TITLE:'TBD',
+        NO:'TBD',
+        CLASSROOMS_NAME:'TBD',
+        CLASS_NAME:'TBD',
+        TEACHER:'TBD',
+        MXSTUDENTS:'TBD',
+        ACTION:'TBD',
+        EDIT:'TBD',
+        BUTTON:{
+            CREATE:'TBD'
+        },
+
+    }
+}
+
+
+
+
 function paginationPage(lang: string, page: number, total: number) {
     if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`
     if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`
@@ -308,4 +622,11 @@ export {
     editClassDict,
     spBuilderDict,
     manageusersDict,
+    InstitutionDict,
+    Institute_info,
+    InstitutionEdit,
+    InstitutionAdd,
+    Institute_class,
+    InstitueCurriculam,
+    InstitueRomms
 };
