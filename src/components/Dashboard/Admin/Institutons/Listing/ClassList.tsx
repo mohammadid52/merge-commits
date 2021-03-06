@@ -9,10 +9,11 @@ import { GlobalContext } from '../../../../../contexts/GlobalContext';
 interface ClassListProps {
   classes: { items: { name?: string, id: string }[] },
   instId: string
+  instName: string
 }
 
 const ClassList = (props: ClassListProps) => {
-  const { classes, instId } = props;
+  const { classes, instId, instName } = props;
   const [classList, setClassList] = useState([]);
   const history = useHistory();
   const { clientKey, theme } = useContext(GlobalContext);
@@ -26,7 +27,7 @@ const ClassList = (props: ClassListProps) => {
     <div className="p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">INSTITUTE CLASSES</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{instName ? instName.toUpperCase() : 'INSTITUTE'} CLASSES</h3>
 
           {
             (classes.items && classes.items.length > 0) ? (
