@@ -40,6 +40,7 @@ const dashboardProfileDict: any = {
     'EN': {
         PROFILE: 'Profile',
         TITLE: 'USER PROFILE',
+        PROFILE_INSTRUCTON:'Click the circle above to update profile picture.',
         SUBTITLE: 'This contains your profile information.',
         PERSONAL_INFO: {
             TITLE: 'Personal Information',
@@ -92,6 +93,7 @@ const dashboardProfileDict: any = {
     'ES': {
         PROFILE: 'Perfil',
         TITLE: 'PERFIL DEL USUARIO',
+        PROFILE_INSTRUCTON:'Haga clic en el círculo de arriba para actualizar la imagen de perfil.',
         SUBTITLE: 'Esto contiene la información de su perfil.',
         PERSONAL_INFO: {
             TITLE: 'Informacion personal',

@@ -9950,6 +9950,7 @@ export const createNoticeboardWidget = /* GraphQL */ `
       id
       teacherAuthID
       teacherEmail
+      roomID
       type
       placement
       title
@@ -10007,6 +10008,7 @@ export const updateNoticeboardWidget = /* GraphQL */ `
       id
       teacherAuthID
       teacherEmail
+      roomID
       type
       placement
       title
@@ -10064,6 +10066,7 @@ export const deleteNoticeboardWidget = /* GraphQL */ `
       id
       teacherAuthID
       teacherEmail
+      roomID
       type
       placement
       title

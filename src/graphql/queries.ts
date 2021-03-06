@@ -4128,6 +4128,7 @@ export const getNoticeboardWidget = /* GraphQL */ `
       id
       teacherAuthID
       teacherEmail
+      roomID
       type
       placement
       title
@@ -4191,6 +4192,7 @@ export const listNoticeboardWidgets = /* GraphQL */ `
         id
         teacherAuthID
         teacherEmail
+        roomID
         type
         placement
         title

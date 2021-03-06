@@ -29,6 +29,7 @@ type userObject = {
 };
 
 export interface DashboardProps {
+  loading?: boolean;
   isTeacher?: boolean;
   updateAuthState?: Function;
   currentPageData?: any[];

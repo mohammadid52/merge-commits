@@ -1936,6 +1936,7 @@ export const listLessonRubricss = /* GraphQL */ `
           id
           name
           topicID
+          curriculumID
         }
         createdAt
         updatedAt
