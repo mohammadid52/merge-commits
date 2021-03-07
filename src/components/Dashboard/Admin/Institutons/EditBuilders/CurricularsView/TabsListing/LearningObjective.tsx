@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import API, { graphqlOperation } from '@aws-amplify/api';
 
@@ -11,6 +11,8 @@ import Buttons from '../../../../../../Atoms/Buttons';
 
 import * as mutations from '../../../../../../../graphql/mutations';
 import * as queries from '../../../../../../../graphql/queries';
+import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../../../customHooks/dictionary';
 
 interface LearningObjectiveListProps {
   curricularId: string
@@ -21,6 +23,8 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
   const [loading, setLoading] = useState(false)
   const [learnings, setLearnings] = useState([])
   const [learningIds, setLearningIds] = useState([])
+  const { clientKey, userLanguage, theme } = useContext(GlobalContext);
+  const { LEARINGOBJECTIVEDICT,BreadcrumsTitles } = useDictionary(clientKey);
 
   const history = useHistory();
 
@@ -93,12 +97,12 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
     <div className="p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LEARNING OBJECTIVES</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{LEARINGOBJECTIVEDICT[userLanguage]['TITLE']}</h3>
           {
             !loading ? ((learnings && learnings.length > 0) ? (
               <Fragment>
                 <div className="flex justify-end w-9/10 m-auto ">
-                  <Buttons btnClass="" label="Add New Learning Objective" onClick={createLearningObjective} />
+                  <Buttons btnClass="" label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']} onClick={createLearningObjective} />
                 </div>
                 <div className="py-4">
                   <DragableAccordion titleList={learnings} onDragEnd={onDragEnd} showEdit onItemEdit={editLearningObj} />
@@ -107,11 +111,11 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
             ) : (
                 <Fragment>
                   <div className="flex justify-center mt-8">
-                    <Buttons btnClass="mx-4" label="Add new" onClick={createLearningObjective} />
+                    <Buttons btnClass="mx-4" label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']} onClick={createLearningObjective} />
                   </div>
-                  <p className="text-center p-16">  This curricular does not have any learning objectives yet. Please create a new one.</p>
+                  <p className="text-center p-16"> {LEARINGOBJECTIVEDICT[userLanguage]['INFO']}</p>
                 </Fragment>)) : (
-                <div className="py-12 my-12 m-auto text-center">Fetching Data Please wait...</div>
+                <div className="py-12 my-12 m-auto text-center">{LEARINGOBJECTIVEDICT[userLanguage]['FETCH']}</div>
               )}
         </PageWrapper>
       </div>

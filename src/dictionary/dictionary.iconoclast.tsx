@@ -25,6 +25,14 @@ const BreadcrumsTitles: any = {
         INSTITUTION_MANAGEMENT:'Institution Management',
         ADD_INSTITUTION:'Add New Institute',
         INSTITUTION_INFO:'Institute Info',
+        Class_Creation:'Class Creation',
+        CURRICULARBUILDER:'New Curriculum',
+        CLASSROOM_CREATION:'Classroom Creation',
+        EDITCLASS:'Edit Class',
+        EDITCURRICULUM:'Edit Curriculm',
+        EDITCLASSROOM:'Edit Classroom',
+        CURRICULUMBUILDER:'Curriculum Builder',
+        LEARINGOBJECTIVE:'Add Learning objective',
     },
     'ES': {
         HOME: 'CASA',
@@ -32,7 +40,15 @@ const BreadcrumsTitles: any = {
         PEOPLE: 'PERSONAS',
         INSTITUTION_MANAGEMENT:'TBD',
         ADD_INSTITUTION:'TBD',
-        INSTITUTION_INFO:'TBD'
+        INSTITUTION_INFO:'TBD',
+        Class_Creation:'TBD',
+        CURRICULARBUILDER:'TBD',
+        CLASSROOM_CREATION:'TBD',
+        EDITCLASS:'TBD',
+        EDITCURRICULUM:'TBD',
+        EDITCLASSROOM:'TBD',
+        CURRICULUMBUILDER:'TBD',
+        LEARINGOBJECTIVE:'TBD'
     }
 }
 // Profile Display and edit section
@@ -243,13 +259,36 @@ const staffBuilderDict: any = {
     'EN': {
         TITLE: 'STAFF MEMBERS',
         ADD_PLACEHOLDER: 'Add new',
-        ADD_BUTTON: 'ADD'
+        ADD_BUTTON: 'ADD',
+        NO:'No.',
+        NAME:'Name',
+        ROLE:'Role',
+        STATUS:'Status',
+        ACTION:'Action',
+        UPDATING:'updating...',
+        CANCEL:'Cancel',
+        INFO:'This institute does not have any staff member. Please add new member.',
+        LOADING:'Loading...',
+        STATUS_PLACEHOLDER:'Select Status',
+        EDIT:'Edit',
+        
 
     },
     'ES': {
         TITLE: 'MIEMBROS DEL PERSONAL',
         ADD_PLACEHOLDER: 'Añadir nuevo',
-        ADD_BUTTON: 'Añadir'
+        ADD_BUTTON: 'Añadir',
+        NO:'TBD',
+        NAME:'TBD',
+        ROLE:'TBD',
+        STATUS:'TBD',
+        ACTION:'TBD',
+        UPDATING:'TBD',
+        CANCEL:'TBD',
+        INFO:'TBD',
+        LOADING:'TBD',
+        STATUS_PLACEHOLDER:'TBD',
+        EDIT:'TBD',
     }
 }
 
@@ -257,13 +296,27 @@ const spBuilderDict: any = {
     'EN': {
         TITLE: 'SERVICE PROVIDERS',
         ADD_PLACEHOLDER: 'Add a new service provider',
-        ADD_BUTTON: 'ADD'
+        ADD_BUTTON: 'ADD',
+        NO:'NO.',
+        SERVICE:'Service Providers',
+        STATUS:'Status',
+        ACTION:'Actions',
+        UPDATING:'updating...',
+        CANCEL:'Cancel',
+        INFO:'This institute does not have any service provider. Please add new service provider.'
 
     },
     'ES': {
         TITLE: 'PROVEEDORES DE SERVICIO',
         ADD_PLACEHOLDER: 'Agregar un nuevo proveedor de servicios',
-        ADD_BUTTON: 'Añadir'
+        ADD_BUTTON: 'Añadir',
+        NO:'TBD',
+        SERVICE:'TBD',
+        STATUS:'TBD',
+        ACTION:'TBD',
+        UPDATING:'TBD',
+        CANCEL:'TBD',
+        INFO:'TBD'
     }
 }
 
@@ -275,6 +328,11 @@ const editClassDict: any = {
         STUDENTS: 'STUDENTS',
         ADD_STUDENT_PLACEHOLDER: 'Add new student',
         ADD_STUDENT_BUTTON: 'Add',
+        UPDATING:'updating...',
+        CANCEL:'Cancel',
+        NOSTUDENT:'No students added in the class.',
+        LOADING:'Loading class students list...',
+        EDIT:'Edit',
         TABLE: {
             SNO: 'No.',
             NAME: 'Student Name',
@@ -289,6 +347,11 @@ const editClassDict: any = {
         STUDENTS: 'ALUMNAS',
         ADD_STUDENT_PLACEHOLDER: 'Agregar nuevo alumno',
         ADD_STUDENT_BUTTON: 'Añadir',
+        UPDATING:'TBD',
+        CANCEL:'TBD',
+        NOSTUDENT:'TBD',
+        LOADING:'TBD',
+        EDIT:'TBD',
         TABLE: {
             SNO: 'No.',
             NAME: 'nombre del estudiante',
@@ -603,8 +666,348 @@ const InstitueRomms:any={
     }
 }
 
+const classBuilderdict:any={
+    'EN':{
+        TITLE:'Create New Class',
+        SUBTITLE:'Add new class to the list',
+        NAME_LABEL:'Class Name',
+        HEADING:'CLASS INFORMATION',
+        MEMBER_PLACEHOLDER:'Add new student',
+
+        BUTTON:{
+            ADD:'Add',
+            SAVE:'Save',
+            SAVING:'Saving...',
+
+        }
+    },
+    'ES':{
+        TITLE:'TBD',
+        SUBTITLE:'TBD',
+        NAME_LABEL:'TBD',
+        HEADING:'TBD',
+        MEMBER_PLACEHOLDER:'TBD',
+
+        BUTTON:{
+            ADD:'TBD',
+            SAVE:'TBD',
+            SAVING:'TBD',
+
+        }
+    }
+}
 
 
+const CurricularBuilderdict:any={
+    'EN':{
+        TITLE:'Create New Curriculum',
+        SUBTITLE:'Add new curriculum to the list',
+        HEADING:'CURRICULUM INFORMATION',
+        NAME:'Curriculum Name',
+        LANGUAGE:'Select Language',
+        DESIGNER:'Select Designers',
+
+        DESCRIPTION:'Description',
+        OBJECT:'Objective',
+        BUTTON:{
+            SAVE:'Save',
+            SAVING:'Saving...'
+        }
+    },
+    'ES':{
+        TITLE:'TBD',
+        SUBTITLE:'TBD',
+        HEADING:'TBD',
+        NAME:'TBD',
+        LANGUAGE:'TBD',
+        DESIGNER:'TBD',
+        DESCRIPTION:'TBD',
+        OBJECT:'TBD',
+        BUTTON:{
+            SAVE:'TBD',
+            SAVING:'TBD'
+        }
+
+    }
+}
+const RoomBuilderdict:any={
+    'EN':{
+        TITLE:'Create New Classroom',
+        SUBTITLE:'Add new Classroom to the list',
+        HEADING:'CLASSROOM INFORMATION',
+        NAME_LABEL:'Classroom Name',
+        NAME_PLACEHOLDER:'Add Classroom name',
+        TEACHER_LABEL:'Teacher',
+        TEACHER_PLACEHOLDER:'Select teacher',
+        CLASS_NAME_LABEL:'Class Name',
+        CLASS_NAME_PLACEHOLDER:'Select Class',
+        CURRICULUM_LABEL:'Curriculum',
+        CURRICULUM_PLACEHOLDER:'Select Curriculum',
+        MAXSTUDENT_LABEL:'Max.Students (Add number between 1 to 30)',
+        MAXSTUDENT_PLACHOLDER:'Max students',
+        BUTTON:{
+            SAVE:'Save',
+            SAVING:'Saving...',
+        }
+
+    },
+    'ES':{
+        TITLE:'TBD',
+        SUBTITLE:'TBD',
+        HEADING:'TBD',
+        NAME_LABEL:'TBD',
+        NAME_PLACEHOLDER:'TBD',
+        TEACHER_LABEL:'TBD',
+        TEACHER_PLACEHOLDER:'TBD',
+        CLASS_NAME_LABEL:'TBD',
+        CLASS_NAME_PLACEHOLDER:'TBD',
+        CURRICULUM_LABEL:'TBD',
+        CURRICULUM_PLACEHOLDER:'TBD',
+        MAXSTUDENT_LABEL:'TBD',
+        MAXSTUDENT_PLACHOLDER:'TBD',
+        BUTTON:{
+            SAVE:'TBD',
+            SAVING:'TBD',
+        }
+
+    }
+}
+
+const EditCurriculardict:any={
+    'EN':{
+        TITLE:'Edit Curriculum',
+        SUBTITLE:'Update curriculum information',
+        HEADING:'CURRICULAR INFORMATION',
+        NAME:'Curriculum Name',
+        LANGUAGE:'Select Language',
+        DESIGNER:'Select Designers',
+        DESCRIPTION:'Description',
+        OBJECTIVE:'Objective',
+        BUTTON:{
+            SAVE:'Save',
+            CANCEL:'Cancel',
+        }
+        
+    },
+    'ES':{
+        TITLE:'TBD',
+        SUBTITLE:'TBD',
+        HEADING:'TBD',
+        NAME:'TBD',
+        LANGUAGE:'TBD',
+        DESIGNER:'TBD',
+        DESCRIPTION:'TBD',
+        OBJECTIVE:'TBD',
+        BUTTON:{
+            SAVE:'TBD',
+            CANCEL:'TBD',
+        }
+    }
+}
+
+const RoomEDITdict:any={
+    'EN':{
+        TITLE:'Edit Classroom',
+        SUBTITLE:'Edit Classroom information',
+        HEADING:'ROOM INFORMATION',
+        NAME_LABEL:'Classroom Name',
+        NAME_PLACEHOLDER:'Add Classroom name',
+        TEACHER_LABEL:'Teacher',
+        TEACHER_PLACEHOLDER:'Select teacher',
+        CLASS_NAME_LABEL:'Class Name',
+        CLASS_NAME_PLACEHOLDER:'Select Class',
+        CURRICULUM_LABEL:'Curriculum',
+        CURRICULUM_PLACEHOLDER:'Select Curriculum',
+        MAXSTUDENT_LABEL:'Max.Students (Add number between 1 to 30)',
+        MAXSTUDENT_PLACHOLDER:'Max students',
+        BUTTON:{
+            SAVE:'Save',
+            SAVING:'Saving...',
+            CANCEL:'Cancel',
+        }
+
+    },
+    'ES':{
+        TITLE:'TBD',
+        SUBTITLE:'TBD',
+        HEADING:'TBD',
+        NAME_LABEL:'TBD',
+        NAME_PLACEHOLDER:'TBD',
+        TEACHER_LABEL:'TBD',
+        TEACHER_PLACEHOLDER:'TBD',
+        CLASS_NAME_LABEL:'TBD',
+        CLASS_NAME_PLACEHOLDER:'TBD',
+        CURRICULUM_LABEL:'TBD',
+        CURRICULUM_PLACEHOLDER:'TBD',
+        MAXSTUDENT_LABEL:'TBD',
+        MAXSTUDENT_PLACHOLDER:'TBD',
+        BUTTON:{
+            SAVE:'TBD',
+            SAVING:'TBD',
+            CANCEL:'TBD',
+        }
+
+    }
+}
+
+const curricularviewdict:any={
+
+    'EN':{
+        TITLE:'Curriculum Builder',
+        SUBTITLE:'Build curriculum, units and lesson plans here',
+        HEADING:'GENERAL INFORMATION',
+        NAME:'Curriculum Name',
+        OWNER:'Institution Owner',
+        DESCRIPTION:'Description',
+        DESIGNER:'Designers',
+        LANGUAGE:'Languages',
+        OBJECTIVE:'Objective',
+        TAB:{
+            UNIT:'Units',
+            LEARINGOBJECTIVE:'Learning objectives',
+            INFORMATION:'Demographics & Information'
+        }
+    },
+    'ES':{
+        TITLE:'TBD',
+        SUBTITLE:'TBD',
+        HEADING:'TBD',
+        NAME:'TBD',
+        OWNER:'TBD',
+        DESCRIPTION:'TBD',
+        DESIGNER:'TBD',
+        LANGUAGE:'TBD',
+        OBJECTIVE:'TBD',
+        TAB:{
+            UNIT:'TBD',
+            LEARINGOBJECTIVE:'TBD',
+            INFORMATION:'TBD'
+        }
+
+    }
+}
+
+const CHECKPOINTSDICT:any={
+    'EN':{
+        TITLE:'CURRICULAR CHECKPOINTS',
+        INFO:'This curricular does not have any checkpoints yet. Please create a new one.',
+        FETCH:'Fetching Data Please wait...',
+        BUTTON:{
+            ADDEXISTING:'Add Existing Checkpoint',
+            ADDNEW:'Add New Checkpoint'
+        }
+    },
+    'ES':{
+        TITLE:'TBD',
+        INFO:'TBD',
+        FETCH:'TBD',
+        BUTTON:{
+            ADDEXISTING:'TBD',
+            ADDNEW:'TBD'
+        }
+    }
+}
+
+const LEARINGOBJECTIVEDICT:any={
+    'EN':{
+        TITLE:'LEARNING OBJECTIVES',
+        INFO:'This curricular does not have any learning objectives yet. Please create a new one.',
+        FETCH:'Fetching Data Please wait...',
+        BUTTON:{
+            ADD:'Add New Learning Objective',
+        }
+    },
+    'ES':{
+        TITLE:'TBD',
+        INFO:'TBD',
+        FETCH:'TBD',
+        BUTTON:{
+            ADD:'TBD',
+        }
+    }
+}
+
+const SYLLABUS:any={
+    'EN':{
+        TITLE:'CURRICULUM UNITS',
+        NO:'No.',
+        NAME:'Unit Name',
+        ACTION:'Actions',
+        EDIT:'edit',
+        INFO:'This curricular does not have any units yet. Please create a new one.',
+        FETCH:'Fetching details...',
+        ADDNEW:'Add new Unit'
+    },
+    'ES':{
+        TITLE:'TBD',
+        NO:'TBD',
+        NAME:'TBD',
+        ACTION:'TBD',
+        EDIT:'TBD',
+        INFO:'TBD',
+        FETCH:'TBD',
+        ADDNEW:'TBD'
+    }
+}
+
+const Measurementdict:any={
+    'EN':{
+        NO:'No.',
+        MEASUREMENT:'Measurements',
+        ACTION:'Actions',
+        EDIT:'Edit',
+        INFO:'This topic does not have any measurement yet. Please create a new one.',
+        ADDNEW:'Add New Measurement',
+        FETCH:'Fetching measurements list...'
+    },
+    'ES':{
+        NO:'TBD',
+        MEASUREMENT:'TBD',
+        ACTION:'TBD',
+        EDIT:'TBD',
+        INFO:'TBD',
+        ADDNEW:'TBD',
+        FETCH:'TBD'
+    }
+}
+
+const TOPICLISTDICT:any={
+    'EN':{
+        TOPIC:'Topics',
+        EDIT:'Edit',
+        INFO:'This learning objective does not have any topics. Please create a new one.',
+        ADDNEW:'Add New Topic',
+        FETCH:'Fetching topics list...',
+    },
+    'ES':{
+        TOPIC:'TBD',
+        EDIT:'TBD',
+        INFO:'TBD',
+        ADDNEW:'TBD',
+        FETCH:'TBD',
+    }
+}
+
+const ADDLEARINGOBJDICT:any={
+    'EN':{
+        TITLE:'Add learning objective',
+        SUBTITLE:'Add new learning objective.',
+        HEADING:'LEARNING OBJECTIVE INFORMATION',
+        NAME:'Learning Objective Name',
+        DESC:'Description',
+        SAVE:'Save',
+        VALIDATION:'Name is required'
+    },
+    'ES':{
+        TITLE:'TBD',
+        SUBTITLE:'TBD',
+        HEADING:'TBD',
+        NAME:'TBD',
+        DESC:'TBD',
+        SAVE:'TBD',
+        VALIDATION:'TBD',
+    }
+}
 
 function paginationPage(lang: string, page: number, total: number) {
     if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`
@@ -630,5 +1033,17 @@ export {
     InstitutionAdd,
     Institute_class,
     InstitueCurriculam,
-    InstitueRomms
+    InstitueRomms,
+    classBuilderdict,
+    CurricularBuilderdict,
+    RoomBuilderdict,
+    EditCurriculardict,
+    RoomEDITdict,
+    curricularviewdict,
+    CHECKPOINTSDICT,
+    LEARINGOBJECTIVEDICT,
+    SYLLABUS,
+    Measurementdict,
+    TOPICLISTDICT,
+    ADDLEARINGOBJDICT
 };

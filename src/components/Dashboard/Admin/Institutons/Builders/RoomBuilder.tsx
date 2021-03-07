@@ -17,6 +17,7 @@ import { getFilterORArray } from '../../../../../utilities/strings';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../../../utilities/services';
+import useDictionary from '../../../../../customHooks/dictionary';
 
 interface RoomBuilderProps {
 
@@ -41,6 +42,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   const [teachersList, setTeachersList] = useState([]);
   const [classList, setClassList] = useState([]);
   const [curricularList, setCurricularList] = useState([]);
+  const { clientKey,userLanguage} = useContext(GlobalContext);
+  const { RoomBuilderdict,BreadcrumsTitles  } = useDictionary(clientKey);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -52,8 +55,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   };
   const params = useQuery();
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Classroom Creation', url: '/dashboard/room-creation', last: true }
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'], url: '/dashboard/room-creation', last: true }
   ];
 
   const selectTeacher = (val: string, name: string, id: string) => {
@@ -484,7 +487,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Create New Classroom" subtitle="Add new Classroom to the list" />
+        <SectionTitle title={RoomBuilderdict[userLanguage]['TITLE']} subtitle={RoomBuilderdict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -493,10 +496,10 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CLASSROOM INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{RoomBuilderdict[userLanguage]['HEADING']}</h3>
           <div className="">
             <div className="px-3 py-4">
-              <FormInput value={name} id='name' onChange={editInputField} name='name' label="Classroom Name" placeHolder="Add Classroom name" isRequired />
+              <FormInput value={name} id='name' onChange={editInputField} name='name' label={RoomBuilderdict[userLanguage]['NAME_LABEL']} placeHolder={RoomBuilderdict[userLanguage]['NAME_PLACEHOLDER']} isRequired />
             </div>
             {/* 
               **
@@ -513,25 +516,25 @@ const RoomBuilder = (props: RoomBuilderProps) => {
             <div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  Teacher  <span className="text-red-500"> *</span>
+                {RoomBuilderdict[userLanguage]['TEACHER_LABEL']}  <span className="text-red-500"> *</span>
                 </label>
-                <SelectorWithAvatar selectedItem={teacher} list={teachersList} placeholder="Select teacher" onChange={selectTeacher} />
+                <SelectorWithAvatar selectedItem={teacher} list={teachersList} placeholder={RoomBuilderdict[userLanguage]['TEACHER_PLACEHOLDER']} onChange={selectTeacher} />
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  Class Name  <span className="text-red-500"> *</span>
+                {RoomBuilderdict[userLanguage]['CLASS_NAME_LABEL']}  <span className="text-red-500"> *</span>
                 </label>
-                <Selector selectedItem={classRoom.value} placeholder="Select Class" list={classList} onChange={selectClass} />
+                <Selector selectedItem={classRoom.value} placeholder= {RoomBuilderdict[userLanguage]['CLASS_NAME_PLACEHOLDER']} list={classList} onChange={selectClass} />
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  Curriculum
+                {RoomBuilderdict[userLanguage]['CURRICULUM_LABEL']}
               </label>
-                <Selector selectedItem={curricular.value} placeholder="Select Curriculum" list={curricularList} onChange={selectCurriculum} />
+                <Selector selectedItem={curricular.value} placeholder={RoomBuilderdict[userLanguage]['CURRICULUM_PLACEHOLDER']} list={curricularList} onChange={selectCurriculum} />
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  Max.Students (Add number between 1 to 30)  <span className="text-red-500"> *</span>
+                {RoomBuilderdict[userLanguage]['MAXSTUDENT_LABEL']} <span className="text-red-500"> *</span>
                 </label>
                 <input
                   type="number"
@@ -540,7 +543,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
                   onChange={editInputField}
                   className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
                   value={maxPersons}
-                  placeholder='Max students'
+                  placeholder={RoomBuilderdict[userLanguage]['MAXSTUDENT_PLACHOLDER']}
                   min="1" max="30" />
               </div>
             </div>
@@ -550,7 +553,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
         </div>) : null}
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-12 text-sm" label={!loading ? 'Save' : 'Saving...'} onClick={createNewRoom} />
+          <Buttons btnClass="py-3 px-12 text-sm" label={!loading ? RoomBuilderdict[userLanguage]['BUTTON']['SAVE'] : RoomBuilderdict[userLanguage]['BUTTON']['SAVING']} onClick={createNewRoom} />
         </div>
       </PageWrapper>
     </div>

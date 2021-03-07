@@ -45,19 +45,11 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const { Institute_info ,BreadcrumsTitles } = useDictionary(clientKey);
 
   const tabs = [
-<<<<<<< HEAD
-    { index: 0, title: `${Institute_info[userLanguage]['TABS']['SERVICE_PROVIDER']}`, icon: <FaHandshake />, active: false, content: <ServiceProviders serviceProviders={institute.serviceProviders} instId={institute?.id} updateServiceProviders={instProps.updateServiceProviders} /> },
-    { index: 1, title: `${Institute_info[userLanguage]['TABS']['STAFF']}`, icon: <IoPeople />, active: true, content: <StaffBuilder serviceProviders={institute.serviceProviders} instituteId={instProps?.institute?.id} /> },
-    { index: 2, title: `${Institute_info[userLanguage]['TABS']['CLASSES']}`, icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={institute?.classes} instId={institute?.id} /> },
-    { index: 3, title: `${Institute_info[userLanguage]['TABS']['CURRICULAR']}`, icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} instId={institute?.id} /> },
-    { index: 4, title: `${Institute_info[userLanguage]['TABS']['CLASSROOMS']}`, icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id} instName={institute?.name}/> }
-=======
-    { index: 0, title: 'Service Providers', icon: <FaHandshake />, active: false, content: <ServiceProviders serviceProviders={institute.serviceProviders} instId={institute?.id} updateServiceProviders={instProps.updateServiceProviders} /> },
-    { index: 1, title: 'Staff', icon: <IoPeople />, active: true, content: <StaffBuilder serviceProviders={institute.serviceProviders} instituteId={instProps?.institute?.id} /> },
-    { index: 2, title: 'Classes', icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={institute?.classes} instId={institute?.id} instName={institute?.name}/> },
-    { index: 3, title: 'Curricula', icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} instId={institute?.id} instName={institute?.name}/> },
-    { index: 4, title: 'Classrooms', icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id} instName={institute?.name}/> }
->>>>>>> 9470b9e841debffb4e5fb4e339ab7e8cfe17d28a
+    { index: 0, title: Institute_info[userLanguage]['SERVICE_PROVIDER'] , icon: <FaHandshake />, active: false, content: <ServiceProviders serviceProviders={institute.serviceProviders} instId={institute?.id} updateServiceProviders={instProps.updateServiceProviders} /> },
+    { index: 1, title: Institute_info[userLanguage]['STAFF'], icon: <IoPeople />, active: true, content: <StaffBuilder serviceProviders={institute.serviceProviders} instituteId={instProps?.institute?.id} /> },
+    { index: 2, title: Institute_info[userLanguage]['CLASSES'], icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={institute?.classes} instId={institute?.id} instName={institute?.name}/> },
+    { index: 3, title: Institute_info[userLanguage]['CURRICULAR'], icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} instId={institute?.id} instName={institute?.name}/> },
+    { index: 4, title: Institute_info[userLanguage]['CLASSROOMS'], icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id} instName={institute?.name}/> }
   ]
 
   const updateTab = (tab: number) => {

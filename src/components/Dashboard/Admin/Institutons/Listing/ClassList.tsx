@@ -29,11 +29,7 @@ const ClassList = (props: ClassListProps) => {
     <div className="p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-<<<<<<< HEAD
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{Institute_class[userLanguage]['TITLE']}</h3>
-=======
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{instName ? instName.toUpperCase() : 'INSTITUTE'} CLASSES</h3>
->>>>>>> 9470b9e841debffb4e5fb4e339ab7e8cfe17d28a
 
           {
             (classes.items && classes.items.length > 0) ? (

@@ -44,16 +44,16 @@ const EditClass = (props: EditClassProps) => {
   const [updateStatus, setUpdateStatus] = useState(false)
   const [previousName, setPreviousName] = useState('')
 
-  const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Edit Class', url: `/dashboard/class-edit?id=${urlParams.get('id')}`, last: true }
-  ];
-
+  
   const { clientKey, userLanguage, theme } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { editClassDict } = useDictionary(clientKey);
+  const { editClassDict,BreadcrumsTitles } = useDictionary(clientKey);
   const dictionary = editClassDict[userLanguage]
-
+  const breadCrumsList = [
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['EDITCLASS'], url: `/dashboard/class-edit?id=${urlParams.get('id')}`, last: true }
+  ];
+  
   const fetchClassData = async (classId: string) => {
     try {
       const result: any = await API.graphql(graphqlOperation(customQueries.getClassDetails, { id: classId }))
@@ -333,10 +333,10 @@ const EditClass = (props: EditClassProps) => {
 
                             <div className="w-1/10">
                               {statusEdit === item.id ?
-                                <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
+                                <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit('')}>{updateStatus ? dictionary.UPDATING : dictionary.CANCEL}</span>
                                 :
                                 <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit(item.id)}>
-                                  Edit
+                                  {dictionary.EDIT}
                           </span>
                               }
                             </div>
@@ -345,9 +345,9 @@ const EditClass = (props: EditClassProps) => {
                     </div>
                   </Fragment>
                 )
-                : (<div className="py-12 my-12 m-auto text-center">No students added in the class.</div>)
+                : (<div className="py-12 my-12 m-auto text-center">{dictionary.NOSTUDENT}</div>)
               )
-              : <div className="py-12 my-12 m-auto text-center">Loading class students list...</div>
+              : <div className="py-12 my-12 m-auto text-center">{dictionary.LOADING}</div>
             }
             {messages.show && (
               <div className="py-2 m-auto text-center">

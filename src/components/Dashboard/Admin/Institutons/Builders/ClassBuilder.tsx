@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoClose } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
@@ -18,6 +18,8 @@ import { IconContext } from 'react-icons';
 import { stringToHslColor, getInitialsFromString, initials } from '../../../../../utilities/strings';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import { getImageFromS3 } from '../../../../../utilities/services';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../customHooks/dictionary';
 
 interface ClassBuilderProps {
 
@@ -48,6 +50,8 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   const [selectedStudents, setSelectedStudent] = useState([]);
   const [allStudentList, setAllStudentList] = useState([]);
   const [loading, setIsLoading] = useState(false);
+  const { clientKey,userLanguage} = useContext(GlobalContext);
+  const { classBuilderdict,BreadcrumsTitles  } = useDictionary(clientKey);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -60,8 +64,8 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   const params = useQuery();
 
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Class Creation', url: '/dashboard/class-creation', last: true }
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['Class_Creation'], url: '/dashboard/class-creation', last: true }
   ];
 
   const onChange = (e: any) => {
@@ -362,7 +366,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Create New Class" subtitle="Add new class to the list" />
+        <SectionTitle title={classBuilderdict[userLanguage]['TITLE']} subtitle={classBuilderdict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -371,10 +375,10 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CLASS INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{classBuilderdict[userLanguage]['HEADING']}</h3>
           <div className="">
             <div className="px-3 py-4">
-              <FormInput value={name} id='className' onChange={onChange} name='className' label="Class Name" isRequired />
+              <FormInput value={name} id='className' onChange={onChange} name='className' label={classBuilderdict[userLanguage]['NAME_LABEL']} isRequired />
             </div>
 
             {/* 
@@ -393,8 +397,8 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         </div>
         <h3 className="text-center text-lg text-gray-600 font-medium mt-12 mb-6">STUDENTS</h3>
         <div className="flex items-center w-6/10 m-auto px-2">
-          <SelectorWithAvatar selectedItem={newMember} list={studentList} placeholder="Add new student" onChange={onStudentSelect} />
-          <Buttons btnClass="ml-4 py-1" label="Add" onClick={addMemberToList} />
+          <SelectorWithAvatar selectedItem={newMember} list={studentList} placeholder={classBuilderdict[userLanguage]['MEMBER_PLACEHOLDER']} onChange={onStudentSelect} />
+          <Buttons btnClass="ml-4 py-1" label={classBuilderdict[userLanguage]['BUTTON']['ADD']} onClick={addMemberToList} />
         </div>
         <div className="my-4 w-6/10 m-auto px-2 max-h-88 overflow-y-scroll">
           {selectedStudents.length > 0 && (
@@ -426,7 +430,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
         </div>) : null}
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="my-8 py-3 px-12 text-sm" label={loading ? 'Saving...' : 'Save'} onClick={saveClassDetails} disabled={loading ? true : false} />
+          <Buttons btnClass="my-8 py-3 px-12 text-sm" label={loading ? classBuilderdict[userLanguage]['BUTTON']['SAVING'] : classBuilderdict[userLanguage]['BUTTON']['SAVE']} onClick={saveClassDetails} disabled={loading ? true : false} />
         </div>
       </PageWrapper>
     </div>

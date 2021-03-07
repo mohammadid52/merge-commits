@@ -10,6 +10,7 @@ import * as mutations from '../../../../../../../graphql/mutations';
 import * as queries from '../../../../../../../graphql/queries';
 import { getAsset } from '../../../../../../../assets';
 import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../../../customHooks/dictionary';
 
 interface SyllabusListProps {
   savedSyllabi?: any[]
@@ -24,8 +25,9 @@ const SyllabusList = (props: SyllabusListProps) => {
   const [syllabusIds, setSyllabusIds] = useState([]);
   const history = useHistory();
 
-  const { clientKey, theme } = useContext(GlobalContext);
+  const { clientKey, theme,userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const { SYLLABUS,BreadcrumsTitles } = useDictionary(clientKey)
 
   const onDragEnd = async (result: any) => {
     if (result.source.index !== result.destination.index) {
@@ -90,29 +92,29 @@ const SyllabusList = (props: SyllabusListProps) => {
     <div className="p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CURRICULUM UNITS</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{SYLLABUS[userLanguage]['TITLE']}</h3>
           {!isLoading ? (
 
             <Fragment>
               {(syllabusList && syllabusList.length > 0) ? (
                 <Fragment>
                   <div className="flex justify-end w-8/10 m-auto ">
-                    <Buttons btnClass="mx-4" label="Add new Unit" onClick={createNewSyllabus} />
+                    <Buttons btnClass="mx-4" label={SYLLABUS[userLanguage]['ADDNEW']} onClick={createNewSyllabus} />
                   </div>
                   <div className="my-8 w-8/10 m-auto">
 
                     <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                       <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>No.</span>
+                        <span>{SYLLABUS[userLanguage]['NO']}</span>
                       </div>
                       <div className="w-7/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>Unit Name</span>
+                        <span>{SYLLABUS[userLanguage]['NAME']}</span>
                       </div>
                       {/* <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>Description</span>
                   </div> */}
                       <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>Actions</span>
+                        <span>{SYLLABUS[userLanguage]['ACTION']}</span>
                       </div>
                     </div>
 
@@ -143,7 +145,7 @@ const SyllabusList = (props: SyllabusListProps) => {
                                           {item.description ? item.description : ''}
                                         </div> */}
                                         <span className={`w-2/10 flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]} `}>
-                                          edit
+                                        {SYLLABUS[userLanguage]['EDIT']}
                                         </span>
                                       </div>
                                     </div>
@@ -163,10 +165,10 @@ const SyllabusList = (props: SyllabusListProps) => {
                     <div className="flex justify-center mt-8">
                       <Buttons btnClass="mx-4" label="Add new unit" onClick={createNewSyllabus} />
                     </div>
-                    <p className="text-center p-16">  This curricular does not have any units yet. Please create a new one.</p>
+                    <p className="text-center p-16">  {SYLLABUS[userLanguage]['INFO']}</p>
                   </Fragment>)}
             </Fragment>
-          ) : (<p className="text-center p-16">  Fetching details...</p>)}
+          ) : (<p className="text-center p-16">  {SYLLABUS[userLanguage]['FETCH']}</p>)}
         </PageWrapper>
       </div>
     </div>

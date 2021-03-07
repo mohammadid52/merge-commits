@@ -16,6 +16,7 @@ import { getFilterORArray } from '../../../../../utilities/strings';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../../../utilities/services';
+import useDictionary from '../../../../../customHooks/dictionary';
 
 interface EditRoomProps {
 
@@ -34,7 +35,7 @@ const EditRoom = (props: EditRoomProps) => {
     curricular: { id: '', name: '', value: '' },
     maxPersons: ''
   }
-  const { theme } = useContext(GlobalContext);
+  const { theme,clientKey, userLanguage } = useContext(GlobalContext);
   const [roomData, setRoomData] = useState(initialData)
   const [institutionList, setInstitutionList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
@@ -50,10 +51,13 @@ const EditRoom = (props: EditRoomProps) => {
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
+ 
+  const { BreadcrumsTitles,RoomEDITdict } = useDictionary(clientKey);
+
   const params = useQuery();
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Edit Classroom', url: `/dashboard/room-edit?id=${params.get('id')}`, last: true }
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['EDITCLASSROOM'], url: `/dashboard/room-edit?id=${params.get('id')}`, last: true }
   ];
 
   const selectTeacher = (val: string, name: string, id: string) => {
@@ -499,7 +503,7 @@ const EditRoom = (props: EditRoomProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Edit Classroom" subtitle="Edit Classroom information" />
+        <SectionTitle title={RoomEDITdict[userLanguage]['TITLE']} subtitle={RoomEDITdict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -508,10 +512,10 @@ const EditRoom = (props: EditRoomProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">ROOM INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{RoomEDITdict[userLanguage]['HEADING']}</h3>
           <div className="">
             <div className="px-3 py-4">
-              <FormInput value={name} id='name' onChange={editInputField} name='name' label="Classroom Name" placeHolder="Add Classroom name" isRequired />
+              <FormInput value={name} id='name' onChange={editInputField} name='name' label={RoomEDITdict[userLanguage]['NAME_LABEL']} placeHolder={RoomEDITdict[userLanguage]['NAME_PLACEHOLDER']} isRequired />
             </div>
             {/* 
               **
@@ -528,25 +532,25 @@ const EditRoom = (props: EditRoomProps) => {
             <div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  Teacher  <span className="text-red-500"> *</span>
+                {RoomEDITdict[userLanguage]['TEACHER_LABEL']}  <span className="text-red-500"> *</span>
                 </label>
-                <SelectorWithAvatar selectedItem={teacher} list={teachersList} placeholder="Select teacher" onChange={selectTeacher} />
+                <SelectorWithAvatar selectedItem={teacher} list={teachersList} placeholder={RoomEDITdict[userLanguage]['TEACHER_PLACEHOLDER']} onChange={selectTeacher} />
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  Class Name  <span className="text-red-500"> *</span>
+                {RoomEDITdict[userLanguage]['CLASS_NAME_LABEL']}  <span className="text-red-500"> *</span>
                 </label>
-                <Selector selectedItem={classRoom.value} placeholder="Select Class" list={classList} onChange={selectClass} />
+                <Selector selectedItem={classRoom.value} placeholder={RoomEDITdict[userLanguage]['CLASS_NAME_PLACEHOLDER']} list={classList} onChange={selectClass} />
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  Curriculum
+                {RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
               </label>
-                <Selector selectedItem={curricular.value} placeholder="Select Curriculum" list={curricularList} onChange={selectCurriculum} />
+                <Selector selectedItem={curricular.value} placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']} list={curricularList} onChange={selectCurriculum} />
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  Max.Students (Add number between 1 to 30)  <span className="text-red-500"> *</span>
+                {RoomEDITdict[userLanguage]['MAXSTUDENT_LABEL']}  <span className="text-red-500"> *</span>
                 </label>
                 <input
                   type="number"
@@ -555,7 +559,7 @@ const EditRoom = (props: EditRoomProps) => {
                   onChange={editInputField}
                   className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
                   value={maxPersons}
-                  placeholder='Max students'
+                  placeholder={RoomEDITdict[userLanguage]['MAXSTUDENT_PLACEHOLDER']}
                   min="1" max="30" />
               </div>
             </div>
@@ -565,8 +569,8 @@ const EditRoom = (props: EditRoomProps) => {
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
         </div>) : null}
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-12 text-sm mr-4" label="Cancel" onClick={history.goBack} transparent />
-          <Buttons btnClass="py-3 px-12 text-sm ml-4" label="Save" onClick={saveRoomDetails} />
+          <Buttons btnClass="py-3 px-12 text-sm mr-4" label={RoomEDITdict[userLanguage]['BUTTON']['CANCEL']} onClick={history.goBack} transparent />
+          <Buttons btnClass="py-3 px-12 text-sm ml-4" label={RoomEDITdict[userLanguage]['BUTTON']['SAVE']} onClick={saveRoomDetails} />
         </div>
       </PageWrapper>
     </div>

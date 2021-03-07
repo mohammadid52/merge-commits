@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
@@ -15,6 +15,8 @@ import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
 import TextArea from '../../../../Atoms/Form/TextArea';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../customHooks/dictionary';
 
 interface CurricularBuilderProps {
 
@@ -52,6 +54,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [curricularData, setCurricularData] = useState<InitialData>(initialData);
   const [loading, setIsLoading] = useState(false);
+  const { clientKey,userLanguage} = useContext(GlobalContext);
+  const { CurricularBuilderdict,BreadcrumsTitles  } = useDictionary(clientKey);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -63,8 +67,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const params = useQuery();
   const checkpointsList: any = [];
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'New Curriculum', url: '/dashboard/curricular-creation', last: true }
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['CURRICULARBUILDER'], url: '/dashboard/curricular-creation', last: true }
   ];
 
   const onChange = (e: any) => {
@@ -303,7 +307,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Create New Curriculum" subtitle="Add new curriculum to the list" />
+        <SectionTitle title={CurricularBuilderdict[userLanguage]['TITLE']} subtitle={CurricularBuilderdict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -312,10 +316,10 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CURRICULUM INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{CurricularBuilderdict[userLanguage]['HEADING']}</h3>
           <div className="">
             <div className="px-3 py-4">
-              <FormInput value={name} id='curricularName' onChange={onChange} name='name' label="Curriculum Name" isRequired />
+              <FormInput value={name} id='curricularName' onChange={onChange} name='name' label={CurricularBuilderdict[userLanguage]['NAME']} isRequired />
             </div>
 
             {/* 
@@ -332,21 +336,21 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
 
             <div className="px-3 py-4">
               <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                Select Language
+              {CurricularBuilderdict[userLanguage]['LANGUAGE']}
               </label>
-              <MultipleSelector selectedItems={languages} placeholder="Select Language" list={languageList} onChange={selectLanguage} />
+              <MultipleSelector selectedItems={languages} placeholder={CurricularBuilderdict[userLanguage]['LANGUAGE']} list={languageList} onChange={selectLanguage} />
             </div>
             <div className="px-3 py-4">
               <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                Select Designers
+              {CurricularBuilderdict[userLanguage]['DESIGNER']}
               </label>
-              <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
+              <MultipleSelector selectedItems={selectedDesigners} placeholder={CurricularBuilderdict[userLanguage]['DESIGNER']} list={designersList} onChange={selectDesigner} />
             </div>
             <div className="px-3 py-4">
-              <TextArea value={description} id='description' onChange={onChange} name='description' label="Description" />
+              <TextArea value={description} id='description' onChange={onChange} name='description' label= {CurricularBuilderdict[userLanguage]['DESCRIPTION']} />
             </div>
             <div className="px-3 py-4">
-              <TextArea value={objectives} id='objectives' onChange={onChange} name='objectives' label="Objective" />
+              <TextArea value={objectives} id='objectives' onChange={onChange} name='objectives' label= {CurricularBuilderdict[userLanguage]['OBJECT']} />
             </div>
           </div>
         </div>
@@ -354,7 +358,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
         </div>) : null}
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-12 text-sm" label={loading ? 'Saving...' : 'Save'} onClick={saveCurriculum} disabled={loading ? true : false} />
+          <Buttons btnClass="py-3 px-12 text-sm" label={loading ?  CurricularBuilderdict[userLanguage]['BUTTON']['SAVING'] :  CurricularBuilderdict[userLanguage]['BUTTON']['SAVE']} onClick={saveCurriculum} disabled={loading ? true : false} />
         </div>
       </PageWrapper>
     </div>

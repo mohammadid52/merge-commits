@@ -208,19 +208,19 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                   <Fragment>
                     <div className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                       <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>No.</span>
+                        <span>{dictionary['NO']}</span>
                       </div>
                       <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>Name</span>
+                        <span>{dictionary['NAME']}</span>
                       </div>
                       <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>Role</span>
+                        <span>{dictionary['ROLE']}</span>
                       </div>
                       <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>Status</span>
+                        <span>{dictionary['STATUS']}</span>
                       </div>
                       <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>Action</span>
+                        <span>{dictionary['ACTION']}</span>
                       </div>
                     </div>
 
@@ -256,7 +256,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                           {
                             statusEdit === item.id ? (
                               <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">
-                                <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={(val, name, id) => onStaffStatusChange(val, item.id, item.status)} />
+                                <Selector selectedItem={item.status} placeholder={dictionary['STATUS_PLACEHOLDER']} list={statusList} onChange={(val, name, id) => onStaffStatusChange(val, item.id, item.status)} />
                               </div>) :
                               <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">
                                 {item.status || 'Active'}
@@ -264,10 +264,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                           }
                           <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center">
                             {statusEdit === item.id ?
-                              <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
+                              <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit('')}>{updateStatus ? dictionary['UPDATING'] : dictionary['CANCEL']}</span>
                               :
                               <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit(item.id)}>
-                                Edit
+                               {dictionary['EDIT']}
                               </span>
                             }
                           </div>
@@ -278,12 +278,12 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                   </Fragment>
                 ) : (
                     <div className="text-center p-16">
-                      <p> This institute does not have any staff member. Please add new member.</p>
+                      <p> {dictionary['INFO']}</p>
                     </div>
                   )}
               </> : (
                 <div className="text-center p-16">
-                  <p>Loading...</p>
+                  <p>{dictionary['LOADING']}</p>
                 </div>
               )
           }
