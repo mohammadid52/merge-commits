@@ -1,15 +1,10 @@
-import React, { useContext, useEffect } from 'react';
-// import { LessonContext } from '../../../../contexts/LessonContext';
-import Banner from './Banner';
-import PhotoBlock from './PhotoBlock';
-import QuoteBlock from './QuoteBlock';
-import TrophyBlock from './TrophyBlock';
+import React, { useContext } from 'react';
 import MoreArtist from './MoreArtist';
 import Feedback from './Feedback';
-import Links from './Links';
 import SaveQuit from './SaveQuit';
-import { studentObject } from '../../../../state/LessonControlState';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
+
+import Banner from '../../../Lesson/LessonComponents/Banner';
 
 interface props {
   fullscreen: boolean;
@@ -17,13 +12,15 @@ interface props {
 
 const OutroView = (props: props) => {
   const { fullscreen } = props;
-  const { theme } = useContext(LessonControlContext);
+  const { state, theme } = useContext(LessonControlContext);
+
+  const { title } = state.data.lesson;
 
   return (
     <div className={theme.section}>
-      <Banner fullscreen={fullscreen} />
+      {state.data.lesson.type !== 'survey' ? <Banner isTeacher={true} title={`You've completed ${title}!`} /> : null}
       <div className={theme.section}>
-        <div className="flex flex-col justify-between items-center">
+        <div className='flex flex-col justify-between items-center'>
           <Feedback fullscreen={fullscreen} />
           <MoreArtist fullscreen={fullscreen} />
           <SaveQuit fullscreen={fullscreen} />
