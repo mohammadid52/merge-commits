@@ -1,10 +1,12 @@
 import React, { useContext } from 'react';
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import { useHistory } from 'react-router-dom';
+
+import { GlobalContext } from '../../../contexts/GlobalContext';
 import { dateString } from '../../../utilities/time';
 import { Lesson } from './Classroom';
-import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../customGraphql/customMutations';
+import useDictionary from '../../../customHooks/dictionary';
 
 interface StartProps {
   isTeacher?: boolean;
@@ -15,7 +17,8 @@ interface StartProps {
 }
 
 const Start: React.FC<StartProps> = (props: StartProps) => {
-  const { state, dispatch } = useContext(GlobalContext);
+  const { state, dispatch, userLanguage, clientKey } = useContext(GlobalContext);
+  const { classRoomDict } = useDictionary(clientKey);
   const { isTeacher, lessonKey, open, accessible, type } = props;
   const history = useHistory();
 
@@ -61,21 +64,30 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     if (isTeacher) {
       if (type === 'survey' || type === 'assessment') {
         if (open) {
-          return 'DISABLE';
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['DISABLE'];
         } else {
-          return 'ENABLE';
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['ENABLE'];
         }
       } else {
-        return 'TEACH';
+        return classRoomDict[userLanguage]['BOTTOM_BAR']['TEACH'];
       }
     } else {
-      return 'START';
+      return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
     }
   };
 
   const secondPart = () => {
     if (typeof type !== 'undefined') {
-      return type.toUpperCase();
+      switch (type) {
+        case 'lesson':
+          return classRoomDict[userLanguage]['LESSON'].toUpperCase();
+        case 'assessment':
+          return classRoomDict[userLanguage]['ASSESSMENT'].toUpperCase();
+        case 'survey':
+          return classRoomDict[userLanguage]['SURVEY'].toUpperCase();
+        default:
+          return type.toUpperCase();
+      }
     } else {
       return '';
     }

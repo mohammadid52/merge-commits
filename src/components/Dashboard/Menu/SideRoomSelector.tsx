@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
+
 import { SideMenuProps } from '../Dashboard';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { API, graphqlOperation } from '@aws-amplify/api';
 import * as customQueries from '../../../customGraphql/customQueries';
 import { getArrayOfUniqueValueByProperty } from '../../../utilities/arrays';
 import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
-import { useCookies } from 'react-cookie';
+import useDictionary from '../../../customHooks/dictionary';
 
 export interface Room {
   id: string;
@@ -30,7 +32,8 @@ const SideRoomSelector = (props: SideMenuProps) => {
     activeRoomSyllabus,
     setActiveRoomSyllabus,
   } = props;
-  const { state, theme, dispatch } = useContext(GlobalContext);
+  const { state, theme, dispatch, clientKey, userLanguage } = useContext(GlobalContext);
+  const { classRoomDict } = useDictionary(clientKey);
 
   // Cookie setting for transition to Student/Teacher
   const [cookies, setCookie, removeCookie] = useCookies(['room_info']);
@@ -50,7 +53,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
   useEffect(() => {
     const userAuthID = state.user.authId;
     const userRole = state.user.role;
-    if(userRole === 'ADM') {
+    if (userRole === 'ADM') {
       setLoaded(true);
     }
   }, []);
@@ -108,7 +111,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
         }
       }
     };
-    (userRole === 'FLW' || userRole === 'TR' ) && listRoomTeacher();
+    (userRole === 'FLW' || userRole === 'TR') && listRoomTeacher();
   }, []);
 
 
@@ -171,15 +174,15 @@ const SideRoomSelector = (props: SideMenuProps) => {
   }, [activeRoom]);
 
   // Save info of selected room to cookie
-  useEffect(()=>{
+  useEffect(() => {
     const getRoomFromState = state.roomData.rooms.filter((room: any) => room.id === activeRoom);
-    if(getRoomFromState.length === 1){
+    if (getRoomFromState.length === 1) {
       setCookie('room_info', getRoomFromState[0])
     } else {
       setCookie('room_info', {})
     }
 
-  },[activeRoom])
+  }, [activeRoom])
 
   /**
    * LISTSYLLABUS SHOULD ONLY BE DONE FOR TEACHER
@@ -255,10 +258,10 @@ const SideRoomSelector = (props: SideMenuProps) => {
       const lessonPlannerSyllabus =
         state.roomData.syllabus.length > 0
           ? state.roomData.syllabus.filter((syllabusObject: any) => {
-              if (syllabusObject.hasOwnProperty('active') && syllabusObject.active) {
-                return syllabusObject;
-              }
-            })
+            if (syllabusObject.hasOwnProperty('active') && syllabusObject.active) {
+              return syllabusObject;
+            }
+          })
           : [];
       const classRoomActiveSyllabus = rooms
         .filter((room: any) => room.id === activeRoom)
@@ -318,7 +321,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
 
   return (
     <div className={`${theme.sidemenu.secondary} mr-2`}>
-      <div className={roomsTitle}>Classrooms:</div>
+      <div className={roomsTitle}>{classRoomDict[userLanguage]['LIST_TITLE']}:</div>
       {rooms.length > 0 ? (
         rooms.map((room: Room, i: number) => {
           return (
@@ -329,9 +332,9 @@ const SideRoomSelector = (props: SideMenuProps) => {
               onClick={(e) => handleRoomSelection(e, i)}
               className={`cursor-pointer ${linkClass} 
               ${activeRoom === room.id
-                ? 'bg-grayscale-light bg-opacity-80'
-                : 'bg-darker-gray bg-opacity-20'
-              } 
+                  ? 'bg-grayscale-light bg-opacity-80'
+                  : 'bg-darker-gray bg-opacity-20'
+                } 
               truncate ...`}>
               {room.name}
             </div>
@@ -339,13 +342,13 @@ const SideRoomSelector = (props: SideMenuProps) => {
         })
       ) : loaded === false ? (
         <>
-          <p className={`${linkClass}`}>Loading classrooms...</p>
+          <p className={`${linkClass}`}>Loading {classRoomDict[userLanguage]['LIST_TITLE']}...</p>
         </>
       ) : (
-        <>
-          <p className={`${linkClass}`}>No classrooms assigned to user</p>
-        </>
-      )}
+            <>
+              <p className={`${linkClass}`}>No {classRoomDict[userLanguage]['LIST_TITLE']} assigned to user</p>
+            </>
+          )}
     </div>
   );
 };

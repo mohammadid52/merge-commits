@@ -34,7 +34,7 @@ const dashboardProfileDict: any = {
     'EN': {
         PROFILE: 'Profile',
         TITLE: 'USER PROFILE',
-        PROFILE_INSTRUCTON:'Click the circle above to update profile picture.',
+        PROFILE_INSTRUCTON: 'Click the circle above to update profile picture.',
         SUBTITLE: 'This contains your profile information.',
         PERSONAL_INFO: {
             TITLE: 'Personal Information',
@@ -75,7 +75,7 @@ const dashboardProfileDict: any = {
             CANCEL: 'Cancel',
             SUCCESS_MSG: 'Success',
             WARN_MSG: 'This will log you out and take you to the reset password page, do you want to continue?',
-            CONTINUE_BTN:'Continue',
+            CONTINUE_BTN: 'Continue',
             ERRORS: {
                 NO_OLD_PASS: 'Please enter your old password',
                 NO_NEW_PASS: 'Please enter your new password',
@@ -87,7 +87,7 @@ const dashboardProfileDict: any = {
     'ES': {
         PROFILE: 'Perfil',
         TITLE: 'PERFIL DEL USUARIO',
-        PROFILE_INSTRUCTON:'Haga clic en el círculo de arriba para actualizar la imagen de perfil.',
+        PROFILE_INSTRUCTON: 'Haga clic en el círculo de arriba para actualizar la imagen de perfil.',
         SUBTITLE: 'Esto contiene la información de su perfil.',
         PERSONAL_INFO: {
             TITLE: 'Informacion personal',
@@ -128,7 +128,7 @@ const dashboardProfileDict: any = {
             CANCEL: 'Cancelar',
             SUCCESS_MSG: 'Éxito',
             WARN_MSG: 'TBD',
-            CONTINUE_BTN:'TBD',
+            CONTINUE_BTN: 'TBD',
             ERRORS: {
                 NO_OLD_PASS: 'Ingrese su contraseña anterior',
                 NO_NEW_PASS: 'Ingrese su nueva contraseña',
@@ -303,6 +303,59 @@ const lessonDict: any = {
     }
 }
 
+const classRoomDict: any = {
+    'EN': {
+        TITLE: 'Classroom',
+        LIST_TITLE: 'Classrooms',
+        LESSON: 'Lesson',
+        LIST_LESSON: 'Lessons',
+        ASSESSMENT: 'Assessment',
+        SURVEY: 'Survey',
+        LESSON_PLANNER: 'Lesson Planner',
+        ASSESSMENT_TITLE: 'Surveys & Assessments',
+        UNIT_TITLE: 'Unit Manager',
+        BOTTOM_BAR: {
+            START: 'START',
+            DISABLE: 'DISABLE',
+            ENABLE: 'ENABLE',
+            TEACH: 'TEACH',
+        },
+        LESSON_TABS: {
+            TAB_ONE: `Today's Lesson`,
+            TAB_TWO: 'Teach Lessons',
+        }
+    },
+    'ES': {
+        TITLE: 'TBD',
+        LIST_TITLE: 'TBD',
+        LESSON: 'TBD',
+        LIST_LESSON: 'TBD',
+        ASSESSMENT: 'TBD',
+        SURVEY: 'TBD',
+        LESSON_PLANNER: 'TBD',
+        ASSESSMENT_TITLE: 'TBD',
+        UNIT_TITLE: 'TBD',
+        BOTTOM_BAR: {
+            START: 'TBD',
+            DISABLE: 'TBD',
+            ENABLE: 'TBD',
+            TEACH: 'TBD',
+        },
+        LESSON_TABS: {
+            TAB_ONE: `TBD`,
+            TAB_TWO: 'TBD',
+        }
+    }
+}
+
+const lessonPlannerDict: any = {
+    'EN': {
+
+    },
+    'ES': {
+
+    }
+}
 function paginationPage(lang: string, page: number, total: number) {
     if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`
     if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`
@@ -321,5 +374,7 @@ export {
     editClassDict,
     spBuilderDict,
     manageusersDict,
-    lessonDict
+    lessonDict,
+    classRoomDict,
+    lessonPlannerDict
 };
