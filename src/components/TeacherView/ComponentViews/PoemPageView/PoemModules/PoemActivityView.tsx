@@ -1,14 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
+import React, { useContext, useEffect, useState } from 'react';
 // import { useCookies } from 'react-cookie';
 import WritingBlock from './WritingBlock';
 import InstructionBlock from './InstructionBlock';
-import ToolBar from './ToolBar';
-import Banner from './Banner';
 import EditBlock from './EditBlock';
-import InstructionsPopup from '../../../../Lesson/Popup/InstructionsPopup';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
-import { studentObject } from '../../../../../state/LessonControlState';
+import Banner from '../../../../Lesson/LessonComponents/Banner';
 
 type storageObject = {
     title: string
@@ -81,11 +77,13 @@ const PoemActivity = (props: props) => {
         // }
     }, [editMode.input])
 
+    const title = state.data.lesson.activity.title;
+
     return (
         <>
             {/* <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/> */}
             < div className={theme.section} >
-                <Banner fullscreen={fullscreen} />
+                <Banner isTeacher={true} title={title} iconName={`FaPenFancy`}/>
                 <InstructionBlock editMode={editMode.open} fullscreen={fullscreen} />
                 <div className='flex flex-col justify-between items-center'>
                     {!editMode.open ? (

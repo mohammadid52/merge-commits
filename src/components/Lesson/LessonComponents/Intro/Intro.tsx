@@ -9,7 +9,7 @@ import InstructionBlock from '../InstructionBlock';
 
 const Intro = () => {
   const { dispatch, state, theme } = useContext(LessonContext);
-  const imgArray = state.data.lesson.artist.images;
+  const imgArray = state.data?.lesson?.artist?.images;
   const lessonType = state.data.lesson.type;
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const Intro = () => {
       <Banner title={state.data.lesson.title} iconName={'FaHourglassStart'}/>
       <div
         className='h-96 flex flex-col mb-4 justify-between items-center bg-cover bg-right-top rounded-xl z-10'
-        style={{ backgroundImage: `url(${imgArray[0]})` }}>
+        style={{ backgroundImage: `url(${imgArray ? imgArray[0] : null})` }}>
         <QuoteBlock />
         {/* <Block /> */}
       </div>

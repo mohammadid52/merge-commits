@@ -1,8 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
-import StarRating from './Feedback/StarRating';
+import StarRating from '../../../Lesson/LessonComponents/Outro/Feedback/StarRating';
 
 interface props {
   fullscreen: boolean;

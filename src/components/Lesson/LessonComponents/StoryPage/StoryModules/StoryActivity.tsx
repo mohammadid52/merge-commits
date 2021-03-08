@@ -1,11 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
 import InstructionsBlock from './InstructionBlock';
 import StoryForm from './StoryForm';
-import Banner from './Banner';
 import Modules from './Modules';
-import InstructionsPopup from '../../../Popup/InstructionsPopup';
+import Banner from '../../Banner';
 
 export interface StoryState {
   story: string[];
@@ -68,11 +67,14 @@ const Story = () => {
     }
   }, []);
 
+  const title = state.data.lesson.warmUp.title;
+
   return (
     <>
       {/* <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/> */}
       <div className={theme.section}>
-        <Banner />
+
+        <Banner title={title} iconName={`FaScroll`}/>
 
         <div className="flex flex-col justify-between items-center">
           <InstructionsBlock />

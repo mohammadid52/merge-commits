@@ -5,10 +5,9 @@ import { API, graphqlOperation } from '@aws-amplify/api';
 import * as customQueries from '../../../customGraphql/customQueries';
 import { getArrayOfUniqueValueByProperty } from '../../../utilities/arrays';
 import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
-import { LessonControlContext } from '../../../contexts/LessonControlContext';
 import { useCookies } from 'react-cookie';
 
-interface Room {
+export interface Room {
   id: string;
   classID: string;
   teacherAuthID: string;

@@ -29,6 +29,7 @@ type userObject = {
 };
 
 export interface DashboardProps {
+  loading?: boolean;
   isTeacher?: boolean;
   updateAuthState?: Function;
   currentPageData?: any[];
@@ -220,7 +221,7 @@ const Dashboard = (props: DashboardProps) => {
               <Route path={`${match.url}/noticeboard`} render={() => <NoticeboardAdmin />} />
               <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
               <Route path={`${match.url}/registration`} render={() => <Registration />} />
-              <Route path={`${match.url}/profile`} render={() => <Profile />} />
+              <Route path={`${match.url}/profile`} render={() => <Profile updateAuthState={updateAuthState}/>} />
               <Route
                 path={`${match.url}/lesson-planner`}
                 render={() => (

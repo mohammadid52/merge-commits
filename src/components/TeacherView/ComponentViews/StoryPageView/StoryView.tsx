@@ -1,17 +1,12 @@
-import React, { useEffect, useContext } from 'react';
-import {
-    Switch,
-    Route,
-    useRouteMatch,
-} from "react-router-dom";
-import { studentObject } from '../../../../state/LessonControlState'
+import React, { useContext, useEffect } from 'react';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import StoryActivityView from './StoryModules/StoryActivityView';
 import StoryBreakdownView from './StoryBreakdown/StoryBreakdownView';
 // import ErrorPage from '../../Error/ErrorPage';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
-interface props {
-        fullscreen: boolean
+interface props {
+  fullscreen: boolean
 }
 
 const StoryPage = (props: props) => {
@@ -31,9 +26,6 @@ const StoryPage = (props: props) => {
             <Route exact path={`${match.url}`}>
                 <StoryActivityView fullscreen={fullscreen} />
             </Route>
-            {/* <Route>
-                <ErrorPage />
-            </Route> */}
         </Switch>
     )
 }

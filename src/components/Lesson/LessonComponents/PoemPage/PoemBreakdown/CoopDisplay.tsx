@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import Banner from './Banner';
 import ReflectionQuestions from '../../ReflectionQuestions';
 import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaExpand, FaCompress } from 'react-icons/fa';
 import PoemOutput from './PoemOutput';
-
+import Banner from '../../Banner';
 
 interface teacherData {
     breakdownComponent: string,
@@ -69,22 +68,25 @@ const CoopDisplay = () => {
                             {fullscreen ? < FaCompress /> : < FaExpand />}
                         </IconContext.Provider>
                     </div>
-                    
-                    <div className="w-full h-full flex flex-col justify-between items-center p-1">
-                        
-                    <div className=" w-full z-50 top-0 ">
-                        <div className="w-2.5/10 h-auto w-auto py-1 text-gray-800 font-light flex flex-col justify-center items-center z-50">
-                            <p><span className='text-white'>by: <span className='font-medium text-yellow-600'>{student ? student.preferredName ? student.preferredName : student.firstName : null} {student ? firstInitialFunc(student.lastName) : null}</span></span></p>
+
+                    <div className='w-full h-full flex flex-col justify-between items-center p-1'>
+
+                        <div className=' w-full z-50 top-0 '>
+                            <div
+                              className='w-2.5/10 h-auto w-auto py-1 text-gray-800 font-light flex flex-col justify-center items-center z-50'>
+                                <p><span className='text-white'>by: <span
+                                  className='font-medium text-yellow-600'>{student ? student.preferredName ? student.preferredName : student.firstName : null} {student ? firstInitialFunc(student.lastName) : null}</span></span>
+                                </p>
+                            </div>
                         </div>
-                    </div>
 
-                    <Banner title={teacherData && teacherData.activityData && teacherData.activityData.title ? teacherData.activityData.title : null}
-                        fullscreen={fullscreen}
-                        display="COOP" />
-
+                        <Banner
+                          title={teacherData && teacherData.activityData && teacherData.activityData.title ? teacherData.activityData.title : 'Activity Breakdown'}
+                          iconName={`FaPenFancy`} />
 
 
-                    <PoemOutput poem={typeof teacherData !== 'undefined' ? teacherData.activityData.editInput : 'Classmates Poem :)'} />
+                        <PoemOutput
+                          poem={typeof teacherData !== 'undefined' ? teacherData.activityData.editInput : 'Classmates Poem :)'} />
 
                     </div>
                 </div>
@@ -93,19 +95,22 @@ const CoopDisplay = () => {
 
 
                  {/* self display */}
-                 <div className={`${fullscreen ? 'hidden' : 'w-full'} h-full flex flex-col justify-between items-center p-4 bg-darker-gray rounded-xl`}>
+            <div
+              className={`${fullscreen ? 'hidden' : 'w-full'} h-full flex flex-col justify-between items-center p-4 bg-darker-gray rounded-xl`}>
 
-                    <div className=" w-full z-50 top-0 ">
-                        <div className="w-2.5/10 h-auto w-auto py-1 text-gray-800 font-light flex flex-col justify-center items-center z-50">
-                            <p><span className='text-white'>by: <span className='font-medium text-blueberry'>You</span></span></p>
-                        </div>
+                <div className=' w-full z-50 top-0 '>
+                    <div
+                      className='w-2.5/10 h-auto w-auto py-1 text-gray-800 font-light flex flex-col justify-center items-center z-50'>
+                        <p><span className='text-white'>by: <span
+                          className='font-medium text-blueberry'>You</span></span></p>
                     </div>
-
-                    <Banner title={displayProps ? displayProps.title : null}
-                        display="SELFinCOOP" fullscreen={fullscreen} />
-
-                    <PoemOutput poem={typeof displayProps !== 'undefined' ? displayProps.editInput : 'Your Poem :)'} />
                 </div>
+
+                <Banner title={displayProps.title ? displayProps.title : 'Activity Breakdown'}
+                        iconName={`FaPenFancy`} />
+
+                <PoemOutput poem={typeof displayProps !== 'undefined' ? displayProps.editInput : 'Your Poem :)'} />
+            </div>
 
 
 

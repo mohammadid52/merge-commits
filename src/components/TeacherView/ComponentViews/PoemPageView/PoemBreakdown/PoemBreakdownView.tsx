@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import Banner from './Banner';
 import ReflectionQuestions from './ReflectionQuestions';
 import PoemOutput from './PoemOutput';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 import { getPageLabel } from '../../../../getPageLabel';
+import Banner from '../../../../Lesson/LessonComponents/Banner';
 
 interface props {
     fullscreen: boolean
@@ -37,7 +37,7 @@ const PoemBreakdownView = (props: props) => {
     return (
         <div className={theme.section}>
             <ReflectionQuestions fullscreen={fullscreen} />
-            <Banner title={dataProps !== null ? dataProps.title : 'No title'} display="SELF" fullscreen={fullscreen} />
+            <Banner isTeacher={true} title={dataProps !== null ? dataProps.title : 'No title'} iconName={`FaPenFancy`}/>
             <PoemOutput poem={dataProps !== null ? dataProps.editInput : 'Your Poem :)'} />
         </div>
     )

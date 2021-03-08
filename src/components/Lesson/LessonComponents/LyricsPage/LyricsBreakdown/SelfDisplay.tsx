@@ -1,8 +1,8 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ReflectionQuestions from '../../ReflectionQuestions';
-import Banner from './Banner';
 import LyricsOutput from './LyricsOutput';
 import { LessonContext } from '../../../../../contexts/LessonContext';
+import Banner from '../../Banner';
 
 const SelfDisplay = () => {
   const { dispatch, theme, state } = useContext(LessonContext);
@@ -53,9 +53,9 @@ const SelfDisplay = () => {
 
   return (
     <div className={theme.section}>
-      <ReflectionQuestions questions={state.data.lesson.coreLesson.breakdown.reflectionQuestions}  />
-      <Banner title={title} artist={artist} />
-      <LyricsOutput modules={modules}/>
+      <ReflectionQuestions questions={state.data.lesson.coreLesson.breakdown.reflectionQuestions} />
+      <Banner title={title} iconName={`FaHeadphonesAlt`} />
+      <LyricsOutput modules={modules} />
     </div>
   );
 };

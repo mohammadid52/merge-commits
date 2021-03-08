@@ -20,7 +20,7 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = (
 
 
   return (
-    <div className="w-auto mr-4 flex flex-col content-between ">
+    <div className="w-8 mr-4 flex flex-col content-between ">
       <div className="relative flex flex-col my-auto justify-around">
         <div
           className="hover:text-blueberry"
