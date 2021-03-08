@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { LessonContext } from '../../../contexts/LessonContext';
 import Banner from '../LessonComponents/Banner';
 
-const TEMPoutro = (props: any) => {
+const SurveyOutro = (props: any) => {
   const { state } = useContext(LessonContext);
 
   const quickRepair = (str: string) => {
@@ -19,4 +19,4 @@ const TEMPoutro = (props: any) => {
   );
 };
 
-export default TEMPoutro;
+export default SurveyOutro;
