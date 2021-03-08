@@ -59,17 +59,6 @@ const AnthologyContent = (props: ContentCardProps) => {
           className={`mb-2 w-auto ${theme.lessonCard.title}`}>{contentObj.title ? contentObj.title : `No title`}</h4>
         {/*<p className={`text-left ${theme.lessonCard.subtitle}`}>{contentObj.subTitle ? contentObj.subTitle : `No subtitle`}</p>*/}
       </div>
-      {/**
-       *  section: DESCRIPTION
-       */}
-      {/*<div className={`overflow-ellipsis overflow-hidden ellipsis`}>
-        {contentObj.description ?
-          contentObj.description :
-          `No description`}
-      </div>*/}
-      {/**
-       *  section:  CONTENT
-       */}
       <div className={`p-3 border-l overflow-ellipsis overflow-hidden ellipsis`}>
         {contentObj.content ?
           <p dangerouslySetInnerHTML={{ __html: contentObj.content }} /> :
@@ -98,38 +87,10 @@ const AnthologyContent = (props: ContentCardProps) => {
           placeHolder={contentObj.title ? contentObj.title : `Please add title...`}
         />
       </div>
-      <div className={`mt-2 `}>
-        {/*  <FormInput
-          id={`subTitle_${contentObj.type}_${contentObj.studentDataID}`}
-          label={`Subtitle`}
-          onChange={handleEditUpdate}
-          value={contentObj.subTitle}
-          placeHolder={contentObj.subTitle ? contentObj.subTitle : `Please add subtitle...`}
-        />*/}
-      </div>
-      {/**
-       *  section: DESCRIPTION
-       */}
-      <div className={`mt-2 overflow-ellipsis overflow-hidden ellipsis`}>
-       {/* <FormInput
-          id={`description_${contentObj.type}_${contentObj.studentDataID}`}
-          label={`Description`}
-          onChange={handleEditUpdate}
-          value={contentObj.description}
-          placeHolder={contentObj.description ? contentObj.description : `Please add description...`}
-        />*/}
-      </div>
       {/**
        *  section:  CONTENT
        */}
       <div className={`mt-2 mb-2`}>
-        {/*<TextArea
-          id={`content_${contentObj.type}_${contentObj.studentDataID}`}
-          label={`Content`}
-          onChange={handleEditUpdate}
-          value={contentObj.content}
-          placeHolder={contentObj.content ? contentObj.content : `Please add content...`}
-        />*/}
         <RichTextEditor initialValue={contentObj.content}
                         onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, `content_${contentObj.type}_${contentObj.studentDataID}`)} />
       </div>
@@ -155,27 +116,6 @@ const AnthologyContent = (props: ContentCardProps) => {
           value={contentObj.title}
           placeHolder={contentObj.title ? contentObj.title : `Please add title...`}
         />
-      </div>
-      <div className={`mt-2 `}>
-        {/*   <FormInput
-          id={`subTitle_${contentObj.type}_${contentObj.studentDataID}`}
-          label={`Subtitle`}
-          onChange={handleEditUpdate}
-          value={contentObj.subTitle}
-          placeHolder={contentObj.subTitle ? contentObj.subTitle : `Please add subtitle...`}
-        />*/}
-      </div>
-      {/**
-       *  section: DESCRIPTION
-       */}
-      <div className={`mt-2 overflow-ellipsis overflow-hidden ellipsis`}>
-      {/*  <FormInput
-          id={`description_${contentObj.type}_${contentObj.studentDataID}`}
-          label={`Description`}
-          onChange={handleEditUpdate}
-          value={contentObj.description}
-          placeHolder={contentObj.description ? contentObj.description : `Please add description...`}
-        />*/}
       </div>
       {/**
        *  section:  CONTENT

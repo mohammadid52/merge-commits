@@ -134,7 +134,7 @@ const SyllabusList = (props: SyllabusListProps) => {
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
                                     >
-                                      <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200 cursor-move">
+                                      <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200 cursor-pointer" onClick={() => editCurrentSyllabus(item.id)}>
                                         <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
                                         <div className="flex w-7/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                                           {item.name ? item.name : ''}
@@ -142,7 +142,7 @@ const SyllabusList = (props: SyllabusListProps) => {
                                         {/* <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                                           {item.description ? item.description : ''}
                                         </div> */}
-                                        <span className={`w-2/10 flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]} `} onClick={() => editCurrentSyllabus(item.id)}>
+                                        <span className={`w-2/10 flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]} `}>
                                           edit
                                         </span>
                                       </div>

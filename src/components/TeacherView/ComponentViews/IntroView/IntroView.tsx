@@ -1,14 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
-import PhotoBlock from './PhotoBlock';
 import QuoteBlock from './QuoteBlock';
-import Block from './Block';
-import Banner from './Banner';
-import InstructionsBlock from './InstructionsBlock';
 import Keyword from './Keyword';
 import Connect from './Connect';
 import DoFirst from './DoFirst';
 import { getPageLabel } from '../../../getPageLabel';
+import Banner from '../../../Lesson/LessonComponents/Banner';
 
 interface props {
   fullscreen: boolean;
@@ -18,7 +15,7 @@ const IntroView = (props: props) => {
   const { state, theme, dispatch } = useContext(LessonControlContext);
   const [doFirstData, setDoFirstData] = useState<{ [key: string]: any }>();
   const { fullscreen } = props;
-  const imgArray = state.data.lesson.artist.images;
+  const imgArray = state.data?.lesson?.artist?.images;
 
   let displayStudentData = state.studentViewing.live
     ? state.studentViewing.studentInfo.currentLocation
@@ -28,10 +25,10 @@ const IntroView = (props: props) => {
 
   return (
     <div className={theme.section}>
-      <Banner fullscreen={fullscreen} />
+      <Banner isTeacher={true} title={state.data.lesson.title} iconName={'FaHourglassStart'}/>
       <div
         className='h-96 flex flex-col mb-4 justify-between items-center bg-cover bg-right-top rounded-xl z-10'
-        style={{ backgroundImage: `url(${imgArray[0]})` }}>
+        style={{ backgroundImage: `url(${imgArray ? imgArray[0] : null})` }}>
         <QuoteBlock fullscreen={fullscreen} />
         {/* <Block /> */}
       </div>

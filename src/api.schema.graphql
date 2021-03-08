@@ -52,10 +52,7 @@ type Person
   classes: [ClassStudent] @connection(keyName: "classByStudent", fields: ["email"])
   wordbank: [StudentWord] @connection(keyName: "wordsByStudent", fields: ["email"])
 }
-type Institution 
-@model 
-@key(fields: ["id"]) 
-{
+type Institution @model @key(fields: ["id"]) {
   id: ID!
   name: String!
   type: String!
@@ -78,10 +75,7 @@ type Institution
   checkpoints: [commonCheckpoint] @connection(keyName: "byType", fields: ["id"])
 }
 
-type ServiceProvider 
-@model(queries: null)
-@key(name: "providersByPartner", fields: ["partnerID", "providerID"]) 
-{
+type ServiceProvider @model(queries: null) @key(name: "providersByPartner", fields: ["partnerID", "providerID"]) {
   id: ID!
   partnerID: ID!
   providerID: ID!
@@ -89,10 +83,7 @@ type ServiceProvider
   providerInstitution: Institution @connection(fields: ["providerID"])
 }
 
-type Staff
-@model
-@key(name: "staffByInstitution", fields: ["institutionID", "staffEmail"])
-{
+type Staff @model @key(name: "staffByInstitution", fields: ["institutionID", "staffEmail"]) {
   id: ID!
   institutionID: ID!
   staffAuthID: String!
@@ -104,10 +95,9 @@ type Staff
 }
 
 type Room
-@model
-@key(name: "roomByInstitution", fields: ["institutionID"])
-@key(name: "roomByClass", fields: ["classID"])
-{
+  @model
+  @key(name: "roomByInstitution", fields: ["institutionID"])
+  @key(name: "roomByClass", fields: ["classID"]) {
   id: ID!
   institutionID: ID!
   classID: ID!
@@ -118,7 +108,7 @@ type Room
   institution: Institution @connection(fields: ["institutionID"])
   teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
   class: Class @connection(fields: ["classID"])
-  curricula:[RoomCurriculum] @connection(keyName: "curriculumByRoom", fields: ["id"])
+  curricula: [RoomCurriculum] @connection(keyName: "curriculumByRoom", fields: ["id"])
   filters: [String]
   location: String
   startDate: AWSDate
@@ -128,10 +118,7 @@ type Room
   notes: String
   activeSyllabus: String
 }
-type Class 
-@model
-@key(name: "classByInstitution", fields: ["institutionID"])
-{
+type Class @model @key(name: "classByInstitution", fields: ["institutionID"]) {
   id: ID!
   institutionID: ID!
   type: String
@@ -141,11 +128,10 @@ type Class
   students: [ClassStudent]! @connection(keyName: "byClass", fields: ["id"])
 }
 
-type ClassStudent 
-@model
-@key(name: "byClass", fields: ["classID", "studentID"])
-@key(name: "classByStudent", fields: ["studentEmail"])
-{
+type ClassStudent
+  @model
+  @key(name: "byClass", fields: ["classID", "studentID"])
+  @key(name: "classByStudent", fields: ["studentEmail"]) {
   id: ID!
   classID: ID!
   studentID: ID!
@@ -156,11 +142,7 @@ type ClassStudent
   student: Person @connection(fields: ["studentEmail", "studentAuthID"])
 }
 
-type Curriculum 
-@model 
-@key(fields: ["id"]) 
-@key(name: "curriculumByInstitution", fields: ["institutionID"])
-{
+type Curriculum @model @key(fields: ["id"]) @key(name: "curriculumByInstitution", fields: ["institutionID"]) {
   id: ID!
   institutionID: ID!
   name: String!
@@ -173,11 +155,7 @@ type Curriculum
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
   checkpoints: [commonCheckpoint] @connection(keyName: "byType", fields: ["id"])
 }
-type Topic
-@model 
-@key(fields: ["id"])
-@key(name: "topicByCurriculum", fields: ["curriculumID"])
-{
+type Topic @model @key(fields: ["id"]) @key(name: "topicByCurriculum", fields: ["curriculumID"]) {
   id: ID!
   curriculumID: ID!
   learningObjectiveID: ID!
@@ -187,28 +165,19 @@ type Topic
   description: String
 }
 
-type CSequences
-@key(fields: ["id"])
-@model
-{
+type CSequences @key(fields: ["id"]) @model {
   id: ID!
   sequence: [String]
 }
 
-type LearningObjective
-@model
-@key(fields: ["id"])
-{
+type LearningObjective @model @key(fields: ["id"]) {
   id: ID!
   name: String!
   description: String
   curriculumID: ID!
 }
 
-type Rubric
-@model
-@key(fields: ["id"])
-{
+type Rubric @model @key(fields: ["id"]) {
   id: ID!
   name: String
   criteria: String
@@ -221,20 +190,14 @@ type Rubric
   curriculumID: ID!
 }
 
-type TeacherCurriculum
-@model(queries: null)
-@key(name: "curriculumByTeacher", fields: ["staffID"])
-{
+type TeacherCurriculum @model(queries: null) @key(name: "curriculumByTeacher", fields: ["staffID"]) {
   id: ID!
   staffID: ID!
   curriculumID: ID!
   curriculum: Curriculum @connection(fields: ["curriculumID"])
 }
 
-type RoomCurriculum
-@model
-@key(name: "curriculumByRoom", fields: ["roomID"])
-{
+type RoomCurriculum @model @key(name: "curriculumByRoom", fields: ["roomID"]) {
   id: ID!
   roomID: ID!
   curriculumID: ID!
@@ -271,14 +234,14 @@ type PollInputs {
 
 type AdventureNodeOptions {
   id: String
-	text: String
-	nextText: String
+  text: String
+  nextText: String
 }
 
 type AdventureGameInputs {
   id: String
-	text: String
-	options: [AdventureNodeOptions]
+  text: String
+  options: [AdventureNodeOptions]
 }
 
 type WarmUpData {
@@ -586,13 +549,10 @@ type QuestionType @model {
   name: String!
 }
 
-
 type QuestionResponse {
-  qid: String,
+  qid: String
   response: [String]
 }
-
-
 
 type Word @model @key(name: "byWord", fields: ["word"], queryField: "searchByWord") {
   id: ID!
@@ -608,10 +568,7 @@ type StudentWord @model(queries: null) @key(name: "wordsByStudent", fields: ["st
   word: Word @connection(fields: ["wordID"])
   student: Person @connection(fields: ["studentID", "studentAuthID"])
 }
-type RoomMsgs
-@model
-@key(name: "byRoomID", fields: ["roomID", "createdAt"], queryField: "messagesByRoomID")
-{
+type RoomMsgs @model @key(name: "byRoomID", fields: ["roomID", "createdAt"], queryField: "messagesByRoomID") {
   id: ID!
   roomID: ID!
   senderAuthID: String!
@@ -666,13 +623,10 @@ type Lesson @model @key(fields: ["id"]) {
   introduction: String
   connectionTitle: String
   lessonPlan: [LessonComponents]
-  measurements: [LessonRubrics]! @connection(keyName:"byLesson", fields: ["id"])
+  measurements: [LessonRubrics]! @connection(keyName: "byLesson", fields: ["id"])
 }
 
-type LessonRubrics 
-@model
-@key(name: "byLesson", fields: ["lessonID", "rubricID"])
-{
+type LessonRubrics @model @key(name: "byLesson", fields: ["lessonID", "rubricID"]) {
   id: ID!
   lessonID: ID!
   rubricID: ID!
@@ -703,16 +657,12 @@ type LessonKeyWord @model(queries: null) @key(name: "wordsByLesson", fields: ["l
   lesson: Lesson @connection(fields: ["lessonID"])
 }
 
-type Syllabus
-@model
-@key(fields: ["id"])
-@key(name: "syllabusByCurriculum", fields: ["curriculumID"])
-{
+type Syllabus @model @key(fields: ["id"]) @key(name: "syllabusByCurriculum", fields: ["curriculumID"]) {
   id: ID!
   name: String!
   type: String
   description: String
-  methodology:String
+  methodology: String
   policies: String
   pupose: String
   objectives: String
@@ -723,10 +673,7 @@ type Syllabus
   status: Boolean
 }
 
-type SyllabusLesson
-@model
-@key(name: "lessonBySyllabus", fields: ["syllabusID", "lessonID"])
-{
+type SyllabusLesson @model @key(name: "lessonBySyllabus", fields: ["syllabusID", "lessonID"]) {
   id: ID!
   syllabusID: ID!
   lessonID: ID!
@@ -764,16 +711,16 @@ type StudentData
   activityData: ActivityData
   doFirstData: [QuestionDataStudentData]! @connection(name: "byStudentData", fields: ["id"])
   checkpointData: [QuestionDataStudentData]! @connection(name: "byStudentData", fields: ["id"])
-	anthologyContent: [AnthologyContent]
+  anthologyContent: [AnthologyContent]
 }
 
 type AnthologyContent {
   type: String
   subType: String
-	title: String
-	subTitle: String
-	description: String
-	content: String
+  title: String
+  subTitle: String
+  description: String
+  content: String
 }
 type QuestionData @model {
   id: ID!
@@ -820,7 +767,7 @@ type Intro @model {
   questionsTitle: String
   questions: [DoFirstQuestion!]! @connection(keyName: "byDoFirst", fields: ["id"])
   language: String
-  estTime: Int 
+  estTime: Int
   artistID: ID!
   artist: Artist @connection(fields: ["artistID"])
 }
@@ -852,10 +799,10 @@ type Theme {
   additionalContent: AdditionalContent
 }
 
-type PersonLocation @model
-@key(fields: ["personEmail", "personAuthID"]) 
-@key(name: "bySyllabusLesson", fields: ["syllabusLessonID"], queryField: "personLocationBySyllabusLesson")
-{
+type PersonLocation
+  @model
+  @key(fields: ["personEmail", "personAuthID"])
+  @key(name: "bySyllabusLesson", fields: ["syllabusLessonID"], queryField: "personLocationBySyllabusLesson") {
   id: ID!
   personAuthID: String!
   personEmail: String!
@@ -869,26 +816,27 @@ type PersonLocation @model
 }
 
 type WidgetContent {
-	text: String
-	image: String
+  text: String
+  image: String
 }
 
 type Quotes {
-	text: String
-	author: String
+  text: String
+  author: String
 }
 
 type NoticeboardWidget @model {
-	id: ID!
+  id: ID!
   teacherAuthID: String!
   teacherEmail: String!
-	type: String
-	placement: String
-	title: String
-	description: String
-	content: WidgetContent
-	quotes: [Quotes]
-	active: Boolean
+  roomID: String
+  type: String
+  placement: String
+  title: String
+  description: String
+  content: WidgetContent
+  quotes: [Quotes]
+  active: Boolean
   teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
 }
 

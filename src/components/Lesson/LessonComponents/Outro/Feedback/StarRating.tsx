@@ -52,56 +52,56 @@ const StarRating: React.FC<StarRatingProps> = (props: StarRatingProps) => {
 
   return (
     <div
-      className="w-auto flex flex-row"
+      className='w-auto flex flex-row flex-start'
       onPointerOver={handleStarHover}
       onPointerLeave={handleStarLeave}
       onClick={handleStarRate}>
       <div id={`1`} className={`w-auto`}>
-        <IconContext.Provider value={{ color: '#ffffff', size: '1.5rem' }}>
+        <IconContext.Provider value={{ color: '#ffffff' }}>
           {whichStarHovered >= 1 || (isRated && rating >= 1) ? (
-            <AiFillStar id="1" style={{ pointerEvents: 'none' }} />
+            <AiFillStar size={24} id='1' style={{ pointerEvents: 'none' }} />
           ) : (
-            <AiOutlineStar id="1" style={{ pointerEvents: 'none' }} />
+            <AiOutlineStar size={24} id='1' style={{ pointerEvents: 'none' }} />
           )}
         </IconContext.Provider>
       </div>
 
       <div id={`2`} className={`w-auto`}>
-        <IconContext.Provider value={{ color: '#ffffff', size: '1.5rem' }}>
+        <IconContext.Provider value={{ color: '#ffffff' }}>
           {whichStarHovered >= 2 || (isRated && rating >= 2) ? (
-            <AiFillStar id="2" style={{ pointerEvents: 'none' }} />
+            <AiFillStar size={24} id='2' style={{ pointerEvents: 'none' }} />
           ) : (
-            <AiOutlineStar id="2" style={{ pointerEvents: 'none' }} />
+            <AiOutlineStar size={24} id='2' style={{ pointerEvents: 'none' }} />
           )}
         </IconContext.Provider>
       </div>
 
       <div id={`3`} className={`w-auto`}>
-        <IconContext.Provider value={{ color: '#ffffff', size: '1.5rem' }}>
+        <IconContext.Provider value={{ color: '#ffffff' }}>
           {whichStarHovered >= 3 || (isRated && rating >= 3) ? (
-            <AiFillStar id="3" style={{ pointerEvents: 'none' }} />
+            <AiFillStar size={24} id='3' style={{ pointerEvents: 'none' }} />
           ) : (
-            <AiOutlineStar id="3" style={{ pointerEvents: 'none' }} />
+            <AiOutlineStar size={24} id='3' style={{ pointerEvents: 'none' }} />
           )}
         </IconContext.Provider>
       </div>
 
       <div id={`4`} className={`w-auto`}>
-        <IconContext.Provider value={{ color: '#ffffff', size: '1.5rem' }}>
+        <IconContext.Provider value={{ color: '#ffffff' }}>
           {whichStarHovered >= 4 || (isRated && rating >= 4) ? (
-            <AiFillStar id="4" style={{ pointerEvents: 'none' }} />
+            <AiFillStar size={24} id='4' style={{ pointerEvents: 'none' }} />
           ) : (
-            <AiOutlineStar id="4" style={{ pointerEvents: 'none' }} />
+            <AiOutlineStar size={24} id='4' style={{ pointerEvents: 'none' }} />
           )}
         </IconContext.Provider>
       </div>
 
       <div id={`5`} className={`w-auto`}>
-        <IconContext.Provider value={{ color: '#ffffff', size: '1.5rem' }}>
+        <IconContext.Provider value={{ color: '#ffffff' }}>
           {whichStarHovered >= 5 || (isRated && rating >= 5) ? (
-            <AiFillStar id="5" style={{ pointerEvents: 'none' }} />
+            <AiFillStar size={24} id='5' style={{ pointerEvents: 'none' }} />
           ) : (
-            <AiOutlineStar id="5" style={{ pointerEvents: 'none' }} />
+            <AiOutlineStar size={24} id='5' style={{ pointerEvents: 'none' }} />
           )}
         </IconContext.Provider>
       </div>

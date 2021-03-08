@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api'
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaTrash } from 'react-icons/fa';
+import { useHistory } from 'react-router';
 
 import { InitialData, InputValueObject } from '../LessonBuilder';
 
@@ -38,7 +39,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     lessonMeasurements,
     setLessonMeasurements
   } = props;
-
+  const history = useHistory();
   const [selectedMeasu, setSelectedMeasu] = useState({ id: '', name: '', value: '' });
   const [measurementList, setMeasurementList] = useState(allMeasurement);
   const [loading, setLoading] = useState(false);
@@ -98,7 +99,9 @@ const GeneralInformation = (props: GeneralInformationProps) => {
       state: !showDeleteModal.state
     })
   }
-
+  const goToMeasmntDetails = (curriculumId: string, measurementId: string) => {
+    history.push(`/dashboard/manage-institutions/curricular/${curriculumId}/measurement/edit/${measurementId}`)
+  }
   const deleteMeasurement = async () => {
     try {
       const input = {
@@ -140,7 +143,8 @@ const GeneralInformation = (props: GeneralInformationProps) => {
             id: lessonRubric.id,
             rubricID: lessonRubric.rubricID,
             measurement: selectedMeasu.name,
-            topic: lessonRubric?.rubric?.topic?.name
+            topic: lessonRubric?.rubric?.topic?.name,
+            curriculumId: lessonRubric?.rubric?.curriculumID
           }
         ]);
         setSelectedMeasu({ id: '', name: '', value: '' });
@@ -198,7 +202,8 @@ const GeneralInformation = (props: GeneralInformationProps) => {
           id: item.id,
           rubricID: item.rubricID,
           measurement: item?.rubric?.name,
-          topic: topicsList.find((topic: any) => topic.id === item.rubric.topicID)?.name || ''
+          topic: topicsList.find((topic: any) => topic.id === item.rubric.topicID)?.name || '',
+          curriculumId: item?.rubric?.curriculumID
         }
       });
       setLessonMeasurements([...lessonRubrics]);
@@ -365,7 +370,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
                 {lessonMeasurements.map((item: any, index: number) => (
                   <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                     <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4"> {index + 1}.</div>
-                    <div className="flex w-4.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.measurement || '--'} </div>
+                    <div className="flex w-4.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer" onClick={() => goToMeasmntDetails(item.curriculumId, item.rubricID)}> {item.measurement || '--'} </div>
                     <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.topic ? item.topic : '--'}</div>
                     {/* <div className="flex w-2/10 px-6 py-3 text-s leading-4 items-center justify-center">
                       <span className="cursor-pointer">

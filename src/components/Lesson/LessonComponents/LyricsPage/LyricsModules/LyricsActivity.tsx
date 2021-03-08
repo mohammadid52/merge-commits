@@ -1,14 +1,13 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
-import Banner from './Banner';
 import Toolbar from './Toolbar';
 import LyricsBlock from './LyricsBlock';
 import InstructionBlock from './InstructionBlock';
 import VideoBlock from './VideoBlock';
-import InstructionsPopup from '../../../Popup/InstructionsPopup';
 
 import { useWindowSize } from '../../../../../customHooks/windowSize';
+import Banner from '../../Banner';
 
 /**
  * interfaces
@@ -178,10 +177,13 @@ const Body = () => {
    * COOKIE loading for previously highlighted text WOOO!!!
    */
 
+  const { title } = state.data.lesson.coreLesson.content;
+
   return (
     <>
       <div className='relative max-w-256 h-full flex flex-col overflow-hidden mx-auto'>
-        <Banner />
+
+        <Banner title={title} iconName={`FaHeadphonesAlt`}/>
 
         <div className='flex flex-row'>
           <div className='w-3/10 h-full  max-h-192 mr-4'>

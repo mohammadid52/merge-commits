@@ -46,6 +46,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
     title: '',
     subtitle: '',
     label: '',
+    estTime: '',
     instructionsTitle: '',
     purposeHtml: '<p></p>',
     objectiveHtml: '<p></p>',
@@ -58,6 +59,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
   const [validation, setValidation] = useState({
     title: '',
     label: '',
+    estTime: '',
     message: '',
     isError: true
   });
@@ -106,7 +108,14 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
       ...checkPointData,
       [e.target.name]: e.target.value
     })
-
+    if (validation.title || validation.label || validation.estTime) {
+      setValidation({
+        ...validation,
+        title: '',
+        label: '',
+        estTime: ''
+      })
+    }
   }
   const setEditorContent = (html: string, text: string, fieldHtml: string) => {
     setCheckPointData({
@@ -173,6 +182,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
       setValidation({
         title: '',
         label: '',
+        estTime: '',
         message: 'Unable to save Checkpoint details, Please try again later.',
         isError: true
       });
@@ -192,6 +202,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
       setValidation({
         title: '',
         label: '',
+        estTime: '',
         message: 'Unable to save Checkpoint details, Please try again later.',
         isError: true
       });
@@ -212,6 +223,19 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
       msgs.label = 'Checkpoint label is required';
     } else {
       msgs.label = ''
+    }
+    if (!checkPointData.estTime?.trim().length) {
+      isValid = false;
+      msgs.estTime = 'Checkpoint estimated time is required';
+    } else {
+      const estTime = checkPointData.estTime?.trim();
+      const isInValidNumber = isNaN(parseInt(estTime));
+      if (isInValidNumber) {
+        isValid = false;
+        msgs.estTime = 'Please enter valid number i.e. 30.';
+      } else {
+        msgs.estTime = ''
+      }
     }
     if (checkpQuestions?.length <= 0) {
       isValid = false;
@@ -239,6 +263,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
           objectives: checkPointData.objectiveHtml,
           designers: selectedDesigners.map((item: any) => item.id),
           language: checkPointData.language.value,
+          estTime: checkPointData.estTime ? parseInt(checkPointData.estTime) : 0,
         }
         const results: any = await API.graphql(
           graphqlOperation(customMutations.updateCheckpoint, { input: input })
@@ -265,6 +290,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
           setValidation({
             title: '',
             label: '',
+            estTime: '',
             message: 'Unable to save Checkpoint details, Please try again later.',
             isError: true
           });
@@ -276,6 +302,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
         setValidation({
           title: '',
           label: '',
+          estTime: '',
           message: 'Unable to save Checkpoint details, Please try again later.',
           isError: true
         });
@@ -288,7 +315,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
   //   setQuestionsState([...checkpQuestions])
   // }, [checkpQuestions]);
 
-  const { title, subtitle, language, label, instructionsTitle, purposeHtml, objectiveHtml, instructionHtml } = checkPointData;
+  const { title, subtitle, language, label, instructionsTitle, purposeHtml, objectiveHtml, instructionHtml, estTime } = checkPointData;
 
   return (
     <Fragment>
@@ -354,9 +381,13 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
             </label>
               <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
             </div>
-            {/* <div>
-              <FormInput value={instructionsTitle} id='instructionsTitle' onChange={onInputChange} name='instructionsTitle' label="Instructions Title" />
-            </div> */}
+            <div>
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                Estimated Time (min) <span className="text-red-500"> *</span>
+              </label>
+              <FormInput value={estTime} id='estTime' onChange={onInputChange} name='estTime' />
+              {validation.estTime && <p className="text-red-600 text-sm">{validation.estTime}</p>}
+            </div>
           </div>
 
           {/* New accordion */}
@@ -367,7 +398,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
                   <li className={`relative border-b border-gray-200 ${selectedBlock === item.id ? 'rounded-lg' : ''}`}>
                     <div className={`w-full px-8 py-6 text-left ${selectedBlock === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
                       <div className="flex items-center justify-between" onClick={() => toggleView(item.id)}>
-                        <span className={`text-xs md:text-base cursor-pointer text-left ${theme.textColor[themeColor] } ${selectedBlock === item.id ? 'font-bold' : 'font-medium '}`}>
+                        <span className={`text-xs md:text-base cursor-pointer text-left ${theme.textColor[themeColor]} ${selectedBlock === item.id ? 'font-bold' : 'font-medium '}`}>
                           {item.header}
                         </span>
                         <span className="w-8 h-8 flex items-center cursor-pointer">
@@ -445,7 +476,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
                             </span>
                           </div>
                           <div className="flex w-1/10 px-6 py-1 text-s leading-4 items-center justify-center">
-                            {(item.type === 'selectMany' || item.type === 'selectOne') && (<div className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor] }`} onClick={() => showOptions(item.id, item.options)}>
+                            {(item.type === 'selectMany' || item.type === 'selectOne') && (<div className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => showOptions(item.id, item.options)}>
                               <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                                 <IoOptionsOutline />
                               </IconContext.Provider>

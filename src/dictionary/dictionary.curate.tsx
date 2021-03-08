@@ -34,6 +34,7 @@ const dashboardProfileDict: any = {
     'EN': {
         PROFILE: 'Profile',
         TITLE: 'USER PROFILE',
+        PROFILE_INSTRUCTON:'Click the circle above to update profile picture.',
         SUBTITLE: 'This contains your profile information.',
         PERSONAL_INFO: {
             TITLE: 'Personal Information',
@@ -73,6 +74,8 @@ const dashboardProfileDict: any = {
             SAVE: 'Save New Password',
             CANCEL: 'Cancel',
             SUCCESS_MSG: 'Success',
+            WARN_MSG: 'This will log you out and take you to the reset password page, do you want to continue?',
+            CONTINUE_BTN:'Continue',
             ERRORS: {
                 NO_OLD_PASS: 'Please enter your old password',
                 NO_NEW_PASS: 'Please enter your new password',
@@ -84,6 +87,7 @@ const dashboardProfileDict: any = {
     'ES': {
         PROFILE: 'Perfil',
         TITLE: 'PERFIL DEL USUARIO',
+        PROFILE_INSTRUCTON:'Haga clic en el círculo de arriba para actualizar la imagen de perfil.',
         SUBTITLE: 'Esto contiene la información de su perfil.',
         PERSONAL_INFO: {
             TITLE: 'Informacion personal',
@@ -123,6 +127,8 @@ const dashboardProfileDict: any = {
             SAVE: 'Guardar nueva contraseña',
             CANCEL: 'Cancelar',
             SUCCESS_MSG: 'Éxito',
+            WARN_MSG: 'TBD',
+            CONTINUE_BTN:'TBD',
             ERRORS: {
                 NO_OLD_PASS: 'Ingrese su contraseña anterior',
                 NO_NEW_PASS: 'Ingrese su nueva contraseña',
@@ -286,6 +292,15 @@ const editClassDict: any = {
     }
 }
 
+const lessonDict: any = {
+    'EN':{
+        TOPIC_CONNECTION: 'Transformative Justice',
+    },
+    'ES': {
+        TOPIC_CONNECTION: 'Transformative Justice',
+    }
+}
+
 function paginationPage(lang: string, page: number, total: number) {
     if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`
     if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`
@@ -304,4 +319,5 @@ export {
     editClassDict,
     spBuilderDict,
     manageusersDict,
+    lessonDict
 };

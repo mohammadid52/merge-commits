@@ -92,7 +92,12 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       // get service providers of the institute and create a list and fetch the staff
       const { serviceProviders: { items }, instituteId } = props;
       const institutions = [instituteId]
-      items.map((item: any) => institutions.push(item.providerID))
+
+      // ********
+      // Hiding staff details for other institutions they will be available on dropdown only.
+      // items.map((item: any) => institutions.push(item.providerID))
+      // ********
+
       const staff: any = await API.graphql(graphqlOperation(queries.listStaffs, {
         filter: { ...createFilterToFetchSpecificItemsOnly(institutions, 'institutionID') },
       }));

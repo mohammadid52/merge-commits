@@ -53,7 +53,7 @@ const UserLookup = () => {
 	const sortByList = [
 		{ id: 1, name: 'Name', value: 'lastName' },
 		{ id: 2, name: 'Role', value: 'role' },
-		{ id: 3, name: 'Institution', value: 'institution' },
+		// { id: 3, name: 'Institution', value: 'institution' },
 		{ id: 4, name: 'Status', value: 'status' },
 	]
 
@@ -246,19 +246,21 @@ const UserLookup = () => {
 						<div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b border-gray-200">
 							<div className="h-8/10 px-4">
 								<div className="w-full flex justify-between border-b border-gray-200 ">
-									<div className="w-3.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+									<div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
 										<span>Name</span>
 									</div>
-									<div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+									<div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
 										<span className="w-auto">Role</span>
 									</div>
-									<div className="w-3.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+
+									{/* hide institution column for now. */}
+									{/* <div className="w-3.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
 										<span className="w-auto">Institution</span>
-									</div>
-									<div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+									</div> */}
+									<div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
 										<span className="w-auto">Status</span>
 									</div>
-									<div className="w-1/10 px-8 justify-center py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+									<div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
 										Actions
 									</div>
 								</div>

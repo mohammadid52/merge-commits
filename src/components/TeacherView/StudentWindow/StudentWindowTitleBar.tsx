@@ -150,7 +150,7 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (props: Stud
         ) : null}
 
         <div
-          className="w-auto flex justify-center items-center cursor-pointer text-xl z-50 px-2 text-black hover:text-blueberry"
+          className="w-8 mr-4 flex justify-center items-center cursor-pointer text-xl z-50 px-2 text-black hover:text-blueberry"
           onClick={handleFullscreen}>
           <IconContext.Provider
             value={{

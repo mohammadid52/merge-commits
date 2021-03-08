@@ -1,29 +1,41 @@
 import React, { useContext, useState } from 'react';
-import ErrorNote from '../Admin/UserManagement/ErrorNote';
-import { IconContext } from "react-icons/lib/esm/iconContext";
-import { FaKey } from 'react-icons/fa';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { useHistory, NavLink } from 'react-router-dom';
-// import { Auth } from 'aws-amplify';
+import { useCookies } from 'react-cookie';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import { Auth } from '@aws-amplify/auth';
 import { validate } from 'json-schema';
+import { FaKey } from 'react-icons/fa';
+import { IconContext } from "react-icons/lib/esm/iconContext";
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { useHistory, NavLink } from 'react-router-dom';
+
+import ErrorNote from '../Admin/UserManagement/ErrorNote';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import Buttons from '../../Atoms/Buttons';
+import ModalPopUp from '../../Molecules/ModalPopUp';
 
-const ChangePassword = () => {
+import * as customMutations from '../../../customGraphql/customMutations';
+
+interface ChangePasswordProps {
+    updateAuthState: Function
+}
+
+const ChangePassword = (props: ChangePasswordProps) => {
+    const { updateAuthState } = props
     const [oldPassToggle, setOldPassToggle] = useState(false);
     const [passToggle, setPassToggle] = useState(false);
     const [passMatchToggle, setPassMatchToggle] = useState(false);
-    const [saveModal, setSaveModal] = useState({
-        show: false,
-        message: ''
-    })
+    const [cookies, , removeCookie] = useCookies();
     const history = useHistory();
 
-    const { userLanguage, clientKey } = useContext(GlobalContext);
+    const { userLanguage, clientKey, state, dispatch } = useContext(GlobalContext);
     const { dashboardProfileDict } = useDictionary(clientKey);
     const dictionary = dashboardProfileDict[userLanguage]
+
+    const [warningModal, setWarningModal] = useState({
+        show: false,
+        message: dictionary['CHANGE_PASSWORD']['WARN_MSG']
+    });
 
     const [message, setMessage] = useState<{ show: boolean, type: string, message: string, }>({
         show: false,
@@ -36,6 +48,29 @@ const ChangePassword = () => {
         match: ''
     })
 
+    const toggleModal = () => {
+        setWarningModal({
+            ...warningModal,
+            show: !warningModal.show
+        })
+    }
+    const gotoPasswordReset = async () => {
+        try {
+            const input = {
+                id: state.user.id,
+                authId: state.user.authId,
+                email: state.user.email,
+                lastLoggedOut: new Date().toISOString(),
+            };
+            API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, { input }));
+            await Auth.signOut();
+            updateAuthState(false);
+            history.push('/forgot-password');
+
+        } catch (error) {
+            console.log('error signing out: ', error);
+        }
+    }
     async function change() {
         let oldPassword = input.oldPassword;
         let newPassword = input.newPassword;
@@ -245,7 +280,8 @@ const ChangePassword = () => {
 
 
                     <div className="w-auto text-sm text-center text-gray-600 ">
-                        <NavLink to="/forgot-password" className={`hover:text-blue-500`}>{dictionary['CHANGE_PASSWORD']['FORGOT_PASS_LINK']}</NavLink>
+                        <p className={`hover:text-blue-500 cursor-pointer`} onClick={toggleModal}>{dictionary['CHANGE_PASSWORD']['FORGOT_PASS_LINK']}</p>
+                        {warningModal.show && <ModalPopUp closeAction={toggleModal} saveAction={gotoPasswordReset} saveLabel={dictionary['CHANGE_PASSWORD']['CONTINUE_BTN']} message={warningModal.message} />}
                     </div>
 
 
