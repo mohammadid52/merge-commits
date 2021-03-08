@@ -1,19 +1,19 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ReflectionQuestions from '../../ReflectionQuestions';
-import Banner from './Banner';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaExpand, FaCompress } from 'react-icons/fa';
+import { FaCompress, FaExpand } from 'react-icons/fa';
 
 import LyricsOutput from './LyricsOutput';
 
 
 /**
- * 
+ *
  * IMPORT EXTERNAL FUNCTIONS
- * 
+ *
  */
 import { firstInitialFunc } from '../../../../../utilities/strings';
+import Banner from '../../Banner';
 
 interface teacherData {
   breakdownComponent: string;
@@ -33,7 +33,6 @@ const CoopDisplay = () => {
   const { dispatch, theme, state } = useContext(LessonContext);
   const [modules, setModules] = useState<Array<any>>();
   const displayProps = state.componentState.lyrics.selected;
-  const { artist, title } = state.data.lesson.coreLesson.content;
   const moduleTypes = state.data.lesson.coreLesson.tools;
   const [fullscreen, setFullscreen] = useState(false);
   const student = state.displayData.studentInfo;
@@ -120,13 +119,13 @@ const CoopDisplay = () => {
     }
   }, [teacherData]);
 
-  // ${key === 0 ? 'md:mr-2' : key === modules.length - 1 ? 'md:ml-2' : 'md:mx-2'}
+  const { title } = state.data.lesson.coreLesson.content;
 
   return (
     <div className={theme.section}>
       <ReflectionQuestions questions={state.data.lesson.coreLesson.breakdown.reflectionQuestions}  />
 
-      <Banner title={title} artist={artist} />
+      <Banner title={title} iconName={`FaHeadphonesAlt`} />
 
       <div className='h-7.2/10 w-full flex flex-col justify-between items-center'>
         {/* teacher view */}

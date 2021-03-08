@@ -2,12 +2,6 @@ import React, { useContext } from 'react';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaTrophy } from 'react-icons/fa';
 import { LessonContext } from '../../../../contexts/LessonContext';
-
-const keywordCapitilizer = (str: string) => {
-  let capitalizedStr = str.replace(/^\w/, (char) => char.toUpperCase());
-  return capitalizedStr;
-};
-
 const Banner = () => {
   const { state, theme } = useContext(LessonContext);
 
