@@ -13,7 +13,7 @@ import { FaSpotify } from 'react-icons/fa';
 const MoreArtist = () => {
   const { state, dispatch, theme } = useContext(LessonContext);
   const [fullscreen, setFullscreen] = useState(false);
-  const [artistLink, setArtistLinks] = useState(state.data.lesson.artist.additionalContent.links
+  const [artistLink, setArtistLinks] = useState(state.data.lesson?.artist?.additionalContent.links
   //   [
   //   {
   //     type: 'etc',
@@ -49,7 +49,7 @@ const MoreArtist = () => {
   return (
     <div className={`w-full h-full ${theme.underline}`}>
         <h3 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
-          Learn more about {state.data.lesson.artist.name}
+          Learn more about {state.data.lesson?.artist?.name}
         </h3>
       <div className='h-full w-full flex flex-col items-center rounded-lg'>
         {/* <PhotoBlock /> */}

@@ -4,6 +4,7 @@ import CheckpointQuestions from './CheckpointQuestions';
 import Banner from '../LessonComponents/Banner';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 import SaveQuit from '../LessonComponents/Outro/SaveQuit';
+import TEMPoutro from './TEMPoutro';
 
 export interface CheckpointInterface {
   title: string;
@@ -63,7 +64,10 @@ const Checkpoint = (props: { isTeacher?: boolean }) => {
       {
         !isTeacher && state.data.lesson.type !== 'lesson' &&
         (
-          <SaveQuit />
+          <>
+            <TEMPoutro />
+            <SaveQuit />
+          </>
         )
       }
     </div>

@@ -875,7 +875,15 @@ export const getSyllabusLesson = /* GraphQL */ `
         id
         title
         type
+         instructions
+        instructionsTitle
         instructions
+          filters
+          coverImage
+          summaryTitle
+          introductionTitle
+          introduction
+          connectionTitle
         artist {
           id
           images

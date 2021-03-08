@@ -295,9 +295,11 @@ const editClassDict: any = {
 const lessonDict: any = {
     'EN':{
         TOPIC_CONNECTION: 'Transformative Justice',
+        KEYWORDS: 'Keywords'
     },
     'ES': {
         TOPIC_CONNECTION: 'Transformative Justice',
+        KEYWORDS: 'Keywords'
     }
 }
 

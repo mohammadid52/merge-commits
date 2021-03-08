@@ -295,9 +295,11 @@ const editClassDict: any = {
 const lessonDict: any = {
     'EN':{
         TOPIC_CONNECTION: 'SEL Connection',
+        KEYWORDS: 'Keywords'
     },
     'ES': {
         TOPIC_CONNECTION: 'SEL Connection',
+        KEYWORDS: 'Keywords'
     }
 }
 

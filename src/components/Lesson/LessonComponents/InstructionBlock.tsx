@@ -30,13 +30,13 @@ const InstructionsBlock = (props: InstructionBlockProps) => {
       {/**
        * DISPLAY DEFAULT TITLE...
        */}
-    {
+   {/* {
       (titleVisible === undefined && !instructionsTitle) ?
         (
           <Banner subtitle={`Instructions`} />
         ) :
         null
-    }
+    }*/}
     {/**
      * DISPLAY PROPS TITLE...
      */}

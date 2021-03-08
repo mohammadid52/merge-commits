@@ -3,7 +3,6 @@ import { LessonContext } from '../../../../../contexts/LessonContext';
 import SelfDisplay from './SelfDisplay';
 import CoopDisplay from './CoopDisplay';
 
-
 const StoryBreakdown = () => {
     const { state, dispatch } = useContext(LessonContext);
     const displayProps = state.componentState.story;

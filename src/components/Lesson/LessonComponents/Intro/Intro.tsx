@@ -16,11 +16,20 @@ const Intro = () => {
     dispatch({ type: 'ACTIVATE_LESSON', payload: '' });
   }, []);
 
+  const quickRepair = (str: string) => {
+    if(str){
+      return str.replace('color: black', 'color: white');
+    } else return '';
+  }
+
   if (lessonType === 'survey' || lessonType === 'assessment') {
     return (
       <div className={theme.section}>
-        <Banner />
+        <Banner subtitle={state.data.lesson?.title}/>
+        <Banner title={state.data.lesson?.introductionTitle}/>
+        <p dangerouslySetInnerHTML={{ __html: quickRepair(state.data.lesson?.introduction) }} />
         <div className='flex flex-col justify-between items-center mt-4'>
+          <Banner title={state.data.lesson?.instructionsTitle}/>
           <InstructionBlock instructions={state.data.lesson.instructions} />
         </div>
       </div>

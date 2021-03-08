@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineInfoCircle } from 'react-icons/ai';
+import useDictionary from '../../../../customHooks/dictionary';
 
 const Keyword = () => {
-  const { state, theme } = useContext(LessonContext);
+  const { userLanguage, clientKey, state, theme } = useContext(LessonContext);
   const keywords = state.data.lesson.keywords.items;
+  // const { lessonDict } = useDictionary(clientKey)
 
   const checkIfBottomRowN = (n: number, colNr: number) => {
     let lastRow = [...keywords];
@@ -30,7 +30,7 @@ const Keyword = () => {
   return (
     <div className={`flex flex-col md:w-full ${theme.block.text} rounded-r-lg`}>
       <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
-        <h3>Keywords we will cover in this lesson:</h3>
+        <h3>Keywords: we will cover in this lesson:</h3> {/*  e.g. 'Keywords' we will cover this lesson */}
       </div>
 
       <div className='flex flex-row flex-wrap z-50'>
