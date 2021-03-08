@@ -175,7 +175,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       try {
         setIsLoading(true);
         const languagesCode = syllabusData.languages.map((item: { value: string }) => item.value);
-        const designers = selectedDesigners.map(item => ({ id: item.id }))
+        const designers = selectedDesigners.map(item => item.id)
         const input = {
           id: syllabusId,
           name: syllabusData.name,
