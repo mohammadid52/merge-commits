@@ -16,7 +16,7 @@ const SelfDisplay = () => {
   return (
     <div className={theme.section}>
       <ReflectionQuestions questions={state.data.lesson.warmUp.breakdown.reflectionQuestions}  />
-      <Banner title={displayProps.title} iconName={`FaScroll`} />
+      <Banner title={displayProps.title && displayProps.title !== '' ? displayProps.title : 'Warm Up Breakdown'} iconName={`FaScroll`} />
       <StoryOutput story={displayProps.story} />
       <Modules additional={displayProps.additional} displayMode='SELF' />
     </div>

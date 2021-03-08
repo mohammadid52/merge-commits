@@ -6,7 +6,7 @@ import { LessonControlContext } from '../../../contexts/LessonControlContext';
 /**
  * ICON IMPORTS FROM react-icons
  */
-import { FaPoll, FaCheck, FaQuestion, FaHourglassStart, FaHeadphonesAlt, FaScroll } from 'react-icons/fa';
+import { FaPoll, FaCheck, FaQuestion, FaHourglassStart, FaHeadphonesAlt, FaScroll, FaPenFancy } from 'react-icons/fa';
 
 interface BannerProps {
   isTeacher?: boolean
@@ -42,6 +42,8 @@ const Banner = (props: BannerProps) => {
         return <FaScroll/>;
       case 'FaCheck':
         return <FaCheck/>
+        case 'FaPenFancy':
+        return <FaPenFancy/>
       default:
         return <FaQuestion/>
     }
