@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import useDictionary from '../../customHooks/dictionary';
+import { GlobalContext } from '../../contexts/GlobalContext';
 
 // type Role = 'ADM' | 'BLD' | 'FLW' | 'CRD' | 'TR' | 'ST';
 
@@ -10,16 +12,19 @@ type LabelProps = {
 const FooterLabels = (props: LabelProps) => {
   const { label, counter } = props;
 
+  const { clientKey, userLanguage } = useContext(GlobalContext);
+  const { lessonPlannerDict } = useDictionary(clientKey);
+
   const labelSwitch = (input: string) => {
     if (RegExp('Breakdown', 'i').test(input)) {
-      return 'Breakdown';
+      return lessonPlannerDict[userLanguage]['BREAKDOWN'];
     } else {
-      if (RegExp('intro', 'i').test(input)) return 'Intro';
-      if (RegExp('Warmup', 'i').test(input)) return 'Warm Up';
-      if (RegExp('Corelesson', 'i').test(input)) return 'Core Lesson';
-      if (RegExp('Activity', 'i').test(input)) return 'Activity';
-      if (RegExp('Checkpoint', 'i').test(input)) return 'Checkpoint';
-      if (RegExp('Outro', 'i').test(input)) return 'Outro';
+      if (RegExp('intro', 'i').test(input)) return lessonPlannerDict[userLanguage]['INTRO'];
+      if (RegExp('Warmup', 'i').test(input)) return lessonPlannerDict[userLanguage]['WARM_UP'];
+      if (RegExp('Corelesson', 'i').test(input)) return lessonPlannerDict[userLanguage]['CORE_LESSON'];
+      if (RegExp('Activity', 'i').test(input)) return lessonPlannerDict[userLanguage]['ACTIVITY'];
+      if (RegExp('Checkpoint', 'i').test(input)) return lessonPlannerDict[userLanguage]['CHECKPOINT'];
+      if (RegExp('Outro', 'i').test(input)) return lessonPlannerDict[userLanguage]['OUTRO'];
     }
   };
 

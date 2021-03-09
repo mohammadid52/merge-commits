@@ -293,7 +293,7 @@ const editClassDict: any = {
 }
 
 const lessonDict: any = {
-    'EN':{
+    'EN': {
         TOPIC_CONNECTION: 'Transformative Justice',
         KEYWORDS: 'Keywords'
     },
@@ -350,10 +350,22 @@ const classRoomDict: any = {
 
 const lessonPlannerDict: any = {
     'EN': {
-
+        INTRO: 'Intro',
+        WARM_UP: 'Warm Up',
+        CORE_LESSON: 'Core Lesson',
+        ACTIVITY: 'Activity',
+        CHECKPOINT: 'Checkpoint',
+        OUTRO: 'Outro',
+        BREAKDOWN:'Breakdown'
     },
     'ES': {
-
+        INTRO: 'TBD ',
+        WARM_UP: 'TBD',
+        CORE_LESSON: 'TBD',
+        ACTIVITY: 'TBD',
+        CHECKPOINT: 'TBD',
+        OUTRO: 'TBD',
+        BREAKDOWN:'TBD'
     }
 }
 function paginationPage(lang: string, page: number, total: number) {
