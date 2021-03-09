@@ -508,7 +508,7 @@ const EditRoom = (props: EditRoomProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">ROOM INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CLASSROOM INFORMATION</h3>
           <div className="">
             <div className="px-3 py-4">
               <FormInput value={name} id='name' onChange={editInputField} name='name' label="Classroom Name" placeHolder="Add Classroom name" isRequired />

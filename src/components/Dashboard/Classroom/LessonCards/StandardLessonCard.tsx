@@ -10,7 +10,7 @@ import BottomBar from './StandardLessonCard/BottomBar';
 import MainSummary from './StandardLessonCard/MainSummary';
 
 const StandardLessonCard = (props: LessonCardProps) => {
-  const { isTeacher, keyProps, lessonProps, accessible, lessonType } = props;
+  const { isTeacher, keyProps, activeRoomInfo, lessonProps, accessible, lessonType } = props;
   const { theme } = useContext(GlobalContext);
 
   return (
@@ -27,7 +27,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
       <div className={`${lessonType !== 'survey' ? 'w-7.5/10' : 'w-full'} flex flex-col rounded-b`}>
         <MainSummary lessonType={lessonType} lessonProps={lessonProps} />
 
-        <BottomBar lessonProps={lessonProps} isTeacher={isTeacher} accessible={accessible} lessonType={lessonType} />
+        <BottomBar isTeacher={isTeacher} accessible={accessible} activeRoomInfo={activeRoomInfo} lessonProps={lessonProps}   lessonType={lessonType} />
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { LessonProps } from './Classroom';
 import SmallLessonCard from './LessonCards/SmallLessonCard';
 
 const UpcomingLessons: React.FC<LessonProps> = (props: LessonProps) => {
-  const { lessons } = props;
+  const { lessons, activeRoomInfo } = props;
   const { theme } = useContext(GlobalContext);
   const [openCards, setOpenCards] = useState<string>('');
 
@@ -15,6 +15,7 @@ const UpcomingLessons: React.FC<LessonProps> = (props: LessonProps) => {
             <div key={`upcoming-${i}_parent`} className={`relative pl-2 pr-2 w-2.5/10 h-100 transition ease-in-out duration-500`}>
               <SmallLessonCard
                 keyProps={`upcoming-${i}`}
+                activeRoomInfo={activeRoomInfo}
                 lessonProps={lesson}
                 openCards={openCards}
                 setOpenCards={setOpenCards}

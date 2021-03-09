@@ -5,7 +5,7 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 
 const Today: React.FC<LessonProps> = (props: LessonProps) => {
   const { theme } = useContext(GlobalContext);
-  const { activeRoom, isTeacher, lessonLoading, lessons } = props;
+  const { activeRoom, activeRoomInfo,isTeacher, lessonLoading, lessons } = props;
   const [accessible, setAccessible] = useState<boolean>(true);
 
   useEffect(() => {
@@ -25,6 +25,7 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
                 <StandardLessonCard
                   isTeacher={isTeacher}
                   keyProps={`todayLesson_${key}`}
+                  activeRoomInfo={activeRoomInfo}
                   lessonProps={lesson}
                   accessible={accessible}
                   lessonType={lesson.lesson.type}
