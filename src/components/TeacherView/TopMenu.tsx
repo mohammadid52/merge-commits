@@ -1,4 +1,7 @@
 import React, { useContext } from 'react';
+
+import useDictionary from '../../customHooks/dictionary';
+import { GlobalContext } from '../../contexts/GlobalContext';
 import { LessonControlContext } from '../../contexts/LessonControlContext';
 
 import LessonInfoTitleBar from './TopMenu/LessonInfoTitleBar';
@@ -50,9 +53,11 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
   } = props;
 
   const { state, theme, dispatch } = useContext(LessonControlContext);
+  const { clientKey, userLanguage } = useContext(GlobalContext);
+  const { lessonPlannerDict } = useDictionary(clientKey);
 
   const studentsOnline = () => {
-    if(state.roster) {
+    if (state.roster) {
       return state.roster.length;
     } else {
       return 0;
@@ -76,7 +81,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
         {/* RIGHT */}
         <div className="relative w-6/10 lg:w-full h-full flex flex-row justify-between items-center pl-2">
           <div className="h-8 align-middle font-bold text-xs leading-8 ">
-            Lesson Control:
+            {lessonPlannerDict[userLanguage]['OTHER_LABELS']['LESSON_CONTROL']}:
           </div>
 
           <HamburgerMenu
@@ -95,10 +100,10 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
         {/* LEFT */}
         <div className="h-full  w-4/10 min-w-100 max-w-160 border-r border-white bg-light-gray bg-opacity-10 pl-2 flex flex-row justify-between ">
           <div className="w-full flex flex-col my-auto">
-            <p className="text-xs">Students Online: {studentsOnline()}</p>
-            <p className="text-xs">Topic: Identity</p>
-            <p className="text-xs">Start Date: {formatPattern(state.startDate, '-','aaaa-bb-cc','bb-cc-aaaa')}</p>
-            <p className="text-xs">Estimated Time: 1 hr 15 mins</p>
+            <p className="text-xs">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDDENT_ONLINE']}: {studentsOnline()}</p>
+            <p className="text-xs">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['TOPIC']}: Identity</p>
+            <p className="text-xs">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['START_DATE']}: {formatPattern(state.startDate, '-', 'aaaa-bb-cc', 'bb-cc-aaaa')}</p>
+            <p className="text-xs">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}: 1 hr 15 mins</p>
           </div>
         </div>
 

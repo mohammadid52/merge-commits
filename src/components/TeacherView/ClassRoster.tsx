@@ -1,8 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { LessonControlContext } from '../../contexts/LessonControlContext';
-
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoMdRefresh } from 'react-icons/io';
+
+import { LessonControlContext } from '../../contexts/LessonControlContext';
+import useDictionary from '../../customHooks/dictionary';
+import { GlobalContext } from '../../contexts/GlobalContext';
 
 import RosterRow from './ClassRoster/RosterRow';
 
@@ -44,6 +46,9 @@ const ClassRoster = (props: classRosterProps) => {
     setPageViewed,
   } = props;
   const { state, dispatch } = useContext(LessonControlContext);
+  const { clientKey, userLanguage } = useContext(GlobalContext);
+  const { lessonPlannerDict } = useDictionary(clientKey);
+
   const [cookies] = useCookies(['room_info']);
 
   // Loading state
@@ -200,15 +205,15 @@ const ClassRoster = (props: classRosterProps) => {
       {/* TABLE HEAD */}
       <div className={`w-full h-8 flex py-2 pl-2 pr-1 text-white bg-darker-gray bg-opacity-40`}>
         <div className={`w-3.5/10 relative mx-2 flex items-center hover:underline cursor-pointer text-xs`}>
-          <span>Student Name</span>
+          <span>{lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}</span>
           <span className={`w-auto absolute right-0 translate-x-4`} onClick={handleManualRefresh}>
             <IconContext.Provider value={{ color: '#EDF2F7' }}>
               <IoMdRefresh size={28} className={`${loading ? 'animate-spin' : null}`}/>
             </IconContext.Provider>
           </span>
         </div>
-        <div className={`w-3.5/10 mx-2 flex items-center overflow-hidden text-center text-xs `}>Current Page</div>
-        <div className={`w-2/10 mx-2 flex items-center justify-center rounded-lg text-xs`}>Action</div>
+        <div className={`w-3.5/10 mx-2 flex items-center overflow-hidden text-center text-xs `}>{lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['TWO']}</div>
+        <div className={`w-2/10 mx-2 flex items-center justify-center rounded-lg text-xs`}>{lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['THREE']}</div>
       </div>
 
       {/* ROWS */}
@@ -216,7 +221,7 @@ const ClassRoster = (props: classRosterProps) => {
         {state.roster.length > 0 ?
           (
             <div className={`w-full pl-4 text-xs font-semibold text-white bg-medium-gray bg-opacity-20`}>
-              In Class
+              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['IN_CLASS']}
             </div>
           ) : null}
 
@@ -250,7 +255,7 @@ const ClassRoster = (props: classRosterProps) => {
         {inactiveStudents.length > 0 ?
           (
             <div className={`w-full pl-4 text-xs font-semibold text-white bg-medium-gray bg-opacity-20`}>
-              Not In Class
+              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['NOT_IN_CLASS']}
             </div>
           ) : null}
         {inactiveStudents.length > 0

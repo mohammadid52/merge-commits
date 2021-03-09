@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
+import useDictionary from '../../../customHooks/dictionary';
 
 interface TodayUpcomingTabs {
   isTeacher?: boolean;
@@ -10,7 +11,8 @@ interface TodayUpcomingTabs {
 
 const TodayUpcomingTabs = (props: TodayUpcomingTabs) => {
   const { isTeacher, lessonGroupCount, visibleLessonGroup, setVisibleLessonGroup } = props;
-  const { state, theme } = useContext(GlobalContext);
+  const { state, theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const { classRoomDict } = useDictionary(clientKey);
 
   useEffect(() => {
     setVisibleLessonGroup('today');
@@ -30,33 +32,30 @@ const TodayUpcomingTabs = (props: TodayUpcomingTabs) => {
     <div id={`lessonGroupTabs`} className={`flex flex-row`} onClick={handleTabClick}>
       <h2
         id={`today`}
-        className={`w-auto cursor-pointer ${theme.dashboard.sectionTitle} ${
-          visibleLessonGroup === 'today'
+        className={`w-auto cursor-pointer ${theme.dashboard.sectionTitle} ${visibleLessonGroup === 'today'
             ? 'text-black'
             : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
-        }`}>
-        {!isTeacher ? "Today's Lesson" : 'Teach Lessons'}
+          }`}>
+        {!isTeacher ? classRoomDict[userLanguage]['LESSON_TABS']['TAB_ONE'] : classRoomDict[userLanguage]['LESSON_TABS']['TAB_TWO']}
       </h2>
 
       {!isTeacher ? (
         <h2
           id={`upcoming`}
-          className={`w-auto ml-4 cursor-pointer ${theme.dashboard.sectionTitle} ${
-            visibleLessonGroup === 'upcoming'
+          className={`w-auto ml-4 cursor-pointer ${theme.dashboard.sectionTitle} ${visibleLessonGroup === 'upcoming'
               ? 'text-black'
               : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
-          }`}>
+            }`}>
           Upcoming ({lessonGroupCount.upcoming})
         </h2>
       ) : null}
 
       <h2
         id={`completed`}
-        className={`w-auto ml-4 cursor-pointer ${theme.dashboard.sectionTitle} ${
-          visibleLessonGroup === 'completed'
+        className={`w-auto ml-4 cursor-pointer ${theme.dashboard.sectionTitle} ${visibleLessonGroup === 'completed'
             ? 'text-black'
             : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
-        }`}>
+          }`}>
         Completed ({lessonGroupCount.completed})
       </h2>
     </div>

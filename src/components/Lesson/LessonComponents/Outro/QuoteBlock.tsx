@@ -3,7 +3,7 @@ import { LessonContext } from '../../../../contexts/LessonContext';
 
 const QuoteBlock = () => { 
     const { state } = useContext(LessonContext);
-    const quoteArray = state.data.lesson.artist.quotes;
+    const quoteArray = state.data.lesson?.artist?.quotes;
 
     const randomQuote = () => {
         let quote = quoteArray[Math.floor(Math.random() * quoteArray.length)];

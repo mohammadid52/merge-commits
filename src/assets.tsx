@@ -29,7 +29,7 @@ const curate_assets: any = {
     favicon16x16: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/favicon-16x16.png',
     favicon32x32: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/favicon-32x32.png',
     manifest: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/site.webmanifest',
-    appleTouchIcon: 'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/apple-touch-icon.png',
+    appleTouchIcon: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/apple-touch-icon.png',
     maskIcon: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/safari-pinned-tab.svg',
     webAppTitle: 'Project Curate',
     appName: 'Project Curate',
@@ -40,10 +40,40 @@ const curate_assets: any = {
     themeClassName: 'curateBlue',
 }
 
+const demo_assets: any = {
+    appTitle: 'Demo',
+    main_logo: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/ProjectCurateLogo-WhiteLetters.png',
+    login_page_logo: 'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/Iconoclast_Logo-Full-Color.svg',
+    loading_logo: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/ProjectCurate_Logo.png',
+    logo_symbol: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/curate_blue_icon_169x169+(2).png',
+    faviconDefault: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/favicon.ico',
+    favicon16x16: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/favicon-16x16.png',
+    favicon32x32: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/favicon-32x32.png',
+    manifest: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/site.webmanifest',
+    appleTouchIcon: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/apple-touch-icon.png',
+    maskIcon: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/safari-pinned-tab.svg',
+    webAppTitle: 'Demo',
+    appName: 'Demo',
+    tileImage: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/mstile-150x150.png',
+    msapplicationConfig: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/browserconfig.xml',
+    authBackground: 'bg-demo-bg',
+    authButtonColor: 'bg-theme-blue',
+    themeClassName: 'curateBlue',
+}
+
+// main logo (dashboard above sidebar)
+// login_page_logo (logo in login pages)
+// loading_logo (logo in loader)
+// logo_symbol (sidebar menu icon image)
+// favicon, manifest, appleTouchIcon
+// webAppTitle
+
 export function getAsset(clientKey: string, key: string) {
     if (clientKey === 'iconoclast') {
         return iconoclast_assets[key]
     } else if (clientKey === 'curate') {
         return curate_assets[key]
+    } else if (clientKey === 'demo') {
+        return demo_assets[key]
     }
 }

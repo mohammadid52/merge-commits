@@ -10,14 +10,19 @@ const QuoteBlock = () => {
   const [isToggled, setIsToggled] = useState<string[]>(['']);
   const [showReadMe, setShowReadMe] = useState<boolean>(true);
 
-  const quoteArray = state.data.lesson.artist.quotes;
-  const artistName = state.data.lesson.artist.name;
+  const quoteArray = state.data.lesson?.artist?.quotes;
+  const artistName = state.data.lesson?.artist?.name;
   const title = state.data.lesson.title;
-  const artistBio = state.data.lesson.artist.bio;
+  const artistBio = state.data.lesson?.artist?.bio;
 
   const randomQuote = () => {
-    let quote = quoteArray[Math.floor(Math.random() * quoteArray.length)];
-    return quote;
+    if (Array.isArray(quoteArray) && quoteArray.length > 0) {
+      return quoteArray[Math.floor(Math.random() * quoteArray.length)];
+    } else {
+      return {
+         text: ''
+      };
+    }
   };
 
   const quote = randomQuote();

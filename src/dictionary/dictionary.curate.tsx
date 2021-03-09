@@ -34,7 +34,7 @@ const dashboardProfileDict: any = {
     'EN': {
         PROFILE: 'Profile',
         TITLE: 'USER PROFILE',
-        PROFILE_INSTRUCTON:'Click the circle above to update profile picture.',
+        PROFILE_INSTRUCTON: 'Click the circle above to update profile picture.',
         SUBTITLE: 'This contains your profile information.',
         PERSONAL_INFO: {
             TITLE: 'Personal Information',
@@ -75,7 +75,7 @@ const dashboardProfileDict: any = {
             CANCEL: 'Cancel',
             SUCCESS_MSG: 'Success',
             WARN_MSG: 'This will log you out and take you to the reset password page, do you want to continue?',
-            CONTINUE_BTN:'Continue',
+            CONTINUE_BTN: 'Continue',
             ERRORS: {
                 NO_OLD_PASS: 'Please enter your old password',
                 NO_NEW_PASS: 'Please enter your new password',
@@ -87,7 +87,7 @@ const dashboardProfileDict: any = {
     'ES': {
         PROFILE: 'Perfil',
         TITLE: 'PERFIL DEL USUARIO',
-        PROFILE_INSTRUCTON:'Haga clic en el círculo de arriba para actualizar la imagen de perfil.',
+        PROFILE_INSTRUCTON: 'Haga clic en el círculo de arriba para actualizar la imagen de perfil.',
         SUBTITLE: 'Esto contiene la información de su perfil.',
         PERSONAL_INFO: {
             TITLE: 'Informacion personal',
@@ -128,7 +128,7 @@ const dashboardProfileDict: any = {
             CANCEL: 'Cancelar',
             SUCCESS_MSG: 'Éxito',
             WARN_MSG: 'TBD',
-            CONTINUE_BTN:'TBD',
+            CONTINUE_BTN: 'TBD',
             ERRORS: {
                 NO_OLD_PASS: 'Ingrese su contraseña anterior',
                 NO_NEW_PASS: 'Ingrese su nueva contraseña',
@@ -293,14 +293,129 @@ const editClassDict: any = {
 }
 
 const lessonDict: any = {
-    'EN':{
+    'EN': {
         TOPIC_CONNECTION: 'Transformative Justice',
+        KEYWORDS: 'Keywords'
     },
     'ES': {
         TOPIC_CONNECTION: 'Transformative Justice',
+        KEYWORDS: 'Keywords'
     }
 }
 
+const classRoomDict: any = {
+    'EN': {
+        TITLE: 'Classroom',
+        LIST_TITLE: 'Classrooms',
+        LESSON: 'Lesson',
+        LIST_LESSON: 'Lessons',
+        ASSESSMENT: 'Assessment',
+        SURVEY: 'Survey',
+        LESSON_PLANNER: 'Lesson Planner',
+        ASSESSMENT_TITLE: 'Surveys & Assessments',
+        UNIT_TITLE: 'Unit Manager',
+        BOTTOM_BAR: {
+            START: 'START',
+            DISABLE: 'DISABLE',
+            ENABLE: 'ENABLE',
+            TEACH: 'TEACH',
+        },
+        LESSON_TABS: {
+            TAB_ONE: `Today's Lesson`,
+            TAB_TWO: 'Teach Lessons',
+        }
+    },
+    'ES': {
+        TITLE: 'TBD',
+        LIST_TITLE: 'TBD',
+        LESSON: 'TBD',
+        LIST_LESSON: 'TBD',
+        ASSESSMENT: 'TBD',
+        SURVEY: 'TBD',
+        LESSON_PLANNER: 'TBD',
+        ASSESSMENT_TITLE: 'TBD',
+        UNIT_TITLE: 'TBD',
+        BOTTOM_BAR: {
+            START: 'TBD',
+            DISABLE: 'TBD',
+            ENABLE: 'TBD',
+            TEACH: 'TBD',
+        },
+        LESSON_TABS: {
+            TAB_ONE: `TBD`,
+            TAB_TWO: 'TBD',
+        }
+    }
+}
+
+const lessonPlannerDict: any = {
+    'EN': {
+        INTRO: 'Intro',
+        WARM_UP: 'Warm Up',
+        CORE_LESSON: 'Core Lesson',
+        ACTIVITY: 'Activity',
+        CHECKPOINT: 'Checkpoint',
+        OUTRO: 'Outro',
+        BREAKDOWN: 'Breakdown',
+        NA: 'n/a',
+        WARMUP_BREAKDOWN: 'WarmUp/Breakdown',
+        CORELESSON_BREAKDOWN: 'CoreLesson/Breakdown',
+        ACTIVITY_BREAKDOWN: 'Activity/Breakdown',
+        OTHER_LABELS: {
+            STUDDENT_ONLINE: 'Students Online',
+            TOPIC: 'Topic',
+            START_DATE: 'Start Date',
+            EST_TIME: 'Estimated Time',
+            LESSON_CONTROL: 'Lesson Control',
+            COLUMN: {
+                ONE: 'Student Name',
+                TWO: 'Current Page',
+                THREE: 'Action'
+            },
+            STUDENT_SECTION: {
+                IN_CLASS: 'In Class',
+                NOT_IN_CLASS: 'Not In Class'
+            }
+        },
+        ACCESS_BUTTONS: {
+            START: 'Start',
+            COMPLETE: 'Complete'
+        }
+    },
+    'ES': {
+        INTRO: 'TBD ',
+        WARM_UP: 'TBD',
+        CORE_LESSON: 'TBD',
+        ACTIVITY: 'TBD',
+        CHECKPOINT: 'TBD',
+        OUTRO: 'TBD ',
+        BREAKDOWN: 'TBD',
+        NA: 'TBD',
+        WARMUP_BREAKDOWN: 'TBD',
+        CORELESSON_BREAKDOWN: 'TBD',
+        ACTIVITY_BREAKDOWN: 'TBD',
+        OTHER_LABELS: {
+            STUDDENT_ONLINE: 'TBD',
+            TOPIC: 'TBD',
+            START_DATE: 'TBD',
+            EST_TIME: 'TBD',
+            LESSON_CONTROL: 'TBD',
+            COLUMN: {
+                ONE: 'TBD',
+                TWO: 'TBD',
+                THREE: 'TBD'
+            },
+            STUDENT_SECTION: {
+                IN_CLASS: 'TBD',
+                NOT_IN_CLASS: 'TBD'
+            }
+        },
+        ACCESS_BUTTONS: {
+            START: 'TBD',
+            COMPLETE: 'TBD'
+        }
+    }
+}
 function paginationPage(lang: string, page: number, total: number) {
     if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`
     if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`
@@ -319,5 +434,7 @@ export {
     editClassDict,
     spBuilderDict,
     manageusersDict,
-    lessonDict
+    lessonDict,
+    classRoomDict,
+    lessonPlannerDict
 };
