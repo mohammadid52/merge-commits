@@ -155,6 +155,8 @@ module.exports = {
           "url('https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/iconoclast_frontpage_bg.jpg')",
         'curate-bg':
           "url('https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/LoginImage_PC.jpg')",
+        'demo-bg':
+          "url('https://zoiqclients.s3.amazonaws.com/demo/demologos/LoginImage_PC.jpg')",
       }),
       backgroundOpacity: {
         10: '0.1',
