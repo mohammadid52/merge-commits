@@ -27,7 +27,7 @@ const Intro = () => {
       <div className={theme.section}>
         <Banner subtitle={state.data.lesson?.title}/>
         <Banner title={state.data.lesson?.introductionTitle}/>
-        <p dangerouslySetInnerHTML={{ __html: quickRepair(state.data.lesson?.introduction) }} />
+        <p className={`text-gray-100`} dangerouslySetInnerHTML={{ __html: quickRepair(state.data.lesson?.introduction) }} />
         <div className='flex flex-col justify-between items-center mt-4'>
           <Banner title={state.data.lesson?.instructionsTitle}/>
           <InstructionBlock instructions={state.data.lesson.instructions} />
