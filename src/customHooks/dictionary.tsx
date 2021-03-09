@@ -6,7 +6,10 @@ function useDictionary(clientKey: string) {
         return iconoclastDict
     } else if (clientKey === 'curate') {
         return curateDict
+    } else if (clientKey === 'demo') {
+        return iconoclastDict
     }
 }
+
 
 export default useDictionary;

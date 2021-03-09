@@ -26,6 +26,7 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   const {
     currentPage,
     activeRoom,
+    activeRoomInfo,
     visibleLessonGroup,
     setVisibleLessonGroup,
     lessonLoading,
@@ -98,12 +99,10 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   };
 
-  // if (status !== 'done') {
-  //   return <ComponentLoading />;
-  // }
   return (
     <Classroom
       activeRoom={activeRoom}
+      activeRoomInfo={activeRoomInfo}
       currentPage={currentPage}
       isTeacher={true}
       visibleLessonGroup={visibleLessonGroup}

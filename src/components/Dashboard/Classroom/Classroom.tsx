@@ -68,6 +68,7 @@ export interface LessonProps extends DashboardProps {
 export interface LessonCardProps {
   isTeacher?: boolean;
   keyProps?: string;
+  activeRoomInfo?: any;
   lessonProps: Lesson;
   accessible?: boolean;
   openCards?: string;
@@ -80,6 +81,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     isTeacher,
     currentPage,
     activeRoom,
+    activeRoomInfo,
     setActiveRoom,
     activeRoomName,
     visibleLessonGroup,
@@ -103,6 +105,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     upcoming: '0',
     completed: '0',
   });
+
+
 
   /**
    * LIFECYCLE - on mount
@@ -303,6 +307,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           <div className={`${theme.section} p-4 text-xl m-auto`}>
             <Today
               activeRoom={activeRoom}
+              activeRoomInfo={activeRoomInfo}
               isTeacher={isTeacher}
               lessonLoading={lessonLoading}
               lessons={!isTeacher ? todayLessons : todayAndUpcomingLessons}
@@ -317,7 +322,9 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         visibleLessonGroup === 'upcoming' ? (
           <div className={`bg-grayscale-light bg-opacity-10`}>
             <div className={`${theme.section} p-4 text-xl m-auto`}>
-              <UpcomingLessons lessons={upcomingLessons} />
+              <UpcomingLessons
+                activeRoomInfo={activeRoomInfo}
+                lessons={upcomingLessons} />
             </div>
           </div>
         ) : null}

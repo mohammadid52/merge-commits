@@ -10,15 +10,6 @@ interface InstructionBlockProps {
 
 const InstructionsBlock = (props: InstructionBlockProps) => {
   const { isTeacher, titleVisible, instructionsTitle, instructions } = props;
-  // const { state, theme } = useContext(LessonContext);
-
-  // const [videoMode, setVideoMode] = useState(false);
-  // const instructionsArr = state.data.lesson.coreLesson.instructions.text;
-
-  // const toggleVideoMode = () => {
-  //   setVideoMode(!videoMode);
-  // };
-
   const quickRepair = (str: string) => {
     if(str){
       return str.replace('color: black', 'color: white');
@@ -52,7 +43,7 @@ const InstructionsBlock = (props: InstructionBlockProps) => {
      */}
     {
       Array.isArray(instructions) && instructions.map((inst: any, key: number) => (
-        <p key={key} className='mb-1' dangerouslySetInnerHTML={{ __html: quickRepair(inst) }}>
+        <p key={key} className='mb-1 text-gray-100' dangerouslySetInnerHTML={{ __html: quickRepair(inst) }}>
         </p>
       ))
     }
@@ -61,7 +52,7 @@ const InstructionsBlock = (props: InstructionBlockProps) => {
      */}
     {
       typeof instructions === 'string' && (
-        <p className='mb-1' dangerouslySetInnerHTML={{ __html: instructions }}>
+        <p className='mb-1 text-gray-100' dangerouslySetInnerHTML={{ __html: instructions }}>
         </p>
       )
     }
