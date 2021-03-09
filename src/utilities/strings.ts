@@ -336,12 +336,12 @@ export const checkIfFirstNewInSequence = (before: string, current: string, after
   const notSameAsBefore = current !== before;
   const sameAsAfter = current === after;
 
-  if(notSameAsBefore && sameAsAfter){
+  if (notSameAsBefore && sameAsAfter) {
     return true;
   } else {
-    if(typeof before === 'undefined'){
+    if (typeof before === 'undefined') {
       return true;
-    } else if(notSameAsBefore && typeof after === 'undefined'){
+    } else if (notSameAsBefore && typeof after === 'undefined') {
       return true;
     } else {
       return false;
