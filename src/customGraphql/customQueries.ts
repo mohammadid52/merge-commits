@@ -759,6 +759,11 @@ export const listRooms = /* GraphQL */ `
         name
         maxPersons
         activeSyllabus
+        teacher {
+          firstName
+          preferredName
+          lastName
+        }
       }
       nextToken
     }

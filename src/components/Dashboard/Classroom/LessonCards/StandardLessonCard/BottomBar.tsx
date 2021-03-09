@@ -7,7 +7,7 @@ import Start from '../../Start';
 
 const BottomBar = (props: LessonCardProps) => {
   const { theme } = useContext(GlobalContext);
-  const { isTeacher, lessonProps, accessible, lessonType } = props;
+  const { isTeacher, activeRoomInfo, lessonProps, accessible, lessonType } = props;
 
   return (
     <div
@@ -38,17 +38,27 @@ const BottomBar = (props: LessonCardProps) => {
             </IconContext.Provider>
           )}
           {lessonType === 'survey' && (
-            <p className="overflow-ellipsis overflow-hidden ... text-xs text-left">
+            <p className='overflow-ellipsis overflow-hidden ... text-xs text-left'>
               Status:
               {accessible ? (
-                <span className="ml-2 text-xs font-semibold text-green-400">Open</span>
+                <span className='ml-2 text-xs font-semibold text-green-400'>Open</span>
               ) : (
-                <span className="ml-2 text-xs font-semibold text-gray-400">Closed</span>
+                <span className='ml-2 text-xs font-semibold text-gray-400'>Closed</span>
               )}
             </p>
           )}
         </div>
-        <div className={`w-auto mx-4 text-xs text-gray-200`}>{lessonType !== 'survey' && 'Marlon'}</div>
+        {/*
+        * SHOW TEACHER NAME
+        */}
+        <div className={`w-auto mx-4 text-xs text-gray-200`}>
+          {
+            lessonType !== 'survey' && typeof activeRoomInfo !== 'undefined'
+              ? (
+                `${activeRoomInfo?.teacher?.firstName} ${activeRoomInfo?.teacher?.lastName}`
+              ) : null
+          }
+        </div>
       </div>
 
       {/* START */}
