@@ -38,6 +38,8 @@ export interface DashboardProps {
   setCurrentPage?: React.Dispatch<React.SetStateAction<string>>;
   activeRoom?: string;
   setActiveRoom?: React.Dispatch<React.SetStateAction<string>>;
+  activeRoomInfo?: any;
+  setActiveRoomInfo?: React.Dispatch<React.SetStateAction<any>>;
   activeRoomName?: string;
   setActiveRoomName?: React.Dispatch<React.SetStateAction<string>>;
   visibleLessonGroup?: string;
@@ -72,6 +74,7 @@ const Dashboard = (props: DashboardProps) => {
   const [currentPage, setCurrentPage] = useState<string>('classroom');
   const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('today');
   const [activeRoom, setActiveRoom] = useState<string>('');
+  const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
   const [activeRoomName, setActiveRoomName] = useState<string>('');
   const [activeRoomSyllabus, setActiveRoomSyllabus] = useState<string>('');
 
@@ -160,6 +163,7 @@ const Dashboard = (props: DashboardProps) => {
           currentPage={currentPage}
           activeRoom={activeRoom}
           setActiveRoom={setActiveRoom}
+          setActiveRoomInfo={setActiveRoomInfo}
           setActiveRoomName={setActiveRoomName}
           lessonLoading={lessonLoading}
           setLessonLoading={setLessonLoading}
@@ -207,6 +211,7 @@ const Dashboard = (props: DashboardProps) => {
                   <Classroom
                     currentPage={currentPage}
                     activeRoom={activeRoom}
+                    activeRoomInfo={activeRoomInfo}
                     setActiveRoom={setActiveRoom}
                     activeRoomName={activeRoomName}
                     setActiveRoomName={setActiveRoomName}
@@ -228,6 +233,7 @@ const Dashboard = (props: DashboardProps) => {
                   <LessonPlanHome
                     currentPage={currentPage}
                     activeRoom={activeRoom}
+                    activeRoomInfo={activeRoomInfo}
                     activeRoomName={activeRoomName}
                     setActiveRoomName={setActiveRoomName}
                     visibleLessonGroup={visibleLessonGroup}

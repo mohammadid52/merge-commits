@@ -6,7 +6,7 @@ import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/ai';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 const SmallLessonCard = (props: LessonCardProps) => {
-  const { keyProps, lessonProps, openCards, setOpenCards, lessonType } = props;
+  const { keyProps, activeRoomInfo, lessonProps, openCards, setOpenCards, lessonType } = props;
   const { theme } = useContext(GlobalContext);
 
   /**
@@ -60,7 +60,7 @@ const SmallLessonCard = (props: LessonCardProps) => {
             className={`w-full h-40 bg-white  ${theme.dashboard.bg} rounded-t bg-cover flex flex-col place-content-end`}
             style={{
               background: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))`,
-              backgroundImage: `url(${lessonProps.lesson.artist.images})`,
+              backgroundImage: `url(${lessonProps.lesson?.artist?.images})`,
               backgroundSize: 'cover',
             }}>
             <div className="text-center">
@@ -75,7 +75,7 @@ const SmallLessonCard = (props: LessonCardProps) => {
               <h2
                 className={`first w-full text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200 text-center`}
                 style={{ textShadow: '1px 1px black' }}>
-                <p> {lessonProps.lesson.artist.name} </p>
+                <p> {lessonProps?.lesson?.artist?.name} </p>
               </h2>
             </div>
           </div>
@@ -111,7 +111,14 @@ const SmallLessonCard = (props: LessonCardProps) => {
                     <AiOutlineUser />
                   </IconContext.Provider>
                 </div>
-                <div className={`w-auto ml-2 text-sm text-gray-200`}>Marlon</div>
+                <div className={`w-auto ml-2 text-sm text-gray-200`}>
+                  {
+                    typeof activeRoomInfo !== 'undefined'
+                      ? (
+                        `${activeRoomInfo?.teacher?.firstName} ${activeRoomInfo?.teacher?.lastName}`
+                      ) : null
+                  }
+                </div>
               </div>
             </div>
           </div>
