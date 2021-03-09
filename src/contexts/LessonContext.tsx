@@ -214,20 +214,24 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         return acc;
       }
     }, []);
-    if (allCheckpointIDS.length > 0) {
 
+    if (allCheckpointIDS.length > 0) {
+      console.log('allcheckpoints -> ', allCheckpointIDS)
       try {
         const checkpoints: any = await API.graphql(graphqlOperation(customQueries.listCheckpoints, {
           filter: { ...createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id') },
         }));
 
-        //  STORE FULL CHECKPOINT OBJECTS
-        setLesson({ ...lesson, lesson: { ...lesson.lesson, checkpoints: checkpoints.data.listCheckpoints } });
+        const itemsReversed = checkpoints.data.listCheckpoints.items.reverse();
+        const listCheckpoints = {...checkpoints.data.listCheckpoints, items: itemsReversed}
+
+        setLesson({ ...lesson, lesson: { ...lesson.lesson, checkpoints:  listCheckpoints}});
 
         // INIT CONTEXT WITH EMPTY QUESTIONDATA!
-        const initCheckpointsObj = checkpoints.data.listCheckpoints.items.reduce((acc: any, checkpointObj: any) => {
+        const initCheckpointsObj = listCheckpoints.items.reduce((acc: any, checkpointObj: any) => {
           return { ...acc, [checkpointObj.id]: {} };
         }, {});
+
         dispatch({
           type: 'SET_QUESTION_DATA',
           payload: {

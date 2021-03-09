@@ -13,13 +13,14 @@ const SyllabusSwitch = (props: DashboardProps) => {
         <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>Loading units...</div>
       ) : null}
 
+      <div className={``}>
       {!syllabusLoading && state.roomData?.syllabus?.length > 0
         ? state.roomData.syllabus.map((syllabus: Syllabus, i: number) => {
             return (
               <div
                 key={`testSyllabus_${i}`}
                 id={`testSyllabus_${i}`}
-                className={`${theme.dashboard.card} ${theme.elem.textDark}`}>
+                className={`flex max-w-256 mb-2 ${theme.dashboard.card} ${theme.elem.textDark}`}>
                 <div className={``}>
                   <p className={`text-sm text-darker-gray`}><b>Unit Name: </b>{syllabus.name}</p>
                   <p className={`text-sm text-darker-gray`}><b>Description:</b> {syllabus.description}</p>
@@ -40,6 +41,7 @@ const SyllabusSwitch = (props: DashboardProps) => {
             );
           })
         : null}
+      </div>
 
       {activeRoom === '' ? (
         <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}> ⬅️ Select a classroom to see applicable units ...</div>

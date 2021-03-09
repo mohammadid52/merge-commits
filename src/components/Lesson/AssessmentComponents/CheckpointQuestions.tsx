@@ -264,20 +264,19 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     <div className={theme.section}>
       <div className={`${theme.elem.text}`}>
 
-        <div className='w-full h-full flex flex-col flex-wrap justify-around items-center'>
+        <div className='w-full h-full my-4 flex flex-col flex-wrap justify-around items-center'>
 
           {
             questionSource() ? (
               questionSource().length > 0 &&
               allQuestionGroups().map((questionGroup: any, idx0: number) => {
                 const part1 = <QuestionGroupInfo key={`qgroup_${idx0}`} isTeacher={isTeacher}
-                                                 checkpointID={questionGroup[0].checkpointID}
-                                                 showTitle={checkIfFirstNewInSequence(questionGroup[idx0 - 1], questionGroup[idx0], questionGroup[idx0 + 1])} />;
+                                                 checkpointID={questionGroup[0].checkpointID} />;
                 const part2 = questionGroup.map((question: QuestionInterface, idx: number) => {
                   const realIndex = indexInc[idx0] + idx;
                   return (
                     <React.Fragment key={`questionFragment_${realIndex}`}>
-                      <div key={`questionParent_${realIndex}`} id={`questionParent_${realIndex}`}>
+                      <div key={`questionParent_${realIndex}`} id={`questionParent_${realIndex}`} className={`mb-8`}>
                         <Question
                           checkpointID={question.checkpointID ? question.checkpointID : 'undefined-checkpointID'}
                           visible={true}

@@ -356,7 +356,31 @@ const lessonPlannerDict: any = {
         ACTIVITY: 'Activity',
         CHECKPOINT: 'Checkpoint',
         OUTRO: 'Outro',
-        BREAKDOWN:'Breakdown'
+        BREAKDOWN: 'Breakdown',
+        NA: 'n/a',
+        WARMUP_BREAKDOWN: 'WarmUp/Breakdown',
+        CORELESSON_BREAKDOWN: 'CoreLesson/Breakdown',
+        ACTIVITY_BREAKDOWN: 'Activity/Breakdown',
+        OTHER_LABELS: {
+            STUDDENT_ONLINE: 'Students Online',
+            TOPIC: 'Topic',
+            START_DATE: 'Start Date',
+            EST_TIME: 'Estimated Time',
+            LESSON_CONTROL: 'Lesson Control',
+            COLUMN: {
+                ONE: 'Student Name',
+                TWO: 'Current Page',
+                THREE: 'Action'
+            },
+            STUDENT_SECTION: {
+                IN_CLASS: 'In Class',
+                NOT_IN_CLASS: 'Not In Class'
+            }
+        },
+        ACCESS_BUTTONS: {
+            START: 'Start',
+            COMPLETE: 'Complete'
+        }
     },
     'ES': {
         INTRO: 'TBD ',
@@ -364,8 +388,32 @@ const lessonPlannerDict: any = {
         CORE_LESSON: 'TBD',
         ACTIVITY: 'TBD',
         CHECKPOINT: 'TBD',
-        OUTRO: 'TBD',
-        BREAKDOWN:'TBD'
+        OUTRO: 'TBD ',
+        BREAKDOWN: 'TBD',
+        NA: 'TBD',
+        WARMUP_BREAKDOWN: 'TBD',
+        CORELESSON_BREAKDOWN: 'TBD',
+        ACTIVITY_BREAKDOWN: 'TBD',
+        OTHER_LABELS: {
+            STUDDENT_ONLINE: 'TBD',
+            TOPIC: 'TBD',
+            START_DATE: 'TBD',
+            EST_TIME: 'TBD',
+            LESSON_CONTROL: 'TBD',
+            COLUMN: {
+                ONE: 'TBD',
+                TWO: 'TBD',
+                THREE: 'TBD'
+            },
+            STUDENT_SECTION: {
+                IN_CLASS: 'TBD',
+                NOT_IN_CLASS: 'TBD'
+            }
+        },
+        ACCESS_BUTTONS: {
+            START: 'TBD',
+            COMPLETE: 'TBD'
+        }
     }
 }
 function paginationPage(lang: string, page: number, total: number) {

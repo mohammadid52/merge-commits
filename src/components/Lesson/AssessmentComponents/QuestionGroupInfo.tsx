@@ -31,20 +31,22 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
   });
 
   const getQuestionGroupInfo = () => {
-    const getCheckpointObj = state.data.lesson.checkpoints.items.find((checkpointObj: any) => checkpointObj.id === checkpointID);
+    const getCheckpointObj = state.data.lesson.checkpoints.items.find(
+      (checkpointObj: any) => checkpointObj.id === checkpointID
+    );
 
     const quickRepair = (str: string) => {
-      if(str){
+      if (str) {
         return str.replace('color: black', 'color: white');
       } else return '';
-    }
+    };
 
     setInfo({
       title: getCheckpointObj?.title,
       subtitle: getCheckpointObj?.subtitle,
       instructions: quickRepair(getCheckpointObj?.instructions),
-      instructionsTitle: getCheckpointObj?.instructionsTitle
-    })
+      instructionsTitle: getCheckpointObj?.instructionsTitle,
+    });
   };
 
   useEffect(() => {
@@ -56,11 +58,20 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
   return (
     <div className={theme.section}>
       <div className={`${theme.elem.text}`}>
-        <div className='w-full h-full flex flex-col flex-wrap justify-around items-center'>
-          <Banner isTeacher={isTeacher} titleSection={showTitle ? info.title : null} subtitleSection={info.subtitle} />
+        <div className="w-full h-full flex flex-col flex-wrap justify-around items-center">
 
-              <InstructionBlock isTeacher={isTeacher} titleVisible={true} instructionsTitle={info.instructionsTitle}
-                                instructions={info.instructions} />
+          <Banner
+            isTeacher={isTeacher}
+            subtitleSection={`${info.subtitle}`}
+            subtitleSection2={`${info && info.title ? ` - ( ${info.title} ) `: null}`}
+          />
+
+          <InstructionBlock
+            isTeacher={isTeacher}
+            titleVisible={true}
+            instructionsTitle={info.instructionsTitle}
+            instructions={info.instructions}
+          />
 
         </div>
       </div>

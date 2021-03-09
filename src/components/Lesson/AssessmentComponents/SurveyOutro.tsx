@@ -14,7 +14,7 @@ const SurveyOutro = (props: any) => {
   return (
     <>
       <Banner subtitle={state.data.lesson?.summaryTitle } />
-      <p dangerouslySetInnerHTML={{ __html: quickRepair(state.data.lesson?.summary )}} />
+      <p className={`text-gray-100`} dangerouslySetInnerHTML={{ __html: quickRepair(state.data.lesson?.summary )}} />
     </>
   );
 };
