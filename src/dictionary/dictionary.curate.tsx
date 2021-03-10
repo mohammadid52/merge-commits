@@ -368,6 +368,25 @@ const lessonPlannerDict: any = {
     CHECKPOINT: 'Checkpoint',
     OUTRO: 'Closing',
     BREAKDOWN: 'Discussion',
+    OTHER_LABELS: {
+      STUDDENT_ONLINE: 'Students Online',
+      TOPIC: 'Topic',
+      START_DATE: 'Start Date',
+      EST_TIME: 'Estimated Time',
+      LESSON_CONTROL: 'Lesson Control',
+      COLUMN: {
+        ONE: 'Student Name',
+        TWO: 'Current Page',
+        THREE: 'Action',
+      },
+      STUDENT_SECTION: {
+        IN_CLASS: 'In Class',
+        NOT_IN_CLASS: 'Not In Class',
+      },
+    }, ACCESS_BUTTONS: {
+      START: 'Start',
+      COMPLETE: 'Complete',
+    },
   },
   'ES': {
     INTRO: 'TBD ',
@@ -377,6 +396,25 @@ const lessonPlannerDict: any = {
     CHECKPOINT: 'TBD',
     OUTRO: 'TBD ',
     BREAKDOWN: 'TBD',
+    OTHER_LABELS: {
+      STUDDENT_ONLINE: 'Students Online',
+      TOPIC: 'Topic',
+      START_DATE: 'Start Date',
+      EST_TIME: 'Estimated Time',
+      LESSON_CONTROL: 'Lesson Control',
+      COLUMN: {
+        ONE: 'Student Name',
+        TWO: 'Current Page',
+        THREE: 'Action',
+      },
+      STUDENT_SECTION: {
+        IN_CLASS: 'In Class',
+        NOT_IN_CLASS: 'Not In Class',
+      },
+    }, ACCESS_BUTTONS: {
+      START: 'Start',
+      COMPLETE: 'Complete',
+    },
   },
 };
 

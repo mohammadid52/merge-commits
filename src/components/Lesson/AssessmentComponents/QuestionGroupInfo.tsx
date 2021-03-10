@@ -51,7 +51,9 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
 
   useEffect(() => {
     if (state.data.lesson.checkpoints) {
-      getQuestionGroupInfo();
+      if(state.data.lesson.checkpoints.items.length > 0){
+        getQuestionGroupInfo();
+      }
     }
   }, [state.data.lesson.checkpoints]);
 
@@ -69,8 +71,8 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
           <InstructionBlock
             isTeacher={isTeacher}
             titleVisible={true}
-            instructionsTitle={info.instructionsTitle}
-            instructions={info.instructions}
+            instructionsTitle={info?.instructionsTitle}
+            instructions={info?.instructions}
           />
 
         </div>

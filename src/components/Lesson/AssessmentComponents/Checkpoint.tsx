@@ -58,12 +58,12 @@ const Checkpoint = (props: { isTeacher?: boolean }) => {
        *  1.
        *  SHOW BANNER + ICON, IF LESSON
        */}
-      {
+      {/*{
         lessonType === 'lesson' &&
         (
           <Banner isTeacher={isTeacher} title={`${title}`} iconName={'FaCheck'} />
         )
-      }
+      }*/}
 
       {/**
        *  2.

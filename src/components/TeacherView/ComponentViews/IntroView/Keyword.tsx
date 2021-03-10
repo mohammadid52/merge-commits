@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { IconContext } from "react-icons/lib/esm/iconContext";
 import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
@@ -10,54 +10,70 @@ interface props {
 const Keyword = (props: props) => {
   const { fullscreen } = props;
   const { state, theme } = useContext(LessonControlContext);
-  const keywords = state.data.lesson.keywords.items
+
+  const keywords = state.data.lesson?.keywords?.items;
+  const [mappedKeywords, setMappedKeywords] = useState<any[]>([]);
+
+  useEffect(() => {
+    const abc = (inarr: any, inc: number, out: [any[],any[],any[]]):any => {
+      const [head, ...tail] = inarr;
+      if (typeof head === 'undefined') {
+        return out;
+      }
+      switch(inc){
+        case 0:
+          return abc(tail, inc + 1, [
+            [...out[0], head],
+            out[1],
+            out[2]])
+        case 1:
+          return abc(tail, inc + 1, [
+            out[0],
+            [...out[1],head],
+            out[2]])
+        case 2:
+          return abc(tail, 0, [
+            out[0],
+            out[1],
+            [...out[2],head]
+          ])
+      }
+    }
+
+    if (keywords && keywords.length > 0) {
+      setMappedKeywords(abc(keywords, 0, [[],[],[]]));
+    }
+  }, []);
 
   return (
     <div className={`flex flex-col md:w-full ${theme.block.text} rounded-r-lg`}>
       <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
-        <h3>Keywords we will cover in this lesson:</h3>
-        <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
-          <div className='absolute w-auto h-auto mr-2 right-0'>
-            <AiOutlineInfoCircle
-              style={{
-                MozUserSelect: 'none',
-                WebkitUserSelect: 'none',
-                msUserSelect: 'none',
-              }}
-            />
-          </div>
-        </IconContext.Provider>
+        <h3>Keywords: we will cover in this lesson:</h3> {/*  e.g. 'Keywords' we will cover this lesson */}
       </div>
 
-      <div className='flex flex-row'>
-        {typeof keywords !== 'undefined'
-          ? keywords.map(
-            (item: { word: { word: string; definition: string }; wordID: number }, i: number) => {
-              return (
-                <div
-                  key={i}
-                  id={`kw${i}`}
-                  className={`relative h-32 min-h-32 mb-4 p-2 w-3.3/10 z-10 hover:z-50 rounded-lg`}
-                >
-
-                  <div className={`relative h-32 min-h-32 hover:z-50 bg-light-gray rounded-lg`}>
-                    <div className='relative min-h-32 h-32 h-full w-full rounded-lg hover:shadow-lg'>
-
-                      <div className='h-32 hover:h-auto p-2 hover:absolute overflow-hidden bg-light-gray rounded-lg border-8 border-light-gray'>
+      <div className={`flex flex-row`}>
+        {
+          mappedKeywords.length > 0 &&
+          mappedKeywords.map((row: any[], i0:number) => (
+            <div key={`cardKWP_${i0}`} className={`flex flex-col px-2`}>
+              {
+                row.length > 0 && (
+                  row.map((item: { word: { word: string; definition: string }; wordID: number }, i1: number) => (
+                    <div key={`cardKW_${i1}`}
+                         className={`pb-4 pt-4 px-4 mb-4 h-32 hover:h-auto hover:min-h-32 overflow-ellipsis overflow-hidden ... rounded-lg bg-light-gray border-light-gray`}>
+                      <div className={`h-full overflow-ellipsis overflow-hidden ...`}>
                         <p className={`${theme.elem.title}`}>{item.word.word}:</p>
-                        <p className={theme.elem.text}>{item.word.definition}</p>
+                        <p className={`${theme.elem.text}`}>{item.word.definition}</p>
                       </div>
-
                     </div>
-
-                  </div>
-
-                </div>
-              );
-            }
-          )
-          : ''}
+                  ))
+                )
+              }
+            </div>
+          ))
+        }
       </div>
+
     </div>
   );
 }

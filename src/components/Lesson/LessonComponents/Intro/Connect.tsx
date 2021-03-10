@@ -10,7 +10,7 @@ const Connect = () => {
   return (
     <div className={`flex flex-col md:w-full md:h-full text-sm rounded-r-lg`}>
       <div className={`md:w-full md:h-full flex flex-col text-lx rounded-r-lg`}>
-        <h1 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>SEL Connection:</h1>
+        <h1 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>Objectives:</h1>
         <p className={`${theme.elem.text}`}>{connection}</p>
       </div>
     </div>

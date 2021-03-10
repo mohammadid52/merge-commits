@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import Banner from './Banner';
 import { LessonContext } from '../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../contexts/LessonControlContext';
 
 interface InstructionBlockProps {
   isTeacher?: boolean;
@@ -10,8 +11,9 @@ interface InstructionBlockProps {
 }
 
 const InstructionsBlock = (props: InstructionBlockProps) => {
-  const {theme} = useContext(LessonContext);
   const { isTeacher, titleVisible, instructionsTitle, instructions } = props;
+  const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
+  const { state, theme, dispatch } = switchContext;
 
   return (
     <>
