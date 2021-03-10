@@ -547,6 +547,8 @@ export const getSyllabusLesson = /* GraphQL */ `
           }
         }
         summary
+        purpose
+        designers
         objectives
         checkpoints {
           items {
@@ -773,6 +775,9 @@ export const listSyllabusLessons = /* GraphQL */ `
             bio
           }
           summary
+        purpose
+        designers
+        objectives
         }
         endDate
         startDate

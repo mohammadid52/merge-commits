@@ -103,7 +103,7 @@ const QuoteBlock = () => {
           } h-full flex flex-col justify-end transition-all duration-500 ease-in-out animate-fadeIn`}
           >
           <div className='absolute bottom-0 left-0 p-2 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-xl'>
-            <div className='text-xl header-font font-open font-light'>Featured Artist:</div>
+            <div className='text-xl header-font font-open font-light'>Featured Person:</div>
             <div className='w-full text-4.5xl leading-none font-light'>{artistName}</div>
             <div className='text-xl header-font font-open font-light'>"{quote.text}"</div>
           </div>

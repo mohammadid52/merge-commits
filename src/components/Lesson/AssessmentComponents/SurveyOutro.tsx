@@ -3,18 +3,13 @@ import { LessonContext } from '../../../contexts/LessonContext';
 import Banner from '../LessonComponents/Banner';
 
 const SurveyOutro = (props: any) => {
-  const { state } = useContext(LessonContext);
-
-  const quickRepair = (str: string) => {
-    if(str){
-      return str.replace('color: black', 'color: white');
-    } else return '';
-  }
+  const { state, theme } = useContext(LessonContext);
 
   return (
     <>
-      <Banner subtitle={state.data.lesson?.summaryTitle } />
-      <p className={`text-gray-100`} dangerouslySetInnerHTML={{ __html: quickRepair(state.data.lesson?.summary )}} />
+      <Banner titleSection={state.data.lesson?.summaryTitle} />
+      <p className={`mb-1 text-gray-100 ${theme.elem.text}`}
+         dangerouslySetInnerHTML={{ __html: state.data.lesson?.summary }} />
     </>
   );
 };
