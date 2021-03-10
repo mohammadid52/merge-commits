@@ -323,7 +323,11 @@ const classRoomDict: any = {
         LESSON_TABS: {
             TAB_ONE: `Today's Lesson`,
             TAB_TWO: 'Teach Lessons',
-        }
+        },
+        MESSAGES: {
+            SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
+            NO_LESSONS: 'No sessions...',
+        },
     },
     'ES': {
         TITLE: 'TBD',
@@ -344,7 +348,11 @@ const classRoomDict: any = {
         LESSON_TABS: {
             TAB_ONE: `TBD`,
             TAB_TWO: 'TBD',
-        }
+        },
+        MESSAGES: {
+            SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
+            NO_LESSONS: 'No sessions...',
+        },
     }
 }
 
