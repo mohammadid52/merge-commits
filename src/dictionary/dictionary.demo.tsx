@@ -350,8 +350,10 @@ const classRoomDict: any = {
             TAB_TWO: 'TBD',
         },
         MESSAGES: {
-            SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
-            NO_LESSONS: 'No sessions...',
+            SELECT_SYLLABUS: 'Select a cohort to see applicable units...',
+            NO_SYLLABUS: 'No units...',
+            SELECT_CLASSROOM: 'Select a classroom to see applicable lessons...',
+            NO_LESSONS: 'No lessons...',
         },
     }
 }

@@ -324,6 +324,8 @@ const classRoomDict: any = {
       TAB_TWO: 'Teach Sessions',
     },
     MESSAGES: {
+      SELECT_SYLLABUS: 'Select a cohort to see applicable units...',
+      NO_SYLLABUS: 'No units...',
       SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
       NO_LESSONS: 'No sessions...',
     },
@@ -349,6 +351,8 @@ const classRoomDict: any = {
       TAB_TWO: 'TBD',
     },
     MESSAGES: {
+      SELECT_SYLLABUS: 'Select a cohort to see applicable units...',
+      NO_SYLLABUS: 'No units...',
       SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
       NO_LESSONS: 'No sessions...',
     },

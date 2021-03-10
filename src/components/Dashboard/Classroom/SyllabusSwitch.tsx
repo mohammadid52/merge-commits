@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { DashboardProps } from '../Dashboard';
 import { Syllabus } from './Classroom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
@@ -8,6 +8,10 @@ const SyllabusSwitch = (props: DashboardProps) => {
   const { activeRoom, currentPage, syllabusLoading, handleSyllabusActivation } = props;
   const { state, theme, clientKey, userLanguage  } = useContext(GlobalContext);
   const { classRoomDict } = useDictionary(clientKey);
+
+  useEffect(()=>{
+    console.log('classroomDict ->? ', classRoomDict)
+  },[])
 
   return (
     <>
@@ -46,11 +50,15 @@ const SyllabusSwitch = (props: DashboardProps) => {
       </div>
 
       {activeRoom === '' ? (
-        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}> ⬅️ Select a {classRoomDict[userLanguage]['TITLE']} to see applicable units ...</div>
+        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>
+          ⬅️ {classRoomDict[userLanguage].MESSAGES.SELECT_SYLLABUS}...
+        </div>
       ) : null}
 
       {activeRoom !== '' && !syllabusLoading && state.roomData?.syllabus?.length === 0 ? (
-        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>No units...</div>
+        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>
+          {classRoomDict[userLanguage].MESSAGES.NO_SYLLABUS}...
+        </div>
       ) : null}
     </>
   );

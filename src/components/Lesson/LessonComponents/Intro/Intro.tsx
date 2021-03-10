@@ -22,20 +22,30 @@ const Intro = () => {
     } else return '';
   }
 
+  /**
+   *
+   * SURVEY INTRO COMPONENT
+   *
+   */
   if (lessonType === 'survey' || lessonType === 'assessment') {
     return (
       <div className={theme.section}>
-        <Banner subtitle={state.data.lesson?.title}/>
-        <Banner title={state.data.lesson?.introductionTitle}/>
-        <p className={`text-gray-100`} dangerouslySetInnerHTML={{ __html: quickRepair(state.data.lesson?.introduction) }} />
+        <Banner title={state.data.lesson?.title}/>
+        <Banner titleSection={state.data.lesson?.introductionTitle}/>
+        <p className={`mb-1 text-gray-100 ${theme.elem.text}`} dangerouslySetInnerHTML={{ __html: state.data.lesson?.introduction }} />
         <div className='flex flex-col justify-between items-center mt-4'>
-          <Banner title={state.data.lesson?.instructionsTitle}/>
+          <Banner titleSection={state.data.lesson?.instructionsTitle}/>
           <InstructionBlock instructions={state.data.lesson.instructions} />
         </div>
       </div>
     );
   }
 
+  /**
+   *
+   * STANDARD INTRO COMPONENT
+   *
+   */
   return (
     <div className={theme.section}>
       <Banner title={state.data.lesson.title} iconName={'FaHourglassStart'}/>

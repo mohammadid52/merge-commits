@@ -44,39 +44,49 @@ const SelectManyQuestions = (props: QuestionProps) => {
 
   return (
     visible && (
-        <div key={questionKey} className={'flex flex-col my-4'}>
-          <label htmlFor={question.question.label}>
-            <p className={`font-semibold ${theme.elem.text} ${theme.underline} pb-2 mb-4`}>
-              <b>{questionIndex + 1}. </b>
-              {question.question.question}
-            </p>
-          </label>
-          {/*<div id={question.label} className={'flex'}>*/}
-          <div className={'flex flex-col'}>
-            {question.question.options.map(
-              (option: { label: string; icon: string; color: string; text: string }, key: any) => (
-                <div
-                  key={key}
-                  className={`w-3/4 flex justify-center items-center mb-2 mx-4`}
-                  onClick={(e) => (!isTeacher) ? handleMultiSelect(e) : null}
+      <div key={questionKey} className={'flex flex-col my-4'}>
+        <label htmlFor={question.question.label}>
+          <p className={`font-semibold ${theme.elem.text} ${theme.underline} pb-2 mb-4`}>
+            <b>{questionIndex + 1}. </b>
+            {question.question.question}
+          </p>
+        </label>
+        {/*<div id={question.label} className={'flex'}>*/}
+        <div className={'grid grid-cols-4 gap-4 max-w-200 mx-auto'}>
+          {question.question.options.map(
+            (option: { label: string; icon: string; color: string; text: string }, key: any) => (
+              <div
+                key={key}
+                className={`w-3/4 flex justify-center items-center mb-2 mx-4`}
+                onClick={(e) => (!isTeacher ? handleMultiSelect(e) : null)}
                 data-key={questionId}>
                 {input.value.indexOf(`${option.label}`) >= 0 ? (
-                  <label className="inline-flex items-center mb-2">
-                    <input id={`${option.label}`} data-key={questionId} type="checkbox" className="form-checkbox h-5 w-5 text-pink-600" checked/>
-                    <span className={`ml-2 ${theme.elem.text}`}>{option.text}</span>
+                  <label className={`w-3/4 flex justify-center items-center mb-2 mx-4`}>
+                    <input
+                      id={`${option.label}`}
+                      data-key={questionId}
+                      type="checkbox"
+                      className="form-checkbox h-5 w-5 text-pink-600"
+                      checked
+                    />
+                    <span className={`w-24 ml-2 ${theme.elem.text}`}>{option.text}</span>
                   </label>
                 ) : (
-                  <label className='inline-flex items-center mb-2'>
-                    <input id={`${option.label}`} data-key={questionId} type='checkbox'
-                           className='form-checkbox h-5 w-5 text-pink-600' />
-                           <span className={`ml-2 ${theme.elem.text}`}>{option.text}</span>
+                  <label className={`w-3/4 flex justify-center items-center mb-2 mx-4`}>
+                    <input
+                      id={`${option.label}`}
+                      data-key={questionId}
+                      type="checkbox"
+                      className="form-checkbox h-5 w-5 text-pink-600"
+                    />
+                    <span className={`w-24 ml-2 ${theme.elem.text}`}>{option.text}</span>
                   </label>
                 )}
-                </div>
-              )
-            )}
-          </div>
+              </div>
+            )
+          )}
         </div>
+      </div>
     )
   );
 };

@@ -12,7 +12,6 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
 
   useEffect(() => {
     setAccessible(true);
-    console.log('classroomDict ->', classRoomDict[userLanguage])
   }, [props]);
 
   return (

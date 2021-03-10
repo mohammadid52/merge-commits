@@ -323,6 +323,8 @@ const classRoomDict: any = {
       TAB_TWO: 'Teach Lessons',
     },
     MESSAGES: {
+      SELECT_SYLLABUS: 'Select a cohort to see applicable units...',
+      NO_SYLLABUS: 'No units...',
       SELECT_CLASSROOM: 'Select a classroom to see applicable lessons...',
       NO_LESSONS: 'No lessons...',
     },
@@ -348,6 +350,8 @@ const classRoomDict: any = {
       TAB_TWO: 'TBD',
     },
     MESSAGES: {
+      SELECT_SYLLABUS: 'Select a cohort to see applicable units...',
+      NO_SYLLABUS: 'No units...',
       SELECT_CLASSROOM: 'Select a classroom to see applicable lessons...',
       NO_LESSONS: 'No lessons...',
     },
@@ -387,10 +391,6 @@ const lessonPlannerDict: any = {
       START: 'Start',
       COMPLETE: 'Complete',
     },
-    MESSAGES: {
-      SELECT_CLASSROOM: 'Select a classroom to see applicable lessons...',
-      NO_LESSONS: 'No lessons...',
-    },
   },
   ES: {
     INTRO: 'TBD ',
@@ -423,10 +423,6 @@ const lessonPlannerDict: any = {
     ACCESS_BUTTONS: {
       START: 'TBD',
       COMPLETE: 'TBD',
-    },
-    MESSAGES: {
-      SELECT_CLASSROOM: 'Select a classroom to see applicable lessons...',
-      NO_LESSONS: 'No lessons...',
     },
   },
 };
