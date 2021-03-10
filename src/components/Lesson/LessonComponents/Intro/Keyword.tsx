@@ -40,7 +40,7 @@ const Keyword = () => {
   return (
     <div className={`flex flex-col md:w-full ${theme.block.text} rounded-r-lg`}>
       <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
-        <h3>Keywords: we will cover in this lesson:</h3> {/*  e.g. 'Keywords' we will cover this lesson */}
+        <h3>Keywords:</h3> {/*  e.g. 'Keywords' we will cover this lesson */}
       </div>
 
       <div className={`flex flex-row`}>

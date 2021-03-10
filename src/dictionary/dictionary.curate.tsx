@@ -362,10 +362,10 @@ const classRoomDict: any = {
 const lessonPlannerDict: any = {
   'EN': {
     INTRO: 'Begin',
-    WARM_UP: 'Grounding',
+    WARM_UP: 'Check-In',
     CORE_LESSON: 'Topic',
     ACTIVITY: 'Activity',
-    CHECKPOINT: 'Checkpoint',
+    CHECKPOINT: 'Spiritual Grounding',
     OUTRO: 'Closing',
     BREAKDOWN: 'Discussion',
     OTHER_LABELS: {
