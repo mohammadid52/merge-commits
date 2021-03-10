@@ -250,13 +250,13 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
        *  TOP WIDGET BAR
        *  - Hide for teacher
        */}
-      {/*{!isTeacher && (
+      {!isTeacher && (
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 pb-4 m-auto`}>
             <TopWidgetBar />
           </div>
         </div>
-      )}*/}
+      )}
 
       {/**
        *  ASSESSMENTS/SURVEYS
