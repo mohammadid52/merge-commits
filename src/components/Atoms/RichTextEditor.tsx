@@ -17,7 +17,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
 
   const options: string[] = [
     'inline',
-    'colorPicker',
+    // 'colorPicker',
     'list',
     'textAlign',
     'blockType',

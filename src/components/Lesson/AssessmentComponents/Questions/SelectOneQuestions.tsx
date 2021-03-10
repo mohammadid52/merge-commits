@@ -32,26 +32,27 @@ const SelectOneQuestions = (props: QuestionProps) => {
   return (
     <>
       {visible && (
-          <div key={questionKey} className={'flex flex-col my-4'} id={`question_${questionId}`}>
-            <label htmlFor={question.question.label}>
-              <p className={`font-semibold ${theme.elem.text} ${theme.underline} pb-2 mb-4`}>
-                <b>{questionIndex + 1}. </b>
-                {question.question.question}
-              </p>
-            </label>
-            <div className={`flex justify-center`}>
-              {question.question.options.map(
-                (
-                  option: {
-                    label: string;
-                    icon: string;
-                    color: string;
-                    text: string;
-                  },
-                  questionOptionIndex: number,
+        <div key={questionKey} className={'flex flex-col my-4'} id={`question_${questionId}`}>
+          <label htmlFor={question.question.label}>
+            <p className={`font-semibold ${theme.elem.text} ${theme.underline} pb-2 mb-4`}>
+              <b>{questionIndex + 1}. </b>
+              {question.question.question}
+            </p>
+          </label>
+          <div className={'grid grid-cols-4 gap-4 max-w-200 mx-auto'}>
+            {question.question.options.map(
+              (
+                option: {
+                  label: string;
+                  icon: string;
+                  color: string;
+                  text: string;
+                },
+                questionOptionIndex: number,
               ) => {
                 return (
-                  <React.Fragment key={`question_${questionId}_${questionOptionIndex}`}>
+                  <div key={`question_${questionId}_${questionOptionIndex}`}
+                       className={`w-3/4 flex justify-center items-center mb-2 mx-4`}>
                     <span
                       id={option.label}
                       className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border 
@@ -60,12 +61,12 @@ const SelectOneQuestions = (props: QuestionProps) => {
                       onClick={(e) => (!isTeacher ? handleRadioSelect(e) : null)}
                     />
                     <span className={`w-24`}>{option.text}</span>
-                  </React.Fragment>
+                  </div>
                 );
-                }
-              )}
-            </div>
+              },
+            )}
           </div>
+        </div>
       )}
     </>
   );

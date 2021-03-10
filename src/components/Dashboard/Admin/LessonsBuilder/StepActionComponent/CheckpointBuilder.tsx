@@ -21,6 +21,8 @@ interface CheckpointBuilderProps {
   lessonID: string
   lessonPlans?: LessonPlansProps[] | null
   updateLessonPlan: (plan: LessonPlansProps[]) => void
+  setUnsavedChanges?: (val: boolean) => void
+  activeStep?: string
 }
 
 // TODO: Replace type any with actual type wherever required.
@@ -33,7 +35,7 @@ interface CheckpointBuilderProps {
 
 
 const CheckpointBuilder = (props: CheckpointBuilderProps) => {
-  const { designersList, lessonID, lessonPlans, updateLessonPlan } = props;
+  const { designersList, lessonID, lessonPlans, updateLessonPlan, setUnsavedChanges, activeStep } = props;
 
   const initialCheckpData = {
     title: '',
@@ -96,6 +98,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           setSelectedDesigners={setSelectedDesigners}
           checkpQuestions={checkpQuestions}
           setCheckpQuestions={setCheckpQuestions}
+          setUnsavedChanges={setUnsavedChanges}
         />;
 
       case 'EditCheckPoint':
@@ -189,7 +192,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           instructionHtml: results.instructions,
           language: selectedLanguage,
           checkpQuestions: results?.questions?.items,
-          estTime: results?.estTime
+          estTime: results?.estTime?.toString()
         });
         setSelectedDesigners(designers);
         const checkpointQuestions = results?.questions?.items;
@@ -425,6 +428,15 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
   useEffect(() => {
     setParentLessonPlans(lessonPlans);
   }, [lessonPlans])
+
+  useEffect(() => {
+    if (builderStep === 'AddNewCheckPoint' && (checkpointDetails?.title || checkpointDetails?.label)) {
+      return function cleanup() {
+        setUnsavedChanges(true);
+        console.log("bye from the component")
+      }
+    }
+  }, [activeStep, checkpointDetails?.title])
 
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>

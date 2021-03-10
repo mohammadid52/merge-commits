@@ -37,28 +37,29 @@ export interface Syllabus {
 
 export interface Lesson {
   id: string;
-  open: boolean;
+  open?: boolean;
   status?: string;
-  openedAt: string;
-  closedAt: string;
-  complete: boolean;
-  roster: string[];
-  viewing: any;
-  startDate: string;
-  endDate: string;
+  openedAt?: string;
+  closedAt?: string;
+  complete?: boolean;
+  roster?: string[];
+  viewing?: any;
+  startDate?: string;
+  endDate?: string;
   SELStructure?: string;
-  courseID: string;
-  lessonID: string;
-  lesson: {
+  courseID?: string;
+  lessonID?: string;
+  lesson?: {
     id?: string;
     type?: string;
-    title: string;
+    title?: string;
     artist?: any;
-    language: string;
-    summary: string;
+    language?: string;
+    summary?: string;
+    purpose?: string;
   };
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface LessonProps extends DashboardProps {
@@ -249,13 +250,13 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
        *  TOP WIDGET BAR
        *  - Hide for teacher
        */}
-      {/*{!isTeacher && (
+      {!isTeacher && (
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 pb-4 m-auto`}>
             <TopWidgetBar />
           </div>
         </div>
-      )}*/}
+      )}
 
       {/**
        *  ASSESSMENTS/SURVEYS

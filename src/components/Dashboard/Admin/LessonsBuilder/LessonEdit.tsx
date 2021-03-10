@@ -18,6 +18,7 @@ import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
 import PreviewForm from './StepActionComponent/PreviewForm';
 import { InitialData } from './LessonBuilder';
 import { languageList } from '../../../../utilities/staticData'
+import ModalPopUp from '../../../Molecules/ModalPopUp';
 
 interface LessonEditProps {
   designersList: any[]
@@ -80,6 +81,11 @@ const LessonEdit = (props: LessonEditProps) => {
   // const [activeStep, setActiveStep] = useState('Builder');
   const [activeStep, setActiveStep] = useState('Overview');
   const [loading, setLoading] = useState(false);
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    message: "You have unsaved changes, do you still want to continue?"
+  });
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
@@ -108,6 +114,21 @@ const LessonEdit = (props: LessonEditProps) => {
   ];
   const goBack = () => {
     history.push('/dashboard/lesson-builder')
+  }
+
+  const gobackToLessonsList = () => {
+    if (activeStep === 'Builder' && unsavedChanges) {
+      toggleModal();
+    } else {
+      history.goBack();
+    }
+  }
+
+  const toggleModal = () => {
+    setWarnModal({
+      ...warnModal,
+      show: !warnModal.show
+    });
   }
 
   const fetchMeasurementList = async () => {
@@ -217,7 +238,10 @@ const LessonEdit = (props: LessonEditProps) => {
           lessonPlans={savedLessonDetails.lessonPlans}
           updateLessonPlan={updateLessonPlan}
           designersList={designersList}
-          lessonID={lessonId || assessmentId} />;
+          lessonID={lessonId || assessmentId}
+          setUnsavedChanges={setUnsavedChanges}
+          activeStep={activeStep}
+        />;
       case 'Preview Details':
         return <PreviewForm />;
       // default:
@@ -240,7 +264,7 @@ const LessonEdit = (props: LessonEditProps) => {
       <div className="flex justify-between">
         <SectionTitle title="LESSON PLAN BUILDER" subtitle="Build lessons, surveys or assessments here." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons btnClass="mr-4" onClick={gobackToLessonsList} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -265,6 +289,7 @@ const LessonEdit = (props: LessonEditProps) => {
             </div>
           </div>
         </div>
+        {warnModal.show && <ModalPopUp closeAction={toggleModal} saveAction={history.goBack} saveLabel='Yes' message={warnModal.message} />}
       </PageWrapper>
     </div>
   )

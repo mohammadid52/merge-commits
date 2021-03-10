@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Banner from './Banner';
+import { LessonContext } from '../../../contexts/LessonContext';
 
 interface InstructionBlockProps {
   isTeacher?: boolean;
@@ -9,53 +10,28 @@ interface InstructionBlockProps {
 }
 
 const InstructionsBlock = (props: InstructionBlockProps) => {
+  const {theme} = useContext(LessonContext);
   const { isTeacher, titleVisible, instructionsTitle, instructions } = props;
-  const quickRepair = (str: string) => {
-    if(str){
-      return str.replace('color: black', 'color: white');
-    } else return '';
-  }
 
   return (
     <>
       {/**
-       * DISPLAY DEFAULT TITLE...
+       * DISPLAY PROPS TITLE...
        */}
-   {/* {
-      (titleVisible === undefined && !instructionsTitle) ?
-        (
-          <Banner subtitle={`Instructions`} />
-        ) :
-        null
-    }*/}
-    {/**
-     * DISPLAY PROPS TITLE...
-     */}
-    {
-      (titleVisible && instructionsTitle) ?
-        (
-          <Banner subtitle={instructionsTitle} />
-        ) :
-        null
-    }
-    {/**
-     * ARRAY OF INSTRUCTIONS...
-     */}
-    {
-      Array.isArray(instructions) && instructions.map((inst: any, key: number) => (
-        <p key={key} className='mb-1 text-gray-100' dangerouslySetInnerHTML={{ __html: quickRepair(inst) }}>
-        </p>
-      ))
-    }
-    {/**
-     * STRING OF INSTRUCTIONS...
-     */}
-    {
-      typeof instructions === 'string' && (
-        <p className='mb-1 text-gray-100' dangerouslySetInnerHTML={{ __html: instructions }}>
-        </p>
-      )
-    }
+      {titleVisible && instructionsTitle ? <Banner titleSection={instructionsTitle} /> : null}
+      {/**
+       * ARRAY OF INSTRUCTIONS...
+       */}
+      {Array.isArray(instructions) &&
+        instructions.map((inst: any, key: number) => (
+          <p key={key} className={`mb-1 text-gray-100 ${theme.elem.text}`} dangerouslySetInnerHTML={{ __html: inst }}></p>
+        ))}
+      {/**
+       * STRING OF INSTRUCTIONS...
+       */}
+      {typeof instructions === 'string' && (
+        <p className={`mb-1 text-gray-100 ${theme.elem.text}`} dangerouslySetInnerHTML={{ __html: instructions }}></p>
+      )}
     </>
   );
 };

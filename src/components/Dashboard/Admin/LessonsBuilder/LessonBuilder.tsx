@@ -6,6 +6,7 @@ import { FaRegEye, FaQuestionCircle } from 'react-icons/fa';
 
 import * as customQueries from '../../../../customGraphql/customQueries';
 
+import ModalPopUp from '../../../Molecules/ModalPopUp';
 import Buttons from '../../../Atoms/Buttons';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
@@ -87,6 +88,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [lessonId, setLessonId] = useState('');
   const [activeStep, setActiveStep] = useState('Overview');
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    message: "You have unsaved changes, do you still want to continue?"
+  });
+
   const changeLessonType = (type: string) => {
     if (type === 'lesson') {
       setLessonBuilderSteps(lessonScrollerStep);
@@ -119,7 +126,14 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           lessonType={formData.type?.value}
         />;
       case 'Builder':
-        return <CheckpointBuilder lessonPlans={savedLessonDetails?.lessonPlans} designersList={designersList} lessonID={lessonId} updateLessonPlan={updateLessonPlan} />;
+        return <CheckpointBuilder
+          lessonPlans={savedLessonDetails?.lessonPlans}
+          designersList={designersList}
+          lessonID={lessonId}
+          updateLessonPlan={updateLessonPlan}
+          setUnsavedChanges={setUnsavedChanges}
+          activeStep={activeStep}
+        />;
       case 'Preview Details':
         return <PreviewForm />;
       // default:
@@ -135,7 +149,20 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   }
 
+  const gobackToLessonsList = () => {
+    if (activeStep === 'Builder' && unsavedChanges) {
+      toggleModal();
+    } else {
+      history.goBack();
+    }
+  }
 
+  const toggleModal = () => {
+    setWarnModal({
+      ...warnModal,
+      show: !warnModal.show
+    });
+  }
   const fetchMeasurementList = async () => {
     try {
       let list: any = await API.graphql(graphqlOperation(customQueries.listRubrics));
@@ -198,7 +225,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       <div className="flex justify-between">
         <SectionTitle title="LESSON PLAN BUILDER" subtitle="Build lessons, surveys or assessments here." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons btnClass="mr-4" onClick={gobackToLessonsList} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -221,6 +248,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
           </div>
         </div>
+        {warnModal.show && <ModalPopUp closeAction={toggleModal} saveAction={history.goBack} saveLabel='Yes' message={warnModal.message} />}
       </PageWrapper>
     </div>
   )

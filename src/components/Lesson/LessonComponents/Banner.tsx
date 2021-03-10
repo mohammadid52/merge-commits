@@ -71,15 +71,15 @@ const Banner = (props: BannerProps) => {
 
       {
         titleSection && (
-          <h3 className={`w-full text-2xl ${theme.banner} font-semibold`}>
+          <h2 className={`w-full text-xl font-semibold ${theme.banner} ${theme.underline}`}>
             <span dangerouslySetInnerHTML={{ __html: titleSection }} />
-          </h3>
+          </h2>
         )
       }
 
       {
         subtitleSection && !subtitleSection2 && (
-          <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
+          <h3 className={`w-full text-xl border-b-4 border-sea-green ${theme.banner} ${theme.underline}`}>
             <span dangerouslySetInnerHTML={{ __html: subtitleSection }}/>
           </h3>
         )
@@ -87,7 +87,7 @@ const Banner = (props: BannerProps) => {
 
       {
         subtitleSection && subtitleSection2 && (
-          <h3 className={`w-full flex text-xl ${theme.banner} border-b-4 border-sea-green`}>
+          <h3 className={`w-full flex text-xl border-b-4 border-sea-green ${theme.banner}`}>
             <span className={`w-auto font-semibold`}>{subtitleSection}</span>
             <span className={`w-auto ml-2`} >{subtitleSection2}</span>
           </h3>
