@@ -20,7 +20,7 @@ const MainSummary = (props: LessonCardProps) => {
             </span>
       </h1>
       <p className='overflow-ellipsis overflow-hidden ... text-sm text-left'
-         dangerouslySetInnerHTML={{ __html: lessonProps.lesson && lessonProps.lesson.summary ? lessonProps.lesson.summary : '' }}>
+         dangerouslySetInnerHTML={{ __html: lessonProps.lesson && lessonProps.lesson?.purpose ? lessonProps.lesson?.purpose : '' }}>
       </p>
     </div>
   );
