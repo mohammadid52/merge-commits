@@ -3,8 +3,8 @@ import { LessonCardProps } from '../../Classroom';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 const MainSummary = (props: LessonCardProps) => {
-  const {theme} = useContext(GlobalContext)
-  const {lessonType, lessonProps} = props;
+  const { theme } = useContext(GlobalContext);
+  const { lessonType, lessonProps } = props;
 
   const reverseDateString = () => {
     if (lessonProps.hasOwnProperty('endDate')) {
@@ -19,11 +19,19 @@ const MainSummary = (props: LessonCardProps) => {
               {lessonProps.complete && lessonProps.endDate ? 'Completed on ' + reverseDateString() : ''}
             </span>
       </h1>
-      <p className='overflow-ellipsis overflow-hidden ... text-sm text-left'
-         dangerouslySetInnerHTML={{ __html: lessonProps.lesson && lessonProps.lesson.summary ? lessonProps.lesson.summary : '' }}>
-      </p>
+      {
+        lessonType === 'survey' ? (
+          <p className='overflow-ellipsis overflow-hidden ... text-sm text-left'
+             dangerouslySetInnerHTML={{ __html: lessonProps.lesson && lessonProps.lesson?.purpose ? lessonProps.lesson?.purpose : '' }}>
+          </p>
+        ) : (
+          <p className='overflow-ellipsis overflow-hidden ... text-sm text-left'
+             dangerouslySetInnerHTML={{ __html: lessonProps.lesson && lessonProps.lesson?.summary ? lessonProps.lesson?.summary : '' }}>
+          </p>
+        )
+      }
     </div>
   );
-}
+};
 
 export default MainSummary;

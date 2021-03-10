@@ -62,8 +62,8 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
 
           <Banner
             isTeacher={isTeacher}
-            subtitleSection={`${info.subtitle}`}
-            subtitleSection2={`${info && info.title ? ` - ( ${info.title} ) `: null}`}
+            subtitleSection={`${info && info.title ?  info.title : null}`}
+            subtitleSection2={`- ( ${info.subtitle} )`}
           />
 
           <InstructionBlock
