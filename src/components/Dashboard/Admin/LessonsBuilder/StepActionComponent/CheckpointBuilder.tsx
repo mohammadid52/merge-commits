@@ -189,7 +189,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           instructionHtml: results.instructions,
           language: selectedLanguage,
           checkpQuestions: results?.questions?.items,
-          estTime: results?.estTime
+          estTime: results?.estTime?.toString()
         });
         setSelectedDesigners(designers);
         const checkpointQuestions = results?.questions?.items;

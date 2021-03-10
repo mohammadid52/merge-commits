@@ -2,6 +2,8 @@ import React, { Fragment, useEffect, useState, useContext } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api';
 
 import * as queries from '../../../../../../graphql/queries';
+import * as customQueries from '../../../../../../customGraphql/customQueries';
+
 import { createFilterToFetchSpecificItemsOnly } from '../../../../../../utilities/strings';
 import Buttons from '../../../../../Atoms/Buttons';
 import { getTypeString } from '../../../../../../utilities/strings';
@@ -29,24 +31,25 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
   const fetchCheckpointQuestions = async () => {
     try {
       setLoading(true);
-      const fetchCheckpointsData: any = await API.graphql(graphqlOperation(queries.getCheckpoint, {
+      const fetchCheckpointsData: any = await API.graphql(graphqlOperation(customQueries.getCheckpointDetails, {
         id: checkpointId
-      })
-      );
+      }));
+      let questionSequence: any = await API.graphql(graphqlOperation(queries.getCSequences,
+        { id: `Ch_Ques_${checkpointId}` }));
+      questionSequence = questionSequence?.data.getCSequences?.sequence || []
       if (!fetchCheckpointsData) {
         setError(true);
         throw new Error('fail!');
       } else {
-        const checkpointQuestions = fetchCheckpointsData.data?.getCheckpoint.questions?.items;
+        const checkpointQuestions = fetchCheckpointsData.data?.getCheckpoint?.questions?.items;
         const quesionsListIds = checkpointQuestions.map((item: { questionID: string }) => item.questionID);
-        if (quesionsListIds?.length > 0) {
-
-          const results: any = await API.graphql(graphqlOperation(queries.listQuestions, {
-            filter: { ...createFilterToFetchSpecificItemsOnly(quesionsListIds, 'id') }
-          }));
-          const questionsList: any = results.data.listQuestions.items
-
-          setQuestionsList(questionsList);
+        if (checkpointQuestions?.length > 0) {
+          const questionsList: any = checkpointQuestions.map((item: any) => item.question);
+          let list = questionsList.map((t: any) => {
+            let index = questionSequence.indexOf(t.id)
+            return { ...t, index }
+          }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+          setQuestionsList(list);
         }
         else {
           setQuestionsList([])
