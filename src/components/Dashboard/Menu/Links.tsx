@@ -164,16 +164,16 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
-              title: sideBarLinksDict[userLanguage].ANTHOLOGY,
-              name: sideBarLinksDict[userLanguage].ANTHOLOGY,
-              label: 'Anthology',
-              path: 'anthology',
-            },
-            {
               title: sideBarLinksDict[userLanguage].CLASSROOM,
               name: sideBarLinksDict[userLanguage].CLASSROOM,
               label: 'Classroom',
               path: 'classroom',
+            },
+            {
+              title: sideBarLinksDict[userLanguage].ANTHOLOGY,
+              name: sideBarLinksDict[userLanguage].ANTHOLOGY,
+              label: 'Anthology',
+              path: 'anthology',
             }
           ]
         })
