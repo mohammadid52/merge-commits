@@ -67,7 +67,7 @@ const SmallLessonCard = (props: LessonCardProps) => {
               <div
                 className="tracking-widest border-b text-gray-300 border-ketchup"
                 style={{ textShadow: '1px 1px black' }}>
-                FEATURED ARTIST
+                FEATURED PERSON
               </div>
             </div>
 
