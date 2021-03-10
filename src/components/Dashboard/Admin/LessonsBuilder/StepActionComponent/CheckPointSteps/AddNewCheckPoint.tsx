@@ -33,6 +33,7 @@ export interface AddNewCheckPointProps {
   checkpQuestions: any[]
   setCheckpQuestions: (val: any[]) => void
   previouslySelectedId?: string[]
+  setUnsavedChanges?: Function
 }
 export interface InitialData {
   id?: string
@@ -65,6 +66,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     selectedDesigners,
     setSelectedDesigners,
     checkpQuestions,
+    setUnsavedChanges,
     setCheckpQuestions
   } = props;
 
@@ -362,6 +364,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
         });
         setLoading(false)
       }
+      setUnsavedChanges(false);
     }
   }
 
