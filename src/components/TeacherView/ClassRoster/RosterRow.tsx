@@ -114,7 +114,9 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     <div
       key={keyProp}
       id={`${id}`}
-      onClick={active && handleRowSelection}
+      // onClick={active ? handleRowSelection : undefined}
+      onMouseDown={active ? handleRowSelection : undefined}
+      draggable={false}
       className={`w-full flex h-10 py-2 pl-2 pr-1 
                     ${ active && activeHoverClass} 
                     ${ !active && inactiveTextClass }
@@ -123,17 +125,18 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
                     `}>
 
       {/* STUDENT NAME */}
-      <div id={`${id}`} className={`w-8/10 flex flex-row ${ active && activeHoverClass}`}>
+      <div id={`${id}`} draggable={false} className={`w-8/10 flex flex-row select-none ${ active && activeHoverClass} `}>
         <div
           id={`${id}`}
-          className={`w-1/2 overflow-hidden mx-2 flex items-center text-sm whitespace-pre truncate ... ${ active && activeHoverClass} `}>
+          draggable={false}
+          className={`w-1/2 overflow-hidden mx-2 flex items-center pointer-events-none text-sm whitespace-pre truncate ... ${ active && activeHoverClass} `}>
           {preferredName ? preferredName : firstName} {lastName}
         </div>
 
-        {/* LESSON PROGRESS */}
         <div
           id={`${id}`}
-          className={`w-1/2 mx-2 flex justify-center items-center overflow-hidden text-sm text-left ${ active && activeHoverClass}`}>
+          draggable={false}
+          className={`w-1/2 mx-2 flex justify-center items-center pointer-events-none overflow-hidden text-sm text-left ${ active && activeHoverClass}`}>
           <ProgressSwitch label={getPageLabel(currentLocation)} id={id} />
         </div>
       </div>
@@ -145,6 +148,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
           <div
             aria-label={`asd`}
             id={`${id}`}
+            draggable={false}
             className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-red hover:bg-red-500 text-sm ${ active && activeHoverClass}`}
             onClick={handleQuitShare}>
             <span id={`${id}`}>Unshare</span>
@@ -153,6 +157,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
           <div
             aria-label={`asd`}
             id={`${id}`}
+            draggable={false}
             className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-sea-green hover:bg-green-400 text-sm ${ active && activeHoverClass}`}
             onClick={handleShareStudentData}>
             <span id={`${id}`}>Share</span>
@@ -160,14 +165,16 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
         ) : (
           <div
             id={`${id}`}
-            className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-sea-green text-sm ${ active && activeHoverClass} `}>
+            draggable={false}
+            className={`w-2/10 mx-2 flex items-center select-none text-center rounded-lg text-sea-green text-sm ${ active && activeHoverClass} `}>
             <span id={`${id}`}>Shareable</span>
           </div>
         )
       ) : (
         <div
           id={`${id}`}
-          className={`w-2/10 mx-2 flex items-center text-center rounded-lg text-sm ${active && 'cursor-pointer text-light-gray'}`}>
+          draggable={false}
+          className={`w-2/10 mx-2 flex items-center select-none text-center rounded-lg text-sm ${active && 'cursor-pointer text-light-gray'}`}>
           <span id={`${id}`}>N/A</span>
         </div>
       )}

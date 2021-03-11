@@ -139,7 +139,8 @@ const ClassRoster = (props: classRosterProps) => {
     const personLocationSubscription = API.graphql(graphqlOperation(subscriptions.onChangePersonLocation, { syllabusLessonID: syllabusLessonID })).subscribe({
       next: (locationData: any) => {
         const updatedStudent = locationData.value.data.onChangePersonLocation;
-        console.log('new location receveid...')
+
+        console.log('new location: ', updatedStudent)
         setUpdatedStudent(updatedStudent);
       },
     });
@@ -150,11 +151,13 @@ const ClassRoster = (props: classRosterProps) => {
 
   // Update the student roster
   useEffect(() => {
+    console.log('current location: ', state.studentViewing?.studentInfo?.currentLocation)
     const updateStudentRoster = (newStudent: any) => {
       const studentExists =
         personLocationStudents.filter((student: any) => student.personAuthID === newStudent.personAuthID).length > 0;
 
       if (studentExists) {
+        // console.log('student exists YES', ' --> update loc')
         const existRoster = personLocationStudents.map((student: any) => {
           if (student.personAuthID === newStudent.personAuthID) {
             return { ...student, currentLocation: newStudent.currentLocation };
@@ -166,6 +169,7 @@ const ClassRoster = (props: classRosterProps) => {
         dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: existRoster } });
         setUpdatedStudent({});
       } else {
+        // console.log('student exists NO', ' --> update loc')
         const newRoster = [...personLocationStudents, newStudent];
         setPersonLocationStudents(newRoster);
         dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: newRoster } });
@@ -183,6 +187,7 @@ const ClassRoster = (props: classRosterProps) => {
       return student.personAuthID === id;
     });
 
+    // console.log('row ID : ', id)
     setViewedStudent(id);
     dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] });
   };
