@@ -16,27 +16,27 @@ const ProgressLabels = ({label, id}: LabelProps) => {
 
     switch (label) {
         case 'n/a':
-            return <div id={id}>{lessonPlannerDict[userLanguage]['NA']}</div>;
+            return <div id={id} draggable={false} className={`pointer-events-none`}>{lessonPlannerDict[userLanguage]['NA']}</div>;
         case 'intro':
-            return <div id={id}>{lessonPlannerDict[userLanguage]['INTRO']}</div>;
+            return <div id={id} draggable={false} className={`pointer-events-none`}>{lessonPlannerDict[userLanguage]['INTRO']}</div>;
         case 'warmup': 
-            return <div id={id}>{lessonPlannerDict[userLanguage]['WARM_UP']}</div>;
+            return <div id={id} draggable={false} className={`pointer-events-none`}>{lessonPlannerDict[userLanguage]['WARM_UP']}</div>;
         case 'warmup/breakdown':
-            return <div id={id}>{lessonPlannerDict[userLanguage]['WARMUP_BREAKDOWN']}</div>;
+            return <div id={id} draggable={false} className={`pointer-events-none`}>{lessonPlannerDict[userLanguage]['WARMUP_BREAKDOWN']}</div>;
         case 'corelesson':
-            return <div id={id}>{lessonPlannerDict[userLanguage]['CORE_LESSON']}</div>;
+            return <div id={id} draggable={false} className={`pointer-events-none`}>{lessonPlannerDict[userLanguage]['CORE_LESSON']}</div>;
         case 'corelesson/breakdown':
-            return <div id={id}>{lessonPlannerDict[userLanguage]['CORELESSON_BREAKDOWN']}</div>;
+            return <div id={id} draggable={false} className={`pointer-events-none`}>{lessonPlannerDict[userLanguage]['CORELESSON_BREAKDOWN']}</div>;
         case 'activity':
-            return <div id={id}>{lessonPlannerDict[userLanguage]['ACTIVITY']}</div>;
+            return <div id={id} draggable={false} className={`pointer-events-none`}>{lessonPlannerDict[userLanguage]['ACTIVITY']}</div>;
         case 'activity/breakdown':
-            return <div id={id}>{lessonPlannerDict[userLanguage]['ACTIVITY_BREAKDOWN']}</div>;
+            return <div id={id} draggable={false} className={`pointer-events-none`}>{lessonPlannerDict[userLanguage]['ACTIVITY_BREAKDOWN']}</div>;
         case 'checkpoint?id=1':
-            return <div id={id}>{lessonPlannerDict[userLanguage]['CHECKPOINT']}</div>;
+            return <div id={id} draggable={false} className={`pointer-events-none`}>{lessonPlannerDict[userLanguage]['CHECKPOINT']}</div>;
         case 'breakdown':
-            return <div id={id}>{lessonPlannerDict[userLanguage]['BREAKDOWN']}</div>;
+            return <div id={id} draggable={false} className={`pointer-events-none`}>{lessonPlannerDict[userLanguage]['BREAKDOWN']}</div>;
         case 'outro':
-            return <div id={id}>{lessonPlannerDict[userLanguage]['OUTRO']}</div>;
+            return <div id={id} draggable={false} className={`pointer-events-none`}>{lessonPlannerDict[userLanguage]['OUTRO']}</div>;
         default: 
         return null;  
     }

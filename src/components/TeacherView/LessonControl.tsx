@@ -83,9 +83,7 @@ const LessonControl = () => {
         if(currentLocationDefined){
           history.push(`${match.url}/${state.pages[state.studentViewing.studentInfo.currentLocation]?.stage}`);
         }
-      }
-
-      if (!hasCurrentLocation) {
+      } else if (!hasCurrentLocation) {
         if(lessonProgressDefined) {
           history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`);
         }
