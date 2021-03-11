@@ -13,7 +13,7 @@ const MainSummary = (props: LessonCardProps) => {
   };
   return (
     <div className={`${lessonType !== 'survey' ? 'h-44' : 'h-auto'} p-4 flex flex-col justify-start items-center`}>
-      <h1 className={`${theme.lessonCard.title}`}>
+      <h1 className={`${theme.lessonCard.title} mb-2`}>
         <span>{lessonProps.lesson && lessonProps.lesson.title ? lessonProps.lesson.title : null}</span>
         <span className={`text-right ${theme.lessonCard.subtitle}`}>
               {lessonProps.complete && lessonProps.endDate ? 'Completed on ' + reverseDateString() : ''}
