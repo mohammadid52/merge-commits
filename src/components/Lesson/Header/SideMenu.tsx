@@ -78,7 +78,7 @@ const SideMenu = (props: LessonHeaderBarProps) => {
 
   return (
     <>
-      <div className={`absolute w-auto content-end px-6`}>
+      <div className={`absolute w-auto content-end px-6 ${state.data.lesson.type === 'survey' ? 'mt-20' : ''}`}>
 
         {/**
          * AUTOSAVE

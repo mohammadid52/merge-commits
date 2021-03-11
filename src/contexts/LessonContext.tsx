@@ -206,7 +206,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
    * checkpoints in their name
    */
   const getAllCheckpoints = async () => {
-    const allCheckpointIDS = state.data.lessonPlan.reduce((acc: string[], lessonPlanObj: any) => {
+    const allCheckpointIDS = state.data.lessonPlan.reduce((acc: string[], lessonPlanObj: any, i: number) => {
       const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
       if (isCheckpoint) {
         return [...acc, lessonPlanObj.stage.match(/checkpoint\?id=(.*)/)[1]];
@@ -214,16 +214,23 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         return acc;
       }
     }, []);
-
     if (allCheckpointIDS.length > 0) {
-      console.log('allcheckpoints -> ', allCheckpointIDS)
       try {
         const checkpoints: any = await API.graphql(graphqlOperation(customQueries.listCheckpoints, {
           filter: { ...createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id') },
         }));
 
-        const itemsReversed = checkpoints.data.listCheckpoints.items.reverse();
-        const listCheckpoints = {...checkpoints.data.listCheckpoints, items: itemsReversed}
+
+
+        const items = checkpoints.data.listCheckpoints.items;
+        const orderCorrected = allCheckpointIDS.map((checkpointID: string, idx: number) => {
+          const pickCheckpointObj = items.find((targetCheckpointObj: any) => targetCheckpointObj.id === checkpointID)
+          return pickCheckpointObj;
+        })
+
+        // console.log('checkpoints --> ', items)
+        // console.log('checkpoints --> ordered --> ',orderCorrected)
+        const listCheckpoints = {...checkpoints.data.listCheckpoints, items: orderCorrected}
 
         setLesson({ ...lesson, lesson: { ...lesson.lesson, checkpoints:  listCheckpoints}});
 
@@ -338,16 +345,29 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   }
 
   // Collect and fetch checkpoints when lesson loaded
+  // useEffect(() => {
+  //   const getAdditionalLessonData = async () => {
+  //     if (state.data && state.data.lessonPlan) {
+  //       await getAllCheckpoints();
+  //     }
+  //   };
+  //   if (!checkpointsLoaded) {
+  //     getAdditionalLessonData();
+  //   }
+  // }, [state.data.lesson]);
+
   useEffect(() => {
     const getAdditionalLessonData = async () => {
       if (state.data && state.data.lessonPlan) {
         await getAllCheckpoints();
       }
     };
-    if (!checkpointsLoaded) {
+    if (!checkpointsLoaded && state.status === 'loaded') {
       getAdditionalLessonData();
     }
-  }, [state.data.lesson]);
+  }, [state.status]);
+
+
 
   // Init questionData in DB if necessary
   useEffect(() => {
