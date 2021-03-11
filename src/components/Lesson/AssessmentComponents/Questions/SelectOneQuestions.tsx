@@ -39,7 +39,7 @@ const SelectOneQuestions = (props: QuestionProps) => {
               {question.question.question}
             </p>
           </label>
-          <div className={'grid grid-cols-4 gap-4 max-w-200 mx-auto'}>
+          <div className={'w-auto flex flex-wrap mx-auto'}>
             {question.question.options.map(
               (
                 option: {
@@ -52,7 +52,7 @@ const SelectOneQuestions = (props: QuestionProps) => {
               ) => {
                 return (
                   <div key={`question_${questionId}_${questionOptionIndex}`}
-                       className={`w-3/4 flex justify-center items-center mb-2 mx-4`}>
+                       className={`w-1/5 min-w-48 flex justify-center items-center mb-2 `}>
                     <span
                       id={option.label}
                       className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border 

@@ -52,16 +52,16 @@ const SelectManyQuestions = (props: QuestionProps) => {
           </p>
         </label>
         {/*<div id={question.label} className={'flex'}>*/}
-        <div className={'grid grid-cols-4 gap-4 max-w-200 mx-auto'}>
+        <div className={'w-auto flex flex-wrap mx-auto'}>
           {question.question.options.map(
             (option: { label: string; icon: string; color: string; text: string }, key: any) => (
               <div
                 key={key}
-                className={`w-3/4 flex justify-center items-center mb-2 mx-4`}
+                className={`w-1/5 min-w-48 flex justify-center items-center mb-2 `}
                 onClick={(e) => (!isTeacher ? handleMultiSelect(e) : null)}
                 data-key={questionId}>
                 {input.value.indexOf(`${option.label}`) >= 0 ? (
-                  <label className={`w-3/4 flex justify-center items-center mb-2 mx-4`}>
+                  <label className={`flex justify-center items-center mb-2 `}>
                     <input
                       id={`${option.label}`}
                       data-key={questionId}
@@ -72,7 +72,7 @@ const SelectManyQuestions = (props: QuestionProps) => {
                     <span className={`w-24 ml-2 ${theme.elem.text}`}>{option.text}</span>
                   </label>
                 ) : (
-                  <label className={`w-3/4 flex justify-center items-center mb-2 mx-4`}>
+                  <label className={`flex justify-center items-center mb-2 `}>
                     <input
                       id={`${option.label}`}
                       data-key={questionId}
