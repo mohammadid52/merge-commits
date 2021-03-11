@@ -78,7 +78,7 @@ const SideMenu = (props: LessonHeaderBarProps) => {
 
   return (
     <>
-      <div className={`absolute top-5 right-0 w-auto h-auto flex flex-col justify-end items-center px-6 pt-1`}>
+      <div className={`absolute w-auto content-end px-6`}>
 
         {/**
          * AUTOSAVE
