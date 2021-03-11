@@ -150,6 +150,9 @@ module.exports = {
       'open': ['Open Sans', 'sans-serif'],
     },
     extend: {
+      transitionProperty: {
+        'height': 'height'
+      },
       backgroundImage: (theme) => ({
         'iconoclast-bg':
           "url('https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/iconoclast_frontpage_bg.jpg')",

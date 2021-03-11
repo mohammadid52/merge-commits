@@ -52,7 +52,7 @@ const Keyword = () => {
                 row.length > 0 && (
                   row.map((item: { word: { word: string; definition: string }; wordID: number }, i1: number) => (
                     <div key={`cardKW_${i1}`}
-                         className={`pb-4 pt-4 px-4 mb-4 h-32 hover:h-auto hover:min-h-32 overflow-ellipsis overflow-hidden ... rounded-lg bg-light-gray border-light-gray`}>
+                         className={`pb-4 pt-4 px-4 mb-4 h-32 hover:h-64 hover:min-h-32 transition-height duration-500 ease-in-out overflow-ellipsis overflow-hidden ... rounded-lg bg-light-gray border-light-gray`}>
                       <div className={`h-full overflow-ellipsis overflow-hidden ...`}>
                         <p className={`${theme.elem.title}`}>{item.word.word}:</p>
                         <p className={`${theme.elem.text}`}>{item.word.definition}</p>
