@@ -21,9 +21,11 @@ import * as mutations from '../../../../../graphql/mutations';
 interface StaffBuilderProps {
   instituteId: String
   serviceProviders: { items: { id: string, providerID: string }[] }
+  instName: string
 }
 
 const StaffBuilder = (props: StaffBuilderProps) => {
+  const { instName } = props;
   const { userLanguage, clientKey, theme } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const { staffBuilderDict } = useDictionary(clientKey);
@@ -195,7 +197,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     <div className="py-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{dictionary['TITLE']}</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{instName?.toUpperCase()} {dictionary['TITLE']}</h3>
           {
             !dataLoading ?
               <>
