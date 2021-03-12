@@ -71,7 +71,6 @@ const Story = () => {
 
   return (
     <>
-      {/* <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/> */}
       <div className={theme.section}>
 
         <Banner title={title} iconName={`FaScroll`}/>

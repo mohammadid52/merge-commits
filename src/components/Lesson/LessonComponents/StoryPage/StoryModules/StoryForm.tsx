@@ -5,6 +5,8 @@ import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 const StoryForm = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
+  const labelForm = state.data.lesson?.warmUp?.label;
+
   const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const [input, setInput] = useState({
     title: state.componentState.story && state.componentState.story.title ? state.componentState.story.title : '',
@@ -75,9 +77,9 @@ const StoryForm = () => {
 
   return (
     <div className="w-full h-full rounded-xl">
-      <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>Story </h3>
+      <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>{labelForm}</h3>
       <div className="relative h-full flex flex-col mb-5 mt-2">
-        <label className={`${theme.elem.text}`} htmlFor="title">
+        <label className={`${theme.elem.text} my-2`} htmlFor="title">
           Title
         </label>
 
