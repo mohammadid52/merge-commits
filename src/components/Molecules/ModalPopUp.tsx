@@ -9,10 +9,11 @@ interface ModalProps {
   saveLabel?: string
   onlyInfo?: boolean
   deleteModal?: boolean
+  deleteLabel?: string
 }
 
 const ModalPopUp = (props: ModalProps) => {
-  const { saveAction, closeAction, message, saveLabel, onlyInfo, deleteModal } = props;
+  const { saveAction, closeAction, message, saveLabel, onlyInfo, deleteModal, deleteLabel } = props;
   return (
     <Modal showHeader={true} showHeaderBorder={false} showFooter={false} closeAction={closeAction}>
       <div className="w-168 text-center my-8">
@@ -21,7 +22,7 @@ const ModalPopUp = (props: ModalProps) => {
           {!onlyInfo &&
             <Buttons label="Cancel" btnClass='px-8 py-3 mr-4' onClick={closeAction} transparent />
           }
-          {deleteModal ? <Buttons label='Delete' btnClass='px-10 py-3 ml-4 text-red-600 border-red-600 hover:bg-gray-100 hover:text-red-500' onClick={saveAction} transparent />
+          {deleteModal ? <Buttons label={deleteLabel ? deleteLabel : 'Delete'} btnClass='px-10 py-3 ml-4 text-red-600 border-red-600 hover:bg-gray-100 hover:text-red-500' onClick={saveAction} transparent />
             :
             <Buttons label={saveLabel ? saveLabel : "Save"} btnClass='px-10 py-3 ml-4' onClick={saveAction} />
           }
