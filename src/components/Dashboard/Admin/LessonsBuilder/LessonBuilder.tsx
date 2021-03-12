@@ -44,7 +44,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Lessons', url: '/dashborad/lesson-builder', last: false },
+    { title: 'Lessons', url: '/dashboard/lesson-builder', last: false },
     { title: 'Lesson Plan Builder', url: `${match.url}`, last: true },
   ]
 
