@@ -248,6 +248,10 @@ const LessonEdit = (props: LessonEditProps) => {
       case 'Preview Details':
         return <PreviewForm
           lessonName={formData.name}
+          enablePublish
+          lessonID={lessonId || assessmentId}
+          lessonPlans={savedLessonDetails.lessonPlans}
+          lessonType={formData.type?.value}
         />;
       // default:
       //   return <GeneralInformation

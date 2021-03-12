@@ -140,6 +140,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       case 'Preview Details':
         return <PreviewForm
           lessonName={formData.name}
+          lessonID={lessonId}
+          lessonPlans={savedLessonDetails.lessonPlans}
+          lessonType={formData.type?.value}
         />;
       // default:
       //   return <AddNewLessonForm

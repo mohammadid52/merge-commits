@@ -14,7 +14,6 @@ export const getPerson = /* GraphQL */ `
   }
 `;
 
-
 export const listLessonPlans = /* GraphQL */ `
   query ListClassrooms {
     listClassrooms {
@@ -501,7 +500,7 @@ export const getSyllabusLesson = /* GraphQL */ `
         id
         title
         type
-         instructions
+        instructions
         instructionsTitle
         instructions
         filters
@@ -775,9 +774,9 @@ export const listSyllabusLessons = /* GraphQL */ `
             bio
           }
           summary
-        purpose
-        designers
-        objectives
+          purpose
+          designers
+          objectives
         }
         endDate
         startDate
@@ -1757,11 +1756,7 @@ export const getCheckpointDetails = /* GraphQL */ `
 `;
 
 export const listQuestionDatas = /* GraphQL */ `
-  query ListQuestionDatas(
-    $filter: ModelQuestionDataFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListQuestionDatas($filter: ModelQuestionDataFilterInput, $limit: Int, $nextToken: String) {
     listQuestionDatas(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -1819,6 +1814,99 @@ export const listQuestionDatas = /* GraphQL */ `
         updatedAt
       }
       nextToken
+    }
+  }
+`;
+
+export const getCompleteLesson = /* GraphQL */ `
+  query GetLesson($id: ID!) {
+    getLesson(id: $id) {
+      id
+      title
+      type
+      label
+      instructions
+      instructionsTitle
+      grades
+      artistID
+      language
+      SELStructure
+      connection
+      summary
+      purpose
+      designers
+      objectives
+      checkpoints {
+        items {
+          id
+          lessonID
+          checkpointID
+          position
+          createdAt
+          updatedAt
+          checkpoint {
+            id
+            label
+            title
+            subtitle
+            stage
+            type
+            instructionsTitle
+            instructions
+            questions {
+              items {
+                id
+                checkpointID
+                questionID
+                required
+                question {
+                  id
+                  label
+                  type
+                  question
+                  designers
+                  language
+                  sourceId
+                  note
+                }
+              }
+            }
+            purpose
+            objectives
+            designers
+            language
+            estTime
+          }
+        }
+        nextToken
+      }
+      doFirstID
+      warmUpId
+      coreLessonId
+      filters
+      coverImage
+      summaryTitle
+      introductionTitle
+      introduction
+      connectionTitle
+      lessonPlan {
+        type
+        LessonComponentID
+        sequence
+        stage
+      }
+      measurements {
+        items {
+          id
+          lessonID
+          rubricID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
     }
   }
 `;

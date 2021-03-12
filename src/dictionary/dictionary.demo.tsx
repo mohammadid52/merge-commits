@@ -5,14 +5,18 @@ const BUTTONS: any = {
         ADD_NEW: 'Add New',
         EDIT: 'Edit',
         SAVE: 'Save',
-        CANCEL: 'Cancel'
+        CANCEL: 'Cancel',
+        PUBLISH: 'Publish',
+        YES: 'Yes'
     },
     'ES': {
         ADD: 'Añadir',
         ADD_NEW: 'Añadir nuevo',
         EDIT: 'Edit',
         SAVE: 'Salvar',
-        CANCEL: 'Cancelar'
+        CANCEL: 'Cancelar',
+        PUBLISH: 'TBD',
+        YES: 'TBD'
     }
 }
 
@@ -366,7 +370,7 @@ const lessonPlannerDict: any = {
         ACTIVITY: 'Activity',
         CHECKPOINT: 'Checkpoint',
         OUTRO: 'Outro',
-        BREAKDOWN:'Breakdown',
+        BREAKDOWN: 'Breakdown',
         OTHER_LABELS: {
             STUDDENT_ONLINE: 'Students Online',
             TOPIC: 'Topic',
@@ -382,7 +386,8 @@ const lessonPlannerDict: any = {
                 IN_CLASS: 'In Class',
                 NOT_IN_CLASS: 'Not In Class',
             },
-        },ACCESS_BUTTONS: {
+        },
+        ACCESS_BUTTONS: {
             START: 'Start',
             COMPLETE: 'Complete',
         },
@@ -394,7 +399,7 @@ const lessonPlannerDict: any = {
         ACTIVITY: 'TBD',
         CHECKPOINT: 'TBD',
         OUTRO: 'TBD ',
-        BREAKDOWN:'TBD',
+        BREAKDOWN: 'TBD',
         OTHER_LABELS: {
             STUDDENT_ONLINE: 'Students Online',
             TOPIC: 'Topic',
@@ -409,11 +414,26 @@ const lessonPlannerDict: any = {
             STUDENT_SECTION: {
                 IN_CLASS: 'In Class',
                 NOT_IN_CLASS: 'Not In Class',
-            },ACCESS_BUTTONS: {
+            }, ACCESS_BUTTONS: {
                 START: 'Start',
                 COMPLETE: 'Complete',
             },
         },
+    }
+}
+
+const lessonBuilderDict: any = {
+    'EN': {
+        PREVIEW_DETAILS: {
+            WARN_MESSAGE: 'Publishing your changes will update lesson plans in all the connected unit, Do you want to continue?',
+            TITLE: 'Preview Details',
+        }
+    },
+    'ES': {
+        PREVIEW_DETAILS: {
+            WARN_MESSAGE: 'TBD',
+            TITLE: 'TBD',
+        }
     }
 }
 
@@ -437,5 +457,6 @@ export {
     manageusersDict,
     lessonDict,
     classRoomDict,
-    lessonPlannerDict
+    lessonPlannerDict,
+    lessonBuilderDict
 };

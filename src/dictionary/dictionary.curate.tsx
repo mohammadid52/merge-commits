@@ -5,6 +5,8 @@ const BUTTONS: any = {
     EDIT: 'Edit',
     SAVE: 'Save',
     CANCEL: 'Cancel',
+    PUBLISH: 'Publish',
+    YES: 'Yes'
   },
   'ES': {
     ADD: 'Añadir',
@@ -12,6 +14,8 @@ const BUTTONS: any = {
     EDIT: 'Edit',
     SAVE: 'Salvar',
     CANCEL: 'Cancelar',
+    PUBLISH: 'TBD',
+    YES: 'TBD'
   },
 };
 
@@ -418,6 +422,21 @@ const lessonPlannerDict: any = {
   },
 };
 
+const lessonBuilderDict: any = {
+  'EN': {
+      PREVIEW_DETAILS: {
+          WARN_MESSAGE: 'Publishing your changes will update lesson plans in all the connected unit, Do you want to continue?',
+          TITLE: 'Preview Details',
+      }
+  },
+  'ES': {
+      PREVIEW_DETAILS: {
+          WARN_MESSAGE: 'TBD',
+          TITLE: 'TBD',
+      }
+  }
+}
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -439,4 +458,5 @@ export {
   lessonDict,
   classRoomDict,
   lessonPlannerDict,
+  lessonBuilderDict
 };
