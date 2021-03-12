@@ -12,6 +12,9 @@ interface props {
 
 const StoryForm = (props: props) => {
   const { theme, state } = useContext(LessonControlContext);
+  const labelForm = state.data.lesson?.warmUp?.label;
+  const showTitle = state.data.lesson?.warmUp?.inputs?.title;
+
   const { fullscreen, dataProps } = props;
   const [input, setInput] = useState({
     title: '',
@@ -27,11 +30,16 @@ const StoryForm = (props: props) => {
 
   return (
     <div className="w-full h-full rounded-xl">
-      <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>Story </h3>
+      <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>{labelForm}</h3>
       <div className="relative h-full flex flex-col mb-5 mt-2">
-        <label className={`${theme.elem.text}`} htmlFor="title">
-          Title
-        </label>
+
+        {
+          showTitle && (
+            <label className={`${theme.elem.text} my-2`} htmlFor='title'>
+              Title
+            </label>
+          )
+        }
 
         <input
           id="title"
@@ -40,7 +48,6 @@ const StoryForm = (props: props) => {
           type="text"
           placeholder="La Llorona"
           value={input.title}
-          // onChange={handleInputChange}
         />
         <div className="py-2"></div>
         <textarea
@@ -49,7 +56,6 @@ const StoryForm = (props: props) => {
           name="story"
           placeholder="Write your story here!"
           value={input.story[0]}
-          // onChange={handleInputChange}
         />
       </div>
     </div>

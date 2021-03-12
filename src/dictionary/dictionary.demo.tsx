@@ -297,15 +297,19 @@ const editClassDict: any = {
 }
 
 const lessonDict: any = {
-    'EN': {
+    EN: {
+        CLASS: 'Class',
         TOPIC_CONNECTION: 'SEL Connection',
-        KEYWORDS: 'Keywords'
+        KEYWORDS: 'Keywords',
+        REFLECTION_QUESTIONS: 'Class Discussion',
     },
-    'ES': {
+    ES: {
+        CLASS: 'Class',
         TOPIC_CONNECTION: 'SEL Connection',
-        KEYWORDS: 'Keywords'
-    }
-}
+        KEYWORDS: 'Keywords',
+        REFLECTION_QUESTIONS: 'Class Discussion',
+    },
+};
 
 const classRoomDict: any = {
     'EN': {

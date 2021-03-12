@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
-import ReflectionQuestions from './ReflectionQuestions';
 import LyricsOutput from './LyricsOutput';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 import { getPageLabel } from '../../../../getPageLabel';
 import Banner from '../../../../Lesson/LessonComponents/Banner';
+import ReflectionQuestions from '../../../../Lesson/LessonComponents/ReflectionQuestions';
+
 
 interface props {
   fullscreen: boolean;
 }
 
 const SelfDisplay = (props: props) => {
-  const { fullscreen } = props;
   const { dispatch, state, theme } = useContext(LessonControlContext);
   const [modules, setModules] = useState<Array<any>>();
   const dataProps =
@@ -69,15 +69,12 @@ const SelfDisplay = (props: props) => {
     return setModules(modulesArray);
   }, [state.studentViewing]);
 
-  useEffect(() => {
-    console.log('LyricsBreakdownView: ', modules);
-  }, []);
-
   const { title } = state.data.lesson.coreLesson.content;
+  const questArr = state.data.lesson.activity?.breakdown?.reflectionQuestions;
 
   return (
     <div className={theme.section}>
-      <ReflectionQuestions fullscreen={fullscreen} />
+      <ReflectionQuestions isTeacher={true} questions={questArr}/>
       <Banner isTeacher={true} title={title} iconName={`FaHeadphonesAlt`} />
       <LyricsOutput modules={(modules) ? modules : []} />
     </div>

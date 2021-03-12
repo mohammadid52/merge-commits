@@ -297,12 +297,16 @@ const editClassDict: any = {
 
 const lessonDict: any = {
   'EN': {
+    CLASS: 'Session',
     TOPIC_CONNECTION: 'Objectives',
     KEYWORDS: 'Framing',
+    REFLECTION_QUESTIONS: 'Focus Questions',
   },
   'ES': {
+    CLASS: 'Session',
     TOPIC_CONNECTION: 'SEL Connection',
     KEYWORDS: 'Keywords',
+    REFLECTION_QUESTIONS: 'Focus Questions',
   },
 };
 
