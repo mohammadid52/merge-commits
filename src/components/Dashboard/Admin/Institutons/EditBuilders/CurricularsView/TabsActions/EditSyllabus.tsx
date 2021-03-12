@@ -442,10 +442,13 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   }
 
   useEffect(() => {
-    fetchLessonsList();
-    fetchPersonsList();
-    fetchLessonsSequence();
-    fetchSyllabusData();
+    Promise.all([
+      fetchLessonsList(),
+      fetchPersonsList(),
+      fetchLessonsSequence()
+    ]).then(() =>
+      fetchSyllabusData()
+    ).catch((err) => console.log(err))
   }, []);
 
   useEffect(() => {
