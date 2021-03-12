@@ -40,7 +40,7 @@ const ReflectionQuestions = (props: ReflectionQuestionProps) => {
   };
 
   return (
-    <div className={`${theme.elem.text} ${theme.elem.card} p-2 reflection w-full flex flex-col`}>
+    <div className={`${theme.elem.text} ${theme.elem.card} p-2 mb-4 reflection w-full flex flex-col`}>
       <div className={`w-full`}>
         <div className={`w-full flex flex-row text-xl ${theme.banner} border-b-4 border-sea-green`}>
           <h3>{lessonDict[userLanguage].REFLECTION_QUESTIONS}:</h3>
