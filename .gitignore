@@ -3,7 +3,6 @@
 .gitignore
 node_modules
 public
-package-lock.json
 zjunk
 inspiration
 workspace.xml
