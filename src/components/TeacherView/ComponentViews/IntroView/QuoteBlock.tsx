@@ -72,9 +72,7 @@ const QuoteBlock = (props: props) => {
       <div className='h-full text-left flex flex-col items-start'>
         {/* BIO */}
         <div
-          className={`${
-            heroIsActive ? 'visible overflow-y-auto' : 'hidden'
-          } h-96 w-9/10 flex flex-col justify-start transition-all duration-500 ease-in-out animate-fadeIn overflow-hidden`}>
+          className={`hidden hover:visible h-96 w-9/10 flex flex-col justify-start transition-all duration-500 ease-in-out animate-fadeIn overflow-hidden`}>
           {typeof artistBio !== 'undefined'
             ? artistBio.map((paragraph: string, i: number) => (
                 <p key={`paraBio${i}`} className='mb-2 text-blue-100 text-opacity-75'>
@@ -86,9 +84,7 @@ const QuoteBlock = (props: props) => {
 
         {/* STANDARD HERO TEXT */}
         <div
-          className={`${
-            heroIsActive ? 'hidden' : 'visible'
-          } h-full flex flex-col justify-end transition-all duration-500 ease-in-out animate-fadeIn`}
+          className={`hidden hover:visible h-full flex flex-col justify-end transition-all duration-500 ease-in-out animate-fadeIn`}
           >
           <div className='absolute bottom-0 left-0 p-2 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-xl'>
             <div className='text-xl header-font font-open font-light'>Featured Person:</div>

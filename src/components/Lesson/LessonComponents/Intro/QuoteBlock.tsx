@@ -57,16 +57,18 @@ const QuoteBlock = () => {
 
   return (
     <div
-      className={`relative w-full md:h-96 flex flex-grow items-center p-4 rounded-xl ${theme.block.text} ${heroIsActive ? 'bg-black50' : ''}`}>
+      className={`relative w-full md:h-96 flex flex-grow items-center rounded-xl ${theme.block.text}`}
+      onMouseEnter={toggleHeroDescription}
+      onMouseLeave={toggleHeroDescription}
+      >
       
       {/* READ ICON */}
       <div
         id='read-icon'
-        className='absolute top-1 right-1 w-auto h-auto transition-all duration-500 ease-in-out text-gray-200 hover:text-white'
-        onClick={toggleHeroDescription}>
+        className='absolute top-1 right-1 w-auto h-auto text-gray-200 z-50'
+        >
         <IconContext.Provider value={{ size: '2rem', style: { width: 'auto', cursor: 'pointer' } }}>
           <AiOutlineRead
-            className={`${isToggled.includes('read-icon') && 'animate-jiggle'} hover:animate-jiggle`}
             style={{
               MozUserSelect: 'none',
               WebkitUserSelect: 'none',
@@ -76,17 +78,15 @@ const QuoteBlock = () => {
         </IconContext.Provider>
       </div>
 
-      {/* READ ICON - RIGHT TEXT */}
-      {/*<div className={`${showReadMe ? 'visible' : 'hidden'} absolute w-auto overflow-x-hidden top-1 right-0 transform translate-x-full`}>
-        <p className='animate-bounce ml-2'>&larr; Read Me!</p>
-      </div>*/}
-
-      <div className='h-full text-left flex flex-col mr-8 items-start'>
+      <div className='h-full text-left flex flex-col rounded-xl items-start'>
         {/* BIO */}
         <div
-          className={`${
-            heroIsActive ? 'visible overflow-y-auto' : 'hidden'
-          } h-96 w-full flex flex-col justify-start transition-all duration-500 ease-in-out animate-fadeIn overflow-hidden`}>
+          className={`
+          ${
+            heroIsActive ? 'visible opacity-100 bg-black50 overflow-y-auto' : 'invisible opacity-0'
+          } 
+          h-full w-full flex flex-col justify-start  p-4 transition-all duration-500 ease-in-out overflow-hidden rounded-xl`}>
+          <div className='w-full leading-7 font-semibold'>{artistName}</div>
           {typeof artistBio !== 'undefined'
             ? artistBio.map((paragraph: string, i: number) => (
                 <p key={`paraBio${i}`} className='mb-2 text-blue-100 text-opacity-75'>
@@ -98,9 +98,11 @@ const QuoteBlock = () => {
 
         {/* STANDARD HERO TEXT */}
         <div
-          className={`${
-            heroIsActive ? 'hidden' : 'visible'
-          } h-full flex flex-col justify-end transition-all duration-500 ease-in-out animate-fadeIn`}
+          className={`
+          ${
+            heroIsActive ? 'opacity-0' : 'opacity-100'
+          } 
+          absolute bottom-0 opacity-100 h-full flex flex-col justify-end transition-all duration-500 ease-in-out`}
           >
           <div className='absolute bottom-0 left-0 p-2 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-xl'>
             <div className='text-xl header-font font-open font-light'>Featured Person:</div>
