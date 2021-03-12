@@ -293,10 +293,12 @@ const editClassDict: any = {
 
 const lessonDict: any = {
   'EN': {
+    CLASS: 'Session',
     TOPIC_CONNECTION: 'Objectives',
     KEYWORDS: 'Framing',
   },
   'ES': {
+    CLASS: 'Session',
     TOPIC_CONNECTION: 'SEL Connection',
     KEYWORDS: 'Keywords',
   },

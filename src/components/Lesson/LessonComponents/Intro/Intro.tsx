@@ -6,21 +6,18 @@ import Keyword from './Keyword';
 import DoFirst from './DoFirst';
 import Connect from './Connect';
 import InstructionBlock from '../InstructionBlock';
+import useDictionary from '../../../../customHooks/dictionary';
 
 const Intro = () => {
-  const { dispatch, state, theme } = useContext(LessonContext);
+  const { state,theme,dispatch,clientKey, userLanguage } = useContext(LessonContext);
+  const { lessonDict } = useDictionary(clientKey);
+
   const imgArray = state.data?.lesson?.artist?.images;
   const lessonType = state.data.lesson.type;
 
   useEffect(() => {
     dispatch({ type: 'ACTIVATE_LESSON', payload: '' });
   }, []);
-
-  const quickRepair = (str: string) => {
-    if(str){
-      return str.replace('color: black', 'color: white');
-    } else return '';
-  }
 
   /**
    *
@@ -53,7 +50,6 @@ const Intro = () => {
         className='h-96 flex flex-col mb-4 justify-between items-center bg-cover bg-right-top rounded-xl z-10'
         style={{ backgroundImage: `url(${imgArray ? imgArray[0] : null})` }}>
         <QuoteBlock />
-        {/* <Block /> */}
       </div>
       <Connect />
       <div className='flex flex-col justify-between items-center mt-4'>

@@ -72,7 +72,7 @@ const QuoteBlock = (props: QuoteBlockProps) => {
       {/* READ ICON */}
       <div
         id='read-icon'
-        className='absolute top-1 right-1 w-auto h-auto text-gray-200 z-50'
+        className='absolute top-1 right-1 w-auto h-auto flex flex-row text-gray-200 z-50'
         >
         <IconContext.Provider value={{ size: '2rem', style: { width: 'auto', cursor: 'pointer' } }}>
           <AiOutlineRead
@@ -93,7 +93,7 @@ const QuoteBlock = (props: QuoteBlockProps) => {
             heroIsActive ? 'visible opacity-100 bg-black50 overflow-y-auto' : 'invisible opacity-0'
           } 
           h-full w-full flex flex-col justify-start  p-4 transition-all duration-500 ease-in-out overflow-hidden rounded-xl`}>
-          <div className='w-full leading-7 font-semibold'>{artistName}</div>
+          <p className='w-full leading-7 font-semibold'>{artistName}</p>
           {typeof artistBio !== 'undefined'
             ? artistBio.map((paragraph: string, i: number) => (
                 <p key={`paraBio${i}`} className='mb-2 text-blue-100 text-opacity-75'>

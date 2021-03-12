@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
-import Keyword from './Keyword';
-import Connect from './Connect';
+import Keyword from '../../../Lesson/LessonComponents/Intro/Keyword';
+import Connect from '../../../Lesson/LessonComponents/Intro/Connect';
 import DoFirst from './DoFirst';
 import { getPageLabel } from '../../../getPageLabel';
 import Banner from '../../../Lesson/LessonComponents/Banner';
@@ -32,9 +32,9 @@ const IntroView = (props: props) => {
         <QuoteBlock isTeacher={true}/>
         {/* <Block /> */}
       </div>
-      <Connect fullscreen={fullscreen} />
+      <Connect isTeacher={true} />
       <div className='flex flex-col justify-between items-center mt-4'>
-        <Keyword fullscreen={fullscreen} />
+        <Keyword isTeacher={true}/>
       </div>
       <div className='flex flex-col justify-between items-center mt-4'>
         <DoFirst />

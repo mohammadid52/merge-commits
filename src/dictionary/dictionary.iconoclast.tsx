@@ -292,10 +292,12 @@ const editClassDict: any = {
 
 const lessonDict: any = {
   EN: {
+    CLASS: 'Class',
     TOPIC_CONNECTION: 'SEL Connection',
     KEYWORDS: 'Keywords',
   },
   ES: {
+    CLASS: 'Class',
     TOPIC_CONNECTION: 'SEL Connection',
     KEYWORDS: 'Keywords',
   },
