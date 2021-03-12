@@ -295,11 +295,13 @@ const lessonDict: any = {
     CLASS: 'Class',
     TOPIC_CONNECTION: 'SEL Connection',
     KEYWORDS: 'Keywords',
+    REFLECTION_QUESTIONS: 'Class Discussion',
   },
   ES: {
     CLASS: 'Class',
     TOPIC_CONNECTION: 'SEL Connection',
     KEYWORDS: 'Keywords',
+    REFLECTION_QUESTIONS: 'Class Discussion',
   },
 };
 

@@ -21,9 +21,6 @@ const StoryPage = () => {
       <Route exact path={`${match.url}`}>
         <StoryActivity />
       </Route>
-      {/* <Route>
-                <ErrorPage />
-            </Route> */}
     </Switch>
   );
 };

@@ -19,8 +19,6 @@ const Story = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
   const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const inputs = state.data.lesson.warmUp.inputs;
-  // const video = state.data.lesson.warmUp.instructions.link
-  // const [ openPopup, setOpenPopup ] = useState(false)
 
   useEffect(() => {
     if (!cookies[`lesson-${state.syllabusLessonID}`].story && !state.componentState.story) {
