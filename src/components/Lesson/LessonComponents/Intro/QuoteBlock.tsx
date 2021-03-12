@@ -1,11 +1,18 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineRead } from 'react-icons/ai';
-import PhotoBlock from './PhotoBlock';
 
-const QuoteBlock = () => {
-  const { state, theme } = useContext(LessonContext);
+interface QuoteBlockProps {
+  isTeacher?: boolean;
+}
+
+const QuoteBlock = (props: QuoteBlockProps) => {
+  const {isTeacher} = props;
+  const switchContext = (isTeacher) ? useContext(LessonControlContext) : useContext(LessonContext);
+  const { state, theme } = switchContext;
+
   const [heroIsActive, setHeroIsActive] = useState<boolean>(false);
   const [isToggled, setIsToggled] = useState<string[]>(['']);
   const [showReadMe, setShowReadMe] = useState<boolean>(true);

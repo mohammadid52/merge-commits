@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
-import QuoteBlock from './QuoteBlock';
 import Keyword from './Keyword';
 import Connect from './Connect';
 import DoFirst from './DoFirst';
 import { getPageLabel } from '../../../getPageLabel';
 import Banner from '../../../Lesson/LessonComponents/Banner';
+import QuoteBlock from '../../../Lesson/LessonComponents/Intro/QuoteBlock';
 
 interface props {
   fullscreen: boolean;
@@ -29,7 +29,7 @@ const IntroView = (props: props) => {
       <div
         className='h-96 flex flex-col mb-4 justify-between items-center bg-cover bg-right-top rounded-xl z-10'
         style={{ backgroundImage: `url(${imgArray ? imgArray[0] : null})` }}>
-        <QuoteBlock fullscreen={fullscreen} />
+        <QuoteBlock isTeacher={true}/>
         {/* <Block /> */}
       </div>
       <Connect fullscreen={fullscreen} />
