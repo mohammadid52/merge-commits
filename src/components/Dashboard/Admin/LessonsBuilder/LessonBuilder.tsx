@@ -124,6 +124,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           savedInstructions={savedLessonDetails?.lessonInstructions}
           updateParentState={(obj) => onInstructionSaved(obj)}
           lessonType={formData.type?.value}
+          lessonName={formData.name}
         />;
       case 'Builder':
         return <CheckpointBuilder
@@ -133,9 +134,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           updateLessonPlan={updateLessonPlan}
           setUnsavedChanges={setUnsavedChanges}
           activeStep={activeStep}
+          lessonName={formData.name}
+          lessonType={formData.type?.value}
         />;
       case 'Preview Details':
-        return <PreviewForm />;
+        return <PreviewForm
+          lessonName={formData.name}
+        />;
       // default:
       //   return <AddNewLessonForm
       //     changeLessonType={changeLessonType}
