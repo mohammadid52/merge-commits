@@ -1,5 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, Fragment } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
+import ReactHtmlParser from 'react-html-parser';
 
 import Buttons from '../../../../Atoms/Buttons';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
@@ -63,6 +64,12 @@ const PreviewForm = (props: PreviewFormProps) => {
         isError: true,
         msg: 'Error while updating lesson plans for units, please try again after some time.'
       }))
+    } else {
+      setMessage({
+        ...message,
+        isError: false,
+        msg: 'This lesson is not connected to any units.'
+      });
     }
     toggleModal();
   }
@@ -122,6 +129,18 @@ const PreviewForm = (props: PreviewFormProps) => {
     fetchSyllabusLessonData();
   }, [])
 
+  useEffect(() => {
+    if (message?.msg) {
+      setTimeout(() => {
+        setMessage({
+          ...message,
+          isError: true,
+          msg: ''
+        })
+      }, 3000)
+    }
+  }, [message.msg])
+
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
@@ -132,18 +151,68 @@ const PreviewForm = (props: PreviewFormProps) => {
         <div className="py-20 text-center mx-auto">
           <p>Fetching Lesson checkpoints please wait...</p>
         </div>) :
-        (<div className="p-4">
-          {/* <div>
-            <h3>{lessonDetails?.introductionTitle || ''}</h3>
-            {lessonDetails?.introduction || ''}
-          </div> */}
+        (<Fragment>
+          <div className="p-4 max-h-screen overflow-y-auto">
+            <div className="py-2">
+              <h3 className="font-bold text-gray-900 text-base"> Purpose: </h3>
+              {lessonDetails?.purpose ? ReactHtmlParser(lessonDetails?.purpose) : ''}
+            </div>
+            <div className="py-2">
+              <h3 className="font-bold text-gray-900 text-base"> Objective: </h3>
+              {lessonDetails?.objectives ? ReactHtmlParser(lessonDetails?.objectives[0]) : ''}
+            </div>
+            <div className="py-2">
+              <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.introductionTitle || ''}</h3>
+              <Fragment>
+                {lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.introduction) : ''}
+              </Fragment>
+            </div>
+            <div className="py-2">
+              <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.instructionsTitle || ''}</h3>
+              <Fragment>
+                {lessonDetails?.instructions ? ReactHtmlParser(lessonDetails?.instructions[0]) : ''}
+              </Fragment>
+            </div>
+            <div className="py-2">
+              <h3 className="font-bold text-gray-900 text-base">Checkpoints :</h3>
+              {lessonDetails?.checkpoints?.items?.length > 0 ? (<Fragment>
+                {lessonDetails?.checkpoints?.items?.map((item: any) => (
+                  <Fragment key={item.id}>
+                    <h4 className="font-bold text-gray-900 text-base py-2">{item.checkpoint?.title || ''}<br />
+                      <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
+                    </h4>
+                    <div>
+                      {item.checkpoint?.questions?.items?.length > 0 ? (
+                        <div className="py-2 px-4">
+                          {item.checkpoint?.questions?.items?.map((checkpItem: any, index: number) => (
+                            <p key={checkpItem.id}>
+                              <span>{index + 1}.{checkpItem?.question?.question} </span>
+                            </p>
+                          ))}
+                        </div>) : null}
+                    </div>
+                  </Fragment>
+                ))}
+              </Fragment>) : <p>No Checkpoint added.</p>}
+            </div>
+            <div className="py-2">
+              <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.summaryTitle || ''}</h3>
+              <Fragment>
+                {lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.summary) : ''}
+              </Fragment>
+            </div>
+          </div>
+          {message ? (
+            <div className="py-4 m-auto mt-2 text-center">
+              <p className={`${message.isError ? 'text-red-600' : 'text-green-600'}`}> {message.msg} </p>
+            </div>) : null}
           {enablePublish &&
-            <div className="w-2/10 mx-auto">
-              <Buttons btnClass="" onClick={toggleModal} label={BUTTONS[userLanguage]['PUBLISH']} />
+            <div className="w-2/10 mx-auto py-4">
+              <Buttons btnClass="mx-auto w-full" onClick={toggleModal} label={BUTTONS[userLanguage]['PUBLISH']} />
             </div>
           }
           {warnModal.show && <ModalPopUp closeAction={toggleModal} saveAction={updateAllLessonPlans} saveLabel={BUTTONS[userLanguage]['YES']} message={warnModal.message} />}
-        </div>)
+        </Fragment>)
       }
 
     </div>

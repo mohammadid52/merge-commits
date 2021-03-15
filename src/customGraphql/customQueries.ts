@@ -1541,6 +1541,7 @@ export const listCheckpoints = /* GraphQL */ `
         subtitle
         id
         type
+        language
         questions {
           nextToken
           items {
