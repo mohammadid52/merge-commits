@@ -11,6 +11,8 @@ import * as queries from '../../../../../graphql/queries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 
+import { getTypeString } from '../../../../../utilities/strings';
+
 interface PreviewFormProps {
   lessonName: string
   enablePublish?: boolean
@@ -44,33 +46,25 @@ const PreviewForm = (props: PreviewFormProps) => {
   }
 
   const updateAllLessonPlans = () => {
-    if (relatedUnitsID?.length) {
-      const updatedLessonPlan = lessonPlans.map((item: any) => ({
-        disabled: false,
-        open: lessonType !== 'lesson' ? true : false,
-        active: lessonType !== 'lesson' ? true : false,
-        stage: `checkpoint?id=${item.LessonComponentID}`,
-        type: 'survey',
-        displayMode: 'SELF',
-      }))
-      let updatedPlans: any = Promise.all(
-        relatedUnitsID.map(async (ID: string) => updateLessonPlan(ID, updatedLessonPlan))
-      ).then(res => setMessage({
-        ...message,
-        isError: false,
-        msg: 'Successfully updated lesson plans in all units.'
-      })).catch(err => setMessage({
-        ...message,
-        isError: true,
-        msg: 'Error while updating lesson plans for units, please try again after some time.'
-      }))
-    } else {
-      setMessage({
-        ...message,
-        isError: false,
-        msg: 'This lesson is not connected to any units.'
-      });
-    }
+    const updatedLessonPlan = lessonPlans.map((item: any) => ({
+      disabled: false,
+      open: lessonType !== 'lesson' ? true : false,
+      active: lessonType !== 'lesson' ? true : false,
+      stage: `checkpoint?id=${item.LessonComponentID}`,
+      type: 'survey',
+      displayMode: 'SELF',
+    }))
+    let updatedPlans: any = Promise.all(
+      relatedUnitsID.map(async (ID: string) => updateLessonPlan(ID, updatedLessonPlan))
+    ).then(res => setMessage({
+      ...message,
+      isError: false,
+      msg: 'Successfully updated lesson plans in all units.'
+    })).catch(err => setMessage({
+      ...message,
+      isError: true,
+      msg: 'Error while updating lesson plans for units, please try again after some time.'
+    }))
     toggleModal();
   }
 
@@ -79,6 +73,18 @@ const PreviewForm = (props: PreviewFormProps) => {
       ...warnModal,
       show: !warnModal.show
     })
+  }
+
+  const publishAction = () => {
+    if (relatedUnitsID?.length) {
+      toggleModal();
+    } else {
+      setMessage({
+        ...message,
+        isError: false,
+        msg: 'This lesson is not connected to any units.'
+      });
+    }
   }
 
   const fetchSyllabusLessonData = async () => {
@@ -185,9 +191,18 @@ const PreviewForm = (props: PreviewFormProps) => {
                       {item.checkpoint?.questions?.items?.length > 0 ? (
                         <div className="py-2 px-4">
                           {item.checkpoint?.questions?.items?.map((checkpItem: any, index: number) => (
-                            <p key={checkpItem.id}>
-                              <span>{index + 1}.{checkpItem?.question?.question} </span>
-                            </p>
+                            <Fragment>
+                              <p key={checkpItem.id}>
+                                <span>{index + 1}.{checkpItem?.question?.question} </span>({getTypeString(checkpItem?.question?.type)})
+                              </p>
+                              <div className="px-12">
+                                {(checkpItem?.question?.type === 'selectMany' || checkpItem?.question?.type === 'selectOne') && (
+                                  <ul className="list-disc">
+                                    {checkpItem?.question?.options?.map((opt: any) => (<li >{opt?.text}</li>))}
+                                  </ul>
+                                )}
+                              </div>
+                            </Fragment>
                           ))}
                         </div>) : null}
                     </div>
@@ -208,7 +223,7 @@ const PreviewForm = (props: PreviewFormProps) => {
             </div>) : null}
           {enablePublish &&
             <div className="w-2/10 mx-auto py-4">
-              <Buttons btnClass="mx-auto w-full" onClick={toggleModal} label={BUTTONS[userLanguage]['PUBLISH']} />
+              <Buttons btnClass="mx-auto w-full" onClick={publishAction} label={BUTTONS[userLanguage]['PUBLISH']} />
             </div>
           }
           {warnModal.show && <ModalPopUp closeAction={toggleModal} saveAction={updateAllLessonPlans} saveLabel={BUTTONS[userLanguage]['YES']} message={warnModal.message} />}

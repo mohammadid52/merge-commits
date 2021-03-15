@@ -438,7 +438,7 @@ const lessonPlannerDict: any = {
 const lessonBuilderDict: any = {
   'EN': {
     PREVIEW_DETAILS: {
-      WARN_MESSAGE: 'Publishing your changes will update lesson plans in all the connected unit, Do you want to continue?',
+      WARN_MESSAGE: 'Publishing your changes will update lesson plans in all the connected units, Do you want to continue?',
       TITLE: 'Preview Details',
     }
   },

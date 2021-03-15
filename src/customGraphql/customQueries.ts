@@ -1869,6 +1869,12 @@ export const getCompleteLesson = /* GraphQL */ `
                   language
                   sourceId
                   note
+                  options {
+                    text
+                    label
+                    icon
+                    color
+                  }
                 }
               }
             }
@@ -1906,6 +1912,58 @@ export const getCompleteLesson = /* GraphQL */ `
         }
         nextToken
       }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const getSyllabus = /* GraphQL */ `
+  query GetSyllabus($id: ID!) {
+    getSyllabus(id: $id) {
+      id
+      name
+      type
+      description
+      methodology
+      policies
+      pupose
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          lesson {
+            title
+            measurements {
+              id
+              lessonID
+              rubricID
+              rubric {
+                id
+                name
+                topicID
+              }
+            }
+          }
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      designers
+      status
       createdAt
       updatedAt
     }
