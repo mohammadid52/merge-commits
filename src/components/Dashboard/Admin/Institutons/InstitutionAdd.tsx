@@ -218,7 +218,7 @@ const InstitutionAdd = () => {
             {imageUrl ? (
               <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
                 {!imageLoading ?
-                  <label className="cursor-pointer">
+                  <label className="cursor-pointer flex justify-center">
                     <img
                       className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
                       src={imageUrl}
@@ -252,7 +252,7 @@ const InstitutionAdd = () => {
                   <Loader />}
                 <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
               </label>}
-            <p className="text-gray-600 my-4">{InstitutionAdd[userLanguage]['INFO']}</p>
+            <p className="text-gray-600 my-4">Click circle to manage your avatar.</p>
           </div>
 
 

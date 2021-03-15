@@ -18,6 +18,7 @@ interface ServiceProvidersProps {
   instId: string
   serviceProviders: { items: { id: string, providerID: string, status: string, providerInstitution?: any }[] }
   updateServiceProviders: Function
+  instName: string
 }
 
 const ServiceProviders = (props: ServiceProvidersProps) => {
@@ -26,7 +27,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
   const { spBuilderDict, BUTTONS } = useDictionary(clientKey);
   const dictionary = spBuilderDict[userLanguage]
 
-  const { instId, serviceProviders } = props;
+  const { instId, serviceProviders, instName } = props;
   const existingPartners = serviceProviders.items.map((item: any) => {
     return {
       id: item.id,
@@ -127,7 +128,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
     <div className="p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{dictionary.TITLE}</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{instName?.toUpperCase()} {dictionary.TITLE}</h3>
           <div className="flex items-center w-6/10 m-auto px-2 mb-8">
             <Selector selectedItem={newServPro.value} list={availableServiceProviders} placeholder={dictionary.ADD_PLACEHOLDER} onChange={onServProChange} />
             <Buttons btnClass="ml-4 py-1" label={BUTTONS[userLanguage].ADD} onClick={addPartner} />

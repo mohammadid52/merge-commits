@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
-import Banner from './Banner';
 import ReflectionQuestions from '../../ReflectionQuestions';
 import PoemOutput from './PoemOutput';
+import Banner from '../../Banner';
 
 const SelfDisplay = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
@@ -15,8 +15,16 @@ const SelfDisplay = () => {
 
   return (
     <div className={theme.section}>
-      <ReflectionQuestions questions={state.data.lesson.activity.breakdown.reflectionQuestions}  />
-      <Banner title={typeof displayProps !== 'undefined' ? displayProps.title : 'Your Poem Title :)'} display='SELF' fullscreen={fullscreen} />    
+      <ReflectionQuestions questions={state.data.lesson.activity.breakdown.reflectionQuestions} />
+
+      {/**
+       * HIDE BANNER IF NO TITLE
+       */}
+      {
+        displayProps && displayProps.title && (
+          <Banner title={displayProps.title} iconName={`FaPenFancy`} />
+        )
+      }
       <PoemOutput poem={typeof displayProps !== 'undefined' ? displayProps.editInput : 'Your Poem :)'} />
     </div>
   );

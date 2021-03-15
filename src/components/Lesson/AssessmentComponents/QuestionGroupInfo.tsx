@@ -31,36 +31,49 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
   });
 
   const getQuestionGroupInfo = () => {
-    const getCheckpointObj = state.data.lesson.checkpoints.items.find((checkpointObj: any) => checkpointObj.id === checkpointID);
+    const getCheckpointObj = state.data.lesson.checkpoints.items.find(
+      (checkpointObj: any) => checkpointObj.id === checkpointID
+    );
 
     const quickRepair = (str: string) => {
-      if(str){
+      if (str) {
         return str.replace('color: black', 'color: white');
       } else return '';
-    }
+    };
 
     setInfo({
       title: getCheckpointObj?.title,
       subtitle: getCheckpointObj?.subtitle,
       instructions: quickRepair(getCheckpointObj?.instructions),
-      instructionsTitle: getCheckpointObj?.instructionsTitle
-    })
+      instructionsTitle: getCheckpointObj?.instructionsTitle,
+    });
   };
 
   useEffect(() => {
     if (state.data.lesson.checkpoints) {
-      getQuestionGroupInfo();
+      if(state.data.lesson.checkpoints.items.length > 0){
+        getQuestionGroupInfo();
+      }
     }
   }, [state.data.lesson.checkpoints]);
 
   return (
     <div className={theme.section}>
       <div className={`${theme.elem.text}`}>
-        <div className='w-full h-full flex flex-col flex-wrap justify-around items-center'>
-          <Banner isTeacher={isTeacher} titleSection={showTitle ? info.title : null} subtitleSection={info.subtitle} />
+        <div className="w-full h-full flex flex-col flex-wrap justify-around items-center">
 
-              <InstructionBlock isTeacher={isTeacher} titleVisible={true} instructionsTitle={info.instructionsTitle}
-                                instructions={info.instructions} />
+          <Banner
+            isTeacher={isTeacher}
+            subtitleSection={`${info && info.title ?  info.title : null}`}
+            subtitleSection2={info.subtitle ? `- ( ${info.subtitle} )` : null}
+          />
+
+          <InstructionBlock
+            isTeacher={isTeacher}
+            titleVisible={true}
+            instructionsTitle={info?.instructionsTitle}
+            instructions={info?.instructions}
+          />
 
         </div>
       </div>

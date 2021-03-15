@@ -241,8 +241,8 @@ export const reorder = (list: any, startIndex: number, endIndex: number) => {
 
 export const getClientKey = () => {
   const url = window.location.href;
-  if (url.indexOf('localhost') >= 0) return 'iconoclast';
-  if (url.indexOf('demo') >= 0) return 'curate';
+  if (url.indexOf('localhost') >= 0) return 'demo';
+  if (url.indexOf('demo') >= 0) return 'demo';
   if (url.indexOf('iconoclast') >= 0) return 'iconoclast';
   if (url.indexOf('curate') >= 0) return 'curate';
   else '';
@@ -336,12 +336,12 @@ export const checkIfFirstNewInSequence = (before: string, current: string, after
   const notSameAsBefore = current !== before;
   const sameAsAfter = current === after;
 
-  if(notSameAsBefore && sameAsAfter){
+  if (notSameAsBefore && sameAsAfter) {
     return true;
   } else {
-    if(typeof before === 'undefined'){
+    if (typeof before === 'undefined') {
       return true;
-    } else if(notSameAsBefore && typeof after === 'undefined'){
+    } else if (notSameAsBefore && typeof after === 'undefined') {
       return true;
     } else {
       return false;

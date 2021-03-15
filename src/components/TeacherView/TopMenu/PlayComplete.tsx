@@ -1,4 +1,7 @@
 import React, { useContext } from 'react';
+
+import useDictionary from '../../../customHooks/dictionary';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 
 import { LessonInfoTitleBarProps } from '../TopMenu';
@@ -6,6 +9,8 @@ import { LessonInfoTitleBarProps } from '../TopMenu';
 const PlayComplete: React.FC<LessonInfoTitleBarProps> = (props: LessonInfoTitleBarProps) => {
   const { handleOpen, handleLessonButton } = props;
   const { state, theme, dispatch } = useContext(LessonControlContext);
+  const { clientKey, userLanguage } = useContext(GlobalContext);
+  const { lessonPlannerDict } = useDictionary(clientKey);
 
   return (
     <>
@@ -16,7 +21,7 @@ const PlayComplete: React.FC<LessonInfoTitleBarProps> = (props: LessonInfoTitleB
           onClick={() => {
             !state.open || state.complete ? handleOpen() : null;
           }}>
-          Start
+          {lessonPlannerDict[userLanguage]['ACCESS_BUTTONS']['START']}
         </span>
       ) : null}
 
@@ -26,7 +31,7 @@ const PlayComplete: React.FC<LessonInfoTitleBarProps> = (props: LessonInfoTitleB
           onClick={() => {
             !state.complete ? handleLessonButton() : null;
           }}>
-          Complete
+          {lessonPlannerDict[userLanguage]['ACCESS_BUTTONS']['COMPLETE']}
         </span>
       ) : null}
     </>

@@ -52,7 +52,13 @@ const useStudentTimer = (inputs?: inputs) => {
   useEffect(() => {
     const isLesson = state.data.lesson.type === 'lesson';
     if (isLesson) {
-      if (!state.viewing) {
+      if (state.viewing) {
+        clearTimeout(activityTimeout);
+        setactivityTimeout(setTimeout(() => {
+          console.log('VIEWING -> page switch -> save')
+          dispatch({ type: 'INCREMENT_SAVE_COUNT' })
+        }, 2000));
+      } else if (!state.viewing) {
         if (typeOfTimeout === '') {
           console.log('%c save timer: ', 'background: #222; color: #bada55', 'page switch save triggered after 10s');
 
@@ -76,9 +82,12 @@ const useStudentTimer = (inputs?: inputs) => {
     if(isLesson) {
       if (state.viewing) {
         clearTimeout(activityTimeout);
-        setactivityTimeout(setTimeout(() => dispatch({ type: 'INCREMENT_SAVE_COUNT' }), 2000));
-      }
-      if (!state.viewing) {
+        setactivityTimeout(setTimeout(() => {
+          dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+          console.log('VIEWING -> EDIT -> save');
+        }, 2000));
+
+      } else if (!state.viewing) {
         if (typeOfTimeout === '') {
           console.log('%c save timer: ', 'background: #bada55; color: #25362a', 'edit save triggered after 60s');
 

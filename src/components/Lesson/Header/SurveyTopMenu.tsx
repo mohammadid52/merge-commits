@@ -30,7 +30,11 @@ const SurveyTopMenu = () => {
     return Object.keys(state.questionData).reduce((acc: number, questionGroupKey: string) => {
       const questionGroupSum = Array.isArray(state.questionData[questionGroupKey])
         ? state.questionData[questionGroupKey].reduce((acc2: number, val: any) => {
-          return acc2 + val.response.length;
+          if(val.response.length > 0){
+            return acc2 + 1;
+          } else {
+            return acc2;
+          }
         }, 0)
         : 0;
       return acc + questionGroupSum;

@@ -29,7 +29,7 @@ const curate_assets: any = {
     favicon16x16: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/favicon-16x16.png',
     favicon32x32: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/favicon-32x32.png',
     manifest: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/site.webmanifest',
-    appleTouchIcon: 'https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/apple-touch-icon.png',
+    appleTouchIcon: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/apple-touch-icon.png',
     maskIcon: 'https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/safari-pinned-tab.svg',
     webAppTitle: 'Project Curate',
     appName: 'Project Curate',
@@ -40,10 +40,40 @@ const curate_assets: any = {
     themeClassName: 'curateBlue',
 }
 
+const demo_assets: any = {
+    appTitle: 'Demo',
+    main_logo: 'https://zoiqappdemoimages.s3.amazonaws.com/ISPLogo.png',
+    login_page_logo: 'https://zoiqappdemoimages.s3.amazonaws.com/ISPLogo.png',
+    loading_logo: 'https://zoiqappdemoimages.s3.amazonaws.com/ISPLogo.png',
+    logo_symbol: 'https://zoiqappdemoimages.s3.amazonaws.com/ISP.png',
+    faviconDefault: 'https://zoiqappdemoimages.s3.amazonaws.com/ISP.png',
+    favicon16x16: 'https://zoiqappdemoimages.s3.amazonaws.com/ISP.png',
+    favicon32x32: 'https://zoiqappdemoimages.s3.amazonaws.com/ISP.png',
+    manifest: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/site.webmanifest',
+    appleTouchIcon: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/apple-touch-icon.png',
+    maskIcon: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/safari-pinned-tab.svg',
+    webAppTitle: 'ISP Demo',
+    appName: 'ISP Demo',
+    tileImage: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/mstile-150x150.png',
+    msapplicationConfig: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/browserconfig.xml',
+    authBackground: 'bg-demo-bg',
+    authButtonColor: 'bg-theme-blue',
+    themeClassName: 'curateBlue',
+}
+
+// main logo (dashboard above sidebar)
+// login_page_logo (logo in login pages)
+// loading_logo (logo in loader)
+// logo_symbol (sidebar menu icon image)
+// favicon, manifest, appleTouchIcon
+// webAppTitle
+
 export function getAsset(clientKey: string, key: string) {
     if (clientKey === 'iconoclast') {
         return iconoclast_assets[key]
     } else if (clientKey === 'curate') {
         return curate_assets[key]
+    } else if (clientKey === 'demo') {
+        return demo_assets[key]
     }
 }

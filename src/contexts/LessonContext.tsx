@@ -11,7 +11,7 @@ import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { standardTheme } from './GlobalContext';
 import * as queries from '../graphql/queries';
-import { createFilterToFetchSpecificItemsOnly } from '../utilities/strings';
+import { createFilterToFetchSpecificItemsOnly, getClientKey } from '../utilities/strings';
 
 interface LessonProps {
   children: React.ReactNode;
@@ -28,23 +28,27 @@ interface DataObject {
 export const LessonContext = React.createContext(null);
 
 export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
-  const urlParams: any = useParams()
+  const [state, dispatch] = useReducer(lessonReducer, lessonState);
+  const theme = standardTheme;
+  // const location = useLocation();
+  const history = useHistory();
+  const urlParams: any = useParams();
+
+  // Subscription for teacher/syllabusLesson changes
+  let subscription: any;
+
+  // Dictionary
+  const userLanguage = /*state.user.language ||*/ 'EN'; // TODO: add 'user' property & info to state
+  const uLang = userLanguage;
+  const clientKey = getClientKey();
+
   const [data, setData] = useState<DataObject>();
   const [lesson, setLesson] = useState<DataObject>();
   const [subscriptionData, setSubscriptionData] = useState<any>();
-
-  const [state, dispatch] = useReducer(lessonReducer, lessonState);
-  const location = useLocation();
-  const history = useHistory();
-  let subscription: any;
-
-  const theme = standardTheme;
-
   const [loaded, setLoaded] = useState<boolean>(false);
   const [personLocationObj, setPersonLocationObj] = useState<any>();
   const [recentOp, setRecentOp] = useState<string>('');
   const [recentQuestionOp, setRecentQuestionOp] = useState<string>('');
-
   const [checkpointsLoaded, setCheckpointsLoaded] = useState<boolean>(false);
 
   // INIT PERSON LOCATION STATE
@@ -206,7 +210,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
    * checkpoints in their name
    */
   const getAllCheckpoints = async () => {
-    const allCheckpointIDS = state.data.lessonPlan.reduce((acc: string[], lessonPlanObj: any) => {
+    const allCheckpointIDS = state.data.lessonPlan.reduce((acc: string[], lessonPlanObj: any, i: number) => {
       const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
       if (isCheckpoint) {
         return [...acc, lessonPlanObj.stage.match(/checkpoint\?id=(.*)/)[1]];
@@ -215,19 +219,30 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       }
     }, []);
     if (allCheckpointIDS.length > 0) {
-
       try {
         const checkpoints: any = await API.graphql(graphqlOperation(customQueries.listCheckpoints, {
           filter: { ...createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id') },
         }));
 
-        //  STORE FULL CHECKPOINT OBJECTS
-        setLesson({ ...lesson, lesson: { ...lesson.lesson, checkpoints: checkpoints.data.listCheckpoints } });
+
+
+        const items = checkpoints.data.listCheckpoints.items;
+        const orderCorrected = allCheckpointIDS.map((checkpointID: string, idx: number) => {
+          const pickCheckpointObj = items.find((targetCheckpointObj: any) => targetCheckpointObj.id === checkpointID)
+          return pickCheckpointObj;
+        })
+
+        // console.log('checkpoints --> ', items)
+        // console.log('checkpoints --> ordered --> ',orderCorrected)
+        const listCheckpoints = {...checkpoints.data.listCheckpoints, items: orderCorrected}
+
+        setLesson({ ...lesson, lesson: { ...lesson.lesson, checkpoints:  listCheckpoints}});
 
         // INIT CONTEXT WITH EMPTY QUESTIONDATA!
-        const initCheckpointsObj = checkpoints.data.listCheckpoints.items.reduce((acc: any, checkpointObj: any) => {
+        const initCheckpointsObj = listCheckpoints.items.reduce((acc: any, checkpointObj: any) => {
           return { ...acc, [checkpointObj.id]: {} };
         }, {});
+
         dispatch({
           type: 'SET_QUESTION_DATA',
           payload: {
@@ -334,16 +349,29 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   }
 
   // Collect and fetch checkpoints when lesson loaded
+  // useEffect(() => {
+  //   const getAdditionalLessonData = async () => {
+  //     if (state.data && state.data.lessonPlan) {
+  //       await getAllCheckpoints();
+  //     }
+  //   };
+  //   if (!checkpointsLoaded) {
+  //     getAdditionalLessonData();
+  //   }
+  // }, [state.data.lesson]);
+
   useEffect(() => {
     const getAdditionalLessonData = async () => {
       if (state.data && state.data.lessonPlan) {
         await getAllCheckpoints();
       }
     };
-    if (!checkpointsLoaded) {
+    if (!checkpointsLoaded && state.status === 'loaded') {
       getAdditionalLessonData();
     }
-  }, [state.data.lesson]);
+  }, [state.status]);
+
+
 
   // Init questionData in DB if necessary
   useEffect(() => {
@@ -479,6 +507,9 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         theme,
         subscription,
         subscribeToSyllabusLesson,
+        userLanguage,
+        uLang,
+        clientKey
       }}>
       {children}
     </LessonContext.Provider>

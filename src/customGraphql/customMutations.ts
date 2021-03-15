@@ -720,6 +720,7 @@ export const updateLesson = /* GraphQL */ `
         }
         nextToken
       }
+      assessmentID
     }
   }
 `;

@@ -36,7 +36,7 @@ const TextQuestions = (props: QuestionProps) => {
         <label htmlFor={question.question.label}>
           <p className={`font-semibold ${theme.elem.text} ${theme.underline} pb-2 mb-4`}>
             <b>{questionIndex + 1}. </b>
-            {question.question.question}
+            <span style={{whiteSpace:'pre-line'}}>{question.question.question}</span>
           </p>
         </label>
         <textarea

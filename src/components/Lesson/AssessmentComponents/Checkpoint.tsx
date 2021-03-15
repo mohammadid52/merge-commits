@@ -4,6 +4,7 @@ import CheckpointQuestions from './CheckpointQuestions';
 import Banner from '../LessonComponents/Banner';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 import SaveQuit from '../LessonComponents/Outro/SaveQuit';
+import SurveyOutro from './SurveyOutro';
 
 export interface CheckpointInterface {
   title: string;
@@ -53,17 +54,34 @@ const Checkpoint = (props: { isTeacher?: boolean }) => {
 
   return (
     <div className={theme.section}>
-      {
+      {/**
+       *  1.
+       *  SHOW BANNER + ICON, IF LESSON
+       */}
+      {/*{
         lessonType === 'lesson' &&
         (
           <Banner isTeacher={isTeacher} title={`${title}`} iconName={'FaCheck'} />
         )
-      }
+      }*/}
+
+      {/**
+       *  2.
+       *  LOAD CHECKPOINT QUESTIONS
+       */}
       <CheckpointQuestions isTeacher={isTeacher} checkpointType={`checkpoint`} handleSetTitle={handleSetTitle} />
+
+      {/**
+       *  3.
+       *  SHOW OUTRO + SAVE, IF SURVEY
+       */}
       {
         !isTeacher && state.data.lesson.type !== 'lesson' &&
         (
-          <SaveQuit />
+          <>
+            <SurveyOutro />
+            <SaveQuit />
+          </>
         )
       }
     </div>

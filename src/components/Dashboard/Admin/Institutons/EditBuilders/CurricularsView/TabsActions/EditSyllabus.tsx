@@ -175,7 +175,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       try {
         setIsLoading(true);
         const languagesCode = syllabusData.languages.map((item: { value: string }) => item.value);
-        const designers = selectedDesigners.map(item => ({ id: item.id }))
+        const designers = selectedDesigners.map(item => item.id)
         const input = {
           id: syllabusId,
           name: syllabusData.name,
@@ -387,14 +387,13 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       const result: any = await API.graphql(graphqlOperation(customQueries.listLessonsTitles))
       const savedData = result.data.listLessons;
       const sortedList = savedData?.items?.sort((a: any, b: any) => a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1)
-      const updatedList = sortedList?.map((item: { id: string, title: string, type: string }) => (
+      const updatedList = sortedList?.filter((item: any) => item.lessonPlan ? true : false).map((item: { id: string, title: string, type: string }) => (
         {
           id: item.id,
           name: `${item.title} - ${item.type && getLessonType(item.type)}`,
           value: item.title
         }))
       setAllLessonsList([...sortedList])
-      // console.log(sortedList, savedData)
       setDropdownLessonsList([...updatedList])
     } catch {
       setMessages({
@@ -442,10 +441,13 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   }
 
   useEffect(() => {
-    fetchLessonsList();
-    fetchPersonsList();
-    fetchLessonsSequence();
-    fetchSyllabusData();
+    Promise.all([
+      fetchLessonsList(),
+      fetchPersonsList(),
+      fetchLessonsSequence()
+    ]).then(() =>
+      fetchSyllabusData()
+    ).catch((err) => console.log(err))
   }, []);
 
   useEffect(() => {

@@ -45,15 +45,15 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const { Institute_info ,BreadcrumsTitles } = useDictionary(clientKey);
 
   const tabs = [
-    { index: 0, title: Institute_info[userLanguage]['SERVICE_PROVIDER'] , icon: <FaHandshake />, active: false, content: <ServiceProviders serviceProviders={institute.serviceProviders} instId={institute?.id} updateServiceProviders={instProps.updateServiceProviders} /> },
-    { index: 1, title: Institute_info[userLanguage]['STAFF'], icon: <IoPeople />, active: true, content: <StaffBuilder serviceProviders={institute.serviceProviders} instituteId={instProps?.institute?.id} /> },
-    { index: 2, title: Institute_info[userLanguage]['CLASSES'], icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={institute?.classes} instId={institute?.id} instName={institute?.name}/> },
-    { index: 3, title: Institute_info[userLanguage]['CURRICULAR'], icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} instId={institute?.id} instName={institute?.name}/> },
-    { index: 4, title: Institute_info[userLanguage]['CLASSROOMS'], icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id} instName={institute?.name}/> }
+    { index: 0, title: Institute_info[userLanguage]['STAFF'], icon: <IoPeople />, active: true, content: <StaffBuilder serviceProviders={institute.serviceProviders} instituteId={instProps?.institute?.id} instName={institute?.name} /> },
+    { index: 1, title: Institute_info[userLanguage]['CLASSES'], icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={institute?.classes} instId={institute?.id} instName={institute?.name} /> },
+    { index: 2, title: Institute_info[userLanguage]['CURRICULAR'], icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} instId={institute?.id} instName={institute?.name} /> },
+    { index: 3, title: Institute_info[userLanguage]['SERVICE_PROVIDER'], icon: <FaHandshake />, active: false, content: <ServiceProviders serviceProviders={institute.serviceProviders} instId={institute?.id} updateServiceProviders={instProps.updateServiceProviders} instName={institute?.name} /> },
+    { index: 4, title:  Institute_info[userLanguage]['CLASSROOMS'], icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id} instName={institute?.name} /> }
   ]
 
   const updateTab = (tab: number) => {
-    tabProps.setTabsData({...tabProps.tabsData, inst: tab})
+    tabProps.setTabsData({ ...tabProps.tabsData, inst: tab })
   }
 
   useEffect(() => {

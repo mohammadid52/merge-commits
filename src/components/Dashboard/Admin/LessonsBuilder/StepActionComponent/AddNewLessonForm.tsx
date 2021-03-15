@@ -396,7 +396,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
         </div>}
         {showDeleteModal.state &&
-          <ModalPopUp deleteModal closeAction={toggleModal} saveAction={deleteMeasurement} message={showDeleteModal.message} />
+          <ModalPopUp deleteModal deleteLabel="Remove" closeAction={toggleModal} saveAction={deleteMeasurement} message={showDeleteModal.message} />
         }
         <div className="flex mb-8 mt-4 justify-center">
           <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveFormData} disabled={(loading || lessonId) ? true : false} />

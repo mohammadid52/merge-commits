@@ -150,11 +150,16 @@ module.exports = {
       'open': ['Open Sans', 'sans-serif'],
     },
     extend: {
+      transitionProperty: {
+        'height': 'height'
+      },
       backgroundImage: (theme) => ({
         'iconoclast-bg':
           "url('https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/iconoclast_frontpage_bg.jpg')",
         'curate-bg':
           "url('https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/LoginImage_PC.jpg')",
+        'demo-bg':
+          "url('https://zoiqappdemoimages.s3.amazonaws.com/MainPic.jpg')",
       }),
       backgroundOpacity: {
         10: '0.1',
@@ -365,6 +370,42 @@ module.exports = {
         '9.5/10': '95%',
         '19/20': '95%',
         '9.3/10': '93%',
+      },
+      minHeight: {
+        32: '8rem',
+        48: '12rem',
+        52: '13rem',
+        56: '14rem',
+        64: '16rem',
+        68: '17rem',
+        72: '18rem',
+        80: '20rem',
+        84: '21rem',
+        88: '22rem',
+        96: '24rem',
+        100: '25rem',
+        104: '26rem',
+        112: '28rem',
+        120: '30rem',
+        124: '31rem',
+        128: '32rem',
+        132: '33rem',
+        136: '34rem',
+        140: '35rem',
+        152: '38rem',
+        156: '39rem',
+        160: '40rem',
+        164: '41rem',
+        168: '42rem',
+        172: '43rem',
+        176: '44rem',
+        180: '45rem',
+        184: '46rem',
+        188: '47rem',
+        192: '48rem',
+        196: '49rem',
+        200: '50rem',
+        256: '64rem',
       },
       minWidth: {
         32: '8rem',

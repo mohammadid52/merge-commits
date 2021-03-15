@@ -4,8 +4,10 @@ import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoCaretDownCircleOutline, IoCaretUpCircleOutline, IoOptionsOutline } from 'react-icons/io5';
 import { IoIosKeypad } from 'react-icons/io';
 import { RiArrowRightLine } from 'react-icons/ri';
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import * as customMutations from '../../../../../../customGraphql/customMutations';
+import * as mutations from '../../../../../../graphql/mutations';
 
 import MultipleSelector from '../../../../../Atoms/Form/MultipleSelector';
 import Selector from '../../../../../Atoms/Form/Selector';
@@ -15,7 +17,7 @@ import RichTextEditor from '../../../../../Atoms/RichTextEditor';
 import CheckBox from '../../../../../Atoms/Form/CheckBox';
 import { LessonPlansProps } from '../../LessonEdit';
 
-import { getTypeString } from '../../../../../../utilities/strings';
+import { getTypeString, reorder } from '../../../../../../utilities/strings';
 import { getAsset } from '../../../../../../assets';
 import { GlobalContext } from '../../../../../../contexts/GlobalContext';
 export interface AddNewCheckPointProps {
@@ -31,6 +33,9 @@ export interface AddNewCheckPointProps {
   checkpQuestions: any[]
   setCheckpQuestions: (val: any[]) => void
   previouslySelectedId?: string[]
+  setUnsavedChanges?: Function
+  lessonName: string
+  lessonType: string
 }
 export interface InitialData {
   id?: string
@@ -63,7 +68,10 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     selectedDesigners,
     setSelectedDesigners,
     checkpQuestions,
-    setCheckpQuestions
+    setUnsavedChanges,
+    setCheckpQuestions, 
+    lessonName, 
+    lessonType
   } = props;
 
   const initialData = {
@@ -160,6 +168,18 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
         value
       }
     })
+  }
+
+  const onDragEnd = async (result: any) => {
+    if (result.source.index !== result.destination.index) {
+      const checkpointId = checkpQuestions.map(item => item.id);
+      const list = reorder(checkpointId, result.source.index, result.destination.index)
+      let questionsList = checkpQuestions.map((t: any) => {
+        let index = list.indexOf(t.id)
+        return { ...t, index }
+      }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+      setCheckpQuestions(questionsList)
+    }
   }
 
   const selectDesigner = (id: string, name: string, value: string) => {
@@ -309,6 +329,8 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
           let questions = Promise.all(
             checkpQuestions.map(async (item: any) => addCheckpointQuestions(item.id, newCheckpoint.id, item.required))
           )
+          let checkpQuestionsIds = checkpQuestions.map(item => item.id)
+          let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `Ch_Ques_${newCheckpoint.id}`, sequence: checkpQuestionsIds } }));
 
           const newLessonPlans = lesson?.data?.updateLesson?.lessonPlan;
           const newData = [{
@@ -346,6 +368,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
         });
         setLoading(false)
       }
+      setUnsavedChanges(false);
     }
   }
 
@@ -366,7 +389,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
 
         {/* Breadcrums */}
         <h4 className="text-base leading-6 font-medium text-gray-900 flex items-center">
-          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>Assessment Builder</span>
+          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>{lessonType === 'survey' ? 'Survey' : 'Assessment'} Builder - {lessonName}</span>
           <span className="w-6 h-6 flex items-center mx-4">
             <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
               <RiArrowRightLine />
@@ -502,33 +525,60 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                   </div>
 
                   <div className="w-full m-auto">
-                    {checkpQuestions.length > 0 ? checkpQuestions.map((item, index) => (
-                      <Fragment key={item.id}>
-                        <div key={item.id} className={`flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200 ${questionOptions.quesId === item.id && 'bg-gray-200'}`}>
-                          <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4"> {index + 1}.</div>
-                          <div className="flex w-5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.question} </div>
-                          <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.type ? getTypeString(item.type) : '--'}</div>
-                          <div className="flex w-1.5/10 px-6 py-3 text-s leading-4 items-center justify-center">
-                            <span className="cursor-pointer">
-                              <CheckBox value={item.required ? true : false} onChange={() => makeQuestionRequired(item.id)} name='isRequired' />
-                            </span>
-                          </div>
-                          <div className="flex w-1/10 px-6 py-1 text-s leading-4 items-center justify-center">
-                            {(item.type === 'selectMany' || item.type === 'selectOne') && (<div className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => showOptions(item.id, item.options)}>
-                              <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
-                                <IoOptionsOutline />
-                              </IconContext.Provider>
-                            </div>)}
-                          </div>
-                        </div>
-                        {(questionOptions.quesId === item.id) && (<div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b border-gray-200">
-                          <p className="text-gray-900 px-2 py-2 text-base">Options:</p>
-                          {questionOptions.options?.map((item, index) => (
-                            <span className="px-12 py-2" key={item.label}>{index + 1}. {item.text}</span>
-                          ))}
-                        </div>)}
-                      </Fragment>
-                    )) : (
+                    {checkpQuestions.length > 0 ? (
+                      //  Drag and drop listing
+                      <DragDropContext onDragEnd={onDragEnd}>
+                        <Droppable droppableId="droppable">
+                          {(provided, snapshot) => (
+                            <div
+                              {...provided.droppableProps}
+                              ref={provided.innerRef}
+                            >
+                              { checkpQuestions.map((item, index) => (
+
+                                <Draggable key={item.id} draggableId={item.id} index={index}>
+                                  {(provided, snapshot) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                    >
+                                      <Fragment key={item.id}>
+                                        <div key={item.id} className={`flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200 ${questionOptions.quesId === item.id && 'bg-gray-200'}`}>
+                                          <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4"> {index + 1}.</div>
+                                          <div className="flex w-5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.question} </div>
+                                          <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.type ? getTypeString(item.type) : '--'}</div>
+                                          <div className="flex w-1.5/10 px-6 py-3 text-s leading-4 items-center justify-center">
+                                            <span className="cursor-pointer">
+                                              <CheckBox value={item.required ? true : false} onChange={() => makeQuestionRequired(item.id)} name='isRequired' />
+                                            </span>
+                                          </div>
+                                          <div className="flex w-1/10 px-6 py-1 text-s leading-4 items-center justify-center">
+                                            {(item.type === 'selectMany' || item.type === 'selectOne') && (<div className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => showOptions(item.id, item.options)}>
+                                              <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
+                                                <IoOptionsOutline />
+                                              </IconContext.Provider>
+                                            </div>)}
+                                          </div>
+                                        </div>
+                                        {(questionOptions.quesId === item.id) && (<div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b border-gray-200">
+                                          <p className="text-gray-900 px-2 py-2 text-base">Options:</p>
+                                          {questionOptions.options?.map((item, index) => (
+                                            <span className="px-12 py-2" key={item.label}>{index + 1}. {item.text}</span>
+                                          ))}
+                                        </div>)}
+                                      </Fragment>
+                                    </div>
+                                  )}
+                                </Draggable>
+                              ))}
+                              {provided.placeholder}
+                            </div>
+                          )}
+                        </Droppable>
+                      </DragDropContext>
+
+                    ) : (
                         <div className="py-12 my-6 text-center">
                           <p> This checkpoint does not have any questions</p>
                         </div>

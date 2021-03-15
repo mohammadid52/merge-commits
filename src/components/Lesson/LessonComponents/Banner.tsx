@@ -6,13 +6,14 @@ import { LessonControlContext } from '../../../contexts/LessonControlContext';
 /**
  * ICON IMPORTS FROM react-icons
  */
-import { FaPoll, FaCheck, FaQuestion, FaHourglassStart } from 'react-icons/fa';
+import { FaPoll, FaCheck, FaQuestion, FaHourglassStart, FaHeadphonesAlt, FaScroll, FaPenFancy } from 'react-icons/fa';
 
 interface BannerProps {
   isTeacher?: boolean
   title?: string;
   titleSection?: string;
   subtitleSection?: string;
+  subtitleSection2?: string;
   subtitle?: string;
   titleParagraph?: string;
   iconName?: string;
@@ -22,7 +23,7 @@ const Banner = (props: BannerProps) => {
   /**
    * Teacher switch
    */
-  const { isTeacher, title, titleSection, subtitleSection, subtitle, titleParagraph, iconName } = props;
+  const { isTeacher, title, titleSection, subtitleSection, subtitleSection2, subtitle, titleParagraph, iconName } = props;
   const switchContext = (isTeacher) ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme } = switchContext;
 
@@ -34,10 +35,16 @@ const Banner = (props: BannerProps) => {
     switch (nameString) {
       case 'FaHourglassStart':
         return <FaHourglassStart />;
+        case 'FaHeadphonesAlt':
+        return <FaHeadphonesAlt />;
       case 'FaPoll':
         return <FaPoll/>;
+        case 'FaScroll':
+        return <FaScroll/>;
       case 'FaCheck':
         return <FaCheck/>
+        case 'FaPenFancy':
+        return <FaPenFancy/>
       default:
         return <FaQuestion/>
     }
@@ -64,16 +71,25 @@ const Banner = (props: BannerProps) => {
 
       {
         titleSection && (
-          <h3 className={`w-full text-2xl ${theme.banner} font-semibold`}>
+          <h2 className={`w-full text-xl font-semibold ${theme.banner} ${theme.underline}`}>
             <span dangerouslySetInnerHTML={{ __html: titleSection }} />
+          </h2>
+        )
+      }
+
+      {
+        subtitleSection && !subtitleSection2 && (
+          <h3 className={`w-full text-xl border-b-4 border-sea-green ${theme.banner} ${theme.underline}`}>
+            <span dangerouslySetInnerHTML={{ __html: subtitleSection }}/>
           </h3>
         )
       }
 
       {
-        subtitleSection && (
-          <h3 className={`w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
-            <span dangerouslySetInnerHTML={{ __html: subtitleSection }} />
+        subtitleSection && subtitleSection2 && (
+          <h3 className={`w-full flex text-xl border-b-4 border-sea-green ${theme.banner}`}>
+            <span className={`w-auto font-semibold`}>{subtitleSection}</span>
+            <span className={`w-auto ml-2`} >{subtitleSection2}</span>
           </h3>
         )
       }

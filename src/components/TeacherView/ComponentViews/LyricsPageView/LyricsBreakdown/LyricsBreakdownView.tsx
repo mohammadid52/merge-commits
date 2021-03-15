@@ -1,16 +1,16 @@
-import React, { useEffect, useContext, useState } from 'react';
-import ReflectionQuestions from './ReflectionQuestions';
-import Banner from './Banner';
+import React, { useContext, useEffect, useState } from 'react';
 import LyricsOutput from './LyricsOutput';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 import { getPageLabel } from '../../../../getPageLabel';
+import Banner from '../../../../Lesson/LessonComponents/Banner';
+import ReflectionQuestions from '../../../../Lesson/LessonComponents/ReflectionQuestions';
+
 
 interface props {
   fullscreen: boolean;
 }
 
 const SelfDisplay = (props: props) => {
-  const { fullscreen } = props;
   const { dispatch, state, theme } = useContext(LessonControlContext);
   const [modules, setModules] = useState<Array<any>>();
   const dataProps =
@@ -19,7 +19,6 @@ const SelfDisplay = (props: props) => {
     state.studentViewing.studentInfo.corelessonData.selected
       ? state.studentViewing.studentInfo.corelessonData.selected
       : [];
-  const { artist, title } = state.data.lesson.coreLesson.content;
   const moduleTypes = state.data.lesson.coreLesson.tools;
   
   let displayStudentData = state.studentViewing.live ? state.studentViewing.studentInfo.currentLocation ? getPageLabel(state.studentViewing.studentInfo.currentLocation, state.pages) === 'corelesson/breakdown' : state.studentViewing.studentInfo.lessonProgress === 'corelesson/breakdown' : false;
@@ -70,15 +69,14 @@ const SelfDisplay = (props: props) => {
     return setModules(modulesArray);
   }, [state.studentViewing]);
 
-  useEffect(()=>{
-    console.log('LyricsBreakdownView: ', modules)
-  },[])
+  const { title } = state.data.lesson.coreLesson.content;
+  const questArr = state.data.lesson.activity?.breakdown?.reflectionQuestions;
 
   return (
     <div className={theme.section}>
-      <ReflectionQuestions fullscreen={fullscreen} />
-      <Banner title={title} artist={artist} fullscreen={fullscreen} />
-      <LyricsOutput modules={(modules) ? modules : [] }/>
+      <ReflectionQuestions isTeacher={true} questions={questArr}/>
+      <Banner isTeacher={true} title={title} iconName={`FaHeadphonesAlt`} />
+      <LyricsOutput modules={(modules) ? modules : []} />
     </div>
   );
 };

@@ -2,13 +2,15 @@ import React, { useState, useContext, useEffect } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import RichTextEditor from '../../../Atoms/RichTextEditor';
 import Banner from '../Banner';
-import { LessonHeaderBarProps } from '../../../Header/LessonHeaderBar';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaRegWindowMinimize } from 'react-icons/fa';
+import { LessonHeaderBarProps } from '../../../../interfaces/LessonComponentsInterfaces';
+import useDictionary from '../../../../customHooks/dictionary';
 
 const NotesForm = (props: LessonHeaderBarProps) => {
   const { overlay, setOverlay } = props;
-  const { state, theme, dispatch } = useContext(LessonContext);
+  const { theme, dispatch, clientKey, userLanguage } = useContext(LessonContext);
+  const { lessonDict } = useDictionary(clientKey);
 
   const [notesData, setNotesData] = useState<{ content: string }>({ content: '' });
 
@@ -36,13 +38,14 @@ const NotesForm = (props: LessonHeaderBarProps) => {
         transform transition duration-300 ease-in-out ...
       `}>
       <div className={`relative px-4 pb-4 rounded-br-xl bg-tahini`}>
-        <div className={`absolute w-auto right-0 top-0 p-2 m-4 text-white cursor-pointer z-50 transition duration-200 ease-in-out rounded bg-white bg-opacity-10 hover:bg-opacity-40`}
-             onClick={() => setOverlay('')}>
-          <IconContext.Provider value={{className: 'w-auto h-auto'}}>
-            <FaRegWindowMinimize size={18}/>
+        <div
+          className={`absolute w-auto right-0 top-0 p-2 m-4 text-white cursor-pointer z-50 transition duration-200 ease-in-out rounded bg-white bg-opacity-10 hover:bg-opacity-40`}
+          onClick={() => setOverlay('')}>
+          <IconContext.Provider value={{ className: 'w-auto h-auto' }}>
+            <FaRegWindowMinimize size={18} />
           </IconContext.Provider>
         </div>
-        <Banner subtitle={`Class Notes`} />
+        <Banner subtitle={`${lessonDict[userLanguage].CLASS} Notes`} />
         <RichTextEditor initialValue={`Take notes here...`}
                         onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'content')} />
       </div>

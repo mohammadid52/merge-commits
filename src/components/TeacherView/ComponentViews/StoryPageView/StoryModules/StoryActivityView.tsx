@@ -1,14 +1,11 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 // import { useCookies } from 'react-cookie';
 import InstructionsBlock from './InstructionBlock';
 import StoryForm from './StoryForm';
-import Banner from './Banner';
 import Modules from './Modules';
-import { studentObject } from '../../../../../state/LessonControlState';
-import InstructionsPopup from '../../../../Lesson/Popup/InstructionsPopup';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
-import { string } from 'prop-types';
 import { getPageLabel } from '../../../../getPageLabel';
+import Banner from '../../../../Lesson/LessonComponents/Banner';
 
 export interface StoryState {
   story: string[];
@@ -27,8 +24,6 @@ const Story = (props: props) => {
   const { fullscreen } = props;
   const { state, theme } = useContext(LessonControlContext);
   const inputs = state.data.lesson.warmUp.inputs;
-  const video = state.data.lesson.warmUp.instructions.link;
-  const [openPopup, setOpenPopup] = useState(false);
   const [dataProps, setDataProps] = useState<{ title?: string; story?: string[]; [key: string]: any }>();
 
   let displayStudentData = state.studentViewing.live
@@ -46,11 +41,14 @@ const Story = (props: props) => {
     }
   }, [state.studentViewing]);
 
+  const title = state.data.lesson.warmUp.title
+
   return (
     <>
       {/* <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/> */}
       <div className={theme.section}>
-        <Banner fullscreen={fullscreen} />
+
+        <Banner isTeacher={true} title={title} iconName={`FaScroll`}/>
 
         <div className="flex flex-col justify-between items-center">
           <InstructionsBlock fullscreen={fullscreen} />

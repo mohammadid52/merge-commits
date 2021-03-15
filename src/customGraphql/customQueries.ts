@@ -13,386 +13,6 @@ export const getPerson = /* GraphQL */ `
     }
   }
 `;
-export const getClassroom = /* GraphQL */ `
-  query GetClassroom($id: ID!) {
-    getClassroom(id: $id) {
-      id
-      open
-      roster
-      viewing
-      complete
-      expectedStartDate
-      expectedEndDate
-      displayData {
-        breakdownComponent
-        studentInfo {
-          id
-          firstName
-          preferredName
-          lastName
-        }
-        warmUpData {
-          story
-          title
-          additional {
-            name
-            input
-          }
-          poll {
-            id
-            question
-            option {
-              id
-            }
-          }
-        }
-        corelessonData {
-          selected {
-            anchor
-            color
-            content {
-              id
-              text
-            }
-            focus
-            id
-          }
-          rawSelected {
-            color
-            selected
-          }
-          selectGroup
-        }
-        activityData {
-          editInput
-          editMode
-          lines {
-            example
-            id
-            menuOpen
-            text
-          }
-          title
-        }
-      }
-      lessonID
-      lesson {
-        id
-        title
-        type
-        instructions
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          quotes {
-            source
-            text
-          }
-          additionalContent {
-            video
-            links {
-              type
-              text
-              link
-            }
-          }
-        }
-        language
-        summary
-        connection
-        keywords {
-          items {
-            wordID
-            word {
-              word
-              definition
-            }
-          }
-        }
-        objectives
-        checkpoints {
-          items {
-            position
-            checkpoint {
-              id
-              instructions
-              label
-              type
-              questions {
-                items {
-                  required
-                  question {
-                    id
-                    label
-                    type
-                    question
-                    options {
-                      text
-                      icon
-                      label
-                      color
-                    }
-                  }
-                }
-                nextToken
-              }
-            }
-          }
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          questions {
-            items {
-              question {
-                id
-                label
-                type
-                question
-                options {
-                  text
-                  icon
-                  label
-                  color
-                }
-              }
-            }
-            nextToken
-          }
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          instructions {
-            video
-            link
-            text
-          }
-          inputs {
-            title
-            textExample
-            titleExample
-            example
-            listInputNumber
-            truthGameInputs {
-              id
-              label
-            }
-            additionalInputs {
-              id
-              name
-              prompt
-              example
-            }
-            pollInputs {
-              id
-              question
-              option {
-                id
-                option
-                isChoice
-              }
-            }
-          }
-          breakdown {
-            reflectionQuestions
-          }
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          instructions {
-            video
-            link
-            text
-          }
-          content {
-            video
-            link
-            title
-            artist
-            text
-          }
-          tools {
-            name
-            color
-            icon
-          }
-          breakdown {
-            reflectionQuestions
-          }
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          lineNumber
-          instructions {
-            video
-            link
-            text
-          }
-          writingPrompts {
-            id
-            name
-            prompt
-            example
-          }
-          breakdown {
-            reflectionQuestions
-          }
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          checkpoints {
-            items {
-              checkpoint {
-                id
-                instructions
-                label
-                type
-                questions {
-                  items {
-                    required
-                    question {
-                      id
-                      label
-                      type
-                      question
-                      options {
-                        text
-                        icon
-                        label
-                        color
-                      }
-                    }
-                  }
-                  nextToken
-                }
-              }
-            }
-            nextToken
-          }
-        }
-        createdAt
-        updatedAt
-      }
-      lessonPlan {
-        disabled
-        open
-        active
-        stage
-        type
-        displayMode
-      }
-      data {
-        items {
-          id
-          lessonProgress
-          currentLocation
-          status
-          classroomID
-          studentID
-          studentAuthID
-          student {
-            id
-            authId
-            email
-            firstName
-            preferredName
-            lastName
-            language
-            role
-          }
-          warmupData {
-            story
-            title
-            additional {
-              name
-              input
-            }
-            poll {
-              id
-              question
-              option {
-                id
-              }
-            }
-          }
-          corelessonData {
-            selected {
-              anchor
-              color
-              content {
-                id
-                text
-              }
-              focus
-              id
-            }
-            rawSelected {
-              color
-              selected
-            }
-            selectGroup
-          }
-          activityData {
-            editInput
-            editMode
-            lines {
-              example
-              id
-              menuOpen
-              text
-            }
-            title
-          }
-          # doFirstData {
-          #   items {
-          #     id
-          #     studentDataID
-          #     questionDataID
-          #     createdAt
-          #     updatedAt
-          #   }
-          #   nextToken
-          # }
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
 
 export const listLessonPlans = /* GraphQL */ `
   query ListClassrooms {
@@ -759,6 +379,11 @@ export const listRooms = /* GraphQL */ `
         name
         maxPersons
         activeSyllabus
+        teacher {
+          firstName
+          preferredName
+          lastName
+        }
       }
       nextToken
     }
@@ -876,6 +501,20 @@ export const getSyllabusLesson = /* GraphQL */ `
         title
         type
         instructions
+        instructionsTitle
+        instructions
+        filters
+        coverImage
+        summaryTitle
+        introductionTitle
+        introduction
+        connectionTitle
+        lessonPlan {
+          type
+          LessonComponentID
+          sequence
+          stage
+        }
         artist {
           id
           images
@@ -907,6 +546,8 @@ export const getSyllabusLesson = /* GraphQL */ `
           }
         }
         summary
+        purpose
+        designers
         objectives
         checkpoints {
           items {
@@ -1133,6 +774,9 @@ export const listSyllabusLessons = /* GraphQL */ `
             bio
           }
           summary
+          purpose
+          designers
+          objectives
         }
         endDate
         startDate
@@ -1897,6 +1541,7 @@ export const listCheckpoints = /* GraphQL */ `
         subtitle
         id
         type
+        language
         questions {
           nextToken
           items {
@@ -2112,11 +1757,7 @@ export const getCheckpointDetails = /* GraphQL */ `
 `;
 
 export const listQuestionDatas = /* GraphQL */ `
-  query ListQuestionDatas(
-    $filter: ModelQuestionDataFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListQuestionDatas($filter: ModelQuestionDataFilterInput, $limit: Int, $nextToken: String) {
     listQuestionDatas(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -2174,6 +1815,157 @@ export const listQuestionDatas = /* GraphQL */ `
         updatedAt
       }
       nextToken
+    }
+  }
+`;
+
+export const getCompleteLesson = /* GraphQL */ `
+  query GetLesson($id: ID!) {
+    getLesson(id: $id) {
+      id
+      title
+      type
+      label
+      instructions
+      instructionsTitle
+      grades
+      artistID
+      language
+      SELStructure
+      connection
+      summary
+      purpose
+      designers
+      objectives
+      checkpoints {
+        items {
+          id
+          lessonID
+          checkpointID
+          position
+          createdAt
+          updatedAt
+          checkpoint {
+            id
+            label
+            title
+            subtitle
+            stage
+            type
+            instructionsTitle
+            instructions
+            questions {
+              items {
+                id
+                checkpointID
+                questionID
+                required
+                question {
+                  id
+                  label
+                  type
+                  question
+                  designers
+                  language
+                  sourceId
+                  note
+                  options {
+                    text
+                    label
+                    icon
+                    color
+                  }
+                }
+              }
+            }
+            purpose
+            objectives
+            designers
+            language
+            estTime
+          }
+        }
+        nextToken
+      }
+      doFirstID
+      warmUpId
+      coreLessonId
+      filters
+      coverImage
+      summaryTitle
+      introductionTitle
+      introduction
+      connectionTitle
+      lessonPlan {
+        type
+        LessonComponentID
+        sequence
+        stage
+      }
+      measurements {
+        items {
+          id
+          lessonID
+          rubricID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const getSyllabus = /* GraphQL */ `
+  query GetSyllabus($id: ID!) {
+    getSyllabus(id: $id) {
+      id
+      name
+      type
+      description
+      methodology
+      policies
+      pupose
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          lesson {
+            title
+            measurements {
+              id
+              lessonID
+              rubricID
+              rubric {
+                id
+                name
+                topicID
+              }
+            }
+          }
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      designers
+      status
+      createdAt
+      updatedAt
     }
   }
 `;
