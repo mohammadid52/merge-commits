@@ -100,7 +100,7 @@ const SideMenu = (props: LessonHeaderBarProps) => {
         {/**
          * HOME
          */}
-        <HomeWidget handlePopup={props.handlePopup}/>
+        <HomeWidget overlay={overlay} setOverlay={setOverlay} handlePopup={props.handlePopup}/>
 
         {/**
          * NOTES
