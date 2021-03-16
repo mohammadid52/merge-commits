@@ -50,7 +50,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     teacherAuthID: '',
     teacherEmail: '',
     roomID: '',
-    type: '',
+    type: 'default',
     placement: '',
     title: '',
     description: '',
@@ -178,7 +178,6 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       case 'create':
         const updatedNewWidgetData = { ...newWidgetData, [basekey]: value };
         setNewWidgetData(updatedNewWidgetData);
-
         break;
     }
   };
@@ -274,8 +273,13 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       active: getWidgetObj.active,
       placement: getWidgetObj.placement,
       quotes: getWidgetObj.quotes,
+      content: getWidgetObj.content,
+      description: getWidgetObj.description,
       title: getWidgetObj.title,
       type: getWidgetObj.type,
+      /**
+       * description & content ?
+       */
     };
     try {
       const noticeboardWidgetUpdate: any = await API.graphql(

@@ -13,6 +13,7 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
     handleEditUpdateDefault,
     handleEditUpdateQuotes,
     viewEditMode,
+    newWidgetData,
     setNewWidgetData,
     setWidgetData,
     widgetData,
@@ -41,7 +42,7 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
         <span className={`text-right ${theme.lessonCard.subtitle}`}>
           Type:
           <select name="type" id="type" data-basekey="type" onChange={(e) => handleEditUpdateDefault(e)}>
-            <option value="default">Default</option>
+            <option value="default" selected>Default</option>
             <option value="quote">Quote</option>
           </select>
         </span>
@@ -76,6 +77,7 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
           widgetObj={widgetObj}
           setEditorContent={setEditorContent}
           handleActivation={handleActivation}
+          newWidgetData={newWidgetData}
           setNewWidgetData={setNewWidgetData}
           setWidgetData={setWidgetData}
           widgetData={widgetData}
@@ -88,6 +90,7 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
           widgetObj={widgetObj}
           setEditorContent={setEditorContent}
           handleActivation={handleActivation}
+          newWidgetData={newWidgetData}
           setNewWidgetData={setNewWidgetData}
           setWidgetData={setWidgetData}
           widgetData={widgetData}
