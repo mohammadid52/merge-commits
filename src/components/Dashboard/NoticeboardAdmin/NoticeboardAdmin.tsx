@@ -9,26 +9,23 @@ import useDictionary from '../../../customHooks/dictionary';
 import NoticeboardAdminContent from './NoticeboardAdminContent';
 import RoomSwitch from './RoomSwitch';
 
+import {Widget as NoticeboardWidgetMapItem} from '../../../interfaces/ClassroomComponentsInterfaces';
+
 export interface NoticeboardAdmin {}
-
-export interface Quote {
-  text: string;
-  author: String;
-}
-
-export interface NoticeboardWidgetMapItem {
-  id?: string;
-  teacherAuthID: string;
-  teacherEmail: string;
-  roomID: string;
-  type: string;
-  placement: string;
-  title: string;
-  description: string;
-  content?: { text: string; image: string };
-  quotes?: Quote[];
-  active: boolean;
-}
+//
+// export interface NoticeboardWidgetMapItem {
+//   id?: string;
+//   teacherAuthID: string;
+//   teacherEmail: string;
+//   roomID: string;
+//   type: string;
+//   placement: string;
+//   title: string;
+//   description: string;
+//   content?: { text: string; image: string };
+//   quotes?: Quote[];
+//   active: boolean;
+// }
 
 export type ViewEditMode = {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | '';
@@ -132,15 +129,12 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
         }, []);
         setWidgetData(updatedWidgetData);
         break;
-      case 'create':
+      case 'create':  // final step to saving author!
         const updatedNewWidgetData = {
           ...newWidgetData,
           quotes: newWidgetData.quotes.map((nestedObj: any, idx: number) => {
             if (idx === parseInt(nestkey2)) {
-              return {
-                text: value,
-                author: '',
-              };
+              return { ...nestedObj, [nestkey1]: value };
             } else {
               return nestedObj;
             }

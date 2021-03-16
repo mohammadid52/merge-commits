@@ -36,57 +36,39 @@ export const DefaultTextWidget = (props: { title: string; content: string }) => 
   );
 };
 
-export const UpcomingLessonsWidget = (props: LessonProps) => {
-  const { setVisibleLessonGroup, lessons } = props;
-  const upcomingCount = lessons.length.toString();
-
+export const ButtonLinkWidget = (props: { title: string; href: string; buttonText: string }) => {
+  const { title, href, buttonText } = props;
   return (
     <div className={`p-2`}>
       <div className={`bg-white border border-dark-gray border-opacity-10 rounded`}>
-        <p
-          className={`text-sm p-2 font-semibold border-b border-dark-gray  border-opacity-10 cursor-pointer`}
-          onClick={() => setVisibleLessonGroup('upcoming')}>
-          Upcoming Lessons ({upcomingCount ? upcomingCount : '0'}):
-        </p>
-        {lessons && lessons.length > 0
-          ? lessons.map((lesson: Lesson, index: number) => {
-              return (
-                <div
-                  key={`upcoming_side_${index}`}
-                  className={`p-2 ${
-                    index !== lessons.length - 1 ? 'border-b border-dark-gray border-opacity-10' : ''
-                  }`}>
-                  <p className={`text-sm font-semibold text-dark-gray`}>{lesson.lesson.title}</p>
-                  <p className={`text-xs text-dark-gray`}>{lesson.lesson.artist.name}</p>
-                </div>
-              );
-            })
-          : null}
-      </div>
-    </div>
-  );
-};
-
-
-export const MediaRecommendation = () => {
-  return (
-    <div className={`p-2`}>
-      <div className={`bg-white border border-dark-gray border-opacity-10 rounded`}>
-        <p className={`text-sm p-2 font-semibold border-b border-dark-gray  border-opacity-10`}>Recommended Book:</p>
-        <div key={`teacher_side_note`} className={`p-2 border-b border-dark-gray  border-opacity-10`}>
-          <p className={`text-sm font-medium text-dark-gray border-b pb-2`}>
-            Beyond Survival: Strategies and Stories from the Transformative Justice Movement
-          </p>
-          <p className={`text-xs text-dark-gray pt-2`}>
-            <a
-              href="https://www.amazon.com/Beyond-Survival-Strategies-Transformative-Movement/dp/184935362X"
-              target="_blank">
-              {' '}
-              <b>Click to purchase on Amazon</b>
-            </a>
-          </p>
+        <p className={`text-sm p-2 font-semibold border-b border-dark-gray border-opacity-10`}>{title}:</p>
+        <div className={`p-2 border-b border-dark-gray  border-opacity-10`}>
+          BUTTON
         </div>
       </div>
     </div>
   );
 };
+
+// export const MediaRecommendation = () => {
+//   return (
+//     <div className={`p-2`}>
+//       <div className={`bg-white border border-dark-gray border-opacity-10 rounded`}>
+//         <p className={`text-sm p-2 font-semibold border-b border-dark-gray  border-opacity-10`}>Recommended Book:</p>
+//         <div key={`teacher_side_note`} className={`p-2 border-b border-dark-gray  border-opacity-10`}>
+//           <p className={`text-sm font-medium text-dark-gray border-b pb-2`}>
+//             Beyond Survival: Strategies and Stories from the Transformative Justice Movement
+//           </p>
+//           <p className={`text-xs text-dark-gray pt-2`}>
+//             <a
+//               href="https://www.amazon.com/Beyond-Survival-Strategies-Transformative-Movement/dp/184935362X"
+//               target="_blank">
+//               {' '}
+//               <b>Click to purchase on Amazon</b>
+//             </a>
+//           </p>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };

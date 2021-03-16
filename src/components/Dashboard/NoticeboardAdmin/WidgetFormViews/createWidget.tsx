@@ -44,6 +44,7 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
           <select name="type" id="type" data-basekey="type" onChange={(e) => handleEditUpdateDefault(e)}>
             <option value="default" selected>Default</option>
             <option value="quote">Quote</option>
+            <option value="call">Call</option>
           </select>
         </span>
       </div>
@@ -83,6 +84,7 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
           widgetData={widgetData}
         />
       ) : null}
+
       {widgetObj.type === 'quote' ? (
         <EditQuoteContent
           handleEditUpdateQuotes={handleEditUpdateQuotes}
@@ -95,6 +97,10 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
           setWidgetData={setWidgetData}
           widgetData={widgetData}
         />
+      ) : null}
+
+      {widgetObj.type === 'call' ? (
+        <>Edit form for call links</>
       ) : null}
     </>
   );
