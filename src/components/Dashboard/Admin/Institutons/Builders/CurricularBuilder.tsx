@@ -148,7 +148,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         const newCurricular: any = response?.data?.createCurriculum;
         setMessages({
           show: true,
-          message: 'New curriculum has been saved.',
+          message: CurricularBuilderdict[userLanguage]['messages']['success']['save'],
           isError: false
         })
         setCurricularData(initialData);
@@ -159,7 +159,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       } catch {
         setMessages({
           show: true,
-          message: 'Unable to save new curriculum please try again later.',
+          message: CurricularBuilderdict[userLanguage]['messages']['error']['save'],
           isError: true
         })
       }
@@ -179,7 +179,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Unable to fetch institution list pleas try later.',
+        message: CurricularBuilderdict[userLanguage]['messages']['error']['fetch'],
         isError: true
       })
     }
@@ -200,7 +200,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while fetching Designers list Please try again later.',
+        message: CurricularBuilderdict[userLanguage]['messages']['error']['designerlist'],
         isError: true,
       })
     }
@@ -219,7 +219,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while processing please Try again later.',
+        message:CurricularBuilderdict[userLanguage]['messages']['error']['process'],
         isError: true
       })
     }
@@ -229,14 +229,14 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     if (curricularData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Curricular name is required please enter name.',
+        message: CurricularBuilderdict[userLanguage]['messages']['validation']['name'],
         isError: true
       })
       return false;
     } else if (curricularData.institute.id === '') {
       setMessages({
         show: true,
-        message: 'Please select an institute to add curricular.',
+        message: CurricularBuilderdict[userLanguage]['messages']['validation']['institute'],
         isError: true
       })
       return false;
@@ -245,7 +245,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       if (!isUniq) {
         setMessages({
           show: true,
-          message: 'This curricular name is already exist, please add another name.',
+          message: CurricularBuilderdict[userLanguage]['messages']['validation']['curricular'],
           isError: true
         })
         return false;
@@ -293,7 +293,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       } else {
         setMessages({
           show: true,
-          message: 'Invalid path please go back to institution selection page to select your institute.',
+          message: CurricularBuilderdict[userLanguage]['messages']['error']['invalid'],
           isError: true
         })
       }

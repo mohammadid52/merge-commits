@@ -168,7 +168,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     } catch{
       setMessages({
         show: true,
-        message: 'Error while fetching student list, Please try again or you can add them later.',
+        message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['FETCHSTUDENT'],
         isError: true
       })
     }
@@ -188,7 +188,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while fetching institution list, Please try again later.',
+        message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['FETCHINSTITUTION'],
         isError: true
       })
     }
@@ -202,7 +202,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       .then(res => {
         setMessages({
           show: true,
-          message: 'New class details has been saved.',
+          message: classBuilderdict[userLanguage]['MESSAGES']['SUCCESS']['CLASSSAVE'],
           isError: false
         })
         setSelectedStudent([])
@@ -212,7 +212,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       .catch(err => {
         setMessages({
           show: true,
-          message: 'Error while adding students data, you can add them saperately from class.',
+          message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['STUDENTADDERROR'],
           isError: true
         })
       })
@@ -234,7 +234,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       } catch{
         setMessages({
           show: true,
-          message: 'Unable to save new class. Please try again later.',
+          message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['SAVECLASSERROR'],
           isError: true
         })
       }
@@ -255,7 +255,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while adding stuents data, you can add them saperately from class.',
+        message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['STUDENTADDERROR'],
         isError: true
       })
     }
@@ -274,7 +274,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while processing please Try again later.',
+        message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['PROCESSINGERROR'],
         isError: true
       })
     }
@@ -284,14 +284,14 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     if (classData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Class name is required please enter.',
+        message: classBuilderdict[userLanguage]['MESSAGES']['VALIDATION']['NAME'] ,
         isError: true
       })
       return false;
     } else if (classData.institute.id === '') {
       setMessages({
         show: true,
-        message: 'Please select an institute to add class.',
+        message: classBuilderdict[userLanguage]['MESSAGES']['VALIDATION']['INSTITUTE'],
         isError: true
       })
       return false;
@@ -300,7 +300,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       if (!isUniq) {
         setMessages({
           show: true,
-          message: 'This class name is already exist, please add another name.',
+          message: classBuilderdict[userLanguage]['MESSAGES']['VALIDATION']['CLASSNAME'],
           isError: true
         })
         return false;
@@ -351,7 +351,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       } else {
         setMessages({
           show: true,
-          message: 'Invalid path please go back to institution selection page to select your institute.',
+          message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['INVALIDPATH'],
           isError: true
         })
       }
@@ -395,7 +395,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
             </div> */}
           </div>
         </div>
-        <h3 className="text-center text-lg text-gray-600 font-medium mt-12 mb-6">STUDENTS</h3>
+        <h3 className="text-center text-lg text-gray-600 font-medium mt-12 mb-6">{classBuilderdict[userLanguage]['HEADING2']}</h3>
         <div className="flex items-center w-6/10 m-auto px-2">
           <SelectorWithAvatar selectedItem={newMember} list={studentList} placeholder={classBuilderdict[userLanguage]['MEMBER_PLACEHOLDER']} onChange={onStudentSelect} />
           <Buttons btnClass="ml-4 py-1" label={classBuilderdict[userLanguage]['BUTTON']['ADD']} onClick={addMemberToList} />

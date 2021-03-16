@@ -821,6 +821,7 @@ const classBuilderdict: any = {
     SUBTITLE: 'Add new class to the list',
     NAME_LABEL: 'Class Name',
     HEADING: 'CLASS INFORMATION',
+    HEADING2:'STUDENTS',
     MEMBER_PLACEHOLDER: 'Add new student',
 
     BUTTON: {
@@ -828,6 +829,27 @@ const classBuilderdict: any = {
       SAVE: 'Save',
       SAVING: 'Saving...',
 
+    },
+    MESSAGES:{
+      ERROR:{
+        FETCHSTUDENT:'Error while fetching student list, Please try again or you can add them later.',
+        FETCHINSTITUTION:'Error while fetching institution list, Please try again later.',
+        STUDENTADDERROR:'Error while adding students data, you can add them saperately from class.',
+        SAVECLASSERROR:'Unable to save new class. Please try again later.',
+        PROCESSINGERROR:'Error while processing please Try again later.',
+        INVALIDPATH:'Invalid path please go back to institution selection page to select your institute.',
+
+      },
+      VALIDATION:{
+        NAME:'Class name is required please enter.',
+        INSTITUTE:'Please select an institute to add class.',
+        CLASSNAME:'This class name is already exist, please add another name.',
+      },
+      SUCCESS:{
+        CLASSSAVE:'New class details has been saved.',
+
+
+      }
     }
   },
   'ES': {
@@ -836,6 +858,28 @@ const classBuilderdict: any = {
     NAME_LABEL: 'TBD',
     HEADING: 'TBD',
     MEMBER_PLACEHOLDER: 'TBD',
+    HEADING2:'TBD',
+    MESSAGES:{
+      ERROR:{
+        FETCHSTUDENT:'TBD',
+        FETCHINSTITUTION:'TBD',
+        STUDENTADDERROR:'TBD',
+        SAVECLASSERROR:'TBD',
+        PROCESSINGERROR:'TBD',
+        INVALIDPATH:'TBD',
+
+      },
+      VALIDATION:{
+        NAME:'TBD',
+        INSTITUTE:'TBD',
+        CLASSNAME:'TBD',
+      },
+      SUCCESS:{
+        CLASSSAVE:'TBD',
+
+
+      }
+    },
 
     BUTTON: {
       ADD: 'TBD',
@@ -845,7 +889,6 @@ const classBuilderdict: any = {
     }
   }
 }
-
 const CurricularBuilderdict: any = {
   'EN': {
     TITLE: 'Create New Curriculum',
@@ -857,6 +900,24 @@ const CurricularBuilderdict: any = {
 
     DESCRIPTION: 'Description',
     OBJECT: 'Objective',
+    messages:{
+      error:{
+        save:'Unable to save new curriculum please try again later.',
+        fetch:'Unable to fetch institution list pleas try later.',
+        designerlist:'Error while fetching Designers list Please try again later.',
+        process:'Error while processing please Try again later.',
+        invalid:'Invalid path please go back to institution selection page to select your institute.'
+      },
+      validation:{
+        name:'Curricular name is required please enter name.',
+        institute:'Please select an institute to add curricular.',
+        curricular:'This curricular name is already exist, please add another name.'
+      },
+      success:{
+        save:'New curriculum has been saved.'
+
+      }
+    },
     BUTTON: {
       SAVE: 'Save',
       SAVING: 'Saving...'
@@ -871,6 +932,24 @@ const CurricularBuilderdict: any = {
     DESIGNER: 'TBD',
     DESCRIPTION: 'TBD',
     OBJECT: 'TBD',
+    messages:{
+      error:{
+        save:'TBD',
+        fetch:'TBD',
+        designerlist:'TBD',
+        process:'TBD',
+        invalid:'TBD'
+
+      },
+      validation:{
+        name:'TBD',
+        institute:'TBD',
+        curricular:'TBD'
+      },
+      success:{
+        save:'TBD'
+      }
+    },
     BUTTON: {
       SAVE: 'TBD',
       SAVING: 'TBD'
