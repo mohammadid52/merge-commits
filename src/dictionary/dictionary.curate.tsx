@@ -1094,6 +1094,19 @@ const EditCurriculardict: any = {
     DESIGNER: 'Select Designers',
     DESCRIPTION: 'Description',
     OBJECTIVE: 'Objective',
+    messages:{
+      fetcherr:'Error while fetching Designers list Please try again later.',
+      curricularchange:'Curricular changes has been saved.',
+      updateerror:'Error while updating curricular data please try later.',
+      unablefetch:'Unable to fetch institution list pleas try later.',
+      processerr:'Error while processing please Try again later.',
+      namerequired:'Curricular name is required please enter name.',
+      selectinstitute:'Please select an institute to add curricular.',
+      nameexist:'This curricular name is already exist, please add another name.',
+      fetchinger:'Error while fetching curricular data,please try again later.',
+
+
+    },
     BUTTON: {
       SAVE: 'Save',
       CANCEL: 'Cancel',
@@ -1109,6 +1122,19 @@ const EditCurriculardict: any = {
     DESIGNER: 'TBD',
     DESCRIPTION: 'TBD',
     OBJECTIVE: 'TBD',
+    messages:{
+      fetcherr:'TBD',
+      curricularchange:'TBD',
+      updateerror:'TBD',
+      unablefetch:'TBD',
+      processerr:'TBD',
+      namerequired:'TBD',
+      selectinstitute:'TBD',
+      nameexist:'TBD',
+      fetchinger:'TBD',
+       
+
+    },
     BUTTON: {
       SAVE: 'TBD',
       CANCEL: 'TBD',

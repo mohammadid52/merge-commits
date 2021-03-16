@@ -136,7 +136,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while fetching Designers list Please try again later.',
+        message: EditCurriculardict[userLanguage]['messages']['fetcherr'],
         isError: true,
       })
     }
@@ -159,13 +159,13 @@ const EditCurricular = (props: EditCurricularProps) => {
         const newCurricular = await API.graphql(graphqlOperation(mutation.updateCurriculum, { input: input }));
         setMessages({
           show: true,
-          message: 'Curricular changes has been saved.',
+          message:EditCurriculardict[userLanguage]['messages']['curricularchange'] ,
           isError: false
         })
       } catch{
         setMessages({
           show: true,
-          message: 'Error while updating curricular data please try later.',
+          message: EditCurriculardict[userLanguage]['messages']['updateerror'] ,
           isError: true
         })
       }
@@ -185,7 +185,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     } catch{
       setMessages({
         show: true,
-        message: 'Unable to fetch institution list pleas try later.',
+        message: EditCurriculardict[userLanguage]['messages']['unablefetch'],
         isError: true
       })
     }
@@ -204,7 +204,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while processing please Try again later.',
+        message: EditCurriculardict[userLanguage]['messages']['processerr'],
         isError: true
       })
     }
@@ -214,14 +214,14 @@ const EditCurricular = (props: EditCurricularProps) => {
     if (curricularData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Curricular name is required please enter name.',
+        message: EditCurriculardict[userLanguage]['messages']['namerequired'],
         isError: true
       })
       return false;
     } else if (curricularData.institute.id === '') {
       setMessages({
         show: true,
-        message: 'Please select an institute to add curricular.',
+        message: EditCurriculardict[userLanguage]['messages']['selectinstitute'],
         isError: true
       })
       return false;
@@ -230,7 +230,7 @@ const EditCurricular = (props: EditCurricularProps) => {
       if (!isUniq) {
         setMessages({
           show: true,
-          message: 'This curricular name is already exist, please add another name.',
+          message: EditCurriculardict[userLanguage]['messages']['nameexist'],
           isError: true
         })
         return false;
@@ -272,7 +272,7 @@ const EditCurricular = (props: EditCurricularProps) => {
         console.log('err', err)
         setMessages({
           show: true,
-          message: 'Error while fetching curricular data,please try again later.',
+          message:EditCurriculardict[userLanguage]['messages']['fetchinger'],
           isError: true
         })
       }
@@ -349,7 +349,7 @@ const EditCurricular = (props: EditCurricularProps) => {
               <MultipleSelector selectedItems={selectedDesigners} placeholder={EditCurriculardict[userLanguage]['DESIGNER']} list={designersList} onChange={selectDesigner} />
             </div>
             <div className="px-3 py-4">
-              <TextArea value={description} id='description' onChange={onChange} name={EditCurriculardict[userLanguage]['DESCRIPTION']} label="Description" />
+              <TextArea value={description} id='description' onChange={onChange} name="description" label={EditCurriculardict[userLanguage]['DESCRIPTION']} />
             </div>
             <div className="px-3 py-4">
               <TextArea value={objectives} id='objectives' onChange={onChange} name='objectives' label={EditCurriculardict[userLanguage]['OBJECTIVE']} />
