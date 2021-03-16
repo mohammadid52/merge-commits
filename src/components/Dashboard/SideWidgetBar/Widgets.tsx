@@ -37,14 +37,17 @@ export const DefaultTextWidget = (props: { title: string; content: string }) => 
 };
 
 export const ButtonLinkWidget = (props: { title: string; href: string; buttonText: string }) => {
-  const { title, href, buttonText } = props;
+  const { title, href } = props;
   return (
     <div className={`p-2`}>
       <div className={`bg-white border border-dark-gray border-opacity-10 rounded`}>
         <p className={`text-sm p-2 font-semibold border-b border-dark-gray border-opacity-10`}>{title}:</p>
-        <div className={`p-2 border-b border-dark-gray  border-opacity-10`}>
-          BUTTON
-        </div>
+        <a
+          href={href}
+          target={`_blank`}
+        >
+          {href}
+        </a>
       </div>
     </div>
   );

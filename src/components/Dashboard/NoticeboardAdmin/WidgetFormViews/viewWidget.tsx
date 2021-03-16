@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
-import { NoticeboardWidgetMapItem } from '../NoticeboardAdmin';
+import {Widget as NoticeboardWidgetMapItem} from '../../../../interfaces/ClassroomComponentsInterfaces';
 
 // Standard widget card view
 export const ViewModeView = (props: {widgetObj: NoticeboardWidgetMapItem}) => {

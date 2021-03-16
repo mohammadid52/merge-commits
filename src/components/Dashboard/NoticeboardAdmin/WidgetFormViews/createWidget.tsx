@@ -36,13 +36,17 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
           Placement:
           <select name="placement" id="placement" data-basekey="placement" onChange={(e) => handleEditUpdateDefault(e)}>
             <option value="topbar">Top</option>
-            <option value="sidebar" selected>Side</option>
+            <option value="sidebar" selected>
+              Side
+            </option>
           </select>
         </span>
         <span className={`text-right ${theme.lessonCard.subtitle}`}>
           Type:
           <select name="type" id="type" data-basekey="type" onChange={(e) => handleEditUpdateDefault(e)}>
-            <option value="default" selected>Default</option>
+            <option value="default" selected>
+              Default
+            </option>
             <option value="quote">Quote</option>
             <option value="call">Call</option>
           </select>
@@ -85,7 +89,7 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
         />
       ) : null}
 
-      {widgetObj.type === 'quote' ? (
+      {widgetObj.type === 'quote' || widgetObj.type === 'call' ?  (
         <EditQuoteContent
           handleEditUpdateQuotes={handleEditUpdateQuotes}
           viewEditMode={viewEditMode}
@@ -99,9 +103,6 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
         />
       ) : null}
 
-      {widgetObj.type === 'call' ? (
-        <>Edit form for call links</>
-      ) : null}
     </>
   );
 };

@@ -1,8 +1,15 @@
 export interface Quote {
-  text?: string;
+  [key: string]: any;
+  text: string;
   author?: string;
 }
+export interface Link {
+  [key: string]: any;
+  text?: string;
+  url: string;
+}
 export interface Widget {
+  [key: string]: any;
   id?: string;
   teacherAuthID?: string;
   teacherEmail?: string;
@@ -16,6 +23,7 @@ export interface Widget {
     text?: string;
   };
   quotes?: Quote[];
+  links?: Link[];
   active?: boolean;
   teacher?: any;
   createdAt?: string;

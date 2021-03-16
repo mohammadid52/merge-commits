@@ -18,14 +18,45 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
   const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
   const { anthologyDict } = useDictionary(clientKey);
 
+  const quoteItem = { text: '', author: '' };
+  const callItem = { text: '', url: '' };
+
+  const switchKey = (): { key: string; key2: string; key3: string; expander: any; label: string; label2: string, label3: string } => {
+    switch (widgetObj.type) {
+      case 'quote':
+        return {
+          key: `quotes`,
+          key2: `author`,
+          key3: `text`,
+          expander: quoteItem,
+          label: 'Author',
+          label2: 'Quote',
+          label3: 'Text',
+        };
+      case 'call':
+        return {
+          key: `links`,
+          key2: `url`,
+          key3: `text`,
+          expander: callItem,
+          label: 'Link Text',
+          label2: 'Call Link',
+          label3: 'Url',
+        };
+      default:
+        return null;
+    }
+  };
+
   const increaseQuoteCount = () => {
     if (viewEditMode.mode === 'create') {
-      setNewWidgetData({ ...widgetObj, quotes: [...widgetObj.quotes, { text: '', author: '' }] });
+      // @ts-ignore
+      setNewWidgetData({ ...widgetObj, [switchKey().key]: [...widgetObj[switchKey().key], switchKey().expander] });
     }
     if (viewEditMode.mode === 'edit') {
       const updatedWidgetArray = widgetData.map((nestedObj: any, idx: number) => {
         if (nestedObj.id === widgetObj.id) {
-          return { ...nestedObj, quotes: [...nestedObj.quotes, { text: '', author: '' }] };
+          return { ...nestedObj, [switchKey().key]: [...nestedObj[switchKey().key], switchKey().expander] };
         } else {
           return nestedObj;
         }
@@ -34,45 +65,63 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
     }
   };
 
+  const theSwitchObj = switchKey();
+
   return (
     <div className={`mt-2 mb-2`}>
-      {widgetObj.quotes.length > 0 ? (
-        widgetObj.quotes.map((widgetQuote: Quote, idx: number) => {
+      {widgetObj[theSwitchObj.key].length > 0 ? (
+        widgetObj[theSwitchObj.key].map((widgetQuote: Quote, idx: number) => {
           return (
             <Fragment>
               <label
                 htmlFor={`text_${idx}_${widgetObj.id}`}
                 className="block text-xs font-semibold leading-5 text-gray-700">
-                {`Author #${idx}`}
+                {`${theSwitchObj.label} #${idx}`}
               </label>
 
               <textarea
                 id={`${widgetObj.id}`}
                 onChange={handleEditUpdateQuotes}
-                data-basekey={`quotes`}
-                data-nestkey1={`author`}
+                data-basekey={`${theSwitchObj.key}`}
+                data-nestkey1={`${theSwitchObj.key2}`}
                 data-nestkey2={idx}
                 className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
-                value={widgetObj.quotes[idx].author ? widgetObj.quotes[idx].author : ''}
-                placeholder={widgetObj.quotes[idx].author ? widgetObj.quotes[idx].author : `Please add author...`}
+                value={
+                  widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                    ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                    : ''
+                }
+                placeholder={
+                  widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                    ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                    : `Please add ${theSwitchObj.label}...`
+                }
                 rows={1}
               />
 
               <label
                 htmlFor={`text_${idx}_${widgetObj.id}`}
                 className="block text-xs font-semibold leading-5 text-gray-700">
-                {`Quote #${idx}`}
+                {`${theSwitchObj.label2} #${idx}`}
               </label>
 
               <textarea
                 id={`${widgetObj.id}`}
                 onChange={handleEditUpdateQuotes}
-                data-basekey={`quotes`}
-                data-nestkey1={`text`}
+                data-basekey={`${theSwitchObj.key}`}
+                data-nestkey1={`${theSwitchObj.key3}`}
                 data-nestkey2={idx}
                 className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
-                value={widgetObj.quotes[idx].text ? widgetObj.quotes[idx].text : ''}
-                placeholder={widgetObj.quotes[idx].text ? widgetObj.quotes[idx].text : `Please add quote...`}
+                value={
+                  widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
+                    ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
+                    : ''
+                }
+                placeholder={
+                  widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
+                    ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
+                    : `Please add ${theSwitchObj.label2}...`
+                }
                 rows={2}
               />
             </Fragment>

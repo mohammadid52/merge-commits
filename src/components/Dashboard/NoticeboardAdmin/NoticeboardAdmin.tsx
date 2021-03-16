@@ -43,7 +43,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   const [loading, setLoading] = useState<boolean>(false);
   //
   const [widgetData, setWidgetData] = useState<NoticeboardWidgetMapItem[]>([]);
-  const [newWidgetData, setNewWidgetData] = useState<NoticeboardWidgetMapItem>({
+  const [newWidgetData, setNewWidgetData] = useState<NoticeboardWidgetMapItem | any>({
     teacherAuthID: '',
     teacherEmail: '',
     roomID: '',
@@ -53,6 +53,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     description: '',
     content: { text: '', image: '' },
     quotes: [],
+    links: [],
     active: true,
   });
 
@@ -106,6 +107,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     const basekey = e.target.getAttribute('data-basekey');
     const nestkey1 = e.target.getAttribute('data-nestkey1');
     const nestkey2 = e.target.getAttribute('data-nestkey2');
+
     switch (viewEditMode.mode) {
       case 'edit':
         const updatedWidgetData = widgetData.reduce((acc: NoticeboardWidgetMapItem[], widgetObj: any) => {
@@ -132,7 +134,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       case 'create':  // final step to saving author!
         const updatedNewWidgetData = {
           ...newWidgetData,
-          quotes: newWidgetData.quotes.map((nestedObj: any, idx: number) => {
+          [basekey]: newWidgetData[basekey].map((nestedObj: any, idx: number) => {
             if (idx === parseInt(nestkey2)) {
               return { ...nestedObj, [nestkey1]: value };
             } else {
@@ -267,6 +269,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       active: getWidgetObj.active,
       placement: getWidgetObj.placement,
       quotes: getWidgetObj.quotes,
+      links: getWidgetObj.links,
       content: getWidgetObj.content,
       description: getWidgetObj.description,
       title: getWidgetObj.title,
@@ -296,6 +299,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       roomID: activeRoom,
       placement: subSectionKey[subSection],
     };
+    console.log('creating widget...', input)
     try {
       const noticeboardWidgetCreate: any = await API.graphql(
         graphqlOperation(mutations.createNoticeboardWidget, {

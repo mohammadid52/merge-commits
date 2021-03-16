@@ -9963,6 +9963,10 @@ export const createNoticeboardWidget = /* GraphQL */ `
         text
         author
       }
+      links {
+        text
+        url 
+      }
       active
       teacher {
         id
@@ -10020,6 +10024,10 @@ export const updateNoticeboardWidget = /* GraphQL */ `
       quotes {
         text
         author
+      }
+      links {
+        text
+        url 
       }
       active
       teacher {
