@@ -151,14 +151,14 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       if (InstituteList.length === 0) {
         setMessages({
           show: true,
-          message: 'Please create an institute before creating Classroom.',
+          message: RoomBuilderdict[userLanguage]['messages']['error']['institutebefor'],
           isError: true
         })
       }
     } catch {
       setMessages({
         show: true,
-        message: 'Unable to fetch institution list. Please try again later.',
+        message:RoomBuilderdict[userLanguage]['messages']['error']['institutelist'] ,
         isError: true
       })
     }
@@ -174,7 +174,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Unable to fetch institution data. Please try again later.',
+        message: RoomBuilderdict[userLanguage]['messages']['error']['institutelist'],
         isError: true
       })
     }
@@ -189,7 +189,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       if (listStaffs?.length === 0) {
         setMessages({
           show: true,
-          message: 'Please create staff member first for your institute.',
+          message:  RoomBuilderdict[userLanguage]['messages']['error']['staffmember'],
           isError: true
         })
       } else {
@@ -217,7 +217,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       console.log(err)
       setMessages({
         show: true,
-        message: 'Unable to fetch teachers list. Please try again later.',
+        message: RoomBuilderdict[userLanguage]['messages']['error']['teacherlist'],
         isError: true
       })
     }
@@ -233,7 +233,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       if (listClass.length === 0) {
         setMessages({
           show: true,
-          message: 'Please create class first for your institute.',
+          message: RoomBuilderdict[userLanguage]['messages']['error']['createclass'],
           isError: true
         })
       } else {
@@ -248,7 +248,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Unable to fetch class list. Please try again later.',
+        message: RoomBuilderdict[userLanguage]['messages']['error']['classlist'],
         isError: true
       })
     }
@@ -269,7 +269,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Unable to fetch curricular list. Please try again later.',
+        message: RoomBuilderdict[userLanguage]['messages']['error']['curricular'],
         isError: true
       })
     }
@@ -288,7 +288,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while processing please Try again later.',
+        message: RoomBuilderdict[userLanguage]['messages']['error']['process'],
         isError: true
       })
     }
@@ -298,42 +298,42 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     if (roomData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Classroom name is required please enter name.',
+        message: RoomBuilderdict[userLanguage]['messages']['validation']['classroomname'],
         isError: true
       })
       return false;
     } else if (roomData.institute.id === '') {
       setMessages({
         show: true,
-        message: 'Please select an institute to add Classroom.',
+        message:  RoomBuilderdict[userLanguage]['messages']['validation']['institute'],
         isError: true
       })
       return false;
     } else if (roomData.teacher.id === '') {
       setMessages({
         show: true,
-        message: 'Please select a teacher for the Classroom.',
+        message: RoomBuilderdict[userLanguage]['messages']['validation']['teacher'],
         isError: true
       })
       return false;
     } else if (roomData.classRoom.id === '') {
       setMessages({
         show: true,
-        message: 'Please select a class for the Classroom.',
+        message:RoomBuilderdict[userLanguage]['messages']['validation']['class'] ,
         isError: true
       })
       return false;
     } else if (roomData.maxPersons == '') {
       setMessages({
         show: true,
-        message: 'Please set Max students limit for the Classroom.',
+        message: RoomBuilderdict[userLanguage]['messages']['validation']['maxstudent'] ,
         isError: true
       })
       return false;
     } else if (parseInt(roomData.maxPersons) < 1 || parseInt(roomData.maxPersons) > 30) {
       setMessages({
         show: true,
-        message: 'One Classroom can allow max. 30 students.',
+        message:RoomBuilderdict[userLanguage]['messages']['validation']['allowstudent'] ,
         isError: true
       })
       return false;
@@ -342,7 +342,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       if (!isUniq) {
         setMessages({
           show: true,
-          message: 'This Classroom name is already exist, please add another name.',
+          message: RoomBuilderdict[userLanguage]['messages']['validation']['classroomexist'] ,
           isError: true
         })
         return false;
@@ -365,7 +365,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         const addCurricular: any = await API.graphql(graphqlOperation(mutation.createRoomCurriculum, { input: curricularInput }))
         setMessages({
           show: true,
-          message: 'New Classroom details has been saved.',
+          message: RoomBuilderdict[userLanguage]['messages']['success']['classroomdetail'],
           isError: false
         })
         setRoomData(initialData)
@@ -373,7 +373,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       } catch {
         setMessages({
           show: true,
-          message: 'Error while adding Classroom curricular. Please try again later.',
+          message: RoomBuilderdict[userLanguage]['messages']['error']['classroomadd'],
           isError: true
         })
         setLoading(false)
@@ -381,7 +381,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     } else {
       setMessages({
         show: true,
-        message: 'Error while adding Classroom curricular. Please try again later.',
+        message: RoomBuilderdict[userLanguage]['messages']['error']['classroomadd'],
         isError: true
       })
       setLoading(false)
@@ -409,7 +409,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         } else {
           setMessages({
             show: true,
-            message: 'New Classroom details has been saved.',
+            message: RoomBuilderdict[userLanguage]['messages']['success']['newclassroom'],
             isError: false
           })
           setRoomData(initialData)
@@ -418,7 +418,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       } catch {
         setMessages({
           show: true,
-          message: 'Error while creating Classroom. Please try again later.',
+          message: RoomBuilderdict[userLanguage]['messages']['error']['ecreateclass'],
           isError: true
         })
         setLoading(false)
@@ -472,7 +472,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       } else {
         setMessages({
           show: true,
-          message: 'Invalid path please go back to institution selection page to select your institute.',
+          message:RoomBuilderdict[userLanguage]['messages']['error']['invalid'] ,
           isError: true
         })
       }

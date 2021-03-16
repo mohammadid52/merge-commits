@@ -912,6 +912,36 @@ const RoomBuilderdict: any = {
     BUTTON: {
       SAVE: 'Save',
       SAVING: 'Saving...',
+    },
+    messages:{
+      error:{
+        institutebefor:'Please create an institute before creating Classroom.',
+        institutelist:'Unable to fetch institution list. Please try again later.',
+        staffmember:'Please create staff member first for your institute.',
+        teacherlist:'Unable to fetch teachers list. Please try again later.',
+        createclass:'Please create class first for your institute.',
+        classlist:'Unable to fetch class list. Please try again later.',
+        curricular:'Unable to fetch curricular list. Please try again later.',
+        process:'Error while processing please Try again later.',
+        classroomadd:'Error while adding Classroom curricular. Please try again later.',
+        ecreateclass:'Error while creating Classroom. Please try again later.',
+        invalid:'Invalid path please go back to institution selection page to select your institute.',
+      },
+      validation:{
+        classroomname:'Classroom name is required please enter name.',
+        institute:'Please select an institute to add Classroom.',
+        teacher:'Please select a teacher for the Classroom.',
+        class:'Please select a class for the Classroom.',
+        maxstudent:'Please set Max students limit for the Classroom.',
+        allowstudent:'One Classroom can allow max. 30 students.',
+        classroomexist:'This Classroom name is already exist, please add another name.',
+
+      },
+      success:{
+        classroomdetail:'New Classroom details has been saved.',
+        newclassroom:'New Classroom details has been saved.',
+
+      }
     }
 
   },
@@ -932,6 +962,36 @@ const RoomBuilderdict: any = {
     BUTTON: {
       SAVE: 'TBD',
       SAVING: 'TBD',
+    },
+    messages:{
+      error:{
+        institutebefor:'TBD',
+        institutelist:'TBD',
+        staffmember:'TBD',
+        teacherlist:'TBD',
+        createclass:'TBD',
+        classlist:'TBD',
+        curricular:'TBD',
+        process:'TBD',
+        classroomadd:'TBD',
+        ecreateclass:'TBD',
+        invalid:'TBD',
+      },
+      validation:{
+        classroomname:'TBD',
+        institute:'TBD',
+        teacher:'TBD',
+        class:'TBD',
+        maxstudent:'TBD',
+        allowstudent:'TBD',
+        classroomexist:'TBD',
+
+      },
+      success:{
+        classroomdetail:'TBD',
+        newclassroom:'TBD',
+
+      }
     }
 
   }
@@ -1173,6 +1233,91 @@ const ADDLEARINGOBJDICT: any = {
   }
 }
 
+const addQuestionDict:any={
+  'EN':{
+    heading:'ADD NEW CHECKPOINT QUESTION',
+    q:'Question',
+    qlabel:'Question Label',
+    selecttype:'Select Type',
+    selectpl:'Type',
+    selectlang:'Select Language',
+    selectlanpl:'Language',
+    addOption:'Add Options :',
+    otheropt:`Add an "Other" Answer Option and Comment Field`,
+    nonefabove:`Add a "None of the above" Answer Option`,
+    messages:{
+      qrequired:'Question input is required',
+      qtyperequired:'Question type is required',
+      qlabelrequired:'Question label is required',
+      qdetailsave:'Question details has been saved.',
+      unabletosave:'Unable to save Question details, Please try again later.',
+
+    },
+    Button:{
+      save:'Save',
+      cancel:'Cancel'
+    }
+  },
+  'ES':{
+    heading:'TBD',
+    q:'TBD',
+    qlabel:'TBD',
+    selecttype:'TBD',
+    selectpl:'TBD',
+    selectlang:'TBD',
+    selectlanpl:'TBD',
+    addOption:'TBD',
+    otheropt:`TBD`,
+    nonefabove:`TBD`,
+    messages:{
+      qrequired:'TBD',
+      qtyperequired:'TBD',
+      qlabelrequired:'TBD',
+      qdetailsave:'TBD',
+      unabletosave:'TBD',
+
+    },
+    Button:{
+      save:'TBD',
+      cancel:'TBD'
+    }
+
+  }
+}
+
+const SelectPreviousQuestion:any={
+  'EN':{
+    heading:'SELECT NEW CHECKPOINT QUESTION',
+    qselectd:'Questions Selected',
+    selection:'Selection',
+    question:'Question',
+    type:'Type',
+    language:'Language',
+    qempty:'Question bank is empty please create a new question.',
+    error:'Error while fetching questions list please try again later.',
+    wait:'Fetching question details please wait...',
+    button:{
+      save:'Save',
+      cancel:'Cancel'
+    }
+  },
+  'ES':{
+    heading:'TBD',
+    qselectd:'TBD',
+    selection:'TBD',
+    question:'TBD',
+    type:'TBD',
+    language:'TBD',
+    qempty:'TBD',
+    error:'TBD',
+    wait:'TBD',
+    button:{
+      save:'TBD',
+      cancel:'TBD'
+    }
+  }
+}
+
 
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
@@ -1215,6 +1360,8 @@ export {
   Measurementdict,
   TOPICLISTDICT,
   ADDLEARINGOBJDICT,
+  addQuestionDict,
+  SelectPreviousQuestion
   
   
 };
