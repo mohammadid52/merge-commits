@@ -255,13 +255,13 @@ const Dashboard = (props: DashboardProps) => {
         {/**
          *  SIDEWIDGETSBAR
          */}
-        {/*{currentPage === 'lesson-planner' || currentPage === 'classroom' ? (
+        {
+          currentPage === 'classroom' ? (
           <SideWidgetBar
             currentPage={currentPage}
-            visibleLessonGroup={visibleLessonGroup}
-            setVisibleLessonGroup={setVisibleLessonGroup}
           />
-        ) : null}*/}
+        ) : null
+        }
       </div>
     </div>
   );
