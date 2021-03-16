@@ -1939,14 +1939,24 @@ export const getSyllabus = /* GraphQL */ `
           lesson {
             title
             measurements {
-              id
-              lessonID
-              rubricID
-              rubric {
+              items {
                 id
-                name
-                topicID
+                lessonID
+                rubricID
+                rubric {
+                  id
+                  name
+                  criteria
+                  distinguished
+                  excelled
+                  adequite
+                  basic
+                  topicID
+                }
+                createdAt
+                updatedAt
               }
+              nextToken
             }
           }
           unit
