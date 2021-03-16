@@ -36,7 +36,7 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
           Placement:
           <select name="placement" id="placement" data-basekey="placement" onChange={(e) => handleEditUpdateDefault(e)}>
             <option value="topbar">Top</option>
-            <option value="sidebar">Side</option>
+            <option value="sidebar" selected>Side</option>
           </select>
         </span>
         <span className={`text-right ${theme.lessonCard.subtitle}`}>

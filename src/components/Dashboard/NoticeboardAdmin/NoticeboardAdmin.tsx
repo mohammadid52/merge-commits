@@ -51,7 +51,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     teacherEmail: '',
     roomID: '',
     type: 'default',
-    placement: '',
+    placement: 'sidebar',
     title: '',
     description: '',
     content: { text: '', image: '' },
