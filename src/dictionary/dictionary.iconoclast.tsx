@@ -334,6 +334,18 @@ const editClassDict: any = {
     NOSTUDENT: 'No students added in the class.',
     LOADING: 'Loading class students list...',
     EDIT: 'Edit',
+    heading:'CLASS INFORMATION',
+    heading2:'STUDENTS',
+    messages:{
+      errorfetch:'Error while fetching class data,please try again later.',
+      errorstudentadd:'Error while adding stuent, please try again later',
+      processerror:'Error while processing please Try again later.',
+      classrequired:'Class name is required please enter.',
+      selectinstitute:'Please select an institute to add class.',
+      classexist:'This class name is already exist, please add another name.',
+      classupdate:'Class details has been updated.',
+      unableupdate:'Unable to update class details. Please try again later.',
+    },
     TABLE: {
       SNO: 'No.',
       NAME: 'Participant Name',
@@ -353,6 +365,18 @@ const editClassDict: any = {
     NOSTUDENT: 'TBD',
     LOADING: 'TBD',
     EDIT: 'TBD',
+    heading:'TBD',
+    heading2:'TBD',
+    messages:{
+      errorfetch:'TBD',
+      errorstudentadd:'TBD',
+      processerror:'TBD',
+      classrequired:'TBD',
+      selectinstitute:'TBD',
+      classexist:'TBD',
+      classupdate:'TBD',
+      unableupdate:'TBD',
+    },
     TABLE: {
       SNO: 'No.',
       NAME: 'nombre del estudiante',
@@ -1358,7 +1382,7 @@ const addQuestionDict:any={
   }
 }
 
-const SelectPreviousQuestion:any={
+const SelectPreviousQuestionDict:any={
   'EN':{
     heading:'SELECT NEW CHECKPOINT QUESTION',
     qselectd:'Questions Selected',
@@ -1433,5 +1457,5 @@ export {
   lessonPlannerDict,
   lessonBuilderDict,
   addQuestionDict,
-  SelectPreviousQuestion
+  SelectPreviousQuestionDict
 };

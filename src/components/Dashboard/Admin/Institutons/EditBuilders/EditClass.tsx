@@ -102,7 +102,7 @@ const EditClass = (props: EditClassProps) => {
       setLoading(false)
       setMessages({
         show: true,
-        message: 'Error while fetching class data,please try again later.',
+        message: dictionary.messages.errorfetch,
         isError: true
       })
     }
@@ -155,7 +155,7 @@ const EditClass = (props: EditClassProps) => {
       console.log('saveClassStudent', err)
       setMessages({
         show: true,
-        message: 'Error while adding stuent, please try again later',
+        message: dictionary.messages.errorstudentadd,
         isError: true
       })
     }
@@ -194,7 +194,7 @@ const EditClass = (props: EditClassProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while processing please Try again later.',
+        message: dictionary.messages.processerror,
         isError: true
       })
     }
@@ -204,14 +204,14 @@ const EditClass = (props: EditClassProps) => {
     if (classData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Class name is required please enter.',
+        message: dictionary.messages.classrequired,
         isError: true
       })
       return false;
     } else if (classData.institute.id === '') {
       setMessages({
         show: true,
-        message: 'Please select an institute to add class.',
+        message:dictionary.messages.selectinstitute,
         isError: true
       })
       return false;
@@ -220,7 +220,7 @@ const EditClass = (props: EditClassProps) => {
       if (!isUniq) {
         setMessages({
           show: true,
-          message: 'This class name is already exist, please add another name.',
+          message: dictionary.messages.classexist,
           isError: true
         })
         return false;
@@ -244,13 +244,13 @@ const EditClass = (props: EditClassProps) => {
         const newClass: any = await API.graphql(graphqlOperation(mutations.updateClass, { input: input }));
         setMessages({
           show: true,
-          message: 'Class details has been updated.',
+          message: dictionary.messages.classupdate,
           isError: false
         })
       } catch {
         setMessages({
           show: true,
-          message: 'Unable to update class details. Please try again later.',
+          message: dictionary.messages.unableupdate,
           isError: true
         })
       }
@@ -271,7 +271,7 @@ const EditClass = (props: EditClassProps) => {
 
       <PageWrapper>
         <div className="w-7/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CLASS INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{dictionary.heading}</h3>
           <div className="">
             <div className="w-7/10 m-auto px-2">
               <FormInput value={classData.name} id='className' onChange={onNameChange} name='className' label={dictionary.NAME_INPUT_LABEL} isRequired />
@@ -280,7 +280,7 @@ const EditClass = (props: EditClassProps) => {
           </div>
         </div>
 
-        <h3 className="text-center text-lg text-gray-600 font-medium mt-12 mb-6">STUDENTS</h3>
+        <h3 className="text-center text-lg text-gray-600 font-medium mt-12 mb-6">{dictionary.heading2}</h3>
 
         <div className="flex items-center w-6/10 m-auto px-2">
           <SelectorWithAvatar selectedItem={newMember} list={students} placeholder={dictionary.ADD_STUDENT_PLACEHOLDER} onChange={onStudentSelect} />

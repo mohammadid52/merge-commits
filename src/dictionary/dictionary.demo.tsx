@@ -264,27 +264,61 @@ const spBuilderDict: any = {
 };
 
 const editClassDict: any = {
-  EN: {
-    TITLE: 'EDIT CLASS',
-    SUBTITLE: 'Edit class information',
-    NAME_INPUT_LABEL: 'Class Name',
-    STUDENTS: 'STUDENTS',
-    ADD_STUDENT_PLACEHOLDER: 'Add new student',
+  'EN': {
+    TITLE: 'EDIT Cohort',
+    SUBTITLE: 'Edit cohort information',
+    NAME_INPUT_LABEL: 'Cohort Name',
+    STUDENTS: 'Participants',
+    ADD_STUDENT_PLACEHOLDER: 'Add new participant',
     ADD_STUDENT_BUTTON: 'Add',
+    UPDATING: 'updating...',
+    CANCEL: 'Cancel',
+    NOSTUDENT: 'No students added in the class.',
+    LOADING: 'Loading class students list...',
+    EDIT: 'Edit',
+    heading:'CLASS INFORMATION',
+    heading2:'STUDENTS',
+    messages:{
+      errorfetch:'Error while fetching class data,please try again later.',
+      errorstudentadd:'Error while adding stuent, please try again later',
+      processerror:'Error while processing please Try again later.',
+      classrequired:'Class name is required please enter.',
+      selectinstitute:'Please select an institute to add class.',
+      classexist:'This class name is already exist, please add another name.',
+      classupdate:'Class details has been updated.',
+      unableupdate:'Unable to update class details. Please try again later.',
+    },
     TABLE: {
       SNO: 'No.',
-      NAME: 'Student Name',
+      NAME: 'Participant Name',
       STATUS: 'Status',
       ACTIONS: 'Actions',
     },
   },
-  ES: {
+  'ES': {
     TITLE: 'EDITAR CLASE',
     SUBTITLE: 'Editar la información de la clase',
     NAME_INPUT_LABEL: 'Nombre de la clase',
     STUDENTS: 'ALUMNAS',
     ADD_STUDENT_PLACEHOLDER: 'Agregar nuevo alumno',
     ADD_STUDENT_BUTTON: 'Añadir',
+    UPDATING: 'TBD',
+    CANCEL: 'TBD',
+    NOSTUDENT: 'TBD',
+    LOADING: 'TBD',
+    EDIT: 'TBD',
+    heading:'TBD',
+    heading2:'TBD',
+    messages:{
+      errorfetch:'TBD',
+      errorstudentadd:'TBD',
+      processerror:'TBD',
+      classrequired:'TBD',
+      selectinstitute:'TBD',
+      classexist:'TBD',
+      classupdate:'TBD',
+      unableupdate:'TBD',
+    },
     TABLE: {
       SNO: 'No.',
       NAME: 'nombre del estudiante',
@@ -293,7 +327,6 @@ const editClassDict: any = {
     },
   },
 };
-
 const lessonDict: any = {
   EN: {
     CLASS: 'Class',
@@ -1285,7 +1318,7 @@ const addQuestionDict:any={
   }
 }
 
-const SelectPreviousQuestion:any={
+const SelectPreviousQuestionDict:any={
   'EN':{
     heading:'SELECT NEW CHECKPOINT QUESTION',
     qselectd:'Questions Selected',
@@ -1361,7 +1394,7 @@ export {
   TOPICLISTDICT,
   ADDLEARINGOBJDICT,
   addQuestionDict,
-  SelectPreviousQuestion
+  SelectPreviousQuestionDict
   
   
 };
