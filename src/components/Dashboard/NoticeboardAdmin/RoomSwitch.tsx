@@ -23,11 +23,11 @@ const RoomSwitch = (props: DashboardProps) => {
     }
   };
 
-  const linkClass = 'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b border-medium-gray';
+  const linkClass = 'w-full p-2 text-sm tracking-wider mx-auto border-b border-medium-gray';
 
   return (
     <div className={`${theme.section}`}>
-      <div className={`flex flex-col p-4`}>
+      <div className={`grid grid-cols-4 gap-2 px-4`}>
         {rooms.length > 0
           ? rooms.map((room: Room, i: number) => (
               <div
@@ -35,9 +35,12 @@ const RoomSwitch = (props: DashboardProps) => {
                 id={room.id}
                 data-name={room.name}
                 onClick={(e) => handleRoomSelection(e, i)}
-                className={`cursor-pointer ${linkClass} 
-              ${activeRoom === room.id ? 'bg-grayscale-light bg-opacity-80' : 'bg-darker-gray bg-opacity-20'} 
-              truncate ...`}>
+                className={`rounded p-2 cursor-pointer truncate ...
+                ${linkClass} 
+                ${activeRoom === room.id 
+                  ? 'font-semibold text-grayscale-lightest bg-darker-gray bg-opacity-20' 
+                  : 'text-grayscale-lightest bg-grayscale-light bg-opacity-80'} 
+              `}>
                 {room.name}
               </div>
             ))

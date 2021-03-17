@@ -1,6 +1,9 @@
 import React from 'react';
 
 import { Lesson, LessonProps } from '../Classroom/Classroom';
+import { Link } from '../../../interfaces/ClassroomComponentsInterfaces';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { IoCallOutline } from 'react-icons/all';
 
 export const ImageWidget = (props: {
   source: string;
@@ -29,25 +32,45 @@ export const DefaultTextWidget = (props: { title: string; content: string }) => 
       <div className={`bg-white border border-dark-gray border-opacity-10 rounded`}>
         <p className={`text-sm p-2 font-semibold border-b border-dark-gray border-opacity-10`}>{title}:</p>
         <div key={`teacher_side_note`} className={`p-2 border-b border-dark-gray  border-opacity-10`}>
-          <p className={`text-xs text-dark-gray`} dangerouslySetInnerHTML={{__html: content}}/>
+          <p className={`text-xs text-dark-gray`} dangerouslySetInnerHTML={{ __html: content }} />
         </div>
       </div>
     </div>
   );
 };
 
-export const ButtonLinkWidget = (props: { title: string; href: string; buttonText: string }) => {
-  const { title, href } = props;
+export const CallLinkWidget = (props: { title: string; links: Link }) => {
+  const { title, links } = props;
+
   return (
     <div className={`p-2`}>
       <div className={`bg-white border border-dark-gray border-opacity-10 rounded`}>
-        <p className={`text-sm p-2 font-semibold border-b border-dark-gray border-opacity-10`}>{title}:</p>
-        <a
-          href={href}
-          target={`_blank`}
-        >
-          {href}
-        </a>
+        <div className={`flex flex-row p-2 text-sm font-semibold border-b border-dark-gray border-opacity-10`}>
+          <span>{title}</span>:
+          <span>
+            <IconContext.Provider value={{ className: 'w-auto ' }}>
+              <IoCallOutline size={18} />
+            </IconContext.Provider>
+          </span>
+        </div>
+        {links &&
+          links.length > 0 &&
+          links.map((link: Link, idx: number) => (
+            <div
+              key={`links_${links.id}_idx`}
+              className={`p-2 break-all ${
+                idx < links.length - 1 ? 'border-b border-dark-gray border-opacity-10' : ''
+              }`}>
+              <p className={`text-sm font-semibold`}>{link.text}:</p>
+              <a
+                id={`links_${links.id}_idx`}
+                className={`text-xs font-semibold text-blueberry hover:underline`}
+                href={link.url}
+                target={`_blank`}>
+                {link.url}
+              </a>
+            </div>
+          ))}
       </div>
     </div>
   );

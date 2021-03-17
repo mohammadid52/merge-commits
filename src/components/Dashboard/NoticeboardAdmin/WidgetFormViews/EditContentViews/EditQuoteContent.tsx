@@ -36,12 +36,12 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
       case 'call':
         return {
           key: `links`,
-          key2: `url`,
-          key3: `text`,
+          key2: `text`,
+          key3: `url`,
           expander: callItem,
           label: 'Link Text',
-          label2: 'Call Link',
-          label3: 'Url',
+          label2: 'Url',
+          label3: 'Call Link',
         };
       default:
         return null;

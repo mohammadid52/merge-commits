@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { DashboardProps } from '../Dashboard';
 
-import { ButtonLinkWidget, DefaultTextWidget, ImageWidget } from './Widgets';
+import { CallLinkWidget, DefaultTextWidget, ImageWidget } from './Widgets';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { getAsset } from '../../../assets';
 import { Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
@@ -32,7 +32,7 @@ const SideWidgetBar = (props: DashboardProps) => {
       case 'quote':
         return <QuoteWidget key={`sidebar_widget_${idx}`} quotes={widgetObj.quotes} />;
       case 'call':
-        return <ButtonLinkWidget title={`Zoom`} href={`https://www.google.com`} buttonText={`Zoom`}/>
+        return <CallLinkWidget key={`sidebar_widget_${idx}`} title={widgetObj.title} links={widgetObj.links}/>
       default:
         return null;
     }
