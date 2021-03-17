@@ -1360,6 +1360,7 @@ export const listLessonsTitles = /* GraphQL */ `
           sequence
           stage
         }
+        institutionID
       }
       nextToken
     }
@@ -1527,6 +1528,11 @@ export const getLesson = /* GraphQL */ `
         sequence
         stage
       }
+      institutionID
+      institution {
+        id
+        name
+        }
       measurements {
         nextToken
       }
@@ -1974,6 +1980,38 @@ export const getSyllabus = /* GraphQL */ `
       }
       designers
       status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const getInstitutionCurriculars = /* GraphQL */ `
+  query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      name
+      type
+      curricula {
+        items {
+          id
+          institutionID
+          name
+          type
+          languages
+          designers
+          syllabi {
+            items{
+              id
+              name
+              type      
+            }
+          }
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }

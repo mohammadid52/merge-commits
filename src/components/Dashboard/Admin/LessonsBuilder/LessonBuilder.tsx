@@ -27,6 +27,7 @@ export interface InitialData {
   objective: string,
   objectiveHtml: string,
   languages: { id: string, name: string, value: string }[]
+  institution?: InputValueObject
 }
 export interface InputValueObject {
   id: string,
@@ -35,10 +36,11 @@ export interface InputValueObject {
 }
 interface LessonBuilderProps {
   designersList: any[]
+  institutionList: any[]
 }
 
 const LessonBuilder = (props: LessonBuilderProps) => {
-  const { designersList } = props;
+  const { designersList, institutionList } = props;
   const history = useHistory();
   const match = useRouteMatch();
 
@@ -55,7 +57,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     purposeHtml: '<p></p>',
     objective: '',
     objectiveHtml: '<p></p>',
-    languages: [{ id: '1', name: "English", value: 'EN' }]
+    languages: [{ id: '1', name: "English", value: 'EN' }],
+    institution: { id: '', name: '', value: '' },
   }
   const instructionInitialState = {
     introductionTitle: '',
@@ -117,6 +120,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           allMeasurement={measurementList}
           lessonMeasurements={selectedMeasurement}
           setLessonMeasurements={setSelectedMeasurement}
+          institutionList={institutionList}
         />;
       case 'Instructions':
         return <AssessmentInstuctions

@@ -62,6 +62,7 @@ const LessonEdit = (props: LessonEditProps) => {
     purposeHtml: '<p></p>',
     objective: '',
     objectiveHtml: '<p></p>',
+    institution: { id: '', name: '', value: '' },
     languages: [{ id: '1', name: "English", value: 'EN' }]
   }
   const instructionInitialState = {
@@ -80,8 +81,8 @@ const LessonEdit = (props: LessonEditProps) => {
   const [measurementList, setMeasurementList] = useState([]);
   const [selectedMeasurement, setSelectedMeasurement] = useState([]);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
-  const [activeStep, setActiveStep] = useState('Assign Unit');
-  // const [activeStep, setActiveStep] = useState('Overview');
+  // const [activeStep, setActiveStep] = useState('Assign Unit');
+  const [activeStep, setActiveStep] = useState('Overview');
   const [loading, setLoading] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
@@ -165,7 +166,8 @@ const LessonEdit = (props: LessonEditProps) => {
         type: savedData.type && typeList.find((item: any) => item.value === savedData.type),
         purposeHtml: savedData?.purpose ? savedData.purpose : '<p></p>',
         objectiveHtml: savedData.objectives ? savedData.objectives[0] : '<p></p>',
-        languages: savedData.language ? languageList.filter((item: any) => savedData.language.includes(item.value)) : []
+        languages: savedData.language ? languageList.filter((item: any) => savedData.language.includes(item.value)) : [],
+        institution: { id: savedData?.institution?.id, name: savedData?.institution?.name, value: savedData?.institution?.name }
       });
       setSavedLessonDetails({
         ...savedLessonDetails,
@@ -260,6 +262,8 @@ const LessonEdit = (props: LessonEditProps) => {
       case 'Assign Unit':
         return <UnitLookup
           lessonName={formData.name}
+          lessonId={lessonId || assessmentId}
+          institution={formData.institution}
         />;
       // default:
       //   return <GeneralInformation
