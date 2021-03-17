@@ -20,7 +20,7 @@ export const EditModeView = (props: NoticeboardFormProps) => {
   } = props;
   const { theme } = useContext(GlobalContext);
   return (
-    <div className={`p-2`}>
+    <>
       {/**
        *  section: TOP INFO
        */}
@@ -121,6 +121,6 @@ export const EditModeView = (props: NoticeboardFormProps) => {
           />
         ) : null
       }
-    </div>
+    </>
   );
 };

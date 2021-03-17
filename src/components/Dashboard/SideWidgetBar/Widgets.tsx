@@ -46,8 +46,8 @@ export const CallLinkWidget = (props: { title: string; links: Link }) => {
     <div className={`p-2`}>
       <div className={`bg-white border border-dark-gray border-opacity-10 rounded`}>
         <div className={`flex flex-row p-2 text-sm font-semibold border-b border-dark-gray border-opacity-10`}>
-          <span>{title}</span>:
-          <span>
+          <span className={`w-full`}>{title}:</span>
+          <span className={`w-auto mr-0`}>
             <IconContext.Provider value={{ className: 'w-auto ' }}>
               <IoCallOutline size={18} />
             </IconContext.Provider>

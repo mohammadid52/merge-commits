@@ -76,7 +76,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
   const theSwitchObj = switchKey();
 
   return (
-    <div className={`mt-2 mb-2`}>
+    <div className={`mt-2 mb-2 p-2`}>
       {widgetObj[theSwitchObj.key].length > 0 ? (
         widgetObj[theSwitchObj.key].map((widgetQuote: Quote, idx: number) => {
           return (

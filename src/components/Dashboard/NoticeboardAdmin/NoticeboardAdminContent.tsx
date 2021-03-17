@@ -150,7 +150,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
                   {/**
                    *  section:  VIEW/EDIT BUTTON
                    */}
-                  <div className={`flex p-2 mt-2`}>
+                  <div className={`flex mt-2`}>
                     {viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
                       <p
                         onClick={() => handleEditToggle('', '')}
