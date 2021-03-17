@@ -26,7 +26,7 @@ const RoomsList = (props: RoomListProps) => {
 
   const [messages, setMessages] = useState({
     show: false,
-    message: 'This institute does not have any classroom. Please create a new classroom.',
+    message: InstitueRomms[userLanguage]['messages']['nothaveclass'],
     isError: false
   })
   const createNewRoom = () => {
@@ -49,7 +49,7 @@ const RoomsList = (props: RoomListProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while fetching classroom data please Try again later.',
+        message: InstitueRomms[userLanguage]['messages']['fetcherr'],
         isError: true
       })
     }

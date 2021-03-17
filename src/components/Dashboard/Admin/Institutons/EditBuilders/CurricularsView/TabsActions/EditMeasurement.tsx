@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { IoArrowUndoCircleOutline } from 'react-icons/io5'
 import API, { graphqlOperation } from '@aws-amplify/api';
@@ -14,6 +14,8 @@ import * as mutations from '../../../../../../../graphql/mutations';
 import * as queries from '../../../../../../../graphql/queries';
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../../customGraphql/customMutations';
+import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../../../customHooks/dictionary';
 
 interface EditMeasurementProps {
 
@@ -28,14 +30,16 @@ const EditMeasurement = (props: EditMeasurementProps) => {
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({ name: '', topic: '' })
   const [topics, setTopics] = useState([]);
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
+  const {EditMeasurementDict, BreadcrumsTitles } = useDictionary(clientKey);
   const [measurement, setMeasurement] = useState({
     id: measurementId, name: '', curriculumID: curricularId, topic: { id: '', name: '', value: '' },
     criteria: '', distinguished: '', basic: '', adequite: '', excelled: ''
   })
 
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Edit Measurement', url: `/dashboard/curricular/${curricularId}/measurement/edit/${measurementId}'}`, last: true }
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['EditMeasurement'], url: `/dashboard/curricular/${curricularId}/measurement/edit/${measurementId}'}`, last: true }
   ];
 
   const onInputChange = (e: any) => {
@@ -95,13 +99,13 @@ const EditMeasurement = (props: EditMeasurementProps) => {
     const msgs = validation;
     if (!measurement.name.length) {
       isValid = false;
-      msgs.name = 'Name is required';
+      msgs.name = EditMeasurementDict[userLanguage]['messages']['namerequired'];
     } else {
       msgs.name = ''
     }
     if (!measurement.topic.id) {
       isValid = false;
-      msgs.topic = 'topic is required';
+      msgs.topic = EditMeasurementDict[userLanguage]['messages']['topicrequired'];
     } else {
       msgs.topic = ''
     }
@@ -144,7 +148,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Edit Measurement" subtitle="Edit curricular measurement." />
+        <SectionTitle title={EditMeasurementDict[userLanguage]['title']} subtitle={EditMeasurementDict[userLanguage]['subtitle']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -153,7 +157,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">MEASUREMENT INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{EditMeasurementDict[userLanguage]['heading']}</h3>
         </div>
         {
           !loading ?
@@ -161,7 +165,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
               <div className="w-6/10 m-auto">
                 <div className="">
                   <div className="px-3 py-4">
-                    <FormInput id='name' value={measurement.name} onChange={onInputChange} name='name' label="Measurement Name" isRequired />
+                    <FormInput id='name' value={measurement.name} onChange={onInputChange} name='name' label={EditMeasurementDict[userLanguage]['labelmeasur']} isRequired />
                   </div>
                   <div className="px-3 py-4">
                     {/* <div>
@@ -172,34 +176,34 @@ const EditMeasurement = (props: EditMeasurementProps) => {
                   </div> */}
                     <div>
                       <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                        Select Topic
+                        {EditMeasurementDict[userLanguage]['seltopic']}
                     </label>
-                      <Selector selectedItem={measurement.topic.value} placeholder="Topic" list={topics} onChange={selectTopic} />
+                      <Selector selectedItem={measurement.topic.value} placeholder={EditMeasurementDict[userLanguage]['topic']} list={topics} onChange={selectTopic} />
                     </div>
                   </div>
 
                   <div className="px-3 py-4">
-                    <TextArea rows={3} id='criteria' value={measurement.criteria} onChange={onInputChange} name='criteria' label="Criteria" />
+                    <TextArea rows={3} id='criteria' value={measurement.criteria} onChange={onInputChange} name='criteria' label={EditMeasurementDict[userLanguage]['criteria']} />
                   </div>
                   <div className="px-3 py-4">
-                    <TextArea rows={3} id='distinguished' value={measurement.distinguished} onChange={onInputChange} name='distinguished' label="Distinguished" />
+                    <TextArea rows={3} id='distinguished' value={measurement.distinguished} onChange={onInputChange} name='distinguished' label={EditMeasurementDict[userLanguage]['distinguished']} />
                   </div>
                   <div className="px-3 py-4">
-                    <TextArea rows={3} id='excelled' value={measurement.excelled} onChange={onInputChange} name='excelled' label="Excelled" />
+                    <TextArea rows={3} id='excelled' value={measurement.excelled} onChange={onInputChange} name='excelled' label={EditMeasurementDict[userLanguage]['excell']} />
                   </div>
                   <div className="px-3 py-4">
-                    <TextArea rows={3} id='adequite' value={measurement.adequite} onChange={onInputChange} name='adequite' label="Adequate" />
+                    <TextArea rows={3} id='adequite' value={measurement.adequite} onChange={onInputChange} name='adequite' label={EditMeasurementDict[userLanguage]['adequite']} />
                   </div>
                   <div className="px-3 py-4">
-                    <TextArea rows={3} id='basic' value={measurement.basic} onChange={onInputChange} name='basic' label="Basic" />
+                    <TextArea rows={3} id='basic' value={measurement.basic} onChange={onInputChange} name='basic' label={EditMeasurementDict[userLanguage]['basic']} />
                   </div>
                 </div>
               </div>
               <div className="flex my-8 justify-center">
-                <Buttons btnClass="py-3 px-10 mr-4" label="Cancel" onClick={history.goBack} transparent />
-                <Buttons btnClass="py-3 px-10 ml-4" label="Save" onClick={saveMeasurementDetails} />
+                <Buttons btnClass="py-3 px-10 mr-4" label={EditMeasurementDict[userLanguage]['button']['cancel']} onClick={history.goBack} transparent />
+                <Buttons btnClass="py-3 px-10 ml-4" label={EditMeasurementDict[userLanguage]['button']['save']} onClick={saveMeasurementDetails} />
               </div>
-            </> : <div className="py-12 my-12 m-auto text-center">Fetching data...</div>
+            </> : <div className="py-12 my-12 m-auto text-center">{EditMeasurementDict[userLanguage]['fetching']}</div>
         }
       </PageWrapper>
     </div>

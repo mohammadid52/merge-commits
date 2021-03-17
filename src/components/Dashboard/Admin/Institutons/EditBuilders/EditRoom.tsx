@@ -152,14 +152,14 @@ const EditRoom = (props: EditRoomProps) => {
       if (InstituteList.length === 0) {
         setMessages({
           show: true,
-          message: 'Please create an institute before creating Classroom.',
+          message: RoomEDITdict[userLanguage]['messages']['institutebefor'],
           isError: true
         })
       }
     } catch{
       setMessages({
         show: true,
-        message: 'Unable to fetch institution list. Please try again later.',
+        message: RoomEDITdict[userLanguage]['messages']['unabletofetch'],
         isError: true
       })
     }
@@ -175,7 +175,7 @@ const EditRoom = (props: EditRoomProps) => {
     } catch{
       setMessages({
         show: true,
-        message: 'Unable to fetch institution data. Please try again later.',
+        message: RoomEDITdict[userLanguage]['messages']['unabletofetch'],
         isError: true
       })
     }
@@ -190,7 +190,7 @@ const EditRoom = (props: EditRoomProps) => {
       if (listStaffs?.length === 0) {
         setMessages({
           show: true,
-          message: 'Please add staff member first for the selected institute or select another institute.',
+          message: RoomEDITdict[userLanguage]['messages']['addstaffirst'],
           isError: true
         })
       } else {
@@ -216,7 +216,7 @@ const EditRoom = (props: EditRoomProps) => {
     } catch{
       setMessages({
         show: true,
-        message: 'Unable to fetch teachers list. Please try again later.',
+        message: RoomEDITdict[userLanguage]['messages']['unableteacher'],
         isError: true
       })
     }
@@ -232,7 +232,7 @@ const EditRoom = (props: EditRoomProps) => {
       if (listClass.length === 0) {
         setMessages({
           show: true,
-          message: 'Please add class first for the selected institute or select another institute.',
+          message: RoomEDITdict[userLanguage]['messages']['addclassfirst'],
           isError: true
         })
       } else {
@@ -247,7 +247,7 @@ const EditRoom = (props: EditRoomProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Unable to fetch class list. Please try again later.',
+        message: RoomEDITdict[userLanguage]['messages']['unableclass'],
         isError: true
       })
     }
@@ -268,7 +268,7 @@ const EditRoom = (props: EditRoomProps) => {
     } catch{
       setMessages({
         show: true,
-        message: 'Unable to fetch curricular list. Please try again later.',
+        message: RoomEDITdict[userLanguage]['messages']['unablecurricular'],
         isError: true
       })
     }
@@ -287,7 +287,7 @@ const EditRoom = (props: EditRoomProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while processing please Try again later.',
+        message: RoomEDITdict[userLanguage]['messages']['errorprocess'],
         isError: true
       })
     }
@@ -297,42 +297,42 @@ const EditRoom = (props: EditRoomProps) => {
     if (roomData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Classroom name is required please enter name.',
+        message: RoomEDITdict[userLanguage]['messages']['classroomrequired'],
         isError: true
       })
       return false;
     } else if (roomData.institute.id === '') {
       setMessages({
         show: true,
-        message: 'Please select an institute to add Classroom.',
+        message: RoomEDITdict[userLanguage]['messages']['selectinstitute'],
         isError: true
       })
       return false;
     } else if (roomData.teacher.id === '') {
       setMessages({
         show: true,
-        message: 'Please select a teacher for the Classroom.',
+        message: RoomEDITdict[userLanguage]['messages']['selectteacher'],
         isError: true
       })
       return false;
     } else if (roomData.classRoom.id === '') {
       setMessages({
         show: true,
-        message: 'Please select a class for the Classroom.',
+        message: RoomEDITdict[userLanguage]['messages']['selectclass'],
         isError: true
       })
       return false;
     } else if (roomData.maxPersons == '') {
       setMessages({
         show: true,
-        message: 'Please set Max students limit for the Classroom.',
+        message: RoomEDITdict[userLanguage]['messages']['mxstudent'],
         isError: true
       })
       return false;
     } else if (roomData.maxPersons > '30') {
       setMessages({
         show: true,
-        message: 'One Classroom can allow max. 30 students.',
+        message: RoomEDITdict[userLanguage]['messages']['oneclass'],
         isError: true
       })
       return false;
@@ -341,7 +341,7 @@ const EditRoom = (props: EditRoomProps) => {
       if (!isUniq) {
         setMessages({
           show: true,
-          message: 'This Classroom name is already exist, please add another name.',
+          message: RoomEDITdict[userLanguage]['messages']['alreadyexist'],
           isError: true
         })
         return false;
@@ -366,20 +366,20 @@ const EditRoom = (props: EditRoomProps) => {
         const addCurricular: any = await API.graphql(graphqlOperation(mutation.updateRoomCurriculum, { input: curricularInput }))
         setMessages({
           show: true,
-          message: 'Classroom details has been updated.',
+          message: RoomEDITdict[userLanguage]['messages']['classupdate'],
           isError: false
         })
       } catch {
         setMessages({
           show: true,
-          message: 'Error while updating Classroom curricular. Please try that later.',
+          message: RoomEDITdict[userLanguage]['messages']['errupdating'],
           isError: true
         })
       }
     } else {
       setMessages({
         show: true,
-        message: 'Error while processing. Please try again later.',
+        message: RoomEDITdict[userLanguage]['messages']['errprocess'],
         isError: true
       })
     }
@@ -405,7 +405,7 @@ const EditRoom = (props: EditRoomProps) => {
       } catch{
         setMessages({
           show: true,
-          message: 'Error while updating Classroom details. Please try again later.',
+          message: RoomEDITdict[userLanguage]['messages']['errupdatingclass'],
           isError: true
         })
       }
@@ -459,7 +459,7 @@ const EditRoom = (props: EditRoomProps) => {
       } catch {
         setMessages({
           show: true,
-          message: 'Error while fetching Classroom data, please try again later.',
+          message: RoomEDITdict[userLanguage]['messages']['errfetch'],
           isError: true
         })
       }

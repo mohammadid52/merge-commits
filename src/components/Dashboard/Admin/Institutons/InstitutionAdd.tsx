@@ -21,6 +21,7 @@ import { statesList } from '../../../../utilities/staticData';
 import useDictionary from '../../../../customHooks/dictionary';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 
+
 const InstitutionAdd = () => {
 
   const history = useHistory();
@@ -45,7 +46,7 @@ const InstitutionAdd = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [s3Image, setS3Image] = useState(null);
   const { theme, clientKey,userLanguage } = useContext(GlobalContext);
-  const { InstitutionAdd ,BreadcrumsTitles } = useDictionary(clientKey);
+  const { InstitutionAddDict ,BreadcrumsTitles } = useDictionary(clientKey);
   const [error, setError] = useState({
     show: true,
     errorMsg: ''
@@ -57,11 +58,11 @@ const InstitutionAdd = () => {
     { title: BreadcrumsTitles[userLanguage]['ADD_INSTITUTION'], url: `/dashboard/manage-institutions/add`, last: true }
   ];
   const institutionTypeList = [
-    { id: 1, name: InstitutionAdd[userLanguage]['INSTITUTION_TYPE']['SCHOOL'], value: 'School' },
-    { id: 2, name: InstitutionAdd[userLanguage]['INSTITUTION_TYPE']['AFTERSCHOOL'], value: 'After School' },
-    { id: 3, name: InstitutionAdd[userLanguage]['INSTITUTION_TYPE']['DAYCAMP'], value: 'Day Camp' },
-    { id: 4, name: InstitutionAdd[userLanguage]['INSTITUTION_TYPE']['SUMMERCAMP'], value: 'Summer Camp' },
-    { id: 5, name: InstitutionAdd[userLanguage]['INSTITUTION_TYPE']['C3'], value: '501C3' },
+    { id: 1, name: InstitutionAddDict[userLanguage]['INSTITUTION_TYPE']['SCHOOL'], value: 'School' },
+    { id: 2, name: InstitutionAddDict[userLanguage]['INSTITUTION_TYPE']['AFTERSCHOOL'], value: 'After School' },
+    { id: 3, name: InstitutionAddDict[userLanguage]['INSTITUTION_TYPE']['DAYCAMP'], value: 'Day Camp' },
+    { id: 4, name: InstitutionAddDict[userLanguage]['INSTITUTION_TYPE']['SUMMERCAMP'], value: 'Summer Camp' },
+    { id: 5, name: InstitutionAddDict[userLanguage]['INSTITUTION_TYPE']['C3'], value: '501C3' },
   ]
 
   const removeErrorMSg = () => {
@@ -77,7 +78,7 @@ const InstitutionAdd = () => {
     if (!instituteData.name) {
       setError({
         show: true,
-        errorMsg: 'Institute name is required.'
+        errorMsg: InstitutionAddDict[userLanguage]['messages']['namerequired']
       })
     }
   }
@@ -140,7 +141,7 @@ const InstitutionAdd = () => {
       }).catch(err => {
         setError({
           show: true,
-          errorMsg: 'Unable to upload image. Please try again later. '
+          errorMsg: InstitutionAddDict[userLanguage]['messages']['uploaderr']
         })
         console.log('Error in uploading file to s3', err)
         reject(err)
@@ -169,7 +170,7 @@ const InstitutionAdd = () => {
     if (!instituteData.name) {
       setError({
         show: true,
-        errorMsg: 'Institute name is required.'
+        errorMsg: InstitutionAddDict[userLanguage]['messages']['namerequired']
       })
     }
     else {
@@ -183,7 +184,7 @@ const InstitutionAdd = () => {
       } catch {
         setError({
           show: true,
-          errorMsg: 'Unable to add new institute. Please try again later.'
+          errorMsg: InstitutionAddDict[userLanguage]['messages']['adderr']
         })
       }
     }
@@ -203,7 +204,7 @@ const InstitutionAdd = () => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title={InstitutionAdd[userLanguage]['TITLE']} subtitle={InstitutionAdd[userLanguage]['SUBTITLE']} />
+        <SectionTitle title={InstitutionAddDict[userLanguage]['TITLE']} subtitle={InstitutionAddDict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -252,7 +253,7 @@ const InstitutionAdd = () => {
                   <Loader />}
                 <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
               </label>}
-            <p className="text-gray-600 my-4">Click circle to manage your avatar.</p>
+            <p className="text-gray-600 my-4">{InstitutionAddDict[userLanguage]['INFOA']}</p>
           </div>
 
 
@@ -263,50 +264,50 @@ const InstitutionAdd = () => {
                 {/* TITLE */}
                 <div className='w-full px-4 py-5 border-b border-gray-200 sm:px-6'>
                   <h3 className='text-lg leading-6 font-medium text-gray-900'>
-                  {InstitutionAdd[userLanguage]['FORM']['TITLE']}
+                  {InstitutionAddDict[userLanguage]['FORM']['TITLE']}
                   </h3>
                 </div>
                 {/* FORM */}
                 <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 px-4 py-5'>
                   <div className='sm:col-span-6 px-3 py-4'>
                     <div className="w-3/10">
-                      <Selector selectedItem={type} placeholder={InstitutionAdd[userLanguage]['FORM']['INSTITUTION_TYPE']} list={institutionTypeList} onChange={onTypeSelect} />
+                      <Selector selectedItem={type} placeholder={InstitutionAddDict[userLanguage]['FORM']['INSTITUTION_TYPE']} list={institutionTypeList} onChange={onTypeSelect} />
                     </div>
                   </div>
                   <div className='sm:col-span-3 px-3 py-2'>
-                    <FormInput value={name} onChange={onInputChange} id='name' name='name' label={InstitutionAdd[userLanguage]['FORM']['NAME_INPUT_LABEL']} placeHolder={InstitutionAdd[userLanguage]['FORM']['NAME_INPUT_PLACEHOLDER']} isRequired />
+                    <FormInput value={name} onChange={onInputChange} id='name' name='name' label={InstitutionAddDict[userLanguage]['FORM']['NAME_INPUT_LABEL']} placeHolder={InstitutionAddDict[userLanguage]['FORM']['NAME_INPUT_PLACEHOLDER']} isRequired />
                   </div>
                   <div className='sm:col-span-3 px-3 py-2'>
-                    <FormInput value={website} onChange={onInputChange} id='website' name='website' label={InstitutionAdd[userLanguage]['FORM']['WEBSITE_INPUT_LABEL']} placeHolder={InstitutionAdd[userLanguage]['FORM']['WEBSITE_INPUT_PLACEHOLDER']} />
+                    <FormInput value={website} onChange={onInputChange} id='website' name='website' label={InstitutionAddDict[userLanguage]['FORM']['WEBSITE_INPUT_LABEL']} placeHolder={InstitutionAddDict[userLanguage]['FORM']['WEBSITE_INPUT_PLACEHOLDER']} />
                   </div>
                   <div className='sm:col-span-3 px-3 py-2'>
-                    <FormInput value={address} id='address' onChange={onInputChange} name='address' label={InstitutionAdd[userLanguage]['FORM']['ADDRESS_INPUT_LABEL']} />
-                  </div>
-
-                  <div className='sm:col-span-3 px-3 py-2'>
-                    <FormInput value={addressLine2} id='addressLine2' onChange={onInputChange} name='addressLine2' label={InstitutionAdd[userLanguage]['FORM']['ADDRESS2_INPUT_LABEL']} />
+                    <FormInput value={address} id='address' onChange={onInputChange} name='address' label={InstitutionAddDict[userLanguage]['FORM']['ADDRESS_INPUT_LABEL']} />
                   </div>
 
                   <div className='sm:col-span-3 px-3 py-2'>
-                    <FormInput value={city} id='city' onChange={onInputChange} name='city' label={InstitutionAdd[userLanguage]['FORM']['CITY_LABEL']} />
+                    <FormInput value={addressLine2} id='addressLine2' onChange={onInputChange} name='addressLine2' label={InstitutionAddDict[userLanguage]['FORM']['ADDRESS2_INPUT_LABEL']} />
+                  </div>
+
+                  <div className='sm:col-span-3 px-3 py-2'>
+                    <FormInput value={city} id='city' onChange={onInputChange} name='city' label={InstitutionAddDict[userLanguage]['FORM']['CITY_LABEL']} />
                   </div>
 
                   <div className='sm:col-span-3 px-3 py-2'>
                     <label className="block text-xs font-semibold mb-1  leading-5 text-gray-700">
-                    {InstitutionAdd[userLanguage]['FORM']['STATE_LABEL']}
+                    {InstitutionAddDict[userLanguage]['FORM']['STATE_LABEL']}
                     </label>
-                    <Selector selectedItem={state} placeholder="Select state" list={statesList} onChange={onStateSelect} />
+                    <Selector selectedItem={state} placeholder={InstitutionAddDict[userLanguage]['FORM']['state']} list={statesList} onChange={onStateSelect} />
                   </div>
 
                   <div className='sm:col-span-3 px-3 py-2'>
-                    <FormInput value={zip} id='zip' onChange={onInputChange} name='zip' label={InstitutionAdd[userLanguage]['FORM']['ZIP_LABEL']} />
+                    <FormInput value={zip} id='zip' onChange={onInputChange} name='zip' label={InstitutionAddDict[userLanguage]['FORM']['ZIP_LABEL']} />
                   </div>
 
                   <div className='sm:col-span-3 px-3 py-2'>
-                    <FormInput value={phone} id='phone' onChange={onInputChange} name='phone' label={InstitutionAdd[userLanguage]['FORM']['PHONE_LABEL']} />
+                    <FormInput value={phone} id='phone' onChange={onInputChange} name='phone' label={InstitutionAddDict[userLanguage]['FORM']['PHONE_LABEL']} />
                   </div>
                   <div className='sm:col-span-3 px-3 py-2 flex items-center'>
-                    <CheckBox value={isServiceProvider} onChange={handdleCheckBox} name='isServiceProvider' label={InstitutionAdd[userLanguage]['FORM']['SERVICEPROVIDER_LABEL']} />
+                    <CheckBox value={isServiceProvider} onChange={handdleCheckBox} name='isServiceProvider' label={InstitutionAddDict[userLanguage]['FORM']['SERVICEPROVIDER_LABEL']} />
                   </div>
                 </div>
               </div>
@@ -318,8 +319,8 @@ const InstitutionAdd = () => {
               {/* Cancel-save buttons */}
               <div className='px-4 w-full flex justify-end'>
                 <div className='flex w-4/10'>
-                  <Buttons label={InstitutionAdd[userLanguage]['BUTTON']['CANCEL']} btnClass='w-full px-6 py-4 mr-2' onClick={history.goBack} transparent />
-                  <Buttons label={InstitutionAdd[userLanguage]['BUTTON']['SAVE']} btnClass='w-full px-6 py-4 ml-2' onClick={addNewInstitution} />
+                  <Buttons label={InstitutionAddDict[userLanguage]['BUTTON']['CANCEL']} btnClass='w-full px-6 py-4 mr-2' onClick={history.goBack} transparent />
+                  <Buttons label={InstitutionAddDict[userLanguage]['BUTTON']['SAVE']} btnClass='w-full px-6 py-4 ml-2' onClick={addNewInstitution} />
                 </div>
               </div>
             </form>

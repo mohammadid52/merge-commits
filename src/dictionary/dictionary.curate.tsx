@@ -36,6 +36,15 @@ const BreadcrumsTitles: any = {
     EDITCLASSROOM: 'Edit Classroom',
     CURRICULUMBUILDER: 'Curriculum Builder',
     LEARINGOBJECTIVE: 'Add Learning objective',
+    AddMesurement:'Add Measurement',
+    AddCheckpint:'Add Checkpoint',
+    UnitBuilder:'Unit Builder',
+    AddTopic:'Add Topic',
+    EditLearningObj:'Edit Learning objective',
+    EditMeasurement:'Edit Measurement',
+    AddChekpoint:'Add Checkpoint',
+    EditTopic:'Edit Topic',
+    AddExistingCheckpoint:'Add Existing Checkpoint',
   },
   'ES': {
     HOME: 'CASA',
@@ -51,7 +60,16 @@ const BreadcrumsTitles: any = {
     EDITCURRICULUM: 'TBD',
     EDITCLASSROOM: 'TBD',
     CURRICULUMBUILDER: 'TBD',
-    LEARINGOBJECTIVE: 'TBD'
+    LEARINGOBJECTIVE: 'TBD',
+    AddMesurement:'TBD',
+    AddCheckpint:'TBD',
+    UnitBuilder:'TBD',
+    AddTopic:'TBD',
+    EditLearningObj:'TBD',
+    EditMeasurement:'TBD',
+    AddChekpoint:'TBD',
+    EditTopic:'TBD',
+    AddExistingCheckpoint:'TBD'
   }
 }
 // Profile Display and edit section
@@ -611,7 +629,7 @@ const Institute_info: any = {
   }
 }
 
-const InstitutionEdit: any = {
+const InstitutionEditDict: any = {
   'EN': {
     INFO: 'Click the circle above to update institution image.',
 
@@ -642,6 +660,14 @@ const InstitutionEdit: any = {
     BUTTON: {
       CANCEL: 'Cancel',
       SAVE: 'Save'
+    },
+    messages:{
+      namerequired:'Institute name is required.',
+      unabletoupdate:'Unable to update institute details. Please try again later.',
+      uploaderr:'Unable to upload image. Please try again later. ',
+      deleterr:'Error in deleting institute image.',
+      imgeerr:'Unable to update image changes. Please try again later.',
+
     }
   },
   'ES': {
@@ -673,17 +699,24 @@ const InstitutionEdit: any = {
     BUTTON: {
       CANCEL: 'TBD',
       SAVE: 'TBD'
+    },
+    messages:{
+      namerequired:'TBD',
+      unabletoupdate:'TBD',
+      uploaderr:'TBD',
+      deleterr:'TBD',
+      imgeerr:'TBD',
+      
     }
 
 
   }
 
-
 }
 
-
-const InstitutionAdd: any = {
+const InstitutionAddDict: any = {
   'EN': {
+    INFOA:'Click circle to manage your avatar.',
     INFO: 'Click the circle above to update institution image.',
     TITLE: 'Add Institution',
     SUBTITLE: 'Add new institution to the list',
@@ -701,6 +734,7 @@ const InstitutionAdd: any = {
       STATE_LABEL: 'State',
       ZIP_LABEL: 'Zip',
       PHONE_LABEL: 'Phone',
+      state:'Select state',
       SERVICEPROVIDER_LABEL: 'Service Provider'
 
     },
@@ -714,9 +748,16 @@ const InstitutionAdd: any = {
     BUTTON: {
       CANCEL: 'Cancel',
       SAVE: 'Save'
+    },
+    messages:{
+      namerequired:'Institute name is required.',
+      uploaderr:'Unable to upload image. Please try again later. ',
+      adderr:'Unable to add new institute. Please try again later.',
     }
+  
   },
   'ES': {
+    INFOA:'TBD',
     INFO: 'TBD',
     TITLE: 'TBD',
     SUBTITLE: 'TBD',
@@ -735,6 +776,7 @@ const InstitutionAdd: any = {
       STATE_LABEL: 'TBD',
       ZIP_LABEL: 'TBD',
       PHONE_LABEL: 'TBD',
+      state:'TBD',
       SERVICEPROVIDER_LABEL: 'TBD'
 
     },
@@ -748,12 +790,18 @@ const InstitutionAdd: any = {
     BUTTON: {
       CANCEL: 'TBD',
       SAVE: 'TBD'
+    },
+    messages:{
+      namerequired:'TBD',
+      uploaderr:'TBD',
+      adderr:'TBD',
     }
 
 
   }
 
 }
+
 
 const Institute_class: any = {
   'EN': {
@@ -819,6 +867,11 @@ const InstitueRomms: any = {
     MXSTUDENTS: 'Max. Students',
     ACTION: 'Actions',
     EDIT: 'edit',
+    messages:{
+      nothaveclass:'This institute does not have any classroom. Please create a new classroom.',
+      fetcherr:'Error while fetching classroom data please Try again later.',
+
+    },
     BUTTON: {
       CREATE: 'Create new Classroom'
     },
@@ -832,6 +885,11 @@ const InstitueRomms: any = {
     MXSTUDENTS: 'TBD',
     ACTION: 'TBD',
     EDIT: 'TBD',
+    messages:{
+      nothaveclass:'TBD',
+      fetcherr:'TBD',
+      
+    },
     BUTTON: {
       CREATE: 'TBD'
     },
@@ -1157,6 +1215,28 @@ const RoomEDITdict: any = {
     CURRICULUM_PLACEHOLDER: 'Select Curriculum',
     MAXSTUDENT_LABEL: 'Max.Students (Add number between 1 to 30)',
     MAXSTUDENT_PLACHOLDER: 'Max students',
+    messages:{
+      institutebefor:'Please create an institute before creating Classroom.',
+      unabletofetch:'Unable to fetch institution list. Please try again later.',
+      addstaffirst:'Please add staff member first for the selected institute or select another institute.',
+      unableteacher:'Unable to fetch teachers list. Please try again later.',
+      addclassfirst:'Please add class first for the selected institute or select another institute.',
+      unableclass:'Unable to fetch class list. Please try again later.',
+      unablecurricular:'Unable to fetch curricular list. Please try again later.',
+      errorprocess:'Error while processing please Try again later.',
+      classroomrequired:'Classroom name is required please enter name.',
+      selectinstitute:'Please select an institute to add Classroom.',
+      selectteacher:'Please select a teacher for the Classroom.',
+      selectclass:'Please select a class for the Classroom.',
+      mxstudent:'Please set Max students limit for the Classroom.',
+      oneclass:'One Classroom can allow max. 30 students.',
+      alreadyexist:'This Classroom name is already exist, please add another name.',
+      classupdate:'Classroom details has been updated.',
+      errupdating:'Error while updating Classroom curricular. Please try that later.',
+      errprocess:'Error while processing. Please try again later.',
+      errupdatingclass:'Error while updating Classroom details. Please try again later.',
+      errfetch:'Error while fetching Classroom data, please try again later.',
+    },
     BUTTON: {
       SAVE: 'Save',
       SAVING: 'Saving...',
@@ -1178,6 +1258,28 @@ const RoomEDITdict: any = {
     CURRICULUM_PLACEHOLDER: 'TBD',
     MAXSTUDENT_LABEL: 'TBD',
     MAXSTUDENT_PLACHOLDER: 'TBD',
+    messages:{
+      institutebefor:'TBD',
+      unabletofetch:'TBD',
+      addstaffirst:'TBD',
+      unableteacher:'TBD',
+      addclassfirst:'TBD',
+      unableclass:'TBD',
+      unablecurricular:'TBD',
+      errorprocess:'TBD',
+      classroomrequired:'TBD',
+      selectinstitute:'TBD',
+      selectteacher:'TBD',
+      selectclass:'TBD',
+      mxstudent:'TBD',
+      oneclass:'TBD',
+      alreadyexist:'TBD',
+      classupdate:'TBD',
+      errupdating:'TBD',
+      errprocess:'TBD',
+      errupdatingclass:'TBD',
+      errfetch:'TBD',
+    },
     BUTTON: {
       SAVE: 'TBD',
       SAVING: 'TBD',
@@ -1431,6 +1533,521 @@ const SelectPreviousQuestionDict:any={
     }
   }
 }
+const AddMeasurementDict:any={
+  'EN':{
+    title:'Add Measurement',
+    subtitle:'Add new measurement to curricular.',
+    heading:'MEASUREMENT INFORMATION',
+    mlabel:'Measurement Name',
+    selecttopic:'Select Topic',
+    topic:'Topic',
+    criterialabel:'Criteria',
+    distinlabel:'Distinguished',
+    excell:'Excelled',
+    adequate:'Adequate',
+    basic:'Basic',
+    button:{
+      save:'Save',
+      cancel:'cancel'
+    },
+    messages:{
+      namerequired:'Name is required',
+      topicrequired:'topic is required',
+
+
+    }
+  },
+  'ES':{
+    title:'TBD',
+    subtitle:'TBD',
+    heading:'TBD',
+    mlabel:'TBD',
+    selecttopic:'TBD',
+    topic:'TBD',
+    criterialabel:'TBD',
+    distinlabel:'TBD',
+    excell:'TBD',
+    adequate:'TBD',
+    basic:'TBD',
+    button:{
+      save:'TBD',
+      cancel:'TBD'
+    },
+    messages:{
+      namerequired:'TBD',
+      topicrequired:'TBD',
+
+    }
+  }
+}
+
+const AddProfileCheckpointDict:any={
+  'EN':{
+    title:'Add Checkpoint',
+    subtitle:'Add new checkpoint to curricular.',
+    heading:'ADD NEW CHECKPOINT',
+    label:'Title',
+    checkpointlabel:'Checkpoint Label',
+    selectdesigner:'Select Designers',
+    placeholder:'Designers',
+    languageselect:'Select Language',
+    placeholderlanguage:'Language',
+    checkpointq:'Checkpoint Questions',
+    addquestion:'Please add questions to this checkpoint.',
+    no:'No.',
+    question:'Question',
+    type:'Type',
+    option:'Options',
+    button:{
+      existing:'Add Existing Questions',
+      newq:'Create New Question',
+      cancel:'Cancel',
+      save:'Save',
+      saving:'Saving...'
+      
+    },
+    messages:{
+      unsave:'Unable to save Checkpoint details, Please try again later.',
+      titlerequired:'Checkpoint title is required',
+      labelrequired:'Checkpoint label is required',
+      minone:'You need to add minimum one question to create a checkpoint.',
+      noquestion:'This checkpoint does not have any questions',
+
+    }
+  },
+  'ES':{
+    title:'TBD',
+    subtitle:'TBD',
+    heading:'TBD',
+    label:'TBD',
+    checkpointlabel:'TBD',
+    selectdesigner:'TBD',
+    placeholder:'TBD',
+    languageselect:'TBD',
+    placeholderlanguage:'TBD',
+    checkpointq:'TBD',
+    addquestion:'TBD',
+    no:'TBD',
+    question:'TBD',
+    type:'TBD',
+    option:'TBD',
+    button:{
+      existing:'TBD',
+      newq:'TBD',
+      cancel:'TBD',
+      save:'TBD',
+      saving:'TBD'
+      
+    },
+    messages:{
+      unsave:'TBD',
+      titlerequired:'TBD',
+      labelrequired:'TBD',
+      minone:'TBD',
+      noquestion:'TBD',
+
+    }
+  }
+}
+
+
+const AddSyllabusDict:any={
+  'EN':{
+    title:'Unit Builder',
+    subtitle:'Create curriculum units here.',
+    heading:'UNIT INFORMATION',
+    unitname:'Unit Name',
+    designer:'Select Designers',
+    placeholder:'Designers',
+    language:'Select Language',
+    placeholderlanguage:'Language',
+    description:'Description',
+    purpose:'Purpose',
+    objective:'Objectives',
+    methodology:'Methodology',
+    policy:'Policies',
+    save:'Save',
+    saving:'Saving...',
+
+    messages:{
+      fetcherr:'Error while fetching Designers list Please try again later.',
+      uintsave:'New unit has been saved.',
+      unablesave:'Unable to save new unit please try again later.',
+      namerequired:'Unit name is required please enter name.',
+
+    }
+  },
+  'ES':{
+    title:'TBD',
+    subtitle:'TBD',
+    heading:'TBD',
+    unitname:'TBD',
+    designer:'TBD',
+    placeholder:'TBD',
+    language:'TBD',
+    placeholderlanguage:'TBD',
+    description:'TBD',
+    purpose:'TBD',
+    objective:'TBD',
+    methodology:'TBD',
+    policy:'TBD',
+    save:'TBD',
+    saving:'TBD',
+
+    messages:{
+      fetcherr:'TBD',
+      uintsave:'TBD',
+      unablesave:'TBD',
+      namerequired:'TBD',
+
+    }
+
+  }
+}
+
+
+const AddTopicDict:any={
+  'EN':{
+    title:'Add Topic',
+    subtitle:'Add new topic to the curricular.',
+    heading:'TOPIC INFORMATION',
+    topicname:'Topic Name',
+    learningobj:'Select Learning objective',
+    learningobjpl:'Learning objective',
+    description:'Description',
+    button:{
+      cancel:'Cancel',
+      save:'Save',
+    },
+    messages:{
+      namerequired:'Name is required',
+      objectiverequired:'learning objective is required',
+
+    }
+  },
+  'ES':{
+    title:'TBD',
+    subtitle:'TBD',
+    heading:'TBD',
+    topicname:'TBD',
+    learningobj:'TBD',
+    learningobjpl:'TBD',
+    description:'TBD',
+    button:{
+      cancel:'TBD',
+      save:'TBD',
+    },
+    messages:{
+      namerequired:'TBD',
+      objectiverequired:'TBD',
+
+    }
+
+  }
+}
+
+const EditLearningObjectiveDict:any={
+  'EN':{
+    title:'Edit Learning objective',
+    subtitle:'Edit curricular Learning objective.',
+    heading:'LEARNING OBJECTIVE INFORMATION',
+    learningname:'Lerning Objective name',
+    description:'Description',
+    fetching:'Fetching data...',
+    button:{
+      cancel:'Cancel',
+      save:'Save'
+    },
+    messages:{
+      namerequired:'Name is required',
+
+    }
+  },
+  'ES':{
+    title:'TBD',
+    subtitle:'TBD',
+    heading:'TBD',
+    learningname:'TBD',
+    description:'TBD',
+    fetching:'TBD',
+    button:{
+      cancel:'TBD',
+      save:'TBD'
+    },
+    messages:{
+      namerequired:'TBD',
+
+    }
+
+  }
+}
+
+const EditMeasurementDict:any={
+  'EN':{
+    title:'Edit Measurement',
+    subtitle:'Edit curricular measurement.',
+    heading:'MEASUREMENT INFORMATION',
+    labelmeasur:'Measurement Name',
+    seltopic:'Select Topic',
+    topic:'Topic',
+    criteria:'Criteria',
+    distinguished:'Distinguished',
+    excell:'Excelled',
+    adequite:'Adequate',
+    basic:'Basic',
+    fetching:'Fetching data...',
+    button:{
+      cancel:'Cancel',
+      save:'Save'
+    },
+    messages:{
+      namerequierd:'Name is required',
+      topicrequired:'topic is required'
+    }
+  },
+  'ES':{
+    title:'TBD',
+    subtitle:'TBD',
+    heading:'TBD',
+    labelmeasur:'TBD',
+    seltopic:'TBD',
+    topic:'TBD',
+    criteria:'TBD',
+    distinguished:'TBD',
+    excell:'TBD',
+    adequite:'TBD',
+    basic:'TBD',
+    fetching:'TBD',
+    button:{
+      cancel:'TBD',
+      save:'TBD'
+    },
+    messages:{
+      namerequierd:'TBD',
+      topicrequired:'TBD'
+    }
+
+  }
+}
+
+const EditProfileCheckpointDict:any={
+  'EN':{
+    title:'Add Checkpoint',
+    subtitle:'Add new checkpoint to curricular.',
+    heading:'ADD NEW CHECKPOINT',
+    ltitle:'Title',
+    checklabel:'Checkpoint Label',
+    designer:'Select Designers',
+    language:'Select Language',
+    planguage:'Language',
+    checkpoint:'Checkpoint Questions',
+    addquestion:'Please add questions to this checkpoint.',
+    addexist:'Add Existing Questions',
+    addnew:'Create New Question',
+    no:'No.',
+    question:'Question',
+    type:'Type',
+    option:'Options',
+    noquestion:'This checkpoint does not have any questions',
+    save:'Save',
+    saving:'Saving...',
+    messages:{
+      saveerr:'Unable to save Checkpoint details, Please try again later.',
+      title:'Checkpoint title is required',
+      label:'Checkpoint label is required',
+      onequetion:'You need to add minimum one question to create a checkpoint.',
+      fetcherr:'Unable to fetch Checkpoint details, Please try again later.',
+
+    }
+  },
+  'ES':{
+    title:'TBD',
+    subtitle:'TBD',
+    heading:'TBD',
+    ltitle:'TBD',
+    checklabel:'TBD',
+    designer:'TBD',
+    language:'TBD',
+    planguage:'TBD',
+    checkpoint:'TBD',
+    addquestion:'TBD',
+    addexist:'TBD',
+    addnew:'TBD',
+    no:'TBD',
+    question:'TBD',
+    type:'TBD',
+    option:'TBD',
+    noquestion:'TBD',
+    save:'TBD',
+    saving:'TBD',
+    messages:{
+      saveerr:'TBD',
+      title:'TBD',
+      label:'TBD',
+      onequetion:'TBD',
+      fetcherr:'TBD',
+
+    }
+  }
+}
+
+const EditSyllabusDict:any={
+  'EN':{
+    title:'Unit Builder',
+    subtitle:'Update curriculum units here.',
+    heading:'GENERAL INFORMATION',
+    unitname:'Unit Name',
+    designer:'Select Designers',
+    pdesigner:'Designers',
+    selectlang:'Select Language',
+    language:'Language',
+    desc:'Description',
+    purpose:'Purpose',
+    objective:'Objectives',
+    methodology:'Methodology',
+    policy:'Policies',
+    lessonplan:'LESSON PLAN MANAGER',
+    selectlesson:'Select Lesson',
+    no:'No.',
+    name:'Lesson Name',
+    measurement:'Measurements',
+    type:'Tyep',
+    status:'Status',
+    action:'Actions',
+    edit:'edit',
+    nolesson:'No Lessons Selected',
+    createnew:'Create New Lesson',
+    messages:{
+      wantsave:'Do you want to save changes before moving forward?',
+      unitupdate:'Unit details has been updated.',
+      unableupdate:'Unable to update unit details please try again later.',
+      namerequired:'Unit name is required please enter name.',
+      updateerr:'Error while updating lesson status please try later.',
+      fetcher:'Error while fetching unit data.',
+      fetchlist:'Error while fetching lessons list data.',
+      fetchdesign:'Error while fetching Designers list Please try again later.',
+
+    }
+  },
+  'ES':{
+    title:'TBD',
+    subtitle:'TBD',
+    heading:'TBD',
+    unitname:'TBD',
+    designer:'TBD',
+    pdesigner:'TBD',
+    selectlang:'TBD',
+    language:'TBD',
+    desc:'TBD',
+    purpose:'TBD',
+    objective:'TBD',
+    methodology:'TBD',
+    policy:'TBD',
+    lessonplan:'TBD',
+    selectlesson:'TBD',
+    no:'TBD',
+    name:'TBD',
+    measurement:'TBD',
+    type:'TBD',
+    status:'TBD',
+    action:'TBD',
+    edit:'TBD',
+    nolesson:'TBD',
+    createnew:'TBD',
+    messages:{
+      wantsave:'TBD',
+      unitupdate:'TBD',
+      unableupdate:'TBD',
+      namerequired:'TBD',
+      updateerr:'TBD',
+      fetcher:'TBD',
+      fetchlist:'TBD',
+      fetchdesign:'TBD',
+
+    }
+
+  }
+}
+
+const EditTopicDict:any={
+  'EN':{
+    title:'Edit Topic',
+    subtitle:'Edit curricular topic.',
+    heading:'TOPIC INFORMATION',
+    topicname:'Topic Name',
+    selectlearning:'Select Learning objective',
+    learningobjective:'Learning objective',
+    desc:'Description',
+    fetching:'Fetching data...',
+    button:{
+      cancel:'Cancel',
+      save:'Save'
+    },
+    messages:{
+      namerequired:'Name is required',
+      learningobj:'learning objective is required',
+    }
+  },
+  'ES':{
+    title:'TBD',
+    subtitle:'TBD',
+    heading:'TBD',
+    topicname:'TBD',
+    selectlearning:'TBD',
+    learningobjective:'TBD',
+    desc:'TBD',
+    fetching:'TBD',
+    button:{
+      cancel:'TBD',
+      save:'TBD'
+    },
+    messages:{
+      namerequired:'TBD',
+      learningobj:'TBD',
+    }
+  }
+}
+
+
+const ProfileCheckpointlookupDict:any={
+  'EN':{
+    title:'Select Checkpoint',
+    subtitle:'Select checkpoint for curricular.',
+    heading:'CHECKPOINT LISTS',
+    selectcheckpoint:'Checkpoints Selected',
+    selection:'Selection',
+    checkpoint:'Checkpoint Title',
+    language:'Language',
+    listempty:'Other checkpoint list is empty, please create a new checkpoint.',
+    errfetch:' Error while fetching Checkpoint list Please try again later.',
+    updating:'Updating checkpoints please wait...',
+    fetching:'Fetching Checkpoint list Please wait...',
+    button:{
+      cancel:'Cancel',
+      save:'Save',
+      saving:'Saving...',
+    }
+  },
+  'ES':{
+    title:'TBD',
+    subtitle:'TBD',
+    heading:'TBD',
+    selectcheckpoint:'TBD',
+    selection:'TBD',
+    checkpoint:'TBD',
+    language:'TBD',
+    listempty:'TBD',
+    errfetch:'TBD',
+    updating:'TBD',
+    fetching:'TBD',
+    button:{
+      cancel:'TBD',
+      save:'TBD',
+      saving:'TBD',
+    }
+  }
+}
+
 
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
@@ -1452,8 +2069,8 @@ export {
   manageusersDict,
   InstitutionDict,
   Institute_info,
-  InstitutionEdit,
-  InstitutionAdd,
+  InstitutionEditDict,
+  InstitutionAddDict,
   Institute_class,
   InstitueCurriculam,
   InstitueRomms,
@@ -1474,5 +2091,15 @@ export {
   lessonPlannerDict,
   lessonBuilderDict,
   addQuestionDict,
-  SelectPreviousQuestionDict
+  SelectPreviousQuestionDict,
+  AddMeasurementDict,
+  AddProfileCheckpointDict,
+  AddSyllabusDict,
+  AddTopicDict,
+  EditLearningObjectiveDict,
+  EditMeasurementDict,
+  EditProfileCheckpointDict,
+  EditSyllabusDict,
+  EditTopicDict,
+  ProfileCheckpointlookupDict
 };
