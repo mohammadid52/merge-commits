@@ -5,34 +5,27 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import { API, graphqlOperation } from '@aws-amplify/api';
 import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
-import * as customMutations from '../../../customGraphql/customMutations';
 import useDictionary from '../../../customHooks/dictionary';
 import NoticeboardAdminContent from './NoticeboardAdminContent';
-import { AnthologyMapItem } from '../Anthology/Anthology';
 import RoomSwitch from './RoomSwitch';
-import { listNoticeboardWidgets } from '../../../graphql/queries';
 
-export interface NoticeboardAdmin {
-}
+import {Widget as NoticeboardWidgetMapItem} from '../../../interfaces/ClassroomComponentsInterfaces';
 
-export interface Quote {
-  text: string;
-  author: String;
-}
-
-export interface NoticeboardWidgetMapItem {
-  id?: string;
-  teacherAuthID: string;
-  teacherEmail: string;
-  roomID: string;
-  type: string;
-  placement: string;
-  title: string;
-  description: string;
-  content?: { text: string; image: string };
-  quotes?: Quote[];
-  active: boolean;
-}
+export interface NoticeboardAdmin {}
+//
+// export interface NoticeboardWidgetMapItem {
+//   id?: string;
+//   teacherAuthID: string;
+//   teacherEmail: string;
+//   roomID: string;
+//   type: string;
+//   placement: string;
+//   title: string;
+//   description: string;
+//   content?: { text: string; image: string };
+//   quotes?: Quote[];
+//   active: boolean;
+// }
 
 export type ViewEditMode = {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | '';
@@ -50,16 +43,17 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   const [loading, setLoading] = useState<boolean>(false);
   //
   const [widgetData, setWidgetData] = useState<NoticeboardWidgetMapItem[]>([]);
-  const [newWidgetData, setNewWidgetData] = useState<NoticeboardWidgetMapItem>({
+  const [newWidgetData, setNewWidgetData] = useState<NoticeboardWidgetMapItem | any>({
     teacherAuthID: '',
     teacherEmail: '',
     roomID: '',
-    type: '',
-    placement: '',
+    type: 'default',
+    placement: 'sidebar',
     title: '',
     description: '',
     content: { text: '', image: '' },
     quotes: [],
+    links: [],
     active: true,
   });
 
@@ -69,47 +63,93 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   // For editing specific poems/stories
   const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({ mode: '', widgetID: '' });
 
-
   //  TOP Function to load widgets
-  const listNoticeboardWidgets = async() => {
+  const listNoticeboardWidgets = async () => {
     setLoading(true);
     try {
       const noticeboardWidgetsFetch: any = await API.graphql(
-        graphqlOperation(queries.listNoticeboardWidgets, { filter: { roomID: { eq: activeRoom } } }),
+        graphqlOperation(queries.listNoticeboardWidgets, { filter: { roomID: { eq: activeRoom } } })
       );
       const response = await noticeboardWidgetsFetch;
       const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
-      console.log('listNoticebaordWidgets -> ', arrayOfResponseObjects)
+      console.log('listNoticebaordWidgets -> ', arrayOfResponseObjects);
       setWidgetData(arrayOfResponseObjects);
-    } catch(e){
-      console.error('listNoticeboardWidgetsFetch: -> ', e)
+    } catch (e) {
+      console.error('listNoticeboardWidgetsFetch: -> ', e);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  useEffect(()=>{
-    const initializeWidgetData = async()=> {
+  useEffect(() => {
+    const initializeWidgetData = async () => {
       if (state.user.authId) {
         await listNoticeboardWidgets();
       }
-    }
-    if(activeRoom !== '' && loading === false){
+    };
+    if (activeRoom !== '' && loading === false) {
       initializeWidgetData();
     }
-  },[activeRoom])
-
+  }, [activeRoom]);
 
   /*
-  * Function group to handle updating widget data
-  *
-  * Explanation:
-  *   A widget object can have multiple levels of nesting
-  *     = basekey => first object property
-  *       = nestkey1 => first nested property
-  *         = nestkey2 => second nester property
-  * */
-  const handleEditUpdate = (e: React.ChangeEvent) => {
+   * Function group to handle updating widget data
+   *
+   * Explanation:
+   *   A widget object can have multiple levels of nesting
+   *     = basekey => first object property
+   *       = nestkey1 => first nested property
+   *         = nestkey2 => second nester property
+   * */
+  const handleEditUpdateQuotes = (e: React.ChangeEvent) => {
+    const target = e.target as any;
+    const { id, value } = target;
+    const basekey = e.target.getAttribute('data-basekey');
+    const nestkey1 = e.target.getAttribute('data-nestkey1');
+    const nestkey2 = e.target.getAttribute('data-nestkey2');
+
+    switch (viewEditMode.mode) {
+      case 'edit':
+        const updatedWidgetData = widgetData.reduce((acc: NoticeboardWidgetMapItem[], widgetObj: any) => {
+          if (widgetObj.id === id) {
+            return [
+              ...acc,
+              {
+                ...widgetObj,
+                [basekey]: widgetObj[basekey].map((nestedObj: any, idx: number) => {
+                  if (idx === parseInt(nestkey2)) {
+                    return { ...nestedObj, [nestkey1]: value };
+                  } else {
+                    return nestedObj;
+                  }
+                }),
+              },
+            ];
+          } else {
+            return [...acc, widgetObj];
+          }
+        }, []);
+        setWidgetData(updatedWidgetData);
+        break;
+      case 'create':  // final step to saving author!
+        const updatedNewWidgetData = {
+          ...newWidgetData,
+          [basekey]: newWidgetData[basekey].map((nestedObj: any, idx: number) => {
+            if (idx === parseInt(nestkey2)) {
+              return { ...nestedObj, [nestkey1]: value };
+            } else {
+              return nestedObj;
+            }
+          }),
+        };
+        setNewWidgetData(updatedNewWidgetData);
+        break;
+      default:
+        console.log('handleEditUpdateQuotes - ', 'nothing to update...');
+    }
+  };
+
+  const handleEditUpdateDefault = (e: React.ChangeEvent) => {
     const target = e.target as any;
     const { id, value } = target;
     const basekey = e.target.getAttribute('data-basekey');
@@ -121,28 +161,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
         const updatedWidgetData = widgetData.reduce((acc: NoticeboardWidgetMapItem[], widgetObj: any) => {
           if (widgetObj.id === id) {
             if (basekey && nestkey1) {
-              if (Array.isArray(widgetObj[basekey])) {
-                return [
-                  ...acc,
-                  {
-                    ...widgetObj,
-                    [basekey]: widgetObj[basekey].map((nestedObj: any, idx: number) => {
-                      if (idx === parseInt(nestkey2)) {
-                        return { ...nestedObj, [nestkey1]: value };
-                      } else {
-                        return nestedObj;
-                      }
-                    }),
-                  },
-                ];
-              }
-              if (
-                typeof widgetObj[basekey] === 'object' &&
-                Object.keys(widgetObj[basekey]).length > 0 &&
-                !Array.isArray(widgetObj[basekey])
-              ) {
-                return [...acc, { ...widgetObj, [basekey]: { [nestkey1]: value } }];
-              }
+              return [...acc, { ...widgetObj, [basekey]: { [nestkey1]: value } }];
             } else {
               return [...acc, { ...widgetObj, [basekey]: value }];
             }
@@ -153,31 +172,28 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
         setWidgetData(updatedWidgetData);
         break;
       case 'create':
-        if (viewEditMode.mode === 'create') {
-          const updatedNewWidgetData = { ...newWidgetData, [basekey]: value };
-          setNewWidgetData(updatedNewWidgetData);
-        }
+        const updatedNewWidgetData = { ...newWidgetData, [basekey]: value };
+        setNewWidgetData(updatedNewWidgetData);
         break;
     }
   };
 
   /*
-  * Function group to handle updating widget data with the WYSIWYG editor
-  *
-  * Explanation:
-  *   A widget object can have multiple levels of nesting
-  *     = basekey => first object property
-  *       = nestkey1 => first nested property
-  *         = nestkey2 => second nester property
-  * */
-  const handleWYSIWYGupdate = (id: string, value: string, basekey: string, nestkey1: string, nestkey2: string) => {
+   * Function group to handle updating widget data with the WYSIWYG editor
+   *
+   * Explanation:
+   *   A widget object can have multiple levels of nesting
+   *     = basekey => first object property
+   *       = nestkey1 => first nested property
+   *         = nestkey2 => second nester property
+   * */
+  const handleEditUpdateWYSIWYG = (id: string, value: string, basekey: string, nestkey1: string, nestkey2: string) => {
     switch (viewEditMode.mode) {
       case 'create':
         if (viewEditMode.mode === 'create') {
           if (basekey !== '') {
             if (nestkey1 !== '') {
               if (nestkey2 !== '') {
-                // @ts-ignore
                 const updatedNewWidgetData = {
                   ...newWidgetData,
                   [basekey]: {
@@ -246,6 +262,35 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     if (widgetObj.placement === subSectionKey[subSection]) return widgetObj;
   });
 
+  const noticeboardUpdate = async () => {
+    const getWidgetObj = widgetData.find((widgetObj: any) => widgetObj.id === viewEditMode.widgetID);
+    const input = {
+      id: getWidgetObj.id,
+      active: getWidgetObj.active,
+      placement: getWidgetObj.placement,
+      quotes: getWidgetObj.quotes,
+      links: getWidgetObj.links,
+      content: getWidgetObj.content,
+      description: getWidgetObj.description,
+      title: getWidgetObj.title,
+      type: getWidgetObj.type,
+      /**
+       * description & content ?
+       */
+    };
+    try {
+      const noticeboardWidgetUpdate: any = await API.graphql(
+        graphqlOperation(mutations.updateNoticeboardWidget, {
+          input: input,
+        })
+      );
+    } catch (e) {
+      console.error('noticeboardWidgetUpdate: widget: ', e);
+    } finally {
+      setViewEditMode({ mode: '', widgetID: '' });
+    }
+  };
+
   const noticeboardCreate = async () => {
     const input = {
       ...newWidgetData,
@@ -254,11 +299,12 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       roomID: activeRoom,
       placement: subSectionKey[subSection],
     };
+    console.log('creating widget...', input)
     try {
       const noticeboardWidgetCreate: any = await API.graphql(
         graphqlOperation(mutations.createNoticeboardWidget, {
           input: input,
-        }),
+        })
       );
     } catch (e) {
       console.error('noticeboardWidgetCreate: widget: ', e);
@@ -271,7 +317,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   useEffect(() => {
     const manageSaveAndCreate = async () => {
       if (viewEditMode.mode === 'save') {
-        // await noticeboardSave();
+        await noticeboardUpdate();
       } else if (viewEditMode.mode === 'savenew') {
         await noticeboardCreate();
         await listNoticeboardWidgets();
@@ -311,11 +357,15 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       <NoticeboardAdminContent
         viewEditMode={viewEditMode}
         handleEditToggle={handleEditToggle}
-        handleEditUpdate={handleEditUpdate}
-        handleWYSIWYGupdate={handleWYSIWYGupdate}
+        handleEditUpdateDefault={handleEditUpdateDefault}
+        handleEditUpdateQuotes={handleEditUpdateQuotes}
+        handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
         handleActivation={handleActivation}
         subSection={subSection}
+        widgetData={widgetData}
+        setWidgetData={setWidgetData}
         createTemplate={newWidgetData}
+        setNewWidgetData={setNewWidgetData}
         content={widgetData.length > 0 && filterWidgetContentBySubsection}
       />
     </React.Fragment>

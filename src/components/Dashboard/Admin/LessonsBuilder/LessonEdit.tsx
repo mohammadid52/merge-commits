@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp } from 'react-icons/io5';
-import { FaRegEye, FaQuestionCircle } from 'react-icons/fa';
+import { FaRegEye, FaQuestionCircle, FaUnity } from 'react-icons/fa';
 
 import * as customQueries from '../../../../customGraphql/customQueries';
 
@@ -16,6 +16,8 @@ import GeneralInformation from './StepActionComponent/GeneralInformation';
 import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
 import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
 import PreviewForm from './StepActionComponent/PreviewForm';
+import UnitLookup from './StepActionComponent/UnitLookup';
+
 import { InitialData } from './LessonBuilder';
 import { languageList } from '../../../../utilities/staticData'
 import ModalPopUp from '../../../Molecules/ModalPopUp';
@@ -78,8 +80,8 @@ const LessonEdit = (props: LessonEditProps) => {
   const [measurementList, setMeasurementList] = useState([]);
   const [selectedMeasurement, setSelectedMeasurement] = useState([]);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
-  // const [activeStep, setActiveStep] = useState('Builder');
-  const [activeStep, setActiveStep] = useState('Overview');
+  const [activeStep, setActiveStep] = useState('Assign Unit');
+  // const [activeStep, setActiveStep] = useState('Overview');
   const [loading, setLoading] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
@@ -100,11 +102,13 @@ const LessonEdit = (props: LessonEditProps) => {
     { name: "Overview", icon: <IoCardSharp /> },
     { name: "Instructions", icon: <IoDocumentText /> },
     { name: "Builder", icon: <FaQuestionCircle /> },
-    { name: "Preview Details", icon: <FaRegEye /> }
+    { name: "Assign Unit", icon: <FaUnity /> },
+    { name: "Preview Details", icon: <FaRegEye /> },
   ];
   const lessonScrollerStep = [
     { name: "Overview", icon: <IoCardSharp /> },
-    { name: "Preview Details", icon: <FaRegEye /> }
+    { name: "Assign Unit", icon: <FaUnity /> },
+    { name: "Preview Details", icon: <FaRegEye /> },
   ];
 
   const typeList: any = [
@@ -252,6 +256,10 @@ const LessonEdit = (props: LessonEditProps) => {
           lessonID={lessonId || assessmentId}
           lessonPlans={savedLessonDetails.lessonPlans}
           lessonType={formData.type?.value}
+        />;
+      case 'Assign Unit':
+        return <UnitLookup
+          lessonName={formData.name}
         />;
       // default:
       //   return <GeneralInformation

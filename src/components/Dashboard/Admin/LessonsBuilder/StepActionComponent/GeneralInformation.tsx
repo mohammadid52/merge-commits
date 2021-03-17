@@ -234,17 +234,17 @@ const GeneralInformation = (props: GeneralInformationProps) => {
           graphqlOperation(customMutations.updateLesson, { input: input })
         );
         const lessonsData = results?.data?.updateLesson;
-        if (lessonsData.type !== 'lesson') {
-          const assessmentInput = {
-            id: lessonsData.assessmentID,
-            title: formData.name,
-            type: formData.type?.value,
-          }
-          const results: any = await API.graphql(
-            graphqlOperation(customMutations.updateAssessment, { input: assessmentInput })
-          );
-          const assessmentData = results?.data?.updateAssessment;
-        }
+        // if (lessonsData.type !== 'lesson') {
+        //   const assessmentInput = {
+        //     id: lessonsData.assessmentID,
+        //     title: formData.name,
+        //     type: formData.type?.value,
+        //   }
+        //   const results: any = await API.graphql(
+        //     graphqlOperation(customMutations.updateAssessment, { input: assessmentInput })
+        //   );
+        //   const assessmentData = results?.data?.updateAssessment;
+        // }
         setLoading(false);
         if (lessonsData) {
           setValidation({

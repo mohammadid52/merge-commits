@@ -825,6 +825,11 @@ type Quotes {
   author: String
 }
 
+type Links {
+  text: String
+  url: String
+}
+
 type NoticeboardWidget @model {
   id: ID!
   teacherAuthID: String!
@@ -836,6 +841,7 @@ type NoticeboardWidget @model {
   description: String
   content: WidgetContent
   quotes: [Quotes]
+  links: [Links]
   active: Boolean
   teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
 }
