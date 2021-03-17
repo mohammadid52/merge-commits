@@ -2447,6 +2447,43 @@ export const getLesson = /* GraphQL */ `
         }
         nextToken
       }
+      institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -2576,6 +2613,25 @@ export const listLessons = /* GraphQL */ `
         measurements {
           nextToken
         }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -2698,6 +2754,25 @@ export const getLessonRubrics = /* GraphQL */ `
         measurements {
           nextToken
         }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -2766,6 +2841,7 @@ export const listLessonRubricss = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -2983,6 +3059,25 @@ export const getSyllabusLesson = /* GraphQL */ `
         measurements {
           nextToken
         }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -3093,6 +3188,7 @@ export const listSyllabusLessons = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -3169,6 +3265,7 @@ export const getStudentData = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -3486,6 +3583,7 @@ export const getQuestionData = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -3627,6 +3725,7 @@ export const getFeedback = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -3926,6 +4025,7 @@ export const getPersonLocation = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -4144,7 +4244,7 @@ export const getNoticeboardWidget = /* GraphQL */ `
       links {
         text
         url
-      {
+      }
       active
       teacher {
         id
