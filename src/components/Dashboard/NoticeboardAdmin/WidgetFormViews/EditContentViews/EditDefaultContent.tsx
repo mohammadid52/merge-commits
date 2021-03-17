@@ -16,7 +16,7 @@ export const EditDefaultContent = (props: NoticeboardFormProps) => {
     widgetData,
   } = props;
   return (
-    <div className={`mt-2 mb-2`}>
+    <div className={`mt-2 mb-2 p-2`}>
       <Fragment>
         <label htmlFor={`${widgetObj.id}`} className="block text-xs font-semibold leading-5 text-gray-700">
           {`Content`}
