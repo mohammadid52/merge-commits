@@ -188,6 +188,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
    *         = nestkey2 => second nester property
    * */
   const handleEditUpdateWYSIWYG = (id: string, value: string, basekey: string, nestkey1: string, nestkey2: string) => {
+    console.log('handleEdit -> ',[id, value, basekey, nestkey1, nestkey2])
     switch (viewEditMode.mode) {
       case 'create':
         if (viewEditMode.mode === 'create') {

@@ -3,6 +3,7 @@ import { GlobalContext } from '../../../../contexts/GlobalContext';
 import { NoticeboardFormProps } from '../NoticeboardAdminContent';
 import { EditDefaultContent } from './EditContentViews/EditDefaultContent';
 import { EditQuoteContent } from './EditContentViews/EditQuoteContent';
+import CreateEditDropdown from './createEditDropdown';
 
 // Standard widget card view
 export const CreateModeView = (props: NoticeboardFormProps) => {
@@ -12,6 +13,7 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
     handleActivation,
     handleEditUpdateDefault,
     handleEditUpdateQuotes,
+    handleEditUpdateWYSIWYG,
     viewEditMode,
     newWidgetData,
     setNewWidgetData,
@@ -20,44 +22,21 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
   } = props;
   const { theme } = useContext(GlobalContext);
   return (
-    <>
+    <div className={`p-2`}>
       {/**
        *  section: TOP INFO
        */}
-      <div className={`flex pb-2 mb-2 border-b ${theme.lessonCard.border}`}>
-        <span className={`text-left ${theme.lessonCard.subtitle}`}>
-          Widget Status:
-          <select name="status" id="status" data-basekey="active" onChange={(e) => handleEditUpdateDefault(e)}>
-            <option value="true">Active</option>
-            <option value="false">Inactive</option>
-          </select>
-        </span>
-        <span className={`text-right ${theme.lessonCard.subtitle}`}>
-          Placement:
-          <select name="placement" id="placement" data-basekey="placement" onChange={(e) => handleEditUpdateDefault(e)}>
-            <option value="topbar">Top</option>
-            <option value="sidebar" selected>
-              Side
-            </option>
-          </select>
-        </span>
-        <span className={`text-right ${theme.lessonCard.subtitle}`}>
-          Type:
-          <select name="type" id="type" data-basekey="type" onChange={(e) => handleEditUpdateDefault(e)}>
-            <option value="default" selected>
-              Default
-            </option>
-            <option value="quote">Quote</option>
-            <option value="call">Call</option>
-          </select>
-        </span>
-      </div>
+      <CreateEditDropdown
+        widgetObj={widgetObj}
+        handleEditUpdateDefault={handleEditUpdateDefault}
+        handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
+      />
       {/**
        *  section: TITLE
        */}
-      <div className={`mt-2 `}>
+      <div className={`mt-2 p-2`}>
         <Fragment>
-          <label htmlFor={widgetObj.id} className="block text-xs font-semibold leading-5 text-gray-700">
+          <label htmlFor={widgetObj.id} className="block text-sm font-semibold leading-5 text-gray-700">
             {`Title`}
           </label>
           <input
@@ -89,20 +68,21 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
         />
       ) : null}
 
-      {widgetObj.type === 'quote' || widgetObj.type === 'call' ?  (
-        <EditQuoteContent
-          handleEditUpdateQuotes={handleEditUpdateQuotes}
-          viewEditMode={viewEditMode}
-          widgetObj={widgetObj}
-          setEditorContent={setEditorContent}
-          handleActivation={handleActivation}
-          newWidgetData={newWidgetData}
-          setNewWidgetData={setNewWidgetData}
-          setWidgetData={setWidgetData}
-          widgetData={widgetData}
-        />
+      {widgetObj.type === 'quote' || widgetObj.type === 'call' ? (
+        <div className={`p-2`}>
+          <EditQuoteContent
+            handleEditUpdateQuotes={handleEditUpdateQuotes}
+            viewEditMode={viewEditMode}
+            widgetObj={widgetObj}
+            setEditorContent={setEditorContent}
+            handleActivation={handleActivation}
+            newWidgetData={newWidgetData}
+            setNewWidgetData={setNewWidgetData}
+            setWidgetData={setWidgetData}
+            widgetData={widgetData}
+          />
+        </div>
       ) : null}
-
-    </>
+    </div>
   );
 };
