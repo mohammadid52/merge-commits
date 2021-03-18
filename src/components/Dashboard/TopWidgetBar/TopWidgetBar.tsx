@@ -28,14 +28,14 @@ const TopWidgetBar = () => {
       case 'quote':
         return <QuoteWidget key={`topbar_widget_${idx}`} quotes={widgetObj.quotes} />;
       case 'call':
-        return <CallLinkWidget key={`sidebar_widget_${idx}`} title={widgetObj.title} links={widgetObj.links} />;
+        return <CallLinkWidget key={`sidebar_widget_${idx}`} title={widgetObj.title} links={widgetObj.links} widgetObj={widgetObj}/>;
       default:
         return null;
     }
   };
 
   return (
-    <div className={`h-16 w-full`}>
+    <div className={`w-full h-auto min-h-16`}>
       {getTopWidgets().length > 0 &&
         getTopWidgets().map((widgetObj: Widget, idx: number) => {
           return switchWidgets(widgetObj, idx);

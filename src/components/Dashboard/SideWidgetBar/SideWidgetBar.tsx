@@ -35,7 +35,7 @@ const SideWidgetBar = (props: DashboardProps) => {
         return <QuoteWidget key={`sidebar_widget_${idx}`} card={true} quotes={widgetObj.quotes} />;
       case 'call':
         return (
-          <CallLinkWidget key={`sidebar_widget_${idx}`} card={true} title={widgetObj.title} links={widgetObj.links} />
+          <CallLinkWidget key={`sidebar_widget_${idx}`} card={true} title={widgetObj.title} links={widgetObj.links} widgetObj={widgetObj}/>
         );
       default:
         return null;

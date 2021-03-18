@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '../../../interfaces/ClassroomComponentsInterfaces';
+import { Link, Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoCallOutline } from 'react-icons/all';
 
@@ -59,8 +59,14 @@ export const DefaultTextWidget = (props: { title: string; content: string; card?
   );
 };
 
-export const CallLinkWidget = (props: { title: string; links: Link; card?: boolean; classProp?: string }) => {
-  const { title, links, card, classProp } = props;
+export const CallLinkWidget = (props: {
+  title: string;
+  links: Link;
+  card?: boolean;
+  classProp?: string;
+  widgetObj?: Widget;
+}) => {
+  const { title, links, card, classProp, widgetObj } = props;
 
   const getShortenedCallLabel = (url: string) => {
     if (url.includes('web.zoom')) {
@@ -95,45 +101,49 @@ export const CallLinkWidget = (props: { title: string; links: Link; card?: boole
           </span>
         </div>
       </div>
-      {links &&
-        links.length > 0 &&
-        links.map((link: Link, idx: number) => (
-          <>
-            {/**
-             * MOBILE VERSION WIDGET ICON
-             */}
-            <span className={`${mobileShowClass} w-full mr-0 mb-2 flex flex-col`}>
-              <a
-                id={`links_${links.id}_mini`}
-                className={`text-xs font-semibold text-blueberry hover:underline`}
-                href={link.url}
-                target={`_blank`}>
-                <IconContext.Provider value={{ className: 'mx-auto' }}>
-                  <IoCallOutline size={24} />
-                </IconContext.Provider>
-                <p className={`text-center`}>{getShortenedCallLabel(link.url).iconLabel}</p>
-              </a>
-            </span>
 
-            {/**
-             * WIDGET
-             */}
-            <div
-              key={`links_${links.id}_idx`}
-              className={`${responsiveClass} ${
-                idx < links.length - 1 ? 'border-b border-dark-gray border-opacity-10' : ''
-              } p-2 break-all`}>
-              <p className={`text-sm font-semibold`}>{link.text}:</p>
-              <a
-                id={`links_${links.id}_idx`}
-                className={`text-xs font-semibold text-blueberry hover:underline`}
-                href={link.url}
-                target={`_blank`}>
-                {link.url}
-              </a>
+      <div className={`${widgetObj.placement === 'sidebar' ? '' : 'flex'}`}>
+        {links &&
+          links.length > 0 &&
+          links.map((link: Link, idx: number) => (
+            <div className={`max-w-1/3`}>
+              {/**
+               * MOBILE VERSION WIDGET ICON
+               */}
+              <span className={`${mobileShowClass} w-full mr-0 mb-2 flex flex-col`}>
+                <a
+                  id={`links_${links.id}_mini`}
+                  className={`text-xs font-semibold text-blueberry hover:underline`}
+                  href={link.url}
+                  target={`_blank`}>
+                  <IconContext.Provider value={{ className: 'mx-auto' }}>
+                    <IoCallOutline size={24} />
+                  </IconContext.Provider>
+                  <p className={`text-center`}>{getShortenedCallLabel(link.url).iconLabel}</p>
+                </a>
+              </span>
+
+              {/**
+               * WIDGET
+               */}
+              <div
+                key={`links_${links.id}_idx`}
+                className={`
+              ${responsiveClass} 
+              ${idx < links.length - 1 && widgetObj.placement === 'sidebar' ? 'border-b border-dark-gray border-opacity-10' : ''} 
+              p-2 break-all`}>
+                <p className={`text-sm font-semibold`}>{link.text}:</p>
+                <a
+                  id={`links_${links.id}_idx`}
+                  className={`text-xs font-semibold text-blueberry hover:underline`}
+                  href={link.url}
+                  target={`_blank`}>
+                  {link.url}
+                </a>
+              </div>
             </div>
-          </>
-        ))}
+          ))}
+      </div>
     </div>
   );
 };
