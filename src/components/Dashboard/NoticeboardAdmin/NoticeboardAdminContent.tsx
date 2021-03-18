@@ -3,7 +3,7 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import ContentCard from '../../Atoms/ContentCard';
 import useDictionary from '../../../customHooks/dictionary';
 import { ViewEditMode } from './NoticeboardAdmin';
-import {Widget as NoticeboardWidgetMapItem} from '../../../interfaces/ClassroomComponentsInterfaces';
+import { Widget as NoticeboardWidgetMapItem } from '../../../interfaces/ClassroomComponentsInterfaces';
 import { ViewModeView } from './WidgetFormViews/viewWidget';
 import { EditModeView } from './WidgetFormViews/editWidget';
 import { CreateModeView } from './WidgetFormViews/createWidget';
@@ -164,6 +164,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
                         {anthologyDict[userLanguage].ACTIONS.EDIT}
                       </p>
                     )}
+
                     {viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
                       <>
                         <span className={`w-auto mr-2`}>/</span>
@@ -171,6 +172,17 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
                           onClick={() => handleEditToggle('save', widgetObj.id)}
                           className={`w-auto cursor-pointer font-semibold text-blueberry`}>
                           {anthologyDict[userLanguage].ACTIONS.SAVE}
+                        </p>
+                      </>
+                    ) : null}
+
+                    {viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
+                      <>
+                        <span className={`w-auto ml-2`}>/</span>
+                        <p
+                          onClick={() => handleEditToggle('delete', widgetObj.id)}
+                          className={`w-auto cursor-pointer font-semibold text-blueberry`}>
+                          {anthologyDict[userLanguage].ACTIONS.DELETE}
                         </p>
                       </>
                     ) : null}

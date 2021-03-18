@@ -132,13 +132,12 @@ export const CallLinkWidget = (props: {
               ${responsiveClass} 
               ${idx < links.length - 1 && widgetObj.placement === 'sidebar' ? 'border-b border-dark-gray border-opacity-10' : ''} 
               p-2 break-all`}>
-                <p className={`text-sm font-semibold`}>{link.text}:</p>
                 <a
                   id={`links_${links.id}_idx`}
                   className={`text-xs font-semibold text-blueberry hover:underline`}
                   href={link.url}
                   target={`_blank`}>
-                  {link.url}
+                  {link.text}
                 </a>
               </div>
             </div>
