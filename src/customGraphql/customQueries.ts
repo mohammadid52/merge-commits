@@ -1979,3 +1979,21 @@ export const getSyllabus = /* GraphQL */ `
     }
   }
 `;
+
+// delete once lessons table updated in production
+// export const listLessonsIds = /* GraphQL */ `
+//   query ListLessons(
+//     $id: ID
+//     $filter: ModelLessonFilterInput
+//     $limit: Int
+//     $nextToken: String
+//     $sortDirection: ModelSortDirection
+//   ) {
+//     listLessons(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken, sortDirection: $sortDirection) {
+//       items {
+//         id
+//       }
+//       nextToken
+//     }
+//   }
+// `;

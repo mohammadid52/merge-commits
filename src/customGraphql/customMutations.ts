@@ -932,3 +932,13 @@ export const deleteCommonCheckpoint = /* GraphQL */ `
     }
   }
 `;
+
+// delete once lessons table updated in production
+// export const updateLessonInsts= /* GraphQL */ `
+//   mutation UpdateLesson($input: UpdateLessonInput!, $condition: ModelLessonConditionInput) {
+//     updateLesson(input: $input, condition: $condition) {
+//       id
+//       institutionID
+//     }
+//   }
+// `;
