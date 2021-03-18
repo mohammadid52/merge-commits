@@ -20,8 +20,8 @@ import React, { useEffect, useState } from 'react';
   },
 ];*/
 
-export const QuoteWidget = (props:{quotes: any[]}) => {
-  const {quotes} = props;
+export const QuoteWidget = (props:{quotes: any[], classProp?: string; card?: boolean;}) => {
+  const {quotes, classProp, card} = props;
   const [widgetQuote, setWidgetQuote] = useState<{ text: string; author: string }>();
   const [twClass, setTWClass] = useState<string>('opacity-100');
 

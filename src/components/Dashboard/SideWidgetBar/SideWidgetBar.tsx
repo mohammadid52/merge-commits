@@ -1,15 +1,17 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { DashboardProps } from '../Dashboard';
 
-import { CallLinkWidget, DefaultTextWidget, ImageWidget } from './Widgets';
+import { CallLinkWidget, DefaultTextWidget, ImageWidget, LogoWidget } from './Widgets';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { getAsset } from '../../../assets';
 import { Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
 import { QuoteWidget } from '../TopWidgetBar/TopWidgets';
+import { useWindowSize } from '../../../customHooks/windowSize';
 
 const SideWidgetBar = (props: DashboardProps) => {
   const { currentPage, setVisibleLessonGroup } = props;
   const { state, clientKey } = useContext(GlobalContext);
+  const windowSize = useWindowSize();
 
   const getSideWidgets = () => {
     const thereAreWidgets = state.roomData.widgets.length > 0;
@@ -30,45 +32,58 @@ const SideWidgetBar = (props: DashboardProps) => {
           <DefaultTextWidget key={`sidebar_widget_${idx}`} title={widgetObj.title} content={widgetObj.content.text} />
         );
       case 'quote':
-        return <QuoteWidget key={`sidebar_widget_${idx}`} quotes={widgetObj.quotes} />;
+        return <QuoteWidget key={`sidebar_widget_${idx}`} card={true} quotes={widgetObj.quotes} />;
       case 'call':
-        return <CallLinkWidget key={`sidebar_widget_${idx}`} title={widgetObj.title} links={widgetObj.links}/>
+        return (
+          <CallLinkWidget key={`sidebar_widget_${idx}`} card={true} title={widgetObj.title} links={widgetObj.links} />
+        );
       default:
         return null;
     }
   };
 
+  const barClass = `md:bg-white md:bg-opacity-100 lg:bg-opacity-0`;
+  const responsiveBarClass = `md:w-16 lg:w-56 xl:w-80`;
+  const responsiveBarScalingAnimation = `transition-all duration-500 ease-in-out`;
+
   return (
-    <div id={`sideWidgetBar`} className={`w-2/10 max-w-80 min-w-48`}>
+    <>
       {/**
-       * STATIC INSTITUTE LOGO
+       * FULL SIZE
        */}
-      <ImageWidget
-        source={getAsset(clientKey, 'logo_symbol')}
-        altdesc={`school-logo`}
-        card={false}
-        classProp={`w-16 h-auto mx-auto`}
-      />
+      <div id={`sideWidgetBar`} className={`${barClass} ${responsiveBarClass} ${responsiveBarScalingAnimation}`}>
+        {/**
+         * STATIC INSTITUTE LOGO
+         */}
+        <LogoWidget
+          source={getAsset(clientKey, 'logo_symbol')}
+          altdesc={`school-logo`}
+          card={false}
+          classProp={`w-16 h-auto mx-auto p-2 mb-2 bg-white`}
+        />
 
-      {/**
-       * DYNAMIC MAP
-       */}
-      {getSideWidgets().length > 0 &&
-        getSideWidgets().map((widgetObj: Widget, idx: number) => {
-          return switchWidgets(widgetObj, idx);
-        })}
+        {/**
+         * DYNAMIC MAP
+         */}
+        {getSideWidgets().length > 0 &&
+          getSideWidgets().map((widgetObj: Widget, idx: number) => {
+            return switchWidgets(widgetObj, idx);
+          })}
 
-      {/**
-       * FURTHER DEVELOPMENT
-       */}
-      <ImageWidget
-        source={`https://iconoclastimages141704-uat.s3.amazonaws.com/public/CurateImage.jpg`}
-        altdesc={`fun-meme`}
-        title={`Reflection`}
-        card={true}
-        classProp={`w-auto h-auto`}
-      />
-    </div>
+        {/**
+         * FURTHER DEVELOPMENT
+         *  TODO: This meme widget should be built
+         *    out in the future
+         */}
+        {/*<ImageWidget
+          source={`https://iconoclastimages141704-uat.s3.amazonaws.com/public/CurateImage.jpg`}
+          altdesc={`fun-meme`}
+          title={`Reflection`}
+          card={true}
+          classProp={`w-auto h-auto sm:hidden lg:visible`}
+        />*/}
+      </div>
+    </>
   );
 };
 
