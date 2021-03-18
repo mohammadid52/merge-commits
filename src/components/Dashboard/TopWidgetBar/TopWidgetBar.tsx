@@ -2,12 +2,12 @@ import React, { useContext } from 'react';
 import { QuoteWidget } from './TopWidgets';
 import { Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
 import { GlobalContext } from '../../../contexts/GlobalContext';
-import { DefaultTextWidget } from '../SideWidgetBar/Widgets';
+import { CallLinkWidget, DefaultTextWidget } from '../SideWidgetBar/Widgets';
 
 const TopWidgetBar = () => {
   const { state } = useContext(GlobalContext);
 
-  const getTopWidgets = ():any[] => {
+  const getTopWidgets = (): any[] => {
     const thereAreWidgets = state.roomData.widgets.length > 0;
     if (thereAreWidgets) {
       return state.roomData.widgets.filter((widgetObj: Widget) => {
@@ -27,6 +27,8 @@ const TopWidgetBar = () => {
         );
       case 'quote':
         return <QuoteWidget key={`topbar_widget_${idx}`} quotes={widgetObj.quotes} />;
+      case 'call':
+        return <CallLinkWidget key={`sidebar_widget_${idx}`} title={widgetObj.title} links={widgetObj.links} />;
       default:
         return null;
     }
@@ -34,12 +36,10 @@ const TopWidgetBar = () => {
 
   return (
     <div className={`h-16 w-full`}>
-      {
-        getTopWidgets().length > 0 &&
-          getTopWidgets().map((widgetObj: Widget, idx: number) => {
-            return switchWidgets(widgetObj, idx)
-          })
-      }
+      {getTopWidgets().length > 0 &&
+        getTopWidgets().map((widgetObj: Widget, idx: number) => {
+          return switchWidgets(widgetObj, idx);
+        })}
     </div>
   );
 };

@@ -624,7 +624,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                   <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                       Select Language
-                  </label>
+                    </label>
                     <MultipleSelector selectedItems={languages} placeholder="Language" list={languageList} onChange={selectLanguage} />
                   </div>
 

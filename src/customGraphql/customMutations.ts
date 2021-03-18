@@ -673,6 +673,7 @@ export const createLesson = /* GraphQL */ `
       coreLessonId
       activityId
       assessmentID
+      institutionID
     }
   }
 `;
