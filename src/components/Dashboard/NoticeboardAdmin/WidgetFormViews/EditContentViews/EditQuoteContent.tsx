@@ -12,6 +12,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
     widgetObj,
     setEditorContent,
     viewEditMode,
+    newWidgetData,
     setNewWidgetData,
     widgetData,
     setWidgetData,
@@ -59,53 +60,26 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
   };
 
   const increaseQuoteCount = () => {
-    if (viewEditMode.mode === 'create') {
+    // if (viewEditMode.mode === 'create') {
+    if (true) {
       // @ts-ignore
       setNewWidgetData({
         ...widgetObj,
         [switchKey().key]: [...widgetObj[switchKey().key], switchKey().expander],
       });
     }
-    if (viewEditMode.mode === 'edit') {
-      const updatedWidgetArray = widgetData.map((nestedObj: any, idx: number) => {
-        if (nestedObj.id === widgetObj.id) {
-          return {
-            ...nestedObj,
-            [switchKey().key]: [...nestedObj[switchKey().key], switchKey().expander],
-          };
-        } else {
-          return nestedObj;
-        }
-      });
-      setWidgetData(updatedWidgetArray);
-    }
   };
 
   const decreaseQuoteCount = (idx: number) => {
-    if (viewEditMode.mode === 'create') {
+    // if (viewEditMode.mode === 'create') {
+    if (true) {
       const filtered = widgetObj[switchKey().key].filter((linkObj: any, idx1: number) => {
-        if (idx1 === idx) return linkObj;
+        if (idx1 !== idx) return linkObj;
       });
       setNewWidgetData({
         ...widgetObj,
         [switchKey().key]: filtered,
       });
-    }
-    if (viewEditMode.mode === 'edit') {
-      const updatedWidgetArray = widgetData.map((nestedObj: any, idx: number) => {
-        if (nestedObj.id === widgetObj.id) {
-          const filtered = nestedObj[switchKey().key].filter((linkObj: any, idx1: number) => {
-            if (idx1 === idx) return linkObj;
-          });
-          return {
-            ...nestedObj,
-            [switchKey().key]: filtered,
-          };
-        } else {
-          return nestedObj;
-        }
-      });
-      setWidgetData(updatedWidgetArray);
     }
   };
 
@@ -113,7 +87,9 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
 
   return (
     <div className={`mt-2 mb-2 p-2`}>
-      {widgetObj[theSwitchObj.key].length > 0 ? (
+      {
+        theSwitchObj &&
+        widgetObj[theSwitchObj.key].length > 0 ? (
         widgetObj[theSwitchObj.key].map((widgetQuote: Quote, idx: number) => {
           return (
             <div
@@ -188,7 +164,8 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
         <>
           <p>No quotes added...</p>
         </>
-      )}
+      )
+      }
       <p onClick={increaseQuoteCount} className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}>
         {anthologyDict[userLanguage].ACTIONS.CREATE}?
       </p>

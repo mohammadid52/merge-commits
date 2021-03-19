@@ -10,9 +10,9 @@ const RoomSwitch = (props: DashboardProps) => {
   const rooms = useLoadRooms();
   //
 
-  useEffect(() => {
-    console.log('rooms hook - ', rooms);
-  }, [rooms]);
+  // useEffect(() => {
+  //   console.log('rooms hook - ', rooms);
+  // }, [rooms]);
 
   const handleRoomSelection = (e: React.MouseEvent, i: number) => {
     const t = e.target as HTMLElement;

@@ -169,27 +169,23 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   const handleEditUpdateDefault = (e: React.ChangeEvent) => {
     const target = e.target as any;
     const { id, value } = target;
+    const dataVal = e.target.getAttribute('data-value');
     const basekey = e.target.getAttribute('data-basekey');
     const nestkey1 = e.target.getAttribute('data-nestkey1');
     const nestkey2 = e.target.getAttribute('data-nestkey2');
 
+    const usableValue = (typeof value !== 'undefined') ? value : dataVal;
+
     switch (viewEditMode.mode) {
-      case 'edit':
-        const updatedWidgetData = widgetData.reduce((acc: NoticeboardWidgetMapItem[], widgetObj: any) => {
-          if (widgetObj.id === id) {
+        case 'edit':
             if (basekey && nestkey1) {
-              return [...acc, { ...widgetObj, [basekey]: { [nestkey1]: value } }];
+              setNewWidgetData({ ...newWidgetData, [basekey]: { [nestkey1]: usableValue } });
             } else {
-              return [...acc, { ...widgetObj, [basekey]: value }];
+              setNewWidgetData( { ...newWidgetData, [basekey]: usableValue });
             }
-          } else {
-            return [...acc, widgetObj];
-          }
-        }, []);
-        setWidgetData(updatedWidgetData);
         break;
       case 'create':
-        const updatedNewWidgetData = { ...newWidgetData, [basekey]: value };
+        const updatedNewWidgetData = { ...newWidgetData, [basekey]: usableValue };
         setNewWidgetData(updatedNewWidgetData);
         break;
     }
@@ -205,13 +201,12 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
    *         = nestkey2 => second nester property
    * */
   const handleEditUpdateWYSIWYG = (id: string, value: string, basekey: string, nestkey1: string, nestkey2: string) => {
-    console.log('handleEdit -> ', [id, value, basekey, nestkey1, nestkey2]);
     switch (viewEditMode.mode) {
       case 'create':
-        if (viewEditMode.mode === 'create') {
-          if (basekey !== '') {
-            if (nestkey1 !== '') {
-              if (nestkey2 !== '') {
+      case 'edit':
+          if (basekey !== '' && basekey !== undefined) {
+            if (nestkey1 !== '' && nestkey1 !== undefined) {
+              if (nestkey2 !== '' && nestkey2 !== undefined) {
                 const updatedNewWidgetData = {
                   ...newWidgetData,
                   [basekey]: {
@@ -238,10 +233,9 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
           } else {
             console.error('create err0r -> ', ' no basekey provided for update function...');
           }
-        }
         break;
       default:
-        console.log('handleWYSIWYGudpate ->', 'pfft');
+        console.log('handleWYSIWYGudpate ->', 'does not work');
     }
   };
 
@@ -250,14 +244,8 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   };
 
   const handleActivation = (id: string) => {
-    const updatedWidgetData = widgetData.reduce((acc: NoticeboardWidgetMapItem[], widgetObj: any) => {
-      if (widgetObj.id === id) {
-        return [...acc, { ...widgetObj, active: !widgetObj.active }];
-      } else {
-        return [...acc, widgetObj];
-      }
-    }, []);
-    setWidgetData(updatedWidgetData);
+    const updatedWidgetData = {...newWidgetData, active: !newWidgetData.active};
+    setNewWidgetData(updatedWidgetData);
   };
 
   // Function group to handle section-switching
@@ -281,17 +269,16 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   });
 
   const noticeboardUpdate = async () => {
-    const getWidgetObj = widgetData.find((widgetObj: any) => widgetObj.id === viewEditMode.widgetID);
     const input = {
-      id: getWidgetObj.id,
-      active: getWidgetObj.active,
-      placement: getWidgetObj.placement,
-      quotes: getWidgetObj.quotes,
-      links: getWidgetObj.links,
-      content: getWidgetObj.content,
-      description: getWidgetObj.description,
-      title: getWidgetObj.title,
-      type: getWidgetObj.type,
+      id: newWidgetData.id,
+      active: newWidgetData.active,
+      placement: newWidgetData.placement,
+      quotes: newWidgetData.quotes,
+      links: newWidgetData.links,
+      content: newWidgetData.content,
+      description: newWidgetData.description,
+      title: newWidgetData.title,
+      type: newWidgetData.type,
     };
     try {
       const noticeboardWidgetUpdate: any = await API.graphql(
@@ -307,12 +294,12 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   };
 
   const noticeboardCreate = async () => {
+    const getWidgetObj = widgetData.find((widgetObj: any) => widgetObj.id === viewEditMode.widgetID);
     const input = {
       ...newWidgetData,
       teacherAuthID: state.user.authId,
       teacherEmail: state.user.email,
       roomID: activeRoom,
-      placement: subSectionKey[subSection],
     };
     console.log('creating widget...', input);
     try {
@@ -405,6 +392,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
         widgetData={widgetData}
         setWidgetData={setWidgetData}
         createTemplate={newWidgetData}
+        newWidgetData={newWidgetData}
         setNewWidgetData={setNewWidgetData}
         content={widgetData.length > 0 && filterWidgetContentBySubsection}
       />

@@ -3,7 +3,7 @@ import { GlobalContext } from '../../../../contexts/GlobalContext';
 import { NoticeboardFormProps } from '../NoticeboardAdminContent';
 import { EditDefaultContent } from './EditContentViews/EditDefaultContent';
 import { EditQuoteContent } from './EditContentViews/EditQuoteContent';
-import CreateEditDropdown from './createEditDropdown';
+import CreateWidgetToolbar from './createWidgetToolbar';
 
 // Standard widget card view
 export const CreateModeView = (props: NoticeboardFormProps) => {
@@ -26,7 +26,7 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
       {/**
        *  section: TOP INFO
        */}
-      <CreateEditDropdown
+      <CreateWidgetToolbar
         widgetObj={widgetObj}
         handleEditUpdateDefault={handleEditUpdateDefault}
         handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
