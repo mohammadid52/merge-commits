@@ -5,6 +5,7 @@ import UserStatus from './UserStatus';
 import { getImageFromS3 } from '../../../../utilities/services';
 import { getAsset } from '../../../../assets';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
+import useDictionary from '../../../../customHooks/dictionary';
 
 interface ListProps {
     item: any
@@ -12,8 +13,9 @@ interface ListProps {
 
 const List = (props: ListProps) => {
     const { item } = props;
-    const { theme, clientKey } = useContext(GlobalContext);
+    const { theme, clientKey,userLanguage } = useContext(GlobalContext);
     const themeColor = getAsset(clientKey, 'themeClassName');
+    const { BUTTONS  } = useDictionary(clientKey);
     const match = useRouteMatch();
     const history = useHistory();
     const [imageUrl, setImageUrl] = useState('')
@@ -95,7 +97,7 @@ const List = (props: ListProps) => {
                         </div>
                     </div>
                     <div className="w-2/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleLink} >
-                        <div id={item.id} className={`flex justify-center ${theme.textColor[themeColor]} `}>Edit</div>
+                        <div id={item.id} className={`flex justify-center ${theme.textColor[themeColor]} `}>{BUTTONS[userLanguage]['EDIT']}</div>
                     </div>
                 </div>
                 : null}

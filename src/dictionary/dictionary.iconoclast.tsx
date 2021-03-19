@@ -46,6 +46,8 @@ const BreadcrumsTitles: any = {
     AddChekpoint:'Add Checkpoint',
     EditTopic:'Edit Topic',
     AddExistingCheckpoint:'Add Existing Checkpoint',
+    PeopleManagment:'People Management',
+    AddNewUser:'Add New User'
   },
   'ES': {
     HOME: 'CASA',
@@ -70,7 +72,9 @@ const BreadcrumsTitles: any = {
     EditMeasurement:'TBD',
     AddChekpoint:'TBD',
     EditTopic:'TBD',
-    AddExistingCheckpoint:'TBD'
+    AddExistingCheckpoint:'TBD',
+    PeopleManagment:'TBD',
+    AddNewUser:'TBD'
   }
 }
 // Profile Display and edit section
@@ -2061,6 +2065,16 @@ const ProfileCheckpointlookupDict:any={
   }
 }
 
+const RegistrationDict:any={
+  'EN':{
+    messages:{
+      emailerr:'Please make sure the user\'s email is correct',
+      existemail:'An account with this email exists',
+      
+    }
+  },
+  'ES':{}
+}
 
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
@@ -2114,5 +2128,6 @@ export {
   EditProfileCheckpointDict,
   EditSyllabusDict,
   EditTopicDict,
-  ProfileCheckpointlookupDict
+  ProfileCheckpointlookupDict,
+  RegistrationDict
 };
