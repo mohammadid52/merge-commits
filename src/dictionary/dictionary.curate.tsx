@@ -45,6 +45,8 @@ const BreadcrumsTitles: any = {
     AddChekpoint:'Add Checkpoint',
     EditTopic:'Edit Topic',
     AddExistingCheckpoint:'Add Existing Checkpoint',
+    PeopleManagment:'People Management',
+    AddNewUser:'Add New User'
   },
   'ES': {
     HOME: 'CASA',
@@ -69,7 +71,9 @@ const BreadcrumsTitles: any = {
     EditMeasurement:'TBD',
     AddChekpoint:'TBD',
     EditTopic:'TBD',
-    AddExistingCheckpoint:'TBD'
+    AddExistingCheckpoint:'TBD',
+    PeopleManagment:'TBD',
+    AddNewUser:'TBD'
   }
 }
 // Profile Display and edit section
@@ -2048,6 +2052,56 @@ const ProfileCheckpointlookupDict:any={
   }
 }
 
+const RegistrationDict:any={
+  'EN':{
+    title:'Registration',
+    subtitle:'Add new user to the list',
+    requiredfield:'Required fields',
+    firstname:'First Name',
+    firstplaceholder:'John',
+    lastname:'Last Name',
+    lastplaceholder:'Doe',
+    email:'Email',
+    emailplaceholder:'email@email.com',
+    button:{
+      submit:'Submit',
+    },
+    messages:{
+      emailerr:'Please make sure the user\'s email is correct',
+      existemail:'An account with this email exists',
+      fitstname:'User\'s first name cannot be blank',
+      lastname:'User\'s last name cannot be blank',
+      email:'User\'s email cannot be blank',
+      emailaddress:'User\'s email is not in the expected email address format',
+      userrol:'User\'s role cannot be blank',
+      loading:'Loading...',
+    }
+  },
+  'ES':{
+    title:'TBD',
+    subtitle:'TBD',
+    requiredfield:'TBD',
+    firstname:'TBD',
+    firstplaceholder:'TBD',
+    lastname:'TBD',
+    lastplaceholder:'TBD',
+    email:'TBD',
+    emailplaceholder:'TBD',
+    button:{
+      submit:'TBD',
+    },
+    messages:{
+      emailerr:'TBD',
+      existemail:'TBD',
+      fitstname:'TBD',
+      lastname:'TBD',
+      email:'TBD',
+      emailaddress:'TBD',
+      userrol:'TBD',
+      loading:'TBD',
+    }
+  }
+}
 
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
@@ -2101,5 +2155,6 @@ export {
   EditProfileCheckpointDict,
   EditSyllabusDict,
   EditTopicDict,
-  ProfileCheckpointlookupDict
+  ProfileCheckpointlookupDict,
+  RegistrationDict
 };
