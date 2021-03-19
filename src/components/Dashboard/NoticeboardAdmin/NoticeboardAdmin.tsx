@@ -32,6 +32,20 @@ export type ViewEditMode = {
   widgetID: string;
 };
 
+const initialNewWidgetData = {
+  teacherAuthID: '',
+  teacherEmail: '',
+  roomID: '',
+  type: 'default',
+  placement: 'sidebar',
+  title: '',
+  description: '',
+  content: { text: '', image: '' },
+  quotes: [{}],
+  links: [{}],
+  active: true,
+}
+
 const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   const {} = props;
   const { state, userLanguage, clientKey } = useContext(GlobalContext);
@@ -82,6 +96,9 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   };
 
   useEffect(() => {
+    setViewEditMode({ mode: '', widgetID: '' });
+    setNewWidgetData(initialNewWidgetData);
+    
     const initializeWidgetData = async () => {
       if (state.user.authId) {
         await listNoticeboardWidgets();

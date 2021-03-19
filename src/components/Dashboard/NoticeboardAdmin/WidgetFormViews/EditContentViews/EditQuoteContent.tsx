@@ -3,6 +3,8 @@ import { Quote } from '../../../../../interfaces/ClassroomComponentsInterfaces';
 import { NoticeboardFormProps } from '../../NoticeboardAdminContent';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { AiOutlineDelete } from 'react-icons/all';
 
 // Standard widget card view
 export const EditQuoteContent = (props: NoticeboardFormProps) => {
@@ -59,12 +61,46 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
   const increaseQuoteCount = () => {
     if (viewEditMode.mode === 'create') {
       // @ts-ignore
-      setNewWidgetData({ ...widgetObj, [switchKey().key]: [...widgetObj[switchKey().key], switchKey().expander] });
+      setNewWidgetData({
+        ...widgetObj,
+        [switchKey().key]: [...widgetObj[switchKey().key], switchKey().expander],
+      });
     }
     if (viewEditMode.mode === 'edit') {
       const updatedWidgetArray = widgetData.map((nestedObj: any, idx: number) => {
         if (nestedObj.id === widgetObj.id) {
-          return { ...nestedObj, [switchKey().key]: [...nestedObj[switchKey().key], switchKey().expander] };
+          return {
+            ...nestedObj,
+            [switchKey().key]: [...nestedObj[switchKey().key], switchKey().expander],
+          };
+        } else {
+          return nestedObj;
+        }
+      });
+      setWidgetData(updatedWidgetArray);
+    }
+  };
+
+  const decreaseQuoteCount = (idx: number) => {
+    if (viewEditMode.mode === 'create') {
+      const filtered = widgetObj[switchKey().key].filter((linkObj: any, idx1: number) => {
+        if (idx1 === idx) return linkObj;
+      });
+      setNewWidgetData({
+        ...widgetObj,
+        [switchKey().key]: filtered,
+      });
+    }
+    if (viewEditMode.mode === 'edit') {
+      const updatedWidgetArray = widgetData.map((nestedObj: any, idx: number) => {
+        if (nestedObj.id === widgetObj.id) {
+          const filtered = nestedObj[switchKey().key].filter((linkObj: any, idx1: number) => {
+            if (idx1 === idx) return linkObj;
+          });
+          return {
+            ...nestedObj,
+            [switchKey().key]: filtered,
+          };
         } else {
           return nestedObj;
         }
@@ -80,9 +116,17 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
       {widgetObj[theSwitchObj.key].length > 0 ? (
         widgetObj[theSwitchObj.key].map((widgetQuote: Quote, idx: number) => {
           return (
-            <div className={`flex flex-row p-2 rounded my-2 ${idx % 2 ? 'bg-grayscale-light bg-opacity-20' : 'bg-gray-400 bg-opacity-20'}`}>
+            <div
+              className={`flex flex-row p-2 rounded my-2 ${
+                idx % 2 ? 'bg-grayscale-light bg-opacity-20' : 'bg-gray-400 bg-opacity-20'
+              }`}>
               <div className={`w-8`}>
-                <p className={`text-xl font-bold`}>{idx}.</p>
+                <p className={`text-center text-xl font-semibold`}>{idx}.</p>
+                <div className={`cursor-pointer`} onClick={()=>decreaseQuoteCount(idx)}>
+                  <IconContext.Provider value={{ className: 'w-auto pointer-events-none' }}>
+                    <AiOutlineDelete size={24} />
+                  </IconContext.Provider>
+                </div>
               </div>
               <div className={`w-full`}>
                 <label
